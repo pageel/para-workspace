@@ -15,6 +15,10 @@
 
 </div>
 
+**PARA Workspace** is a standardized, code-centric Personal Knowledge Management (PKM) system designed for the age of AI. It bridges the gap between human cognition and artificial intelligence by providing a structured file system layout that is both intuitive for humans and contextually rich for AI agents.
+
+---
+
 ## 1. Objective
 
 This document defines the **Personal Workspace Standard** based on the **PARA Method (Projects – Areas – Resources – Archive)**. It is specifically designed for **Antigravity Workspaces**, enabling seamless collaboration between Humans and AI Agents.
