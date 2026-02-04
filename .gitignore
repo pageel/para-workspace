@@ -1,0 +1,28 @@
+# PARA Workspace gitignore
+
+# System & IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# Dependencies
+node_modules/
+dist/
+build/
+coverage/
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+_secrets/
+
+# Agent
+.agent/memory/
+.agent/history/
+
+# Projects (Optional: Ignore nested git repos / keep structure)
+# Ignore repo contents to handle nested git issues if not using submodules
+# Projects/**/repo/

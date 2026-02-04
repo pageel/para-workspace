@@ -1,0 +1,36 @@
+{
+  "name": "User Name",
+  "description": "Agentic Workspace based on PARA architecture",
+  "version": "1.0.0",
+  "workspace": {
+    "root": "/path/to/workspace",
+    "owner": "Your Name"
+  },
+  "structure": {
+    "Projects": {
+      "path": "./Projects",
+      "description": "Active projects with clear goals and deadlines"
+    },
+    "Areas": {
+      "path": "./Areas",
+      "description": "Ongoing responsibilities"
+    },
+    "Resources": {
+      "path": "./Resources",
+      "description": "Topics of interest and reference materials"
+    },
+    "Archive": {
+      "path": "./Archive",
+      "description": "Inactive items"
+    }
+  },
+  "products": {},
+  "conventions": {
+    "para": {
+      "Projects": "Active work",
+      "Areas": "Ongoing responsibility",
+      "Resources": "Reference material",
+      "Archive": "Completed work"
+    }
+  }
+}
