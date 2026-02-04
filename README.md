@@ -2,7 +2,18 @@
 
 > **The Code-First Personal Knowledge Management System for Agentic Workflows**
 
+<div align="center">
+
 ![PARA Workspace](./favicon.svg)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub issues](https://img.shields.io/github/issues/pageel/para-workspace)](https://github.com/pageel/para-workspace/issues)
+[![GitHub stars](https://img.shields.io/github/stars/pageel/para-workspace)](https://github.com/pageel/para-workspace/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/pageel/para-workspace)](https://github.com/pageel/para-workspace/network)
+
+[🇺🇸 English](README.md) • [🇻🇳 Tiếng Việt](./docs/translations/README.vi.md)
+
+</div>
 
 ## 1. Objective
 
@@ -105,10 +116,6 @@ Suggested scan order for AI Agents:
 4. `Archive/**` (Ignore)
 
 ---
-
-## 9. Translations
-
-- [Tiếng Việt (Vietnamese)](./docs/translations/README.vi.md)
 
 ---
 
