@@ -15,7 +15,37 @@
 
 </div>
 
+```text
+ ┌─────────────────────────────────────────────────────────────┐
+ │   P A R A   W O R K S P A C E    S T A N D A R D            │
+ └─────────────────────────────────────────────────────────────┘
+          │
+          ├───► ⚡ PROJECTS  (Active Work)
+          │       └── [Goal] + [Deadline]
+          │
+          ├───► 🛡️ AREAS     (Responsibilities)
+          │       └── [Standard] + [Maintenance]
+          │
+          ├───► 📚 RESOURCES (Interests)
+          │       └── [Topic] + [Utility]
+          │
+          └───► ❄️ ARCHIVE   (Inactive)
+                  └── [Completed] + [Cold Storage]
+```
+
 **PARA Workspace** is a standardized, code-centric Personal Knowledge Management (PKM) system designed for the age of AI. It bridges the gap between human cognition and artificial intelligence by providing a structured file system layout that is both intuitive for humans and contextually rich for AI agents.
+
+## 🚀 Quick Start
+
+Initialize your workspace with the included CLI tools:
+
+```bash
+# Create a new project (Auto-generates folder structure & metadata)
+./Areas/infrastructure/cli/scaffold.sh my-new-project
+
+# Update workspace templates (Safe non-destructive update)
+./Areas/infrastructure/cli/update.sh
+```
 
 ---
 
@@ -91,9 +121,9 @@ Projects/
 
 **Standard Areas**:
 
-- `Areas/Docs`: Knowledge base, wikis, and specifications.
-- `Areas/Sessions`: Centralized logs for the workspace.
-- `Areas/Agent`: AI rules, workflows, and skills.
+- `Areas/docs`: Knowledge base, wikis, and specifications.
+- `Areas/sessions`: Centralized logs for the workspace.
+- `Areas/agent`: AI rules, workflows, and skills.
 
 ---
 
@@ -110,17 +140,34 @@ Projects/
 
 ---
 
-## 8. Agent Integration
+## 8. Agent Integration (Architecture)
 
-Suggested scan order for AI Agents:
+We follow the **Thin Root / Rich Project** philosophy for AI Agents:
 
-1. `Projects/**` (High Context)
-2. `Areas/**` (Rules & Memory)
-3. `Resources/**` (Reference)
-4. `Archive/**` (Ignore)
+### 🌟 Root `.agent/` (Thin)
+
+Acts as the "Constitution" of the workspace. Only contains global rules:
+
+- `workspace.yaml`: Definition of PARA structure & Scan Order.
+- `conventions.md`: Naming & Code style conventions.
+
+### 🧩 Project `.agent/` (Rich)
+
+The "Powerhouse" of daily work. Each project has its own `.agent` folder containing:
+
+- `role.md`: Specific persona for that project.
+- `context.yaml`: Domain-specific rules.
+- `workflow.md`: Automation steps.
+
+**Agent Golden Rule**: An Agent generally only acts within the scope where it is defined.
+
+- Root Agent -> Routing & Scanning.
+- Project Agent -> Coding & Execution.
 
 ---
 
 ---
 
-_Version: 1.0.0 (RFC-0001)_
+---
+
+_Version: 1.1.0_

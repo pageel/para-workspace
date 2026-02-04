@@ -6,7 +6,8 @@
 set -e
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-WORKSPACE_ROOT="$(dirname "$SCRIPT_DIR")"
+# Path: Areas/Infrastructure/cli -> Root is 3 levels up
+WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
 
 echo "🚀 Installing PARA Workspace CLI..."
 

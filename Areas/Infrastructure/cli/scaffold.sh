@@ -28,6 +28,8 @@ echo "🚀 Scaffolding project: $PROJECT_NAME"
 mkdir -p "$PROJECT_PATH/repo"
 mkdir -p "$PROJECT_PATH/sessions"
 mkdir -p "$PROJECT_PATH/docs"
+mkdir -p "$PROJECT_PATH/.beads"
+mkdir -p "$PROJECT_PATH/.agent"
 
 # Create .gitignore in repo
 cat > "$PROJECT_PATH/repo/.gitignore" <<EOL
@@ -35,6 +37,29 @@ node_modules/
 .DS_Store
 dist/
 .env
+EOL
+
+# Create project.md (Required by PARA Spec)
+cat > "$PROJECT_PATH/project.md" <<EOL
+# Project: $PROJECT_NAME
+
+## 🎯 Goal
+Define the specific goal of this project.
+
+## 🚦 Status
+- [ ] Active
+- [ ] On Hold
+- [ ] Completed
+
+## 🔑 Key Decisions
+- [YYYY-MM-DD] Initialized project.
+
+## 📦 Dependencies
+- None
+
+## ✅ Done Condition
+- [ ] Feature X implemented
+- [ ] Deployed to production
 EOL
 
 # Create README.md

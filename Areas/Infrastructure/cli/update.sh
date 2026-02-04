@@ -26,9 +26,9 @@ git fetch origin main
 # unless they are strictly structural (like .agent)
 SAFE_PATHS=(
     ".agent"
-    "cli"
-    "docs/workflows"
-    "docs/rules"
+    "Areas/Infrastructure/cli"
+    "Areas/Docs/workflows"
+    "Areas/Docs/rules"
 )
 
 echo "Updating core components..."
