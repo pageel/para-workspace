@@ -1,6 +1,6 @@
 {
-  "name": "User Name",
-  "description": "Agentic Workspace based on PARA architecture",
+  "name": "PARA Workspace Standard",
+  "description": "A standardized, code-centric Personal Knowledge Management (PKM) system optimized for AI Agent collaboration. Based on the PARA method.",
   "version": "1.0.0",
   "workspace": {
     "root": "/path/to/workspace",
