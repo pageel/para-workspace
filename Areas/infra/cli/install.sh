@@ -14,6 +14,7 @@ echo "🚀 Installing PARA Workspace CLI..."
 # Ensure all scripts are executable
 chmod +x "$SCRIPT_DIR/scaffold.sh"
 chmod +x "$SCRIPT_DIR/update.sh"
+chmod +x "$SCRIPT_DIR/workflow.sh"
 
 echo "✅ Scripts made executable."
 

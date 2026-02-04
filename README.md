@@ -173,6 +173,31 @@ The "Powerhouse" of daily work. Each project has its own `.agent` folder contain
 
 ---
 
+## 🛠️ Workflow Management
+
+This template includes a **Workflow Catalog** located in `Resources/ai-agents/workflows/`. These are powerful, pre-configured workflows that you can "install" into your workspace.
+
+### Discovery
+
+List all available workflows in the catalog:
+
+```bash
+./Areas/infra/cli/workflow.sh list
+```
+
+### Installation
+
+Activate a workflow by installing it to your `.agent/workflows/` folder:
+
+```bash
+./Areas/infra/cli/workflow.sh install push
+./Areas/infra/cli/workflow.sh install end
+```
+
+Once installed, you can trigger these workflows using your agent (e.g., `/push`).
+
+---
+
 ---
 
 ---
