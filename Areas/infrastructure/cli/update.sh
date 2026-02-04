@@ -6,7 +6,7 @@
 set -e
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-WORKSPACE_ROOT="$(dirname "$SCRIPT_DIR")"
+WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
 REPO_URL="https://github.com/pageel/para-workspace.git"
 
 echo "🔄 Checking for updates from $REPO_URL..."
@@ -26,9 +26,9 @@ git fetch origin main
 # unless they are strictly structural (like .agent)
 SAFE_PATHS=(
     ".agent"
-    "Areas/Infrastructure/cli"
-    "Areas/Docs/workflows"
-    "Areas/Docs/rules"
+    "Areas/infrastructure/cli"
+    "Areas/agent/workflows"
+    "Areas/agent/rules"
 )
 
 echo "Updating core components..."

@@ -6,7 +6,7 @@
 set -e
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-WORKSPACE_ROOT="$(dirname "$SCRIPT_DIR")"
+WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
 PROJECT_NAME=$1
 
 if [ -z "$PROJECT_NAME" ]; then
@@ -30,6 +30,25 @@ mkdir -p "$PROJECT_PATH/sessions"
 mkdir -p "$PROJECT_PATH/docs"
 mkdir -p "$PROJECT_PATH/.beads"
 mkdir -p "$PROJECT_PATH/.agent"
+
+# Create .agent templates
+cat > "$PROJECT_PATH/.agent/role.md" <<EOL
+# Agent Role: $PROJECT_NAME Developer
+
+## Goal
+Help the user achieve the goal of **$PROJECT_NAME**.
+
+## Context
+Refer to \`../project.md\` for status and decisions.
+EOL
+
+cat > "$PROJECT_PATH/.agent/context.yaml" <<EOL
+scope: project
+project: $PROJECT_NAME
+rules:
+  - "Always check project.md for done conditions"
+  - "Update .beads for short-term memory"
+EOL
 
 # Create .gitignore in repo
 cat > "$PROJECT_PATH/repo/.gitignore" <<EOL

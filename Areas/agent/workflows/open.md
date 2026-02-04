@@ -33,7 +33,7 @@ Projects/[project]/sessions/  # Session logs
 ```bash
 # UPDATE_PATH: Set this to your absolute workspace path
 WORKSPACE_ROOT="."
-cat $WORKSPACE_ROOT/Areas/Sessions/SESSION_LOG.md 2>/dev/null || echo "No session log found"
+cat $WORKSPACE_ROOT/Areas/sessions/SESSION_LOG.md 2>/dev/null || echo "No session log found"
 ```
 
 ### 3. Find latest session

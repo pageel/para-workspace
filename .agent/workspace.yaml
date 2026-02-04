@@ -1,0 +1,14 @@
+workspace:
+  structure: PARA
+
+scan_order:
+  - Projects/**
+  - Areas/**
+  - Resources/**
+  - Archive/**
+
+rules:
+  Archive/**: ignore
+  Resources/**: read_on_demand
+  Areas/**: reference
+  Projects/**: primary
