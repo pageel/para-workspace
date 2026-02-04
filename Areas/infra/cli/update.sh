@@ -26,7 +26,7 @@ git fetch origin main
 # unless they are strictly structural (like .agent)
 SAFE_PATHS=(
     ".agent"
-    "Areas/infrastructure/cli"
+    "Areas/infra/cli"
     "Areas/agent/workflows"
     "Areas/agent/rules"
 )

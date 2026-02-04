@@ -13,7 +13,7 @@
     },
     "Areas": {
       "path": "./Areas",
-      "description": "Ongoing responsibilities"
+      "description": "Ongoing responsibilities (infra, docs, architecture)"
     },
     "Resources": {
       "path": "./Resources",
@@ -28,8 +28,8 @@
   "conventions": {
     "para": {
       "Projects": "Active work",
-      "Areas": "Ongoing responsibility",
-      "Resources": "Reference material",
+      "Areas": "Ongoing responsibility (infra, docs, architecture)",
+      "Resources": "Interests and reference material (topics)",
       "Archive": "Completed work"
     }
   }

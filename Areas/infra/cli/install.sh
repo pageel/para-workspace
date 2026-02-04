@@ -6,7 +6,7 @@
 set -e
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
- # Path: Areas/infrastructure/cli -> Root is 3 levels up
+ # Path: Areas/infra/cli -> Root is 3 levels up
 WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
 
 echo "🚀 Installing PARA Workspace CLI..."
@@ -21,7 +21,7 @@ echo "✅ Scripts made executable."
 echo ""
 echo "🎉 Installation complete!"
 echo "To create a new project, run:"
-echo "  ./Areas/infrastructure/cli/scaffold.sh <project-name>"
+echo "  ./Areas/infra/cli/scaffold.sh <project-name>"
 echo ""
 echo "To update workspace template:"
-echo "  ./Areas/infrastructure/cli/update.sh"
+echo "  ./Areas/infra/cli/update.sh"

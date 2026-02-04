@@ -11,7 +11,7 @@ PROJECT_NAME=$1
 
 if [ -z "$PROJECT_NAME" ]; then
   echo "❌ Error: Project name required."
-  echo "Usage: ./cli/scaffold.sh <project-name>"
+  echo "Usage: ./Areas/infra/cli/scaffold.sh <project-name>"
   exit 1
 fi
 

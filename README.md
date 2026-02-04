@@ -11,7 +11,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/pageel/para-workspace)](https://github.com/pageel/para-workspace/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/pageel/para-workspace)](https://github.com/pageel/para-workspace/network)
 
-[🇺🇸 English](README.md) • [🇻🇳 Tiếng Việt](./docs/translations/README.vi.md)
+[🇺🇸 English](README.md) • [🇻🇳 Tiếng Việt](./Resources/translations/README.vi.md)
 
 </div>
 
@@ -41,10 +41,10 @@ Initialize your workspace with the included CLI tools:
 
 ```bash
 # Create a new project (Auto-generates folder structure & metadata)
-./Areas/infrastructure/cli/scaffold.sh my-new-project
+./Areas/infra/cli/scaffold.sh my-new-project
 
 # Update workspace templates (Safe non-destructive update)
-./Areas/infrastructure/cli/update.sh
+./Areas/infra/cli/update.sh
 ```
 
 ---
@@ -86,8 +86,8 @@ Every item belongs to exactly one category based on its current relevance:
 ```txt
 workspace-root/
 ├── Projects/    # Active work with goals & deadlines
-├── Areas/       # Ongoing responsibilities (Docs, Infrastructure)
-├── Resources/   # Reference materials, assets, themes
+├── Areas/       # Ongoing responsibilities (infra, docs, product)
+├── Resources/   # Reference materials (topics of interest)
 └── Archive/     # Completed or inactive items
 ```
 
@@ -117,19 +117,26 @@ Projects/
 
 ## 5. Areas
 
-**Definition**: Responsibilities to maintain over time with no end date.
+**Definition**: Ongoing responsibilities that must be maintained indefinitely.
 
 **Standard Areas**:
 
-- `Areas/docs`: Knowledge base, wikis, and specifications.
-- `Areas/sessions`: Centralized logs for the workspace.
-- `Areas/agent`: AI rules, workflows, and skills.
+- `Areas/infra`: Infrastructure (CLI tools, server configs, CI/CD).
+- `docs`: Workspace standards, policies, and RFCs.
+- `Areas/architecture`: Design patterns and system architecture rules.
+- `Areas/agent`: AI agent workflows and global rules.
 
 ---
 
 ## 6. Resources
 
-**Definition**: Topics of interest and useful assets (Themes, Templates, Content Drafts).
+**Definition**: Reference materials used for learning, comparison, or exploration.
+
+**Examples**:
+
+- `Resources/databases`: Research on database engines (Postgres vs LibSQL).
+- `Resources/web-development`: Frontend frameworks, CSS tips.
+- `Resources/ai-agents`: Research on LLMs and agentic patterns.
 
 ---
 
