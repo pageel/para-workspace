@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# PARA Workspace CLI Wrapper
+# Usage: ./para [scaffold|update|work|install]
+
+set -e
+
+CLI_DIR="./Areas/infra/cli"
+
+case "$1" in
+  scaffold)
+    shift
+    "$CLI_DIR/scaffold.sh" "$@"
+    ;;
+  update)
+    shift
+    "$CLI_DIR/update.sh" "$@"
+    ;;
+  work)
+    shift
+    "$CLI_DIR/workflow.sh" "$@"
+    ;;
+  install)
+    shift
+    "$CLI_DIR/install.sh" "$@"
+    ;;
+  *)
+    echo "Usage: ./para [scaffold | update | work | install]"
+    echo ""
+    echo "Commands:"
+    echo "  scaffold <name>  Create a new project"
+    echo "  update           Update workspace templates"
+    echo "  work <command>   Manage workflows (list, install)"
+    echo "  install          Set up CLI permissions"
+    exit 1
+    ;;
+esac

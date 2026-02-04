@@ -41,10 +41,10 @@ Initialize your workspace with the included CLI tools:
 
 ```bash
 # Create a new project (Auto-generates folder structure & metadata)
-./Areas/infra/cli/scaffold.sh my-new-project
+./para scaffold my-new-project
 
 # Update workspace templates (Safe non-destructive update)
-./Areas/infra/cli/update.sh
+./para update
 ```
 
 ---
@@ -182,7 +182,7 @@ This template includes a **Workflow Catalog** located in `Resources/ai-agents/wo
 List all available workflows in the catalog:
 
 ```bash
-./Areas/infra/cli/workflow.sh list
+./para work list
 ```
 
 ### Installation
@@ -190,8 +190,8 @@ List all available workflows in the catalog:
 Activate a workflow by installing it to your `.agent/workflows/` folder:
 
 ```bash
-./Areas/infra/cli/workflow.sh install push
-./Areas/infra/cli/workflow.sh install end
+./para work install push
+./para work install end
 ```
 
 Once installed, you can trigger these workflows using your agent (e.g., `/push`).
