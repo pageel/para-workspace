@@ -6,9 +6,11 @@
 
 <img src="../../.github/assets/banner.png" width="100%" alt="PARA Workspace Banner">
 
+<br/>
+
 [![PARA Version](https://img.shields.io/badge/PARA-v1.3.0-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![Run on Antigravity](https://img.shields.io/badge/Run%20on-Antigravity-FF6B6B.svg?style=for-the-badge&logo=rocket&logoColor=white)](https://antigravity.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
-[![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-tích-hợp-agent)
 
 [🇺🇸 English](../../README.md) • [🇻🇳 Tiếng Việt](README.vi.md)
 
