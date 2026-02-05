@@ -11,6 +11,13 @@ REPO_ROOT="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
 
 echo "🔄 Updating PARA Workspace Template from GitHub..."
 
+# Get current version
+if [ -f "VERSION" ]; then
+    CURRENT_VER=$(cat VERSION)
+else
+    CURRENT_VER="Unknown"
+fi
+
 cd "$REPO_ROOT"
 
 # Check if it's a git repo
@@ -19,9 +26,24 @@ if [ ! -d ".git" ]; then
     exit 1
 fi
 
+echo "📍 Current Version: $CURRENT_VER"
+
 # Pull latest
 echo "📥 Pulling latest changes..."
 git pull origin main
+
+# Get new version
+if [ -f "VERSION" ]; then
+    NEW_VER=$(cat VERSION)
+else
+    NEW_VER="Unknown"
+fi
+
+if [ "$CURRENT_VER" == "$NEW_VER" ] && [ "$CURRENT_VER" != "Unknown" ]; then
+    echo "✅ Already on latest version ($CURRENT_VER)."
+else
+    echo "⏫ Upgraded: $CURRENT_VER -> $NEW_VER"
+fi
 
 # Re-run installation to sync rules, workflows and CLI wrapper
 echo "⚙️ Re-installing to sync workspace root..."

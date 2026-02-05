@@ -11,7 +11,11 @@ if [ -z "$WORKSPACE_ROOT" ]; then
   WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")")")"
 fi
 
-echo "📊 PARA Workspace Status Report"
+# Get Version
+VERSION_FILE="$WORKSPACE_ROOT/Projects/para-workspace/repo/VERSION"
+VERSION=$(cat "$VERSION_FILE" 2>/dev/null || echo "Unknown")
+
+echo "📊 PARA Workspace Status Report (v$VERSION)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 for project_dir in "$WORKSPACE_ROOT"/Projects/*; do
