@@ -4,7 +4,7 @@
 
 <div align="center">
 
-![PARA Workspace Banner](../../docs/assets/banner.png)
+![PARA Workspace Banner](../../.github/assets/banner.png)
 
 [![PARA Version](https://img.shields.io/badge/PARA-v1.3.0-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
