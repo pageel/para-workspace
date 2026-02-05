@@ -52,7 +52,8 @@ workspace-root/
 ├─ Projects/
 ├─ Areas/
 ├─ Resources/
-└─ Archive/
+├─ Archive/
+└─ .agent/
 ```
 
 ### Quy ước chung

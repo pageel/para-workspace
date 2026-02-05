@@ -94,7 +94,8 @@ workspace-root/
 ├── Projects/    # Active work with goals & deadlines
 ├── Areas/       # Ongoing responsibilities (infra, docs, product)
 ├── Resources/   # Reference materials (topics of interest)
-└── Archive/     # Completed or inactive items
+├── Archive/     # Completed or inactive items
+└── .agent/      # Root-level configuration & workflows
 ```
 
 ### Conventions
@@ -117,7 +118,9 @@ Projects/
    ├── repo/        # Git repository (Source code)
    ├── sessions/    # Work logs (Daily session notes)
    ├── docs/        # Project-specific documentation
-   └── artifacts/   # AI-Agent artifacts (Plans, Walkthroughs, Tasks)
+   ├── artifacts/   # AI-Agent artifacts (Plans, Walkthroughs, Tasks)
+   ├── .agent/      # Project-specific rules & workflows
+   └── project.md   # Project status & metadata
 ```
 
 ---
