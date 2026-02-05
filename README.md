@@ -63,6 +63,92 @@ Standard PKM systems are built for human eyes. **PARA Workspace** is built for *
 
 ---
 
+## 📂 Directory Structure
+
+The workspace follows a strict hierarchy to ensure predictable navigation for both humans and agents.
+
+### 1. **Projects/** (Active Work)
+
+> _Goal-oriented, time-bound efforts._
+
+Every active project lives here. A standard project folder contains:
+
+- `repo/`: **The Source Code.** (This is the git root).
+- `artifacts/`: Agent plans, tasks lists, and verification logs.
+- `docs/`: Project-specific documentation (RFCs, requirements).
+- `sessions/`: Daily Context Logs (The agent's memory).
+- `project.md`: The Project Contract (YAML status).
+
+### 2. **Areas/** (Responsibilities)
+
+> _Ongoing standard maintenance with no deadline._
+
+Long-term responsibilities that require consistent standards.
+
+- `Areas/infra/`: Infrastructure, scripts, and CLI tools.
+- `Areas/marketing/`: Brand assets, guidelines.
+- `Areas/operations/`: SOPs, financial records.
+
+### 3. **Resources/** (Interests & Assets)
+
+> _Topics of interest and utility libraries._
+
+Shared assets and knowledge useful across multiple projects.
+
+- `Resources/ai-agents/`: Prompts, workflows, and skills.
+- `Resources/translations/`: Localization files.
+- `Resources/templates/`: Reusable code snippets.
+
+### 4. **Archive/** (Inactive)
+
+> _Completed or cancelled items._
+
+When a Project is done or an Area is no longer specific, it moves here for cold storage.
+
+---
+
+---
+
+## 📥 Installation
+
+This workspace is designed to be the "Operating System" for your Antigravity agent.
+
+### 1. Setup Structure
+
+Create your workspace root and clone this repository into the standardized path.
+
+> **Why not `npx`?**
+> We use `git clone` so you can pull updates to the Core OS standard (`Projects/para-workspace/repo`) while keeping your personal data separate.
+
+```bash
+# 1. Create your workspace directory
+mkdir WORKSPACE && cd WORKSPACE
+
+# 2. Create the Projects/para-workspace structure (CRITICAL path)
+mkdir -p Projects/para-workspace
+
+# 3. Clone this repo into 'repo'
+git clone https://github.com/pageel/para-workspace.git Projects/para-workspace/repo
+```
+
+### 2. Run Installer
+
+The installer will set up the global `./para` command, install agent skills, and sync standard rules.
+
+```bash
+# Run the install script
+./Projects/para-workspace/repo/Areas/infra/cli/install.sh
+```
+
+**What happens?**
+
+- ✅ Creates the `./para` root command.
+- ✅ Installs **PARA Kit** skills to `.agent/skills/`.
+- ✅ Syncs standard **Workflows** to `.agent/workflows/`.
+- ✅ Enforces valid AI rules in `.agent/rules/`.
+
+---
+
 ## 🚀 Quick Start
 
 Initialize your workspace with the powerhouse CLI tools:

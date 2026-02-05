@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Documentation
+
+- **README Overhaul**: Added detailed directory structure (Projects, Areas, Resources, Archive) and explicit installation guide for Antigravity agents.
+
 ## [1.3.0] - 2026-02-05
 
 ### Added
