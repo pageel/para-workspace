@@ -62,17 +62,18 @@ mkdir -p "$PROJECT_PATH/repo"
 
 # 3. Upgrade project.md to YAML Frontmatter (v1.3)
 PROJECT_MD="$PROJECT_PATH/project.md"
-if [ -f "$PROJECT_MD" ]; then
-    if ! grep -q -e "---" "$PROJECT_MD"; then
-        echo "🔄 Upgrading project.md to YAML Frontmatter..."
-        # Extract Goal if possible
-        GOAL=$(grep -A 1 "## 🎯 Goal" "$PROJECT_MD" | tail -n 1 | sed 's/^[[:space:]]*//' || echo "Define goals")
-        [ -z "$GOAL" ] && GOAL="Define project goal"
-        
-        # Backup old
-        mv "$PROJECT_MD" "$PROJECT_MD.bak"
-        
-        cat > "$PROJECT_MD" <<EOL
+    if [ -f "$PROJECT_MD" ]; then
+        # Check if it starts with YAML frontmatter
+        if [ "$(head -n 1 "$PROJECT_MD")" != "---" ]; then
+            echo "🔄 Upgrading project.md to YAML Frontmatter..."
+            # Extract Goal if possible
+            GOAL=$(grep -i "goal" "$PROJECT_MD" | head -n 1 | cut -d':' -f2- | sed 's/^[[:space:]>]*//' || echo "Define goals")
+            [ -z "$GOAL" ] && GOAL="Define project goal"
+            
+            # Backup old
+            mv "$PROJECT_MD" "$PROJECT_MD.bak"
+            
+            cat > "$PROJECT_MD" <<EOL
 ---
 goal: "$GOAL"
 deadline: "$(date -d "+30 days" +%Y-%m-%d)"
@@ -82,13 +83,11 @@ dod:
 last_reviewed: "$(date +%Y-%m-%d)"
 ---
 
-# Project: $PROJECT_NAME
-
-$(cat "$PROJECT_MD.bak" | sed '1,2d')
+$(cat "$PROJECT_MD.bak")
 EOL
-        rm "$PROJECT_MD.bak"
-        echo "✅ Upgraded project.md"
-    fi
+            rm "$PROJECT_MD.bak"
+            echo "✅ Upgraded project.md"
+        fi
 else
     # Create new project.md
     cat > "$PROJECT_MD" <<EOL

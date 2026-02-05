@@ -24,8 +24,8 @@ for project_dir in "$WORKSPACE_ROOT"/Projects/*; do
     if [ -f "$project_md" ]; then
         # Detect if it's YAML frontmatter (v1.3)
         if grep -q -e "---" "$project_md"; then
-            status=$(grep "^status:" "$project_md" | cut -d'"' -f2 | cut -d"'" -f2)
-            deadline=$(grep "^deadline:" "$project_md" | cut -d'"' -f2 | cut -d"'" -f2)
+            status=$(grep "^status:" "$project_md" | sed 's/status:[[:space:]]*//; s/["'\'']//g')
+            deadline=$(grep "^deadline:" "$project_md" | sed 's/deadline:[[:space:]]*//; s/["'\'']//g')
             
             # Simple overdue check
             if [ "$deadline" != "no-date" ] && [ "$status" == "active" ]; then
