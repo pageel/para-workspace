@@ -1,4 +1,10 @@
-# /verify [task-name]
+---
+description: Verify task completion using walkthroughs
+---
+
+# /p-verify [task-name]
+
+> **Workspace Version:** 1.3.1 (PARA Architecture)
 
 > Verify completion of a feature or task using a Walkthrough artifact.
 

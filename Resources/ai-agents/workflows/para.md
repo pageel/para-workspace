@@ -2,6 +2,10 @@
 description: Master PARA Workspace management workflow for agents. Use this to standardize, review, or initialize projects.
 ---
 
+# /para
+
+> **Workspace Version:** 1.3.1 (PARA Architecture)
+
 This workflow guides the agent through workspace-level PARA maintenance.
 
 ### 1. Identify Target

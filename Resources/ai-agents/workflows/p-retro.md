@@ -1,4 +1,10 @@
-# /retro
+---
+description: Conduct a project retrospective before archiving
+---
+
+# /p-retro
+
+> **Workspace Version:** 1.3.1 (PARA Architecture)
 
 > Conduct a project retrospective before archiving.
 

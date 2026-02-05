@@ -1,4 +1,10 @@
-# /release-check
+---
+description: Pre-release quality gate and verification
+---
+
+# /p-release
+
+> **Workspace Version:** 1.3.1 (PARA Architecture)
 
 > Pre-merge quality gate for production readiness.
 
