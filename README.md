@@ -209,11 +209,46 @@ List all available workflows in the catalog:
 Activate a workflow by installing it to your `.agent/workflows/` folder:
 
 ```bash
-./para work install push
-./para work install end
+./para work install push as p-push
+./para work install end as p-end
 ```
 
-Once installed, you can trigger these workflows using your agent (e.g., `/push`).
+Once installed, you can trigger these workflows using your agent (e.g., `/p-push`).
+
+---
+
+## 9. Core Components
+
+The PARA Workspace ecosystem consists of three main pillars:
+
+### 🛠️ PARA CLI (The Execution Layer)
+
+Standardized set of bash tools to manage the physical structure of your workspace:
+
+- `scaffold`: Create new projects with standard folders.
+- `plan`: Generate implementation plans for agents.
+- `verify`: Generate walkthroughs for quality assurance.
+- `status`: High-level reporting on project health and deadlines.
+- `migrate`: Upgrade legacy folders to PARA v1.3.
+
+### 🧠 PARA Kit Skill (The Intelligence Layer)
+
+Located in `.agent/skills/para-kit/`, this is the "brain" that guides your AI agent:
+
+- **Strategic Selection**: AI chooses between fast CLI scripts or collaborative workflows based on the task.
+- **Project Audit**: Automatically flags overdue tasks or stalled projects.
+- **Resource Extraction**: Suggests patterns to move to `Resources/` when a project finishes.
+
+### 📑 Workflow Library (The Automation Layer)
+
+A catalog of pre-built workflows in `Resources/ai-agents/workflows/` with `p-` prefix:
+
+- `/para`: Master management (default installed).
+- `/p-kickoff`: Structured project start.
+- `/p-plan`: Automated roadmap creation.
+- `/p-verify`: Automated verification loop.
+- `/p-release`: Clean-up and release checks.
+- `/p-retro`: Extract lessons before archiving.
 
 ---
 

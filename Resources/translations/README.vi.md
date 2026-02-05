@@ -468,10 +468,37 @@ Các tác vụ phải được định dạng dưới dạng danh mục có th�
 
 ---
 
-## 16. Quản trị (Governance)
+---
 
-PARA Workspace được duy trì thông qua các hoạt động quản trị tích cực:
+## 17. Các thành phần cốt lõi (Core Components)
 
-- **Đánh giá hàng tuần (Weekly Review)**: Chạy `./para status` để xác định các dự án quá hạn hoặc các tác vụ bị đình trệ.
-- **Sắp xếp (Triage)**: Các dự án không có `deadline` hoặc `goal` rõ ràng sẽ được chuyển sang `Resources/` hoặc `Archive/`.
-- **Nghi thức Lưu trữ (Archive Ritual)**: Sử dụng workflow `/retro` để trích xuất các mẫu (patterns) có thể tái sử dụng vào `Resources/` trước khi lưu trữ.
+Hệ sinh thái PARA Workspace bao gồm 3 trụ cột chính:
+
+### 🛠️ PARA CLI (Tầng thực thi)
+
+Bộ công cụ bash chuẩn hóa để quản lý cấu trúc vật lý của workspace:
+
+- `scaffold`: Tạo dự án mới với đầy đủ thư mục chuẩn.
+- `plan`: Tạo kế hoạch thực thi cho agent.
+- `verify`: Tạo walkthrough để kiểm chứng chất lượng.
+- `status`: Báo cáo cấp cao về sức khỏe dự án và hạn chót.
+- `migrate`: Nâng cấp các thư mục cũ lên chuẩn PARA v1.3.
+
+### 🧠 PARA Kit Skill (Tầng trí tuệ)
+
+Nằm tại `.agent/skills/para-kit/`, đây là "bộ não" hướng dẫn AI agent:
+
+- **Lựa chọn chiến lược**: AI tự chọn giữa script CLI nhanh hoặc workflow cộng tác tùy theo nhiệm vụ.
+- **Kiểm toán dự án**: Tự động đánh dấu các task quá hạn hoặc dự án bị đình trệ.
+- **Trích xuất tài nguyên**: Gợi ý các mẫu (patterns) để đưa vào `Resources/` khi dự án kết thúc.
+
+### 📑 Thư viện Workflow (Tầng tự động hóa)
+
+Danh mục các workflow có sẵn trong `Resources/ai-agents/workflows/` với tiền tố `p-`:
+
+- `/para`: Quản lý master (mặc định đã cài đặt).
+- `/p-kickoff`: Khởi động dự án bài bản.
+- `/p-plan`: Tự động hóa việc tạo roadmap.
+- `/p-verify`: Vòng lặp kiểm chứng tự động.
+- `/p-release`: Kiểm tra dọn dẹp và phát hành.
+- `/p-retro`: Rút bài học kinh nghiệm trước khi lưu trữ.

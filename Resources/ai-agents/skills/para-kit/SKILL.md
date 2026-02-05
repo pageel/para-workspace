@@ -6,7 +6,7 @@ Intelligence for managing an "Agent-Executable" PARA workspace. This skill helps
 
 1. **Workspace Audit**: Uses `./para status` to identify non-compliant projects or overdue deadlines.
 2. **Project Lifecycle**: Orchestrates `scaffold`, `migrate`, and `archive` operations.
-3. **Strategy Selection**: Decides whether a task requires a full workflow (/retro, /kickoff) or just a direct CLI command.
+3. **Strategy Selection**: Decides whether a task requires a full workflow (/p-retro, /p-kickoff) or just a direct CLI command.
 
 ## Selection Strategy (Workflow vs. Script)
 
@@ -17,12 +17,12 @@ Intelligence for managing an "Agent-Executable" PARA workspace. This skill helps
 - **Bulk Migration** (migrate).
 - The task is deterministic and requires no human-in-the-loop decision.
 
-### Use Workflows (`/<slash-cmd>`) when:
+### Use Workflows (`/p-<cmd>`) when:
 
-- Performing **analysis** that requires documentation (e.g., /retro, /plan).
-- **Collaboration** with the user is needed to define scope (/kickoff).
+- Performing **analysis** that requires documentation (e.g., /p-retro, /p-plan).
+- **Collaboration** with the user is needed to define scope (/p-kickoff).
 - The task produces a **permanent artifact** (e.g., plan.md, walkthrough.md).
-- **Complex validation** is required (/verify).
+- **Complex validation** is required (/p-verify).
 
 ## Intelligence Patterns
 
