@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2026-02-05
+
+### Added
+
+- **Project Contracts (v1.3)**: Mandatory YAML Frontmatter for `project.md` enabling machine-readable goals and deadlines.
+- **Smart Governance**: Integrated `PARA Kit` skill for strategic agent decision-making.
+- **Master Workflow**: Added `/para` slash command for automated workspace standardization and migration.
+- **Project Migrator**: New `./para migrate` command to upgrade legacy folders to v1.3 standard.
+- **Refined Status**: Overdue detection (🔥) and unquoted YAML parsing support.
+
+### Changed
+
+- **Migration Policy**: `install.sh` now automatically installs root wrappers and core workflows.
+- **RFC Acceptance**: RFC-0001 to RFC-0004 moved from Draft to Accepted status.
+
 ## [1.2.0] - 2026-02-05
 
 ### Added
