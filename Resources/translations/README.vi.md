@@ -214,33 +214,29 @@ Archive/
 
 ---
 
-## 8. Agent & Beads trong PARA Workspace
+## 8. Tích hợp Agent (Kiến trúc)
 
-### 8.1 Nguyên tắc phân vai
+Chúng tôi tuân theo triết lý **Thin Root / Rich Project** (Gốc mỏng / Dự án giàu) cho các AI Agent:
 
-| Thành phần          | Phạm vi                 |
-| ------------------- | ----------------------- |
-| Beads               | Project-specific memory |
-| Agent rules         | Project hoặc global     |
-| Long-term knowledge | Areas                   |
+### 🌟 Root `.agent/` (Thin)
 
----
+Đóng vai trò là "Hiến pháp" của workspace. Chỉ chứa các quy tắc toàn cục:
 
-### 8.2 Agent scan order đề xuất
+- `workspace.yaml`: Định nghĩa cấu trúc PARA & Thứ tự quét (Scan Order).
+- `conventions.md`: Các quy ước về đặt tên & Phong cách lập trình.
 
-```yaml
-scan_order:
-  - Projects/**
-  - Areas/**
-  - Resources/**
-  - Archive/**
+### 🧩 Project `.agent/` (Rich)
 
-rules:
-  Archive/**: ignore
-  Resources/**: read_on_demand
-  Areas/**: reference
-  Projects/**: primary
-```
+"Trạm năng lượng" của công việc hàng ngày. Mỗi dự án có thư mục `.agent` riêng chứa:
+
+- `role.md`: Persona (vai trò) cụ thể cho dự án đó.
+- `context.yaml`: Các quy tắc đặc thù của domain.
+- `workflow.md`: Các bước tự động hóa.
+
+**Quy tắc Vàng của Agent**: Một Agent thường chỉ hoạt động trong phạm vi mà nó được định nghĩa.
+
+- Root Agent -> Điều hướng (Routing) & Quét (Scanning).
+- Project Agent -> Lập trình (Coding) & Thực thi (Execution).
 
 ---
 
@@ -409,3 +405,44 @@ Nếu bạn duy trì kỷ luật:
 3. **Verify (Kiểm chứng)**: Agent tạo một `Walkthrough` (`./para verify`) để kiểm tra thay đổi.
 4. **Log (Ghi nhật ký)**: Agent ghi lại kết quả vào `sessions/`.
 5. **Status (Trạng thái)**: Kiểm tra tiến độ tổng thể bằng `./para status`.
+
+---
+
+## 15. Hợp đồng dự án (Project Contracts - Spec v1.3)
+
+Để đảm bảo Workspace có thể "thực thi bởi Agent", mọi dự án phải tuân thủ một hợp đồng dữ liệu nghiêm ngặt.
+
+### Schema của `project.md` (YAML Frontmatter)
+
+Mỗi thư mục gốc của dự án phải có file `project.md` với:
+
+```yaml
+---
+goal: "Mục tiêu cụ thể bằng chuỗi ký tự"
+deadline: "YYYY-MM-DD"
+status: "active" | "paused" | "done" | "archived"
+dod: [ "Checklist 1", "Checklist 2" ]
+last_reviewed: "YYYY-MM-DD"
+---
+```
+
+### `artifacts/tasks.md`
+
+Các tác vụ phải được định dạng dưới dạng danh mục có thể liên kết:
+
+```markdown
+- [ ] Tên tính năng
+  - DoD: Chuỗi ký tự định nghĩa khi nào là Hoàn thành
+  - Plan: link/to/plan.md
+  - Walkthrough: link/to/walkthrough.md
+```
+
+---
+
+## 16. Quản trị (Governance)
+
+PARA Workspace được duy trì thông qua các hoạt động quản trị tích cực:
+
+- **Đánh giá hàng tuần (Weekly Review)**: Chạy `./para status` để xác định các dự án quá hạn hoặc các tác vụ bị đình trệ.
+- **Sắp xếp (Triage)**: Các dự án không có `deadline` hoặc `goal` rõ ràng sẽ được chuyển sang `Resources/` hoặc `Archive/`.
+- **Nghi thức Lưu trữ (Archive Ritual)**: Sử dụng workflow `/retro` để trích xuất các mẫu (patterns) có thể tái sử dụng vào `Resources/` trước khi lưu trữ.

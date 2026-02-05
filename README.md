@@ -230,4 +230,45 @@ To ensure high-quality collaboration with AI agents, we utilize an **Artifact La
 
 ---
 
-_Version: 1.2.0_
+## 10. Project Contracts (Spec v1.3)
+
+To ensure the workspace is "Agent-Executable", every project must follow a strict data contract.
+
+### `project.md` Schema (YAML Frontmatter)
+
+Every project root must have a `project.md` with:
+
+```yaml
+---
+goal: "Clear string objective"
+deadline: "YYYY-MM-DD"
+status: "active" | "paused" | "done" | "archived"
+dod: [ "Checklist 1", "Checklist 2" ]
+last_reviewed: "YYYY-MM-DD"
+---
+```
+
+### `artifacts/tasks.md`
+
+Tasks must be formatted as linkable checklists:
+
+```markdown
+- [ ] Feature Name
+  - DoD: Definition of Done string
+  - Plan: link/to/plan.md
+  - Walkthrough: link/to/walkthrough.md
+```
+
+---
+
+## 11. Governance
+
+The PARA Workspace is maintained through active governance:
+
+- **Weekly Review**: Run `./para status` to identify overdue projects or stalled tasks.
+- **Triage**: Projects without an active `deadline` or `goal` are moved to `Resources/` or `Archive/`.
+- **Archive Ritual**: Use `/retro` workflow to extract reusable patterns into `Resources/` before archiving.
+
+---
+
+_Version: 1.3.0_

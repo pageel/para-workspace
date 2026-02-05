@@ -62,27 +62,25 @@ dist/
 .env
 EOL
 
-# Create project.md (Required by PARA Spec)
+# Create project.md (Required by PARA Spec v1.3)
 cat > "$PROJECT_PATH/project.md" <<EOL
+---
+goal: "Define the specific goal of this project."
+deadline: "$(date -d "+30 days" +%Y-%m-%d)"
+status: "active"
+dod:
+  - "Feature X implemented"
+  - "Deployed to production"
+last_reviewed: "$(date +%Y-%m-%d)"
+---
+
 # Project: $PROJECT_NAME
 
-## 🎯 Goal
-Define the specific goal of this project.
-
-## 🚦 Status
-- [ ] Active
-- [ ] On Hold
-- [ ] Completed
-
 ## 🔑 Key Decisions
-- [YYYY-MM-DD] Initialized project.
+- [$(date +%Y-%m-%d)] Initialized project.
 
 ## 📦 Dependencies
 - None
-
-## ✅ Done Condition
-- [ ] Feature X implemented
-- [ ] Deployed to production
 EOL
 
 # Create artifacts/tasks.md
@@ -91,9 +89,13 @@ cat > "$PROJECT_PATH/artifacts/tasks.md" <<EOL
 
 ## 🚦 Roadmap
 - [ ] Initial setup
+  - DoD: Repository and PARA structure verified
+  - Verify: Run \`./para status\`
 
 ## 📋 Current Sprint
-- [ ] Task 1
+- [ ] Initial Scaffolding
+  - Plan: (auto)
+  - Walkthrough: (pending)
 
 ## ✅ Done
 EOL
