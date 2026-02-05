@@ -42,6 +42,8 @@ cp "$WORKSPACE_ROOT/$PROJECT_REL_PATH/.agent/rules/artifact-standard.md" "$WORKS
 # 4. Sync global workflows to Resources/ (for catalog)
 echo "📑 Updating workflow catalog in Resources/..."
 mkdir -p "$WORKSPACE_ROOT/Resources/ai-agents/workflows/"
+# Clean up legacy workflows (those without p- prefix, except .keep and folder structure)
+find "$WORKSPACE_ROOT/Resources/ai-agents/workflows/" -maxdepth 1 -type f ! -name "p-*" ! -name ".keep" -delete
 cp -r "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/workflows/"* "$WORKSPACE_ROOT/Resources/ai-agents/workflows/"
 
 # 5. Install CORE components to root .agent/

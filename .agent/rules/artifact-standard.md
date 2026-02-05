@@ -23,3 +23,9 @@ All complex tasks (lasting >1 session or involving significant architectural cha
 
 - **Location**: `artifacts/tasks.md`
 - **Requirement**: Must have clear checkboxes for tracking progress and defining when a task is "Done".
+
+## 4. Persistent Mirroring (AI Rule)
+
+- **Principle**: AI agents must mirror their internal brain artifacts (plans, tasks, walkthroughs) to the project's `artifacts/` directory.
+- **Why**: Internal brain artifacts are ephemeral. Mirroring ensures that project management data is persistent, version-controlled (locally), and visible to humans.
+- **Action**: After creating/updating an internal artifact, the agent should immediately `write_to_file` the same content to the corresponding project artifact path.

@@ -2,7 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [1.3.1] - 2026-02-05
+
+### Added
+
+- **Artifact Mirroring Rule**: New standard in `artifact-standard.md` forcing agents to mirror brain artifacts to the project's `artifacts/` folder for persistence.
+- **Unified Workflow Prefix**: All workflows now use the `p-` prefix for complete consistency, with `/para` remaining as the master entry command.
+
+### Fixed
+
+- **Workflow Library Cleanup**: `install.sh` now automatically removes legacy workflow files (without the `p-` prefix) from the root Resources directory.
 
 ### Documentation
 
@@ -14,7 +23,10 @@ All notable changes to this project will be documented in this file.
 
 - **Project Contracts (v1.3)**: Mandatory YAML Frontmatter for `project.md` enabling machine-readable goals and deadlines.
 - **Smart Governance**: Integrated `PARA Kit` skill for strategic agent decision-making.
-- **Master Workflow**: Added `/para` slash command for automated workspace standardization and migration.
+- **Master Workflow**: The heart of the workspace is the `/para` slash command. Ask your agent:
+
+> "Review my workspace health" or "@[/para] standardize all projects"ion and migration.
+
 - **Project Migrator**: New `./para migrate` command to upgrade legacy folders to v1.3 standard.
 - **Refined Status**: Overdue detection (🔥) and unquoted YAML parsing support.
 

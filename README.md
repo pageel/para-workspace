@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.3.0-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.3.1-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Run on Antigravity](https://img.shields.io/badge/Run%20on-Antigravity-FF6B6B.svg?style=for-the-badge&logo=rocket&logoColor=white)](https://antigravity.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
@@ -170,8 +170,6 @@ Initialize your workspace with the powerhouse CLI tools:
 ./para migrate legacy-project
 ```
 
-### 🤖 Master Command
-
 The heart of the workspace is the `/para` slash command. Ask your agent:
 
 > "Review my workspace health" or "@[/para] standardize all projects"
@@ -259,4 +257,4 @@ PARA Workspace enforces strict boundaries to keep your version control clean:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Latest Version: 1.3.0_
+_Latest Version: 1.3.1_
