@@ -39,6 +39,12 @@ Khởi tạo và quản lý workspace bằng các công cụ CLI:
 ./para migrate old-project-folder
 ```
 
+### 🤖 Lệnh Slash của Agent
+
+Sau khi cài đặt, bạn có thể yêu cầu AI Agent quản lý workspace bằng:
+
+- `/para`: Lệnh tổng lực để chuẩn hóa, kiểm tra trạng thái hoặc migrate dự án.
+
 ---
 
 ## 2. Triết lý cốt lõi

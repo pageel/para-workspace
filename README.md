@@ -56,6 +56,12 @@ Initialize your workspace with the included CLI tools:
 ./para migrate old-project-folder
 ```
 
+### 🤖 Agent Slash Command
+
+Once installed, you can ask your AI Agent to manage the workspace using:
+
+- `/para`: Master command to standardize, status check, or migrate projects.
+
 ---
 
 ## 1. Objective
