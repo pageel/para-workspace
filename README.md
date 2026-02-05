@@ -4,315 +4,170 @@
 
 <div align="center">
 
-![PARA Workspace](./favicon.svg)
+![PARA Workspace Banner](./docs/assets/banner.png)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub issues](https://img.shields.io/github/issues/pageel/para-workspace)](https://github.com/pageel/para-workspace/issues)
-[![GitHub stars](https://img.shields.io/github/stars/pageel/para-workspace)](https://github.com/pageel/para-workspace/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/pageel/para-workspace)](https://github.com/pageel/para-workspace/network)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.3.0-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
+[![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
 
 [🇺🇸 English](README.md) • [🇻🇳 Tiếng Việt](./Resources/translations/README.vi.md)
 
 </div>
+
+---
+
+## 🌌 Overview
+
+**PARA Workspace** is a standardized, code-centric Personal Knowledge Management (PKM) system designed for the age of AI. It bridges the gap between human cognition and artificial intelligence by providing a structured file system layout that is both intuitive for humans and contextually rich for AI agents.
 
 ```text
  ┌─────────────────────────────────────────────────────────────┐
  │   P A R A   W O R K S P A C E    S T A N D A R D            │
  └─────────────────────────────────────────────────────────────┘
           │
-          ├───► ⚡ PROJECTS  (Active Work)
-          │       └── [Goal] + [Deadline]
+          ├───► ⚡ PROJECTS  (Active Work) ───► [Goal] + [Deadline]
           │
-          ├───► 🛡️ AREAS     (Responsibilities)
-          │       └── [Standard] + [Maintenance]
+          ├───► 🛡️ AREAS     (Responsibilities) ───► [Standard] + [Maintenance]
           │
-          ├───► 📚 RESOURCES (Interests)
-          │       └── [Topic] + [Utility]
+          ├───► 📚 RESOURCES (Interests) ───► [Topic] + [Utility]
           │
-          └───► ❄️ ARCHIVE   (Inactive)
-                  └── [Completed] + [Cold Storage]
+          └───► ❄️ ARCHIVE   (Inactive) ───► [Completed] + [Cold Storage]
 ```
 
-**PARA Workspace** is a standardized, code-centric Personal Knowledge Management (PKM) system designed for the age of AI. It bridges the gap between human cognition and artificial intelligence by providing a structured file system layout that is both intuitive for humans and contextually rich for AI agents.
+---
+
+## 🌌 The PARA Lifecycle
+
+The workspace is a living system. Information flows through categories based on its current utility, not its type.
+
+```mermaid
+graph LR
+    P[⚡ Projects] -->|Completed| A[❄️ Archive]
+    P -->|Generalized| AR[🛡️ Areas]
+    R[📚 Resources] -->|Activated| P
+    AR -->|Standardized| P
+    A -->|Reference| R
+```
+
+### Why PARA for AI?
+
+Standard PKM systems are built for human eyes. **PARA Workspace** is built for **LLM context windows**:
+
+- **Project Isolation**: Prevent the agent from hallucinating by scoping it to one folder.
+- **Contract-Based Goals**: Use YAML to force the agent to recognize deadlines and "Done Conditions".
+- **Short-Term Memory**: Session logs provide the immediate "What happened last?" for seamless pick-up.
+- **Long-Term Memory**: Areas and Resources store the "How we do things" permanently.
+
+---
 
 ## 🚀 Quick Start
 
-Initialize your workspace with the included CLI tools:
+Initialize your workspace with the powerhouse CLI tools:
 
 ```bash
-# Create a new project
-./para scaffold my-new-project
+# 🏗️ Create a new project structure
+./para scaffold my-awesome-app
 
-# Plan a feature
-./para plan my-new-project "Implement OAuth"
+# 📝 Plan a complex feature with AI
+./para plan my-awesome-app "Implement Secure OAuth"
 
-# Verify a task
-./para verify my-new-project "OAuth Login"
+# 🧪 Verify task completion via Walkthrough
+./para verify my-awesome-app "OAuth Flow"
 
-# Check workspace health
+# 📊 Check workspace health & deadlines
 ./para status
 
-# Upgrade an existing folder to PARA v1.3
-./para migrate old-project-folder
+# 🔄 Upgrade a legacy folder to PARA v1.3
+./para migrate legacy-project
 ```
 
-### 🤖 Agent Slash Command
+### 🤖 Master Command
 
-Once installed, you can ask your AI Agent to manage the workspace using:
+The heart of the workspace is the `/para` slash command. Ask your agent:
 
-- `/para`: Master command to standardize, status check, or migrate projects.
-
----
-
-## 1. Objective
-
-This document defines the **Personal Workspace Standard** based on the **PARA Method (Projects – Areas – Resources – Archive)**. It is specifically designed for **Antigravity Workspaces**, enabling seamless collaboration between Humans and AI Agents.
-
-**Key Goals:**
-
-- **reduce cognitive load** for humans.
-- **Normalize lifecycle** of digital assets.
-- **Provide context** for AI agents.
-- **Ensure sustainability** over years.
+> "Review my workspace health" or "@[/para] standardize all projects"
 
 ---
 
-## 2. Core Philosophy
+## 🏛️ Core Pillars
 
-### A Thinking System, Not Just a Filesystem
+The system is built on three main pillars that enable a seamless Human-AI collaboration.
 
-The workspace is a map of your active life and long-term memory. We choose PARA because it reflects **how our brains prioritize information by timeline**, not by file type.
-
-### PARA is a Lifecycle
-
-Every item belongs to exactly one category based on its current relevance:
-
-| Category      | Question to Ask                    |
-| ------------- | ---------------------------------- |
-| **Projects**  | What am I working on right now?    |
-| **Areas**     | What must I maintain indefinitely? |
-| **Resources** | What can I use for reference?      |
-| **Archive**   | What is finished?                  |
-
----
-
-## 3. Directory Structure
-
-```txt
-workspace-root/
-├── Projects/    # Active work with goals & deadlines
-├── Areas/       # Ongoing responsibilities (infra, docs, product)
-├── Resources/   # Reference materials (topics of interest)
-├── Archive/     # Completed or inactive items
-└── .agent/      # Root-level configuration & workflows
-```
-
-### Conventions
-
-- **PascalCase** for top-level directories.
-- **kebab-case** for project names and files.
-- **No Git Repo at Root**: The root tracks the structure; projects contain their own repos.
-
----
-
-## 4. Projects
-
-**Definition**: A Project has a specific **Goal**, a **Deadline**, and a clear **Done Condition**.
-
-**Structure**:
-
-```txt
-Projects/
-└── my-awesome-app/
-   ├── repo/        # Git repository (Source code)
-   ├── sessions/    # Work logs (Daily session notes)
-   ├── docs/        # Project-specific documentation
-   ├── artifacts/   # AI-Agent artifacts (Plans, Walkthroughs, Tasks)
-   ├── .agent/      # Project-specific rules & workflows
-   └── project.md   # Project status & metadata
-```
-
----
-
-## 5. Areas
-
-**Definition**: Ongoing responsibilities that must be maintained indefinitely.
-
-**Standard Areas**:
-
-- `Areas/infra`: Infrastructure (CLI tools, server configs, CI/CD).
-- `docs`: Workspace standards, policies, and RFCs.
-- `Areas/architecture`: Design patterns and system architecture rules.
-- `Areas/agent`: AI agent workflows and global rules.
-
----
-
-## 6. Resources
-
-**Definition**: Reference materials used for learning, comparison, or exploration.
-
-**Examples**:
-
-- `Resources/databases`: Research on database engines (Postgres vs LibSQL).
-- `Resources/web-development`: Frontend frameworks, CSS tips.
-- `Resources/ai-agents`: Research on LLMs and agentic patterns.
-
----
-
-## 7. Archive
-
-**Definition**: Stopped active work.
-**Rule**: Projects are moved here when completed or cancelled.
-
----
-
-## 8. Agent Integration (Architecture)
-
-We follow the **Thin Root / Rich Project** philosophy for AI Agents:
-
-### 🌟 Root `.agent/` (Thin)
-
-Acts as the "Constitution" of the workspace. Only contains global rules:
-
-- `workspace.yaml`: Definition of PARA structure & Scan Order.
-- `conventions.md`: Naming & Code style conventions.
-
-### 🧩 Project `.agent/` (Rich)
-
-The "Powerhouse" of daily work. Each project has its own `.agent` folder containing:
-
-- `role.md`: Specific persona for that project.
-- `context.yaml`: Domain-specific rules.
-- `workflow.md`: Automation steps.
-
-**Agent Golden Rule**: An Agent generally only acts within the scope where it is defined.
-
-- Root Agent -> Routing & Scanning.
-- Project Agent -> Coding & Execution.
-
----
-
-## 🛠️ Workflow Management
-
-This template includes a **Workflow Catalog** located in `Resources/ai-agents/workflows/`. These are powerful, pre-configured workflows that you can "install" into your workspace.
-
-### Discovery
-
-List all available workflows in the catalog:
-
-```bash
-./para work list
-```
-
-### Installation
-
-Activate a workflow by installing it to your `.agent/workflows/` folder:
-
-```bash
-./para work install push as p-push
-./para work install end as p-end
-```
-
-Once installed, you can trigger these workflows using your agent (e.g., `/p-push`).
-
----
-
-## 9. Core Components
-
-The PARA Workspace ecosystem consists of three main pillars:
+| Pillar          | Layer        | Responsibility                    | Key Component                    |
+| :-------------- | :----------- | :-------------------------------- | :------------------------------- |
+| **🛠️ PARA CLI** | Execution    | Managing physical file structures | `Areas/infra/cli/`               |
+| **🧠 PARA Kit** | Intelligence | Strategic decision making         | `.agent/skills/para-kit/`        |
+| **📑 Workflow** | Automation   | Standardization of complex loops  | `Resources/ai-agents/workflows/` |
 
 ### 🛠️ PARA CLI (The Execution Layer)
 
-Standardized set of bash tools to manage the physical structure of your workspace:
+A high-performance set of bash utilities designed to manage the physical structure without manual overhead.
 
-- `scaffold`: Create new projects with standard folders.
-- `plan`: Generate implementation plans for agents.
-- `verify`: Generate walkthroughs for quality assurance.
-- `status`: High-level reporting on project health and deadlines.
-- `migrate`: Upgrade legacy folders to PARA v1.3.
+- **Deterministic**: Ensures every project looks and feels exactly the same.
+- **Fast**: Zero-dependency scripts that run instantly.
+- **Informative**: Status reports with overdue detection (🔥) and progress tracking.
 
 ### 🧠 PARA Kit Skill (The Intelligence Layer)
 
-Located in `.agent/skills/para-kit/`, this is the "brain" that guides your AI agent:
+The "Strategic Brain" that guides the agent's decision-making:
 
-- **Strategic Selection**: AI chooses between fast CLI scripts or collaborative workflows based on the task.
-- **Project Audit**: Automatically flags overdue tasks or stalled projects.
-- **Resource Extraction**: Suggests patterns to move to `Resources/` when a project finishes.
+- **Decision Matrix**: Automatically chooses between fast CLI scripts or deep collaborative workflows.
+- **Lifecycle Audits**: Flags stalled projects and ensures nothing stays "Unknown" for long.
+- **Pattern Learning**: Identifies reusable logic to move from `Projects` to `Resources`.
 
 ### 📑 Workflow Library (The Automation Layer)
 
-A catalog of pre-built workflows in `Resources/ai-agents/workflows/` with `p-` prefix:
+A curated catalog of pre-built, agentic workflows with `p-` prefix:
 
-- `/para`: Master management (default installed).
-- `/p-kickoff`: Structured project start.
-- `/p-plan`: Automated roadmap creation.
-- `/p-verify`: Automated verification loop.
-- `/p-release`: Clean-up and release checks.
-- `/p-retro`: Extract lessons before archiving.
+- **`/para`**: The Master Controller. Updates, installs, and audits the entire workspace.
+- **`/p-kickoff`**: Structured project onboarding between Human and AI.
+- **`/p-plan` & `/p-verify`**: The "Gold Standard" cycle of planning, coding, and provable verification.
+- **`/p-retro`**: Extraction of lessons and patterns before moving to `Archive`.
 
 ---
 
----
+## 🧩 Project Contract (Spec v1.3)
 
-## 9. Artifact-Driven Workflow
+Every project is an **Executable Document**. To ensure compatibility, projects follow a strict contract:
 
-To ensure high-quality collaboration with AI agents, we utilize an **Artifact Layer**. This layer acts as the bridge between "intent" and "execution".
-
-| Artifact Type           | Purpose                                     | Location                  | CLI Command                   |
-| :---------------------- | :------------------------------------------ | :------------------------ | :---------------------------- |
-| **Task List**           | Active TODOs with Definition of Done (DoD). | `artifacts/tasks.md`      | `(Managed manually)`          |
-| **Implementation Plan** | Step-by-step roadmap for complex features.  | `artifacts/plans/`        | `./para plan <proj> <desc>`   |
-| **Walkthrough**         | Verification steps to ensure correctness.   | `artifacts/walkthroughs/` | `./para verify <proj> <desc>` |
-
-### The Cycle
-
-1. **Plan**: Agent creates an `Implementation Plan` (`./para plan`).
-2. **Execute**: Agent implements changes in `repo/`.
-3. **Verify**: Agent creates a `Walkthrough` (`./para verify`) to test the changes.
-4. **Log**: Agent records the results in `sessions/`.
-5. **Status**: Check overall progress with `./para status`.
-
----
-
-## 10. Project Contracts (Spec v1.3)
-
-To ensure the workspace is "Agent-Executable", every project must follow a strict data contract.
-
-### `project.md` Schema (YAML Frontmatter)
-
-Every project root must have a `project.md` with:
+### YAML Frontmatter (`project.md`)
 
 ```yaml
 ---
-goal: "Clear string objective"
-deadline: "YYYY-MM-DD"
-status: "active" | "paused" | "done" | "archived"
-dod: [ "Checklist 1", "Checklist 2" ]
-last_reviewed: "YYYY-MM-DD"
+goal: "Launch the main landing page"
+deadline: "2026-03-15"
+status: "active"
+dod:
+  - "Lighthouse score > 90"
+  - "Responsive on all devices"
+last_reviewed: "2026-02-05"
 ---
 ```
 
-### `artifacts/tasks.md`
+### Artifact Layer
 
-Tasks must be formatted as linkable checklists:
-
-```markdown
-- [ ] Feature Name
-  - DoD: Definition of Done string
-  - Plan: link/to/plan.md
-  - Walkthrough: link/to/walkthrough.md
-```
+- **`artifacts/tasks.md`**: Machine-readable task tracking.
+- **`artifacts/plans/`**: Logic blueprints.
+- **`artifacts/walkthroughs/`**: Provable verification results.
 
 ---
 
-## 11. Governance
+## 🛡️ VCS & Security Boundaries
 
-The PARA Workspace is maintained through active governance:
+PARA Workspace enforces strict boundaries to keep your version control clean:
 
-- **Weekly Review**: Run `./para status` to identify overdue projects or stalled tasks.
-- **Triage**: Projects without an active `deadline` or `goal` are moved to `Resources/` or `Archive/`.
-- **Archive Ritual**: Use `/retro` workflow to extract reusable patterns into `Resources/` before archiving.
+- **The `repo/` Rule**: Only changes within the `repo/` folder are eligible for `git commit/push`.
+- **Local Metadata**: Session logs, drafts, and project metadata stay local by default, keeping your commit history focused on code.
 
 ---
 
-_Version: 1.3.0_
+## 🗺️ Roadmap & Community
+
+- [x] v1.3.0 PARA Core Spec
+- [ ] PARA Landing Page (`paraworkspace.dev`)
+- [ ] Multi-agent Routing (RFC-0003)
+- [ ] Safety Guardrails (Terminal Allowlist)
+
+Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
+
+_Latest Version: 1.3.0_
