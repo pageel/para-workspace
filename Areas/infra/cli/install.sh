@@ -44,12 +44,12 @@ echo "📑 Updating workflow catalog in Resources/..."
 mkdir -p "$WORKSPACE_ROOT/Resources/ai-agents/workflows/"
 cp -r "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/workflows/"* "$WORKSPACE_ROOT/Resources/ai-agents/workflows/"
 
-# 5. Install CORE workflows to root .agent/workflows/
-echo "🤖 Installing default slash commands to .agent/workflows/..."
+# 5. Install CORE components to root .agent/
+echo "🤖 Installing default slash commands & skills to .agent/..."
 mkdir -p "$WORKSPACE_ROOT/.agent/workflows/"
+mkdir -p "$WORKSPACE_ROOT/.agent/skills/para-kit/"
 cp "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/workflows/para.md" "$WORKSPACE_ROOT/.agent/workflows/"
-# Also install 'work.md' (formerly workflow.md) if we want agents to manage other workflows
-# For now, let's keep it simple with 'para'
+cp -r "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/skills/para-kit/"* "$WORKSPACE_ROOT/.agent/skills/para-kit/"
 
 echo ""
 echo "🎉 Installation & Sync complete!"
