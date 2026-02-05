@@ -31,3 +31,8 @@ This workflow guides the agent through workspace-level PARA maintenance.
 ### 5. Task Sync
 
 - Review the `artifacts/tasks.md` of the active project and ensure it reflects the current reality.
+
+### 6. VCS Boundary (Git Rule)
+
+- For any operation, ONLY perform `git commit` or `git push` if changes were made within the `repo/` subdirectory of a project.
+- Changes to metadata folders (`docs/`, `sessions/`, `artifacts/`) or project-level files (like `project.md`) should NOT be committed unless the repository strictly tracks them (e.g., in `repo/docs/`).

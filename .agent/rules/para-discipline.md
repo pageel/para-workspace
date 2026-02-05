@@ -18,3 +18,10 @@ As a workspace agent, you must strictly follow the PARA architecture.
 
 - When working on a project, stay within its directory.
 - Cross-project references must be handled via full paths or as resources.
+
+## 4. VCS & Git Boundaries
+
+- **The `repo/` Folder**: This is the primary Git repository for the project.
+- **Git Operations**: You MUST ONLY consider `git commit` or `git push` if there are changes within the `repo/` directory.
+- **Local Metadata**: Changes in `docs/`, `sessions/`, or `artifacts/` are project management metadata. These SHOULD NOT be committed or pushed unless they are explicitly tracked within the `repo/` (e.g., `repo/docs/`).
+- **Safety**: Never run Git commands at the project root or workspace root unless specifically updating the `para-workspace` template repository itself.
