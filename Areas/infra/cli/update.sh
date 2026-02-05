@@ -6,33 +6,25 @@
 set -e
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
-REPO_URL="https://github.com/pageel/para-workspace.git"
+# This script is in Areas/infra/cli/ - Repo root is 3 levels up
+REPO_ROOT="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
 
-echo "🔄 Checking for updates from $REPO_URL..."
+echo "🔄 Updating PARA Workspace Template from GitHub..."
 
-# Check if git is initialized
-if [ ! -d "$WORKSPACE_ROOT/.git" ]; then
-    echo "⚠️ Not a git repository. Cannot update."
+cd "$REPO_ROOT"
+
+# Check if it's a git repo
+if [ ! -d ".git" ]; then
+    echo "❌ Error: $REPO_ROOT is not a git repository."
     exit 1
 fi
 
-# Fetch upstream
-echo "Fetching latest changes..."
-git fetch origin main
+# Pull latest
+echo "📥 Pulling latest changes..."
+git pull origin main
 
-# Define safe paths to update (templates, cli, docs)
-# We avoid updating root files that user might have customized heavily, 
-# unless they are strictly structural (like .agent)
-SAFE_PATHS=(
-    ".agent"
-    "Areas/infra/cli"
-    "Areas/agent/workflows"
-    "Areas/agent/rules"
-)
+# Re-run installation to sync rules, workflows and CLI wrapper
+echo "⚙️ Re-installing to sync workspace root..."
+bash "$SCRIPT_DIR/install.sh"
 
-echo "Updating core components..."
-git checkout origin/main -- "${SAFE_PATHS[@]}"
-
-echo "✅ Update complete!"
-echo "The following components were updated: ${SAFE_PATHS[*]}"
+echo "✨ Update complete!"
