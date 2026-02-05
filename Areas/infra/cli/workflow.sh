@@ -17,21 +17,35 @@ case "$1" in
     ;;
   install)
     NAME=$2
+    ALIAS=$4 # Usage: install <name> as <alias>
+    
     if [ -z "$NAME" ]; then
       echo "❌ Error: Workflow name required."
       exit 1
     fi
+    
+    FINAL_NAME=${ALIAS:-$NAME}
     SOURCE="$CATALOG_DIR/$NAME.md"
-    DEST="$AGENT_DIR/$NAME.md"
+    DEST="$AGENT_DIR/$FINAL_NAME.md"
     
     if [ ! -f "$SOURCE" ]; then
       echo "❌ Error: Workflow '$NAME' not found in catalog."
       exit 1
     fi
     
+    if [ -f "$DEST" ]; then
+      echo "⚠️ Warning: Workflow '$FINAL_NAME' already exists in .agent/workflows/."
+      read -p "Do you want to overwrite it? (y/N) " -n 1 -r
+      echo ""
+      if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+          echo "🚫 Installation cancelled."
+          exit 0
+      fi
+    fi
+    
     mkdir -p "$AGENT_DIR"
     cp "$SOURCE" "$DEST"
-    echo "✅ Workflow '$NAME' installed to .agent/workflows/"
+    echo "✅ Workflow '$NAME' installed to .agent/workflows/ as '$FINAL_NAME.md'"
     ;;
   *)
     echo "Usage: $0 [list | install <name>]"
