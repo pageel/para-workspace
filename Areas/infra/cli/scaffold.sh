@@ -6,7 +6,10 @@
 set -e
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
+# Use environment variable if provided by 'para' wrapper, otherwise calculate relative to repo structure
+if [ -z "$WORKSPACE_ROOT" ]; then
+  WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")")")"
+fi
 PROJECT_NAME=$1
 
 if [ -z "$PROJECT_NAME" ]; then
@@ -28,7 +31,8 @@ echo "🚀 Scaffolding project: $PROJECT_NAME"
 mkdir -p "$PROJECT_PATH/repo"
 mkdir -p "$PROJECT_PATH/sessions"
 mkdir -p "$PROJECT_PATH/docs"
-mkdir -p "$PROJECT_PATH/.beads"
+mkdir -p "$PROJECT_PATH/artifacts/plans"
+mkdir -p "$PROJECT_PATH/artifacts/walkthroughs"
 mkdir -p "$PROJECT_PATH/.agent"
 
 # Create .agent templates
@@ -81,6 +85,19 @@ Define the specific goal of this project.
 - [ ] Deployed to production
 EOL
 
+# Create artifacts/tasks.md
+cat > "$PROJECT_PATH/artifacts/tasks.md" <<EOL
+# Project Tasks: $PROJECT_NAME
+
+## 🚦 Roadmap
+- [ ] Initial setup
+
+## 📋 Current Sprint
+- [ ] Task 1
+
+## ✅ Done
+EOL
+
 # Create README.md
 cat > "$PROJECT_PATH/repo/README.md" <<EOL
 # $PROJECT_NAME
@@ -94,6 +111,7 @@ Project description goes here.
 - \`repo/\`: Source code
 - \`sessions/\`: Work logs
 - \`docs/\`: Documentation
+- \`artifacts/\`: Implementation plans and walkthroughs
 EOL
 
 # Update metadata.json (requires jq)

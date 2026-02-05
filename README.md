@@ -40,11 +40,17 @@
 Initialize your workspace with the included CLI tools:
 
 ```bash
-# Create a new project (Auto-generates folder structure & metadata)
+# Create a new project
 ./para scaffold my-new-project
 
-# Update workspace templates (Safe non-destructive update)
-./para update
+# Plan a feature
+./para plan my-new-project "Implement OAuth"
+
+# Verify a task
+./para verify my-new-project "OAuth Login"
+
+# Check workspace health
+./para status
 ```
 
 ---
@@ -109,8 +115,9 @@ workspace-root/
 Projects/
 └── my-awesome-app/
    ├── repo/        # Git repository (Source code)
-   ├── sessions/    # Work logs & Backlog
-   └── docs/        # Project-specific documentation
+   ├── sessions/    # Work logs (Daily session notes)
+   ├── docs/        # Project-specific documentation
+   └── artifacts/   # AI-Agent artifacts (Plans, Walkthroughs, Tasks)
 ```
 
 ---
@@ -200,6 +207,24 @@ Once installed, you can trigger these workflows using your agent (e.g., `/push`)
 
 ---
 
+## 9. Artifact-Driven Workflow
+
+To ensure high-quality collaboration with AI agents, we utilize an **Artifact Layer**. This layer acts as the bridge between "intent" and "execution".
+
+| Artifact Type           | Purpose                                     | Location                  | CLI Command                   |
+| :---------------------- | :------------------------------------------ | :------------------------ | :---------------------------- |
+| **Task List**           | Active TODOs with Definition of Done (DoD). | `artifacts/tasks.md`      | `(Managed manually)`          |
+| **Implementation Plan** | Step-by-step roadmap for complex features.  | `artifacts/plans/`        | `./para plan <proj> <desc>`   |
+| **Walkthrough**         | Verification steps to ensure correctness.   | `artifacts/walkthroughs/` | `./para verify <proj> <desc>` |
+
+### The Cycle
+
+1. **Plan**: Agent creates an `Implementation Plan` (`./para plan`).
+2. **Execute**: Agent implements changes in `repo/`.
+3. **Verify**: Agent creates a `Walkthrough` (`./para verify`) to test the changes.
+4. **Log**: Agent records the results in `sessions/`.
+5. **Status**: Check overall progress with `./para status`.
+
 ---
 
-_Version: 1.1.0_
+_Version: 1.2.0_

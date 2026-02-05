@@ -10,6 +10,7 @@ Tài liệu này định nghĩa **chuẩn workspace cá nhân** dựa trên phư
 - Tư duy dài hạn của người làm sản phẩm & hệ thống
 
 Mục tiêu chính:
+
 - Giảm cognitive load
 - Chuẩn hoá vòng đời công việc
 - Giúp agent hiểu đúng ngữ cảnh
@@ -22,6 +23,7 @@ Mục tiêu chính:
 ### 2.1 Workspace là hệ thống tư duy, không chỉ là nơi chứa file
 
 Workspace không đơn thuần là filesystem. Nó là:
+
 - Bản đồ công việc đang diễn ra
 - Bộ nhớ dài hạn của quyết định
 - Nơi agent và con người cùng cộng tác
@@ -32,12 +34,12 @@ PARA được chọn vì nó **phản ánh cách não người phân loại côn
 
 ### 2.2 PARA không phải taxonomy, mà là lifecycle
 
-| Thành phần | Câu hỏi mà não đặt ra |
-|----------|---------------------|
-| Projects | Tôi đang làm gì? |
-| Areas | Tôi phải duy trì điều gì? |
-| Resources | Tôi có thể tham khảo gì? |
-| Archive | Cái gì đã xong? |
+| Thành phần | Câu hỏi mà não đặt ra     |
+| ---------- | ------------------------- |
+| Projects   | Tôi đang làm gì?          |
+| Areas      | Tôi phải duy trì điều gì? |
+| Resources  | Tôi có thể tham khảo gì?  |
+| Archive    | Cái gì đã xong?           |
 
 Mỗi item trong workspace **luôn thuộc đúng 1 nhóm tại 1 thời điểm**.
 
@@ -54,6 +56,7 @@ workspace-root/
 ```
 
 ### Quy ước chung
+
 - Luôn dùng **tên đầy đủ**, không viết tắt
 - PascalCase cho thư mục top-level
 - Không đặt Git repo trực tiếp ở root
@@ -65,11 +68,13 @@ workspace-root/
 ### 4.1 Định nghĩa
 
 **Project** là bất kỳ công việc nào:
+
 - Có mục tiêu rõ ràng
 - Có trạng thái (đang làm / gần xong)
 - Có điều kiện kết thúc
 
 Ví dụ:
+
 - Phát triển sản phẩm
 - Migrate hệ thống
 - Thử nghiệm kỹ thuật có output
@@ -81,11 +86,12 @@ Ví dụ:
 ```txt
 Projects/
 └─ project-name/
-   ├─ repo/
-   ├─ .beads/
-   ├─ .agent/
-   ├─ project.md
-   └─ README.md
+   ├─ repo/         # Source code
+   ├─ sessions/     # Nhật ký phiên làm việc (Daily logs)
+   ├─ artifacts/    # NEW: Artifact của Agent (Plans, Walkthroughs, Tasks)
+   ├─ docs/         # Tài liệu dự án
+   ├─ .agent/       # Cấu hình Agent riêng cho dự án
+   └─ project.md    # Trạng thái dự án
 ```
 
 ### 4.3 project.md (bắt buộc)
@@ -113,11 +119,13 @@ Project tồn tại để **được hoàn thành**, không phải để duy tr�
 ### 5.1 Định nghĩa
 
 **Area** là các lĩnh vực trách nhiệm lâu dài:
+
 - Không có điểm kết thúc
 - Project có thể đến và đi
 - Rule & decision được tích luỹ
 
 Ví dụ:
+
 - Infrastructure
 - Architecture
 - Product strategy
@@ -136,6 +144,7 @@ Areas/
 ```
 
 ### 5.3 Nguyên tắc
+
 - Không chứa code đang active
 - Chỉ chứa tài liệu, rule, policy
 - Là nơi Project "đẩy tri thức lên"
@@ -147,6 +156,7 @@ Areas/
 ### 6.1 Định nghĩa
 
 **Resources** là kho kiến thức tham khảo:
+
 - Research
 - So sánh
 - Ghi chú học tập
@@ -167,6 +177,7 @@ Resources/
 ```
 
 ### 6.3 Nguyên tắc
+
 - Không chứa quyết định cuối cùng
 - Có thể trùng lặp, chưa hoàn chỉnh
 - Agent chỉ đọc khi được yêu cầu
@@ -178,6 +189,7 @@ Resources/
 ### 7.1 Định nghĩa
 
 **Archive** là nơi đóng băng:
+
 - Project đã xong
 - Thử nghiệm thất bại
 - Ý tưởng không theo đuổi
@@ -194,6 +206,7 @@ Archive/
 ```
 
 ### 7.3 Nguyên tắc
+
 - Không chỉnh sửa thường xuyên
 - Agent mặc định ignore
 - Không xoá trừ khi chắc chắn
@@ -204,11 +217,11 @@ Archive/
 
 ### 8.1 Nguyên tắc phân vai
 
-| Thành phần | Phạm vi |
-|----------|--------|
-| Beads | Project-specific memory |
-| Agent rules | Project hoặc global |
-| Long-term knowledge | Areas |
+| Thành phần          | Phạm vi                 |
+| ------------------- | ----------------------- |
+| Beads               | Project-specific memory |
+| Agent rules         | Project hoặc global     |
+| Long-term knowledge | Areas                   |
 
 ---
 
@@ -265,23 +278,23 @@ Workspace được xem là **public API cho não người và agent**, vì vậy
 
 ### 11.2 Quy ước thư mục
 
-| Cấp | Quy ước | Ví dụ |
-|---|---|---|
-| Top-level (PARA) | PascalCase | Projects/, Areas/ |
-| Domain | PascalCase | Infrastructure/, Architecture/ |
-| Project | kebab-case | pageel-workhub/ |
-| Experiment | kebab-case | libsql-turso-migrate/ |
+| Cấp              | Quy ước    | Ví dụ                          |
+| ---------------- | ---------- | ------------------------------ |
+| Top-level (PARA) | PascalCase | Projects/, Areas/              |
+| Domain           | PascalCase | Infrastructure/, Architecture/ |
+| Project          | kebab-case | pageel-workhub/                |
+| Experiment       | kebab-case | libsql-turso-migrate/          |
 
 ---
 
 ### 11.3 Quy ước file
 
-| Loại | Quy ước | Ví dụ |
-|---|---|---|
-| Policy / Rule | kebab-case.md | backup-policy.md |
-| Architecture | kebab-case.md | git-based-cms.md |
-| Notes | snake_case.md | quick_notes.md |
-| Entry | README.md / project.md | project.md |
+| Loại          | Quy ước                | Ví dụ            |
+| ------------- | ---------------------- | ---------------- |
+| Policy / Rule | kebab-case.md          | backup-policy.md |
+| Architecture  | kebab-case.md          | git-based-cms.md |
+| Notes         | snake_case.md          | quick_notes.md   |
+| Entry         | README.md / project.md | project.md       |
 
 ---
 
@@ -303,13 +316,14 @@ Những tên này **làm agent mất khả năng suy luận ngữ nghĩa**.
 
 **Status**: Accepted  
 **Version**: 1.0.0  
-**Applies to**: Antigravity Workspace  
+**Applies to**: Antigravity Workspace
 
 ---
 
 ### 12.1 Problem
 
 Workspace phát triển theo thời gian thường gặp các vấn đề:
+
 - File và repo trộn lẫn
 - Project cũ không được đóng
 - Agent đọc quá nhiều context
@@ -331,11 +345,13 @@ Workspace phát triển theo thời gian thường gặp các vấn đề:
 ### 12.3 Consequences
 
 #### Positive
+
 - Giảm cognitive load
 - Agent routing chính xác
 - Workspace scale tốt theo năm
 
 #### Trade-offs
+
 - Cần kỷ luật archive
 - Cần viết project.md
 
@@ -354,6 +370,7 @@ Workspace phát triển theo thời gian thường gặp các vấn đề:
 ### 12.5 Graduation Rule (Quan trọng)
 
 Một Project **BẮT BUỘC** rời Projects/ khi:
+
 - Goal đạt hoặc bị huỷ
 - Không còn commit trong 30–60 ngày
 - Decision đã được tổng hợp vào Areas/
@@ -365,9 +382,29 @@ Một Project **BẮT BUỘC** rời Projects/ khi:
 PARA Workspace là **hạ tầng tư duy**, không phải mẹo sắp xếp.
 
 Nếu bạn duy trì kỷ luật:
+
 - Workspace sẽ không mục nát
 - Agent ngày càng thông minh hơn
 - Bạn không phải dọn dẹp lại từ đầu
 
 Đây là hệ thống được thiết kế để **đồng hành lâu dài**, không phải cho một giai đoạn ngắn.
 
+---
+
+## 14. Artifact-Driven Workflow (Quy trình làm việc dựa trên Artifact)
+
+Để đảm bảo chất lượng cộng tác với AI agent, chúng ta sử dụng **Lớp Artifact (Artifact Layer)**. Lớp này đóng vai trò cầu nối giữa "ý định" và "thực thi".
+
+| Loại Artifact           | Mục đích                                                    | Vị trí                    | Lệnh CLI                      |
+| :---------------------- | :---------------------------------------------------------- | :------------------------ | :---------------------------- |
+| **Task List**           | Danh sách TODO đang hoạt động với Definition of Done (DoD). | `artifacts/tasks.md`      | `(Quản lý thủ công)`          |
+| **Implementation Plan** | Kế hoạch từng bước cho các tính năng phức tạp.              | `artifacts/plans/`        | `./para plan <proj> <desc>`   |
+| **Walkthrough**         | Các bước kiểm chứng để đảm bảo tính đúng đắn.               | `artifacts/walkthroughs/` | `./para verify <proj> <desc>` |
+
+### Quy trình (The Cycle)
+
+1. **Plan (Lập kế hoạch)**: Agent tạo một `Implementation Plan` (`./para plan`).
+2. **Execute (Thực thi)**: Agent thực hiện thay đổi trong `repo/`.
+3. **Verify (Kiểm chứng)**: Agent tạo một `Walkthrough` (`./para verify`) để kiểm tra thay đổi.
+4. **Log (Ghi nhật ký)**: Agent ghi lại kết quả vào `sessions/`.
+5. **Status (Trạng thái)**: Kiểm tra tiến độ tổng thể bằng `./para status`.

@@ -6,11 +6,26 @@
 set -e
 
 CLI_DIR="./Areas/infra/cli"
+# Workspace Root is 3 levels up from the 'para' wrapper in the standard project repo
+WORKSPACE_ROOT=$(realpath "../../..")
+export WORKSPACE_ROOT
 
 case "$1" in
   scaffold)
     shift
     "$CLI_DIR/scaffold.sh" "$@"
+    ;;
+  plan)
+    shift
+    "$CLI_DIR/plan.sh" "$@"
+    ;;
+  verify)
+    shift
+    "$CLI_DIR/verify.sh" "$@"
+    ;;
+  status)
+    shift
+    "$CLI_DIR/status.sh" "$@"
     ;;
   update)
     shift
@@ -25,13 +40,18 @@ case "$1" in
     "$CLI_DIR/install.sh" "$@"
     ;;
   *)
-    echo "Usage: ./para [scaffold | update | work | install]"
+    echo "Usage: ./para [command]"
     echo ""
-    echo "Commands:"
-    echo "  scaffold <name>  Create a new project"
-    echo "  update           Update workspace templates"
-    echo "  work <command>   Manage workflows (list, install)"
-    echo "  install          Set up CLI permissions"
+    echo "Core Commands:"
+    echo "  scaffold <name>          Create a new project"
+    echo "  plan <proj> <desc>      Create an implementation plan"
+    echo "  verify <proj> [desc]    Create/list walkthroughs"
+    echo "  status                  Show workspace status"
+    echo ""
+    echo "System Commands:"
+    echo "  update                  Update workspace templates"
+    echo "  work <command>          Manage workflows (list, install)"
+    echo "  install                 Set up CLI permissions"
     exit 1
     ;;
 esac
