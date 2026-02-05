@@ -18,6 +18,29 @@ Mục tiêu chính:
 
 ---
 
+## 🚀 Bắt đầu nhanh (Quick Start)
+
+Khởi tạo và quản lý workspace bằng các công cụ CLI:
+
+```bash
+# Tạo dự án mới
+./para scaffold my-new-project
+
+# Lên kế hoạch tính năng
+./para plan my-new-project "Cài đặt OAuth"
+
+# Kiểm chứng task
+./para verify my-new-project "OAuth Login"
+
+# Kiểm tra sức khoẻ workspace
+./para status
+
+# Nâng cấp một dự án cũ sang chuẩn PARA v1.3
+./para migrate old-project-folder
+```
+
+---
+
 ## 2. Triết lý cốt lõi
 
 ### 2.1 Workspace là hệ thống tư duy, không chỉ là nơi chứa file

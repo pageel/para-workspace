@@ -27,6 +27,10 @@ case "$1" in
     shift
     "$CLI_DIR/status.sh" "$@"
     ;;
+  migrate)
+    shift
+    "$CLI_DIR/migrate.sh" "$@"
+    ;;
   update)
     shift
     "$CLI_DIR/update.sh" "$@"
@@ -47,6 +51,7 @@ case "$1" in
     echo "  plan <proj> <desc>      Create an implementation plan"
     echo "  verify <proj> [desc]    Create/list walkthroughs"
     echo "  status                  Show workspace status"
+    echo "  migrate <proj>         Upgrade project to v1.3"
     echo ""
     echo "System Commands:"
     echo "  update                  Update workspace templates"

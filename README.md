@@ -51,6 +51,9 @@ Initialize your workspace with the included CLI tools:
 
 # Check workspace health
 ./para status
+
+# Upgrade an existing folder to PARA v1.3
+./para migrate old-project-folder
 ```
 
 ---

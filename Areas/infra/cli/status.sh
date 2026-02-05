@@ -23,7 +23,7 @@ for project_dir in "$WORKSPACE_ROOT"/Projects/*; do
     deadline="no-date"
     if [ -f "$project_md" ]; then
         # Detect if it's YAML frontmatter (v1.3)
-        if grep -q "---" "$project_md"; then
+        if grep -q -e "---" "$project_md"; then
             status=$(grep "^status:" "$project_md" | cut -d'"' -f2 | cut -d"'" -f2)
             deadline=$(grep "^deadline:" "$project_md" | cut -d'"' -f2 | cut -d"'" -f2)
             
