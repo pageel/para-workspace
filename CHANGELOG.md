@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.2] - 2026-02-06
+
+### Added
+
+- **Rule Management System**: New `./para rule` CLI and `/rule` workflow to manage the `.agent/rules` library.
+- **Intelligent Merging**: `install -m` flag for workflows to blend catalog updates with user customizations.
+- **Versioning Protocol**: Global `versioning.md` rule enforcing "Propose & Approve" protocol and mandatory Plans for MAJOR upgrades.
+- **Config CLI**: New `./para config` command to manage workspace settings.
+
+### Changed
+
+- **Workflow Naming**: Removed mandatory `p-` prefix from standard workflows (e.g., `/kickoff`, `/retro`). Prefix is now optional and only suggested on conflict.
+- **Path Resolution**: Improved `workspace_root` detection in CLI scripts to support execution via wrappers.
+- **Documentation**: Updated READMEs (EN/VI) to reflect the new Rule Management and Versioning strategies.
+
 ## [1.3.1] - 2026-02-05
 
 ### Added

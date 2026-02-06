@@ -6,7 +6,10 @@
 set -e
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
+# Use exported WORKSPACE_ROOT if available, otherwise guess from script location
+if [ -z "$WORKSPACE_ROOT" ]; then
+    WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
+fi
 CATALOG_DIR="$WORKSPACE_ROOT/Resources/ai-agents/workflows"
 AGENT_DIR="$WORKSPACE_ROOT/.agent/workflows"
 
@@ -27,6 +30,8 @@ case "$1" in
     FINAL_NAME=${ALIAS:-$NAME}
     SOURCE="$CATALOG_DIR/$NAME.md"
     DEST="$AGENT_DIR/$FINAL_NAME.md"
+    MERGE=false
+    if [ "$3" == "-m" ] || [ "$5" == "-m" ]; then MERGE=true; fi
     
     if [ ! -f "$SOURCE" ]; then
       echo "❌ Error: Workflow '$NAME' not found in catalog."
@@ -34,18 +39,39 @@ case "$1" in
     fi
     
     if [ -f "$DEST" ]; then
-      echo "⚠️ Warning: Workflow '$FINAL_NAME' already exists in .agent/workflows/."
-      read -p "Do you want to overwrite it? (y/N) " -n 1 -r
-      echo ""
-      if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-          echo "🚫 Installation cancelled."
-          exit 0
+      if [ "$MERGE" == "true" ]; then
+        echo "🔄 Merging catalog workflow '$NAME' into existing '$FINAL_NAME.md'..."
+        # Create a backup
+        cp "$DEST" "$DEST.bak"
+        # Append new content but wrap it in a 'New Version' section
+        echo -e "\n\n---" >> "$DEST"
+        echo -e "## 🆕 [PARA Update] Recommended Changes\n" >> "$DEST"
+        cat "$SOURCE" >> "$DEST"
+        echo "✅ Merged. Please review '$FINAL_NAME.md' to combine logic."
+        exit 0
       fi
+      
+      echo "⚠️ Warning: Workflow '$FINAL_NAME' already exists in .agent/workflows/."
+      read -p "Do you want to overwrite it? (p: overwrite, m: merge, N: cancel) " -n 1 -r
+      echo ""
+      if [[ $REPLY =~ ^[Pp]$ ]]; then
+         cp "$SOURCE" "$DEST"
+         echo "✅ Overwritten."
+      elif [[ $REPLY =~ ^[Mm]$ ]]; then
+         # Similar merge logic
+         cp "$DEST" "$DEST.bak"
+         echo -e "\n\n---" >> "$DEST"
+         echo -e "## 🆕 [PARA Update] Recommended Changes\n" >> "$DEST"
+         cat "$SOURCE" >> "$DEST"
+         echo "✅ Merged into '$FINAL_NAME.md'. Review the bottom of the file."
+      else
+          echo "🚫 Installation cancelled."
+      fi
+    else
+      mkdir -p "$AGENT_DIR"
+      cp "$SOURCE" "$DEST"
+      echo "✅ Workflow '$NAME' installed as '$FINAL_NAME.md'"
     fi
-    
-    mkdir -p "$AGENT_DIR"
-    cp "$SOURCE" "$DEST"
-    echo "✅ Workflow '$NAME' installed to .agent/workflows/ as '$FINAL_NAME.md'"
     ;;
   *)
     echo "Usage: $0 [list | install <name>]"

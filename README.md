@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.3.1-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.3.2-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Run on Antigravity](https://img.shields.io/badge/Run%20on-Antigravity-FF6B6B.svg?style=for-the-badge&logo=rocket&logoColor=white)](https://antigravity.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
@@ -60,6 +60,7 @@ Standard PKM systems are built for human eyes. **PARA Workspace** is built for *
 - **Contract-Based Goals**: Use YAML to force the agent to recognize deadlines and "Done Conditions".
 - **Short-Term Memory**: Session logs provide the immediate "What happened last?" for seamless pick-up.
 - **Long-Term Memory**: Areas and Resources store the "How we do things" permanently.
+- **Intelligent Context Routing**: Explicit rules (RFC-0003) to ensure agents load only relevant files, saving tokens and reducing hallucinations.
 
 ---
 
@@ -144,8 +145,9 @@ The installer will set up the global `./para` command, install agent skills, and
 
 - ✅ Creates the `./para` root command.
 - ✅ Installs **PARA Kit** skills to `.agent/skills/`.
-- ✅ Syncs standard **Workflows** to `.agent/workflows/`.
-- ✅ Enforces valid AI rules in `.agent/rules/`.
+- ✅ Syncs standard **Workflows** to `.agent/workflows/` (with configurable prefixes).
+- ✅ Enforces valid AI rules in `.agent/rules/` (including Context Routing & Versioning).
+- ✅ **Version-Aware Syncing**: Only updates files if the core template is newer (Last checked: 1.3.2).
 
 ---
 
@@ -165,6 +167,9 @@ Initialize your workspace with the powerhouse CLI tools:
 
 # 📊 Check workspace health & deadlines
 ./para status
+
+# ⚙️ Customize workspace settings (e.g., workflow prefix)
+./para config set workflows.prefix "p-"
 
 # 🔄 Upgrade a legacy folder to PARA v1.3
 ./para migrate legacy-project
@@ -199,17 +204,18 @@ A high-performance set of bash utilities designed to manage the physical structu
 The "Strategic Brain" that guides the agent's decision-making:
 
 - **Decision Matrix**: Automatically chooses between fast CLI scripts or deep collaborative workflows.
+- **Intelligent Routing**: Enforces strict context-loading hierarchy (Project -> Areas -> Resources).
+- **Beads Lifecycle**: Proactively manages friction points and graduates knowledge during archival.
 - **Lifecycle Audits**: Flags stalled projects and ensures nothing stays "Unknown" for long.
-- **Pattern Learning**: Identifies reusable logic to move from `Projects` to `Resources`.
 
 ### 📑 Workflow Library (The Automation Layer)
 
-A curated catalog of pre-built, agentic workflows with `p-` prefix:
+A curated catalog of pre-built, agentic workflows:
 
 - **`/para`**: The Master Controller. Updates, installs, and audits the entire workspace.
-- **`/p-kickoff`**: Structured project onboarding between Human and AI.
-- **`/p-plan` & `/p-verify`**: The "Gold Standard" cycle of planning, coding, and provable verification.
-- **`/p-retro`**: Extraction of lessons and patterns before moving to `Archive`.
+- **`/kickoff`**: Structured project onboarding between Human and AI.
+- **`/plan` & `/verify`**: The "Gold Standard" cycle of planning, coding, and provable verification.
+- **`/retro`**: Extraction of lessons and patterns before moving to `Archive`.
 
 ---
 
@@ -244,17 +250,19 @@ last_reviewed: "2026-02-05"
 PARA Workspace enforces strict boundaries to keep your version control clean:
 
 - **The `repo/` Rule**: Only changes within the `repo/` folder are eligible for `git commit/push`.
-- **Local Metadata**: Session logs, drafts, and project metadata stay local by default, keeping your commit history focused on code.
+- **Local Metadata**: Session logs and project metadata stay local by default.
+- **Versioning Strategy**: Adheres to the `1.3.x` path. Proposals for significant upgrades require explicit approval.
+  - **MAJOR (Level 1)**: Must have a formal **Implementation Plan** and align with the **Roadmap**.
 
 ---
 
 ## 🗺️ Roadmap & Community
 
-- [x] v1.3.0 PARA Core Spec
+- [x] v1.3.2 Intelligence & Customization
 - [ ] PARA Landing Page (`paraworkspace.dev`)
-- [ ] Multi-agent Routing (RFC-0003)
+- [x] Multi-agent Routing (RFC-0003)
 - [ ] Safety Guardrails (Terminal Allowlist)
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Latest Version: 1.3.1_
+_Latest Version: 1.3.2_

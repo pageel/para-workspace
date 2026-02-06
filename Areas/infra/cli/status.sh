@@ -58,7 +58,22 @@ for project_dir in "$WORKSPACE_ROOT"/Projects/*; do
         task_count="$done/$total"
     fi
 
-    printf "  %-25s | Status: %-12s | Deadline: %-10s | Tasks: %s\n" "$project_name" "$status" "$deadline" "$task_count"
+    # Count project-specific rules and workflows
+    p_rules=$(find "$project_dir/.agent/rules" -maxdepth 1 -name "*.md" 2>/dev/null | wc -l || echo 0)
+    p_wfs=$(find "$project_dir/.agent/workflows" -maxdepth 1 -name "*.md" 2>/dev/null | wc -l || echo 0)
+
+    printf "  %-25s | Status: %-12s | Tasks: %-7s | Rules/WFs: %s/%s\n" "$project_name" "$status" "$task_count" "$p_rules" "$p_wfs"
   fi
 done
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# Global Stats
+g_rules=$(find "$WORKSPACE_ROOT/.agent/rules" -maxdepth 1 -name "*.md" 2>/dev/null | wc -l || echo 0)
+g_wfs=$(find "$WORKSPACE_ROOT/.agent/workflows" -maxdepth 1 -name "*.md" 2>/dev/null | wc -l || echo 0)
+c_rules=$(find "$WORKSPACE_ROOT/Resources/ai-agents/rules" -maxdepth 1 -name "*.md" 2>/dev/null | wc -l || echo 0)
+c_wfs=$(find "$WORKSPACE_ROOT/Resources/ai-agents/workflows" -maxdepth 1 -name "*.md" 2>/dev/null | wc -l || echo 0)
+
+echo "🌍 Global Stats:"
+echo "  Core Rules: $g_rules (Library: $c_rules)"
+echo "  Core Workflows: $g_wfs (Library: $c_wfs)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

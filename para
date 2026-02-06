@@ -39,9 +39,17 @@ case "$1" in
     shift
     "$CLI_DIR/workflow.sh" "$@"
     ;;
+  rule)
+    shift
+    "$CLI_DIR/rule.sh" "$@"
+    ;;
   install)
     shift
     "$CLI_DIR/install.sh" "$@"
+    ;;
+  config)
+    shift
+    "$CLI_DIR/config.sh" "$@"
     ;;
   *)
     echo "Usage: ./para [command]"
@@ -56,6 +64,8 @@ case "$1" in
     echo "System Commands:"
     echo "  update                  Update workspace templates"
     echo "  work <command>          Manage workflows (list, install)"
+    echo "  rule <command>          Manage rules (list, install)"
+    echo "  config <get|set|list>   Manage workspace settings"
     echo "  install                 Set up CLI permissions"
     exit 1
     ;;

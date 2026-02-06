@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.3.1-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.3.2-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Run on Antigravity](https://img.shields.io/badge/Run%20on-Antigravity-FF6B6B.svg?style=for-the-badge&logo=rocket&logoColor=white)](https://antigravity.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-tích-hợp-agent)
@@ -60,6 +60,7 @@ Các hệ thống PKM thông thường được thiết kế cho mắt người.
 - **Mục tiêu theo Hợp đồng (Contracts)**: Sử dụng YAML để ép Agent phải nhận diện Deadline và "Điều kiện hoàn thành".
 - **Bộ nhớ ngắn hạn**: Nhật ký Session cung cấp thông tin "Điều gì vừa xảy ra?" để Agent tiếp nối công việc mượt mà.
 - **Bộ nhớ dài hạn**: Areas và Resources lưu trữ "Cách chúng ta làm việc" một cách vĩnh viễn.
+- **Định tuyến ngữ cảnh thông minh (Context Routing)**: Các quy tắc tường minh (RFC-0003) đảm bảo Agent chỉ nạp các file thực sự liên quan, tiết kiệm token và giảm ảo tưởng.
 
 ---
 
@@ -142,8 +143,9 @@ Trình cài đặt sẽ thiết lập lệnh `./para` toàn cục, cài đặt c
 
 - ✅ Tạo lệnh `./para` ở thư mục gốc.
 - ✅ Cài đặt các kỹ năng **PARA Kit** vào `.agent/skills/`.
-- ✅ Đồng bộ các **Workflows** tiêu chuẩn vào `.agent/workflows/`.
-- ✅ Thực thi các quy tắc AI hợp lệ trong `.agent/rules/`.
+- ✅ Đồng bộ các **Workflows** tiêu chuẩn vào `.agent/workflows/` (có thể tùy chỉnh tiền tố).
+- ✅ Thực thi các quy tắc AI hợp lệ trong `.agent/rules/` (bao gồm Context Routing & Versioning).
+- ✅ **Cơ chế Đồng bộ Thông minh**: Chỉ cập nhật file nếu bản mẫu gốc mới hơn hoặc file chưa tồn tại (Kiểm tra lần cuối: 1.3.2).
 
 ---
 
@@ -163,6 +165,9 @@ Khởi tạo workspace của bạn bằng các công cụ CLI mạnh mẽ:
 
 # 📊 Kiểm tra "sức khỏe" & thời hạn dự án
 ./para status
+
+# ⚙️ Tùy chỉnh cấu hình workspace (vd: tiền tố workflow)
+./para config set workflows.prefix "p-"
 
 # 🔄 Nâng cấp thư mục cũ sang chuẩn PARA v1.3
 ./para migrate legacy-project
@@ -199,17 +204,18 @@ Bộ công cụ bash hiệu năng cao giúp quản lý cấu trúc vật lý mà
 "Bộ não chiến lược" dẫn dắt việc ra quyết định của Agent:
 
 - **Ma trận quyết định**: Tự động chọn giữa CLI scripts nhanh hoặc workflow cộng tác sâu.
+- **Định tuyến thông minh**: Thực thi phân cấp nạp ngữ cảnh nghiêm ngặt (Project -> Areas -> Resources).
+- **Vòng đời Beads**: Chủ động quản lý các điểm ma sát và "tốt nghiệp" kiến thức khi lưu trữ.
 - **Kiểm toán vòng đời**: Đánh dấu các dự án bị đình trệ và đảm bảo không có gì ở trạng thái "Unknown".
-- **Cộng hưởng tri thức**: Nhận diện các pattern có thể tái sử dụng để chuyển từ `Projects` sang `Resources`.
 
 ### 📑 Thư viện Workflow (Tầng tự động hóa)
 
-Danh mục các quy trình làm việc agentic được tuyển chọn (với tiền tố `p-`):
+Danh mục các quy trình làm việc agentic được tuyển chọn:
 
 - **`/para`**: Bộ điều khiển trung tâm. Cập nhật, cài đặt và kiểm toán toàn bộ workspace.
-- **`/p-kickoff`**: Quy trình khởi động dự án bài bản giữa Người và AI.
-- **`/p-plan` & `/p-verify`**: Vòng lặp "Tiêu chuẩn Vàng" gồm lập kế hoạch, viết code và kiểm chứng có bằng chứng.
-- **`/p-retro`**: Trích xuất bài học và pattern trước khi đưa vào `Archive`.
+- **`/kickoff`**: Quy trình khởi động dự án bài bản giữa Người và AI.
+- **`/plan` & `/verify`**: Vòng lặp "Tiêu chuẩn Vàng" gồm lập kế hoạch, viết code và kiểm chứng có bằng chứng.
+- **`/retro`**: Trích xuất bài học và pattern trước khi đưa vào `Archive`.
 
 ---
 
@@ -243,18 +249,19 @@ last_reviewed: "2026-02-05"
 
 PARA Workspace thực thi ranh giới nghiêm ngặt để giữ cho lịch sử Git luôn sạch sẽ:
 
-- **Quy tắc `repo/`**: Chỉ các thay đổi bên trong thư mục `repo/` mới được `git commit/push`.
-- **Metadata cục bộ**: Nhật ký session, bản nháp và metadata dự án được giữ ở local theo mặc định. Điều này giữ cho lịch sử commit tập trung vào code.
+- **Quy tắc `repo/`**: Chỉ commit các thay đổi trong `repo/`. Metadata và session được giữ ở local theo mặc định để giữ lịch sử commit tập trung vào code.
+- **Chiến lược Phiên bản**: Tuân thủ nhánh `1.3.x`. Mọi đề xuất nâng cấp cần sự chấp thuận của người dùng.
+  - **Phiên bản MAJOR (Cấp 1)**: Bắt buộc phải có **Bản kế hoạch triển khai (Plan)** và khớp với **Lộ trình (Roadmap)** của dự án.
 
 ---
 
 ## 🗺️ Lộ trình phát triển
 
-- [x] v1.3.0 PARA Core Spec
+- [x] v1.3.2 Trí tuệ & Tùy chỉnh
 - [ ] PARA Landing Page (`paraworkspace.dev`)
-- [ ] Multi-agent Routing (RFC-0003)
+- [x] Multi-agent Routing (RFC-0003)
 - [ ] Safety Guardrails (Terminal Allowlist)
 
 Được phát triển với ❤️ bởi **Pageel**. Chuẩn hóa tương lai của Agentic PKM.
 
-_Phiên bản: 1.3.1_
+_Phiên bản: 1.3.2_

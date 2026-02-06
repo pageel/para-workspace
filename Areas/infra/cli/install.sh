@@ -8,6 +8,23 @@ set -e
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
  # Path: Areas/infra/cli -> Root is 3 levels up
 WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")")")")"
+PROJECT_REL_PATH="Projects/para-workspace/repo"
+
+# Helper: Sync only if source is newer or destination doesn't exist
+sync_if_newer() {
+    local src="$1"
+    local dest="$2"
+    
+    # Check if paths are exactly the same physical file
+    if [ -f "$src" ] && [ "$(realpath -m "$src")" == "$(realpath -m "$dest")" ]; then
+        return 0
+    fi
+
+    if [ ! -f "$dest" ] || [ "$src" -nt "$dest" ]; then
+        cp "$src" "$dest"
+        return 0
+    fi
+}
 
 echo "🚀 Installing PARA Workspace CLI & Standards..."
 
@@ -19,10 +36,38 @@ chmod +x "$SCRIPT_DIR/plan.sh"
 chmod +x "$SCRIPT_DIR/verify.sh"
 chmod +x "$SCRIPT_DIR/status.sh"
 chmod +x "$SCRIPT_DIR/migrate.sh"
+chmod +x "$SCRIPT_DIR/config.sh"
+chmod +x "$SCRIPT_DIR/rule.sh"
 
-# 2. Install/Update the root 'para' wrapper
+# 2. Initialize/Sync Workspace Config
+"$SCRIPT_DIR/config.sh" list > /dev/null
+
+# 3. Sync global rules to root .agent/rules/
+echo "⚖️ Syncing global rules to root .agent/rules/..."
+mkdir -p "$WORKSPACE_ROOT/.agent/rules/"
+SYNK_RULES=(
+    "para-discipline.md"
+    "artifact-standard.md"
+    "context-rules.md"
+    "versioning.md"
+)
+
+for rule in "${SYNK_RULES[@]}"; do
+    sync_if_newer "$WORKSPACE_ROOT/$PROJECT_REL_PATH/.agent/rules/$rule" "$WORKSPACE_ROOT/.agent/rules/$rule"
+done
+
+# 4. Sync rules catalog to Resources/
+echo "📜 Updating rules catalog in Resources/..."
+mkdir -p "$WORKSPACE_ROOT/Resources/ai-agents/rules/"
+for f in "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/rules/"*.md; do
+    if [ -f "$f" ]; then
+        sync_if_newer "$f" "$WORKSPACE_ROOT/Resources/ai-agents/rules/$(basename "$f")"
+    fi
+done
+
+# 5. Install/Update the root 'para' wrapper
 echo "📦 Installing root 'para' wrapper..."
-PROJECT_REL_PATH="Projects/para-workspace/repo"
+# (Root wrapper always regenerated to ensure path consistency)
 cat > "$WORKSPACE_ROOT/para" <<EOL
 #!/bin/bash
 # PARA Root Wrapper (Auto-generated)
@@ -33,25 +78,31 @@ cd "\$REAL_CLI_DIR" && ./para "\$@"
 EOL
 chmod +x "$WORKSPACE_ROOT/para"
 
-# 3. Sync global rules to root .agent/rules/
-echo "⚖️ Syncing global rules to root .agent/rules/..."
-mkdir -p "$WORKSPACE_ROOT/.agent/rules/"
-cp "$WORKSPACE_ROOT/$PROJECT_REL_PATH/.agent/rules/para-discipline.md" "$WORKSPACE_ROOT/.agent/rules/"
-cp "$WORKSPACE_ROOT/$PROJECT_REL_PATH/.agent/rules/artifact-standard.md" "$WORKSPACE_ROOT/.agent/rules/"
-
-# 4. Sync global workflows to Resources/ (for catalog)
+# 5. Sync global workflows to Resources/ (for catalog)
 echo "📑 Updating workflow catalog in Resources/..."
 mkdir -p "$WORKSPACE_ROOT/Resources/ai-agents/workflows/"
-# Clean up legacy workflows (those without p- prefix, except .keep and folder structure)
-find "$WORKSPACE_ROOT/Resources/ai-agents/workflows/" -maxdepth 1 -type f ! -name "p-*" ! -name ".keep" -delete
-cp -r "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/workflows/"* "$WORKSPACE_ROOT/Resources/ai-agents/workflows/"
 
-# 5. Install CORE components to root .agent/
+# Sync workflows WITHOUT prefix by default (prefix only when conflicts occur during manual install)
+for f in "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/workflows/"*.md; do
+    if [ -f "$f" ]; then
+        sync_if_newer "$f" "$WORKSPACE_ROOT/Resources/ai-agents/workflows/$(basename "$f")"
+    fi
+done
+
+# 6. Install CORE components to root .agent/
 echo "🤖 Installing default slash commands & skills to .agent/..."
 mkdir -p "$WORKSPACE_ROOT/.agent/workflows/"
 mkdir -p "$WORKSPACE_ROOT/.agent/skills/para-kit/"
-cp "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/workflows/para.md" "$WORKSPACE_ROOT/.agent/workflows/"
-cp -r "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/skills/para-kit/"* "$WORKSPACE_ROOT/.agent/skills/para-kit/"
+
+# Install the primary 'para' slash command (without project prefix usually)
+sync_if_newer "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/workflows/para.md" "$WORKSPACE_ROOT/.agent/workflows/para.md"
+
+# Sync Skill content
+for f in "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/skills/para-kit/"*; do
+    if [ -f "$f" ]; then
+        sync_if_newer "$f" "$WORKSPACE_ROOT/.agent/skills/para-kit/$(basename "$f")"
+    fi
+done
 
 echo ""
 echo "🎉 Installation & Sync complete!"
