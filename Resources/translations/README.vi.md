@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.3.2-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.3.3-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Run on Antigravity](https://img.shields.io/badge/Run%20on-Antigravity-FF6B6B.svg?style=for-the-badge&logo=rocket&logoColor=white)](https://antigravity.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-tích-hợp-agent)
@@ -265,4 +265,4 @@ PARA Workspace thực thi ranh giới nghiêm ngặt để giữ cho lịch sử
 
 Được phát triển với ❤️ bởi **Pageel**. Chuẩn hóa tương lai của Agentic PKM.
 
-_Phiên bản: 1.3.2_
+_Phiên bản mới nhất: 1.3.3_
