@@ -213,6 +213,7 @@ The "Strategic Brain" that guides the agent's decision-making:
 A curated catalog of pre-built, agentic workflows:
 
 - **`/para`**: The Master Controller. Updates, installs, and audits the entire workspace.
+- **`/install`**: Smart agentic installer for rules and workflows (Start here for updates).
 - **`/kickoff`**: Structured project onboarding between Human and AI.
 - **`/plan` & `/verify`**: The "Gold Standard" cycle of planning, coding, and provable verification.
 - **`/retro`**: Extraction of lessons and patterns before moving to `Archive`.

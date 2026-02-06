@@ -213,6 +213,7 @@ Bộ công cụ bash hiệu năng cao giúp quản lý cấu trúc vật lý mà
 Danh mục các quy trình làm việc agentic được tuyển chọn:
 
 - **`/para`**: Bộ điều khiển trung tâm. Cập nhật, cài đặt và kiểm toán toàn bộ workspace.
+- **`/install`**: Trình cài đặt thông minh cho rules và workflows (Dùng cái này để cập nhật).
 - **`/kickoff`**: Quy trình khởi động dự án bài bản giữa Người và AI.
 - **`/plan` & `/verify`**: Vòng lặp "Tiêu chuẩn Vàng" gồm lập kế hoạch, viết code và kiểm chứng có bằng chứng.
 - **`/retro`**: Trích xuất bài học và pattern trước khi đưa vào `Archive`.

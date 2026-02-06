@@ -30,50 +30,14 @@ case "$1" in
     FINAL_NAME=${ALIAS:-$NAME}
     SOURCE="$CATALOG_DIR/$NAME.md"
     DEST="$AGENT_DIR/$FINAL_NAME.md"
-    MERGE=false
-    if [ "$3" == "-m" ] || [ "$5" == "-m" ]; then MERGE=true; fi
-    
-    if [ ! -f "$SOURCE" ]; then
-      echo "❌ Error: Workflow '$NAME' not found in catalog."
-      exit 1
-    fi
-    
     if [ -f "$DEST" ]; then
-      if [ "$MERGE" == "true" ]; then
-        echo "🔄 Merging catalog workflow '$NAME' into existing '$FINAL_NAME.md'..."
-        # Create a backup
-        cp "$DEST" "$DEST.bak"
-        # Append new content but wrap it in a 'New Version' section
-        echo -e "\n\n---" >> "$DEST"
-        echo -e "## 🆕 [PARA Update] Recommended Changes\n" >> "$DEST"
-        cat "$SOURCE" >> "$DEST"
-        echo "✅ Merged. Please review '$FINAL_NAME.md' to combine logic."
-        exit 0
-      fi
       
-      echo "⚠️ Warning: Workflow '$FINAL_NAME.md' already exists."
-      read -p "Choose action: [o]verwrite, [m]erge, [r]ename, [c]ancel? " -n 1 -r
+      echo "❌ Error: Workflow '$FINAL_NAME.md' already exists."
+      echo "💡 To update/merge/overwrite, please use the Agentic Workflow:"
       echo ""
-      if [[ $REPLY =~ ^[Oo]$ ]]; then
-         cp "$SOURCE" "$DEST"
-         echo "✅ Overwritten '$FINAL_NAME.md'."
-      elif [[ $REPLY =~ ^[Mm]$ ]]; then
-         # Merge logic
-         cp "$DEST" "$DEST.bak"
-         echo -e "\n\n---" >> "$DEST"
-         echo -e "## 🆕 [PARA Update] Recommended Changes\n" >> "$DEST"
-         cat "$SOURCE" >> "$DEST"
-         echo "✅ Merged into '$FINAL_NAME.md'. (Backup: '$FINAL_NAME.md.bak')"
-      elif [[ $REPLY =~ ^[Rr]$ ]]; then
-         # Rename logic (Auto-suggest p- prefix)
-         SUGGESTED="p-$FINAL_NAME"
-         read -p "Enter new alias (default: $SUGGESTED): " NEW_ALIAS
-         NEW_ALIAS=${NEW_ALIAS:-$SUGGESTED}
-         cp "$SOURCE" "$AGENT_DIR/$NEW_ALIAS.md"
-         echo "✅ Installed as '$NEW_ALIAS.md' (Original '$FINAL_NAME.md' preserved)."
-      else
-          echo "🚫 Installation cancelled."
-      fi
+      echo "   @[/install] type=work name=$NAME"
+      echo ""
+      exit 1
     else
       mkdir -p "$AGENT_DIR"
       cp "$SOURCE" "$DEST"

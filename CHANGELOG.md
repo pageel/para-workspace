@@ -6,9 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Start Installer (`/install`)**: New agentic workflow for smart installation, updates, and conflict resolution (Overwrite/Merge/Rename).
+- **Intelligent Merge (`/merge`)**: Semantic merge workflow replacing dumb CLI append logic.
 - **Rule Management System**: New `./para rule` CLI and `/rule` workflow to manage the `.agent/rules` library.
-- **Intelligent Merging**: `install -m` flag for workflows to blend catalog updates with user customizations.
-- **Versioning Protocol**: Global `versioning.md` rule enforcing "Propose & Approve" protocol and mandatory Plans for MAJOR upgrades.
 - **Config CLI**: New `./para config` command to manage workspace settings.
 
 ### Changed

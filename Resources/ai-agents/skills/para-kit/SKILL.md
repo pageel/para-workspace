@@ -10,7 +10,6 @@ Intelligence for managing an "Agent-Executable" PARA workspace. This skill helps
 4. **Catalog Management**: Uses `./para work` and `./para rule` to manage personal libraries.
 5. **Configuration & Customization**: Uses `./para config` for workspace settings.
 6. **Versioning Discipline**: Enforces the 1.3.x patch branch (user-approved minor jumps only).
-7. **Safe Merging**: Recommends `install -m` to blend catalog updates with user-customized workflows.
 
 ## Selection Strategy (Workflow vs. Script)
 
