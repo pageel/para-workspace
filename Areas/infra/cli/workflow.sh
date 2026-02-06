@@ -51,19 +51,26 @@ case "$1" in
         exit 0
       fi
       
-      echo "⚠️ Warning: Workflow '$FINAL_NAME' already exists in .agent/workflows/."
-      read -p "Do you want to overwrite it? (p: overwrite, m: merge, N: cancel) " -n 1 -r
+      echo "⚠️ Warning: Workflow '$FINAL_NAME.md' already exists."
+      read -p "Choose action: [o]verwrite, [m]erge, [r]ename, [c]ancel? " -n 1 -r
       echo ""
-      if [[ $REPLY =~ ^[Pp]$ ]]; then
+      if [[ $REPLY =~ ^[Oo]$ ]]; then
          cp "$SOURCE" "$DEST"
-         echo "✅ Overwritten."
+         echo "✅ Overwritten '$FINAL_NAME.md'."
       elif [[ $REPLY =~ ^[Mm]$ ]]; then
-         # Similar merge logic
+         # Merge logic
          cp "$DEST" "$DEST.bak"
          echo -e "\n\n---" >> "$DEST"
          echo -e "## 🆕 [PARA Update] Recommended Changes\n" >> "$DEST"
          cat "$SOURCE" >> "$DEST"
-         echo "✅ Merged into '$FINAL_NAME.md'. Review the bottom of the file."
+         echo "✅ Merged into '$FINAL_NAME.md'. (Backup: '$FINAL_NAME.md.bak')"
+      elif [[ $REPLY =~ ^[Rr]$ ]]; then
+         # Rename logic (Auto-suggest p- prefix)
+         SUGGESTED="p-$FINAL_NAME"
+         read -p "Enter new alias (default: $SUGGESTED): " NEW_ALIAS
+         NEW_ALIAS=${NEW_ALIAS:-$SUGGESTED}
+         cp "$SOURCE" "$AGENT_DIR/$NEW_ALIAS.md"
+         echo "✅ Installed as '$NEW_ALIAS.md' (Original '$FINAL_NAME.md' preserved)."
       else
           echo "🚫 Installation cancelled."
       fi
