@@ -10,11 +10,19 @@ CLI_DIR="./Areas/infra/cli"
 WORKSPACE_ROOT=$(realpath "../../..")
 export WORKSPACE_ROOT
 
+chmod +x "$CLI_DIR/review.sh"
+
+
 case "$1" in
   scaffold)
     shift
     "$CLI_DIR/scaffold.sh" "$@"
     ;;
+  review)
+    shift
+    "$CLI_DIR/review.sh" "$@"
+    ;;
+
   plan)
     shift
     "$CLI_DIR/plan.sh" "$@"
@@ -58,7 +66,8 @@ case "$1" in
     echo "  scaffold <name>          Create a new project"
     echo "  plan <proj> <desc>      Create an implementation plan"
     echo "  verify <proj> [desc]    Create/list walkthroughs"
-    echo "  status                  Show workspace status"
+    echo "  status                  Show workspace status (Simple)"
+    echo "  review                  Audit workspace health (Deep)"
     echo "  migrate <proj>         Upgrade project to v1.3"
     echo ""
     echo "System Commands:"
