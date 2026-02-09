@@ -45,15 +45,10 @@ chmod +x "$SCRIPT_DIR/rule.sh"
 # 3. Sync global rules to root .agent/rules/
 echo "⚖️ Syncing global rules to root .agent/rules/..."
 mkdir -p "$WORKSPACE_ROOT/.agent/rules/"
-SYNK_RULES=(
-    "para-discipline.md"
-    "artifact-standard.md"
-    "context-rules.md"
-    "versioning.md"
-)
-
-for rule in "${SYNK_RULES[@]}"; do
-    sync_if_newer "$WORKSPACE_ROOT/$PROJECT_REL_PATH/.agent/rules/$rule" "$WORKSPACE_ROOT/.agent/rules/$rule"
+for f in "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/rules/"*.md; do
+    if [ -f "$f" ]; then
+        sync_if_newer "$f" "$WORKSPACE_ROOT/.agent/rules/$(basename "$f")"
+    fi
 done
 
 # 4. Sync rules catalog to Resources/
@@ -94,8 +89,13 @@ echo "🤖 Installing default slash commands & skills to .agent/..."
 mkdir -p "$WORKSPACE_ROOT/.agent/workflows/"
 mkdir -p "$WORKSPACE_ROOT/.agent/skills/para-kit/"
 
-# Install the primary 'para' slash command (without project prefix usually)
-sync_if_newer "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/workflows/para.md" "$WORKSPACE_ROOT/.agent/workflows/para.md"
+# Install ALL workflows from catalog to .agent/workflows/
+# This ensures "Factory Reset" capability and full feature availability
+for f in "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/workflows/"*.md; do
+    if [ -f "$f" ]; then
+        sync_if_newer "$f" "$WORKSPACE_ROOT/.agent/workflows/$(basename "$f")"
+    fi
+done
 
 # Sync Skill content
 for f in "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/skills/para-kit/"*; do

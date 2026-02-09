@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.3.4-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.3.3-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Run on Antigravity](https://img.shields.io/badge/Run%20on-Antigravity-FF6B6B.svg?style=for-the-badge&logo=rocket&logoColor=white)](https://antigravity.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
@@ -210,48 +210,13 @@ The "Strategic Brain" that guides the agent's decision-making:
 
 ### 📑 Workflow Library (The Automation Layer)
 
-A curated mechanism for **standardizing complex collaborative loops** between humans and agents. While the full list is in the [Catalog](#-workflow--rule-catalog), these core flows define the PARA experience:
+A curated catalog of pre-built, agentic workflows:
 
-- **`/para`**: The **Master Controller**. Updates, installs, and audits the entire workspace.
+- **`/para`**: The Master Controller. Updates, installs, and audits the entire workspace.
 - **`/install`**: Smart agentic installer for rules and workflows (Start here for updates).
 - **`/kickoff`**: Structured project onboarding between Human and AI.
 - **`/plan` & `/verify`**: The "Gold Standard" cycle of planning, coding, and provable verification.
 - **`/retro`**: Extraction of lessons and patterns before moving to `Archive`.
-
-> **Tip:** The `/para` command is your gateway. It can rout to any other workflow or perform system-wide health checks.
-
----
-
-## 📚 Workflow & Rule Catalog
-
-The `para-workspace` comes with a rich set of built-in capabilities in `.agent/` (or `Resources/ai-agents/`).
-
-### Workflows
-
-| Command            | Description                                                             |
-| :----------------- | :---------------------------------------------------------------------- |
-| **`/backlog`**     | Manage project features and bugs with standardized status tracking.     |
-| **`/config`**      | Manage workspace configuration (e.g., prefixes) and metadata.           |
-| **`/end`**         | Log session, summarize progress, and close the working day.             |
-| **`/install`**     | Intelligent installer for workflows and rules (handles updates/merges). |
-| **`/merge`**       | Semantic merge tool for resolving workflow conflicts.                   |
-| **`/new-project`** | Initialize a new project with standard scaffolding and artifacts.       |
-| **`/open`**        | Start a working session with context from previous logs.                |
-| **`/para`**        | Master controller for workspace audit and management.                   |
-| **`/push`**        | Fast commit and push changes to GitHub with verification.               |
-| **`/release`**     | Pre-release quality gate and verification checklist.                    |
-| **`/retro`**       | Conduct a project retrospective before archiving.                       |
-| **`/rule`**        | Manage and enforce workspace rules.                                     |
-| **`/verify`**      | Verify task completion using walkthroughs and evidence.                 |
-
-### Rules
-
-| Rule                     | Description                                                     |
-| :----------------------- | :-------------------------------------------------------------- |
-| **`context-rules.md`**   | RFC-0003: Routing rules for efficient context loading.          |
-| **`naming.md`**          | Standard naming conventions (`kebab-case`, `PascalCase`, etc.). |
-| **`para-discipline.md`** | Core principles of the PARA architecture.                       |
-| **`versioning.md`**      | Version control strategy (v1.3.x) and release policy.           |
 
 ---
 
@@ -301,4 +266,4 @@ PARA Workspace enforces strict boundaries to keep your version control clean:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Latest Version: 1.3.4_
+_Latest Version: 1.3.3_

@@ -1,30 +1,20 @@
-# Global Versioning Rule
+# Versioning Rule
 
-This rule defines the standardized versioning logic for the entire PARA Workspace and all its embedded projects.
+This rule defines how versions are managed in this workspace.
 
-## 1. Scope & Precedence
+## 1. Version Format
 
-- **Global Applicability**: This rule applies to the workspace itself and every project in `Projects/` by default.
-- **Project Overrides**: If a specific project has its own `rules/versioning.md` or versioning instructions in `project.md`, those specific rules take precedence over this global one.
+- Use Semantic Versioning (SemVer): `MAJOR.MINOR.PATCH`.
+- Current release branch: `1.3.4 (Full Sync)`.
 
-## 2. Version Format (SemVer)
+## 2. Increment Policy
 
-- Format: `MAJOR.MINOR.PATCH` (e.g., `1.4.2`).
-- Location: Workspace root uses `VERSION` file. Projects use their respective `project.md` YAML or specific version tracking.
+- **PATCH increments** (`1.3.1` -> `1.3.2`): Used for bug fixes, documentation updates, and small features.
+- **MINOR increments** (`1.3.4 (Full Sync)` -> `1.4.0`): Used for significant new features or architectural changes.
+- **MAJOR increments**: Used for breaking changes.
 
-## 3. Increment Policy Details
+## 3. User Approval (CRITICAL)
 
-- **PATCH** (`x.y.PATCH`): Bug fixes, internal refactoring, minor documentation, and small features that don't change the user-facing contract.
-- **MINOR** (`x.MINOR.z`): New features, significant enhancements, or non-breaking structural changes.
-- **MAJOR** (`MAJOR.y.z`): Breaking changes, major architectural shifts, or complete redesigns.
-  - **MANDATORY**: A MAJOR update MUST have a formal **Implementation Plan** (e.g., in `artifacts/plans/`) and be explicitly aligned with the project's **Roadmap** (e.g., in `README.md`).
-
-## 4. Propose & Approve Protocol (CRITICAL)
-
-The Agent MUST NOT choose or apply a new version number arbitrarily for any release level increase:
-
-1.  **Analyze**: Determine the suggested scope (Patch, Minor, or Major).
-2.  **Propose**: Suggest the **exact next version number** in the conversation/session log.
-    - _Example_: "I recommend incrementing the version to `1.3.3` for these bug fixes."
-3.  **Approve**: Wait for the USER to explicitly say "OK", "Approve", or similar before updating the version files/metadata.
-4.  **Minor/Major Jumps**: Any jump to a new Minor (e.g., `1.3.x` -> `1.4.0`) or Major version **MANDATORILY** requires user confirmation before the change is applied.
+- Do NOT increment the **MINOR** version (e.g., jumping from `1.3.4 (Full Sync)` to `1.4.0`) without explicit approval from the USER.
+- If significant features are added, propose the jump to `1.4.0` in the session log and wait for user confirmation.
+- Until approval is granted, continue incrementing the **PATCH** number (e.g., `1.3.2`, `1.3.3`, etc.).

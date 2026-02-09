@@ -4,7 +4,7 @@ description: Intelligent agentic installer for workflows and rules. Handles upda
 
 # /install [type] [name]
 
-> **Workspace Version:** 1.3.2 (Smart Management)
+> **Workspace Version:** 1.3.4 (Smart Management)
 
 Use this workflow to install or update components from the PARA Catalog. It handles conflicts intelligently.
 

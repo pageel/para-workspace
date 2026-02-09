@@ -210,13 +210,48 @@ Bộ công cụ bash hiệu năng cao giúp quản lý cấu trúc vật lý mà
 
 ### 📑 Thư viện Workflow (Tầng tự động hóa)
 
-Danh mục các quy trình làm việc agentic được tuyển chọn:
+Cơ chế được tuyển chọn để **chuẩn hóa các vòng lặp cộng tác phức tạp** giữa con người và AI. Mặc dù danh sách đầy đủ nằm trong [Mục lục](#-danh-mục-workflow--quy-tắc), các luồng cốt lõi này định hình trải nghiệm PARA:
 
-- **`/para`**: Bộ điều khiển trung tâm. Cập nhật, cài đặt và kiểm toán toàn bộ workspace.
-- **`/install`**: Trình cài đặt thông minh cho rules và workflows (Dùng cái này để cập nhật).
+- **`/para`**: **Bộ điều khiển trung tâm (Master Controller)**. Cập nhật, cài đặt và kiểm toán toàn bộ workspace.
+- **`/install`**: Trình cài đặt thông minh cho rules và workflows (Bắt đầu tại đây để cập nhật).
 - **`/kickoff`**: Quy trình khởi động dự án bài bản giữa Người và AI.
 - **`/plan` & `/verify`**: Vòng lặp "Tiêu chuẩn Vàng" gồm lập kế hoạch, viết code và kiểm chứng có bằng chứng.
 - **`/retro`**: Trích xuất bài học và pattern trước khi đưa vào `Archive`.
+
+> **Mẹo:** Lệnh `/para` là cổng thông tin của bạn. Nó có thể điều hướng đến bất kỳ quy trình làm việc nào khác hoặc thực hiện kiểm tra tình trạng toàn hệ thống.
+
+---
+
+## 📚 Danh mục Workflow & Quy tắc
+
+`para-workspace` đi kèm với một bộ sưu tập các tính năng được tích hợp sẵn trong `.agent/` (hoặc `Resources/ai-agents/`).
+
+### Workflows
+
+| Lệnh               | Mô tả                                                                    |
+| :----------------- | :----------------------------------------------------------------------- |
+| **`/backlog`**     | Quản lý tính năng và lỗi của dự án với theo dõi trạng thái chuẩn hóa.    |
+| **`/config`**      | Quản lý cấu hình workspace (ví dụ: tiền tố) và metadata.                 |
+| **`/end`**         | Ghi nhật ký phiên làm việc, tổng hợp tiến độ và đóng ngày làm việc.      |
+| **`/install`**     | Trình cài đặt thông minh cho workflow và rule (xử lý cập nhật/hợp nhất). |
+| **`/merge`**       | Công cụ hợp nhất ngữ nghĩa để giải quyết xung đột workflow.              |
+| **`/new-project`** | Khởi tạo dự án mới với scaffolding và artifacts chuẩn.                   |
+| **`/open`**        | Bắt đầu phiên làm việc với ngữ cảnh từ nhật ký trước đó.                 |
+| **`/para`**        | Bộ điều khiển chính để kiểm toán và quản lý workspace.                   |
+| **`/push`**        | Commit và push thay đổi lên GitHub nhanh chóng với xác minh.             |
+| **`/release`**     | Cổng chất lượng trước khi phát hành và danh sách kiểm tra.               |
+| **`/retro`**       | Thực hiện hồi tưởng dự án trước khi lưu trữ.                             |
+| **`/rule`**        | Quản lý và thực thi các quy tắc workspace.                               |
+| **`/verify`**      | Xác minh hoàn thành nhiệm vụ bằng cách sử dụng hướng dẫn và bằng chứng.  |
+
+### Rules (Quy tắc)
+
+| Quy tắc                  | Mô tả                                                            |
+| :----------------------- | :--------------------------------------------------------------- |
+| **`context-rules.md`**   | RFC-0003: Quy tắc định tuyến để tải ngữ cảnh hiệu quả.           |
+| **`naming.md`**          | Quy ước đặt tên chuẩn (`kebab-case`, `PascalCase`, v.v.).        |
+| **`para-discipline.md`** | Các nguyên tắc cốt lõi của kiến trúc PARA.                       |
+| **`versioning.md`**      | Chiến lược kiểm soát phiên bản (v1.3.x) và chính sách phát hành. |
 
 ---
 

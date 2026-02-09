@@ -4,7 +4,7 @@ description: Master PARA Workspace management workflow. Standardize, configure, 
 
 # /para
 
-> **Workspace Version:** 1.3.2 (Intelligence & Customization)
+> **Workspace Version:** 1.3.4 (Intelligence & Customization)
 
 This is the master controller workflow for the PARA Workspace. Use it to audit, configure, and extend the workspace capabilities.
 

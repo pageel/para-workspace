@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.4] - 2026-02-09
+
+### Added
+
+- **Full Catalog Install**: `./para install` now syncs **ALL** rules and workflows from `Resources/ai-agents/` to `.agent/` by default.
+- **Workflow & Rule Catalog**: New section in README listing all available capabilities.
+- **New Project Logic**: Standardized `/new-project` workflow (merged from `/kickoff`).
+
+### Changed
+
+- **Self-Hosting**: The `para-workspace` repo now correctly installs its own rules and workflows into `.agent/` from `Resources/`.
+- **Versioning**: Updated core rule versioning to `1.3.4 (Full Sync)`.
+
 ## [1.3.3] - 2026-02-06
 
 ### Added

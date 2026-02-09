@@ -1,10 +1,13 @@
-# /kickoff <project-name>
+# /new-project [project-name]
+
+> **Workspace Version:** 1.3.4 (PARA Architecture)
 
 > Initialize a new PARA project with standard scaffolding and artifacts.
 
 ## Steps
 
 1. **Scaffold Project**:
+
    ```bash
    ./para scaffold <project-name>
    ```
@@ -19,6 +22,7 @@
    - Record the kickoff in `Projects/<project-name>/sessions/$(date +%Y-%m-%d).md`.
 
 ## Output Checklist
+
 - [ ] Project folder structure created
 - [ ] Registered in `metadata.json`
 - [ ] Goals defined in `project.md`
