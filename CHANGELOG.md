@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.5] - 2026-02-09
+
+### Added
+
+- **Safety (PARA Discipline)**: Added `Resource Immutability` and `Project Protection` rules to prevent agents from accidentally modifying core templates or the `para-workspace` repo itself.
+
 ## [1.3.4] - 2026-02-09
 
 ### Added
