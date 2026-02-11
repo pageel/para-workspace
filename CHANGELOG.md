@@ -2,7 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.3.5] - 2026-02-09
+## [1.3.5] - 2026-02-11
+
+### Added
+
+- **Backup Workflow (`/backup`)**: New workflow to create date-stamped snapshots of workflows, rules, and metadata.json with auto-cleanup (keeps 5 most recent).
+- **Enhanced Backlog Workflow (`/backlog`)**: Expanded from minimal stub to comprehensive template with Epic/Story structure, Bug tracking, ICE scoring, Summary stats, and standardized status/priority conventions.
+
+### Changed
+
+- **README (EN/VI)**: Updated Workflow Catalog to include `/backup`. Bumped version to 1.3.5.
+
+## [1.3.4+safety] - 2026-02-09
 
 ### Added
 

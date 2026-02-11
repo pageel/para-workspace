@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.3.3-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.3.5-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Run on Antigravity](https://img.shields.io/badge/Run%20on-Antigravity-FF6B6B.svg?style=for-the-badge&logo=rocket&logoColor=white)](https://antigravity.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-tích-hợp-agent)
@@ -231,6 +231,7 @@ Cơ chế được tuyển chọn để **chuẩn hóa các vòng lặp cộng t
 | Lệnh               | Mô tả                                                                    |
 | :----------------- | :----------------------------------------------------------------------- |
 | **`/backlog`**     | Quản lý tính năng và lỗi của dự án với theo dõi trạng thái chuẩn hóa.    |
+| **`/backup`**      | Sao lưu workflows, rules, và các file cấu hình quan trọng.               |
 | **`/config`**      | Quản lý cấu hình workspace (ví dụ: tiền tố) và metadata.                 |
 | **`/end`**         | Ghi nhật ký phiên làm việc, tổng hợp tiến độ và đóng ngày làm việc.      |
 | **`/install`**     | Trình cài đặt thông minh cho workflow và rule (xử lý cập nhật/hợp nhất). |
@@ -300,4 +301,4 @@ PARA Workspace thực thi ranh giới nghiêm ngặt để giữ cho lịch sử
 
 Được phát triển với ❤️ bởi **Pageel**. Chuẩn hóa tương lai của Agentic PKM.
 
-_Phiên bản mới nhất: 1.3.3_
+_Phiên bản mới nhất: 1.3.5_
