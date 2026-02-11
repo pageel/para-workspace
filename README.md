@@ -233,11 +233,11 @@ The `para-workspace` comes with a rich set of built-in capabilities in `.agent/`
 | **`/backlog`**     | Manage project features and bugs with standardized status tracking.     |
 | **`/backup`**      | Backup workflows, rules, and important config files.                    |
 | **`/config`**      | Manage workspace configuration (e.g., prefixes) and metadata.           |
-| **`/end`**         | Log session, summarize progress, and close the working day.             |
+| **`/end`**         | Log session with PARA classification and cross-project sync queue.      |
 | **`/install`**     | Intelligent installer for workflows and rules (handles updates/merges). |
 | **`/merge`**       | Semantic merge tool for resolving workflow conflicts.                   |
 | **`/new-project`** | Initialize a new project with standard scaffolding and artifacts.       |
-| **`/open`**        | Start a working session with context from previous logs.                |
+| **`/open`**        | Start a session with context, backlog, and sync queue notifications.    |
 | **`/para`**        | Master controller for workspace audit and management.                   |
 | **`/push`**        | Fast commit and push changes to GitHub with verification.               |
 | **`/release`**     | Pre-release quality gate and verification checklist.                    |
@@ -293,9 +293,43 @@ PARA Workspace enforces strict boundaries to keep your version control clean:
 
 ---
 
+## 🔗 Cross-Project Sync Queue
+
+When projects depend on each other (e.g., a website that showcases a framework), changes in one project need to propagate to the other. PARA Workspace solves this with a **Centralized Sync Queue** — a single file that acts as a notification board.
+
+### How It Works
+
+```mermaid
+graph LR
+    E["/end on upstream"] -->|append 1 row| S["Areas/Workspace/SYNC.md"]
+    O["/open on downstream"] -->|read & filter| S
+    O -->|display alert| U["User sees pending sync"]
+```
+
+1. **Declare relationships** in `metadata.json` using the `downstream` field:
+   ```json
+   "para-workspace": {
+     "downstream": ["website-paraworkspace"]
+   }
+   ```
+2. **`/end`** checks for downstream projects and appends a one-line notification to `SYNC.md`.
+3. **`/open`** reads `SYNC.md`, filters by project name, and alerts the user if there are pending syncs.
+4. After processing, the entry moves from `Pending` to `Completed`.
+
+### Why This Design?
+
+| Metric           | Per-Project Files                | Centralized Queue                |
+| :--------------- | :------------------------------- | :------------------------------- |
+| `/end` cost      | N file writes (1 per downstream) | **1 append**                     |
+| `/open` cost     | 1 extra file read                | **~0** (same dir as SESSION_LOG) |
+| Total operations | **N+1**                          | **2** (constant)                 |
+
+---
+
 ## 🗺️ Roadmap & Community
 
 - [x] v1.3.2 Intelligence & Customization
+- [x] v1.3.6 Cross-Project Sync Queue
 - [ ] PARA Landing Page (`paraworkspace.dev`)
 - [x] Multi-agent Routing (RFC-0003)
 - [ ] Safety Guardrails (Terminal Allowlist)
