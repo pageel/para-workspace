@@ -104,6 +104,23 @@ for f in "$WORKSPACE_ROOT/$PROJECT_REL_PATH/Resources/ai-agents/skills/para-kit/
     fi
 done
 
+# 7. Initialize Sync Queue if missing
+echo "🔄 Initializing Sync Queue..."
+SYNC_TEMPLATE="$WORKSPACE_ROOT/$PROJECT_REL_PATH/Areas/Workspace/SYNC.md"
+SYNC_TARGET="$WORKSPACE_ROOT/Areas/Workspace/SYNC.md"
+
+if [ ! -f "$SYNC_TARGET" ]; then
+    mkdir -p "$(dirname "$SYNC_TARGET")"
+    if [ -f "$SYNC_TEMPLATE" ]; then
+        cp "$SYNC_TEMPLATE" "$SYNC_TARGET"
+        echo "✅ Created $SYNC_TARGET from template."
+    else
+        echo "⚠️  Template SYNC.md not found in repo, skipping."
+    fi
+else
+    echo "ℹ️  $SYNC_TARGET already exists, preserving."
+fi
+
 echo ""
 echo "🎉 Installation & Sync complete!"
 echo "You can now run './para' from the workspace root."

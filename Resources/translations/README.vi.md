@@ -145,7 +145,8 @@ Trình cài đặt sẽ thiết lập lệnh `./para` toàn cục, cài đặt c
 - ✅ Cài đặt các kỹ năng **PARA Kit** vào `.agent/skills/`.
 - ✅ Đồng bộ các **Workflows** tiêu chuẩn vào `.agent/workflows/` (có thể tùy chỉnh tiền tố).
 - ✅ Thực thi các quy tắc AI hợp lệ trong `.agent/rules/` (bao gồm Context Routing & Versioning).
-- ✅ **Cơ chế Đồng bộ Thông minh**: Chỉ cập nhật file nếu bản mẫu gốc mới hơn hoặc file chưa tồn tại (Kiểm tra lần cuối: 1.3.2).
+- ✅ **Cơ chế Đồng bộ Thông minh**: Chỉ cập nhật file nếu bản mẫu gốc mới hơn hoặc file chưa tồn tại (Kiểm tra lần cuối: 1.3.6).
+- ✅ **Khởi tạo Hàng đợi Đồng bộ**: Tạo file `Areas/Workspace/SYNC.md` để quản lý thông báo giữa các dự án.
 
 ---
 
@@ -233,11 +234,11 @@ Cơ chế được tuyển chọn để **chuẩn hóa các vòng lặp cộng t
 | **`/backlog`**     | Quản lý tính năng và lỗi của dự án với theo dõi trạng thái chuẩn hóa.    |
 | **`/backup`**      | Sao lưu workflows, rules, và các file cấu hình quan trọng.               |
 | **`/config`**      | Quản lý cấu hình workspace (ví dụ: tiền tố) và metadata.                 |
-| **`/end`**         | Ghi nhật ký phiên làm việc, tổng hợp tiến độ và đóng ngày làm việc.      |
+| **`/end`**         | Ghi nhận session với phân loại PARA và hàng đợi đồng bộ liên dự án.      |
 | **`/install`**     | Trình cài đặt thông minh cho workflow và rule (xử lý cập nhật/hợp nhất). |
 | **`/merge`**       | Công cụ hợp nhất ngữ nghĩa để giải quyết xung đột workflow.              |
 | **`/new-project`** | Khởi tạo dự án mới với scaffolding và artifacts chuẩn.                   |
-| **`/open`**        | Bắt đầu phiên làm việc với ngữ cảnh từ nhật ký trước đó.                 |
+| **`/open`**        | Bắt đầu session với ngữ cảnh, backlog và thông báo từ hàng đợi đồng bộ.  |
 | **`/para`**        | Bộ điều khiển chính để kiểm toán và quản lý workspace.                   |
 | **`/push`**        | Commit và push thay đổi lên GitHub nhanh chóng với xác minh.             |
 | **`/release`**     | Cổng chất lượng trước khi phát hành và danh sách kiểm tra.               |
@@ -292,13 +293,47 @@ PARA Workspace thực thi ranh giới nghiêm ngặt để giữ cho lịch sử
 
 ---
 
+## 🔗 Hàng đợi Đồng bộ Liên dự án (Cross-Project Sync Queue)
+
+Khi các dự án phụ thuộc lẫn nhau (ví dụ: website giới thiệu framework), thay đổi ở dự án này cần được lan truyền sang dự án kia. PARA Workspace giải quyết vấn đề này bằng **Hàng đợi Đồng bộ Tập trung** — một file duy nhất đóng vai trò bảng thông báo.
+
+### Cách hoạt động
+
+```mermaid
+graph LR
+    E["/end tại upstream"] -->|thêm 1 dòng| S["Areas/Workspace/SYNC.md"]
+    O["/open tại downstream"] -->|đọc & lọc| S
+    O -->|hiển thị cảnh báo| U["User thấy sync pending"]
+```
+
+1. **Khai báo quan hệ** trong `metadata.json` sử dụng trường `downstream`:
+   ```json
+   "para-workspace": {
+     "downstream": ["website-paraworkspace"]
+   }
+   ```
+2. **`/end`** kiểm tra các dự án downstream và nối thêm một dòng thông báo vào `SYNC.md`.
+3. **`/open`** đọc `SYNC.md`, lọc theo tên dự án, và cảnh báo người dùng nếu có sync đang chờ xử lý.
+4. Sau khi xử lý, mục đó sẽ chuyển từ `Pending` sang `Completed`.
+
+### Tại sao thiết kế này tối ưu?
+
+| Chỉ số          | File riêng từng dự án          | Hàng đợi tập trung               |
+| :-------------- | :----------------------------- | :------------------------------- |
+| Chi phí `/end`  | Ghi N file (1 file/downstream) | **Ghi nối 1 file**               |
+| Chi phí `/open` | Đọc thêm file riêng            | **~0** (cùng folder SESSION_LOG) |
+| Tổng thao tác   | **N+1**                        | **2** (hằng số)                  |
+
+---
+
 ## 🗺️ Lộ trình phát triển
 
 - [x] v1.3.2 Trí tuệ & Tùy chỉnh
+- [x] v1.3.6 Hàng đợi Đồng bộ Liên dự án
 - [ ] PARA Landing Page (`paraworkspace.dev`)
 - [x] Multi-agent Routing (RFC-0003)
 - [ ] Safety Guardrails (Terminal Allowlist)
 
 Được phát triển với ❤️ bởi **Pageel**. Chuẩn hóa tương lai của Agentic PKM.
 
-_Phiên bản mới nhất: 1.3.5_
+_Phiên bản mới nhất: 1.3.6_

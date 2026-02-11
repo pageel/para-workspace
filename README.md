@@ -147,7 +147,8 @@ The installer will set up the global `./para` command, install agent skills, and
 - ✅ Installs **PARA Kit** skills to `.agent/skills/`.
 - ✅ Syncs standard **Workflows** to `.agent/workflows/` (with configurable prefixes).
 - ✅ Enforces valid AI rules in `.agent/rules/` (including Context Routing & Versioning).
-- ✅ **Version-Aware Syncing**: Only updates files if the core template is newer (Last checked: 1.3.2).
+- ✅ **Version-Aware Syncing**: Only updates files if the core template is newer (Last checked: 1.3.6).
+- ✅ **Sync Queue Init**: Creates `Areas/Workspace/SYNC.md` to manage cross-project notifications.
 
 ---
 
