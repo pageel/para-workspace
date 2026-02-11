@@ -1,71 +1,111 @@
 ---
-description: Resume work with context from the last session
+description: Bắt đầu phiên làm việc - xem lịch sử và đề xuất công việc tiếp theo
 ---
 
-# /p-open [project-name]
+# /open [project-name]
 
-> **Workspace Version:** 1.3.1 (PARA Architecture)
+> **Workspace Version:** 1.3.6 (Cross-Project Sync)
 
-Initialize the environment for a project by reviewing recent context, backlog, and status.
+Bắt đầu phiên làm việc mới với context từ session trước.
 
 ## Steps
 
-### 1. Read Global Index
+### 1. Xác định project paths
+
+```
+Base: Projects/[project-name]/
+├── repo/           # Source code (git root)
+├── sessions/       # Session logs & BACKLOG
+├── docs/           # Project documentation
+└── project.md      # Project contract (YAML)
+```
+
+### 2. Đọc project contract
+
+// turbo
+
+Read `Projects/[project-name]/project.md` to understand goal, deadline, status, and DoD.
+
+### 3. Tìm và đọc session gần nhất
 
 // turbo
 
 ```bash
-cat Areas/Development/SESSION_LOG.md
+ls -t Projects/[project-name]/sessions/*.md | head -3
 ```
 
-Check `SESSION_LOG.md` for the most recent activity in the workspace.
+Read the latest session log for context on previous work.
 
-### 2. Review Recent Session
+### 4. Đọc BACKLOG (nếu có)
 
 // turbo
 
 ```bash
-ls -t Projects/[project-name]/sessions/*.md | head -1
+head -30 Projects/[project-name]/sessions/BACKLOG.md
 ```
 
-Read the latest session log in `Projects/[project-name]/sessions/` to regain technical context.
+### 5. 🔔 Check Sync Queue (Cross-Project Notifications)
 
-### 3. Check Backlog
+// turbo
+
+Read `Areas/Workspace/SYNC.md` and **filter rows** where the `Downstream` column matches `[project-name]` and Status is `🔴 Pending`.
+
+If there are pending sync items, display them prominently:
+
+```
+⚠️ UPSTREAM CHANGES DETECTED:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+| Source: [upstream-project] v[version]
+| Action: [what needs to be done]
+| Date:   [when it was logged]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+After the user processes the sync, update the row in `SYNC.md`:
+
+- Move the row from `## Pending` to `## Completed`
+- Remove the `Status` column (Completed table doesn't have it)
+
+### 6. Kiểm tra Git status
 
 // turbo
 
 ```bash
-cat Projects/[project-name]/sessions/BACKLOG.md 2>/dev/null | head -20
+cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 ```
 
-Review the internal backlog for any high-priority features or bugs.
+### 7. Hiển thị báo cáo
 
-### 4. Git Status & Directory Setup
-
-// turbo
-
-```bash
-# Locate the source path from metadata.json
-jq -r ".products[\"[project-name]\"].path" metadata.json
 ```
+🚀 Bắt đầu: [Project Name] | 📅 [YYYY-MM-DD]
 
-Navigate to the source directory and run `git status` to check for uncommitted work.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### 5. Deployment Status (Optional)
+📋 PHIÊN GẦN NHẤT: [Date] - [Focus]
 
-If the project is a web app, verify the current deployment URL.
+✅ Đã hoàn thành:
+- [Items from session log]
 
-### 6. Report Context
+⏳ TODO tồn đọng:
+- [ ] [Pending items]
 
-Display a summary for the user:
+🔔 SYNC QUEUE: [N pending] / [0 if none]
 
-- **Last Session:** Summary of achievements.
-- **Pending TODOs:** Items left from the last log.
-- **Backlog Highlights:** Top 2-3 items from backlog.
-- **Proposed Tasks:** 1-2 recommended next steps.
+📥 BACKLOG SUMMARY:
+- High: [N] | Medium: [N] | Low: [N]
+- Top items: [list 2-3 items]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 ĐỀ XUẤT HÔM NAY:
+1. [Priority 1 - include sync items if pending]
+2. [Priority 2]
+
+❓ Bạn muốn làm gì?
+```
 
 ## Related
 
-- `/p-end` - Save session progress
-- `/p-backlog` - View detailed project tasks
-- `/p-push` - Quick commit and push
+- `/end` - Kết thúc session
+- `/backlog` - Xem backlog chi tiết
+- `/push` - Quick commit and push
