@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - **README (EN/VI)**: Updated Workflow Catalog to include `/backup`. Bumped version to 1.3.5.
+- **Scaffold Update**: `scaffold.sh` now generates `project.md` with standard Technical Context (WorkDir, TechStack, Commands, Links).
 
 ## [1.3.4+safety] - 2026-02-09
 

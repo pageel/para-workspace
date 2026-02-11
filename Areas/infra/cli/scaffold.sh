@@ -76,11 +76,50 @@ last_reviewed: "$(date +%Y-%m-%d)"
 
 # Project: $PROJECT_NAME
 
+> **Project Identity**: $PROJECT_NAME
+> **Version**: 0.1.0
+> **Status**: active
+> **Type**: internal
+
+---
+
+## 📝 Description
+
+(Add description here)
+
+---
+
+## 🛠️ Technical Context
+
+### Working Directory
+The main application code resides in the \`repo/\` directory.
+All build and dev commands should be run from there.
+
+### Tech Stack
+- **Framework**: (e.g. React, Astro)
+- **Language**: (e.g. TypeScript, Python)
+- **Build Tool**: (e.g. Vite, Webpack)
+
+### Development Commands
+\`\`\`bash
+# Install dependencies
+cd repo && npm install
+
+# Start dev server
+cd repo && npm run dev
+
+# Build for production
+cd repo && npm run build
+\`\`\`
+
+---
+
 ## 🔑 Key Decisions
 - [$(date +%Y-%m-%d)] Initialized project.
 
-## 📦 Dependencies
-- None
+## 🔗 Quick Links
+- [Backlog](./artifacts/tasks.md)
+- [Source Code](./repo)
 EOL
 
 # Create artifacts/tasks.md
