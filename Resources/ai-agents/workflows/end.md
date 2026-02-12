@@ -13,7 +13,7 @@ Summarize accomplishments and log them to the correct context (Project vs. Works
 1. **Project Work**: Active development, bug fixes, or documentation for a specific project.
    - **Log Destination**: `Projects/[project]/sessions/YYYY-MM-DD.md`
 2. **Workspace & Learning**: Refactoring workspace structure, creating learning artifacts, global standards, or infrastructure updates.
-   - **Log Destination**: `Areas/Workspace/workspace/YYYY-MM-DD.md`
+   - **Log Destination**: `Areas/Workspace/sessions/YYYY-MM-DD.md`
 
 ## Steps
 
