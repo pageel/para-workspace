@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.6] - 2026-02-11
+
+### Added
+
+- **Cross-Project Sync Queue**: Centralized notification system in `Areas/Workspace/SYNC.md`. `/end` logs pending syncs, and `/open` alerts the user.
+- **Sync Logic in Workflows**: Updated `/end` and `/open` to support metadata-driven downstream notifications.
+
+### Changed
+
+- **Version Bump**: Finalized sync queue architecture and bumped all core labels to 1.3.6.
+
 ## [1.3.5] - 2026-02-11
 
 ### Added
