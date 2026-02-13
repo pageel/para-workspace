@@ -1,339 +1,253 @@
-# PARA Workspace Standard
+# PARA Workspace
 
-> **Hệ thống Quản trị Kiến thức Cá nhân (PKM) chuẩn Code-First dành cho AI Agentic Workflows**
+> **Hệ thống Quản lý Tri thức Sẵn sàng cho AI Agent**
 
 <div align="center">
 
-<img src="../../.github/assets/banner.png" width="100%" alt="PARA Workspace Banner">
+<img src="../.github/assets/banner.png" width="100%" alt="PARA Workspace Banner">
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.3.5-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
-[![Run on Antigravity](https://img.shields.io/badge/Run%20on-Antigravity-FF6B6B.svg?style=for-the-badge&logo=rocket&logoColor=white)](https://antigravity.dev)
-[![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.4.0-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-tích-hợp-agent)
+[![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
-[🇺🇸 English](../../README.md) • [🇻🇳 Tiếng Việt](README.vi.md)
+[🇺🇸 English](../README.md) • [🇻🇳 Tiếng Việt](./README.vi.md)
 
 </div>
 
 ---
 
-## 🌌 Tổng quan (Overview)
+## 🌌 Tổng quan
 
-**PARA Workspace** là một hệ thống PKM (Personal Knowledge Management) chuẩn hóa, tập trung vào code, được thiết kế cho kỷ nguyên AI. Nó kết nối khoảng cách giữa tư duy con người và trí tuệ nhân tạo bằng cách cung cấp một cấu trúc hệ thống tệp trực quan cho con người và giàu ngữ cảnh cho AI Agent.
+**PARA Workspace** là một hệ thống Quản lý Tri thức Cá nhân (PKM) chuẩn hoá, lấy code làm trung tâm, được thiết kế cho thời đại AI. Hệ thống cung cấp cấu trúc file vừa trực quan cho con người, vừa giàu ngữ cảnh cho AI agent.
 
-```text
- ┌─────────────────────────────────────────────────────────────┐
- │   P A R A   W O R K S P A C E    S T A N D A R D            │
- └─────────────────────────────────────────────────────────────┘
-          │
-          ├───► ⚡ PROJECTS  (Dự án) ───► [Mục tiêu] + [Deadline]
-          │
-          ├───► 🛡️ AREAS     (Lĩnh vực) ───► [Tiêu chuẩn] + [Bảo trì]
-          │
-          ├───► 📚 RESOURCES (Tài nguyên) ───► [Chủ đề] + [Tiện ích]
-          │
-          └───► ❄️ ARCHIVE   (Lưu trữ) ───► [Hoàn tất] + [Kho lạnh]
+### Ba Nguyên tắc Nền tảng
+
+1. **Repo ≠ Workspace** — Repo chỉ chứa nội dung quản trị (kernel, CLI, templates). Không bao giờ chứa dữ liệu người dùng.
+2. **Workspace = Runtime** — Được tạo bởi `para init`, mỗi workspace là một instance độc lập nơi bạn và agent làm việc.
+3. **Kernel = Hiến pháp** — Các quy tắc bất biến mà mọi workspace phải tuân theo. Thay đổi yêu cầu RFC + nâng version.
+
+```
+Repo      (Hiến pháp + Trình biên dịch)
+  ↓ para init
+Workspace (Hệ điều hành Runtime)
+  ↓ agent attach
+Agent     (Môi trường Thực thi)
 ```
 
 ---
 
-## 🌌 Vòng đời PARA (The Lifecycle)
+## 📂 Kiến trúc
 
-Workspace là một hệ thống sống. Thông tin luân chuyển qua các danh mục dựa trên **giá trị sử dụng hiện tại**, không phải dựa trên loại file.
+### Cấu trúc Repo (Repository này)
 
-```mermaid
-graph LR
-    P[⚡ Projects] -->|Hoàn tất| A[❄️ Archive]
-    P -->|Khái quát hóa| AR[🛡️ Areas]
-    R[📚 Resources] -->|Kích hoạt| P
-    AR -->|Chuẩn hóa| P
-    A -->|Tham khảo| R
+```
+para-workspace/
+├── kernel/            # 🧠 Quy tắc — invariants, heuristics, schemas
+│   ├── KERNEL.md      # Hiến pháp
+│   ├── invariants.md  # 10 luật cứng (thay đổi = MAJOR bump)
+│   ├── heuristics.md  # 8 quy ước mềm
+│   ├── schema/        # Hợp đồng định dạng file
+│   └── examples/      # Vector kiểm thử tuân thủ
+├── cli/               # 🔧 Công cụ
+│   ├── para           # Điểm vào
+│   └── commands/      # init, scaffold, status, migrate, archive, install...
+├── workflows/         # 📑 Workflow tham chiếu (không trạng thái)
+├── templates/         # 📦 Khuôn mẫu
+│   ├── common/        # Template cho project, task, agent
+│   └── profiles/      # Preset: dev, general, marketer, ceo
+├── docs/              # 📖 Tài liệu
+├── CONTRIBUTING.md
+├── VERSIONING.md
+├── CHANGELOG.md
+└── VERSION
 ```
 
-### Tại sao PARA lại tối ưu cho AI?
+### Cấu trúc Workspace (Tạo bởi `para init`)
 
-Các hệ thống PKM thông thường được thiết kế cho mắt người. **PARA Workspace** được thiết kế cho **Context Window của LLM**:
-
-- **Cô lập dự án (Isolation)**: Ngăn chặn Agent "ảo tưởng" (hallucination) bằng cách giới hạn phạm vi làm việc trong một thư mục duy nhất.
-- **Mục tiêu theo Hợp đồng (Contracts)**: Sử dụng YAML để ép Agent phải nhận diện Deadline và "Điều kiện hoàn thành".
-- **Bộ nhớ ngắn hạn**: Nhật ký Session cung cấp thông tin "Điều gì vừa xảy ra?" để Agent tiếp nối công việc mượt mà.
-- **Bộ nhớ dài hạn**: Areas và Resources lưu trữ "Cách chúng ta làm việc" một cách vĩnh viễn.
-- **Định tuyến ngữ cảnh thông minh (Context Routing)**: Các quy tắc tường minh (RFC-0003) đảm bảo Agent chỉ nạp các file thực sự liên quan, tiết kiệm token và giảm ảo tưởng.
-
----
-
-## 📂 Cấu trúc Thư mục
-
-Workspace tuân thủ một hệ thống phân cấp chặt chẽ để đảm bảo khả năng điều hướng dự đoán được cho cả người và Agent.
-
-### 1. **Projects/** (Công việc đang hoạt động)
-
-> _Các nỗ lực hướng tới mục tiêu, có giới hạn thời gian._
-
-Mỗi dự án đang hoạt động sống ở đây. Một thư mục dự án tiêu chuẩn bao gồm:
-
-- `repo/`: **Mã nguồn chính.** (Đây là gốc của git).
-- `artifacts/`: Kế hoạch của Agent, danh sách task, và nhật ký kiểm chứng.
-- `docs/`: Tài liệu riêng của dự án (RFCs, yêu cầu).
-- `sessions/`: Nhật ký ngữ cảnh hàng ngày (Bộ nhớ của Agent).
-- `project.md`: Hợp đồng dự án (Trạng thái YAML).
-
-### 2. **Areas/** (Trách nhiệm dài hạn)
-
-> _Bảo trì tiêu chuẩn liên tục, không có deadline._
-
-Các trách nhiệm dài hạn yêu cầu các tiêu chuẩn nhất quán.
-
-- `Areas/infra/`: Hạ tầng, script, và các công cụ CLI.
-- `Areas/marketing/`: Tài sản thương hiệu, hướng dẫn.
-- `Areas/operations/`: SOPs, hồ sơ tài chính.
-
-### 3. **Resources/** (Sở thích & Tài sản)
-
-> _Các chủ đề quan tâm và thư viện tiện ích._
-
-Các tài sản dùng chung và kiến thức hữu ích cho nhiều dự án.
-
-- `Resources/ai-agents/`: Prompts, workflows, và skills.
-- `Resources/translations/`: Các tệp đa ngôn ngữ.
-- `Resources/templates/`: Các đoạn code mẫu tái sử dụng.
-
-### 4. **Archive/** (Lưu trữ)
-
-> _Các mục đã hoàn thành hoặc đã hủy._
-
-Khi một Dự án kết thúc hoặc một Lĩnh vực không còn cụ thể, nó sẽ được chuyển vào đây để lưu trữ lạnh.
+```
+workspace/
+├── Projects/          # ⚡ Công việc đang hoạt động, có deadline
+├── Areas/             # 🛡️ Kiến thức ổn định & SOPs
+├── Resources/         # 📚 Tài liệu tham khảo, công cụ, kernel snapshot
+│   └── ai-agents/
+│       ├── kernel/    # Bản sao chỉ-đọc từ repo
+│       └── workflows/ # Catalog workflow
+├── Archive/           # ❄️ Lưu trữ lạnh
+├── .agent/            # 🤖 Runtime agent
+│   ├── rules/
+│   └── workflows/
+├── .para-workspace.yml
+└── README.md
+```
 
 ---
 
 ## 📥 Cài đặt
 
-Workspace này được thiết kế như một "Hệ điều hành" cho Antigravity Agent của bạn.
-
-### 1. Thiết lập cấu trúc
-
-Tạo thư mục gốc cho workspace và clone repository này vào đường dẫn tiêu chuẩn.
-
-> **Tại sao không dùng `npx`?**
-> Chúng tôi sử dụng `git clone` để bạn có thể cập nhật Core OS tiêu chuẩn (`Projects/para-workspace/repo`) trong khi vẫn giữ dữ liệu cá nhân của mình tách biệt.
+### Bắt đầu nhanh
 
 ```bash
-# 1. Tạo thư mục workspace chính
-mkdir WORKSPACE && cd WORKSPACE
+# 1. Clone repo
+git clone https://github.com/pageel/para-workspace.git
+cd para-workspace
 
-# 2. Tạo cấu trúc Projects/para-workspace (Đường dẫn QUAN TRỌNG)
-mkdir -p Projects/para-workspace
+# 2. Tạo workspace mới
+./cli/para init --profile=dev --lang=vi --path=~/my-workspace
 
-# 3. Clone repo này vào thư mục 'repo'
-git clone https://github.com/pageel/para-workspace.git Projects/para-workspace/repo
-```
-
-### 2. Chạy Trình cài đặt
-
-Trình cài đặt sẽ thiết lập lệnh `./para` toàn cục, cài đặt các skill của Agent và đồng bộ các quy tắc tiêu chuẩn.
-
-```bash
-# Chạy script cài đặt
-./Projects/para-workspace/repo/Areas/infra/cli/install.sh
-```
-
-**Điều gì sẽ xảy ra?**
-
-- ✅ Tạo lệnh `./para` ở thư mục gốc.
-- ✅ Cài đặt các kỹ năng **PARA Kit** vào `.agent/skills/`.
-- ✅ Đồng bộ các **Workflows** tiêu chuẩn vào `.agent/workflows/` (có thể tùy chỉnh tiền tố).
-- ✅ Thực thi các quy tắc AI hợp lệ trong `.agent/rules/` (bao gồm Context Routing & Versioning).
-- ✅ **Cơ chế Đồng bộ Thông minh**: Chỉ cập nhật file nếu bản mẫu gốc mới hơn hoặc file chưa tồn tại (Kiểm tra lần cuối: 1.3.6).
-- ✅ **Khởi tạo Hàng đợi Đồng bộ**: Tạo file `Areas/Workspace/SYNC.md` để quản lý thông báo giữa các dự án.
-
----
-
-## 🚀 Bắt đầu nhanh
-
-Khởi tạo workspace của bạn bằng các công cụ CLI mạnh mẽ:
-
-```bash
-# 🏗️ Tạo cấu trúc dự án mới
-./para scaffold my-awesome-app
-
-# 📝 Lập kế hoạch tính năng phức tạp cùng AI
-./para plan my-awesome-app "Cài đặt Secure OAuth"
-
-# 🧪 Kiểm chứng hoàn thành task qua Walkthrough
-./para verify my-awesome-app "OAuth Flow"
-
-# 📊 Kiểm tra "sức khỏe" & thời hạn dự án
+# 3. Bắt đầu làm việc
+cd ~/my-workspace
+./para scaffold project my-first-app
 ./para status
-
-# ⚙️ Tùy chỉnh cấu hình workspace (vd: tiền tố workflow)
-./para config set workflows.prefix "p-"
-
-# 🔄 Nâng cấp thư mục cũ sang chuẩn PARA v1.3
-./para migrate legacy-project
 ```
 
-### 🤖 Lệnh tổng lực (Master Command)
+### Profiles có sẵn
 
-Trái tim của workspace là lệnh slash `/para`. Hãy hỏi Agent của bạn:
+| Profile    | Mô tả                         | Phù hợp cho         |
+| ---------- | ----------------------------- | ------------------- |
+| `general`  | Cấu trúc PARA tối thiểu       | PKM cá nhân         |
+| `dev`      | Areas kỹ thuật + AI tooling   | Lập trình viên      |
+| `marketer` | Areas chiến dịch & khách hàng | Nhân viên marketing |
+| `ceo`      | Chiến lược & quản lý tổ chức  | CEO & lãnh đạo      |
 
-> "Review giúp tôi sức khỏe workspace" hoặc "@[/para] chuẩn hóa tất cả dự án"
+### `para init` làm gì?
 
----
-
-## 🏛️ Ba trụ cột chính
-
-Hệ thống được xây dựng trên ba trụ cột cho phép sự cộng tác mượt mà giữa Người và AI.
-
-| Trụ cột         | Tầng        | Trách nhiệm                      | Thành phần chính                 |
-| :-------------- | :---------- | :------------------------------- | :------------------------------- |
-| **🛠️ PARA CLI** | Thực thi    | Quản lý cấu trúc file vật lý     | `Areas/infra/cli/`               |
-| **🧠 PARA Kit** | Trí tuệ     | Ra quyết định chiến lược         | `.agent/skills/para-kit/`        |
-| **📑 Workflow** | Tự động hóa | Chuẩn hóa các quy trình phức tạp | `Resources/ai-agents/workflows/` |
-
-### 🛠️ PARA CLI (Tầng thực thi)
-
-Bộ công cụ bash hiệu năng cao giúp quản lý cấu trúc vật lý mà không cần thao tác thủ công.
-
-- **Tính nhất quán**: Đảm bảo mọi dự án đều có diện mạo và trải nghiệm giống hệt nhau.
-- **Tốc độ**: Scripts không phụ thuộc (zero-dependency) chạy tức thì.
-- **Trực quan**: Báo cáo trạng thái kèm cảnh báo quá hạn (🔥) và theo dõi tiến độ.
-
-### 🧠 PARA Kit Skill (Tầng trí tuệ)
-
-"Bộ não chiến lược" dẫn dắt việc ra quyết định của Agent:
-
-- **Ma trận quyết định**: Tự động chọn giữa CLI scripts nhanh hoặc workflow cộng tác sâu.
-- **Định tuyến thông minh**: Thực thi phân cấp nạp ngữ cảnh nghiêm ngặt (Project -> Areas -> Resources).
-- **Vòng đời Beads**: Chủ động quản lý các điểm ma sát và "tốt nghiệp" kiến thức khi lưu trữ.
-- **Kiểm toán vòng đời**: Đánh dấu các dự án bị đình trệ và đảm bảo không có gì ở trạng thái "Unknown".
-
-### 📑 Thư viện Workflow (Tầng tự động hóa)
-
-Cơ chế được tuyển chọn để **chuẩn hóa các vòng lặp cộng tác phức tạp** giữa con người và AI. Mặc dù danh sách đầy đủ nằm trong [Mục lục](#-danh-mục-workflow--quy-tắc), các luồng cốt lõi này định hình trải nghiệm PARA:
-
-- **`/para`**: **Bộ điều khiển trung tâm (Master Controller)**. Cập nhật, cài đặt và kiểm toán toàn bộ workspace.
-- **`/install`**: Trình cài đặt thông minh cho rules và workflows (Bắt đầu tại đây để cập nhật).
-- **`/kickoff`**: Quy trình khởi động dự án bài bản giữa Người và AI.
-- **`/plan` & `/verify`**: Vòng lặp "Tiêu chuẩn Vàng" gồm lập kế hoạch, viết code và kiểm chứng có bằng chứng.
-- **`/retro`**: Trích xuất bài học và pattern trước khi đưa vào `Archive`.
-
-> **Mẹo:** Lệnh `/para` là cổng thông tin của bạn. Nó có thể điều hướng đến bất kỳ quy trình làm việc nào khác hoặc thực hiện kiểm tra tình trạng toàn hệ thống.
+- ✅ Tạo `Projects/`, `Areas/`, `Resources/`, `Archive/` (theo profile)
+- ✅ Cài **kernel snapshot** vào `Resources/ai-agents/kernel/`
+- ✅ Cài **workflows** vào `.agent/workflows/` và `Resources/ai-agents/workflows/`
+- ✅ Cài **quy tắc quản trị agent** vào `.agent/rules/`
+- ✅ Tạo **`.para-workspace.yml`** với tracking phiên bản kernel
 
 ---
 
-## 📚 Danh mục Workflow & Quy tắc
+## 🧠 Kernel (Nhân hệ thống)
 
-`para-workspace` đi kèm với một bộ sưu tập các tính năng được tích hợp sẵn trong `.agent/` (hoặc `Resources/ai-agents/`).
+Kernel là **hiến pháp** của PARA Workspace — các quy tắc mà mọi workspace phải tuân theo.
 
-### Workflows
+### Invariants (Luật cứng — thay đổi = MAJOR bump)
 
-| Lệnh               | Mô tả                                                                    |
-| :----------------- | :----------------------------------------------------------------------- |
-| **`/backlog`**     | Quản lý tính năng và lỗi của dự án với theo dõi trạng thái chuẩn hóa.    |
-| **`/backup`**      | Sao lưu workflows, rules, và các file cấu hình quan trọng.               |
-| **`/config`**      | Quản lý cấu hình workspace (ví dụ: tiền tố) và metadata.                 |
-| **`/end`**         | Ghi nhận session với phân loại PARA và hàng đợi đồng bộ liên dự án.      |
-| **`/install`**     | Trình cài đặt thông minh cho workflow và rule (xử lý cập nhật/hợp nhất). |
-| **`/merge`**       | Công cụ hợp nhất ngữ nghĩa để giải quyết xung đột workflow.              |
-| **`/new-project`** | Khởi tạo dự án mới với scaffolding và artifacts chuẩn.                   |
-| **`/open`**        | Bắt đầu session với ngữ cảnh, backlog và thông báo từ hàng đợi đồng bộ.  |
-| **`/para`**        | Bộ điều khiển chính để kiểm toán và quản lý workspace.                   |
-| **`/push`**        | Commit và push thay đổi lên GitHub nhanh chóng với xác minh.             |
-| **`/release`**     | Cổng chất lượng trước khi phát hành và danh sách kiểm tra.               |
-| **`/retro`**       | Thực hiện hồi tưởng dự án trước khi lưu trữ.                             |
-| **`/rule`**        | Quản lý và thực thi các quy tắc workspace.                               |
-| **`/verify`**      | Xác minh hoàn thành nhiệm vụ bằng cách sử dụng hướng dẫn và bằng chứng.  |
+| #   | Quy tắc                                           |
+| --- | ------------------------------------------------- |
+| I1  | Cấu trúc thư mục PARA là bắt buộc                 |
+| I2  | Mô hình task hybrid 3-file (backlog = canonical)  |
+| I3  | Đặt tên project theo kebab-case                   |
+| I4  | Không có task hoạt động = project không hoạt động |
+| I5  | Areas không chứa runtime tasks                    |
+| I6  | Archive là lưu trữ lạnh bất biến                  |
+| I7  | Seeds là ý tưởng thô, không phải tasks            |
+| I8  | Không có file lẻ ở root workspace                 |
+| I9  | Resources là tham chiếu chỉ-đọc                   |
+| I10 | Tách biệt Repo ↔ Workspace                        |
 
-### Rules (Quy tắc)
+### Heuristics (Quy ước mềm — thay đổi = MINOR/PATCH)
 
-| Quy tắc                  | Mô tả                                                            |
-| :----------------------- | :--------------------------------------------------------------- |
-| **`context-rules.md`**   | RFC-0003: Quy tắc định tuyến để tải ngữ cảnh hiệu quả.           |
-| **`naming.md`**          | Quy ước đặt tên chuẩn (`kebab-case`, `PascalCase`, v.v.).        |
-| **`para-discipline.md`** | Các nguyên tắc cốt lõi của kiến trúc PARA.                       |
-| **`versioning.md`**      | Chiến lược kiểm soát phiên bản (v1.3.x) và chính sách phát hành. |
+| #   | Hướng dẫn                                 |
+| --- | ----------------------------------------- |
+| H1  | Quy ước đặt tên (kebab-case, PascalCase)  |
+| H2  | Thứ tự ưu tiên nạp context                |
+| H3  | Quản lý phiên bản ngữ nghĩa (SemVer)      |
+| H4  | Cấu trúc thư mục project chuẩn            |
+| H5  | Vòng đời Beads (tạo → messy → tốt nghiệp) |
+| H6  | Ranh giới VCS & Git                       |
+| H7  | Tham chiếu xuyên project qua Resources    |
+| H8  | Tương thích kernel cho workflow           |
 
 ---
 
-## 🧩 Hợp đồng dự án (Spec v1.3)
+## 🛠️ Tham chiếu CLI
 
-Mỗi dự án là một **Tài liệu có thể thực thi**. Để đảm bảo tương thích, mọi dự án tuân thủ hợp đồng nghiêm ngặt:
+```bash
+# Lệnh chính
+para init [--profile=X] [--lang=X] [--path=X]  # Tạo workspace
+para scaffold {project|area|resource} <name>     # Tạo mục
+para status [--json]                             # Sức khoẻ workspace
+para archive <type>/<name> [--force]             # Lưu trữ lạnh
+para migrate [--from=X] [--to=Y] [--dry-run]    # Nâng cấp phiên bản
+para install [--force]                           # Đồng bộ từ repo
 
-### YAML Frontmatter (`project.md`)
+# Lệnh phát triển
+para plan <proj> <desc>       # Kế hoạch triển khai
+para verify <proj> [desc]     # Xác minh task
+para review                   # Kiểm tra workspace sâu
 
-```yaml
----
-goal: "Launch the main landing page"
-deadline: "2026-03-15"
-status: "active"
-dod:
-  - "Lighthouse score > 90"
-  - "Responsive on all devices"
-last_reviewed: "2026-02-05"
----
+# Lệnh hệ thống
+para config [key] [value]     # Cài đặt workspace
+para work <command>           # Quản lý workflows
+para rule <command>           # Quản lý rules
 ```
 
-### Lớp Artifact (Artifact Layer)
+---
 
-- **`artifacts/tasks.md`**: Theo dõi task dành cho máy đọc.
-- **`artifacts/plans/`**: Bản thiết kế logic.
-- **`artifacts/walkthroughs/`**: Kết quả kiểm chứng có bằng chứng.
+## 📑 Catalog Workflow
+
+| Lệnh               | Mô tả                                      |
+| :----------------- | :----------------------------------------- |
+| **`/backlog`**     | Quản lý tasks qua backlog.md canonical     |
+| **`/backup`**      | Sao lưu workflows, rules, và config        |
+| **`/config`**      | Quản lý cấu hình workspace                 |
+| **`/end`**         | Đóng phiên làm việc với phân loại PARA     |
+| **`/install`**     | Cài đặt thông minh (xử lý cập nhật/merge)  |
+| **`/merge`**       | Merge ngữ nghĩa cho xung đột workflow      |
+| **`/new-project`** | Khởi tạo project mới với scaffolding       |
+| **`/open`**        | Bắt đầu phiên với nạp context              |
+| **`/para`**        | Bộ điều khiển chính cho quản lý workspace  |
+| **`/push`**        | Commit và push nhanh lên GitHub            |
+| **`/release`**     | Kiểm tra chất lượng trước release          |
+| **`/retro`**       | Retrospective project trước khi archive    |
+| **`/verify`**      | Xác minh hoàn thành task bằng walkthroughs |
 
 ---
 
-## 🛡️ Ranh giới Git & Bảo mật
+## 🧩 Quản lý Task
 
-PARA Workspace thực thi ranh giới nghiêm ngặt để giữ cho lịch sử Git luôn sạch sẽ:
+PARA Workspace sử dụng **Mô hình Hybrid 3 File**:
 
-- **Quy tắc `repo/`**: Chỉ commit các thay đổi trong `repo/`. Metadata và session được giữ ở local theo mặc định để giữ lịch sử commit tập trung vào code.
-- **Chiến lược Phiên bản**: Tuân thủ nhánh `1.3.x`. Mọi đề xuất nâng cấp cần sự chấp thuận của người dùng.
-  - **Phiên bản MAJOR (Cấp 1)**: Bắt buộc phải có **Bản kế hoạch triển khai (Plan)** và khớp với **Lộ trình (Roadmap)** của dự án.
-
----
-
-## 🔗 Hàng đợi Đồng bộ Liên dự án (Cross-Project Sync Queue)
-
-Khi các dự án phụ thuộc lẫn nhau (ví dụ: website giới thiệu framework), thay đổi ở dự án này cần được lan truyền sang dự án kia. PARA Workspace giải quyết vấn đề này bằng **Hàng đợi Đồng bộ Tập trung** — một file duy nhất đóng vai trò bảng thông báo.
-
-### Cách hoạt động
-
-```mermaid
-graph LR
-    E["/end tại upstream"] -->|thêm 1 dòng| S["Areas/Workspace/SYNC.md"]
-    O["/open tại downstream"] -->|đọc & lọc| S
-    O -->|hiển thị cảnh báo| U["User thấy sync pending"]
+```
+artifacts/tasks/
+├── backlog.md          # 📌 CANONICAL — tất cả tasks ở đây
+├── sprint-current.md   # 🎯 DERIVED — chỉ tasks đang hoạt động
+└── done.md             # ✅ DERIVED — lưu trữ tasks hoàn thành
 ```
 
-1. **Khai báo quan hệ** trong `metadata.json` sử dụng trường `downstream`:
-   ```json
-   "para-workspace": {
-     "downstream": ["website-paraworkspace"]
-   }
-   ```
-2. **`/end`** kiểm tra các dự án downstream và nối thêm một dòng thông báo vào `SYNC.md`.
-3. **`/open`** đọc `SYNC.md`, lọc theo tên dự án, và cảnh báo người dùng nếu có sync đang chờ xử lý.
-4. Sau khi xử lý, mục đó sẽ chuyển từ `Pending` sang `Completed`.
-
-### Tại sao thiết kế này tối ưu?
-
-| Chỉ số          | File riêng từng dự án          | Hàng đợi tập trung               |
-| :-------------- | :----------------------------- | :------------------------------- |
-| Chi phí `/end`  | Ghi N file (1 file/downstream) | **Ghi nối 1 file**               |
-| Chi phí `/open` | Đọc thêm file riêng            | **~0** (cùng folder SESSION_LOG) |
-| Tổng thao tác   | **N+1**                        | **2** (hằng số)                  |
+Agent tương tác chủ yếu với `backlog.md` qua workflow `/backlog`. `sprint-current.md` và `done.md` là các view phái sinh giúp backlog gọn gàng.
 
 ---
 
-## 🗺️ Lộ trình phát triển
+## 🔄 Di chuyển từ v1.3.x
 
-- [x] v1.3.2 Trí tuệ & Tùy chỉnh
-- [x] v1.3.6 Hàng đợi Đồng bộ Liên dự án
-- [ ] PARA Landing Page (`paraworkspace.dev`)
-- [x] Multi-agent Routing (RFC-0003)
-- [ ] Safety Guardrails (Terminal Allowlist)
+```bash
+# Xem trước thay đổi
+para migrate --from=1.3.6 --to=1.4.0 --dry-run
 
-Được phát triển với ❤️ bởi **Pageel**. Chuẩn hóa tương lai của Agentic PKM.
+# Áp dụng di chuyển
+para migrate --from=1.3.6 --to=1.4.0
+```
 
-_Phiên bản mới nhất: 1.3.6_
+Xem [Hướng dẫn Di chuyển](./migration.md) để biết chi tiết.
+
+---
+
+## 🗺️ Lộ trình
+
+- [x] v1.3.6 — Hàng đợi Đồng bộ Xuyên Project
+- [x] v1.4.0 — Trích xuất Kernel & Tái cấu trúc Repo
+- [ ] v1.5.0 — Landing Page PARA (`paraworkspace.dev`)
+- [ ] v1.5.x — Multi-agent Routing
+- [ ] v2.0.0 — Safety Guardrails & Terminal Allowlist
+
+---
+
+## 🤝 Đóng góp
+
+Xem [CONTRIBUTING.md](../CONTRIBUTING.md) để biết hướng dẫn. Điểm chính:
+
+- Thay đổi invariant kernel yêu cầu **RFC + MAJOR bump**
+- Thay đổi heuristic yêu cầu **PR + MINOR/PATCH bump**
+- Mọi thay đổi phải vượt qua test vectors trong `kernel/examples/`
+
+---
+
+Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
+
+_Phiên bản: 1.4.0_
