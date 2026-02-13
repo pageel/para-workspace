@@ -160,7 +160,7 @@ profile: \"dev\"
 language: \"vi\"
 
 repo:
-  url: \"https://github.com/tien-le-pageel/para-workspace\"
+  url: \"https://github.com/pageel/para-workspace\"
   branch: \"main\"
 
 workspace:
