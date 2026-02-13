@@ -1,0 +1,103 @@
+#!/bin/bash
+
+# PARA Workspace CLI
+# Usage: ./cli/para [command] [args...]
+# Version: 1.4.0
+
+set -e
+
+# Resolve CLI directory relative to this script
+CLI_DIR="$(cd "$(dirname "$0")" && pwd)"
+COMMANDS_DIR="$CLI_DIR/commands"
+
+# Workspace Root detection
+# If run from repo: workspace is 3 levels up from repo root
+# If run from workspace: workspace is current directory
+if [ -f ".para-workspace.yml" ]; then
+  WORKSPACE_ROOT="$(pwd)"
+elif [ -f "../../.para-workspace.yml" ]; then
+  WORKSPACE_ROOT="$(realpath ../..)"
+else
+  WORKSPACE_ROOT="$(pwd)"
+fi
+export WORKSPACE_ROOT
+
+case "$1" in
+  init)
+    shift
+    "$COMMANDS_DIR/init.sh" "$@"
+    ;;
+  scaffold)
+    shift
+    "$COMMANDS_DIR/scaffold.sh" "$@"
+    ;;
+  status)
+    shift
+    "$COMMANDS_DIR/status.sh" "$@"
+    ;;
+  migrate)
+    shift
+    "$COMMANDS_DIR/migrate.sh" "$@"
+    ;;
+  archive)
+    shift
+    "$COMMANDS_DIR/archive.sh" "$@"
+    ;;
+  install)
+    shift
+    "$COMMANDS_DIR/install.sh" "$@"
+    ;;
+  config)
+    shift
+    "$COMMANDS_DIR/config.sh" "$@"
+    ;;
+  plan)
+    shift
+    "$COMMANDS_DIR/plan.sh" "$@"
+    ;;
+  review)
+    shift
+    "$COMMANDS_DIR/review.sh" "$@"
+    ;;
+  verify)
+    shift
+    "$COMMANDS_DIR/verify.sh" "$@"
+    ;;
+  update)
+    shift
+    "$COMMANDS_DIR/update.sh" "$@"
+    ;;
+  work)
+    shift
+    "$COMMANDS_DIR/workflow.sh" "$@"
+    ;;
+  rule)
+    shift
+    "$COMMANDS_DIR/rule.sh" "$@"
+    ;;
+  *)
+    echo "PARA Workspace CLI v1.4.0"
+    echo ""
+    echo "Usage: para [command] [args...]"
+    echo ""
+    echo "Core Commands:"
+    echo "  init [--profile=X] [--lang=X]  Create a new workspace"
+    echo "  scaffold <type> <name>         Create project/area/resource"
+    echo "  status [--json]                Show workspace status"
+    echo "  migrate [--from=X] [--to=Y]    Migrate workspace version"
+    echo "  archive <type>/<name>          Move to Archive/"
+    echo "  install [--force]              Sync kernel+workflows to workspace"
+    echo "  config [key] [value]           Manage workspace config"
+    echo ""
+    echo "Dev Commands:"
+    echo "  plan <proj> <desc>             Create implementation plan"
+    echo "  verify <proj> [desc]           Create/list walkthroughs"
+    echo "  review                         Audit workspace health"
+    echo ""
+    echo "System Commands:"
+    echo "  update                         Update workspace templates"
+    echo "  work <command>                 Manage workflows"
+    echo "  rule <command>                 Manage rules"
+    exit 1
+    ;;
+esac

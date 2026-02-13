@@ -2,6 +2,62 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0] - 2026-02-13
+
+### ⚠️ Breaking Changes
+
+- **Repo ↔ Workspace Separation**: The repo no longer contains `Projects/`, `Areas/`, `Resources/`, `Archive/`. It is now purely governance (kernel, CLI, templates, workflows, docs).
+- **`metadata.json` → `.para-workspace.yml`**: Replaced JSON metadata with YAML config.
+- **`workspace.md` → merged into `README.md`**: Reduced file count.
+- **CLI path changed**: `Areas/infra/cli/` → `cli/commands/`. Entry point: `cli/para`.
+- **Workflow path changed**: `Resources/ai-agents/workflows/` → `workflows/` (top-level).
+- **Rules extracted into Kernel**: `Resources/ai-agents/rules/` → `kernel/invariants.md` + `kernel/heuristics.md`.
+- **Task model changed**: Single `tasks.md` → Hybrid 3-file (`backlog.md` canonical, `sprint-current.md` + `done.md` derived).
+
+### Added
+
+- **Kernel System** (`kernel/`):
+  - `KERNEL.md` — Constitution / supreme law.
+  - `invariants.md` — 10 hard rules (I1–I10) that must not be violated.
+  - `heuristics.md` — 8 soft conventions (H1–H8) for recommended practices.
+  - `schema/tasks.schema.md` — Hybrid 3-file task model specification.
+  - `schema/decision-plan.schema.json` — JSON Schema for decision records.
+  - `examples/` — Compliance test vectors (decisions + tasks).
+  - `README.md` — Quick reference for all invariants and heuristics.
+
+- **Profile System** (`templates/profiles/`):
+  - `general/preset.yaml` — Standard PARA workspace.
+  - `dev/preset.yaml` — Developer-focused (AI tooling, infra Areas).
+  - `marketer/preset.yaml` — Marketing-focused (campaign Areas).
+  - `ceo/preset.yaml` — Strategic leadership workspace.
+
+- **New CLI Commands**:
+  - `para init [--profile=X] [--lang=X] [--path=X]` — Create workspace from repo + profile.
+  - `para archive <type>/<name>` — Move items to Archive with graduation review.
+
+- **Cross-platform Fix**: All CLI scripts include `normalize_path()` to fix Windows/PowerShell backslash path issues.
+
+- **New Documentation** (`docs/`):
+  - `architecture.md` — Repo ↔ Workspace ↔ Agent relationship.
+  - `kernel.md` — Kernel concepts and change process.
+  - `workflows.md` — Workflow philosophy and catalog.
+  - `cli.md` — CLI command reference.
+  - `migration.md` — v1.3.x → v1.4.0 migration guide.
+
+- **Governance Files**:
+  - `CONTRIBUTING.md` — Contributor guidelines with RFC process.
+  - `VERSIONING.md` — Semantic versioning policy (kernel vs workspace tracks).
+
+### Changed
+
+- **CLI Rewrite**: All core scripts rewritten for v1.4 architecture:
+  - `init.sh` — Full workspace generation from repo + profile.
+  - `status.sh` — Reads `.para-workspace.yml`, supports `--json`, uses `backlog.md`.
+  - `migrate.sh` — Handles v1.3→v1.4 migration with `--dry-run` mode.
+  - `install.sh` — Syncs kernel + workflows from repo to workspace.
+  - `scaffold.sh` — Supports `project/area/resource` types, kebab-case enforcement.
+- **Templates** (`templates/common/`): Project, task, and agent governance templates.
+
 ## [1.3.6] - 2026-02-11
 
 ### Added

@@ -1,0 +1,214 @@
+#!/bin/bash
+
+# PARA Workspace Initializer (v1.4)
+# Creates a new workspace from repo + profile + language
+# Usage: para init [--profile=dev] [--lang=vi] [--path=./my-workspace]
+
+set -e
+
+# === Cross-platform path normalization ===
+# Fix Windows/PowerShell backslash paths and trailing separators
+normalize_path() {
+  local p="$1"
+  # Convert backslashes to forward slashes (Windows/PowerShell compat)
+  p="${p//\\//}"
+  # Remove trailing slash (except root /)
+  p="${p%/}"
+  echo "$p"
+}
+
+# === Resolve script and repo locations ===
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(normalize_path "$(cd "$SCRIPT_DIR/.." && pwd)")"
+
+# === Parse arguments ===
+PROFILE="general"
+LANG_PREF="en"
+TARGET_PATH=""
+
+for arg in "$@"; do
+  case "$arg" in
+    --profile=*)  PROFILE="${arg#--profile=}" ;;
+    --lang=*)     LANG_PREF="${arg#--lang=}" ;;
+    --path=*)     TARGET_PATH="$(normalize_path "${arg#--path=}")" ;;
+    --help|-h)
+      echo "Usage: para init [options]"
+      echo ""
+      echo "Options:"
+      echo "  --profile=NAME   Workspace profile (general, dev, marketer, ceo)"
+      echo "  --lang=CODE      Language preference (en, vi)"
+      echo "  --path=DIR       Target directory (default: current dir)"
+      echo ""
+      echo "Examples:"
+      echo "  para init --profile=dev --lang=vi"
+      echo "  para init --profile=dev --path=./my-workspace"
+      exit 0
+      ;;
+  esac
+done
+
+# Default target path
+if [ -z "$TARGET_PATH" ]; then
+  TARGET_PATH="$(pwd)"
+fi
+
+# Ensure target is absolute
+case "$TARGET_PATH" in
+  /*) ;; # Already absolute
+  *)  TARGET_PATH="$(pwd)/$TARGET_PATH" ;;
+esac
+TARGET_PATH="$(normalize_path "$TARGET_PATH")"
+
+# === Validate profile ===
+PROFILE_DIR="$REPO_ROOT/templates/profiles/$PROFILE"
+if [ ! -f "$PROFILE_DIR/preset.yaml" ]; then
+  echo "❌ Error: Profile '$PROFILE' not found."
+  echo "Available profiles:"
+  for p in "$REPO_ROOT/templates/profiles"/*/; do
+    pname="$(basename "$p")"
+    echo "  - $pname"
+  done
+  exit 1
+fi
+
+# === Safety check ===
+if [ -f "$TARGET_PATH/.para-workspace.yml" ]; then
+  echo "⚠️  A PARA workspace already exists at $TARGET_PATH"
+  echo "Use 'para install' to update, or remove .para-workspace.yml to reinitialize."
+  exit 1
+fi
+
+echo "🚀 Initializing PARA Workspace"
+echo "   Profile: $PROFILE"
+echo "   Language: $LANG_PREF"
+echo "   Path: $TARGET_PATH"
+echo ""
+
+# === Create workspace structure ===
+mkdir -p "$TARGET_PATH"
+
+# Create PARA directories from profile
+echo "📁 Creating directory structure..."
+# Parse 'creates:' from preset.yaml (simple line-by-line parser, no yq dependency)
+while IFS= read -r line; do
+  # Match lines like "  - Areas/infra/" or "  - Projects/"
+  if echo "$line" | grep -qE '^\s*-\s+'; then
+    dir="$(echo "$line" | sed 's/^[[:space:]]*-[[:space:]]*//')"
+    dir="$(normalize_path "$dir")"
+    if [ -n "$dir" ]; then
+      mkdir -p "$TARGET_PATH/$dir"
+      echo "   ✓ $dir"
+    fi
+  fi
+done < <(sed -n '/^creates:/,/^[a-z]/p' "$PROFILE_DIR/preset.yaml" | head -n -1)
+
+# Fallback: ensure PARA dirs always exist (invariant I1)
+mkdir -p "$TARGET_PATH/Projects"
+mkdir -p "$TARGET_PATH/Areas"
+mkdir -p "$TARGET_PATH/Resources"
+mkdir -p "$TARGET_PATH/Archive"
+
+# === Install kernel snapshot ===
+echo "🧠 Installing kernel snapshot..."
+KERNEL_TARGET="$TARGET_PATH/Resources/ai-agents/kernel"
+mkdir -p "$KERNEL_TARGET"
+cp -r "$REPO_ROOT/kernel/"* "$KERNEL_TARGET/"
+echo "   ✓ Kernel v$(cat "$REPO_ROOT/VERSION" 2>/dev/null || echo "unknown") installed"
+
+# === Install workflow catalog ===
+echo "📑 Installing workflow catalog..."
+WF_TARGET="$TARGET_PATH/Resources/ai-agents/workflows"
+mkdir -p "$WF_TARGET"
+for f in "$REPO_ROOT/workflows/"*.md; do
+  if [ -f "$f" ]; then
+    cp "$f" "$WF_TARGET/"
+  fi
+done
+
+# Install to active .agent/workflows/
+mkdir -p "$TARGET_PATH/.agent/workflows"
+for f in "$REPO_ROOT/workflows/"*.md; do
+  if [ -f "$f" ]; then
+    cp "$f" "$TARGET_PATH/.agent/workflows/"
+  fi
+done
+echo "   ✓ $(ls "$WF_TARGET"/*.md 2>/dev/null | wc -l) workflows installed"
+
+# === Install agent governance ===
+echo "🤖 Installing agent governance..."
+mkdir -p "$TARGET_PATH/.agent/rules"
+if [ -f "$REPO_ROOT/templates/common/agent/governance.md" ]; then
+  cp "$REPO_ROOT/templates/common/agent/governance.md" "$TARGET_PATH/.agent/rules/"
+fi
+
+# === Create workspace README ===
+KERNEL_VERSION="$(cat "$REPO_ROOT/VERSION" 2>/dev/null || echo "1.4.0")"
+cat > "$TARGET_PATH/README.md" <<EOL
+# PARA Workspace
+
+> Profile: **$PROFILE** | Kernel: **v$KERNEL_VERSION** | Language: **$LANG_PREF**
+
+## Structure
+
+\`\`\`
+Projects/    — Active work with deadlines
+Areas/       — Stable knowledge & SOPs
+Resources/   — Reference materials & tools
+Archive/     — Cold storage
+\`\`\`
+
+## Quick Start
+
+\`\`\`bash
+# Create a new project
+para scaffold project my-app
+
+# Check workspace status
+para status
+
+# Update kernel & workflows
+para install
+\`\`\`
+
+---
+
+*Generated by [PARA Workspace](https://github.com/tien-le-pageel/para-workspace) v$KERNEL_VERSION*
+EOL
+
+# === Generate .para-workspace.yml ===
+echo "⚙️  Generating .para-workspace.yml..."
+cat > "$TARGET_PATH/.para-workspace.yml" <<EOL
+# PARA Workspace Configuration
+# Generated: $(date +%Y-%m-%d)
+
+kernel_version: "$KERNEL_VERSION"
+profile: "$PROFILE"
+language: "$LANG_PREF"
+
+# Repo source for updates
+repo:
+  url: "https://github.com/tien-le-pageel/para-workspace"
+  branch: "main"
+
+# Workspace metadata
+workspace:
+  version: "1.0.0"
+  created: "$(date +%Y-%m-%d)"
+EOL
+echo "   ✓ .para-workspace.yml created"
+
+# === Track kernel version ===
+echo "$KERNEL_VERSION" > "$TARGET_PATH/Resources/ai-agents/VERSION"
+
+# === Done ===
+echo ""
+echo "🎉 PARA Workspace initialized successfully!"
+echo ""
+echo "   📂 Location: $TARGET_PATH"
+echo "   🎭 Profile:  $PROFILE"
+echo "   🌐 Language: $LANG_PREF"
+echo "   🧠 Kernel:   v$KERNEL_VERSION"
+echo ""
+echo "Next steps:"
+echo "  cd $(basename "$TARGET_PATH")"
+echo "  para scaffold project my-first-project"

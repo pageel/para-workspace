@@ -1,0 +1,12 @@
+name: "ceo"
+description: "Strategic workspace for leadership and organizational oversight"
+creates:
+  - Areas/strategy/
+  - Areas/finance/
+  - Areas/organization/
+  - Projects/
+  - Resources/references/
+  - Archive/
+default_workflow: "para"
+default_rules:
+  - governance.md
