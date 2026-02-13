@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.4.1] - 2026-02-13
+## [1.4.0] - 2026-02-13
+
+### ⚠️ Breaking Changes
+
+- **Repo ↔ Workspace Separation**: The repo no longer contains `Projects/`, `Areas/`, `Resources/`, `Archive/`. It is now purely governance (kernel, CLI, templates, workflows, docs).
+- **`metadata.json` → `.para-workspace.yml`**: Replaced JSON metadata with YAML config.
+- **`workspace.md` → merged into `README.md`**: Reduced file count.
+- **CLI path changed**: `Areas/infra/cli/` → `cli/commands/`. Entry point: `cli/para`.
+- **Workflow path changed**: `Resources/ai-agents/workflows/` → `workflows/` (top-level).
+- **Rules extracted into Kernel**: `Resources/ai-agents/rules/` → `kernel/invariants.md` + `kernel/heuristics.md`.
+- **Task model changed**: Single `tasks.md` → Hybrid 3-file (`backlog.md` canonical, `sprint-current.md` + `done.md` derived).
 
 ### Fixed
 
@@ -10,14 +20,6 @@ All notable changes to this project will be documented in this file.
 - **BUG-02: Missing install step in onboarding**: `init.sh` now calls `install.sh` automatically, ensuring the `./para` wrapper and all artifacts are correctly installed.
 - **BUG-03: `install.sh` crash on duplicate files**: Added `.bak` backup mechanism to `sync_file()` when overwriting existing files with different content.
 - **BUG-04: `para update` path error**: Fixed `REPO_ROOT` resolution in `update.sh` to correctly identify the git repository in personalized workspace structures.
-
-### Documentation
-
-- **README (EN/VI)**: Updated installation guide with the correct 4-step flow (clone → chmod → init → verify).
-
-## [1.4.0] - 2026-02-13
-
-### ⚠️ Breaking Changes
 
 - **Repo ↔ Workspace Separation**: The repo no longer contains `Projects/`, `Areas/`, `Resources/`, `Archive/`. It is now purely governance (kernel, CLI, templates, workflows, docs).
 - **`metadata.json` → `.para-workspace.yml`**: Replaced JSON metadata with YAML config.
