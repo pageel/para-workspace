@@ -20,7 +20,7 @@
 
 ## 🌌 Overview
 
-**PARA Workspace** is a standardized, code-centric Personal Knowledge Management (PKM) system designed for the age of AI. It provides a structured file system that is both intuitive for humans and contextually rich for AI agents.
+**PARA Workspace** is a governed, open-source standard that defines how humans and AI agents organize knowledge and collaborate on projects. It ships as a **repo** containing a kernel (constitution), CLI tools, and templates — which generates **workspaces** where you actually work. The kernel enforces 10 invariants and 8 heuristics so every workspace is predictable, auditable, and agent-friendly.
 
 ### Three Foundational Principles
 

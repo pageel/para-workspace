@@ -20,7 +20,7 @@
 
 ## 🌌 Tổng quan
 
-**PARA Workspace** là một hệ thống Quản lý Tri thức Cá nhân (PKM) chuẩn hoá, lấy code làm trung tâm, được thiết kế cho thời đại AI. Hệ thống cung cấp cấu trúc file vừa trực quan cho con người, vừa giàu ngữ cảnh cho AI agent.
+**PARA Workspace** là một chuẩn mở có quản trị, định nghĩa cách con người và AI agent tổ chức tri thức và cộng tác trong dự án. Hệ thống được phân phối dưới dạng **repo** chứa kernel (hiến pháp), công cụ CLI, và templates — từ đó tạo ra các **workspace** nơi bạn thực sự làm việc. Kernel thực thi 10 invariants và 8 heuristics để mọi workspace đều nhất quán, kiểm soát được, và thân thiện với agent.
 
 ### Ba Nguyên tắc Nền tảng
 
