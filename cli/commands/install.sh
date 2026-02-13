@@ -37,17 +37,33 @@ for arg in "$@"; do
       echo ""
       echo "Options:"
       echo "  --force   Overwrite all files, even if local is newer"
+      echo ""
+      echo "Existing files are backed up to .bak before overwriting."
       exit 0
       ;;
   esac
 done
 
-# === Helper: sync file if newer ===
+# === Helper: backup file before overwriting ===
+backup_file() {
+  local file="$1"
+  if [ -f "$file" ]; then
+    local bak="${file}.bak"
+    cp "$file" "$bak"
+  fi
+}
+
+# === Helper: sync file if newer, with .bak backup ===
 sync_file() {
   local src="$1"
   local dest="$2"
 
-  # Skip if same file
+  # Create destination directory if needed
+  local dest_dir
+  dest_dir="$(dirname "$dest")"
+  mkdir -p "$dest_dir"
+
+  # Skip if same file (same inode)
   if [ -f "$src" ] && [ -f "$dest" ]; then
     local src_real dest_real
     src_real="$(cd "$(dirname "$src")" && pwd)/$(basename "$src")"
@@ -56,6 +72,13 @@ sync_file() {
   fi
 
   if [ "$FORCE" = true ] || [ ! -f "$dest" ] || [ "$src" -nt "$dest" ]; then
+    # If file already exists, create .bak before overwriting
+    if [ -f "$dest" ]; then
+      # Only backup if content actually differs
+      if ! cmp -s "$src" "$dest"; then
+        backup_file "$dest"
+      fi
+    fi
     cp "$src" "$dest"
     return 0
   fi
@@ -74,6 +97,7 @@ echo "🔧 Setting permissions..."
 for f in "$SCRIPT_DIR"/*.sh; do
   [ -f "$f" ] && chmod +x "$f"
 done
+chmod +x "$SCRIPT_DIR/../para" 2>/dev/null || true
 chmod +x "$REPO_ROOT/para" 2>/dev/null || true
 echo "   ✓ CLI scripts executable"
 
@@ -83,23 +107,23 @@ KERNEL_SRC="$REPO_ROOT/kernel"
 KERNEL_DEST="$WS_ROOT/Resources/ai-agents/kernel"
 mkdir -p "$KERNEL_DEST"
 
-updated=0
+kernel_updated=0
+kernel_total=0
 if [ -d "$KERNEL_SRC" ]; then
   # Sync all kernel files recursively
-  find "$KERNEL_SRC" -type f | while read -r src_file; do
+  while IFS= read -r src_file; do
     rel_path="${src_file#$KERNEL_SRC/}"
     dest_file="$KERNEL_DEST/$rel_path"
-    dest_dir="$(dirname "$dest_file")"
-    mkdir -p "$dest_dir"
+    kernel_total=$((kernel_total + 1))
     if sync_file "$src_file" "$dest_file"; then
-      updated=$((updated + 1))
+      kernel_updated=$((kernel_updated + 1))
     fi
-  done
+  done < <(find "$KERNEL_SRC" -type f)
 fi
 
 KERNEL_VERSION="$(cat "$REPO_ROOT/VERSION" 2>/dev/null || echo "1.4.0")"
 echo "$KERNEL_VERSION" > "$WS_ROOT/Resources/ai-agents/VERSION"
-echo "   ✓ Kernel v$KERNEL_VERSION synced"
+echo "   ✓ Kernel v$KERNEL_VERSION synced ($kernel_updated/$kernel_total files updated)"
 
 # === 3. Install workflow catalog ===
 echo "📑 Syncing workflows..."
@@ -110,17 +134,24 @@ mkdir -p "$WF_CATALOG"
 mkdir -p "$WF_ACTIVE"
 
 wf_count=0
+wf_updated=0
 if [ -d "$WF_SRC" ]; then
   for f in "$WF_SRC"/*.md; do
     if [ -f "$f" ]; then
       fname="$(basename "$f")"
-      sync_file "$f" "$WF_CATALOG/$fname"
-      sync_file "$f" "$WF_ACTIVE/$fname"
       wf_count=$((wf_count + 1))
+
+      # Sync to catalog (always safe — no user edits)
+      sync_file "$f" "$WF_CATALOG/$fname"
+
+      # Sync to active (user may have customized — backup first)
+      if sync_file "$f" "$WF_ACTIVE/$fname"; then
+        wf_updated=$((wf_updated + 1))
+      fi
     fi
   done
 fi
-echo "   ✓ $wf_count workflows synced"
+echo "   ✓ $wf_count workflows synced ($wf_updated updated)"
 
 # === 4. Install agent governance ===
 echo "🤖 Syncing governance rules..."
@@ -133,6 +164,12 @@ echo "   ✓ Governance rules synced"
 
 # === 5. Install root 'para' wrapper ===
 echo "📦 Installing workspace 'para' wrapper..."
+
+# Backup existing wrapper if user has modified it
+if [ -f "$WS_ROOT/para" ]; then
+  backup_file "$WS_ROOT/para"
+fi
+
 cat > "$WS_ROOT/para" <<'WRAPPER'
 #!/bin/bash
 # PARA Workspace CLI Wrapper (Auto-generated)
@@ -171,6 +208,9 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "🎉 Install & sync complete!"
 echo ""
 echo "  Kernel:    v$KERNEL_VERSION"
-echo "  Workflows: $wf_count files"
+echo "  Workflows: $wf_count files ($wf_updated updated)"
+echo ""
+echo "💾 Backed-up files saved as .bak (if any were changed)."
+echo "   To restore: mv <file>.bak <file>"
 echo ""
 echo "Try: ./para status"

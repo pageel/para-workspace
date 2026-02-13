@@ -88,26 +88,40 @@ workspace/
 
 ### Bắt đầu nhanh
 
-Bạn đã mở một thư mục workspace (trong Antigravity hoặc IDE). Clone repo vào đúng vị trí chuẩn PARA rồi khởi tạo workspace:
+Mở thư mục workspace (trong Antigravity hoặc IDE) và làm theo các bước:
 
 ```bash
 # 1. Clone repo vào vị trí chuẩn PARA (từ workspace root)
 mkdir -p Projects/para-workspace
 git clone https://github.com/pageel/para-workspace.git Projects/para-workspace/repo
 
-# 2. Khởi tạo workspace HIỆN TẠI với profile
+# 2. Cấp quyền thực thi cho CLI scripts
+chmod +x Projects/para-workspace/repo/cli/para
+chmod +x Projects/para-workspace/repo/cli/commands/*.sh
+
+# 3. Khởi tạo workspace với profile
 ./Projects/para-workspace/repo/cli/para init --profile=dev --lang=vi
 
-# 3. Bắt đầu làm việc
-./para scaffold project my-first-app
+# 4. Kiểm tra mọi thứ hoạt động
 ./para status
 ```
 
 > **Chuyện gì vừa xảy ra?**
 >
-> - Repo nằm tại `Projects/para-workspace/repo/` — nguồn quản trị của bạn.
-> - `para init` thiết lập **thư mục hiện tại** làm workspace (không cần `--path`).
-> - Lệnh `./para` được tạo tại workspace root để tiện sử dụng.
+> 1. Repo nằm tại `Projects/para-workspace/repo/` — nguồn quản trị.
+> 2. `chmod +x` đảm bảo các CLI scripts có quyền thực thi (bắt buộc trên Linux/macOS).
+> 3. `para init` tạo cấu trúc thư mục PARA, tự động chạy `install.sh`
+>    để đồng bộ kernel, workflows, governance rules, và tạo wrapper `./para`.
+> 4. Từ giờ bạn dùng `./para` từ workspace root cho mọi lệnh.
+
+### Cập nhật
+
+```bash
+# Pull phiên bản mới nhất từ GitHub và đồng bộ lại workspace
+./para update
+```
+
+Lệnh này sẽ `git pull` repo và chạy lại `install.sh` để đồng bộ kernel, workflows, và governance. Các file hiện có được sao lưu thành `.bak` trước khi ghi đè.
 
 ### Profiles có sẵn
 
@@ -121,11 +135,14 @@ git clone https://github.com/pageel/para-workspace.git Projects/para-workspace/r
 ### `para init` làm gì?
 
 - ✅ Tạo `Projects/`, `Areas/`, `Resources/`, `Archive/` (theo profile)
-- ✅ Cài **kernel snapshot** vào `Resources/ai-agents/kernel/`
-- ✅ Cài **workflows** vào `.agent/workflows/` và catalog
-- ✅ Cài **quy tắc quản trị agent** vào `.agent/rules/`
+- ✅ Cấp **quyền thực thi** cho tất cả CLI scripts
+- ✅ Tự động chạy **`install.sh`**, bao gồm:
+  - Cài **kernel snapshot** vào `Resources/ai-agents/kernel/`
+  - Cài **workflows** vào `.agent/workflows/` và catalog
+  - Cài **quy tắc quản trị agent** vào `.agent/rules/`
+  - Tạo **`./para`** wrapper tại workspace root
+  - Sao lưu file xung đột thành `.bak`
 - ✅ Tạo **`.para-workspace.yml`** với tracking phiên bản kernel
-- ✅ Tạo **`./para`** wrapper tại workspace root
 
 ---
 

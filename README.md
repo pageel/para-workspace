@@ -88,26 +88,40 @@ workspace/
 
 ### Quick Start
 
-You already have a workspace directory open (e.g., in Antigravity or your IDE). Clone the repo into the PARA-standard path and initialize your workspace:
+Open your workspace directory (e.g., in Antigravity or your IDE) and follow these steps:
 
 ```bash
 # 1. Clone repo into PARA-standard location (from workspace root)
 mkdir -p Projects/para-workspace
 git clone https://github.com/pageel/para-workspace.git Projects/para-workspace/repo
 
-# 2. Initialize THIS workspace with a profile
+# 2. Set executable permissions on CLI scripts
+chmod +x Projects/para-workspace/repo/cli/para
+chmod +x Projects/para-workspace/repo/cli/commands/*.sh
+
+# 3. Initialize your workspace with a profile
 ./Projects/para-workspace/repo/cli/para init --profile=dev --lang=vi
 
-# 3. Start working
-./para scaffold project my-first-app
+# 4. Verify everything works
 ./para status
 ```
 
 > **What just happened?**
 >
-> - The repo lives at `Projects/para-workspace/repo/` — your governance source.
-> - `para init` set up your **current directory** as the workspace (no `--path` needed).
-> - A `./para` wrapper was installed at workspace root for convenience.
+> 1. The repo lives at `Projects/para-workspace/repo/` — your governance source.
+> 2. `chmod +x` ensures all CLI scripts are executable (required on Linux/macOS).
+> 3. `para init` creates the PARA directory structure, runs `install.sh` automatically
+>    to sync kernel, workflows, governance rules, and generates a `./para` wrapper.
+> 4. You can now use `./para` from your workspace root for all commands.
+
+### Updating
+
+```bash
+# Pull latest from GitHub and re-sync workspace
+./para update
+```
+
+This will `git pull` the repo and re-run `install.sh` to sync kernel, workflows, and governance. Existing files are backed up to `.bak` before overwriting.
 
 ### Available Profiles
 
@@ -121,11 +135,14 @@ git clone https://github.com/pageel/para-workspace.git Projects/para-workspace/r
 ### What `para init` Does
 
 - ✅ Creates `Projects/`, `Areas/`, `Resources/`, `Archive/` (from profile)
-- ✅ Installs **kernel snapshot** to `Resources/ai-agents/kernel/`
-- ✅ Installs **workflows** to `.agent/workflows/` and catalog
-- ✅ Installs **agent governance** rules to `.agent/rules/`
+- ✅ Sets **executable permissions** on all CLI scripts
+- ✅ Runs **`install.sh`** automatically, which:
+  - Installs **kernel snapshot** to `Resources/ai-agents/kernel/`
+  - Installs **workflows** to `.agent/workflows/` and catalog
+  - Installs **agent governance** rules to `.agent/rules/`
+  - Creates **`./para`** wrapper at workspace root
+  - Backs up conflicting files to `.bak`
 - ✅ Generates **`.para-workspace.yml`** with kernel version tracking
-- ✅ Creates **`./para`** wrapper at workspace root
 
 ---
 

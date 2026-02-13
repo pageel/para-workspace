@@ -108,38 +108,13 @@ mkdir -p "$TARGET_PATH/Areas"
 mkdir -p "$TARGET_PATH/Resources"
 mkdir -p "$TARGET_PATH/Archive"
 
-# === Install kernel snapshot ===
-echo "🧠 Installing kernel snapshot..."
-KERNEL_TARGET="$TARGET_PATH/Resources/ai-agents/kernel"
-mkdir -p "$KERNEL_TARGET"
-cp -r "$REPO_ROOT/kernel/"* "$KERNEL_TARGET/"
-echo "   ✓ Kernel v$(cat "$REPO_ROOT/VERSION" 2>/dev/null || echo "unknown") installed"
-
-# === Install workflow catalog ===
-echo "📑 Installing workflow catalog..."
-WF_TARGET="$TARGET_PATH/Resources/ai-agents/workflows"
-mkdir -p "$WF_TARGET"
-for f in "$REPO_ROOT/workflows/"*.md; do
-  if [ -f "$f" ]; then
-    cp "$f" "$WF_TARGET/"
-  fi
+# === Set executable permissions on all CLI scripts (BUG-01 fix) ===
+echo "🔧 Setting CLI permissions..."
+for f in "$SCRIPT_DIR"/*.sh; do
+  [ -f "$f" ] && chmod +x "$f"
 done
-
-# Install to active .agent/workflows/
-mkdir -p "$TARGET_PATH/.agent/workflows"
-for f in "$REPO_ROOT/workflows/"*.md; do
-  if [ -f "$f" ]; then
-    cp "$f" "$TARGET_PATH/.agent/workflows/"
-  fi
-done
-echo "   ✓ $(ls "$WF_TARGET"/*.md 2>/dev/null | wc -l) workflows installed"
-
-# === Install agent governance ===
-echo "🤖 Installing agent governance..."
-mkdir -p "$TARGET_PATH/.agent/rules"
-if [ -f "$REPO_ROOT/templates/common/agent/governance.md" ]; then
-  cp "$REPO_ROOT/templates/common/agent/governance.md" "$TARGET_PATH/.agent/rules/"
-fi
+chmod +x "$SCRIPT_DIR/../para" 2>/dev/null || true
+echo "   ✓ CLI scripts are executable"
 
 # === Create workspace README ===
 KERNEL_VERSION="$(cat "$REPO_ROOT/VERSION" 2>/dev/null || echo "1.4.0")"
@@ -161,13 +136,13 @@ Archive/     — Cold storage
 
 \`\`\`bash
 # Create a new project
-para scaffold project my-app
+./para scaffold project my-app
 
 # Check workspace status
-para status
+./para status
 
 # Update kernel & workflows
-para install
+./para update
 \`\`\`
 
 ---
@@ -197,8 +172,13 @@ workspace:
 EOL
 echo "   ✓ .para-workspace.yml created"
 
-# === Track kernel version ===
-echo "$KERNEL_VERSION" > "$TARGET_PATH/Resources/ai-agents/VERSION"
+# === Run full install (kernel, workflows, governance, para wrapper) ===
+# This replaces manual copy — install.sh handles everything including
+# .bak backups, permission, and the ./para wrapper script (BUG-02 fix)
+echo ""
+echo "📦 Running full install..."
+export WORKSPACE_ROOT="$TARGET_PATH"
+bash "$SCRIPT_DIR/install.sh"
 
 # === Done ===
 echo ""
@@ -211,4 +191,4 @@ echo "   🧠 Kernel:   v$KERNEL_VERSION"
 echo ""
 echo "Next steps:"
 echo "  cd $(basename "$TARGET_PATH")"
-echo "  para scaffold project my-first-project"
+echo "  ./para scaffold project my-first-project"
