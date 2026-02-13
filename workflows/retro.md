@@ -19,8 +19,8 @@ description: Conduct a project retrospective before archiving
    - What can be extracted as a "Resource"?
 
 3. **Export Skills/Gems**:
-   - Move generic reusable code snippets to `Resources/Reference/code/`.
-   - Add new patterns to `Resources/Reference/code/patterns/`.
+   - Move generic reusable code snippets to `Resources/references/code/`.
+   - Add new patterns to `Resources/references/code/patterns/`.
 
 4. **Archive Session**:
    - Record the retrospective in `sessions/RETROSPECTIVE.md`.

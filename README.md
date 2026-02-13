@@ -92,15 +92,15 @@ Open your workspace directory (e.g., in Antigravity or your IDE) and follow thes
 
 ```bash
 # 1. Clone repo into Resources (reference source, not a user project)
-mkdir -p Resources/Reference
-git clone https://github.com/pageel/para-workspace.git Resources/Reference/para-workspace
+mkdir -p Resources/references
+git clone https://github.com/pageel/para-workspace.git Resources/references/para-workspace
 
 # 2. Set executable permissions on CLI scripts
-chmod +x Resources/Reference/para-workspace/cli/para
-chmod +x Resources/Reference/para-workspace/cli/commands/*.sh
+chmod +x Resources/references/para-workspace/cli/para
+chmod +x Resources/references/para-workspace/cli/commands/*.sh
 
 # 3. Initialize your workspace with a profile
-./Resources/Reference/para-workspace/cli/para init --profile=dev --lang=vi
+./Resources/references/para-workspace/cli/para init --profile=dev --lang=vi
 
 # 4. Verify everything works
 ./para status
@@ -108,7 +108,7 @@ chmod +x Resources/Reference/para-workspace/cli/commands/*.sh
 
 > **What just happened?**
 >
-> 1. The repo lives at `Resources/Reference/para-workspace/` — it's a reference source for governance, not a user project.
+> 1. The repo lives at `Resources/references/para-workspace/` — it's a reference source for governance, not a user project.
 > 2. `chmod +x` ensures all CLI scripts are executable (required on Linux/macOS).
 > 3. `para init` creates the PARA directory structure, runs `install.sh` automatically
 >    to sync kernel, workflows, governance rules, and generates a `./para` wrapper.

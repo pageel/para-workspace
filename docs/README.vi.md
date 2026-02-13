@@ -92,15 +92,15 @@ Mở thư mục workspace (trong Antigravity hoặc IDE) và làm theo các bư�
 
 ```bash
 # 1. Clone repo vào Resources (nguồn tham khảo, không phải project người dùng)
-mkdir -p Resources/Reference
-git clone https://github.com/pageel/para-workspace.git Resources/Reference/para-workspace
+mkdir -p Resources/references
+git clone https://github.com/pageel/para-workspace.git Resources/references/para-workspace
 
 # 2. Cấp quyền thực thi cho CLI scripts
-chmod +x Resources/Reference/para-workspace/cli/para
-chmod +x Resources/Reference/para-workspace/cli/commands/*.sh
+chmod +x Resources/references/para-workspace/cli/para
+chmod +x Resources/references/para-workspace/cli/commands/*.sh
 
 # 3. Khởi tạo workspace với profile
-./Resources/Reference/para-workspace/cli/para init --profile=dev --lang=vi
+./Resources/references/para-workspace/cli/para init --profile=dev --lang=vi
 
 # 4. Kiểm tra mọi thứ hoạt động
 ./para status
@@ -108,7 +108,7 @@ chmod +x Resources/Reference/para-workspace/cli/commands/*.sh
 
 > **Chuyện gì vừa xảy ra?**
 >
-> 1. Repo nằm tại `Resources/Reference/para-workspace/` — nguồn tham khảo quản trị, không phải project người dùng.
+> 1. Repo nằm tại `Resources/references/para-workspace/` — nguồn tham khảo quản trị, không phải project người dùng.
 > 2. `chmod +x` đảm bảo các CLI scripts có quyền thực thi (bắt buộc trên Linux/macOS).
 > 3. `para init` tạo cấu trúc thư mục PARA, tự động chạy `install.sh`
 >    để đồng bộ kernel, workflows, governance rules, và tạo wrapper `./para`.

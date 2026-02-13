@@ -14,6 +14,11 @@ All notable changes to this project will be documented in this file.
 - **Rules extracted into Kernel**: `Resources/ai-agents/rules/` → `kernel/invariants.md` + `kernel/heuristics.md`.
 - **Task model changed**: Single `tasks.md` → Hybrid 3-file (`backlog.md` canonical, `sprint-current.md` + `done.md` derived).
 
+### Fixed (build.3)
+
+- **BUG-05: Clone path mismatch**: Installation docs and `install.sh` wrapper used `Resources/Reference/` (PascalCase) but `para init` creates `Resources/references/` (lowercase). Standardized all paths to `Resources/references/` across README (EN/VI), `install.sh`, and `retro.md`.
+- **Cleanup: `migrate.sh` legacy fallbacks**: Removed unnecessary `$REPO_ROOT/../*` fallback paths left from old repo structure. `REPO_ROOT` already resolves correctly.
+
 ### Fixed
 
 - **BUG-01: Permission denied on CLI scripts**: `init.sh` now explicitly sets executable permissions (`chmod +x`) right after workspace creation.

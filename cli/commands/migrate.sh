@@ -65,7 +65,7 @@ fi
 
 # Default target = latest from repo
 if [ -z "$TO_VERSION" ]; then
-  TO_VERSION="$(cat "$REPO_ROOT/../VERSION" 2>/dev/null || cat "$REPO_ROOT/VERSION" 2>/dev/null || echo "1.4.0")"
+  TO_VERSION="$(cat "$REPO_ROOT/VERSION" 2>/dev/null || echo "1.4.0")"
 fi
 
 echo "🔄 PARA Workspace Migration"
@@ -116,14 +116,9 @@ echo ""
 echo "🧠 Step 2: Install kernel snapshot..."
 KERNEL_TARGET="$WS_ROOT/Resources/ai-agents/kernel"
 run_or_preview "Create kernel directory" mkdir -p "$KERNEL_TARGET"
-if [ "$DRY_RUN" = false ]; then
-  if [ -d "$REPO_ROOT/kernel" ]; then
-    cp -r "$REPO_ROOT/kernel/"* "$KERNEL_TARGET/"
-    echo "     ✓ Kernel installed from repo"
-  elif [ -d "$REPO_ROOT/../kernel" ]; then
-    cp -r "$REPO_ROOT/../kernel/"* "$KERNEL_TARGET/"
-    echo "     ✓ Kernel installed from repo"
-  fi
+if [ "$DRY_RUN" = false ] && [ -d "$REPO_ROOT/kernel" ]; then
+  cp -r "$REPO_ROOT/kernel/"* "$KERNEL_TARGET/"
+  echo "     ✓ Kernel installed from repo"
 fi
 
 # Step 3: Update workflow catalog
@@ -131,15 +126,10 @@ echo ""
 echo "📑 Step 3: Update workflow catalog..."
 WF_TARGET="$WS_ROOT/Resources/ai-agents/workflows"
 run_or_preview "Create workflow catalog directory" mkdir -p "$WF_TARGET"
-if [ "$DRY_RUN" = false ]; then
-  WF_SOURCE=""
-  [ -d "$REPO_ROOT/workflows" ] && WF_SOURCE="$REPO_ROOT/workflows"
-  [ -d "$REPO_ROOT/../workflows" ] && WF_SOURCE="$REPO_ROOT/../workflows"
-  if [ -n "$WF_SOURCE" ]; then
-    for f in "$WF_SOURCE"/*.md; do
-      [ -f "$f" ] && cp "$f" "$WF_TARGET/"
-    done
-  fi
+if [ "$DRY_RUN" = false ] && [ -d "$REPO_ROOT/workflows" ]; then
+  for f in "$REPO_ROOT/workflows"/*.md; do
+    [ -f "$f" ] && cp "$f" "$WF_TARGET/"
+  done
 fi
 run_or_preview "Sync to .agent/workflows/" mkdir -p "$WS_ROOT/.agent/workflows"
 
