@@ -4,7 +4,7 @@ description: Intelligent agentic installer for workflows and rules. Handles upda
 
 # /install [type] [name]
 
-> **Workspace Version:** 1.3.4 (Smart Management)
+> **Workspace Version:** 1.4.0
 
 Use this workflow to install or update components from the PARA Catalog. It handles conflicts intelligently.
 
@@ -18,8 +18,8 @@ Use this workflow to install or update components from the PARA Catalog. It hand
 ## Logic Flow
 
 1.  **Resolve Source & Destination**:
-    - **Workflows**: `Resources/ai-agents/workflows/[name].md` -> `.agent/workflows/[name].md`
-    - **Rules**: `Resources/ai-agents/rules/[name].md` -> `.agent/rules/[name].md`
+    - **Workflows**: `.agent/workflows/[name].md` -> `.agent/workflows/[name].md`
+    - **Rules**: `.agent/rules/[name].md` -> `.agent/rules/[name].md`
 
 2.  **Check Status**:
     - If Destination does NOT exist: **Install immediately**.
@@ -48,10 +48,10 @@ TYPE="[type]" # 'work' or 'rule'
 NAME="[name]"
 
 if [ "$TYPE" == "work" ]; then
-    SRC="Resources/ai-agents/workflows/$NAME.md"
+    SRC=".agent/workflows/$NAME.md"
     DEST=".agent/workflows/$NAME.md"
 else
-    SRC="Resources/ai-agents/rules/$NAME.md"
+    SRC=".agent/rules/$NAME.md"
     DEST=".agent/rules/$NAME.md"
 fi
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # PARA Rule Manager
-# Usage: ./Areas/infra/cli/rule.sh [list | install <name>]
+# Usage: ./cli/commands/rule.sh [list | install <name>]
 
 set -e
 
@@ -10,7 +10,7 @@ SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 if [ -z "$WORKSPACE_ROOT" ]; then
     WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
 fi
-CATALOG_DIR="$WORKSPACE_ROOT/Resources/ai-agents/rules"
+CATALOG_DIR="$WORKSPACE_ROOT/.agent/rules"
 AGENT_DIR="$WORKSPACE_ROOT/.agent/rules"
 
 case "$1" in

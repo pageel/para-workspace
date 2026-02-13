@@ -4,7 +4,7 @@ description: Backup workflows, rules, and important config files
 
 # /p-backup [target]
 
-> **Workspace Version:** 1.3.5 (PARA Architecture)
+> **Workspace Version:** 1.4.0
 
 Create a date-stamped snapshot of important workspace configuration files into `Areas/Infrastructure/backup/`.
 
@@ -14,7 +14,7 @@ Create a date-stamped snapshot of important workspace configuration files into `
 /backup all           # Backup workflows + rules + metadata
 /backup workflows     # Only backup workflows
 /backup rules         # Only backup rules
-/backup metadata      # Only backup metadata.json
+/backup metadata      # Only backup .para-workspace.yml
 ```
 
 ## Steps
@@ -63,8 +63,8 @@ echo "✅ Rules: $(ls "$BACKUP_DIR/rules/" 2>/dev/null | wc -l) files backed up"
 ```bash
 WORKSPACE_ROOT="$(pwd)"
 BACKUP_DIR="$WORKSPACE_ROOT/Areas/Infrastructure/backup/$(date +%Y-%m-%d)"
-cp "$WORKSPACE_ROOT/metadata.json" "$BACKUP_DIR/metadata.json" 2>/dev/null
-echo "✅ metadata.json backed up"
+cp "$WORKSPACE_ROOT/.para-workspace.yml" "$BACKUP_DIR/.para-workspace.yml" 2>/dev/null
+echo "✅ .para-workspace.yml backed up"
 ```
 
 ### 3. Cleanup old snapshots (keep 5 most recent)
@@ -102,7 +102,7 @@ cp Areas/Infrastructure/backup/YYYY-MM-DD/workflows/* .agent/workflows/
 cp Areas/Infrastructure/backup/YYYY-MM-DD/workflows/backlog.md .agent/workflows/backlog.md
 
 # Restore metadata
-cp Areas/Infrastructure/backup/YYYY-MM-DD/metadata.json ./metadata.json
+cp Areas/Infrastructure/backup/YYYY-MM-DD/.para-workspace.yml ./.para-workspace.yml
 ```
 
 ## Related

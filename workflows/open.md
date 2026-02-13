@@ -4,7 +4,7 @@ description: Start a working session with context from previous logs and sync qu
 
 # /open [project-name]
 
-> **Workspace Version:** 1.3.6 (Cross-Project Sync)
+> **Workspace Version:** 1.4.0
 
 Start a new working session with full context from previous sessions.
 

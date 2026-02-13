@@ -4,7 +4,7 @@ description: Manage project features and bugs
 
 # /p-backlog [project-name] [action]
 
-> **Workspace Version:** 1.3.5 (PARA Architecture)
+> **Workspace Version:** 1.4.0
 
 Manage the backlog in `Projects/[project]/sessions/BACKLOG.md`.
 

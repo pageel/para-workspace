@@ -4,7 +4,7 @@ description: Intelligent agentic merge for workflows. Combines user customizatio
 
 # /merge [target-workflow]
 
-> **Workspace Version:** 1.3.2 (Feature #16)
+> **Workspace Version:** 1.4.0
 
 This workflow intelligently merges a user's customized workflow with the latest version from the PARA Catalog.
 
@@ -18,7 +18,7 @@ This workflow intelligently merges a user's customized workflow with the latest 
 
 1.  **Identify Paths**:
     - User (Destination): `.agent/workflows/[target].md`
-    - Catalog (Source): `Resources/ai-agents/workflows/[target].md`
+    - Catalog (Source): `.agent/workflows/[target].md`
 
 2.  **Read Content**:
     - AI reads both files to understand the context.
@@ -44,7 +44,7 @@ This workflow intelligently merges a user's customized workflow with the latest 
 // turbo
 
 ```bash
-CATALOG="Resources/ai-agents/workflows/[target].md"
+CATALOG=".agent/workflows/[target].md"
 USER_FILE=".agent/workflows/[target].md"
 
 cat "$CATALOG"

@@ -4,7 +4,7 @@ description: Master PARA Workspace management workflow. Standardize, configure, 
 
 # /para
 
-> **Workspace Version:** 1.3.6 (Cross-Project Sync)
+> **Workspace Version:** 1.4.0
 
 This is the master controller workflow for the PARA Workspace. Use it to audit, configure, and extend the workspace capabilities.
 
@@ -24,11 +24,11 @@ This is the master controller workflow for the PARA Workspace. Use it to audit, 
 Manage the "Core Skills" of the workspace by syncing from the library:
 
 - **Workflows (`./para work`)**:
-  - `list`: Show available workflows in `Resources/ai-agents/workflows/`.
+  - `list`: Show available workflows in `.agent/workflows/`.
   - `install <name>`: Install to root `.agent/workflows/`.
   - **MERGE (`-m`)**: Use `install <name> -m` to blend catalog updates into your customized workflows without losing your specific tweaks.
 - **Rules (`./para rule`)**:
-  - `list`: Show available rules in `Resources/ai-agents/rules/`.
+  - `list`: Show available rules in `.agent/rules/`.
   - `install <name>`: Install to root `.agent/rules/`.
 
 ### 4. Lifecycle Operations
@@ -43,7 +43,7 @@ Manage the "Core Skills" of the workspace by syncing from the library:
 
 - **RFC-0003**: Enforce strict context boundaries. Don't let the agent load unrelated files.
 - **VCS Boundary**: Only commit changes within `repo/` subdirectories. Metadata and sessions stay local unless otherwise specified.
-- **Versioning**: Adhere to `1.3.x` patching. Propose `1.4.0` only for major structural shifts with USER approval.
+- **Versioning**: Follow kernel versioning policy (see VERSIONING.md).
   - **Level 1 (MAJOR)**: Any jump to a new MAJOR version MUST have a formal **Implementation Plan** and align with the public **Roadmap**.
 
 ---

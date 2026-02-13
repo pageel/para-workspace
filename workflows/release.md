@@ -4,7 +4,7 @@ description: Pre-release quality gate and verification
 
 # /p-release
 
-> **Workspace Version:** 1.3.1 (PARA Architecture)
+> **Workspace Version:** 1.4.0
 
 > Pre-merge quality gate for production readiness.
 
@@ -23,7 +23,7 @@ description: Pre-release quality gate and verification
    - Verify `CHANGELOG.md` reflects recent changes.
 
 5. **Version Bump**:
-   - Increment version in `metadata.json` if necessary.
+   - Increment version in `.para-workspace.yml` if necessary.
 
 ## Checklist
 

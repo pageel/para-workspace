@@ -8,7 +8,7 @@ set -e
 WS_ROOT="${WORKSPACE_ROOT:-$(realpath "../../..")}"
 export WORKSPACE_ROOT="$WS_ROOT"
 
-echo "🔍 Starting Workspace Review (PARA v1.3.4)..."
+echo "🔍 Starting Workspace Review (PARA v1.4.0)..."
 echo "------------------------------------------"
 
 # 1. Projects Audit

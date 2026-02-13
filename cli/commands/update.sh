@@ -6,7 +6,7 @@
 set -e
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-# This script is in Areas/infra/cli/ - Repo root is 3 levels up
+# This script is in cli/commands/ - Repo root is 3 levels up
 REPO_ROOT="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
 
 echo "🔄 Updating PARA Workspace Template from GitHub..."

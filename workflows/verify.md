@@ -4,7 +4,7 @@ description: Verify task completion using walkthroughs
 
 # /p-verify [task-name]
 
-> **Workspace Version:** 1.3.1 (PARA Architecture)
+> **Workspace Version:** 1.4.0
 
 > Verify completion of a feature or task using a Walkthrough artifact.
 
@@ -22,7 +22,7 @@ description: Verify task completion using walkthroughs
 
 4. **Record Evidence**:
    - Log the verification status in the current session file.
-   - Update `artifacts/tasks.md` status.
+   - Update `artifacts/tasks/backlog.md` status.
 
 ## Success Criteria
 

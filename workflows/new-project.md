@@ -1,6 +1,6 @@
 # /new-project [project-name]
 
-> **Workspace Version:** 1.3.4 (PARA Architecture)
+> **Workspace Version:** 1.4.0
 
 > Initialize a new PARA project with standard scaffolding and artifacts.
 
@@ -16,7 +16,7 @@
    - Update `Projects/<project-name>/project.md` with specific Goals and Done Conditions.
 
 3. **Initialize Task List**:
-   - Edit `Projects/<project-name>/artifacts/tasks.md` to reflect the initial roadmap.
+   - Edit `Projects/<project-name>/artifacts/tasks/backlog.md` to reflect the initial roadmap.
 
 4. **Start First Session**:
    - Record the kickoff in `Projects/<project-name>/sessions/$(date +%Y-%m-%d).md`.
@@ -24,6 +24,6 @@
 ## Output Checklist
 
 - [ ] Project folder structure created
-- [ ] Registered in `metadata.json`
+- [ ] Registered in `.para-workspace.yml`
 - [ ] Goals defined in `project.md`
 - [ ] `tasks.md` initialized

@@ -4,7 +4,7 @@ description: Log session and close working day with PARA classification
 
 # /end [project-name | all | workspace]
 
-> **Workspace Version:** 1.3.6 (Cross-Project Sync)
+> **Workspace Version:** 1.4.0
 
 Summarize accomplishments and log them to the correct context (Project vs. Workspace).
 
@@ -27,7 +27,7 @@ Create or append to the correct destination based on the rules above. Use "Sessi
 
 ### 3. Cross-Project Sync Queue
 
-Check if the project has `downstream` dependencies in `metadata.json`.
+Check if the project has `downstream` dependencies in `.para-workspace.yml`.
 If yes, **append one row** to `Areas/Workspace/SYNC.md` under the `## Pending` table:
 
 ```markdown

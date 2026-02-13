@@ -4,13 +4,13 @@ description: Quản lý và thực thi các quy tắc (rules) trong workspace.
 
 # /rule [action]
 
-> **Workspace Version:** 1.3.2 (Intelligence & Customization)
+> **Workspace Version:** 1.4.0
 
 Hệ thống quản lý quy tắc tập trung giúp đảm bảo tính nhất quán giữa con người và AI Agent.
 
 ## 📋 Catalog Operations
 
-Sử dụng thư viện quy tắc có sẵn trong `Resources/ai-agents/rules/`.
+Sử dụng thư viện quy tắc có sẵn trong `.agent/rules/`.
 
 // turbo
 

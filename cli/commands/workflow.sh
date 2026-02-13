@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # PARA Workflow Manager
-# Usage: ./Areas/infra/cli/workflow.sh [list | install <name>]
+# Usage: ./cli/commands/workflow.sh [list | install <name>]
 
 set -e
 
@@ -10,7 +10,7 @@ SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 if [ -z "$WORKSPACE_ROOT" ]; then
     WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
 fi
-CATALOG_DIR="$WORKSPACE_ROOT/Resources/ai-agents/workflows"
+CATALOG_DIR="$WORKSPACE_ROOT/.agent/workflows"
 AGENT_DIR="$WORKSPACE_ROOT/.agent/workflows"
 
 case "$1" in

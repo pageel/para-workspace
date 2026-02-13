@@ -4,6 +4,6 @@ description: Manage workspace metadata
 
 # /p-config [update | add-project]
 
-> **Workspace Version:** 1.3.1 (PARA Architecture)
+> **Workspace Version:** 1.4.0
 
-Update `metadata.json` and workspace structure definitions.
+Update `.para-workspace.yml` and workspace structure definitions.

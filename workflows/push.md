@@ -1,6 +1,6 @@
 # /push [project-name] ["message"] [--quick]
 
-> **Workspace Version:** 1.3.4 (PARA Architecture)
+> **Workspace Version:** 1.4.0
 
 Fast commit and push changes to GitHub with verification.
 

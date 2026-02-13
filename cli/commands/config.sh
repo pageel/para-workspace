@@ -6,7 +6,7 @@
 set -e
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-# Root of workspace is 5 levels up from Areas/infra/cli/
+# Root of workspace is 5 levels up from cli/commands/
 WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")")")"
 CONFIG_FILE="$WORKSPACE_ROOT/.para.json"
 
