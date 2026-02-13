@@ -16,7 +16,7 @@ normalize_path() {
 
 # === Resolve paths ===
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-REPO_ROOT="$(normalize_path "$(cd "$SCRIPT_DIR/.." && pwd)")"
+REPO_ROOT="$(normalize_path "$(cd "$SCRIPT_DIR/../.." && pwd)")"
 
 if [ -n "$WORKSPACE_ROOT" ]; then
   WS_ROOT="$(normalize_path "$WORKSPACE_ROOT")"

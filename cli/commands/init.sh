@@ -19,7 +19,7 @@ normalize_path() {
 
 # === Resolve script and repo locations ===
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-REPO_ROOT="$(normalize_path "$(cd "$SCRIPT_DIR/.." && pwd)")"
+REPO_ROOT="$(normalize_path "$(cd "$SCRIPT_DIR/../.." && pwd)")"
 
 # === Parse arguments ===
 PROFILE="general"
