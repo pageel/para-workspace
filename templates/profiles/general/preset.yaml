@@ -1,0 +1,10 @@
+name: "general"
+description: "Standard PARA workspace"
+creates:
+  - Projects/
+  - Areas/
+  - Resources/
+  - Archive/
+default_workflow: "para"
+default_rules:
+  - governance.md

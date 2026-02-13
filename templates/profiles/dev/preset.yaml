@@ -1,0 +1,14 @@
+name: "dev"
+description: "Developer-focused workspace with technical Areas and AI tooling"
+creates:
+  - Projects/
+  - Areas/infra/
+  - Areas/product/
+  - Areas/ops/
+  - Resources/ai-agents/
+  - Resources/tools/
+  - Resources/references/
+  - Archive/
+default_workflow: "para"
+default_rules:
+  - governance.md

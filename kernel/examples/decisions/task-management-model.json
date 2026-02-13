@@ -1,0 +1,35 @@
+{
+  "id": "1739001234",
+  "title": "Choose task management model for PARA Workspace v1.4",
+  "status": "accepted",
+  "created_at": "2026-02-13T14:00:00+07:00",
+  "updated_at": "2026-02-13T14:42:00+07:00",
+  "context": "PARA Workspace v1.4 needs a clear task management model. The previous version had no formal definition of how backlog.md, sprint-current.md, and done.md relate to each other. We needed to decide between a single-file approach, a 3-file model with sprint-current as canonical, or a hybrid model.",
+  "decision": "Adopted the Hybrid 3-File Model: backlog.md is the canonical task store (primary read/write via /backlog workflow), sprint-current.md is a derived focus view showing only active tasks, and done.md is a derived archive for completed tasks.",
+  "options": [
+    {
+      "label": "Single file (backlog only)",
+      "description": "Keep everything in backlog.md with sections for different states",
+      "pros": ["Simple", "Familiar workflow"],
+      "cons": ["File grows large over time", "No separation of concerns"],
+      "chosen": false
+    },
+    {
+      "label": "3-file with sprint-current as canonical",
+      "description": "sprint-current.md is the single source of truth, backlog and done are derived",
+      "pros": ["Clear focus", "Best-practice Kanban model"],
+      "cons": ["Unfamiliar workflow", "Requires migration"],
+      "chosen": false
+    },
+    {
+      "label": "Hybrid 3-file model",
+      "description": "backlog.md is canonical, sprint-current and done are derived views",
+      "pros": ["Familiar /backlog workflow", "Separation of concerns", "Best of both worlds"],
+      "cons": ["Slightly more complex"],
+      "chosen": true
+    }
+  ],
+  "consequences": "The /backlog workflow remains the primary interface. Agent generates sprint-current.md and done.md as derived views. Users don't need to change their workflow.",
+  "tags": ["architecture", "task-management", "v1.4"],
+  "project": "para-workspace"
+}
