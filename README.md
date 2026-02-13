@@ -88,19 +88,26 @@ workspace/
 
 ### Quick Start
 
-```bash
-# 1. Clone the repo
-git clone https://github.com/pageel/para-workspace.git
-cd para-workspace
+You already have a workspace directory open (e.g., in Antigravity or your IDE). Clone the repo into the PARA-standard path and initialize your workspace:
 
-# 2. Create a new workspace
-./cli/para init --profile=dev --lang=vi --path=~/my-workspace
+```bash
+# 1. Clone repo into PARA-standard location (from workspace root)
+mkdir -p Projects/para-workspace
+git clone https://github.com/pageel/para-workspace.git Projects/para-workspace/repo
+
+# 2. Initialize THIS workspace with a profile
+./Projects/para-workspace/repo/cli/para init --profile=dev --lang=vi
 
 # 3. Start working
-cd ~/my-workspace
 ./para scaffold project my-first-app
 ./para status
 ```
+
+> **What just happened?**
+>
+> - The repo lives at `Projects/para-workspace/repo/` — your governance source.
+> - `para init` set up your **current directory** as the workspace (no `--path` needed).
+> - A `./para` wrapper was installed at workspace root for convenience.
 
 ### Available Profiles
 
@@ -115,9 +122,10 @@ cd ~/my-workspace
 
 - ✅ Creates `Projects/`, `Areas/`, `Resources/`, `Archive/` (from profile)
 - ✅ Installs **kernel snapshot** to `Resources/ai-agents/kernel/`
-- ✅ Installs **workflows** to `.agent/workflows/` and `Resources/ai-agents/workflows/`
+- ✅ Installs **workflows** to `.agent/workflows/` and catalog
 - ✅ Installs **agent governance** rules to `.agent/rules/`
 - ✅ Generates **`.para-workspace.yml`** with kernel version tracking
+- ✅ Creates **`./para`** wrapper at workspace root
 
 ---
 

@@ -88,19 +88,26 @@ workspace/
 
 ### Bắt đầu nhanh
 
-```bash
-# 1. Clone repo
-git clone https://github.com/pageel/para-workspace.git
-cd para-workspace
+Bạn đã mở một thư mục workspace (trong Antigravity hoặc IDE). Clone repo vào đúng vị trí chuẩn PARA rồi khởi tạo workspace:
 
-# 2. Tạo workspace mới
-./cli/para init --profile=dev --lang=vi --path=~/my-workspace
+```bash
+# 1. Clone repo vào vị trí chuẩn PARA (từ workspace root)
+mkdir -p Projects/para-workspace
+git clone https://github.com/pageel/para-workspace.git Projects/para-workspace/repo
+
+# 2. Khởi tạo workspace HIỆN TẠI với profile
+./Projects/para-workspace/repo/cli/para init --profile=dev --lang=vi
 
 # 3. Bắt đầu làm việc
-cd ~/my-workspace
 ./para scaffold project my-first-app
 ./para status
 ```
+
+> **Chuyện gì vừa xảy ra?**
+>
+> - Repo nằm tại `Projects/para-workspace/repo/` — nguồn quản trị của bạn.
+> - `para init` thiết lập **thư mục hiện tại** làm workspace (không cần `--path`).
+> - Lệnh `./para` được tạo tại workspace root để tiện sử dụng.
 
 ### Profiles có sẵn
 
@@ -115,9 +122,10 @@ cd ~/my-workspace
 
 - ✅ Tạo `Projects/`, `Areas/`, `Resources/`, `Archive/` (theo profile)
 - ✅ Cài **kernel snapshot** vào `Resources/ai-agents/kernel/`
-- ✅ Cài **workflows** vào `.agent/workflows/` và `Resources/ai-agents/workflows/`
+- ✅ Cài **workflows** vào `.agent/workflows/` và catalog
 - ✅ Cài **quy tắc quản trị agent** vào `.agent/rules/`
 - ✅ Tạo **`.para-workspace.yml`** với tracking phiên bản kernel
+- ✅ Tạo **`./para`** wrapper tại workspace root
 
 ---
 
