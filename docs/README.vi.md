@@ -1,6 +1,6 @@
 # PARA Workspace
 
-> **Hệ thống Quản lý Tri thức Sẵn sàng cho AI Agent**
+> **Chuẩn Workspace có Quản trị dành cho AI Agent**
 
 <div align="center">
 

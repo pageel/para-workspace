@@ -1,6 +1,6 @@
 # PARA Workspace
 
-> **The Agent-Ready Knowledge Management System**
+> **The Governed Workspace Standard for AI Agents**
 
 <div align="center">
 
