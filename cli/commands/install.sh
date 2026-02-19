@@ -127,7 +127,7 @@ echo "   ✓ Kernel v$KERNEL_VERSION synced ($kernel_updated/$kernel_total files
 
 # === 3. Install workflow catalog ===
 echo "📑 Syncing workflows..."
-WF_SRC="$REPO_ROOT/workflows"
+WF_SRC="$REPO_ROOT/templates/common/agent/workflows"
 WF_CATALOG="$WS_ROOT/Resources/ai-agents/workflows"
 WF_ACTIVE="$WS_ROOT/.agent/workflows"
 mkdir -p "$WF_CATALOG"
@@ -153,14 +153,26 @@ if [ -d "$WF_SRC" ]; then
 fi
 echo "   ✓ $wf_count workflows synced ($wf_updated updated)"
 
-# === 4. Install agent governance ===
-echo "🤖 Syncing governance rules..."
+# === 4. Install agent governance & rules ===
+echo "🤖 Syncing governance & rules..."
 mkdir -p "$WS_ROOT/.agent/rules"
+RULE_SRC="$REPO_ROOT/templates/common/agent/rules"
 GOV_SRC="$REPO_ROOT/templates/common/agent/governance.md"
+
+# Sync Governance
 if [ -f "$GOV_SRC" ]; then
   sync_file "$GOV_SRC" "$WS_ROOT/.agent/rules/governance.md"
 fi
-echo "   ✓ Governance rules synced"
+
+# Sync Rules Library
+rule_count=0
+if [ -d "$RULE_SRC" ]; then
+  for f in "$RULE_SRC"/*.md; do
+    sync_file "$f" "$WS_ROOT/.agent/rules/$(basename "$f")"
+    rule_count=$((rule_count + 1))
+  done
+fi
+echo "   ✓ Governance + $rule_count rules synced"
 
 # === 5. Install root 'para' wrapper ===
 echo "📦 Installing workspace 'para' wrapper..."

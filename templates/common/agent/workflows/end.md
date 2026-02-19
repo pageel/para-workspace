@@ -4,8 +4,6 @@ description: Log session and close working day with PARA classification
 
 # /end [project-name | all | workspace]
 
-> **Workspace Version:** 1.4.0
-
 Summarize accomplishments and log them to the correct context (Project vs. Workspace).
 
 ## Classification Rules
@@ -27,18 +25,12 @@ Create or append to the correct destination based on the rules above. Use "Sessi
 
 ### 3. Cross-Project Sync Queue
 
-Check if the project has `downstream` dependencies in `.para-workspace.yml`.
+Check if the project has `downstream` dependencies in `project.md` (or metadata).
 If yes, **append one row** to `Areas/Workspace/SYNC.md` under the `## Pending` table:
 
 ```markdown
 | YYYY-MM-DD | [project] | [new-version] | [downstream-project] | [brief action needed] | 🔴 Pending |
 ```
-
-**Rules:**
-
-- Only add an entry if the change is relevant to the downstream (e.g., version bump, API change, content update).
-- Do NOT open or modify the downstream project. Just write to `SYNC.md`.
-- Keep the action description short (< 15 words).
 
 ### 4. Update Master Index
 

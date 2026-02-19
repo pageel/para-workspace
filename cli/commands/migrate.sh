@@ -125,11 +125,14 @@ fi
 echo ""
 echo "📑 Step 3: Update workflow catalog..."
 WF_TARGET="$WS_ROOT/Resources/ai-agents/workflows"
+CATALOG_SRC="$REPO_ROOT/templates/common/agent/workflows"
+
 run_or_preview "Create workflow catalog directory" mkdir -p "$WF_TARGET"
-if [ "$DRY_RUN" = false ] && [ -d "$REPO_ROOT/workflows" ]; then
-  for f in "$REPO_ROOT/workflows"/*.md; do
+if [ "$DRY_RUN" = false ] && [ -d "$CATALOG_SRC" ]; then
+  for f in "$CATALOG_SRC"/*.md; do
     [ -f "$f" ] && cp "$f" "$WF_TARGET/"
   done
+  echo "     ✓ Workflows updated from templates"
 fi
 run_or_preview "Sync to .agent/workflows/" mkdir -p "$WS_ROOT/.agent/workflows"
 
@@ -170,13 +173,24 @@ if [ -f "$WS_ROOT/workspace.md" ] && [ -f "$WS_ROOT/README.md" ]; then
   run_or_preview "Backup and remove workspace.md" mv "$WS_ROOT/workspace.md" "$WS_ROOT/workspace.md.bak.$(date +%s)"
 fi
 
-# Step 6: Install agent governance
+# Step 6: Install agent governance & rules
 echo ""
-echo "🤖 Step 6: Install agent governance..."
+echo "🤖 Step 6: Install agent governance & rules..."
 run_or_preview "Create .agent/rules/" mkdir -p "$WS_ROOT/.agent/rules"
-if [ "$DRY_RUN" = false ] && [ -d "$REPO_ROOT/templates" ]; then
+
+if [ "$DRY_RUN" = false ]; then
+  # Governance
   GOV_SRC="$REPO_ROOT/templates/common/agent/governance.md"
   [ -f "$GOV_SRC" ] && cp "$GOV_SRC" "$WS_ROOT/.agent/rules/"
+  
+  # Rules Library
+  RULE_SRC="$REPO_ROOT/templates/common/agent/rules"
+  if [ -d "$RULE_SRC" ]; then
+    for f in "$RULE_SRC"/*.md; do
+      cp "$f" "$WS_ROOT/.agent/rules/"
+    done
+    echo "     ✓ Governance & Rules installed"
+  fi
 fi
 
 # === Done ===
