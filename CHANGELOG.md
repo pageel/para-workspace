@@ -14,6 +14,13 @@ All notable changes to this project will be documented in this file.
 - **Rules extracted into Kernel**: `Resources/ai-agents/rules/` → `kernel/invariants.md` + `kernel/heuristics.md`.
 - **Task model changed**: Single `tasks.md` → Hybrid 3-file (`backlog.md` canonical, `sprint-current.md` + `done.md` derived).
 
+### Fixed (build.4) - 2026-02-19
+
+- **Centralized Workflows**: Merged `repo/workflows` (legacy) into `repo/templates/common/agent/workflows`.
+- **Profile Standardization**: All 4 profiles (dev, general, marketer, ceo) now include `para-kit` skill and standard workflows.
+- **CLI Refactor**: Updated `install.sh`, `migrate.sh` to reference the new centralized library.
+- **Dedup**: Removed duplicate `repo/workflows` directory.
+
 ### Fixed (build.3) - 2026-02-19
 
 - **BUG-05: Clone path mismatch**: Installation docs and `install.sh` wrapper used `Resources/Reference/` (PascalCase) but `para init` creates `Resources/references/` (lowercase). Standardized all paths to `Resources/references/` across README (EN/VI), `install.sh`, and `retro.md`.
