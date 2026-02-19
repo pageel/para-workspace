@@ -40,7 +40,7 @@ for arg in "$@"; do
       echo "  --path=DIR       Target directory (default: current dir)"
       echo ""
       echo "Examples:"
-      echo "  para init --profile=dev --lang=vi"
+      echo "  para init --profile=dev --lang=en"
       echo "  para init --profile=dev --path=./my-workspace"
       exit 0
       ;;
@@ -107,6 +107,7 @@ mkdir -p "$TARGET_PATH/Projects"
 mkdir -p "$TARGET_PATH/Areas"
 mkdir -p "$TARGET_PATH/Resources"
 mkdir -p "$TARGET_PATH/Archive"
+mkdir -p "$TARGET_PATH/_inbox"
 
 # === Set executable permissions on all CLI scripts (BUG-01 fix) ===
 echo "🔧 Setting CLI permissions..."
@@ -130,6 +131,7 @@ Projects/    — Active work with deadlines
 Areas/       — Stable knowledge & SOPs
 Resources/   — Reference materials & tools
 Archive/     — Cold storage
+_inbox/      — Uncategorized items (Inbox)
 \`\`\`
 
 ## Quick Start

@@ -75,6 +75,7 @@ workspace/
 │       ├── kernel/    # Bản sao chỉ-đọc từ repo
 │       └── workflows/ # Catalog workflow
 ├── Archive/           # ❄️ Lưu trữ lạnh
+├── _inbox/            # 📥 Khu vực tiếp nhận (Inbox)
 ├── .agent/            # 🤖 Runtime agent
 │   ├── rules/
 │   └── workflows/
@@ -95,12 +96,12 @@ Mở thư mục workspace (trong Antigravity hoặc IDE) và làm theo các bư�
 mkdir -p Resources/references
 git clone https://github.com/pageel/para-workspace.git Resources/references/para-workspace
 
-# 2. Cấp quyền thực thi cho CLI scripts
+# 2. Cấp quyền thực thi (Chỉ dành cho Linux/macOS)
 chmod +x Resources/references/para-workspace/cli/para
 chmod +x Resources/references/para-workspace/cli/commands/*.sh
 
 # 3. Khởi tạo workspace với profile
-./Resources/references/para-workspace/cli/para init --profile=dev --lang=vi
+./Resources/references/para-workspace/cli/para init --profile=dev --lang=en
 
 # 4. Kiểm tra mọi thứ hoạt động
 ./para status
@@ -110,7 +111,7 @@ chmod +x Resources/references/para-workspace/cli/commands/*.sh
 >
 > 1. Repo nằm tại `Resources/references/para-workspace/` — nguồn tham khảo quản trị, không phải project người dùng.
 > 2. `chmod +x` đảm bảo các CLI scripts có quyền thực thi (bắt buộc trên Linux/macOS).
-> 3. `para init` tạo cấu trúc thư mục PARA, tự động chạy `install.sh`
+> 3. `para init` tạo cấu trúc thư mục PARA (bao gồm cả `_inbox/`), tự động chạy `install.sh`
 >    để đồng bộ kernel, workflows, governance rules, và tạo wrapper `./para`.
 > 4. Từ giờ bạn dùng `./para` từ workspace root cho mọi lệnh.
 
@@ -125,16 +126,16 @@ Lệnh này sẽ `git pull` repo và chạy lại `install.sh` để đồng b�
 
 ### Profiles có sẵn
 
-| Profile    | Mô tả                         | Phù hợp cho         |
-| ---------- | ----------------------------- | ------------------- |
-| `general`  | Cấu trúc PARA tối thiểu       | PKM cá nhân         |
-| `dev`      | Areas kỹ thuật + AI tooling   | Lập trình viên      |
-| `marketer` | Areas chiến dịch & khách hàng | Nhân viên marketing |
-| `ceo`      | Chiến lược & quản lý tổ chức  | CEO & lãnh đạo      |
+| Profile                                                | Mô tả                         | Phù hợp cho         |
+| ------------------------------------------------------ | ----------------------------- | ------------------- |
+| [`general`](../templates/profiles/general/README.md)   | Cấu trúc PARA tối thiểu       | PKM cá nhân         |
+| [`dev`](../templates/profiles/dev/README.md)           | Areas kỹ thuật + AI tooling   | Lập trình viên      |
+| [`marketer`](../templates/profiles/marketer/README.md) | Areas chiến dịch & khách hàng | Nhân viên marketing |
+| [`ceo`](../templates/profiles/ceo/README.md)           | Chiến lược & quản lý tổ chức  | CEO & lãnh đạo      |
 
 ### `para init` làm gì?
 
-- ✅ Tạo `Projects/`, `Areas/`, `Resources/`, `Archive/` (theo profile)
+- ✅ Tạo `Projects/`, `Areas/`, `Resources/`, `Archive/`, và `_inbox/`
 - ✅ Cấp **quyền thực thi** cho tất cả CLI scripts
 - ✅ Tự động chạy **`install.sh`**, bao gồm:
   - Cài **kernel snapshot** vào `Resources/ai-agents/kernel/`

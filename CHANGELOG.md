@@ -14,9 +14,14 @@ All notable changes to this project will be documented in this file.
 - **Rules extracted into Kernel**: `Resources/ai-agents/rules/` → `kernel/invariants.md` + `kernel/heuristics.md`.
 - **Task model changed**: Single `tasks.md` → Hybrid 3-file (`backlog.md` canonical, `sprint-current.md` + `done.md` derived).
 
-### Fixed (build.3)
+### Fixed (build.3) - 2026-02-19
 
 - **BUG-05: Clone path mismatch**: Installation docs and `install.sh` wrapper used `Resources/Reference/` (PascalCase) but `para init` creates `Resources/references/` (lowercase). Standardized all paths to `Resources/references/` across README (EN/VI), `install.sh`, and `retro.md`.
+- **BUG-08: Missing `_inbox` directory**: `para init` now automatically creates `_inbox/` as a landing zone for uncategorized items.
+- **Docs: Clarify `chmod`**: Updated README (EN/VI) to specify that the `chmod +x` step is only for Linux and macOS.
+- **Docs: Profile links**: Added direct link to each profile README guide in the README profiles table.
+- **Docs: Profile READMEs**: Created `README.md` for all 4 profiles (`dev`, `general`, `marketer`, `ceo`), each documenting workspace structure, recommended workflows, active rules, and a standard daily workflow (open → backlog → develop → verify → end).
+- **Docs: Default language**: Changed the example installation command to use `--lang=en` by default.
 - **Cleanup: `migrate.sh` legacy fallbacks**: Removed unnecessary `$REPO_ROOT/../*` fallback paths left from old repo structure. `REPO_ROOT` already resolves correctly.
 
 ### Fixed

@@ -75,6 +75,7 @@ workspace/
 │       ├── kernel/    # Read-only snapshot from repo
 │       └── workflows/ # Workflow catalog
 ├── Archive/           # ❄️ Cold storage
+├── _inbox/            # 📥 Uncategorized land zone
 ├── .agent/            # 🤖 Agent runtime
 │   ├── rules/
 │   └── workflows/
@@ -95,12 +96,12 @@ Open your workspace directory (e.g., in Antigravity or your IDE) and follow thes
 mkdir -p Resources/references
 git clone https://github.com/pageel/para-workspace.git Resources/references/para-workspace
 
-# 2. Set executable permissions on CLI scripts
+# 2. Set executable permissions (Linux/macOS only)
 chmod +x Resources/references/para-workspace/cli/para
 chmod +x Resources/references/para-workspace/cli/commands/*.sh
 
 # 3. Initialize your workspace with a profile
-./Resources/references/para-workspace/cli/para init --profile=dev --lang=vi
+./Resources/references/para-workspace/cli/para init --profile=dev --lang=en
 
 # 4. Verify everything works
 ./para status
@@ -110,7 +111,7 @@ chmod +x Resources/references/para-workspace/cli/commands/*.sh
 >
 > 1. The repo lives at `Resources/references/para-workspace/` — it's a reference source for governance, not a user project.
 > 2. `chmod +x` ensures all CLI scripts are executable (required on Linux/macOS).
-> 3. `para init` creates the PARA directory structure, runs `install.sh` automatically
+> 3. `para init` creates the PARA directory structure (including `_inbox/`), runs `install.sh` automatically
 >    to sync kernel, workflows, governance rules, and generates a `./para` wrapper.
 > 4. You can now use `./para` from your workspace root for all commands.
 
@@ -125,16 +126,16 @@ This will `git pull` the repo and re-run `install.sh` to sync kernel, workflows,
 
 ### Available Profiles
 
-| Profile    | Description                         | Best For                |
-| ---------- | ----------------------------------- | ----------------------- |
-| `general`  | Minimal PARA structure              | Personal PKM            |
-| `dev`      | Technical Areas + AI tooling        | Software developers     |
-| `marketer` | Campaign & customer Areas           | Marketing professionals |
-| `ceo`      | Strategy & organizational oversight | Founders & leadership   |
+| Profile                                               | Description                         | Best For                |
+| ----------------------------------------------------- | ----------------------------------- | ----------------------- |
+| [`general`](./templates/profiles/general/README.md)   | Minimal PARA structure              | Personal PKM            |
+| [`dev`](./templates/profiles/dev/README.md)           | Technical Areas + AI tooling        | Software developers     |
+| [`marketer`](./templates/profiles/marketer/README.md) | Campaign & customer Areas           | Marketing professionals |
+| [`ceo`](./templates/profiles/ceo/README.md)           | Strategy & organizational oversight | Founders & leadership   |
 
 ### What `para init` Does
 
-- ✅ Creates `Projects/`, `Areas/`, `Resources/`, `Archive/` (from profile)
+- ✅ Creates `Projects/`, `Areas/`, `Resources/`, `Archive/`, and `_inbox/`
 - ✅ Sets **executable permissions** on all CLI scripts
 - ✅ Runs **`install.sh`** automatically, which:
   - Installs **kernel snapshot** to `Resources/ai-agents/kernel/`
