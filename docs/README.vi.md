@@ -53,9 +53,8 @@ para-workspace/
 ├── cli/               # 🔧 Công cụ
 │   ├── para           # Điểm vào
 │   └── commands/      # init, scaffold, status, migrate, archive, install...
-├── workflows/         # 📑 Workflow tham chiếu (không trạng thái)
-├── templates/         # 📦 Khuôn mẫu
-│   ├── common/        # Template cho project, task, agent
+├── templates/         # 📦 Khuôn mẫu & Tài nguyên Agent
+│   ├── common/        # 🧠 Quy tắc, Skills, Workflows tập trung
 │   └── profiles/      # Preset: dev, general, marketer, ceo
 ├── docs/              # 📖 Tài liệu
 ├── CONTRIBUTING.md

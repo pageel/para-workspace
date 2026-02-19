@@ -53,9 +53,8 @@ para-workspace/
 ├── cli/               # 🔧 Tools
 │   ├── para           # Entry point
 │   └── commands/      # init, scaffold, status, migrate, archive, install...
-├── workflows/         # 📑 Reference workflows (stateless)
-├── templates/         # 📦 Scaffolding
-│   ├── common/        # Project, task, agent templates
+├── templates/         # 📦 Scaffolding & Agent Resources
+│   ├── common/        # 🧠 Centralized Rules, Skills, Workflows
 │   └── profiles/      # dev, general, marketer, ceo presets
 ├── docs/              # 📖 Documentation
 ├── CONTRIBUTING.md
