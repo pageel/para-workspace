@@ -8,6 +8,8 @@ Start a new working session with full context from previous sessions.
 
 ## Steps
 
+> **Constraint:** Read `metadata.json` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final report MUST be translated to this language.**
+
 ### 1. Identify project paths
 
 ```

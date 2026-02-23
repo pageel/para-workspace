@@ -14,6 +14,10 @@ All notable changes to this project will be documented in this file.
 - **Rules extracted into Kernel**: `Resources/ai-agents/rules/` → `kernel/invariants.md` + `kernel/heuristics.md`.
 - **Task model changed**: Single `tasks.md` → Hybrid 3-file (`backlog.md` canonical, `sprint-current.md` + `done.md` derived).
 
+### Fixed (build.5) - 2026-02-23
+
+- **Workflow Enhancements**: Updated `/open` workflow to respect `preferences.language` in `metadata.json` (root), ensuring all agent output and final reports are translated to the user's preferred language (e.g., `vi` for Vietnamese).
+
 ### Fixed (build.4) - 2026-02-19
 
 - **Centralized Workflows**: Merged `repo/workflows` (legacy) into `repo/templates/common/agent/workflows`.
