@@ -14,6 +14,13 @@ All notable changes to this project will be documented in this file.
 - **Rules extracted into Kernel**: `Resources/ai-agents/rules/` → `kernel/invariants.md` + `kernel/heuristics.md`.
 - **Task model changed**: Single `tasks.md` → Hybrid 3-file (`backlog.md` canonical, `sprint-current.md` + `done.md` derived).
 
+### Fixed (build.6) - 2026-02-24
+
+- **Profile Architecture Simplification**: Eliminated redundant `.agent` folders from all profile templates, centralizing workflows in `templates/common/agent/workflows/`.
+- **Workflow Enhanced**: Standardized and translated the `/learn` workflow to English, deploying it to the common catalog.
+- **Documentation**: Updated `dev` Profile `README.md` to include `/learn` in its activities.
+- **Backlog**: Marked Item 5 (Website) as Done.
+
 ### Fixed (build.5) - 2026-02-23
 
 - **Workflow Enhancements**: Updated `/open` workflow to respect `preferences.language` in `metadata.json` (root), ensuring all agent output and final reports are translated to the user's preferred language (e.g., `vi` for Vietnamese).
