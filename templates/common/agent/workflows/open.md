@@ -1,8 +1,10 @@
 ---
-description: Start a working session with full context.
+description: Start a working session with context from previous logs and sync queue
 ---
 
 # /open [project-name]
+
+> **Workspace Version:** 1.3.6 (Cross-Project Sync)
 
 Start a new working session with full context from previous sessions.
 
@@ -50,7 +52,23 @@ head -30 Projects/[project-name]/sessions/BACKLOG.md
 
 Read `Areas/Workspace/SYNC.md` and **filter rows** where the `Downstream` column matches `[project-name]` and Status is `🔴 Pending`.
 
-If there are pending sync items, display them prominently.
+If there are pending sync items, display them prominently:
+
+```
+⚠️ UPSTREAM CHANGES DETECTED:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+| Source: [upstream-project] v[version]
+| Action: [what needs to be done]
+| Date:   [when it was logged]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+Sau khi trình bày, hãy hỏi người dùng xem họ muốn xử lý (update code/nội dung) hay chỉ đơn giản là đánh dấu Đã đọc (Dismiss/Ignore).
+
+Khi người dùng ra quyết định xong, tự động cập nhật lại `SYNC.md`:
+
+- Di chuyển dòng đó từ `## Pending` xuống `## Completed` (Xóa cột Status đi).
+- **QUAN TRỌNG:** Tự động cắt tỉa (trim) bảng `## Completed`, chỉ giữ lại tối đa **5 dòng mới nhất**. Xóa các dòng cũ hơn để tránh phình to file và tốn token của hệ thống.
 
 ### 6. Check Git status
 
@@ -62,15 +80,36 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 
 ### 7. Display report
 
-Generate a dashboard summarizing:
+```
+🚀 Starting: [Project Name] | 📅 [YYYY-MM-DD]
 
-- Last session focus
-- Pending TODOs
-- Sync Queue alerts
-- Backlog top items
-- Suggested Actions
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 LAST SESSION: [Date] - [Focus]
+
+✅ Completed:
+- [Items from session log]
+
+⏳ Pending TODO:
+- [ ] [Pending items]
+
+🔔 SYNC QUEUE: [N pending] /[0 if none]
+
+📥 BACKLOG SUMMARY:
+- High: [N] | Medium: [N] | Low: [N]
+- Top items: [list 2-3 items]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 SUGGESTED ACTIONS:
+1. [Priority 1 - include sync items if pending]
+2. [Priority 2]
+
+❓ What would you like to work on?
+```
 
 ## Related
 
 - `/end` - End session and log progress
 - `/backlog` - View detailed backlog
+- `/push` - Quick commit and push
