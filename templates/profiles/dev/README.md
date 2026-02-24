@@ -49,6 +49,7 @@ workspace/
 | **`/open`**        | Start a working session, load context        |
 | **`/backlog`**     | Add/prioritize tasks for a project           |
 | **`/new-project`** | Scaffold a new development project           |
+| **`/learn`**       | Document lessons and knowledge in Areas      |
 | **`/push`**        | Quick commit and push to GitHub              |
 | **`/verify`**      | Verify a feature is complete via walkthrough |
 | **`/release`**     | Pre-release quality gate before publishing   |
