@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# PARA Workspace Installer (v1.4)
-# Syncs kernel, workflows, and governance from repo to workspace
+# PARA Workspace Installer (v1.4.1)
+# Syncs kernel, workflows, rules, skills, and governance from repo to workspace
 # Usage: para install [--force]
 
 set -e
@@ -17,15 +17,9 @@ normalize_path() {
 # === Resolve paths ===
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(normalize_path "$(cd "$SCRIPT_DIR/../.." && pwd)")"
+LIB_DIR="$SCRIPT_DIR/../lib"
 
-if [ -n "$WORKSPACE_ROOT" ]; then
-  WS_ROOT="$(normalize_path "$WORKSPACE_ROOT")"
-else
-  echo "❌ Error: WORKSPACE_ROOT not set."
-  exit 1
-fi
-
-# === Parse arguments ===
+# === Parse arguments (help first, before env check) ===
 FORCE=false
 for arg in "$@"; do
   case "$arg" in
@@ -33,7 +27,15 @@ for arg in "$@"; do
     --help|-h)
       echo "Usage: para install [--force]"
       echo ""
-      echo "Syncs kernel, workflows, and governance from repo to workspace."
+      echo "Syncs kernel, workflows, rules, skills, and governance from repo to workspace."
+      echo ""
+      echo "What gets installed:"
+      echo "  🧠 Kernel snapshot    → Resources/ai-agents/kernel/"
+      echo "  📑 Workflows + catalog→ Resources/ai-agents/workflows/ + .agent/workflows/"
+      echo "  📏 Rules + catalog    → Resources/ai-agents/rules/ + .agent/rules/"
+      echo "  🧩 Skills + catalog   → Resources/ai-agents/skills/ + .agent/skills/"
+      echo "  🔒 System state       → .para/ (audit.log, migrations/, backups/)"
+      echo "  📦 CLI wrapper        → ./para"
       echo ""
       echo "Options:"
       echo "  --force   Overwrite all files, even if local is newer"
@@ -43,6 +45,13 @@ for arg in "$@"; do
       ;;
   esac
 done
+
+if [ -n "$WORKSPACE_ROOT" ]; then
+  WS_ROOT="$(normalize_path "$WORKSPACE_ROOT")"
+else
+  echo "❌ Error: WORKSPACE_ROOT not set."
+  exit 1
+fi
 
 # === Helper: backup file before overwriting ===
 backup_file() {
@@ -58,7 +67,6 @@ sync_file() {
   local src="$1"
   local dest="$2"
 
-  # Create destination directory if needed
   local dest_dir
   dest_dir="$(dirname "$dest")"
   mkdir -p "$dest_dir"
@@ -72,9 +80,7 @@ sync_file() {
   fi
 
   if [ "$FORCE" = true ] || [ ! -f "$dest" ] || [ "$src" -nt "$dest" ]; then
-    # If file already exists, create .bak before overwriting
     if [ -f "$dest" ]; then
-      # Only backup if content actually differs
       if ! cmp -s "$src" "$dest"; then
         backup_file "$dest"
       fi
@@ -85,10 +91,53 @@ sync_file() {
   return 1
 }
 
-echo "🚀 PARA Workspace Install (v1.4)"
+# === Helper: sync a governed library (workflows/rules/skills) ===
+sync_library() {
+  local lib_name="$1"    # e.g. "workflows"
+  local src_dir="$2"     # e.g. "$REPO_ROOT/templates/common/agent/workflows"
+  local catalog_dest="$3" # e.g. "$WS_ROOT/Resources/ai-agents/workflows"
+  local active_dest="$4"  # e.g. "$WS_ROOT/.agent/workflows"
+
+  mkdir -p "$catalog_dest"
+  mkdir -p "$active_dest"
+
+  local count=0
+  local updated=0
+
+  if [ -d "$src_dir" ]; then
+    # Sync markdown files
+    for f in "$src_dir"/*.md; do
+      if [ -f "$f" ]; then
+        local fname
+        fname="$(basename "$f")"
+        count=$((count + 1))
+
+        # Sync to catalog (read-only snapshot)
+        sync_file "$f" "$catalog_dest/$fname"
+
+        # Sync to active directory (user may customize)
+        if sync_file "$f" "$active_dest/$fname"; then
+          updated=$((updated + 1))
+        fi
+      fi
+    done
+
+    # Sync catalog.yml (v1.4.1)
+    if [ -f "$src_dir/catalog.yml" ]; then
+      sync_file "$src_dir/catalog.yml" "$catalog_dest/catalog.yml"
+    fi
+  fi
+
+  echo "   ✓ $count $lib_name synced ($updated updated)"
+}
+
+KERNEL_VERSION="$(cat "$REPO_ROOT/VERSION" 2>/dev/null || echo "1.4.1")"
+
+echo "🚀 PARA Workspace Install (v1.4.1)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  Repo:      $REPO_ROOT"
 echo "  Workspace: $WS_ROOT"
+echo "  Kernel:    v$KERNEL_VERSION"
 echo "  Mode:      $( [ "$FORCE" = true ] && echo "FORCE (overwrite all)" || echo "Smart (newer only)")"
 echo ""
 
@@ -110,7 +159,6 @@ mkdir -p "$KERNEL_DEST"
 kernel_updated=0
 kernel_total=0
 if [ -d "$KERNEL_SRC" ]; then
-  # Sync all kernel files recursively
   while IFS= read -r src_file; do
     rel_path="${src_file#$KERNEL_SRC/}"
     dest_file="$KERNEL_DEST/$rel_path"
@@ -121,63 +169,63 @@ if [ -d "$KERNEL_SRC" ]; then
   done < <(find "$KERNEL_SRC" -type f)
 fi
 
-KERNEL_VERSION="$(cat "$REPO_ROOT/VERSION" 2>/dev/null || echo "1.4.0")"
 echo "$KERNEL_VERSION" > "$WS_ROOT/Resources/ai-agents/VERSION"
 echo "   ✓ Kernel v$KERNEL_VERSION synced ($kernel_updated/$kernel_total files updated)"
 
-# === 3. Install workflow catalog ===
+# === 3. Sync governed libraries (v1.4.1) ===
+LIB_SRC="$REPO_ROOT/templates/common/agent"
+
 echo "📑 Syncing workflows..."
-WF_SRC="$REPO_ROOT/templates/common/agent/workflows"
-WF_CATALOG="$WS_ROOT/Resources/ai-agents/workflows"
-WF_ACTIVE="$WS_ROOT/.agent/workflows"
-mkdir -p "$WF_CATALOG"
-mkdir -p "$WF_ACTIVE"
+sync_library "workflows" \
+  "$LIB_SRC/workflows" \
+  "$WS_ROOT/Resources/ai-agents/workflows" \
+  "$WS_ROOT/.agent/workflows"
 
-wf_count=0
-wf_updated=0
-if [ -d "$WF_SRC" ]; then
-  for f in "$WF_SRC"/*.md; do
-    if [ -f "$f" ]; then
-      fname="$(basename "$f")"
-      wf_count=$((wf_count + 1))
+echo "📏 Syncing rules..."
+sync_library "rules" \
+  "$LIB_SRC/rules" \
+  "$WS_ROOT/Resources/ai-agents/rules" \
+  "$WS_ROOT/.agent/rules"
 
-      # Sync to catalog (always safe — no user edits)
-      sync_file "$f" "$WF_CATALOG/$fname"
+echo "🧩 Syncing skills..."
+sync_library "skills" \
+  "$LIB_SRC/skills" \
+  "$WS_ROOT/Resources/ai-agents/skills" \
+  "$WS_ROOT/.agent/skills"
 
-      # Sync to active (user may have customized — backup first)
-      if sync_file "$f" "$WF_ACTIVE/$fname"; then
-        wf_updated=$((wf_updated + 1))
-      fi
-    fi
-  done
-fi
-echo "   ✓ $wf_count workflows synced ($wf_updated updated)"
-
-# === 4. Install agent governance & rules ===
-echo "🤖 Syncing governance & rules..."
-mkdir -p "$WS_ROOT/.agent/rules"
-RULE_SRC="$REPO_ROOT/templates/common/agent/rules"
+# === 4. Sync governance file ===
+echo "🤖 Syncing governance..."
 GOV_SRC="$REPO_ROOT/templates/common/agent/governance.md"
-
-# Sync Governance
 if [ -f "$GOV_SRC" ]; then
   sync_file "$GOV_SRC" "$WS_ROOT/.agent/rules/governance.md"
+  echo "   ✓ Governance synced"
+else
+  echo "   ⚠ No governance.md found (optional)"
 fi
 
-# Sync Rules Library
-rule_count=0
-if [ -d "$RULE_SRC" ]; then
-  for f in "$RULE_SRC"/*.md; do
-    sync_file "$f" "$WS_ROOT/.agent/rules/$(basename "$f")"
-    rule_count=$((rule_count + 1))
-  done
+# === 5. Initialize .para/ system state (v1.4.1) ===
+echo "🔒 Initializing system state..."
+PARA_STATE="$WS_ROOT/.para"
+mkdir -p "$PARA_STATE/migrations"
+mkdir -p "$PARA_STATE/backups"
+if [ ! -f "$PARA_STATE/audit.log" ]; then
+  echo "$(date -Iseconds 2>/dev/null || date +"%Y-%m-%dT%H:%M:%S%z") | SYSTEM | para install | kernel=$KERNEL_VERSION | INIT" > "$PARA_STATE/audit.log"
+  echo "   ✓ .para/ created (audit.log, migrations/, backups/)"
+else
+  echo "$(date -Iseconds 2>/dev/null || date +"%Y-%m-%dT%H:%M:%S%z") | SYSTEM | para install | kernel=$KERNEL_VERSION | SYNC" >> "$PARA_STATE/audit.log"
+  echo "   ✓ .para/ exists (audit.log updated)"
 fi
-echo "   ✓ Governance + $rule_count rules synced"
 
-# === 5. Install root 'para' wrapper ===
+# === 6. Validate kernel compatibility (v1.4.1) ===
+if [ -f "$LIB_DIR/validator.sh" ]; then
+  echo "🔍 Validating library compatibility..."
+  source "$LIB_DIR/validator.sh"
+  validate_all_catalogs "$LIB_SRC" "$KERNEL_VERSION" || true
+fi
+
+# === 7. Install root 'para' wrapper ===
 echo "📦 Installing workspace 'para' wrapper..."
 
-# Backup existing wrapper if user has modified it
 if [ -f "$WS_ROOT/para" ]; then
   backup_file "$WS_ROOT/para"
 fi
@@ -190,7 +238,7 @@ cat > "$WS_ROOT/para" <<'WRAPPER'
 WS_ROOT="$(cd "$(dirname "$0")" && pwd)"
 export WORKSPACE_ROOT="$WS_ROOT"
 
-# Find repo location from .para-workspace.yml or known locations
+# Find repo location from known paths
 REPO_CLI=""
 for candidate in \
   "$WS_ROOT/Resources/references/para-workspace/cli/para" \
@@ -221,7 +269,8 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "🎉 Install & sync complete!"
 echo ""
 echo "  Kernel:    v$KERNEL_VERSION"
-echo "  Workflows: $wf_count files ($wf_updated updated)"
+echo "  Libraries: workflows + rules + skills (with catalog.yml)"
+echo "  State:     .para/ (audit.log active)"
 echo ""
 echo "💾 Backed-up files saved as .bak (if any were changed)."
 echo "   To restore: mv <file>.bak <file>"

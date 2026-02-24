@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# PARA Workspace Initializer (v1.4)
+# PARA Workspace Initializer (v1.4.1)
 # Creates a new workspace from repo + profile + language
-# Usage: para init [--profile=dev] [--lang=vi] [--path=./my-workspace]
+# Usage: para init [--profile=dev] [--lang=en] [--path=./my-workspace]
 
 set -e
 
@@ -174,9 +174,14 @@ workspace:
 EOL
 echo "   ✓ .para-workspace.yml created"
 
-# === Run full install (kernel, workflows, governance, para wrapper) ===
-# This replaces manual copy — install.sh handles everything including
-# .bak backups, permission, and the ./para wrapper script (BUG-02 fix)
+# === Create .para/ system state (v1.4.1) ===
+echo "🔒 Creating system state..."
+mkdir -p "$TARGET_PATH/.para/migrations"
+mkdir -p "$TARGET_PATH/.para/backups"
+echo "$(date -Iseconds 2>/dev/null || date +"%Y-%m-%dT%H:%M:%S%z") | SYSTEM | para init | profile=$PROFILE kernel=$KERNEL_VERSION | INIT" > "$TARGET_PATH/.para/audit.log"
+echo "   ✓ .para/ initialized"
+
+# === Run full install (kernel, workflows, rules, skills, para wrapper) ===
 echo ""
 echo "📦 Running full install..."
 export WORKSPACE_ROOT="$TARGET_PATH"

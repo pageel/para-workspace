@@ -2,7 +2,7 @@
 
 # PARA Workspace CLI
 # Usage: ./cli/para [command] [args...]
-# Version: 1.4.0
+# Version: 1.4.1
 
 set -e
 
@@ -11,8 +11,6 @@ CLI_DIR="$(cd "$(dirname "$0")" && pwd)"
 COMMANDS_DIR="$CLI_DIR/commands"
 
 # Workspace Root detection
-# If run from repo: workspace is 3 levels up from repo root
-# If run from workspace: workspace is current directory
 if [ -f ".para-workspace.yml" ]; then
   WORKSPACE_ROOT="$(pwd)"
 elif [ -f "../../.para-workspace.yml" ]; then
@@ -21,6 +19,9 @@ else
   WORKSPACE_ROOT="$(pwd)"
 fi
 export WORKSPACE_ROOT
+
+# Version
+VERSION="$(cat "$CLI_DIR/../VERSION" 2>/dev/null || echo "1.4.1")"
 
 case "$1" in
   init)
@@ -75,29 +76,70 @@ case "$1" in
     shift
     "$COMMANDS_DIR/rule.sh" "$@"
     ;;
+  test)
+    shift
+    echo "🧪 Running PARA Kernel Tests..."
+    echo ""
+    bash "$CLI_DIR/../tests/kernel/test-schemas.sh"
+    echo ""
+    bash "$CLI_DIR/../tests/kernel/test-invariants.sh"
+    ;;
+  version|-v|--version)
+    echo "PARA Workspace v$VERSION"
+    ;;
+  help|--help|-h)
+    # Fall through to default help
+    ;;&
   *)
-    echo "PARA Workspace CLI v1.4.0"
+    echo "PARA Workspace CLI v$VERSION"
     echo ""
-    echo "Usage: para [command] [args...]"
+    echo "Usage: para <command> [args...]"
     echo ""
-    echo "Core Commands:"
-    echo "  init [--profile=X] [--lang=X]  Create a new workspace"
-    echo "  scaffold <type> <name>         Create project/area/resource"
-    echo "  status [--json]                Show workspace status"
-    echo "  migrate [--from=X] [--to=Y]    Migrate workspace version"
-    echo "  archive <type>/<name>          Move to Archive/"
-    echo "  install [--force]              Sync kernel+workflows to workspace"
-    echo "  config [key] [value]           Manage workspace config"
+    echo "━━━ Core Commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
-    echo "Dev Commands:"
-    echo "  plan <proj> <desc>             Create implementation plan"
-    echo "  verify <proj> [desc]           Create/list walkthroughs"
-    echo "  review                         Audit workspace health"
+    echo "  init [--profile=X] [--lang=X]     Create a new workspace"
+    echo "       --profile=NAME               Workspace preset (general, dev, marketer, ceo)"
+    echo "       --lang=CODE                  Language (en, vi)"
+    echo "       --path=DIR                   Target directory"
     echo ""
-    echo "System Commands:"
-    echo "  update                         Update workspace templates"
-    echo "  work <command>                 Manage workflows"
-    echo "  rule <command>                 Manage rules"
+    echo "  scaffold <type> <name>            Create project, area, or resource"
+    echo "       type: project | area | resource"
+    echo ""
+    echo "  status [--json]                   Show workspace health & stats"
+    echo "  archive <type>/<name> [--force]   Move item to Archive/"
+    echo ""
+    echo "━━━ Sync & Upgrade ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "  update                            Pull latest repo + re-sync workspace"
+    echo "  install [--force]                 Sync kernel, workflows, rules, skills"
+    echo "       --force                      Overwrite all, even if local is newer"
+    echo ""
+    echo "  migrate [--from=X] [--to=Y]       Migrate workspace to new version"
+    echo "       --dry-run                    Preview changes without applying"
+    echo ""
+    echo "━━━ Dev Commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "  plan <project> <desc>             Create implementation plan"
+    echo "  verify <project> [desc]           Create/list walkthroughs"
+    echo "  review                            Deep workspace audit"
+    echo ""
+    echo "━━━ System Commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "  config [key] [value]              Get/set workspace config"
+    echo "  work <command>                    Manage workflows (list/add/remove)"
+    echo "  rule <command>                    Manage rules (list/add/remove)"
+    echo "  test                              Run kernel test suite"
+    echo "  version                           Show CLI version"
+    echo ""
+    echo "━━━ Examples ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "  para init --profile=dev --lang=en"
+    echo "  para scaffold project my-saas-app"
+    echo "  para status --json"
+    echo "  para update"
+    echo "  para migrate --from=1.4.0 --to=1.4.1 --dry-run"
+    echo ""
+    echo "Docs: https://github.com/pageel/para-workspace"
     exit 1
     ;;
 esac

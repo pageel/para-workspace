@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# PARA Workspace Migrator (v1.4)
-# Migrates a workspace from v1.3.x to v1.4.0
-# Usage: para migrate [--from=1.3.6] [--to=1.4.0] [--dry-run]
+# PARA Workspace Migrator (v1.4.1)
+# Migrates a workspace between versions
+# Usage: para migrate [--from=1.4.0] [--to=1.4.1] [--dry-run]
 
 set -e
 
@@ -18,15 +18,7 @@ normalize_path() {
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(normalize_path "$(cd "$SCRIPT_DIR/../.." && pwd)")"
 
-if [ -n "$WORKSPACE_ROOT" ]; then
-  WS_ROOT="$(normalize_path "$WORKSPACE_ROOT")"
-else
-  echo "❌ Error: WORKSPACE_ROOT not set."
-  echo "Run this from the workspace root or set WORKSPACE_ROOT."
-  exit 1
-fi
-
-# === Parse arguments ===
+# === Parse arguments (help first) ===
 FROM_VERSION=""
 TO_VERSION=""
 DRY_RUN=false
@@ -39,18 +31,32 @@ for arg in "$@"; do
     --help|-h)
       echo "Usage: para migrate [options]"
       echo ""
+      echo "Migrates a PARA workspace between versions."
+      echo ""
+      echo "Supported migration paths:"
+      echo "  v1.3.x → v1.4.0   Task model, metadata, kernel snapshot"
+      echo "  v1.4.0 → v1.4.1   Governed libraries, .para/ state, catalog.yml"
+      echo ""
       echo "Options:"
       echo "  --from=VERSION   Source version (auto-detected if not specified)"
       echo "  --to=VERSION     Target version (default: latest)"
       echo "  --dry-run        Preview changes without applying"
       echo ""
       echo "Examples:"
-      echo "  para migrate --from=1.3.6 --to=1.4.0 --dry-run"
-      echo "  para migrate --to=1.4.0"
+      echo "  para migrate --from=1.4.0 --to=1.4.1 --dry-run"
+      echo "  para migrate --to=1.4.1"
       exit 0
       ;;
   esac
 done
+
+if [ -n "$WORKSPACE_ROOT" ]; then
+  WS_ROOT="$(normalize_path "$WORKSPACE_ROOT")"
+else
+  echo "❌ Error: WORKSPACE_ROOT not set."
+  echo "Run this from the workspace root or set WORKSPACE_ROOT."
+  exit 1
+fi
 
 # Auto-detect current version
 if [ -z "$FROM_VERSION" ]; then
@@ -191,6 +197,84 @@ if [ "$DRY_RUN" = false ]; then
     done
     echo "     ✓ Governance & Rules installed"
   fi
+fi
+
+# ============================================================
+# Migration: v1.4.0 → v1.4.1 (Governed Libraries & Runtime)
+# ============================================================
+
+echo ""
+echo "━━━ v1.4.0 → v1.4.1 Migration ━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+# Step 7: Create .para/ system state
+echo "🔒 Step 7: Initialize .para/ system state..."
+PARA_STATE="$WS_ROOT/.para"
+if [ ! -d "$PARA_STATE" ]; then
+  run_or_preview "Create .para/" mkdir -p "$PARA_STATE"
+  run_or_preview "Create migrations/" mkdir -p "$PARA_STATE/migrations"
+  run_or_preview "Create backups/" mkdir -p "$PARA_STATE/backups"
+  if [ "$DRY_RUN" = false ]; then
+    echo "$(date -Iseconds 2>/dev/null || date +"%Y-%m-%dT%H:%M:%S%z") | SYSTEM | para migrate | from=$FROM_VERSION to=$TO_VERSION | INIT" > "$PARA_STATE/audit.log"
+    echo "     ✓ .para/ created with audit.log"
+  fi
+else
+  echo "  ✓ .para/ already exists"
+fi
+
+# Step 8: Create Resources/ai-agents/rules/ & skills/
+echo ""
+echo "📏 Step 8: Create governed library snapshots..."
+LIB_SRC="$REPO_ROOT/templates/common/agent"
+
+for lib in rules skills; do
+  SNAPSHOT_DIR="$WS_ROOT/Resources/ai-agents/$lib"
+  ACTIVE_DIR="$WS_ROOT/.agent/$lib"
+  SRC_DIR="$LIB_SRC/$lib"
+  
+  run_or_preview "Create Resources/ai-agents/$lib/" mkdir -p "$SNAPSHOT_DIR"
+  run_or_preview "Create .agent/$lib/" mkdir -p "$ACTIVE_DIR"
+
+  if [ "$DRY_RUN" = false ] && [ -d "$SRC_DIR" ]; then
+    for f in "$SRC_DIR"/*.md "$SRC_DIR"/catalog.yml; do
+      [ -f "$f" ] && cp "$f" "$SNAPSHOT_DIR/"
+    done
+    for f in "$SRC_DIR"/*.md; do
+      [ -f "$f" ] && cp "$f" "$ACTIVE_DIR/"
+    done
+    echo "     ✓ $lib library synced"
+  fi
+done
+
+# Step 9: Sync catalog.yml for workflows
+echo ""
+echo "📑 Step 9: Sync catalog.yml files..."
+for lib in workflows rules skills; do
+  CATALOG_SRC="$LIB_SRC/$lib/catalog.yml"
+  CATALOG_DEST="$WS_ROOT/Resources/ai-agents/$lib/catalog.yml"
+  if [ -f "$CATALOG_SRC" ]; then
+    run_or_preview "Copy $lib/catalog.yml" cp "$CATALOG_SRC" "$CATALOG_DEST"
+  fi
+done
+if [ "$DRY_RUN" = false ]; then
+  echo "     ✓ All catalog.yml files synced"
+fi
+
+# Step 10: Update kernel_version in .para-workspace.yml
+echo ""
+echo "⚙️  Step 10: Update workspace config..."
+if [ -f "$WS_ROOT/.para-workspace.yml" ]; then
+  if [ "$DRY_RUN" = false ]; then
+    sed -i "s/^kernel_version:.*/kernel_version: \"$TO_VERSION\"/" "$WS_ROOT/.para-workspace.yml"
+    echo "     ✓ kernel_version updated to $TO_VERSION"
+  else
+    echo "     → Would update kernel_version to $TO_VERSION"
+  fi
+fi
+
+# === Record migration ===
+if [ "$DRY_RUN" = false ] && [ -d "$WS_ROOT/.para/migrations" ]; then
+  echo "$FROM_VERSION → $TO_VERSION | $(date -Iseconds 2>/dev/null || date +"%Y-%m-%dT%H:%M:%S%z")" >> "$WS_ROOT/.para/migrations/history.log"
 fi
 
 # === Done ===

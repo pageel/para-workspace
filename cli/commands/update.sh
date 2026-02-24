@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# PARA Workspace Update Script (v1.4)
+# PARA Workspace Update Script (v1.4.1)
 # Safely updates templates without overwriting user data
 # Usage: para update
 
@@ -9,6 +9,27 @@ set -e
 # === Resolve paths ===
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+LIB_DIR="$SCRIPT_DIR/../lib"
+
+# Parse help
+for arg in "$@"; do
+  case "$arg" in
+    --help|-h)
+      echo "Usage: para update"
+      echo ""
+      echo "Pulls the latest PARA Workspace repo from GitHub and re-syncs"
+      echo "the workspace (kernel, workflows, rules, skills, CLI wrapper)."
+      echo ""
+      echo "This command:"
+      echo "  1. Runs 'git pull' on the repo"
+      echo "  2. Re-runs 'para install' to sync all libraries"
+      echo "  3. Validates library compatibility"
+      echo ""
+      echo "Existing files are backed up to .bak before overwriting."
+      exit 0
+      ;;
+  esac
+done
 
 echo "🔄 Updating PARA Workspace Template from GitHub..."
 
@@ -52,8 +73,13 @@ else
     echo "⏫ Upgraded: $CURRENT_VER -> $NEW_VER"
 fi
 
-# Re-run installation to sync rules, workflows and CLI wrapper
-echo "⚙️ Re-installing to sync workspace root..."
+# Re-run installation to sync rules, workflows, skills, and CLI wrapper
+echo "⚙️ Re-installing to sync workspace..."
 bash "$SCRIPT_DIR/install.sh"
+
+# Audit log
+if [ -n "$WORKSPACE_ROOT" ] && [ -f "$WORKSPACE_ROOT/.para/audit.log" ]; then
+  echo "$(date -Iseconds 2>/dev/null || date +"%Y-%m-%dT%H:%M:%S%z") | CLI | para update | from=$CURRENT_VER to=$NEW_VER | OK" >> "$WORKSPACE_ROOT/.para/audit.log"
+fi
 
 echo "✨ Update complete!"
