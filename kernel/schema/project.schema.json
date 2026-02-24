@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PARA Project Manifest",
+  "description": "Validates .project.yml — per-project metadata inside Projects/.",
+  "type": "object",
+  "required": ["name", "status", "kernel_version", "created_at"],
+  "additionalProperties": true,
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Kebab-case project name."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "inactive", "archived"],
+      "description": "Project lifecycle status."
+    },
+    "kernel_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+",
+      "description": "Kernel version at project creation."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 creation date."
+    },
+    "owner": {
+      "type": "string",
+      "description": "GitHub handle or name."
+    },
+    "profile": {
+      "type": "string",
+      "enum": ["dev", "general", "marketer", "ceo"],
+      "description": "Profile used for this project."
+    },
+    "deadline": {
+      "type": ["string", "null"],
+      "format": "date",
+      "description": "Optional deadline (ISO 8601 or null)."
+    },
+    "description": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

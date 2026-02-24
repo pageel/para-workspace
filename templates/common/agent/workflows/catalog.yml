@@ -1,0 +1,147 @@
+version: 1
+library: workflows
+description: "Stateless workflow library for PARA Workspace agents."
+items:
+  - id: backlog
+    name: "Backlog Controller"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "backlog.md"
+    description: "Manage project tasks via canonical backlog.md."
+    tags: ["tasks", "canonical"]
+
+  - id: open
+    name: "Session Open"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "open.md"
+    description: "Start session with context loading priority (H2)."
+    tags: ["session", "context"]
+
+  - id: end
+    name: "Session End"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "end.md"
+    description: "Close session with PARA classification."
+    tags: ["session", "classification"]
+
+  - id: install
+    name: "Install / Sync"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "install.md"
+    description: "Intelligent installer — sync kernel/workflows/rules into workspace."
+    tags: ["sync", "governance"]
+
+  - id: new-project
+    name: "New Project"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "new-project.md"
+    description: "Initialize new project with scaffolding."
+    tags: ["scaffold", "project"]
+
+  - id: verify
+    name: "Verify Task"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "verify.md"
+    description: "Verify task completion with walkthroughs."
+    tags: ["tasks", "verification"]
+
+  - id: retro
+    name: "Project Retrospective"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "retro.md"
+    description: "Project retrospective before archiving."
+    tags: ["archive", "review"]
+
+  - id: push
+    name: "Push"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "push.md"
+    description: "Fast commit and push to GitHub."
+    tags: ["vcs", "git"]
+
+  - id: release
+    name: "Release Gate"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "release.md"
+    description: "Pre-release quality gate."
+    tags: ["release", "quality"]
+
+  - id: merge
+    name: "Semantic Merge"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "merge.md"
+    description: "Resolve workflow conflicts with structured merge rules."
+    tags: ["merge", "conflict"]
+
+  - id: config
+    name: "Config Manager"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "config.md"
+    description: "Manage workspace configuration."
+    tags: ["config"]
+
+  - id: backup
+    name: "Backup"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "backup.md"
+    description: "Backup workflows, rules, and config."
+    tags: ["backup", "safety"]
+
+  - id: para
+    name: "PARA Master Controller"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "para.md"
+    description: "Master controller for workspace management."
+    tags: ["master", "governance"]
+
+  - id: inbox
+    name: "Inbox Categorizer"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "inbox.md"
+    description: "Categorize files from _inbox/ into PARA structure."
+    tags: ["inbox", "classification"]
+
+  - id: learn
+    name: "Learn & Capture"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "learn.md"
+    description: "Capture lessons and experiences into Areas/Learning."
+    tags: ["learning", "knowledge"]
+
+  - id: rule
+    name: "Rule Manager"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "rule.md"
+    description: "Manage and enforce PARA-compliant agent rules."
+    tags: ["rules", "governance"]

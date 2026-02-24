@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PARA Backlog Schema",
+  "description": "Validates the structure of backlog.md frontmatter (if YAML-based) or documents the expected markdown table format.",
+  "type": "object",
+  "required": ["project", "features"],
+  "additionalProperties": true,
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Project name this backlog belongs to."
+    },
+    "goal": {
+      "type": "string",
+      "description": "High-level goal statement."
+    },
+    "features": {
+      "type": "array",
+      "description": "List of features/tasks in the backlog.",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "priority", "status"],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Sequential feature ID."
+          },
+          "title": {
+            "type": "string",
+            "description": "Feature title."
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["High", "Medium", "Low"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["ToDo", "In Progress", "Done", "Blocked"],
+            "description": "Current status."
+          },
+          "completed_at": {
+            "type": ["string", "null"],
+            "format": "date",
+            "description": "Date completed (if Done)."
+          }
+        }
+      }
+    },
+    "bugs": {
+      "type": "array",
+      "description": "Known issues.",
+      "items": {
+        "type": "object",
+        "required": ["id", "issue", "priority", "status"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^BUG-\\d+$"
+          },
+          "issue": { "type": "string" },
+          "priority": {
+            "type": "string",
+            "enum": ["High", "Medium", "Low"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Open", "Fixed", "Won't Fix"]
+          }
+        }
+      }
+    }
+  }
+}

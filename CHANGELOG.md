@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.1] - 2026-02-24
+
+### Added
+
+- **RFC Process** (`rfcs/`):
+  - `TEMPLATE.md` — Standard template for proposing kernel changes.
+  - `accepted/0001-governed-agent-libraries.md` — First accepted RFC documenting the governed library system.
+
+- **Governed Library Catalogs** (`templates/common/agent/`):
+  - `workflows/catalog.yml` — 16 workflow entries with kernel_min/max compatibility metadata.
+  - `rules/catalog.yml` — 8 rule entries with kernel_min/max compatibility metadata.
+  - `skills/catalog.yml` — 1 skill entry (para-kit) with kernel_min/max compatibility metadata.
+
+- **Kernel Schemas** (`kernel/schema/`):
+  - `catalog.schema.json` — JSON Schema for validating catalog.yml files.
+  - `workspace.schema.json` — JSON Schema for .para-workspace.yml root config.
+  - `project.schema.json` — JSON Schema for per-project .project.yml manifest.
+  - `backlog.schema.json` — JSON Schema for backlog structure.
+
+- **CLI Internal Library** (`cli/lib/`):
+  - `validator.sh` — Parse catalog.yml and validate kernel compatibility with semver comparison.
+  - `logger.sh` — Structured logging with colored output and audit.log appending.
+  - `rollback.sh` — Atomic rollback mechanism for install/migrate operations.
+
+- **GitHub Governance** (`.github/`):
+  - `workflows/validate-pr.yml` — CI that enforces RFC requirement for invariant changes.
+  - `CODEOWNERS` — Review ownership for kernel, CLI, and governed libraries.
+  - `PULL_REQUEST_TEMPLATE.md` — PR template with PARA-specific checklist.
+
+- **Test Suite** (`tests/`):
+  - `kernel/test-schemas.sh` — Validates schema file existence, JSON validity, and required fields.
+  - `kernel/test-invariants.sh` — Validates kernel document integrity.
+  - `cli/test-init.sh` — Verifies para init creates all expected directories.
+  - `cli/test-migrate.sh` — Migration test skeleton.
+
+- **Project Template** (`templates/common/projects/.project.yml`):
+  - Machine-readable project manifest template for `para scaffold`.
+
+- **Kernel Heuristic H9**: Governed libraries require `catalog.yml` with `kernel_min` field.
+
+### Changed
+
+- **README**: Expanded repo and workspace architecture blocks with full sub-structure details, added Kernel ↔ Workspace Contracts table, updated Roadmap, linked RFC template in Contributing.
+- **Heuristics**: Added H9 (now 9 total heuristics, was 8).
+
 ## [1.4.0] - 2026-02-13
 
 ### ⚠️ Breaking Changes

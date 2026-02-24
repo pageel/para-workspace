@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.4.0-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.4.1-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -44,19 +44,24 @@ Agent    (Execution Environment)
 
 ```
 para-workspace/
-├── kernel/            # 🧠 Rules — invariants, heuristics, schemas
+├── .github/             # 🤖 CI/CD — validate-pr.yml, CODEOWNERS
+├── rfcs/                # 📝 RFC Process — TEMPLATE.md, proposed/, accepted/
+├── kernel/              # 🧠 Constitution
 │   ├── KERNEL.md
-│   ├── invariants.md  # 10 hard rules (change = MAJOR bump)
-│   ├── heuristics.md  # 8 soft conventions
-│   ├── schema/        # File format contracts
-│   └── examples/      # Compliance test vectors
-├── cli/               # 🔧 Tools
-│   ├── para           # Entry point
-│   └── commands/      # init, scaffold, status, migrate, archive, install...
-├── templates/         # 📦 Scaffolding & Agent Resources
-│   ├── common/        # 🧠 Centralized Rules, Skills, Workflows
-│   └── profiles/      # dev, general, marketer, ceo presets
-├── docs/              # 📖 Documentation
+│   ├── invariants.md    # 10 hard rules (MAJOR bump)
+│   ├── heuristics.md    # 9 soft conventions
+│   ├── schema/          # workspace, project, backlog, catalog schemas
+│   └── examples/        # valid/ + invalid/ compliance vectors
+├── cli/                 # 🔧 Compiler
+│   ├── para             # Entry point
+│   ├── lib/             # logger.sh, validator.sh, rollback.sh
+│   └── commands/        # init, scaffold, status, migrate, archive, install...
+├── templates/           # 📦 Scaffolding & Governed Libraries
+│   ├── common/agent/    # Centralized workflows/, rules/, skills/ + catalog.yml
+│   │   └── projects/    # .project.yml template
+│   └── profiles/        # dev, general, marketer, ceo presets
+├── tests/               # 🧪 kernel/ + cli/ integration tests
+├── docs/                # 📖 Documentation
 ├── CONTRIBUTING.md
 ├── VERSIONING.md
 ├── CHANGELOG.md
@@ -67,17 +72,28 @@ para-workspace/
 
 ```
 workspace/
-├── Projects/          # ⚡ Active work with deadlines
-├── Areas/             # 🛡️ Stable knowledge & SOPs
-├── Resources/         # 📚 References, tools, kernel snapshot
+├── Projects/            # ⚡ Active work with deadlines
+│   └── <project>/
+│       ├── project.md   # YAML frontmatter contract
+│       ├── sessions/    # Daily session logs + BACKLOG.md
+│       └── artifacts/   # tasks/, plans/, outputs/
+├── Areas/               # 🛡️ Stable knowledge & SOPs
+├── Resources/           # 📚 References, tools, kernel snapshot
 │   └── ai-agents/
-│       ├── kernel/    # Read-only snapshot from repo
-│       └── workflows/ # Workflow catalog
-├── Archive/           # ❄️ Cold storage
-├── _inbox/            # 📥 Uncategorized land zone
-├── .agent/            # 🤖 Agent runtime
+│       ├── kernel/      # Read-only snapshot from repo
+│       ├── workflows/   # Workflow catalog + catalog.yml
+│       ├── rules/       # Rules catalog + catalog.yml
+│       └── skills/      # Skills catalog + catalog.yml
+├── Archive/             # ❄️ Cold storage
+├── _inbox/              # 📥 Uncategorized landing zone
+├── .agent/              # 🤖 Agent runtime (mutable)
 │   ├── rules/
-│   └── workflows/
+│   ├── workflows/
+│   └── skills/          # Optional (default OFF)
+├── .para/               # 🔒 System state
+│   ├── audit.log        # Append-only operation log
+│   ├── migrations/      # Migration history
+│   └── backups/         # Pre-migrate snapshots
 ├── .para-workspace.yml
 └── README.md
 ```
@@ -140,9 +156,11 @@ This will `git pull` the repo and re-run `install.sh` to sync kernel, workflows,
   - Installs **kernel snapshot** to `Resources/ai-agents/kernel/`
   - Installs **workflows** to `.agent/workflows/` and catalog
   - Installs **agent governance** rules to `.agent/rules/`
+  - Syncs **rules** + **skills** libraries to `Resources/ai-agents/` (snapshots) and `.agent/` (runtime)
   - Creates **`./para`** wrapper at workspace root
   - Backs up conflicting files to `.bak`
 - ✅ Generates **`.para-workspace.yml`** with kernel version tracking
+- ✅ Initializes **`.para/`** state (audit.log, migrations/, backups/) for full auditability
 
 ---
 
@@ -167,16 +185,26 @@ The Kernel is the **constitution** of PARA Workspace — the rules that all work
 
 ### Heuristics (Soft Rules — change = MINOR/PATCH)
 
-| #   | Guideline                                   |
-| --- | ------------------------------------------- |
-| H1  | Naming conventions (kebab-case, PascalCase) |
-| H2  | Context loading priority                    |
-| H3  | Semantic versioning with approval levels    |
-| H4  | Standard project directory structure        |
-| H5  | Beads lifecycle                             |
-| H6  | VCS & Git boundaries                        |
-| H7  | Cross-project references via Resources      |
-| H8  | Workflow kernel compatibility               |
+| #   | Guideline                                                  |
+| --- | ---------------------------------------------------------- |
+| H1  | Naming conventions (kebab-case, PascalCase)                |
+| H2  | Context loading priority                                   |
+| H3  | Semantic versioning with approval levels                   |
+| H4  | Standard project directory structure                       |
+| H5  | Beads lifecycle                                            |
+| H6  | VCS & Git boundaries                                       |
+| H7  | Cross-project references via Resources                     |
+| H8  | Workflow kernel compatibility                              |
+| H9  | Governed libraries require `catalog.yml` with `kernel_min` |
+
+### Kernel ↔ Workspace Contracts
+
+| File                         | Schema                  | Enforced By                    |
+| ---------------------------- | ----------------------- | ------------------------------ |
+| `.para-workspace.yml`        | `workspace.schema.json` | `para init`, `para status`     |
+| `Projects/*/.project.yml`    | `project.schema.json`   | `para scaffold`, `para review` |
+| `artifacts/tasks/backlog.md` | `backlog.schema.json`   | `para verify`                  |
+| `*/catalog.yml`              | `catalog.schema.json`   | `para install`, `para update`  |
 
 ---
 
@@ -257,6 +285,7 @@ See [Migration Guide](./docs/migration.md) for details.
 
 - [x] v1.3.6 — Cross-Project Sync Queue
 - [x] v1.4.0 — Kernel Extraction & Repo Restructure
+- [x] v1.4.1 — Governed Libraries, RFC Process, Workspace Runtime Safety
 - [ ] v1.5.0 — PARA Landing Page (`paraworkspace.dev`)
 - [ ] v1.5.x — Multi-agent Routing
 - [ ] v2.0.0 — Safety Guardrails & Terminal Allowlist
@@ -267,7 +296,7 @@ See [Migration Guide](./docs/migration.md) for details.
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
-- Kernel invariant changes require an **RFC + MAJOR bump**
+- Kernel invariant changes require an **RFC + MAJOR bump** → See [rfcs/TEMPLATE.md](./rfcs/TEMPLATE.md)
 - Heuristic changes require a **PR + MINOR/PATCH bump**
 - All changes must pass test vectors in `kernel/examples/`
 
@@ -275,4 +304,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.4.0_
+_Version: 1.4.1_

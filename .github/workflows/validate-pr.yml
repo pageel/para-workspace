@@ -1,0 +1,36 @@
+name: Validate PR
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check kernel invariant changes require RFC
+        run: |
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+          if echo "$CHANGED" | grep -q "kernel/invariants.md"; then
+            if ! echo "$CHANGED" | grep -qE "rfcs/(proposed|accepted)/"; then
+              echo "❌ ERROR: Changes to kernel/invariants.md require an RFC."
+              echo "   Please create an RFC in rfcs/proposed/ first."
+              exit 1
+            fi
+          fi
+          echo "✅ Kernel invariant check passed."
+
+      - name: Validate JSON schemas
+        run: |
+          for schema in kernel/schema/*.json; do
+            echo "Validating $schema..."
+            jq empty "$schema" || { echo "❌ Invalid JSON: $schema"; exit 1; }
+          done
+          echo "✅ All schemas are valid JSON."
+
+      - name: Run kernel tests
+        run: |
+          bash tests/kernel/test-schemas.sh
+          bash tests/kernel/test-invariants.sh

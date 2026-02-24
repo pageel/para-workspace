@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PARA Workspace Configuration",
+  "description": "Validates .para-workspace.yml — the root workspace manifest.",
+  "type": "object",
+  "required": ["version", "kernel_version", "profile", "created_at"],
+  "additionalProperties": true,
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+",
+      "description": "Workspace schema version (semver)."
+    },
+    "kernel_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+",
+      "description": "Kernel version at time of init or last update."
+    },
+    "profile": {
+      "type": "string",
+      "enum": ["dev", "general", "marketer", "ceo"],
+      "description": "Active profile used during init."
+    },
+    "language": {
+      "type": "string",
+      "pattern": "^[a-z]{2}$",
+      "description": "ISO 639-1 language code (e.g., en, vi).",
+      "default": "en"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date when workspace was initialized."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date of last update/migrate."
+    },
+    "owner": {
+      "type": "string",
+      "description": "GitHub handle or name of workspace owner."
+    },
+    "libraries": {
+      "type": "object",
+      "description": "Installed library versions.",
+      "properties": {
+        "workflows": { "type": "string" },
+        "rules": { "type": "string" },
+        "skills": { "type": "string" }
+      }
+    }
+  }
+}

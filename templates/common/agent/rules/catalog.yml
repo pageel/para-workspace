@@ -1,0 +1,75 @@
+version: 1
+library: rules
+description: "Governance rule library applied to agent runtime."
+items:
+  - id: agent-behavior
+    name: "Agent Behavior"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "agent-behavior.md"
+    description: "Core behavioral constraints for AI agents."
+    tags: ["governance", "safety"]
+
+  - id: artifact-standard
+    name: "Artifact Standard"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "artifact-standard.md"
+    description: "Standards for task lists, plans, and walkthroughs."
+    tags: ["artifacts", "standards"]
+
+  - id: context-rules
+    name: "Context Rules"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "context-rules.md"
+    description: "Rules for context loading and session management."
+    tags: ["context", "session"]
+
+  - id: exports-data
+    name: "Data Export Rules"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "exports-data.md"
+    description: "Rules governing data export and external sharing."
+    tags: ["data", "exports", "safety"]
+
+  - id: naming
+    name: "Naming Conventions"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "naming.md"
+    description: "File and directory naming standards."
+    tags: ["naming", "conventions"]
+
+  - id: para-discipline
+    name: "PARA Discipline"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "para-discipline.md"
+    description: "Enforce PARA classification discipline (P/A/R/A/_inbox)."
+    tags: ["para", "classification", "universal"]
+
+  - id: vcs
+    name: "Version Control"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "vcs.md"
+    description: "Git and version control best practices."
+    tags: ["vcs", "git"]
+
+  - id: versioning
+    name: "Versioning Policy"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "versioning.md"
+    description: "Semantic versioning policy for workspace and projects."
+    tags: ["versioning", "semver"]

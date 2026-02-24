@@ -132,3 +132,25 @@ kernel_compat: ">=1.0.0 <2.0.0"
 ```
 
 This helps detect issues when the kernel changes (e.g., renamed files, changed schemas).
+
+## H9. Governed Library Catalogs
+
+Every governed library (workflows, rules, skills) in `templates/common/agent/` MUST include
+a `catalog.yml` file with the following minimum fields per item:
+
+| Field         | Required | Description                        |
+| ------------- | -------- | ---------------------------------- |
+| `id`          | ✅       | Stable kebab-case identifier       |
+| `name`        | ✅       | Human-readable name                |
+| `version`     | ✅       | Semver version of the library item |
+| `kernel_min`  | ✅       | Minimum kernel version required    |
+| `kernel_max`  | ❌       | Optional max kernel version        |
+| `entrypoint`  | ✅       | Relative path to the markdown file |
+| `description` | ✅       | Short description                  |
+| `tags`        | ❌       | Optional list of tags              |
+
+Schema: `kernel/schema/catalog.schema.json`
+
+The installer (`para install`, `para update`) MUST validate `kernel_min` / `kernel_max`
+against the workspace's kernel version before syncing. Incompatible items are skipped
+with a clear warning.

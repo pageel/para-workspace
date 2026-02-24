@@ -1,0 +1,14 @@
+# CODEOWNERS — Ownership rules for code review
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Kernel invariants — require maintainer review (MAJOR change)
+/kernel/invariants.md   @pageel
+
+# Kernel schemas — require maintainer review
+/kernel/schema/         @pageel
+
+# CLI commands — require maintainer review
+/cli/                   @pageel
+
+# Governed libraries — require maintainer review
+/templates/common/agent/ @pageel
