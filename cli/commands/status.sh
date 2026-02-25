@@ -169,9 +169,16 @@ fi
 
 # Agent stats
 echo ""
-echo "🤖 Agent Intelligence:"
-g_rules=$(find "$WS_ROOT/.agent/rules" -maxdepth 1 -name "*.md" 2>/dev/null | wc -l || echo 0)
-g_wfs=$(find "$WS_ROOT/.agent/workflows" -maxdepth 1 -name "*.md" 2>/dev/null | wc -l || echo 0)
-k_inv=$(grep -c "^## I" "$WS_ROOT/Resources/ai-agents/kernel/invariants.md" 2>/dev/null || echo 0)
-echo "  Rules: $g_rules | Workflows: $g_wfs | Kernel Invariants: $k_inv"
+echo "🤖 Agent Runtime:"
+wf_total=$(find "$WS_ROOT/.agent/workflows" -maxdepth 1 -name "*.md" 2>/dev/null | wc -l || echo 0)
+wf_catalog=$(grep -rl "^source: catalog" "$WS_ROOT/.agent/workflows/"*.md 2>/dev/null | wc -l || echo 0)
+wf_user=$((wf_total - wf_catalog))
+echo "  Workflows: $wf_total ($wf_catalog catalog, $wf_user user)"
+
+rl_total=$(find "$WS_ROOT/.agent/rules" -maxdepth 1 -name "*.md" 2>/dev/null | wc -l || echo 0)
+echo "  Rules:     $rl_total"
+
+sk_total=$(find "$WS_ROOT/.agent/skills" -maxdepth 1 -type d 2>/dev/null | tail -n +2 | wc -l || echo 0)
+echo "  Skills:    $sk_total"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
