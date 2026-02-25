@@ -137,11 +137,20 @@ items:
     description: "Capture lessons and experiences into Areas/Learning."
     tags: ["learning", "knowledge"]
 
-  - id: rule
+  - id: para-workflow
+    name: "Workflow Manager"
+    version: "1.0.0"
+    kernel_min: "1.4.1"
+    kernel_max: "1.x"
+    entrypoint: "para-workflow.md"
+    description: "Manage, install, and standardize AI Agent workflows."
+    tags: ["workflows", "governance", "catalog"]
+
+  - id: para-rule
     name: "Rule Manager"
     version: "1.0.0"
-    kernel_min: "1.4.0"
+    kernel_min: "1.4.1"
     kernel_max: "1.x"
-    entrypoint: "rule.md"
-    description: "Manage and enforce PARA-compliant agent rules."
-    tags: ["rules", "governance"]
+    entrypoint: "para-rule.md"
+    description: "Manage, install, and standardize AI Agent rules."
+    tags: ["rules", "governance", "catalog"]

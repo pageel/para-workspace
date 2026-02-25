@@ -4,7 +4,7 @@ description: Master PARA Workspace management workflow. Standardize, configure, 
 
 # /para
 
-> **Workspace Version:** 1.4.x (PARA Architecture)
+> **Workspace Version:** 1.4.1 (Governed Libraries)
 
 The master controller workflow for the PARA Workspace. Use it to audit, configure, and maintain workspace health.
 
@@ -24,16 +24,17 @@ Extend workspace capabilities by managing workflows and rules:
 
 Managed via **`/para-workflow`**:
 
-- `list`: Show catalog vs. active workflows.
-- `install`: Download from `Resources/ai-agents/workflows/`.
-- `standardize`: Upgrade local workflows to the latest PARA standards.
+- `list`: Compare active workflows vs. governed `catalog.yml`.
+- `install`: Install from governed catalog into `.agent/workflows/`.
+- `standardize`: Upgrade local workflows to v1.4.1 standards.
+- `validate`: Check compliance without making changes.
 
 ### 2. Rules
 
 Managed via **`/para-rule`**:
 
-- `list`: Show catalog vs. active rules.
-- `install`: Download from `Resources/ai-agents/rules/`.
+- `list`: Compare active rules vs. governed `catalog.yml`.
+- `install`: Install from governed catalog into `.agent/rules/`.
 - `standardize`: Ensure rules comply with `para-discipline.md`.
 
 ---
@@ -45,7 +46,7 @@ Managed via **`/para-rule`**:
 - **Scaffolding**: Create new PARA-compliant projects with `./para scaffold [name]`.
 - **Migration**: Upgrade legacy projects using `./para migrate [project]`.
 - **Archiving**: Graduate completed projects to `Archive/` after a `/retro`.
-- **Configuration**: Managed via **`/config`** for `metadata.json` and workspace settings.
+- **Configuration**: Managed via **`/config`** for `.para-workspace.yml` and workspace settings.
 
 ---
 

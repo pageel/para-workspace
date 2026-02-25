@@ -4,9 +4,9 @@ description: Intelligent agentic installer for workflows and rules. Handles upda
 
 # /install [type] [name]
 
-> **Workspace Version:** 1.4.0
+> **Workspace Version:** 1.4.1 (Governed Libraries)
 
-Use this workflow to install or update components from the PARA Catalog. It handles conflicts intelligently.
+Install or update components from the governed PARA Catalog into the workspace. Handles conflicts intelligently.
 
 ## Usage
 
@@ -18,28 +18,43 @@ Use this workflow to install or update components from the PARA Catalog. It hand
 ## Logic Flow
 
 1.  **Resolve Source & Destination**:
-    - **Workflows**: `.agent/workflows/[name].md` -> `.agent/workflows/[name].md`
-    - **Rules**: `.agent/rules/[name].md` -> `.agent/rules/[name].md`
+    - **Workflows**:
+      - Source: Governed catalog directory (e.g., `templates/common/agent/workflows/[name].md` in repo)
+      - Destination: `.agent/workflows/[name].md`
+    - **Rules**:
+      - Source: Governed catalog directory (e.g., `templates/common/agent/rules/[name].md` in repo)
+      - Destination: `.agent/rules/[name].md`
 
 2.  **Check Status**:
     - If Destination does NOT exist: **Install immediately**.
     - If Destination EXISTS: **Trigger Conflict Resolution**.
 
 3.  **Conflict Resolution (Interactive)**:
-    - Agent checks if content is identical. If yes -> "Already up to date."
+    - Agent checks if content is identical. If yes → "Already up to date."
     - If different, Agent asks User:
       - **[O]verwrite**: Replace local with catalog version.
-      - **[M]erge**: (Workflows only) Intelligently combine both.
-      - **[R]ename**: Install catalog version as `p-[name].md` (or custom name).
+      - **[M]erge**: (Workflows only) Intelligently combine both. Delegates to `/merge`.
+      - **[R]ename**: Install catalog version as `[name]-catalog.md` (or custom name).
       - **[C]ancel**: Do nothing.
 
 4.  **Execution**:
     - Perform the selected file operation.
-    - If Merge: Use semantic analysis to blend content.
+    - If Merge: Delegate to `/merge` workflow for semantic analysis.
 
 ## Step-by-Step Instructions
 
-### 1. Verification
+### 1. Resolve Catalog Source
+
+// turbo
+
+Find the catalog source directory (in priority order):
+
+1. `Projects/para-workspace/repo/templates/common/agent/`
+2. `Resources/references/para-workspace/templates/common/agent/`
+
+Determine `TYPE` (`work` → `workflows/`, `rule` → `rules/`) and construct full source path.
+
+### 2. Check Conflict
 
 // turbo
 
@@ -48,21 +63,24 @@ TYPE="[type]" # 'work' or 'rule'
 NAME="[name]"
 
 if [ "$TYPE" == "work" ]; then
-    SRC=".agent/workflows/$NAME.md"
     DEST=".agent/workflows/$NAME.md"
 else
-    SRC=".agent/rules/$NAME.md"
     DEST=".agent/rules/$NAME.md"
 fi
 
-if [ ! -f "$SRC" ]; then echo "❌ Catalog item not found: $SRC"; exit 1; fi
-if [ -f "$DEST" ]; then echo "⚠️ PARAM_CONFLICT=true"; else echo "✅ PARAM_CONFLICT=false"; fi
+if [ -f "$DEST" ]; then echo "⚠️ CONFLICT: $DEST already exists"; else echo "✅ No conflict"; fi
 ```
 
-### 2. Action
+### 3. Action
 
-- If `PARAM_CONFLICT=false`: Copy `SRC` to `DEST`. Report success.
-- If `PARAM_CONFLICT=true`:
+- If no conflict: Copy source to destination. Report success.
+- If conflict:
   - **Compare**: Read both files. Summarize differences.
-  - **Ask**: "File exists. Overwrite, Merge, or Rename?"
+  - **Ask**: "File exists. [O]verwrite, [M]erge, [R]ename, or [C]ancel?"
   - **Act**: Execute user choice.
+
+## Related
+
+- `/merge` — Semantic merge for workflow conflicts
+- `/para-workflow` — Workflow catalog management
+- `/para-rule` — Rule catalog management

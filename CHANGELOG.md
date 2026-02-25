@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.1] - 2026-02-25
+
+### Added
+
+- **Workflow: `/para-workflow`** — New governed workflow for managing, installing, standardizing, and validating agent workflows against `catalog.yml`.
+- **Workflow: `/para-rule`** — New governed workflow for managing, installing, standardizing, and validating agent rules. Replaces legacy `rule.md`.
+- **Catalog Entries**: Added `para-workflow` and `para-rule` to `workflows/catalog.yml` (now 17 total entries).
+
+### Changed
+
+- **All 17 Governed Workflows Standardized to v1.4.1**:
+  - Unified version label to `1.4.1 (Governed Libraries)`.
+  - Translated remaining Vietnamese instructions to English.
+  - Replaced legacy `Resources/ai-agents/` paths with governed catalog paths.
+  - Added `// turbo` annotations on all safe-to-autorun steps.
+  - Added `## Related` section to all workflows.
+  - Fixed `metadata.json` references → `.para-workspace.yml`.
+  - Fixed `Resources/Remotes/` → `Resources/references/` (lowercase).
+  - Removed legacy `/p-` prefixes (`/p-backup`, `/p-release`, `/p-retro`, `/p-verify`).
+  - Expanded stub workflows (`config`, `release`, `retro`, `verify`, `new-project`) with full step-by-step instructions.
+- **README (EN/VI)**: Updated workspace structure tree, install.sh description, workflow catalog (17 entries), and roadmap.
+
+### Removed
+
+- **`rule.md`** — Replaced by `para-rule.md` with richer functionality and catalog awareness.
+
 ## [1.4.1] - 2026-02-24
 
 ### Added

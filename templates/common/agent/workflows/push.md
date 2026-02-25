@@ -1,14 +1,19 @@
+---
+description: Fast commit and push to GitHub with verification
+---
+
 # /push [project-name] ["message"] [--quick]
 
-> **Workspace Version:** 1.4.0
+> **Workspace Version:** 1.4.1 (Governed Libraries)
 
 Fast commit and push changes to GitHub with verification.
 
 ## Usage
 
 ```
-/push pageel-website             # Default: Build & Test before push
-/push pageel-website --quick     # Quick push: Skip build/test
+/push [project-name]                    # Default: Build & Test before push
+/push [project-name] --quick            # Quick push: Skip build/test
+/push [project-name] "feat: new thing"  # With explicit commit message
 ```
 
 ## Options
@@ -25,7 +30,7 @@ Fast commit and push changes to GitHub with verification.
 // turbo
 
 ```bash
-cd [project-path]/repo && git status
+cd Projects/[project-name]/repo && git status
 ```
 
 ### 2. Check Ignore Files (MANDATORY - per vcs.md)
@@ -33,10 +38,11 @@ cd [project-path]/repo && git status
 // turbo
 
 ```bash
+cd Projects/[project-name]/repo
 # Check if ignore file exists
 test -f .gitignore && echo "✅ Ignore file exists" || echo "❌ WARNING: No ignore file!"
 
-# Scan for dangerous/IDE files being tracked (Includes .env, keys, and IDE settings)
+# Scan for dangerous/IDE files being tracked
 git ls-files | grep -E '\.(env|pem|key|sqlite|db)$|id_rsa|credentials|secrets|\.vscode/|\.idea/' && echo "⚠️ WARNING: Sensitive files or IDE settings detected!" || echo "✅ No sensitive files detected"
 ```
 
@@ -53,7 +59,7 @@ git ls-files | grep -E '\.(env|pem|key|sqlite|db)$|id_rsa|credentials|secrets|\.
 // turbo
 
 ```bash
-npm run build
+cd Projects/[project-name]/repo && npm run build
 ```
 
 If build fails, **MUST STOP** and report detailed errors to the user.
@@ -75,7 +81,7 @@ Ask user to:
 - `refactor:` - Restructuring
 - `chore:` - Maintenance
 
-### 5. Update CHANGELOG.md
+### 5. Update CHANGELOG.md (if exists)
 
 ```markdown
 ## [Unreleased]
@@ -94,6 +100,7 @@ Ask user to:
 // turbo
 
 ```bash
+cd Projects/[project-name]/repo
 git add .
 git commit -m "[message]"
 ```
@@ -101,7 +108,7 @@ git commit -m "[message]"
 // turbo
 
 ```bash
-git push
+cd Projects/[project-name]/repo && git push
 ```
 
 ### 7. Confirmation
@@ -110,8 +117,7 @@ git push
 ✅ Pushed to GitHub!
 📝 Commit: [hash] - [message]
 📊 Files: [N] changed
-📋 CHANGELOG: Updated
-🔗 Vercel will auto-deploy
+📋 CHANGELOG: Updated (if applicable)
 ```
 
 ## Troubleshooting
@@ -123,9 +129,8 @@ git push
 | `Email privacy blocked` | Use `user@users.noreply.github.com`              |
 | `Build failed`          | Report error to user to decide fix or force push |
 
-## Notes
+## Related
 
-- Always update CHANGELOG.md before pushing
-- Vercel auto-deploys when pushing to `main`
-- Always Build/Test before pushing to ensure stability (unless `--quick`)
-- **Always check ignore files before pushing** (see `.agent/rules/vcs.md`)
+- `/end` — End session and log progress
+- `/release` — Pre-release quality gate
+- `/backlog` — Update task status after push

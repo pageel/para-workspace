@@ -2,11 +2,11 @@
 description: Backup workflows, rules, and important config files
 ---
 
-# /p-backup [target]
+# /backup [target]
 
-> **Workspace Version:** 1.4.0
+> **Workspace Version:** 1.4.1 (Governed Libraries)
 
-Create a date-stamped snapshot of important workspace configuration files into `Areas/Infrastructure/backup/`.
+Create a date-stamped snapshot of important workspace configuration files into `.para/backups/`.
 
 ## Usage
 
@@ -24,8 +24,7 @@ Create a date-stamped snapshot of important workspace configuration files into `
 // turbo
 
 ```bash
-WORKSPACE_ROOT="$(pwd)"
-BACKUP_DIR="$WORKSPACE_ROOT/Areas/Infrastructure/backup/$(date +%Y-%m-%d)"
+BACKUP_DIR=".para/backups/$(date +%Y-%m-%d)"
 mkdir -p "$BACKUP_DIR"
 echo "📁 Backup dir: $BACKUP_DIR"
 ```
@@ -37,10 +36,9 @@ echo "📁 Backup dir: $BACKUP_DIR"
 // turbo
 
 ```bash
-WORKSPACE_ROOT="$(pwd)"
-BACKUP_DIR="$WORKSPACE_ROOT/Areas/Infrastructure/backup/$(date +%Y-%m-%d)"
+BACKUP_DIR=".para/backups/$(date +%Y-%m-%d)"
 mkdir -p "$BACKUP_DIR/workflows"
-cp -r "$WORKSPACE_ROOT/.agent/workflows/"*.md "$BACKUP_DIR/workflows/" 2>/dev/null
+cp .agent/workflows/*.md "$BACKUP_DIR/workflows/" 2>/dev/null
 echo "✅ Workflows: $(ls "$BACKUP_DIR/workflows/" 2>/dev/null | wc -l) files backed up"
 ```
 
@@ -49,10 +47,9 @@ echo "✅ Workflows: $(ls "$BACKUP_DIR/workflows/" 2>/dev/null | wc -l) files ba
 // turbo
 
 ```bash
-WORKSPACE_ROOT="$(pwd)"
-BACKUP_DIR="$WORKSPACE_ROOT/Areas/Infrastructure/backup/$(date +%Y-%m-%d)"
+BACKUP_DIR=".para/backups/$(date +%Y-%m-%d)"
 mkdir -p "$BACKUP_DIR/rules"
-cp -r "$WORKSPACE_ROOT/.agent/rules/"*.md "$BACKUP_DIR/rules/" 2>/dev/null
+cp .agent/rules/*.md "$BACKUP_DIR/rules/" 2>/dev/null
 echo "✅ Rules: $(ls "$BACKUP_DIR/rules/" 2>/dev/null | wc -l) files backed up"
 ```
 
@@ -61,9 +58,8 @@ echo "✅ Rules: $(ls "$BACKUP_DIR/rules/" 2>/dev/null | wc -l) files backed up"
 // turbo
 
 ```bash
-WORKSPACE_ROOT="$(pwd)"
-BACKUP_DIR="$WORKSPACE_ROOT/Areas/Infrastructure/backup/$(date +%Y-%m-%d)"
-cp "$WORKSPACE_ROOT/.para-workspace.yml" "$BACKUP_DIR/.para-workspace.yml" 2>/dev/null
+BACKUP_DIR=".para/backups/$(date +%Y-%m-%d)"
+cp .para-workspace.yml "$BACKUP_DIR/.para-workspace.yml" 2>/dev/null
 echo "✅ .para-workspace.yml backed up"
 ```
 
@@ -72,7 +68,7 @@ echo "✅ .para-workspace.yml backed up"
 // turbo
 
 ```bash
-BACKUP_ROOT="$(pwd)/Areas/Infrastructure/backup"
+BACKUP_ROOT=".para/backups"
 cd "$BACKUP_ROOT"
 ls -d 20??-??-?? 2>/dev/null | sort -r | tail -n +6 | xargs rm -rf 2>/dev/null
 echo "🧹 Cleanup done. Snapshots remaining: $(ls -d 20??-??-?? 2>/dev/null | wc -l)"
@@ -83,11 +79,11 @@ echo "🧹 Cleanup done. Snapshots remaining: $(ls -d 20??-??-?? 2>/dev/null | w
 ```
 ✅ Backup complete!
 📅 Snapshot: YYYY-MM-DD
-📁 Location: Areas/Infrastructure/backup/YYYY-MM-DD/
+📁 Location: .para/backups/YYYY-MM-DD/
 📊 Workflows: N files | Rules: N files | Metadata: ✓/✗
 
 💡 To restore, copy files from backup to original location:
-   cp Areas/Infrastructure/backup/YYYY-MM-DD/workflows/* .agent/workflows/
+   cp .para/backups/YYYY-MM-DD/workflows/* .agent/workflows/
 ```
 
 ## Restore
@@ -96,16 +92,17 @@ When restoring from a backup:
 
 ```bash
 # Restore all workflows
-cp Areas/Infrastructure/backup/YYYY-MM-DD/workflows/* .agent/workflows/
+cp .para/backups/YYYY-MM-DD/workflows/* .agent/workflows/
 
 # Restore a single file
-cp Areas/Infrastructure/backup/YYYY-MM-DD/workflows/backlog.md .agent/workflows/backlog.md
+cp .para/backups/YYYY-MM-DD/workflows/backlog.md .agent/workflows/backlog.md
 
 # Restore metadata
-cp Areas/Infrastructure/backup/YYYY-MM-DD/.para-workspace.yml ./.para-workspace.yml
+cp .para/backups/YYYY-MM-DD/.para-workspace.yml ./.para-workspace.yml
 ```
 
 ## Related
 
-- `/install` - Install workflow from catalog (alternative to restore)
-- `/merge` - Merge new workflow with customized version
+- `/install` — Install workflow from catalog (alternative to restore)
+- `/merge` — Merge new workflow with customized version
+- `/para` — Master workspace controller

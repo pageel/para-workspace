@@ -4,40 +4,64 @@ description: Package lessons and knowledge into Areas/Learning
 
 # /learn [topic-name]
 
-> **Workspace Version:** 1.4.0
+> **Workspace Version:** 1.4.1 (Governed Libraries)
 
-This workflow standardizes the storage of knowledge and experience accumulated during development according to the PARA Workspace standard.
+Capture and standardize knowledge and experience accumulated during development, stored in `Areas/Learning/`.
 
-### Steps:
+## Steps
 
-1. **Identify the topic**: Summarize the lesson or experience to be stored.
-2. **Create a new file**: Create a `.md` file in `Areas/Learning/[topic-name].md`.
-3. **Apply the Template**:
+### 1. Identify the Topic
 
-   ```markdown
-   # [Lesson Title]
+Summarize the lesson or experience to be stored. Determine the category:
 
-   > [Core value summary of the lesson]
+- **Technical** (Git, DevOps, Architecture)
+- **Process** (Workflows, Best Practices)
+- **Domain** (Business logic, Industry knowledge)
 
-   ## Context
+### 2. Create Learning File
 
-   - Describe the situation or error encountered.
-   - Why the old method was ineffective.
+// turbo
 
-   ## Solution
+Create a `.md` file at `Areas/Learning/[topic-name].md` using this template:
 
-   - Detailed handling method.
-   - Tools or techniques used (e.g., React Portal, Python Script...).
+```markdown
+# [Lesson Title]
 
-   ## Key Learnings
+> [Core value summary of the lesson]
 
-   - Point 1: Technical.
-   - Point 2: Process.
-   - Point 3: Important notes.
+## Context
 
-   ## Code Example (If applicable)
+- Describe the situation or error encountered.
+- Why the old method was ineffective.
 
-   - Code snippet illustrating the optimal solution.
-   ```
+## Solution
 
-4. **Update README**: Add a link to the lesson in `Areas/Learning/README.md` under the appropriate category (Git, Development, Best Practices...).
+- Detailed handling method.
+- Tools or techniques used (e.g., React Portal, Python Script...).
+
+## Key Learnings
+
+- Point 1: Technical.
+- Point 2: Process.
+- Point 3: Important notes.
+
+## Code Example (If applicable)
+
+- Code snippet illustrating the optimal solution.
+```
+
+### 3. Update Index
+
+// turbo
+
+Add a link to the lesson in `Areas/Learning/README.md` under the appropriate category (Git, Development, Best Practices...).
+
+### 4. Cross-Reference (Optional)
+
+If the lesson originated from a specific project, add a reference back in the project's session log.
+
+## Related
+
+- `/end` — End session (may trigger /learn for significant discoveries)
+- `/retro` — Project retrospective (graduates beads to learnings)
+- `/inbox` — Categorize incoming files

@@ -2,9 +2,11 @@
 description: Manage project features and bugs
 ---
 
-# /p-backlog [project-name] [action]
+# /backlog [project-name] [action]
 
-> **Workspace Version:** 1.4.x (PARA Architecture) backlog in `Projects/[project]/sessions/BACKLOG.md`.
+> **Workspace Version:** 1.4.1 (Governed Libraries)
+
+Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/backlog.md`.
 
 ## Actions
 
@@ -13,9 +15,44 @@ description: Manage project features and bugs
 - `evaluate`: ICE scoring for priorities.
 - `update`: Update status of existing items.
 
+## Steps
+
+### review
+
+// turbo
+
+1. Read `Projects/[project-name]/artifacts/tasks/backlog.md`.
+2. Display summary table (Total / Done / High / Medium / Low).
+3. Highlight top 3 actionable items (not Done, sorted by priority).
+
+### add
+
+1. Ask: Epic or standalone? Feature or Bug?
+2. Generate next available ID with proper prefix.
+3. Append to the correct section in backlog.md.
+4. Update Summary counts.
+5. Update `_Last updated` date.
+
+### evaluate
+
+1. List all items with status ⏳ Pending or 🚀 ToDo.
+2. For each, ask user to score Impact / Confidence / Ease (1-10).
+3. Calculate ICE = Impact × Confidence × Ease.
+4. Update the ICE Evaluation table.
+5. Sort by ICE Score descending.
+6. Suggest priority hints based on score ranges.
+
+### update
+
+1. Ask: Which ID to update?
+2. Set new status value.
+3. Update `_Last updated` date.
+
+---
+
 ## Backlog Template
 
-When creating a new BACKLOG.md, use this structure:
+When creating a new backlog.md, use this structure:
 
 ```markdown
 # [Project Name] - Product Backlog
@@ -96,27 +133,8 @@ _Last updated: YYYY-MM-DD_
 | 🟡 Medium | Important but not blocking |
 | 🟢 Low    | Nice-to-have, can defer    |
 
-## Steps
+## Related
 
-### review
-
-1. Read `Projects/[project]/sessions/BACKLOG.md`.
-2. Display summary table (Total / Done / High / Medium / Low).
-3. Highlight top 3 actionable items (not Done, sorted by priority).
-
-### add
-
-1. Ask: Epic or standalone? Feature or Bug?
-2. Generate next available ID with proper prefix.
-3. Append to the correct section in BACKLOG.md.
-4. Update Summary counts.
-5. Update `_Last updated` date.
-
-### evaluate
-
-1. List all items with status ⏳ Pending or 🚀 ToDo.
-2. For each, ask user to score Impact / Confidence / Ease (1-10).
-3. Calculate ICE = Impact × Confidence × Ease.
-4. Update the ICE Evaluation table.
-5. Sort by ICE Score descending.
-6. Suggest priority hints based on score ranges.
+- `/open` — Start session with context loading
+- `/end` — End session and log progress
+- `/verify` — Verify task completion

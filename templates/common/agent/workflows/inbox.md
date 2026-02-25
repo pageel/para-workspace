@@ -4,6 +4,8 @@ description: Categorize files from the _inbox/ directory
 
 # /inbox [filename]
 
+> **Workspace Version:** 1.4.1 (Governed Libraries)
+
 Automatically or manually categorize incoming files from the `_inbox/` directory into their permanent locations within the PARA structure.
 
 ## Usage
@@ -15,11 +17,11 @@ Automatically or manually categorize incoming files from the `_inbox/` directory
 
 ---
 
-## 🔍 Steps
+## Steps
 
 ### 1. Scan Inbox
 
-//turbo
+// turbo
 
 ```bash
 ls -la _inbox/
@@ -27,19 +29,17 @@ ls -la _inbox/
 
 ### 2. Categorization Logic
 
-| Category               | Indicators             | Target Directory                          |
-| :--------------------- | :--------------------- | :---------------------------------------- |
-| **Code Templates**     | `.tsx`, `.jsx`, `.vue` | `Resources/Reference/code/components/`    |
-| **Logic Snippets**     | `.ts`, `.js`, `.py`    | `Resources/Reference/code/snippets/`      |
-| **Design Patterns**    | `.md` regarding design | `Resources/Reference/code/patterns/`      |
-| **Integrations**       | API/Webhook code       | `Resources/Reference/code/integrations/`  |
-| **Research/Tutorials** | `.md` how-to guides    | `Resources/Reference/articles/tutorials/` |
-| **Project Assets**     | `[p]-logo.png`, `.csv` | `Resources/Assets/[project-name]/`        |
-| **Learning**           | Notes, best practices  | `Areas/Infrastructure/learning/`          |
+| Category               | Indicators             | Target Directory                            |
+| :--------------------- | :--------------------- | :------------------------------------------ |
+| **Code Templates**     | `.tsx`, `.jsx`, `.vue` | `Resources/references/code/components/`     |
+| **Logic Snippets**     | `.ts`, `.js`, `.py`    | `Resources/references/code/snippets/`       |
+| **Design Patterns**    | `.md` regarding design | `Resources/references/code/patterns/`       |
+| **Integrations**       | API/Webhook code       | `Resources/references/code/integrations/`   |
+| **Research/Tutorials** | `.md` how-to guides    | `Resources/references/articles/tutorials/`  |
+| **Project Assets**     | `[p]-logo.png`, `.csv` | `Projects/[project-name]/artifacts/assets/` |
+| **Learning**           | Notes, best practices  | `Areas/Learning/`                           |
 
----
-
-## 🛠 Action: Move File
+### 3. Move File
 
 1. **Check for duplicates**: If target file exists, append timestamp `_YYYYMMDD`.
 2. **Ensure directory exists**: Run `mkdir -p "[target-dir]"`.
@@ -54,3 +54,10 @@ ls -la _inbox/
 
 - **Large files (>10MB)**: Confirm with User before moving if storage is a concern.
 - **Unidentified files**: Keep in `_inbox/` and ask for clarification.
+- Files moved to `Projects/` should match an active project. If uncertain, ask the user.
+
+## Related
+
+- `/learn` — Capture lessons into Areas/Learning
+- `/para` — Master workspace controller
+- `/open` — Start session (scans inbox as awareness)

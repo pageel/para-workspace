@@ -4,20 +4,21 @@ description: Start a working session with context from previous logs and sync qu
 
 # /open [project-name]
 
-> **Workspace Version:** 1.3.6 (Cross-Project Sync)
+> **Workspace Version:** 1.4.1 (Governed Libraries)
 
 Start a new working session with full context from previous sessions.
 
 ## Steps
 
-> **Constraint:** Read `metadata.json` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final report MUST be translated to this language.**
+> **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final report MUST be translated to this language.**
 
 ### 1. Identify project paths
 
 ```
 Base: Projects/[project-name]/
 ├── repo/         # Source code (git root)
-├── sessions/     # Session logs & BACKLOG
+├── sessions/     # Session logs
+├── artifacts/    # Tasks, backlog, and other generated files
 ├── docs/         # Project documentation
 └── project.md      # Project contract (YAML)
 ```
@@ -38,12 +39,12 @@ ls -t Projects/[project-name]/sessions/*.md | head -3
 
 Read the latest session log for context on previous work.
 
-### 4. Read BACKLOG (if exists)
+### 4. Read backlog (if exists)
 
 //turbo
 
 ```bash
-head -30 Projects/[project-name]/sessions/BACKLOG.md
+head -30 Projects/[project-name]/artifacts/tasks/backlog.md
 ```
 
 ### 5. 🔔 Check Sync Queue (Cross-Project Notifications)
@@ -63,12 +64,12 @@ If there are pending sync items, display them prominently:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Sau khi trình bày, hãy hỏi người dùng xem họ muốn xử lý (update code/nội dung) hay chỉ đơn giản là đánh dấu Đã đọc (Dismiss/Ignore).
+After presenting the sync items, ask the user whether they want to **process** the changes (update code/content) or simply **dismiss** them (mark as read).
 
-Khi người dùng ra quyết định xong, tự động cập nhật lại `SYNC.md`:
+Once the user decides, automatically update `SYNC.md`:
 
-- Di chuyển dòng đó từ `## Pending` xuống `## Completed` (Xóa cột Status đi).
-- **QUAN TRỌNG:** Tự động cắt tỉa (trim) bảng `## Completed`, chỉ giữ lại tối đa **5 dòng mới nhất**. Xóa các dòng cũ hơn để tránh phình to file và tốn token của hệ thống.
+- Move the row from `## Pending` to `## Completed` (remove the Status column).
+- **IMPORTANT:** Auto-trim the `## Completed` table, keeping only the **5 most recent** entries. Delete older rows to prevent file bloat and save system tokens.
 
 ### 6. Check Git status
 
@@ -95,7 +96,7 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 
 🔔 SYNC QUEUE: [N pending] /[0 if none]
 
-📥 BACKLOG SUMMARY:
+📥 backlog SUMMARY:
 - High: [N] | Medium: [N] | Low: [N]
 - Top items: [list 2-3 items]
 

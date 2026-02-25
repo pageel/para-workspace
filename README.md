@@ -75,26 +75,25 @@ workspace/
 ├── Projects/            # ⚡ Active work with deadlines
 │   └── <project>/
 │       ├── project.md   # YAML frontmatter contract
-│       ├── sessions/    # Daily session logs + BACKLOG.md
-│       └── artifacts/   # tasks/, plans/, outputs/
+│       ├── sessions/    # Daily session logs
+│       ├── artifacts/   # tasks/backlog.md, plans/, outputs/
+│       └── docs/        # Project documentation
 ├── Areas/               # 🛡️ Stable knowledge & SOPs
-├── Resources/           # 📚 References, tools, kernel snapshot
-│   └── ai-agents/
-│       ├── kernel/      # Read-only snapshot from repo
-│       ├── workflows/   # Workflow catalog + catalog.yml
-│       ├── rules/       # Rules catalog + catalog.yml
-│       └── skills/      # Skills catalog + catalog.yml
+│   ├── Workspace/       # Session master log, SYNC.md
+│   └── Learning/        # Knowledge capture
+├── Resources/           # 📚 References & read-only sources
+│   └── references/      # Cloned repos, libraries, examples
 ├── Archive/             # ❄️ Cold storage
 ├── _inbox/              # 📥 Uncategorized landing zone
-├── .agent/              # 🤖 Agent runtime (mutable)
-│   ├── rules/
-│   ├── workflows/
-│   └── skills/          # Optional (default OFF)
+├── .agent/              # 🤖 Agent runtime (governed, mutable)
+│   ├── workflows/       # Active workflows (synced from catalog)
+│   ├── rules/           # Active rules (synced from catalog)
+│   └── skills/          # Optional skills
 ├── .para/               # 🔒 System state
 │   ├── audit.log        # Append-only operation log
 │   ├── migrations/      # Migration history
-│   └── backups/         # Pre-migrate snapshots
-├── .para-workspace.yml
+│   └── backups/         # Pre-migrate & workflow snapshots
+├── .para-workspace.yml  # Workspace config & kernel version
 └── README.md
 ```
 
@@ -153,10 +152,9 @@ This will `git pull` the repo and re-run `install.sh` to sync kernel, workflows,
 - ✅ Creates `Projects/`, `Areas/`, `Resources/`, `Archive/`, and `_inbox/`
 - ✅ Sets **executable permissions** on all CLI scripts
 - ✅ Runs **`install.sh`** automatically, which:
-  - Installs **kernel snapshot** to `Resources/ai-agents/kernel/`
-  - Installs **workflows** to `.agent/workflows/` and catalog
-  - Installs **agent governance** rules to `.agent/rules/`
-  - Syncs **rules** + **skills** libraries to `Resources/ai-agents/` (snapshots) and `.agent/` (runtime)
+  - Syncs **governed workflows** from `catalog.yml` into `.agent/workflows/`
+  - Syncs **governed rules** from `catalog.yml` into `.agent/rules/`
+  - Syncs **skills** into `.agent/skills/` (if profile includes them)
   - Creates **`./para`** wrapper at workspace root
   - Backs up conflicting files to `.bak`
 - ✅ Generates **`.para-workspace.yml`** with kernel version tracking
@@ -234,21 +232,25 @@ para rule <command>           # Manage rules
 
 ## 📑 Workflow Catalog
 
-| Command            | Description                                    |
-| :----------------- | :--------------------------------------------- |
-| **`/backlog`**     | Manage project tasks via canonical backlog.md  |
-| **`/backup`**      | Backup workflows, rules, and config            |
-| **`/config`**      | Manage workspace configuration                 |
-| **`/end`**         | Close session with PARA classification         |
-| **`/install`**     | Intelligent installer (handles updates/merges) |
-| **`/merge`**       | Semantic merge for workflow conflicts          |
-| **`/new-project`** | Initialize new project with scaffolding        |
-| **`/open`**        | Start session with context loading             |
-| **`/para`**        | Master controller for workspace management     |
-| **`/push`**        | Fast commit and push to GitHub                 |
-| **`/release`**     | Pre-release quality gate                       |
-| **`/retro`**       | Project retrospective before archiving         |
-| **`/verify`**      | Verify task completion with walkthroughs       |
+| Command              | Description                                      |
+| :------------------- | :----------------------------------------------- |
+| **`/backlog`**       | Manage project tasks via canonical backlog.md    |
+| **`/backup`**        | Backup workflows, rules, and config              |
+| **`/config`**        | Manage workspace configuration                   |
+| **`/end`**           | Close session with PARA classification           |
+| **`/inbox`**         | Categorize files from `_inbox/` into PARA        |
+| **`/install`**       | Intelligent installer (handles updates/merges)   |
+| **`/learn`**         | Capture lessons into Areas/Learning              |
+| **`/merge`**         | Semantic merge for workflow conflicts            |
+| **`/new-project`**   | Initialize new project with scaffolding          |
+| **`/open`**          | Start session with context loading               |
+| **`/para`**          | Master controller for workspace management       |
+| **`/para-rule`**     | Manage, install, and standardize agent rules     |
+| **`/para-workflow`** | Manage, install, and standardize agent workflows |
+| **`/push`**          | Fast commit and push to GitHub                   |
+| **`/release`**       | Pre-release quality gate                         |
+| **`/retro`**         | Project retrospective before archiving           |
+| **`/verify`**        | Verify task completion with walkthroughs         |
 
 ---
 
@@ -286,9 +288,10 @@ See [Migration Guide](./docs/migration.md) for details.
 - [x] v1.3.6 — Cross-Project Sync Queue
 - [x] v1.4.0 — Kernel Extraction & Repo Restructure
 - [x] v1.4.1 — Governed Libraries, RFC Process, Workspace Runtime Safety
-- [ ] v1.5.0 — PARA Landing Page (`paraworkspace.dev`)
+- [x] v1.4.1 — Landing Page `paraworkspace.dev`
+- [ ] v1.5.0 — Safety Guardrails & Terminal Allowlist
 - [ ] v1.5.x — Multi-agent Routing
-- [ ] v2.0.0 — Safety Guardrails & Terminal Allowlist
+- [ ] v2.0.0 — Context Intelligence & Semantic Search
 
 ---
 
