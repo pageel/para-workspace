@@ -44,3 +44,24 @@ This prevents breaking when the kernel changes (e.g., renamed files, changed sch
 2. Add YAML frontmatter with `description` and `kernel_compat`
 3. Write clear step-by-step instructions
 4. Submit PR with kernel compatibility noted
+
+## Language Compliance (I11)
+
+> Added in v1.4.1 — See `kernel/invariants.md` → I11
+
+All workflows MUST respect the user's language preference configured in `.para-workspace.yml`:
+
+```yaml
+# .para-workspace.yml
+preferences:
+  language: vi # vi | en
+```
+
+**Rules:**
+
+- Agent reads `preferences.language` at the start of every workflow execution
+- All output (reports, session logs, summaries) MUST be in the configured language
+- Default: `en` (English) if not configured
+- This is a **kernel invariant** — violations are non-compliant
+
+**Status:** 🧪 Testing (2026-02-25) — Monitoring across sessions to confirm agent compliance.

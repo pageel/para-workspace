@@ -91,6 +91,13 @@ Each project manages tasks through three files in `artifacts/tasks/`:
 - The workspace kernel copy (`Resources/ai-agents/kernel/`) is a **snapshot**, not canonical
 - The canonical kernel lives only in the repo's `kernel/` directory
 
+## I11. Workflow Language Compliance
+
+- Every workflow execution MUST read `.para-workspace.yml` at the workspace root
+- The agent MUST use the value of `preferences.language` (e.g., `vi`, `en`) to determine the user's preferred language
+- **All output, reports, session logs, and final summaries** produced by any workflow MUST be translated to this language
+- If `.para-workspace.yml` does not exist or `preferences.language` is not set, default to English (`en`)
+
 ---
 
 ## Compliance
