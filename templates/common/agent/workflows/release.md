@@ -1,5 +1,6 @@
 ---
 description: Pre-release quality gate and verification
+source: catalog
 ---
 
 # /release [project-name]

@@ -1,5 +1,6 @@
 ---
 description: Log session and close working day with PARA classification
+source: catalog
 ---
 
 # /end [project-name | all | workspace]

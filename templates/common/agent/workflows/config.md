@@ -1,5 +1,6 @@
 ---
 description: Manage workspace metadata and configuration
+source: catalog
 ---
 
 # /config [action]

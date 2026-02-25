@@ -1,5 +1,6 @@
 ---
 description: Intelligent agentic merge for workflows. Combines user customizations with catalog updates.
+source: catalog
 ---
 
 # /merge [target-workflow]

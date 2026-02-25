@@ -1,5 +1,6 @@
 ---
 description: Conduct a project retrospective before archiving
+source: catalog
 ---
 
 # /retro [project-name]

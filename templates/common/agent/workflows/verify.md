@@ -1,5 +1,6 @@
 ---
 description: Verify task completion using walkthroughs
+source: catalog
 ---
 
 # /verify [project-name] [task-name]

@@ -1,5 +1,6 @@
 ---
 description: Master PARA Workspace management workflow. Standardize, configure, and maintain the workspace health.
+source: catalog
 ---
 
 # /para

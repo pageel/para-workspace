@@ -1,5 +1,6 @@
 ---
 description: Manage and enforce PARA-compliant rules
+source: catalog
 ---
 
 # /para-rule [action] [name]

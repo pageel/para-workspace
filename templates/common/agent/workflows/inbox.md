@@ -1,5 +1,6 @@
 ---
 description: Categorize files from the _inbox/ directory
+source: catalog
 ---
 
 # /inbox [filename]

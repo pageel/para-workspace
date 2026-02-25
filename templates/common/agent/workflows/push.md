@@ -1,5 +1,6 @@
 ---
 description: Fast commit and push to GitHub with verification
+source: catalog
 ---
 
 # /push [project-name] ["message"] [--quick]

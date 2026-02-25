@@ -1,5 +1,6 @@
 ---
 description: Manage and standardize AI Agent Workflows according to PARA standards
+source: catalog
 ---
 
 # /para-workflow [action] [name]
@@ -76,6 +77,7 @@ Create a new PARA-compliant workflow from scratch.
 ```markdown
 ---
 description: [Short description of the workflow]
+source: catalog
 ---
 
 # /[name] [args]

@@ -1,5 +1,6 @@
 ---
 description: Package lessons and knowledge into Areas/Learning
+source: catalog
 ---
 
 # /learn [topic-name]

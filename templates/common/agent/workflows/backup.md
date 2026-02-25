@@ -1,5 +1,6 @@
 ---
 description: Backup workflows, rules, and important config files
+source: catalog
 ---
 
 # /backup [target]

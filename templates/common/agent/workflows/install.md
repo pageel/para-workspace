@@ -1,5 +1,6 @@
 ---
 description: Intelligent agentic installer for workflows and rules. Handles updates, merges, and renames.
+source: catalog
 ---
 
 # /install [type] [name]

@@ -1,5 +1,6 @@
 ---
 description: Start a working session with context from previous logs and sync queue
+source: catalog
 ---
 
 # /open [project-name]

@@ -1,5 +1,6 @@
 ---
 description: Manage project features and bugs
+source: catalog
 ---
 
 # /backlog [project-name] [action]
