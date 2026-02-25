@@ -1,27 +1,31 @@
 # Data Export Rule
 
-> **Workspace Version:** 1.4.x (PARA Architecture)
+> Agent governance rule for data export consistency and safety.
 
-Guidelines for exporting data (CSV, XLSX, PDF, etc.) to ensure consistency and prevent workspace clutter.
+## Scope
 
-## 📁 Target Directory
+- [x] Global (applies to entire workspace)
 
-- **All exported files** MUST be saved in the `_inbox/` directory at the workspace root.
-- Do NOT save exports directly in the workspace root or project directories.
+## Rules
 
-## 🏷️ File Naming
+### 1. Target Directory
 
-- Use lowercase alphanumeric characters and hyphens only (`kebab-case`).
-- **Standard format**: `[content-type]-[date-or-id].[ext]`
-- Example: `product-list.xlsx`, `revenue-report-2025.csv`.
+- **MUST** save all exported files (CSV, XLSX, PDF, etc.) to the `_inbox/` directory at the workspace root.
+- **MUST NOT** save exports directly in the workspace root or inside project directories.
 
-## 📄 Formats & Encoding
+### 2. File Naming
 
-- **CSV**: Prefer `CSV UTF-8 with BOM` for maximum compatibility with localized characters (Vietnamese/Unicode).
-- **Excel**: Prefer `.xlsx` or `.xls` (Excel XML) based on user preference.
-- **Reporting**: Always inform the USER of the exact path where the file was generated.
+- **MUST** use `kebab-case` (lowercase alphanumeric and hyphens only).
+- **MUST** follow the format: `[content-type]-[date-or-id].[ext]`
+- Examples: `product-list.xlsx`, `revenue-report-2025.csv`.
 
-## 🛠️ Post-Export Actions
+### 3. Formats & Encoding
 
-- Provide the full absolute path to the file.
-- If necessary, provide brief instructions on how to open or process the file (e.g., if using special encodings).
+- **SHOULD** prefer `CSV UTF-8 with BOM` for maximum compatibility with localized characters (Vietnamese/Unicode).
+- **SHOULD** prefer `.xlsx` format for Excel files based on user preference.
+- **MUST** inform the user of the exact path where the file was generated.
+
+### 4. Post-Export Actions
+
+- **MUST** provide the full path to the exported file.
+- **SHOULD** provide brief instructions on how to open or process the file if using special encodings.

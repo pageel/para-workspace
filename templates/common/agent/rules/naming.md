@@ -1,63 +1,43 @@
 # Naming Conventions
 
-> **Workspace Version:** 1.4.x (PARA Architecture)
+> Agent governance rule for consistent naming across the workspace.
 
-Standardized naming patterns to ensure consistency, readability, and machine-friendliness across the PARA Workspace.
+## Scope
 
-## 1. File System (Files & Directories)
+- [x] Global (applies to entire workspace)
 
-- **Pattern**: `kebab-case`
-- **Rule**: All files and directories MUST use lowercase letters separated by hyphens.
-- **Why**: Ensures cross-platform compatibility, URI friendliness, and CLI safety.
-- **Examples**:
-  - `user-profile.tsx` (Correct)
-  - `api-service.js` (Correct)
-  - `user_data.json` (Incorrect - use hyphens)
+## Rules
 
-## 2. Source Code
+### 1. File System (Files & Directories)
 
-### Components & Classes
+- **MUST** use `kebab-case` (lowercase letters separated by hyphens).
+- **Rationale**: Cross-platform compatibility, URI friendliness, CLI safety.
+- Examples: `user-profile.tsx` ✅, `api-service.js` ✅, `user_data.json` ❌
 
-- **Pattern**: `PascalCase`
-- **Rule**: React/Astro components, Classes, and Types/Interfaces.
-- **Examples**: `UserCard`, `AuthService`, `UserProfile`.
+### 2. Source Code
 
-### Variables & Functions
+| Object                | Convention         | Examples                          |
+| --------------------- | ------------------ | --------------------------------- |
+| Components & classes  | `PascalCase`       | `UserCard`, `AuthService`         |
+| Variables & functions | `camelCase`        | `isLoading`, `calculateTotal()`   |
+| Constants & env vars  | `UPPER_SNAKE_CASE` | `MAX_RETRY_COUNT`, `API_BASE_URL` |
 
-- **Pattern**: `camelCase`
-- **Rule**: Standard variables, local state, function names, and properties.
-- **Examples**: `isLoading`, `calculateTotal()`.
+### 3. Styling & Markup
 
-### Constants & Environment Variables
+- **MUST** use `kebab-case` for CSS classes and IDs (e.g., `.btn-primary`, `#main-content`).
+- **MUST** use `kebab-case` for HTML data attributes (e.g., `data-user-id`).
 
-- **Pattern**: `UPPER_SNAKE_CASE`
-- **Rule**: Global constants, configuration values, and `.env` keys.
-- **Examples**: `MAX_RETRY_COUNT`, `API_BASE_URL`.
+### 4. Metadata & Config
 
-## 3. Styling & Markup
+- **MUST** use `camelCase` for keys in `.para-workspace.yml` and project metadata.
+- Example: `projectName`, `lastSync`.
 
-### CSS Classes & IDs
+### 5. Workflows & Rules
 
-- **Pattern**: `kebab-case`
-- **Rule**: Use lowercase letters and hyphens (e.g., `.btn-primary`, `#main-content`).
+- **MUST** use `kebab-case` for workflow and rule filenames.
+- Examples: `/new-project`, `naming.md`, `para-discipline.md`.
 
-### HTML Data Attributes
+### 6. Exceptions
 
-- **Pattern**: `kebab-case` (e.g., `data-user-id`).
-
-## 4. Metadata & Intelligence
-
-### Project Metadata (`metadata.json`)
-
-- **Pattern**: `camelCase` for keys.
-- **Example**: `"projectName": "para-workspace"`.
-
-### Workflows & Rules
-
-- **Pattern**: `kebab-case`.
-- **Examples**: `/new-project`, `naming.md`, `para-discipline.md`.
-
-## 5. Exceptions
-
-- Standard documentation files (**README.md**, **LICENSE**, **VERSION**, **CHANGELOG.md**) follow their specific uppercase conventions.
-- Tool-specific config files (e.g., `package.json`, `tsconfig.json`) follow the tool's requirements.
+- Standard documentation files (`README.md`, `LICENSE`, `VERSION`, `CHANGELOG.md`) follow established uppercase conventions.
+- Tool-specific config files (`package.json`, `tsconfig.json`) follow the tool's requirements.

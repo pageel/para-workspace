@@ -285,13 +285,13 @@ See [Migration Guide](./docs/migration.md) for details.
 
 ## 🗺️ Roadmap
 
-- [x] v1.3.6 — Cross-Project Sync Queue
-- [x] v1.4.0 — Kernel Extraction & Repo Restructure
-- [x] v1.4.1 — Governed Libraries, RFC Process, Workspace Runtime Safety
-- [x] v1.4.1 — Landing Page `paraworkspace.dev`
-- [ ] v1.5.0 — Safety Guardrails & Terminal Allowlist
-- [ ] v1.5.x — Multi-agent Routing
-- [ ] v2.0.0 — Context Intelligence & Semantic Search
+- [x] Cross-Project Sync Queue _(shipped in v1.3.6)_
+- [x] Kernel Extraction & Repo Restructure _(shipped in v1.4.0)_
+- [x] Governed Libraries, RFC Process, Workspace Runtime Safety _(shipped in v1.4.1)_
+- [x] Landing Page `paraworkspace.dev` _(shipped in v1.4.1)_
+- [ ] Safety Guardrails & Terminal Allowlist
+- [ ] Multi-agent Routing
+- [ ] Context Intelligence & Semantic Search
 
 ---
 

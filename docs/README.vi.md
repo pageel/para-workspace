@@ -285,13 +285,13 @@ Xem [Hướng dẫn Di chuyển](./migration.md) để biết chi tiết.
 
 ## 🗺️ Lộ trình
 
-- [x] v1.3.6 — Hàng đợi Đồng bộ Xuyên Project
-- [x] v1.4.0 — Trích xuất Kernel & Tái cấu trúc Repo
-- [x] v1.4.1 — Thư viện Quản trị, Quy trình RFC, An toàn Workspace Runtime
-- [x] v1.4.1 — Landing Page `paraworkspace.dev`
-- [ ] v1.5.0 — Safety Guardrails & Terminal Allowlist
-- [ ] v1.5.x — Multi-agent Routing
-- [ ] v2.0.0 — Context Intelligence & Semantic Search
+- [x] Cross-Project Sync Queue _(phát hành v1.3.6)_
+- [x] Trích xuất Kernel & Tái cấu trúc Repo _(phát hành v1.4.0)_
+- [x] Thư viện Quản trị, Quy trình RFC, An toàn Workspace Runtime _(phát hành v1.4.1)_
+- [x] Landing Page `paraworkspace.dev` _(phát hành v1.4.1)_
+- [ ] Safety Guardrails & Terminal Allowlist
+- [ ] Multi-agent Routing
+- [ ] Context Intelligence & Semantic Search
 
 ---
 

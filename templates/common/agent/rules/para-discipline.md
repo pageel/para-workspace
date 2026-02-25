@@ -1,39 +1,53 @@
 # PARA Discipline
 
-As a workspace agent, you must strictly follow the PARA architecture.
+> Agent governance rule for strict PARA architecture compliance.
 
-## 1. No Loose Files
+## Scope
 
-- Every file must belong to a **Project**, an **Area**, or a **Resource**.
-- Do not create files directly in the workspace root (except for approved CLI tools or core config).
+- [x] Global (applies to entire workspace)
 
-## 2. Directory Mapping
+## Rules
 
-- **Active Work**: Place in `Projects/<project-name>/`.
-- **Infrastructure & Standards**: Place in `Areas/`.
-- **Reference & Learning**: Place in `Resources/`.
-- **Completed Work**: Move to `Archive/`.
+### 1. No Loose Files
 
-## 3. Project Scoping
+- **MUST** place every file in a **Project**, **Area**, or **Resource**.
+- **MUST NOT** create files directly in the workspace root (except approved CLI tools or core config like `.para-workspace.yml`).
 
-- When working on a project, stay within its directory.
-- Cross-project references must be handled via full paths or as resources.
+### 2. Directory Mapping
 
-## 4. Resource Immutability
+| Category              | Target Directory           |
+| --------------------- | -------------------------- |
+| Active work           | `Projects/[project-name]/` |
+| Stable knowledge/SOPs | `Areas/`                   |
+| Reference & learning  | `Resources/`               |
+| Completed/cancelled   | `Archive/`                 |
+| Uncategorized input   | `_inbox/`                  |
 
-- **Read-Only Resources**: Files located in `Resources/` (specifically under `ai-agents/workflows/` or `ai-agents/rules/`) are treated as a **Catalog**.
-- **No Reverse Sync**: When a user installs or references a resource, any local customizations (e.g., in `.agent/workflows/`) must **NEVER** be written back to the source in `Resources/` unless explicitly requested.
-- **Reference only**: Use resources for learning, scaffolding, or installation. Do not modify the original templates during a regular project task.
+### 3. Project Scoping
 
-## 5. Protected Projects
+- **MUST** stay within the active project directory when working on it.
+- **MUST** use full relative paths for cross-project references.
+- **SHOULD** prefer creating shared resources in `Resources/` over cross-project file dependencies.
 
-- **Framework Protection**: The `para-workspace` project is the source of truth for the workspace standards.
-- **Explicit Instruction**: Do not modify any files inside `Projects/para-workspace/repo/` unless the user explicitly states they are performing development on the PARA framework itself.
-- **Safety**: Avoid applying global changes that might side-effect the core framework without a direct command.
+### 4. Resource Immutability
 
-## 6. VCS & Git Boundaries
+- **MUST NOT** modify files in `Resources/references/` — these are read-only catalog sources.
+- **MUST NOT** write local customizations back to the governed catalog source.
+- Resources are for learning, scaffolding, and installation only.
 
-- **The `repo/` Folder**: This is the primary Git repository for the project.
-- **Git Operations**: You MUST ONLY consider `git commit` or `git push` if there are changes within the `repo/` directory.
-- **Local Metadata**: Changes in `docs/`, `sessions/`, or `artifacts/` are project management metadata. These SHOULD NOT be committed or pushed unless they are explicitly tracked within the `repo/` (e.g., `repo/docs/`).
-- **Safety**: Never run Git commands at the project root or workspace root unless specifically updating the `para-workspace` template repository itself.
+### 5. Protected Projects
+
+- **MUST NOT** modify files inside `Projects/para-workspace/repo/` unless the user explicitly states they are performing development on the PARA framework itself.
+- **MUST NOT** apply global changes that might side-effect the core framework without a direct command.
+
+### 6. Kernel Compliance
+
+- **MUST** follow the kernel invariants (I1–I10) defined in the governance framework.
+- **MUST** use `backlog.md` as the canonical task store via the `/backlog` workflow.
+- **MUST NOT** delete files without explicit user approval.
+
+### 7. VCS & Git Boundaries
+
+- **MUST** only perform `git commit`/`git push` within the `repo/` directory of a project.
+- **MUST NOT** commit `sessions/`, `docs/`, or `artifacts/` to git unless they are explicitly tracked within `repo/`.
+- **MUST NOT** run git commands at the workspace root unless specifically updating the `para-workspace` template repository itself.

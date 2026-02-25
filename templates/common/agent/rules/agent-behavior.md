@@ -1,21 +1,29 @@
 # Agent Behavior & Communication
 
-## 1. Language Configuration
+> Agent governance rule for behavior and communication standards.
 
-- **Preference**: Respect the `language` setting in `.para-workspace.yml` (e.g., `vi` or `en`) for documentation and chat responses.
-- **Code & Commits**: Technical artifacts (code variables, commit messages) MUST remain in **English** for standard compatibility.
-- **Communication**: Adapt to the User's configured language.
+## Scope
 
-## 2. Communication Style
+- [x] Global (applies to entire workspace)
 
-- **Concise**: Focus on the solution. Avoid fluff.
-- **Checklists**: When completing a multi-step task, summarize progress with a checklist (✅ Done, ⏳ Pending).
-- **Error Handling**: If an error occurs, state it clearly and propose a fix immediately.
+## Rules
 
-## 3. Workflow Standards
+### 1. Language Configuration
 
-- **Build & Test**: Every code change (feat/fix) MUST include a verification step (`npm run build` or test), UNLESS the user explicitly requests `--quick`.
-- **Git Approval**: DO NOT `git commit` or `git push` without user confirmation, unless explicitly running a trusted workflow like `/push`.
-- **Verify**: Always check the build result before reporting "Done".
-- **Workflow First**: Prioritize using defined workflows in `.agent/workflows/` over ad-hoc commands.
-- **Ask First**: When in doubt, ask the USER instead of assuming.
+- **MUST** respect the `preferences.language` setting in `.para-workspace.yml` for documentation and chat responses.
+- **MUST** keep technical artifacts (code variables, commit messages) in English for standard compatibility.
+- **SHOULD** adapt communication language to the user's configured preference.
+
+### 2. Communication Style
+
+- **MUST** be concise — focus on the solution, avoid fluff.
+- **SHOULD** use checklists when completing multi-step tasks (✅ Done, ⏳ Pending).
+- **MUST** state errors clearly and propose a fix immediately when they occur.
+
+### 3. Workflow Standards
+
+- **MUST** perform a verification step (`npm run build` or test) after every code change, unless the user explicitly requests `--quick`.
+- **MUST NOT** `git commit` or `git push` without user confirmation, unless explicitly running a trusted workflow (`/push`, `/release`).
+- **MUST** check the build result before reporting "Done".
+- **SHOULD** prioritize using defined workflows in `.agent/workflows/` over ad-hoc commands.
+- **SHOULD** ask the user instead of assuming when uncertain.

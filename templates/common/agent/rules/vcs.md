@@ -1,14 +1,25 @@
 # Version Control Rules
 
-**GOLDEN RULE:** AI Agents DO NOT perform `git commit` or `git push` during normal feature/fix workflows without explicit user approval. You MUST ask for permission first, unless using approved workflows like `/push`, `/deploy`, or `/release`.
+> Agent governance rule for Git and version control safety.
 
-## 1. Ignore Before Commit
+## Scope
 
-Git-related workflows (like `/push`, `/deploy`, `/release`) **MUST** check `.gitignore` before operations.
+- [x] Global (applies to entire workspace)
 
-### Mandatory Ignores
+## Rules
 
-```
+### 1. Golden Rule
+
+- **MUST NOT** perform `git commit` or `git push` without explicit user approval.
+- **Exception**: Approved workflows (`/push`, `/release`) include built-in user confirmation.
+
+### 2. Ignore Before Commit
+
+**MUST** verify `.gitignore` exists and covers mandatory patterns before any git operation.
+
+#### Mandatory Ignores
+
+```gitignore
 # Dependencies
 node_modules/
 
@@ -38,16 +49,13 @@ build/
 Thumbs.db
 ```
 
-### PROHIBITION
+### 3. Secrets Prohibition
 
-**AI Agents MUST NEVER create `.env.local` or any `.env` file containing real data.**
+- **MUST NEVER** create `.env.local` or any `.env` file containing real credentials.
+- **SHOULD** use `env.example.txt` for templates.
+- **MUST** direct the user to configure secrets manually.
 
-- Use `env.example.txt` for templates.
-- Ask the USER to configure secrets in their environment (Vercel, etc.) or .env file manually.
-
-### Dangerous File Check
-
-Files that must NEVER be committed:
+#### Dangerous Files (MUST NEVER be committed)
 
 - `.env*` (API keys, credentials)
 - `*.pem`, `*.key` (Private keys)
@@ -55,27 +63,16 @@ Files that must NEVER be committed:
 - `*.sqlite`, `*.db` (Databases)
 - `credentials.json` (Service accounts)
 
-## 2. Git Scope Separation
+### 4. Git Scope Separation
 
-**CORE PRINCIPLE:** Strictly separate Workspace Data from Project Data.
+- **MUST NOT** `git add` workspace data (`sessions/`, `_inbox/`, `Archive/`) into a project's repo.
+- **MUST** verify `Cwd` is inside `Projects/[project-name]/repo/` before running git commands.
 
-### Workspace Data (Shared)
+### 5. Workflow Integration
 
-Files in `sessions/`, `docs/` (root), `_inbox/`, `Archive/` belong to the Workspace level.
+When running `/push` or `/release`, **MUST**:
 
-- **PROHIBITED**: Do NOT `git add` these files into a specific Project's repo.
-- **Reason**: These contain personal logs, strategy, and work-in-progress that should not leak into application code.
-
-### Project Data (Application)
-
-Only files inside `Projects/[project-name]/` are subject to project-level Git operations.
-
-- **Action**: Always verify `Cwd` is correct before running `git commit`.
-
-## 3. Workflow Integration
-
-When running `/push` or `/deploy`, the agent must:
-
-1. **Check Ignore**: Ensure `.gitignore` exists.
-2. **Scan**: Check for sensitive files being tracked.
-3. **Warn**: Alert the user if sensitive files are found.
+1. Check `.gitignore` exists.
+2. Scan for sensitive files being tracked.
+3. Warn the user if sensitive files are found.
+4. **STOP** if critical secrets are detected — never force-push.
