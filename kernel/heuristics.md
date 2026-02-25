@@ -87,7 +87,7 @@ Recommended project directory layout:
 
 ```
 <project-slug>/
-├── project.md              # YAML frontmatter: goal, deadline, status, dod
+├── project.md              # YAML frontmatter: goal, deadline, status, dod, milestones
 ├── sessions/
 │   └── YYYY-MM-DD.md       # Daily session logs
 ├── artifacts/
@@ -104,6 +104,29 @@ Recommended project directory layout:
 │   └── seeds.md            # Ideas, hypotheses, raw notes
 └── README.md
 ```
+
+### Milestones Convention
+
+Projects SHOULD define strategic milestones in `project.md` frontmatter:
+
+```yaml
+milestones:
+  - name: "Core MVP"
+    status: done # done | in-progress | planned
+    shipped_in: "1.0.0" # Only for done items
+  - name: "Public Launch"
+    status: in-progress
+  - name: "Advanced Features"
+    status: planned
+```
+
+Rules:
+
+- Use **feature-first naming** (describe the value, not the version number)
+- Only add `shipped_in` after a milestone is released
+- Future milestones have NO version — avoids speculative versioning
+- Order = implicit priority (top = most important)
+- Public-facing roadmaps (e.g., README) can be derived from milestones
 
 ## H5. Beads Lifecycle
 

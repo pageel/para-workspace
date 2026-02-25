@@ -73,6 +73,14 @@ If applicable, increment version in:
 - `Projects/[project-name]/repo/VERSION` (if exists)
 - `Projects/[project-name]/repo/package.json` (if applicable)
 
+### 7. Milestone Check
+
+Review milestones in `project.md` frontmatter:
+
+- If this release completes a milestone, update its status to `done` and add `shipped_in: "[version]"`.
+- If this release is part of an `in-progress` milestone, confirm it stays `in-progress`.
+- Update the public roadmap (e.g., README) to reflect shipped milestones.
+
 ## Checklist
 
 - [ ] No lint errors
