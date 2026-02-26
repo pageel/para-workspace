@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.4.1-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.4.2-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-tích-hợp-agent)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -61,7 +61,7 @@ para-workspace/
 │   │   └── projects/    # .project.yml template
 │   └── profiles/        # Preset: dev, general, marketer, ceo
 ├── tests/               # 🧪 kernel/ + cli/ integration tests
-├── docs/                # 📖 Tài liệu
+├── docs/                # 📖 Tài liệu (kiến trúc, CLI, planning, workflows)
 ├── CONTRIBUTING.md
 ├── VERSIONING.md
 ├── CHANGELOG.md
@@ -232,25 +232,26 @@ para rule <command>           # Quản lý rules
 
 ## 📑 Catalog Workflow
 
-| Lệnh                 | Mô tả                                       |
-| :------------------- | :------------------------------------------ |
-| **`/backlog`**       | Quản lý tasks qua backlog.md canonical      |
-| **`/backup`**        | Sao lưu workflows, rules, và config         |
-| **`/config`**        | Quản lý cấu hình workspace                  |
-| **`/end`**           | Đóng phiên làm việc với phân loại PARA      |
-| **`/inbox`**         | Phân loại file từ `_inbox/` vào PARA        |
-| **`/install`**       | Cài đặt thông minh (xử lý cập nhật/merge)   |
-| **`/learn`**         | Ghi nhận bài học vào Areas/Learning         |
-| **`/merge`**         | Merge ngữ nghĩa cho xung đột workflow       |
-| **`/new-project`**   | Khởi tạo project mới với scaffolding        |
-| **`/open`**          | Bắt đầu phiên với nạp context               |
-| **`/para`**          | Bộ điều khiển chính cho quản lý workspace   |
-| **`/para-rule`**     | Quản lý, cài đặt, chuẩn hoá agent rules     |
-| **`/para-workflow`** | Quản lý, cài đặt, chuẩn hoá agent workflows |
-| **`/push`**          | Commit và push nhanh lên GitHub             |
-| **`/release`**       | Kiểm tra chất lượng trước release           |
-| **`/retro`**         | Retrospective project trước khi archive     |
-| **`/verify`**        | Xác minh hoàn thành task bằng walkthroughs  |
+| Lệnh                 | Mô tả                                                     |
+| :------------------- | :-------------------------------------------------------- |
+| **`/backlog`**       | Quản lý tasks qua backlog.md canonical + plan integration |
+| **`/backup`**        | Sao lưu workflows, rules, và config                       |
+| **`/config`**        | Quản lý cấu hình workspace                                |
+| **`/end`**           | Đóng phiên + kiểm tra tiến độ plan phase                  |
+| **`/inbox`**         | Phân loại file từ `_inbox/` vào PARA                      |
+| **`/install`**       | Cài đặt thông minh (xử lý cập nhật/merge)                 |
+| **`/learn`**         | Ghi nhận bài học vào Areas/Learning                       |
+| **`/merge`**         | Merge ngữ nghĩa cho xung đột workflow                     |
+| **`/new-project`**   | Khởi tạo project mới với scaffolding                      |
+| **`/open`**          | Bắt đầu phiên với nạp context + plan phase                |
+| **`/para`**          | Bộ điều khiển chính cho quản lý workspace                 |
+| **`/para-rule`**     | Quản lý, cài đặt, chuẩn hoá agent rules                   |
+| **`/para-workflow`** | Quản lý, cài đặt, chuẩn hoá agent workflows               |
+| **`/plan`** ✨       | Tạo, xem, và cập nhật kế hoạch triển khai                 |
+| **`/push`**          | Commit và push nhanh lên GitHub                           |
+| **`/release`**       | Kiểm tra chất lượng trước release                         |
+| **`/retro`**         | Retrospective project trước khi archive                   |
+| **`/verify`**        | Xác minh hoàn thành task bằng walkthroughs                |
 
 ---
 
@@ -289,6 +290,7 @@ Xem [Hướng dẫn Di chuyển](./migration.md) để biết chi tiết.
 - [x] Trích xuất Kernel & Tái cấu trúc Repo _(phát hành v1.4.0)_
 - [x] Thư viện Quản trị, Quy trình RFC, An toàn Workspace Runtime _(phát hành v1.4.1)_
 - [x] Landing Page `paraworkspace.dev` _(phát hành v1.4.1)_
+- [x] Workflow Plan-Aware & Tối ưu Token _(phát hành v1.4.2)_
 - [ ] Safety Guardrails & Terminal Allowlist
 - [ ] Multi-agent Routing
 - [ ] Context Intelligence & Semantic Search
@@ -307,4 +309,4 @@ Xem [CONTRIBUTING.md](../CONTRIBUTING.md) để biết hướng dẫn. Điểm c
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.4.1_
+_Phiên bản: 1.4.2_

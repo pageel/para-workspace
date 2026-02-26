@@ -4,7 +4,7 @@ description: "Stateless workflow library for PARA Workspace agents."
 items:
   - id: backlog
     name: "Backlog Controller"
-    version: "1.0.0"
+    version: "1.1.0"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "backlog.md"
@@ -13,7 +13,7 @@ items:
 
   - id: open
     name: "Session Open"
-    version: "1.0.0"
+    version: "1.1.0"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "open.md"
@@ -22,7 +22,7 @@ items:
 
   - id: end
     name: "Session End"
-    version: "1.0.0"
+    version: "1.1.0"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "end.md"
@@ -154,3 +154,12 @@ items:
     entrypoint: "para-rule.md"
     description: "Manage, install, and standardize AI Agent rules."
     tags: ["rules", "governance", "catalog"]
+
+  - id: plan
+    name: "Plan Controller"
+    version: "1.0.0"
+    kernel_min: "1.4.2"
+    kernel_max: "1.x"
+    entrypoint: "plan.md"
+    description: "Create, review, and update phased implementation plans."
+    tags: ["planning", "architecture", "phases"]

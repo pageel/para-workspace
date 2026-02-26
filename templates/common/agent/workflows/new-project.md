@@ -45,6 +45,7 @@ dod:
   - "[Done condition 1]"
   - "[Done condition 2]"
 last_reviewed: "YYYY-MM-DD"
+active_plan: ""
 ---
 ```
 
@@ -86,5 +87,6 @@ Record the kickoff in `Projects/[project-name]/sessions/YYYY-MM-DD.md`:
 ## Related
 
 - `/open` — Start session with context loading
+- `/plan` — Create implementation plan for the project
 - `/backlog` — Manage project backlog
 - `/config` — Register project in workspace config

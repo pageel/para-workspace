@@ -14,19 +14,19 @@ Workflows are the **UI layer** for AI agents. They define processes that agents 
 
 ## Standard Workflows
 
-| Workflow   | Type     | Description                        |
-| ---------- | -------- | ---------------------------------- |
-| `/para`    | Core     | Master workflow — orchestrate work |
-| `/open`    | Session  | Start session, load context        |
-| `/end`     | Session  | Close session, save logs           |
-| `/plan`    | Planning | Create implementation plans        |
-| `/backlog` | Planning | Manage product backlog             |
-| `/push`    | Dev      | Commit & push code                 |
-| `/verify`  | QA       | Check task completion              |
-| `/retro`   | Review   | Retrospective before archive       |
-| `/release` | Release  | Pre-release quality gate           |
-| `/install` | Admin    | Install workflow/rule              |
-| `/merge`   | Admin    | Merge conflicting workflows        |
+| Workflow   | Type     | Description                                                       |
+| ---------- | -------- | ----------------------------------------------------------------- |
+| `/para`    | Core     | Master workflow — orchestrate work                                |
+| `/open`    | Session  | Start session, load context                                       |
+| `/end`     | Session  | Close session, save logs                                          |
+| `/plan`    | Planning | Create implementation plans — see [Planning Guide](./planning.md) |
+| `/backlog` | Planning | Manage product backlog — see [Planning Guide](./planning.md)      |
+| `/push`    | Dev      | Commit & push code                                                |
+| `/verify`  | QA       | Check task completion                                             |
+| `/retro`   | Review   | Retrospective before archive                                      |
+| `/release` | Release  | Pre-release quality gate                                          |
+| `/install` | Admin    | Install workflow/rule                                             |
+| `/merge`   | Admin    | Merge conflicting workflows                                       |
 
 ## Kernel Compatibility
 

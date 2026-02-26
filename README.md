@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.4.1-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.4.2-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -61,7 +61,7 @@ para-workspace/
 │   │   └── projects/    # .project.yml template
 │   └── profiles/        # dev, general, marketer, ceo presets
 ├── tests/               # 🧪 kernel/ + cli/ integration tests
-├── docs/                # 📖 Documentation
+├── docs/                # 📖 Documentation (architecture, CLI, planning, workflows)
 ├── CONTRIBUTING.md
 ├── VERSIONING.md
 ├── CHANGELOG.md
@@ -232,25 +232,26 @@ para rule <command>           # Manage rules
 
 ## 📑 Workflow Catalog
 
-| Command              | Description                                      |
-| :------------------- | :----------------------------------------------- |
-| **`/backlog`**       | Manage project tasks via canonical backlog.md    |
-| **`/backup`**        | Backup workflows, rules, and config              |
-| **`/config`**        | Manage workspace configuration                   |
-| **`/end`**           | Close session with PARA classification           |
-| **`/inbox`**         | Categorize files from `_inbox/` into PARA        |
-| **`/install`**       | Intelligent installer (handles updates/merges)   |
-| **`/learn`**         | Capture lessons into Areas/Learning              |
-| **`/merge`**         | Semantic merge for workflow conflicts            |
-| **`/new-project`**   | Initialize new project with scaffolding          |
-| **`/open`**          | Start session with context loading               |
-| **`/para`**          | Master controller for workspace management       |
-| **`/para-rule`**     | Manage, install, and standardize agent rules     |
-| **`/para-workflow`** | Manage, install, and standardize agent workflows |
-| **`/push`**          | Fast commit and push to GitHub                   |
-| **`/release`**       | Pre-release quality gate                         |
-| **`/retro`**         | Project retrospective before archiving           |
-| **`/verify`**        | Verify task completion with walkthroughs         |
+| Command              | Description                                         |
+| :------------------- | :-------------------------------------------------- |
+| **`/backlog`**       | Manage project tasks via canonical backlog.md       |
+| **`/backup`**        | Backup workflows, rules, and config                 |
+| **`/config`**        | Manage workspace configuration                      |
+| **`/end`**           | Close session with PARA classification + plan check |
+| **`/inbox`**         | Categorize files from `_inbox/` into PARA           |
+| **`/install`**       | Intelligent installer (handles updates/merges)      |
+| **`/learn`**         | Capture lessons into Areas/Learning                 |
+| **`/merge`**         | Semantic merge for workflow conflicts               |
+| **`/new-project`**   | Initialize new project with scaffolding             |
+| **`/open`**          | Start session with context + plan phase loading     |
+| **`/para`**          | Master controller for workspace management          |
+| **`/para-rule`**     | Manage, install, and standardize agent rules        |
+| **`/para-workflow`** | Manage, install, and standardize agent workflows    |
+| **`/plan`** ✨       | Create, review, and update implementation plans     |
+| **`/push`**          | Fast commit and push to GitHub                      |
+| **`/release`**       | Pre-release quality gate                            |
+| **`/retro`**         | Project retrospective before archiving              |
+| **`/verify`**        | Verify task completion with walkthroughs            |
 
 ---
 
@@ -289,6 +290,7 @@ See [Migration Guide](./docs/migration.md) for details.
 - [x] Kernel Extraction & Repo Restructure _(shipped in v1.4.0)_
 - [x] Governed Libraries, RFC Process, Workspace Runtime Safety _(shipped in v1.4.1)_
 - [x] Landing Page `paraworkspace.dev` _(shipped in v1.4.1)_
+- [x] Plan-Aware Workflows & Token Optimization _(shipped in v1.4.2)_
 - [ ] Safety Guardrails & Terminal Allowlist
 - [ ] Multi-agent Routing
 - [ ] Context Intelligence & Semantic Search
@@ -307,4 +309,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.4.1_
+_Version: 1.4.2_

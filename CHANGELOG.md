@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.2] - 2026-02-26
+
+### Added
+
+- **Workflow: `/plan`** — New governed workflow for creating, reviewing, and updating phased implementation plans. Supports `create`, `review`, and `update` actions. Integrates with `/backlog` for phase tracking and cross-referencing.
+- **`active_plan` Field** — New optional field in `project.md` frontmatter to register the active implementation plan. Enables token-optimized plan context loading in `/open` and `/end` (grep-only, no full plan reads).
+- **Backlog Action: `sync`** — New action in `/backlog` to synchronize backlog items with plan phases, detecting unmapped tasks and auto-creating entries.
+- **Catalog Entry**: Added `plan` to `workflows/catalog.yml` (now 18 total entries).
+
+### Changed
+
+- **Workflow: `/backlog` v1.0.0 → v1.1.0**:
+  - `review` shows current Phase context from implementation plan.
+  - `update` announces Phase completion when all phase items are done.
+  - `add` asks which Phase new items belong to.
+  - Template adds optional `Phase` column for plan integration.
+  - Added language constraint from `.para-workspace.yml`.
+  - Added Plan Integration reference section.
+- **Workflow: `/open` v1.0.0 → v1.1.0**:
+  - New Step 5: Read plan summary via `active_plan` field (grep-only, token-optimized).
+  - Report template adds `📐 CURRENT PHASE` section with progress tracking.
+  - Suggested Actions prioritize tasks from the current phase.
+- **Workflow: `/end` v1.0.0 → v1.1.0**:
+  - New Step 4: Check Plan Phase Progress via `active_plan` field (grep-only).
+  - Adds `Plan Progress` block to session log template.
+  - Suggests `/plan update` if scope changed during session.
+- **Workflow: `/new-project`**: Added `active_plan` field to project.md template, added `/plan` to Related section.
+- **Schema: `project.schema.json`**: Added `active_plan` property (string or null, backward-compatible).
+- **Template: `project.md`**: Added `active_plan` field to frontmatter.
+
 ## [1.4.1] - 2026-02-25
 
 ### Added

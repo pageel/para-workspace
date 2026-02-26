@@ -6,6 +6,7 @@ source: catalog
 # /end [project-name | all | workspace]
 
 > **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final report MUST be translated to this language.**
 
 Summarize accomplishments and log them to the correct context (Project vs. Workspace).
 
@@ -43,7 +44,34 @@ If yes, **append one row** to `Areas/Workspace/SYNC.md` under the `## Pending` t
 | YYYY-MM-DD | [project-name] | [new-version] | [downstream-project] | [brief action needed] | 🔴 Pending |
 ```
 
-### 4. Update Master Index
+### 4. Check Plan Phase Progress (if active)
+
+// turbo
+
+> ⚠️ **Token optimization:** Only check if `project.md` has `active_plan` field (already read in Step 1). Skip entirely if missing.
+
+If `active_plan` exists in `project.md`:
+
+1. Extract current phase:
+   ```bash
+   grep -n "^### Phase" Projects/[project-name]/artifacts/[active_plan]
+   ```
+2. Cross-reference with backlog — count ✅ Done items for the current phase.
+3. Report phase status in the session log:
+
+```markdown
+### Plan Progress
+
+- **Current Phase**: [Phase N: Name]
+- **Progress**: [N/M] tasks done
+- **Status**: [🔨 In Progress | 🎉 Phase Complete!]
+```
+
+4. If all items in the current phase are done:
+   - Announce: `🎉 Phase [N] Complete! Phase [N+1] ready to start.`
+5. If scope or architecture changed during this session, suggest running `/plan update`.
+
+### 5. Update Master Index
 
 // turbo
 
@@ -56,6 +84,7 @@ Append a summary line to the global index at `Areas/Workspace/SESSION_LOG.md`:
 ## Related
 
 - `/open` — Start session with context loading
+- `/plan` — View or update implementation plan
 - `/backlog` — View and manage project tasks
 - `/push` — Quick commit and push
 - `/retro` — Project retrospective before archiving

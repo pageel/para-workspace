@@ -6,6 +6,7 @@ created: "YYYY-MM-DD"
 goal: ""
 deadline: ""
 dod: ""
+active_plan: ""
 tags: []
 ---
 
