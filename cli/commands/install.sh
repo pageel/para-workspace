@@ -105,20 +105,34 @@ sync_library() {
   local updated=0
 
   if [ -d "$src_dir" ]; then
-    # Sync markdown files
-    for f in "$src_dir"/*.md; do
-      if [ -f "$f" ]; then
-        local fname
-        fname="$(basename "$f")"
+    # Sync markdown files and subdirectories
+    for item in "$src_dir"/*; do
+      if [ -f "$item" ] && [[ "$item" == *.md ]]; then
+        local fname="$(basename "$item")"
         count=$((count + 1))
 
         # Sync to catalog (read-only snapshot)
-        sync_file "$f" "$catalog_dest/$fname" || true
+        sync_file "$item" "$catalog_dest/$fname" || true
 
         # Sync to active directory (user may customize)
-        if sync_file "$f" "$active_dest/$fname"; then
+        if sync_file "$item" "$active_dest/$fname"; then
           updated=$((updated + 1))
         fi
+      elif [ -d "$item" ]; then
+        local dname="$(basename "$item")"
+        count=$((count + 1))
+        mkdir -p "$catalog_dest/$dname"
+        mkdir -p "$active_dest/$dname"
+        
+        for sub_item in "$item"/*; do
+          if [ -f "$sub_item" ]; then
+            local sub_fname="$(basename "$sub_item")"
+            sync_file "$sub_item" "$catalog_dest/$dname/$sub_fname" || true
+            if sync_file "$sub_item" "$active_dest/$dname/$sub_fname"; then
+              updated=$((updated + 1))
+            fi
+          fi
+        done
       fi
     done
 
