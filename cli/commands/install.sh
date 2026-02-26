@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# PARA Workspace Installer (v1.4.1)
+# PARA Workspace Installer
 # Syncs kernel, workflows, rules, skills, and governance from repo to workspace
 # Usage: para install [--force]
 
@@ -113,7 +113,7 @@ sync_library() {
         count=$((count + 1))
 
         # Sync to catalog (read-only snapshot)
-        sync_file "$f" "$catalog_dest/$fname"
+        sync_file "$f" "$catalog_dest/$fname" || true
 
         # Sync to active directory (user may customize)
         if sync_file "$f" "$active_dest/$fname"; then
@@ -124,7 +124,7 @@ sync_library() {
 
     # Sync catalog.yml (v1.4.1)
     if [ -f "$src_dir/catalog.yml" ]; then
-      sync_file "$src_dir/catalog.yml" "$catalog_dest/catalog.yml"
+      sync_file "$src_dir/catalog.yml" "$catalog_dest/catalog.yml" || true
     fi
   fi
 
@@ -133,7 +133,7 @@ sync_library() {
 
 KERNEL_VERSION="$(cat "$REPO_ROOT/VERSION" 2>/dev/null || echo "1.4.1")"
 
-echo "🚀 PARA Workspace Install (v1.4.1)"
+echo "🚀 PARA Workspace Install (v$KERNEL_VERSION)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  Repo:      $REPO_ROOT"
 echo "  Workspace: $WS_ROOT"
@@ -197,7 +197,7 @@ sync_library "skills" \
 echo "🤖 Syncing governance..."
 GOV_SRC="$REPO_ROOT/templates/common/agent/governance.md"
 if [ -f "$GOV_SRC" ]; then
-  sync_file "$GOV_SRC" "$WS_ROOT/.agent/rules/governance.md"
+  sync_file "$GOV_SRC" "$WS_ROOT/.agent/rules/governance.md" || true
   echo "   ✓ Governance synced"
 else
   echo "   ⚠ No governance.md found (optional)"
