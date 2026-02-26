@@ -1,3 +1,9 @@
+---
+name: PARA Kit
+description: Intelligence for managing an Agent-Executable PARA workspace.
+source: catalog
+---
+
 # Skill: PARA Kit
 
 Intelligence for managing an "Agent-Executable" PARA workspace. This skill helps the agent decide whether to use automated scripts (fast execution) or structured workflows (collaborative refinement).
@@ -23,7 +29,7 @@ Intelligence for managing an "Agent-Executable" PARA workspace. This skill helps
 ### Use Workflows (`/[cmd]`) when:
 
 - Performing **analysis** that requires documentation (e.g., /retro, /plan).
-- **Collaboration** with the user is needed to define scope (/kickoff).
+- **Collaboration** with the user is needed to define scope (/new-project).
 - The task produces a **permanent artifact** (e.g., plan.md, walkthrough.md).
 - **Complex validation** is required (/verify).
 
@@ -31,7 +37,7 @@ Intelligence for managing an "Agent-Executable" PARA workspace. This skill helps
 
 ### 1. Context Routing (Smart Loading)
 
-- **Priority Order**: `project.md` → Project Rules → Global Rules → Artifacts → Beads → Areas → Resources.
+- **Priority Order**: `project.md` → `active_plan` (if exists) → Project Rules → Global Rules → Artifacts → Beads → Areas → Resources.
 - **Isolation Enforcement**: Always scope research to the active project folder first. Only expand to `Areas/` or `Resources/` if the project context is insufficient.
 - **Archive Policy**: Never read `Archive/` unless explicitly requested.
 
@@ -52,7 +58,7 @@ Intelligence for managing an "Agent-Executable" PARA workspace. This skill helps
 - **Universal Rule**: Applies to the workspace and ALL projects by default. Project-specific rules take precedence if they exist.
 - **Protocol**: Always propose the **specific next version number** (e.g., `1.3.3`) and wait for user approval before modifying version files.
 - **Elevation Control**: Strictly requests permission for MINOR or MAJOR jumps.
-- **Traceability**: Link version increments to completed tasks in `BACKLOG.md` or `project.md`.
+- **Traceability**: Link version increments to completed tasks in `artifacts/tasks/backlog.md` or `project.md`.
 
 ## Directory Structure
 
