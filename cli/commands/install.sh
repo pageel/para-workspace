@@ -216,6 +216,11 @@ else
   echo "   ✓ .para/ exists (audit.log updated)"
 fi
 
+if [ -f "$WS_ROOT/.para-workspace.yml" ]; then
+  sed -i "s/^kernel_version:.*/kernel_version: \"$KERNEL_VERSION\"/" "$WS_ROOT/.para-workspace.yml"
+  echo "   ✓ .para-workspace.yml updated to v$KERNEL_VERSION"
+fi
+
 # === 6. Validate kernel compatibility (v1.4.1) ===
 if [ -f "$LIB_DIR/validator.sh" ]; then
   echo "🔍 Validating library compatibility..."
