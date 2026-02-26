@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [1.4.3] - 2026-02-26
 
+### Fixed
+
+- **CLI Updater**: Fixed `install.sh` failing to propagate `$KERNEL_VERSION` and crashing script execution due to unhandled `set -e` in `sync_file()`.
+- **CLI Workspace**: Fixed `.para-workspace.yml` kernel version not automatically updating during `./para install` or `./para update`.
+- **Governed Libraries (Skills)**: Fixed `install.sh` failing to copy nested subdirectories within libraries, effectively allowing complex items like `skills` (e.g., `para-kit`) to correctly sync to `.agent/skills/`.
+
 ### Changed
 
 - **Workflow: `/end` v1.1.0 → v1.2.0**:
@@ -12,6 +18,7 @@ All notable changes to this project will be documented in this file.
   - Automated Action: If 100% complete (or requested via `done`), the agent automatically removes the `active_plan` field from `project.md` to optimize token usage for future sessions.
   - Updated all internal logic to be bilingual-ready.
 - **Workflow Version Labels**: Bumped all governed library version references to `1.4.3`.
+- **Skill: PARA Kit**: Updated YAML frontmatter, file paths, and terminology to conform with the v1.4.1+ standards.
 
 ## [1.4.2] - 2026-02-26
 
