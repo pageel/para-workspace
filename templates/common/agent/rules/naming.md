@@ -41,3 +41,4 @@
 
 - Standard documentation files (`README.md`, `LICENSE`, `VERSION`, `CHANGELOG.md`) follow established uppercase conventions.
 - Tool-specific config files (`package.json`, `tsconfig.json`) follow the tool's requirements.
+- **Top-level Pillars & Global Areas** (`Projects`, `Areas`, `Resources`, `Learning`, `Workspace`, `Infrastructure`) **MUST** use `PascalCase` to maintain compatibility with core workflows and visual hierarchy.
