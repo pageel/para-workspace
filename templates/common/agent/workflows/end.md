@@ -3,12 +3,17 @@ description: Log session and close working day with PARA classification
 source: catalog
 ---
 
-# /end [project-name | all | workspace]
+# /end [project-name | all | workspace] [done]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.4.3 (Governed Libraries)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final report MUST be translated to this language.**
 
 Summarize accomplishments and log them to the correct context (Project vs. Workspace).
+
+| Option | Description                                                                                                    |
+| :----- | :------------------------------------------------------------------------------------------------------------- |
+| `all`  | Đóng phiên làm việc cho tất cả các dự án đã thay đổi trong git status.                                         |
+| `done` | (Optional) Nếu kế hoạch dự án (`active_plan`) đã hoàn thành 100%, tự động gỡ bỏ trường này trong `project.md`. |
 
 ## Classification Rules
 
@@ -67,9 +72,13 @@ If `active_plan` exists in `project.md`:
 - **Status**: [🔨 In Progress | 🎉 Phase Complete!]
 ```
 
-4. If all items in the current phase are done:
-   - Announce: `🎉 Phase [N] Complete! Phase [N+1] ready to start.`
-5. If scope or architecture changed during this session, suggest running `/plan update`.
+4. Nếu tất cả các mục trong phase cuối cùng đã hoàn thành HOẶC người dùng ra lệnh kèm từ khóa `done`:
+   - Nếu kịch bản là 100% hoàn thành:
+     - Thông báo: `🎉 Project Plan Complete! Cleaning up active_plan reference.`
+     - **Hành động**: Gỡ bỏ trường `active_plan` khỏi `project.md` để tối ưu hóa context cho phiên sau.
+   - Nếu chỉ hoàn thành một phase trung gian:
+     - Thông báo: `🎉 Phase [N] Complete! Phase [N+1] ready to start.`
+5. Nếu phạm vi hoặc kiến trúc thay đổi trong phiên này, gợi ý chạy `/plan update`.
 
 ### 5. Update Master Index
 

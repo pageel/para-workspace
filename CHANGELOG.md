@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.3] - 2026-02-26
+
+### Changed
+
+- **Workflow: `/end` v1.1.0 → v1.2.0**:
+  - Added `[done]` optional parameter to the command syntax.
+  - New logic: When the `done` keyword is used, the workflow detects if the project's `active_plan` is 100% complete.
+  - Automated Action: If 100% complete (or requested via `done`), the agent automatically removes the `active_plan` field from `project.md` to optimize token usage for future sessions.
+  - Updated all internal logic to be bilingual-ready.
+- **Workflow Version Labels**: Bumped all governed library version references to `1.4.3`.
+
 ## [1.4.2] - 2026-02-26
 
 ### Added

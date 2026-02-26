@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.4.2-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.4.3-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-tích-hợp-agent)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -237,7 +237,7 @@ para rule <command>           # Quản lý rules
 | **`/backlog`**       | Quản lý tasks qua backlog.md canonical + plan integration |
 | **`/backup`**        | Sao lưu workflows, rules, và config                       |
 | **`/config`**        | Quản lý cấu hình workspace                                |
-| **`/end`**           | Đóng phiên + kiểm tra tiến độ plan phase                  |
+| **`/end`**           | Đóng phiên + dọn dẹp active_plan tự động                  |
 | **`/inbox`**         | Phân loại file từ `_inbox/` vào PARA                      |
 | **`/install`**       | Cài đặt thông minh (xử lý cập nhật/merge)                 |
 | **`/learn`**         | Ghi nhận bài học vào Areas/Learning                       |
@@ -291,6 +291,7 @@ Xem [Hướng dẫn Di chuyển](./migration.md) để biết chi tiết.
 - [x] Thư viện Quản trị, Quy trình RFC, An toàn Workspace Runtime _(phát hành v1.4.1)_
 - [x] Landing Page `paraworkspace.dev` _(phát hành v1.4.1)_
 - [x] Workflow Plan-Aware & Tối ưu Token _(phát hành v1.4.2)_
+- [x] Tự động dọn dẹp Plan qua `/end [done]` _(phát hành v1.4.3)_
 - [ ] Safety Guardrails & Terminal Allowlist
 - [ ] Multi-agent Routing
 - [ ] Context Intelligence & Semantic Search
@@ -309,4 +310,4 @@ Xem [CONTRIBUTING.md](../CONTRIBUTING.md) để biết hướng dẫn. Điểm c
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.4.2_
+_Phiên bản: 1.4.3_
