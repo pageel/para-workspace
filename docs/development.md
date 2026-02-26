@@ -11,7 +11,7 @@ PARA Workspace organizes development into 4 workflow streams:
 │                                                                      │
 │  0. PLANNING          1. DAILY DEV        2. RELEASE      3. OPS    │
 │  ────────────         ──────────          ──────────      ────────  │
-│  /plan create         /open               /release        /migrate  │
+│  /plan create         /open               /release        /retro    │
 │     ↓                    ↓                   ↓            /inbox    │
 │  /backlog sync        [coding]            /deploy                   │
 │                          ↓                                          │
@@ -63,19 +63,20 @@ This runs **every day** during active development.
 /backlog update       → Mark tasks ✅ Done
     │
     ▼
-/end
+/end [project] [done]
     │
     │  💾 Save session log
     │  📐 Check plan phase progress
+    │  🧹 Auto-cleanup active_plan (if 'done')
     │  📊 Update SESSION_LOG.md
 ```
 
-| Workflow          | Trigger          | Frequency    |
-| :---------------- | :--------------- | :----------- |
-| `/open`           | Start working    | 1x/day       |
-| `/push`           | Feature/fix done | Multiple/day |
-| `/backlog update` | Task done        | Per task     |
-| `/end`            | Stop working     | 1x/day       |
+| Workflow          | Trigger          | Frequency                                      |
+| :---------------- | :--------------- | :--------------------------------------------- |
+| `/open`           | Start working    | 1x/day                                         |
+| `/push`           | Feature/fix done | Multiple/day                                   |
+| `/backlog update` | Task done        | Per task                                       |
+| `/end`            | Stop working     | 1x/day (use `done` when active plan completes) |
 
 ---
 
@@ -110,7 +111,6 @@ These run **as needed** (not daily).
 
 | Workflow   | Purpose                      | When           |
 | :--------- | :--------------------------- | :------------- |
-| `/migrate` | Tech stack migration         | New project    |
 | `/inbox`   | Categorize incoming files    | Weekly cleanup |
 | `/install` | Install/update workflows     | After `update` |
 | `/retro`   | Retrospective before archive | Project end    |
@@ -148,6 +148,7 @@ CHANGELOG → GitHub Release           ← PUBLIC RECORD
 - Always start with `/open` for context + current phase
 - Commit often with `/push` (many small commits > 1 big commit)
 - End with `/end` to save progress + check phase completion
+- Use `/end [project] done` when the active plan is complete to auto-cleanup the plan reference
 - Use `/backlog update` to mark tasks done immediately
 - New task discovered? → `/backlog add` FIRST, then code
 - Use `grep` when reading plan in `/open`/`/end` — not the full file

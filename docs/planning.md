@@ -86,6 +86,8 @@ active_plan: "plans/implementation-plan.md" # ← path relative to artifacts/
 
 This enables `/open` and `/end` to automatically detect your current phase without scanning directories — saving agent tokens.
 
+> **Cleanup:** When the active plan is 100% complete, you can run `/end [project] done` to automatically remove this field and archive the plan.
+
 ---
 
 ## Daily Session Flow
@@ -125,6 +127,9 @@ Pick 2-3 tasks from the current phase. Code, test, commit.
 → Session logged to sessions/2026-02-26.md
 → Plan Progress: Phase 2 — 4/5 tasks done
 → 🎉 Almost there! 1 task remaining in Phase 2.
+
+**Pro-Tip: Finishing the Plan**
+When you complete the **final phase** of your current plan, run `/end [project] done`. The agent will perform a 100% check and automatically remove the `active_plan` field from `project.md`, signaling that the strategic roadmap is fully realized. Your project can still continue with maintenance tasks, or you can create a new plan later.
 ```
 
 When all tasks in a phase are done, the agent announces:
@@ -191,6 +196,7 @@ Use `/backlog sync` to keep both artifacts aligned:
 | `/backlog update`   | Change item status   | Completed or started work  |
 | `/backlog sync`     | Align with plan      | After plan changes         |
 | `/backlog evaluate` | ICE score priorities | Need to reprioritize       |
+| `/end [proj] done`  | Close + Cleanup plan | Active plan 100% complete  |
 
 ---
 
