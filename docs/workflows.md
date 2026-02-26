@@ -65,3 +65,8 @@ preferences:
 - This is a **kernel invariant** — violations are non-compliant
 
 **Status:** 🧪 Testing (2026-02-25) — Monitoring across sessions to confirm agent compliance.
+
+## Related Guides
+
+- [Development Workflow Guide](./development.md) — How all 4 workflow streams fit together
+- [Planning Guide](./planning.md) — Plan + Backlog detailed guide
