@@ -95,8 +95,9 @@ Each workspace maintains its own version independently:
 2. Add entry in `CHANGELOG.md` (follow [Keep a Changelog](https://keepachangelog.com/) format).
 3. Update `kernel_version` in `.para-workspace.yml` (after `para update`).
 4. Update any version labels in workflow headers if convention changed.
-5. Run `/release` workflow to verify quality gates.
-6. Commit and push via `/push`.
+5. Update version references (badges, footer) in `README.md` (and `docs/README.vi.md` if applicable).
+6. Run `/release` workflow to verify quality gates.
+7. Commit and push via `/push`.
 
 ---
 

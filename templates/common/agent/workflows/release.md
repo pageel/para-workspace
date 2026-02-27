@@ -73,6 +73,7 @@ If applicable, increment version in:
 - `Projects/[project-name]/project.md` (version field)
 - `Projects/[project-name]/repo/VERSION` (if exists)
 - `Projects/[project-name]/repo/package.json` (if applicable)
+- `Projects/[project-name]/repo/README.md` (Update version badges and footer if applicable)
 
 ### 7. Milestone Check
 
@@ -89,7 +90,7 @@ Review milestones in `project.md` frontmatter:
 - [ ] Build succeeds
 - [ ] Documentation updated
 - [ ] Changelog updated
-- [ ] Version bumped
+- [ ] Version bumped (and README synced)
 
 ## Related
 
