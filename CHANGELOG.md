@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Profile Templates**: Added `/plan` workflow and `plans/` directory to the `dev` profile structure.
+
 - **Workflow: `/end` v1.1.0 → v1.2.0**:
   - Added `[done]` optional parameter to the command syntax.
   - New logic: When the `done` keyword is used, the workflow detects if the project's `active_plan` is 100% complete.

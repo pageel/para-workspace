@@ -17,6 +17,7 @@ workspace/
 │       ├── sessions/              # Session logs & BACKLOG.md
 │       ├── docs/                  # Project documentation
 │       └── artifacts/             # AI-generated artifacts
+│           ├── plans/             # 📝 Implementation plans
 │           └── tasks/
 │               ├── backlog.md     # 📌 CANONICAL task list
 │               ├── sprint-current.md
@@ -46,6 +47,7 @@ workspace/
 
 | Workflow           | When to Use                                  |
 | :----------------- | :------------------------------------------- |
+| **`/plan`**        | Create or review an implementation plan      |
 | **`/open`**        | Start a working session, load context        |
 | **`/backlog`**     | Add/prioritize tasks for a project           |
 | **`/new-project`** | Scaffold a new development project           |
