@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.4] - 2026-02-27
+
+### Changed
+
+- **Skill: PARA Kit (v1.0.0, min_kernel: 1.4.1)**: Updated YAML frontmatter, file paths, terminology, and core strategies to conform with the v1.4.1+ standards. Replaced CLI commands with Workflows (`/para-workflow`, `/config`), added Artifacts-Driven standard, and Sync Queue awareness.
+
 ## [1.4.3] - 2026-02-26
 
 ### Fixed
@@ -20,7 +26,6 @@ All notable changes to this project will be documented in this file.
   - Automated Action: If 100% complete (or requested via `done`), the agent automatically removes the `active_plan` field from `project.md` to optimize token usage for future sessions.
   - Updated all internal logic to be bilingual-ready.
 - **Workflow Version Labels**: Bumped all governed library version references to `1.4.3`.
-- **Skill: PARA Kit**: Updated YAML frontmatter, file paths, and terminology to conform with the v1.4.1+ standards.
 
 ## [1.4.2] - 2026-02-26
 

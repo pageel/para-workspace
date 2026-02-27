@@ -13,8 +13,8 @@ Intelligence for managing an "Agent-Executable" PARA workspace. This skill helps
 1. **Workspace Audit**: Uses `./para status` to identify non-compliant projects or overdue deadlines.
 2. **Project Lifecycle**: Orchestrates `scaffold`, `migrate`, and `archive` operations.
 3. **Strategy Selection**: Decides whether a task requires a full workflow (/retro, /plan) or just a direct CLI command.
-4. **Catalog Management**: Uses `./para work` and `./para rule` to manage personal libraries.
-5. **Configuration & Customization**: Uses `./para config` for workspace settings.
+4. **Catalog Management**: Uses `/para-workflow` and `/para-rule` workflows to manage governed libraries.
+5. **Configuration & Customization**: Uses the `/config` workflow for workspace metadata and settings.
 6. **Versioning Discipline**: Enforces the patch branch (user-approved minor jumps only).
 
 ## Selection Strategy (Workflow vs. Script)
@@ -22,15 +22,15 @@ Intelligence for managing an "Agent-Executable" PARA workspace. This skill helps
 ### Use CLI Scripts (`./para <cmd>`) when:
 
 - Performing **maintenance** (status, install, update).
-- **Initialization** (scaffold).
+- **Low-level Scaffolding** (`./para scaffold`) as an automated step inside a larger wrapper.
 - **Bulk Migration** (migrate).
-- The task is deterministic and requires no human-in-the-loop decision.
+- The task is deterministic and requires no human-in-the-loop decision or creative thinking.
 
 ### Use Workflows (`/[cmd]`) when:
 
+- **Collaboration** with the user is needed to define scope or start a new project (e.g., **`/new-project`** instead of raw `./para scaffold`).
 - Performing **analysis** that requires documentation (e.g., /retro, /plan).
-- **Collaboration** with the user is needed to define scope (/new-project).
-- The task produces a **permanent artifact** (e.g., plan.md, walkthrough.md).
+- The task produces a **permanent artifact** (e.g., plan.md, walkthrough.md) following the Artifact-Driven Standard.
 - **Complex validation** is required (/verify).
 
 ## Intelligence Patterns (RFC-0002 & RFC-0003)
@@ -41,17 +41,19 @@ Intelligence for managing an "Agent-Executable" PARA workspace. This skill helps
 - **Isolation Enforcement**: Always scope research to the active project folder first. Only expand to `Areas/` or `Resources/` if the project context is insufficient.
 - **Archive Policy**: Never read `Archive/` unless explicitly requested.
 
-### 2. Beads Lifecycle Management
+### 2. Artifact-Driven Standard & Beads Lifecycle
 
-- **Bound to Projects**: Beads MUST live in `Projects/<project-name>/.beads/`.
+- **Persistent Mirroring**: ALWAYS mirror creative logic, architectural plans, and verification evidence into `Projects/<project-name>/artifacts/`. Use `plans/` for design, `walkthroughs/` for validation evidence.
+- **Beads Bound to Projects**: Temporary thinking lives in `Projects/<project-name>/.beads/`.
 - **Graduation Ritual**: During `/retro`, analyze Beads for potential graduation to `Areas/` (Standard Operating Procedures), `Resources/` (Reference), or `.agent/rules/` (Codified Guardrails).
 - **Proactive Tagging**: Identify friction points (repeated failures, logic gaps) and suggest creating a Bead.
 
 ### 3. Advanced Auditing (Workspace Health)
 
-- **Status Reporting**: Uses `./para status` to monitor task progress (Done/Total), rule density, and workflow adoption across projects.
+- **Status Reporting**: Uses `./para review` for deep governance analysis and `./para status` for a quick overview of task progress (Done/Total) and rule density.
+- **Sync Queue Awareness**: Actively monitors `Areas/Workspace/SYNC.md` for pending downstream tasks. If a project is blocked by an upstream sync, propose running `/open [project-name]` to resolve it.
 - **Library Health**: Monitors the ratio of Core vs. Library components to ensure standardization.
-- **Stalled Project Detection**: If a project has no tasks in `Current Sprint` and no log in `sessions/` for > 7 days, trigger a `./para status` review.
+- **Stalled Project Detection**: If a project has no tasks in `Current Sprint` and no log in `sessions/` for > 7 days, trigger a `./para status` or `/retro` review.
 
 ### 4. Versioning Strategy (Propose & Approve)
 

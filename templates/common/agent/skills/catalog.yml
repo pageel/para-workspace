@@ -5,7 +5,7 @@ items:
   - id: para-kit
     name: "PARA Kit"
     version: "1.0.0"
-    kernel_min: "1.4.0"
+    kernel_min: "1.4.1"
     kernel_max: "1.x"
     entrypoint: "para-kit/SKILL.md"
     description: "Core PARA intelligence — classification, workspace navigation, and governance awareness."
