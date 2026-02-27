@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [1.4.4] - 2026-02-27
 
+### Fixed
+
+- **Workflow: `/open`**: Optimized token usage by replacing bash commands (`head`, `grep`) with a directive to use native `view_file` capacity for reading the backlog summary, improving stability and performance.
+
 ### Changed
 
 - **Skill: PARA Kit (v1.0.0, min_kernel: 1.4.1)**: Updated YAML frontmatter, file paths, terminology, and core strategies to conform with the v1.4.1+ standards. Replaced CLI commands with Workflows (`/para-workflow`, `/config`), added Artifacts-Driven standard, and Sync Queue awareness.

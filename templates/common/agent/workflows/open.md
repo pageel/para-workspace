@@ -44,9 +44,7 @@ Read the latest session log for context on previous work.
 
 //turbo
 
-```bash
-head -30 Projects/[project-name]/artifacts/tasks/backlog.md
-```
+> ⚠️ **Token optimization:** Use the `view_file` tool to read the entire `Projects/[project-name]/artifacts/tasks/backlog.md` file. Do NOT use `grep` or `head` bash commands to parse it. Instead, extract the task counts directly from the `📊 Summary` table at the bottom of the file.
 
 ### 5. Read implementation plan — summary only (if active)
 
