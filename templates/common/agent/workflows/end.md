@@ -10,10 +10,10 @@ source: catalog
 
 Summarize accomplishments and log them to the correct context (Project vs. Workspace).
 
-| Option | Description                                                                                                    |
-| :----- | :------------------------------------------------------------------------------------------------------------- |
-| `all`  | Đóng phiên làm việc cho tất cả các dự án đã thay đổi trong git status.                                         |
-| `done` | (Optional) Nếu kế hoạch dự án (`active_plan`) đã hoàn thành 100%, tự động gỡ bỏ trường này trong `project.md`. |
+| Option | Description                                                                                                      |
+| :----- | :--------------------------------------------------------------------------------------------------------------- |
+| `all`  | Close the working session for all modified projects in git status.                                               |
+| `done` | (Optional) If the active plan (`active_plan`) is 100% complete, automatically remove this field in `project.md`. |
 
 ## Classification Rules
 
@@ -72,13 +72,13 @@ If `active_plan` exists in `project.md`:
 - **Status**: [🔨 In Progress | 🎉 Phase Complete!]
 ```
 
-4. Nếu tất cả các mục trong phase cuối cùng đã hoàn thành HOẶC người dùng ra lệnh kèm từ khóa `done`:
-   - Nếu kịch bản là 100% hoàn thành:
-     - Thông báo: `🎉 Project Plan Complete! Cleaning up active_plan reference.`
-     - **Hành động**: Gỡ bỏ trường `active_plan` khỏi `project.md` để tối ưu hóa context cho phiên sau.
-   - Nếu chỉ hoàn thành một phase trung gian:
-     - Thông báo: `🎉 Phase [N] Complete! Phase [N+1] ready to start.`
-5. Nếu phạm vi hoặc kiến trúc thay đổi trong phiên này, gợi ý chạy `/plan update`.
+4. If all items in the current phase are complete OR the user issues the command with the `done` keyword:
+   - If the scenario is 100% complete:
+     - Output: `🎉 Project Plan Complete! Cleaning up active_plan reference.`
+     - **Action**: Remove the `active_plan` field from `project.md` to optimize context for future sessions.
+   - If a midway phase is complete:
+     - Output: `🎉 Phase [N] Complete! Phase [N+1] ready to start.`
+5. If the scope or architecture changes during this session, suggest running `/plan update`.
 
 ### 5. Update Master Index
 

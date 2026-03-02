@@ -73,15 +73,15 @@ else
     echo "⏫ Upgraded: $CURRENT_VER -> $NEW_VER"
 fi
 
-# Re-run installation to sync rules, workflows, skills, and CLI wrapper
-echo "⚙️ Re-installing to sync workspace..."
-bash "$SCRIPT_DIR/install.sh"
-
-# Run migrations automatically if versions changed
+# Run migrations automatically if versions changed before install overwrites config
 if [ "$CURRENT_VER" != "$NEW_VER" ] && [ "$CURRENT_VER" != "Unknown" ]; then
     echo "🏗️ Running auto-migration process..."
     bash "$SCRIPT_DIR/migrate.sh" --from="$CURRENT_VER" --to="$NEW_VER"
 fi
+
+# Re-run installation to sync rules, workflows, skills, and CLI wrapper
+echo "⚙️ Re-installing to sync workspace..."
+bash "$SCRIPT_DIR/install.sh"
 
 # Audit log
 if [ -n "$WORKSPACE_ROOT" ] && [ -f "$WORKSPACE_ROOT/.para/audit.log" ]; then
