@@ -11,6 +11,18 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 LIB_DIR="$SCRIPT_DIR/../lib"
 
+# For self-update detection
+get_hash() {
+    if command -v sha256sum &>/dev/null; then
+        sha256sum "$1" | awk '{print $1}'
+    elif command -v shasum &>/dev/null; then
+        shasum -a 256 "$1" | awk '{print $1}'
+    else
+        stat -c %Y "$1" 2>/dev/null || date +%s
+    fi
+}
+OLD_SCRIPT_HASH=$(get_hash "$SCRIPT_DIR/update.sh")
+
 # Parse help
 for arg in "$@"; do
   case "$arg" in
@@ -58,7 +70,25 @@ echo "📍 Current Version: $CURRENT_VER"
 # Pull latest
 echo "📥 Pulling latest changes..."
 cd "$REPO_ROOT"
-git pull origin main
+
+# On Windows, git pull might fail to update the running script.
+# We try to catch this or at least warn the user.
+if git pull origin main; then
+    # If the script itself was updated, we need to restart it to pick up changes
+    # and prevent weird behavior from Bash trying to read from a modified file.
+    NEW_SCRIPT_HASH=$(get_hash "$SCRIPT_DIR/update.sh")
+    if [ "$OLD_SCRIPT_HASH" != "$NEW_SCRIPT_HASH" ]; then
+        echo "🔄 CLI scripts updated. Restarting update process..."
+        exec bash "$SCRIPT_DIR/update.sh" "$@"
+    fi
+else
+    echo "⚠️  Git pull failed or was partial."
+    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+        echo "💡 Windows detected: This is often caused by the script file being locked while running."
+        echo "   Please try closing all terminals and running the update again."
+    fi
+    exit 1
+fi
 
 # Get new version
 if [ -f "$REPO_ROOT/VERSION" ]; then

@@ -236,13 +236,16 @@ if [ -f "$LIB_DIR/validator.sh" ]; then
 fi
 
 # === 7. Install root 'para' wrapper ===
-echo "📦 Installing workspace 'para' wrapper..."
+# Skip if workspace is the repo itself (prevents para.bak and overwriting dev para)
+if [ "$WS_ROOT" = "$REPO_ROOT" ]; then
+  echo "📦 Skipping workspace wrapper (Repo mode)..."
+  echo "   (Detected dev repo as workspace, keeping original 'para' executable)"
+else
+  echo "📦 Installing workspace 'para' wrapper..."
 
-if [ -f "$WS_ROOT/para" ]; then
-  backup_file "$WS_ROOT/para"
-fi
-
-cat > "$WS_ROOT/para" <<'WRAPPER'
+  # Generate content to a temp file first for atomic-like movement
+  TEMP_WRAPPER=$(mktemp 2>/dev/null || echo "$WS_ROOT/para.tmp")
+  cat > "$TEMP_WRAPPER" <<'WRAPPER'
 #!/bin/bash
 # PARA Workspace CLI Wrapper (Auto-generated)
 # Usage: ./para [command] [args...]
@@ -272,8 +275,29 @@ fi
 
 "$REPO_CLI" "$@"
 WRAPPER
-chmod +x "$WS_ROOT/para"
-echo "   ✓ Wrapper installed at $WS_ROOT/para"
+
+  if [ -f "$WS_ROOT/para" ]; then
+    # Only backup and overwrite if content is actually different
+    if ! cmp -s "$WS_ROOT/para" "$TEMP_WRAPPER"; then
+      # On Windows, overwriting a running script is tricky. 
+      # We try to backup first. If cp fails, the script continues.
+      backup_file "$WS_ROOT/para"
+      if cp "$TEMP_WRAPPER" "$WS_ROOT/para" 2>/dev/null; then
+        chmod +x "$WS_ROOT/para"
+        echo "   ✓ Wrapper updated at $WS_ROOT/para"
+      else
+        echo "   ⚠️  Could not update running wrapper (File locked). Please run 'para install' again later."
+      fi
+    else
+      echo "   ✓ Wrapper is already up to date"
+    fi
+  else
+    cp "$TEMP_WRAPPER" "$WS_ROOT/para"
+    chmod +x "$WS_ROOT/para"
+    echo "   ✓ Wrapper installed at $WS_ROOT/para"
+  fi
+  rm "$TEMP_WRAPPER" 2>/dev/null || true
+fi
 
 # === Done ===
 echo ""

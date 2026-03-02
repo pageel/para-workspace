@@ -14,7 +14,12 @@ All notable changes to this project will be documented in this file.
 - **Kernel Version**: Bumped to `v1.4.6`.
 - **Smart Archive Migration (FEAT-29)**: Integrated `archive_file` into `update.sh` and `migrate.sh` (`--from=1.4.5 --to=1.4.6`) to automatically move obsolete files (e.g. `docs/migration.md`) to `.para/archive/[version]-orphans/`.
 - **Documentation**: Overhauled migration guides in `README.md` and `docs/README.vi.md`. Removed obsolete guides and introduced two official path: Auto Update (`para update`) and Manual Clean Slate (via `_inbox/` landing zone).
-- **Backlog**: Added BUG-09.
+
+### Fixed
+
+- **CLI Robustness**: Fixed recursive `.bak` file generation when updating the `para` wrapper in Repo mode.
+- **Windows Compatibility**: Improved `install.sh` and `update.sh` to handle NTFS file locking issues. Added self-restart logic to the update process to ensure script integrity during upgrades.
+- **Bug Fix**: Addressed BUG-09.
 
 ## [1.4.5] - 2026-03-02
 
