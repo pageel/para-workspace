@@ -14,19 +14,22 @@ Workflows are the **UI layer** for AI agents. They define processes that agents 
 
 ## Standard Workflows
 
-| Workflow   | Type     | Description                                                       |
-| ---------- | -------- | ----------------------------------------------------------------- |
-| `/para`    | Core     | Master workflow — orchestrate work                                |
-| `/open`    | Session  | Start session, load context                                       |
-| `/end`     | Session  | Close session, save logs                                          |
-| `/plan`    | Planning | Create implementation plans — see [Planning Guide](./planning.md) |
-| `/backlog` | Planning | Manage product backlog — see [Planning Guide](./planning.md)      |
-| `/push`    | Dev      | Commit & push code                                                |
-| `/verify`  | QA       | Check task completion                                             |
-| `/retro`   | Review   | Retrospective before archive                                      |
-| `/release` | Release  | Pre-release quality gate                                          |
-| `/install` | Admin    | Install workflow/rule                                             |
-| `/merge`   | Admin    | Merge conflicting workflows                                       |
+| Workflow         | Type     | Description                                                                    |
+| ---------------- | -------- | ------------------------------------------------------------------------------ |
+| `/para`          | Core     | Master workflow — orchestrate work                                             |
+| `/open`          | Session  | Start session, load context                                                    |
+| `/end`           | Session  | Close session, save logs                                                       |
+| `/plan`          | Planning | Create implementation plans — see [Planning Guide](./planning.md)              |
+| `/backlog`       | Planning | Manage product backlog — see [Planning Guide](./planning.md)                   |
+| `/push`          | Dev      | Commit & push code                                                             |
+| `/verify`        | QA       | Check task completion                                                          |
+| `/retro`         | Review   | Retrospective before archive                                                   |
+| `/release`       | Release  | Pre-release quality gate                                                       |
+| `/install`       | Admin    | Install workflow/rule                                                          |
+| `/merge`         | Admin    | Merge conflicting workflows                                                    |
+| `/para-rule`     | Admin    | Manage, install, and standardize agent rules                                   |
+| `/para-workflow` | Admin    | Manage, install, and standardize agent workflows                               |
+| `/para-audit`    | Audit    | Macro Assessor for tracking workspace structural drift against the Kernel Spec |
 
 ## Kernel Compatibility
 
@@ -44,6 +47,26 @@ This prevents breaking when the kernel changes (e.g., renamed files, changed sch
 2. Add YAML frontmatter with `description` and `kernel_compat`
 3. Write clear step-by-step instructions
 4. Submit PR with kernel compatibility noted
+
+## Macro Assessor: `/para-audit`
+
+> Added in v1.4.5
+
+The `/para-audit` workflow functions as the **supreme workspace health checker**.
+
+**Why it exists:**
+Instead of agents reading the hundreds-of-lines `Kernel Specs` (like `invariants.md`) on every single `/open` or `/plan` command (which wastes thousands of tokens and causes attention decay), the PARA workspace uses a **Progressive Disclosure** model.
+
+- Daily workflows only read the ultra-light `governance.md` runtime file.
+- When an audit is needed, the user runs the `/para-audit` workflow.
+
+**What it does:**
+
+1. **Full Scans the Kernel:** This is the _only_ workflow permitted to read `invariants.md` in full.
+2. **Detects Structural Drift:** Checks if `Projects/`, `Areas/`, `Resources/`, and `Archive/` are intact and unpolluted (no loose files at the root).
+3. **Validates Project Activity:** Checks `backlog.md` of all projects to see if they are genuinely active (have "In Progress" or "ToDo" tasks) or if they have gone dormant.
+4. **Verifies Libraries:** Calls the packages managers (`/para-rule list` and `/para-workflow list`) to find outdated or untracked routines.
+5. **Generates Report:** Exports finding to `Areas/Workspace/audits/audit-report-YYYY-MM-DD.md` along with a remediation plan for the user.
 
 ## Language Compliance (I11)
 

@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.4.4-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.4.5-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-tích-hợp-agent)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -245,6 +245,7 @@ para rule <command>           # Quản lý rules
 | **`/new-project`**   | Khởi tạo project mới với scaffolding                      |
 | **`/open`**          | Bắt đầu phiên với nạp context + plan phase                |
 | **`/para`**          | Bộ điều khiển chính cho quản lý workspace                 |
+| **`/para-audit`**    | Khảo sát hệ thống, phát hiện độ lệch chuẩn so với Kernel  |
 | **`/para-rule`**     | Quản lý, cài đặt, chuẩn hoá agent rules                   |
 | **`/para-workflow`** | Quản lý, cài đặt, chuẩn hoá agent workflows               |
 | **`/plan`** ✨       | Tạo, xem, và cập nhật kế hoạch triển khai                 |
@@ -292,7 +293,8 @@ Xem [Hướng dẫn Di chuyển](./migration.md) để biết chi tiết.
 - [x] Landing Page `paraworkspace.dev` _(phát hành v1.4.1)_
 - [x] Workflow Plan-Aware & Tối ưu Token _(phát hành v1.4.2)_
 - [x] Tự động dọn dẹp Plan qua `/end [done]` _(phát hành v1.4.3)_
-- [ ] Safety Guardrails & Terminal Allowlist
+- [x] Safety Guardrails & Terminal Allowlist _(phát hành v1.4.5)_
+- [x] Tiết lộ tuần tự (Progressive Disclosure) & Tối ưu Token/Context _(phát hành v1.4.5)_
 - [ ] Multi-agent Routing
 - [ ] Context Intelligence & Semantic Search
 
@@ -310,4 +312,4 @@ Xem [CONTRIBUTING.md](../CONTRIBUTING.md) để biết hướng dẫn. Điểm c
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.4.4_
+_Phiên bản: 1.4.5_
