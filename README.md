@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.4.4-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.4.5-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -245,6 +245,7 @@ para rule <command>           # Manage rules
 | **`/new-project`**   | Initialize new project with scaffolding                    |
 | **`/open`**          | Start session with context + plan phase loading            |
 | **`/para`**          | Master controller for workspace management                 |
+| **`/para-audit`**    | Macro Assessor for tracking workspace structural drift     |
 | **`/para-rule`**     | Manage, install, and standardize agent rules               |
 | **`/para-workflow`** | Manage, install, and standardize agent workflows           |
 | **`/plan`** ✨       | Create, review, and update implementation plans            |
@@ -292,7 +293,8 @@ See [Migration Guide](./docs/migration.md) for details.
 - [x] Landing Page `paraworkspace.dev` _(shipped in v1.4.1)_
 - [x] Plan-Aware Workflows & Token Optimization _(shipped in v1.4.2)_
 - [x] Automated Plan Cleanup via `/end [done]` _(shipped in v1.4.3)_
-- [ ] Safety Guardrails & Terminal Allowlist
+- [x] Safety Guardrails & Terminal Allowlist _(shipped in v1.4.5)_
+- [x] Progressive Disclosure & Token/Context Optimization _(shipped in v1.4.5)_
 - [ ] Multi-agent Routing
 - [ ] Context Intelligence & Semantic Search
 
@@ -310,4 +312,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.4.4_
+_Version: 1.4.5_

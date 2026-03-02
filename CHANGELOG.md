@@ -2,9 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.4.4] - 2026-02-27
+## [1.4.5] - 2026-03-02
 
-### Fixed
+### Added
+
+- **Workflow: `/para-audit`** — New governed workflow functioning as a Macro Assessor to check structural drift against Kernel Specs. It's the only daily workflow allowed to full-scan the Kernel Specs.
+- **Progressive Disclosure** — Implemented a token-saving model where agents only read the lightweight `governance.md` during regular tasks and only access the comprehensive Kernel Spec during `/plan`, `/para-audit` or when creating a new project.
+
+### Changed
+
+- **Kernel Version**: Bumped to `v1.4.5`.
+- **Rule: `governance.md`** — Rewritten to be ultra-lightweight (saving thousands of tokens). Integrated **Invariant IDs** (e.g., `[I1 & I8]`) directly into safety rules so the agent can cross-reference invariants without loading the full `invariants.md` spec. Added **Safety Guardrails** (Terminal Allowlist) to protect workspaces.
+- **Workflow: `/open`**: Modified to explicitly forbid scanning the Kernel Spec to prevent attention decay and context bloat.
+- **Workflow: `/plan`**: Updated to allow selective, on-demand reading of Kernel components (like `invariants.md` or `heuristics.md`) rather than unrestricted scanning.
+
+## [1.4.4] - 2026-02-27
 
 - **Workflow: `/open`**: Optimized token usage by replacing bash commands (`head`, `grep`) with a directive to use native `view_file` capacity for reading the backlog summary, improving stability and performance.
 
