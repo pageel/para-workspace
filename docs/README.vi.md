@@ -70,31 +70,31 @@ para-workspace/
 
 ### Cấu trúc Workspace (Tạo bởi `para init`)
 
+### Cấu trúc Môi trường làm việc cá nhân (Được khởi tạo bởi `para init`)
+
+Đây là hệ thống được sinh ra dành riêng cho cá nhân bạn.
+
 ```
-workspace/
-├── Projects/            # ⚡ Công việc đang hoạt động, có deadline
-│   └── <project>/
-│       ├── project.md   # YAML frontmatter contract
-│       ├── sessions/    # Nhật ký phiên làm việc
-│       ├── artifacts/   # tasks/backlog.md, plans/, outputs/
-│       └── docs/        # Tài liệu dự án
-├── Areas/               # 🛡️ Kiến thức ổn định & SOPs
-│   ├── Workspace/       # Nhật ký tổng, SYNC.md
-│   └── Learning/        # Ghi nhận kiến thức
-├── Resources/           # 📚 Tài liệu tham khảo & nguồn chỉ-đọc
-│   └── references/      # Repo clone, thư viện, ví dụ
-├── Archive/             # ❄️ Lưu trữ lạnh
-├── _inbox/              # 📥 Khu vực tiếp nhận (Inbox)
-├── .agent/              # 🤖 Runtime agent (quản trị, ghi được)
-│   ├── workflows/       # Workflows hoạt động (đồng bộ từ catalog)
-│   ├── rules/           # Rules hoạt động (đồng bộ từ catalog)
-│   └── skills/          # Skills tuỳ chọn
-├── .para/               # 🔒 Trạng thái hệ thống
-│   ├── audit.log        # Nhật ký thao tác (chỉ ghi thêm)
-│   ├── migrations/      # Lịch sử di chuyển
-│   └── backups/         # Bản sao lưu workflows & di chuyển
-├── .para-workspace.yml  # Cấu hình workspace & phiên bản kernel
-└── README.md
+<môi-trường-làm-việc>/
+├── Projects/                          # Các nhiệm vụ có mục tiêu (vd: website-launch)
+├── Areas/                             # Các trách nhiệm thường xuyên (vd: sức khoẻ, tài chính)
+|   └── Learning/                      # Mảng chia sẻ kiến thức (từ wf /learn)
+├── Resources/                         # Tài liệu tham khảo và công cụ
+|   ├── ai-agents/                     # Một bản thư viện của Repo kiến trúc chính thức PARA
+|   └── references/                    # Thư viện ghi chú kiến thức mở rộng bên ngoài
+├── Archive/                           # Lưu trữ lạnh cho các dự án đã hoàn tất
+├── _inbox/                            # Vùng đệm tạm thời để hứng dữ liệu ngoài tải về nhanh
+├── .agent/                            # Thư viện hệ thống Governed Library (Tự động đồng bộ lên)
+|   ├── rules/                         # Các quy tắc kỹ năng (.md) cho Agent
+|   ├── skills/                        # Các kỹ năng phức hợp (.md, /scripts)
+|   └── workflows/                     # Các luồng làm việc (.md) cho Agent
+├── .para/                             # Trạng thái hệ thống ngầm (BẤT KHẢ XÂM PHẠM)
+│   ├── archive/                       # Di dời các tệp kiến trúc cũ hết hạn sử dụng
+│   ├── migrations/                    # Lịch sử và kiểm soát luồng di chuyển hệ thống phiên bản
+|   ├── backups/                       # Bản sao lưu phiên bản luồng làm việc
+│   └── audit.log                      # Lịch sử hành động của PARA CLI
+├── para                               # Bootstrapper CLI
+└── .para-workspace.yml                # Metadata gốc quy định root config của hệ thống
 ```
 
 ---
