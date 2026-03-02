@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.6] - 2026-03-02
+
+### Added
+
+- **CLI Utilities**: Added `cli/lib/fs.sh` with `archive_file` helper for safely archiving structural files during version migrations instead of deleting them.
+- **Smart Archive Rule**: Added strict code standard prohibiting `rm` on structural files during migrations to `CONTRIBUTING.md`.
+
+### Changed
+
+- **Kernel Version**: Bumped to `v1.4.6`.
+- **Smart Archive Migration (FEAT-29)**: Integrated `archive_file` into `update.sh` and `migrate.sh` (`--from=1.4.5 --to=1.4.6`) to automatically move obsolete files (e.g. `docs/migration.md`) to `.para/archive/[version]-orphans/`.
+- **Documentation**: Overhauled migration guides in `README.md` and `docs/README.vi.md`. Removed obsolete guides and introduced two official path: Auto Update (`para update`) and Manual Clean Slate (via `_inbox/` landing zone).
+- **Backlog**: Added BUG-09.
+
 ## [1.4.5] - 2026-03-02
 
 ### Added

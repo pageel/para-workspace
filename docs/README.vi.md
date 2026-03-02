@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.4.5-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.4.6-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-tích-hợp-agent)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -271,17 +271,27 @@ Agent tương tác chủ yếu với `backlog.md` qua workflow `/backlog`. `spri
 
 ---
 
-## 🔄 Di chuyển từ v1.3.x
+## 🔄 Nâng cấp Phiên bản (Upgrading)
+
+PARA Workspace cung cấp hai cơ chế chính thức để nâng cấp lên phiên bản mới hơn:
+
+### Cơ chế 1: Cập nhật Tự động (Khuyên dùng)
+
+Dành cho đa số cấu trúc workspace đang khỏe mạnh, cơ chế cập nhật tích hợp sẽ xử lý mọi thứ an toàn.
 
 ```bash
-# Xem trước thay đổi
-para migrate --from=1.3.6 --to=1.4.0 --dry-run
-
-# Áp dụng di chuyển
-para migrate --from=1.3.6 --to=1.4.0
+./para update
 ```
 
-Xem [Hướng dẫn Di chuyển](./migration.md) để biết chi tiết.
+Lệnh này sẽ tự động tải lõi hệ thống mới về, đồng bộ các thư viện và bảo tồn các cấu trúc file hệ thống lỗi thời vào hầm lưu trữ `.para/archive/` mà không tác động xóa vào dữ liệu riêng của bạn (cơ chế Smart Archive).
+
+### Cơ chế 2: Dọn dẹp Làm mới Thủ công (Dành cho workspace bị chỉnh sửa mạnh)
+
+Nếu workspace của bạn quá cũ (v1.3.x) hoặc đã bị bạn chỉnh sửa cấu trúc lõi nghiêm trọng, hãy làm mới hoàn toàn:
+
+1. Chạy `para init --profile=dev --lang=vi` ở một không gian thư mục hoàn toàn mới.
+2. Sao chép lại các thư mục `Projects/` bên dự án cũ rớt vào thư mục `_inbox/` ở workspace mới.
+3. Chạy workflow `/inbox` hoặc dùng AI agent để tự động phân luồng dọn dẹp các project về đúng khoang chứa chuẩn mới của PARA.
 
 ---
 
@@ -312,4 +322,4 @@ Xem [CONTRIBUTING.md](../CONTRIBUTING.md) để biết hướng dẫn. Điểm c
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.4.5_
+_Phiên bản: 1.4.6_

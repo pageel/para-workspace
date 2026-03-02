@@ -77,6 +77,12 @@ fi
 echo "⚙️ Re-installing to sync workspace..."
 bash "$SCRIPT_DIR/install.sh"
 
+# Run migrations automatically if versions changed
+if [ "$CURRENT_VER" != "$NEW_VER" ] && [ "$CURRENT_VER" != "Unknown" ]; then
+    echo "🏗️ Running auto-migration process..."
+    bash "$SCRIPT_DIR/migrate.sh" --from="$CURRENT_VER" --to="$NEW_VER"
+fi
+
 # Audit log
 if [ -n "$WORKSPACE_ROOT" ] && [ -f "$WORKSPACE_ROOT/.para/audit.log" ]; then
   echo "$(date -Iseconds 2>/dev/null || date +"%Y-%m-%dT%H:%M:%S%z") | CLI | para update | from=$CURRENT_VER to=$NEW_VER | OK" >> "$WORKSPACE_ROOT/.para/audit.log"

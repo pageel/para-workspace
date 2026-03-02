@@ -17,6 +17,10 @@ Thank you for your interest in contributing to PARA Workspace!
 4. Ensure test vectors pass (see `kernel/examples/`)
 5. Submit a Pull Request
 
+### Code Standards
+
+- **Smart Archive Rule:** Never use `rm` directly to delete user-facing or structural PARA files during migrations/updates. You MUST use the `archive_file` helper (from `cli/lib/fs.sh`) to move deprecated files to `.para/archive/[version]-orphans/`. This ensures user data safety.
+
 ### Change Categories
 
 | Change Type       | Process Required        | Version Impact |

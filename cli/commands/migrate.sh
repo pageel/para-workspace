@@ -17,6 +17,15 @@ normalize_path() {
 # === Resolve paths ===
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(normalize_path "$(cd "$SCRIPT_DIR/../.." && pwd)")"
+LIB_DIR="$SCRIPT_DIR/../lib"
+
+# === Load Libraries ===
+if [ -f "$LIB_DIR/logger.sh" ]; then
+  source "$LIB_DIR/logger.sh"
+fi
+if [ -f "$LIB_DIR/fs.sh" ]; then
+  source "$LIB_DIR/fs.sh"
+fi
 
 # === Parse arguments (help first) ===
 FROM_VERSION=""
@@ -270,6 +279,30 @@ if [ -f "$WS_ROOT/.para-workspace.yml" ]; then
   else
     echo "     → Would update kernel_version to $TO_VERSION"
   fi
+fi
+
+# ============================================================
+# Migration: v1.4.5 → v1.4.6 (Smart Archive)
+# ============================================================
+
+echo ""
+echo "━━━ v1.4.5 → v1.4.6 Migration ━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+# Step 11: Cleanup old manual migration docs (Smart Archive)
+echo "🧹 Step 11: Smart Archive obsolete files..."
+
+# Ensure we have a target directory setup done mostly by archive_file
+if [ "$DRY_RUN" = false ]; then
+  # Archive old migration guide if it exists in docs
+  archive_file "$WS_ROOT/docs/migration.md" "$TO_VERSION"
+  
+  # Archive old migration plan if it exists
+  archive_file "$WS_ROOT/artifacts/plans/smart-archive-migration-plan.md" "$TO_VERSION"
+
+  echo "     ✓ Obsolete files archived to .para/archive/${TO_VERSION}-orphans/"
+else
+  echo "     → Would archive obsolete files to .para/archive/${TO_VERSION}-orphans/"
 fi
 
 # === Record migration ===
