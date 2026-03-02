@@ -53,7 +53,7 @@ Identify any untracked or misaligned rules and workflows.
 
 ### 5. Create Audit Report
 
-Generate a detailed `audit-report-YYYY-MM-DD.md` in `_inbox/` summarizing:
+Generate a detailed `audit-report-YYYY-MM-DD.md` in `Areas/Workspace/audits/` summarizing:
 
 - **Structural Integrity:** Which Invariants passed/failed.
 - **Drift Detected:** Loose files, missing structures, inactive projects.
