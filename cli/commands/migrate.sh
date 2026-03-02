@@ -294,15 +294,16 @@ echo "🧹 Step 11: Smart Archive obsolete files..."
 
 # Ensure we have a target directory setup done mostly by archive_file
 if [ "$DRY_RUN" = false ]; then
-  # Archive old migration guide if it exists in docs
-  archive_file "$WS_ROOT/docs/migration.md" "$TO_VERSION"
-  
-  # Archive old migration plan if it exists
-  archive_file "$WS_ROOT/artifacts/plans/smart-archive-migration-plan.md" "$TO_VERSION"
-
-  echo "     ✓ Obsolete files archived to .para/archive/${TO_VERSION}-orphans/"
+  # Check if anything exists to archive
+  if [ -f "$WS_ROOT/docs/migration.md" ] || [ -f "$WS_ROOT/artifacts/plans/smart-archive-migration-plan.md" ]; then
+    archive_file "$WS_ROOT/docs/migration.md" "$TO_VERSION"
+    archive_file "$WS_ROOT/artifacts/plans/smart-archive-migration-plan.md" "$TO_VERSION"
+    echo "     ✓ Obsolete files archived to .para/archive/${TO_VERSION}-orphans/"
+  else
+    echo "     ✓ No obsolete structural files found to archive."
+  fi
 else
-  echo "     → Would archive obsolete files to .para/archive/${TO_VERSION}-orphans/"
+  echo "     → Would check and archive obsolete files to .para/archive/${TO_VERSION}-orphans/"
 fi
 
 # === Record migration ===

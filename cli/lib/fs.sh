@@ -28,7 +28,7 @@ archive_file() {
   fi
 
   # Determine archive directory
-  local workspace_root="${PARA_WORKSPACE_ROOT:-.}"
+  local workspace_root="${WORKSPACE_ROOT:-.}"
   local archive_base="$workspace_root/.para/archive"
   local target_dir="$archive_base/${version_tag}-orphans"
   
