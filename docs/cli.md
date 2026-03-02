@@ -54,10 +54,18 @@ para archive <type>/<name>
 
 ### `para install`
 
-Sync kernel and workflows from repo to workspace.
+Sync the kernel and governed libraries from the repo to `.para/` and `.agent/`.
 
 ```bash
 para install [--force]
+```
+
+### `para update`
+
+Pull the newest version of PARA Workspace from remote repository and run auto-migrate behind the scene to maintain structural sync.
+
+```bash
+para update
 ```
 
 ### `para config`

@@ -1,18 +1,49 @@
-# <Project Name> — Backlog
+# <Project Name> - Product Backlog
 
-> **Project**: <project-slug>
-> **Last Updated**: YYYY-MM-DD
+> 🎯 Goal: <project-slug>
 
-## 🔨 In Progress
+---
 
-_(no active tasks)_
+## 🏗️ Epic: Initial Setup
 
-## 📋 Backlog
+Thiết lập dự án ban đầu.
 
-### Core
+### User Stories
 
-- [ ] _First task_
+| ID    | Story                 | Priority  | Status     | Phase |
+| :---- | :-------------------- | :-------- | :--------- | :---- |
+| SU-01 | Initial scaffolding   | 🔴 High   | ✅ Done    | 0     |
+| SU-02 | Define project goal   | 🔴 High   | ⏳ Pending | 0     |
+| SU-03 | First working session | 🟡 Medium | 🚀 ToDo    | 1     |
 
-## ✅ Recently Done
+---
 
-_(empty)_
+## 🐛 Known Issues & Bugs
+
+| ID     | Issue               | Status     |
+| :----- | :------------------ | :--------- |
+| BUG-01 | Example blank issue | ⏳ Pending |
+
+---
+
+## 📊 Evaluation Scores (ICE)
+
+| ID        | Impact | Confidence | Ease | ICE Score | Priority Hint    |
+| :-------- | :----: | :--------: | :--: | :-------: | :--------------- |
+| **SU-02** |   8    |     9      |  8   |  **576**  | 🚀 High Priority |
+
+---
+
+## 📊 Summary
+
+| Category    | Count |
+| :---------- | :---- |
+| Total Items | 4     |
+| ✅ Done     | 1     |
+| 🔴 High     | 2     |
+| 🟡 Medium   | 1     |
+| 🟢 Low      | 0     |
+
+---
+
+_Last updated: YYYY-MM-DD_

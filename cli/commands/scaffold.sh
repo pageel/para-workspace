@@ -114,28 +114,12 @@ EOL
 ---
 EOL
 
-    # README
-    cat > "$TARGET/README.md" <<EOL
-# $NAME
-
-Created: $(date +%Y-%m-%d)
-
-## Description
-
-_Project description goes here._
-
-## Structure
-
-- \`sessions/\` — Daily work logs
-- \`artifacts/\` — Tasks, plans, decisions, outputs
-- \`.beads/\` — Ideas and raw notes
-EOL
-
     echo "✅ Project '$NAME' created at $TARGET"
     echo ""
     echo "Next steps:"
     echo "  1. Edit $TARGET/project.md to set your goal"
     echo "  2. Add tasks to $TARGET/artifacts/tasks/backlog.md"
+    echo "  3. Write documentation in $TARGET/docs/"
     ;;
 
   area)

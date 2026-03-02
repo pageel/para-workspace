@@ -209,23 +209,21 @@ Kernel là **hiến pháp** của PARA Workspace — các quy tắc mà mọi wo
 ## 🛠️ Tham chiếu CLI
 
 ```bash
-# Lệnh chính
-para init [--profile=X] [--lang=X] [--path=X]  # Tạo workspace
-para scaffold {project|area|resource} <name>     # Tạo mục
-para status [--json]                             # Sức khoẻ workspace
-para archive <type>/<name> [--force]             # Lưu trữ lạnh
-para migrate [--from=X] [--to=Y] [--dry-run]    # Nâng cấp phiên bản
-para install [--force]                           # Đồng bộ từ repo
+# Lệnh Cốt lõi
+para init [--profile] [--lang]  # Khởi tạo workspace
+para status [--json]          # Sức khỏe hệ thống
+para update                   # Cập nhật Hệ thống chuẩn hoá mới và di chuyển tự động (migrate)
+para scaffold <loại> <tên>   # Tạo dự án/lĩnh vực/tài nguyên chuẩn với lõi tạo tác
+para install [--force]        # Đồng bộ thư viện hạt nhân và hệ thống quản trị từ repo
+para archive <loại>/<tên>    # Chuyển các hạng mục hoàn tất vào thư mục Lưu trữ
+para migrate [--from=X] [--to=Y]  # Tự động nâng cấp cấu trúc workspace theo phiên bản định kiến
 
-# Lệnh phát triển
-para plan <proj> <desc>       # Kế hoạch triển khai
-para verify <proj> [desc]     # Xác minh task
-para review                   # Kiểm tra workspace sâu
+# Cấu hình
+para config [key] [value]     # Quản lý thiết lập trong tệp .para-workspace.yml
 
-# Lệnh hệ thống
-para config [key] [value]     # Cài đặt workspace
-para work <command>           # Quản lý workflows
-para rule <command>           # Quản lý rules
+# Chức năng của Agent
+@[/para-workflow] list        # Kiểm tra và rà soát tính hợp quy của Workflows
+@[/para-rule] list            # Kiểm tra và rà soát tính hợp quy của Rules
 ```
 
 ---
@@ -261,10 +259,12 @@ para rule <command>           # Quản lý rules
 PARA Workspace sử dụng **Mô hình Hybrid 3 File**:
 
 ```
+
 artifacts/tasks/
-├── backlog.md          # 📌 CANONICAL — tất cả tasks ở đây
-├── sprint-current.md   # 🎯 DERIVED — chỉ tasks đang hoạt động
-└── done.md             # ✅ DERIVED — lưu trữ tasks hoàn thành
+├── backlog.md # 📌 CANONICAL — tất cả tasks ở đây
+├── sprint-current.md # 🎯 DERIVED — chỉ tasks đang hoạt động
+└── done.md # ✅ DERIVED — lưu trữ tasks hoàn thành
+
 ```
 
 Agent tương tác chủ yếu với `backlog.md` qua workflow `/backlog`. `sprint-current.md` và `done.md` là các view phái sinh giúp backlog gọn gàng.

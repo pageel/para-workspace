@@ -210,22 +210,20 @@ The Kernel is the **constitution** of PARA Workspace — the rules that all work
 
 ```bash
 # Core Commands
-para init [--profile=X] [--lang=X] [--path=X]  # Create workspace
-para scaffold {project|area|resource} <name>     # Create items
-para status [--json]                             # Workspace health
-para archive <type>/<name> [--force]             # Cold storage
-para migrate [--from=X] [--to=Y] [--dry-run]    # Version upgrade
-para install [--force]                           # Sync from repo
+para init [--profile] [--lang]  # Create workspace
+para status [--json]          # System health
+para update                   # Auto-update & migrate
+para scaffold <type> <name>   # Create structured paths
+para install [--force]        # Sync governed libraries
+para archive <type> <name>    # Graduation review
+para migrate [--from] [--to]  # Workspace migration
 
-# Dev Commands
-para plan <proj> <desc>       # Implementation plan
-para verify <proj> [desc]     # Task verification
-para review                   # Deep workspace audit
+# Configuration
+para config [key] [value]     # Manage workspace settings
 
-# System Commands
-para config [key] [value]     # Workspace settings
-para work <command>           # Manage workflows
-para rule <command>           # Manage rules
+# Agent Capabilities
+@[/para-workflow] list        # Manage workflows
+@[/para-rule] list            # Manage rules
 ```
 
 ---
@@ -261,10 +259,12 @@ para rule <command>           # Manage rules
 PARA Workspace uses a **Hybrid 3-File Model**:
 
 ```
+
 artifacts/tasks/
-├── backlog.md          # 📌 CANONICAL — all tasks live here
-├── sprint-current.md   # 🎯 DERIVED — active tasks only
-└── done.md             # ✅ DERIVED — completed tasks archive
+├── backlog.md # 📌 CANONICAL — all tasks live here
+├── sprint-current.md # 🎯 DERIVED — active tasks only
+└── done.md # ✅ DERIVED — completed tasks archive
+
 ```
 
 The agent primarily interacts with `backlog.md` via the `/backlog` workflow. `sprint-current.md` and `done.md` are derived views that keep the backlog clean.
