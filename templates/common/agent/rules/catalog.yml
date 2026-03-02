@@ -11,6 +11,15 @@ items:
     description: "Core behavioral constraints for AI agents."
     tags: ["governance", "safety"]
 
+  - id: governance
+    name: "Agent Governance"
+    version: "1.0.0"
+    kernel_min: "1.4.5"
+    kernel_max: "1.x"
+    entrypoint: "governance.md"
+    description: "Kernel Governance Invariants and Scope Restrictions."
+    tags: ["governance", "kernel", "invariants"]
+
   - id: artifact-standard
     name: "Artifact Standard"
     version: "1.0.0"

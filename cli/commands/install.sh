@@ -208,14 +208,7 @@ sync_library "skills" \
   "$WS_ROOT/.agent/skills"
 
 # === 4. Sync governance file ===
-echo "🤖 Syncing governance..."
-GOV_SRC="$REPO_ROOT/templates/common/agent/governance.md"
-if [ -f "$GOV_SRC" ]; then
-  sync_file "$GOV_SRC" "$WS_ROOT/.agent/rules/governance.md" || true
-  echo "   ✓ Governance synced"
-else
-  echo "   ⚠ No governance.md found (optional)"
-fi
+# (Luật governance.md giờ đã được cấp phát qua catalog thư viện rules ở Bước 3. Không cần sync cứng nữa).
 
 # === 5. Initialize .para/ system state (v1.4.1) ===
 echo "🔒 Initializing system state..."

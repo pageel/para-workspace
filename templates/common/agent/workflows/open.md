@@ -68,7 +68,7 @@ Check the `active_plan` field from `project.md` (already loaded in Step 2):
 
 - **If `active_plan` is empty or missing** → Skip this step entirely. No plan overhead.
 
-> Do NOT read architecture diagrams, data schemas, or code samples during `/open`.
+> 🛡️ **Progressive Disclosure:** Do NOT read `Resources/ai-agents/kernel/` or any architecture diagrams during `/open`. Keep the context ultra-light to save tokens and prevent attention decay.
 
 ### 6. 🔔 Check Sync Queue (Cross-Project Notifications)
 

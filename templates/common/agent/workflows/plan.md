@@ -76,6 +76,8 @@ Create an architecture overview:
 - **Technology stack table** (Component | Technology | Deploy Target)
 - **Data flow** between components
 
+> 🛡️ **Progressive Disclosure:** You may selectively read specific files in `Resources/ai-agents/kernel/` (e.g., `invariants.md`, `heuristics.md`) if you need strict architectural guidance for this step. Do NOT scan the entire kernel directory at once.
+
 #### 6. Define Phases
 
 Break the project into sequential phases. Each phase should:

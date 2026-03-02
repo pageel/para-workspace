@@ -163,3 +163,12 @@ items:
     entrypoint: "plan.md"
     description: "Create, review, and update phased implementation plans."
     tags: ["planning", "architecture", "phases"]
+
+  - id: para-audit
+    name: "Macro Assessor Audit"
+    version: "1.0.0"
+    kernel_min: "1.4.5"
+    kernel_max: "1.x"
+    entrypoint: "para-audit.md"
+    description: "Scan structural drift against Kernel Specs (I1-I11)."
+    tags: ["audit", "governance", "invariants"]
