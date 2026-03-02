@@ -11,6 +11,8 @@ Strict workspace macro-assessor to scan for structural drift against Kernel Spec
 
 ## Steps
 
+> **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final report MUST be translated to this language.**
+
 ### 1. Full-scan Kernel Spec (Allowed Exception)
 
 // turbo
