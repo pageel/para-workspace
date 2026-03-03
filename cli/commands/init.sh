@@ -100,7 +100,7 @@ while IFS= read -r line; do
       echo "   ✓ $dir"
     fi
   fi
-done < <(sed -n '/^creates:/,/^[a-z]/p' "$PROFILE_DIR/preset.yaml" | head -n -1)
+done < <(sed -n '/^creates:/,/^[a-z]/p' "$PROFILE_DIR/preset.yaml" | sed '$d')
 
 # Fallback: ensure PARA dirs always exist (invariant I1)
 mkdir -p "$TARGET_PATH/Projects"

@@ -12,7 +12,7 @@ ROLLBACK_FILES=()
 
 # Initialize rollback session — creates temp backup directory
 rollback_init() {
-  ROLLBACK_DIR="${PARA_WORKSPACE_ROOT:-.}/.para/backups/rollback-$(date +%s)"
+  ROLLBACK_DIR="${WORKSPACE_ROOT:-.}/.para/backups/rollback-$(date +%s)"
   mkdir -p "$ROLLBACK_DIR"
   ROLLBACK_FILES=()
   log_debug "Rollback session initialized: $ROLLBACK_DIR"

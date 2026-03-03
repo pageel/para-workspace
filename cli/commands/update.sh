@@ -11,6 +11,16 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 LIB_DIR="$SCRIPT_DIR/../lib"
 
+# === Ensure WORKSPACE_ROOT is set ===
+if [ -z "$WORKSPACE_ROOT" ]; then
+  if [ -f "$REPO_ROOT/../../.para-workspace.yml" ]; then
+    WORKSPACE_ROOT="$(cd "$REPO_ROOT/../.." && pwd)"
+    export WORKSPACE_ROOT
+  else
+    echo "⚠️  WORKSPACE_ROOT not set. Run via ./para update for best results."
+  fi
+fi
+
 # For self-update detection
 get_hash() {
     if command -v sha256sum &>/dev/null; then
@@ -106,7 +116,9 @@ fi
 # Run migrations automatically if versions changed before install overwrites config
 if [ "$CURRENT_VER" != "$NEW_VER" ] && [ "$CURRENT_VER" != "Unknown" ]; then
     echo "🏗️ Running auto-migration process..."
-    bash "$SCRIPT_DIR/migrate.sh" --from="$CURRENT_VER" --to="$NEW_VER"
+    if ! bash "$SCRIPT_DIR/migrate.sh" --from="$CURRENT_VER" --to="$NEW_VER"; then
+      echo "⚠️  Migration encountered issues. Continuing with install..."
+    fi
 fi
 
 # Re-run installation to sync rules, workflows, skills, and CLI wrapper

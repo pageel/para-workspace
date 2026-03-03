@@ -26,6 +26,9 @@ fi
 if [ -f "$LIB_DIR/fs.sh" ]; then
   source "$LIB_DIR/fs.sh"
 fi
+if [ -f "$LIB_DIR/validator.sh" ]; then
+  source "$LIB_DIR/validator.sh"
+fi
 
 # === Parse arguments (help first) ===
 FROM_VERSION=""
@@ -92,7 +95,7 @@ echo "  Path: $WS_ROOT"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-# === Migration: v1.3.x → v1.4.0 ===
+# === Helper: run or preview ===
 run_or_preview() {
   local desc="$1"
   shift
@@ -105,6 +108,29 @@ run_or_preview() {
     echo "     → Would execute: $*"
   fi
 }
+
+# === Helper: backup before copy (safe cp) ===
+backup_and_copy() {
+  local src="$1"
+  local dest="$2"
+  if [ -f "$dest" ]; then
+    if ! cmp -s "$src" "$dest"; then
+      cp "$dest" "${dest}.bak"
+    fi
+  fi
+  cp "$src" "$dest"
+}
+
+# ============================================================
+# Migration: v1.3.x → v1.4.0
+# ============================================================
+
+# Version gate: only run Steps 1-6 if upgrading from pre-1.4.0
+if ! semver_gte "$FROM_VERSION" "1.4.0" 2>/dev/null; then
+
+echo ""
+echo "━━━ v1.3.x → v1.4.0 Migration ━━━━━━━━━━━━━━━━━━━"
+echo ""
 
 # Step 1: Task file migration (tasks.md → hybrid 3-file)
 echo "📦 Step 1: Migrate task files to hybrid 3-file model..."
@@ -188,7 +214,7 @@ if [ -f "$WS_ROOT/workspace.md" ] && [ -f "$WS_ROOT/README.md" ]; then
   run_or_preview "Backup and remove workspace.md" mv "$WS_ROOT/workspace.md" "$WS_ROOT/workspace.md.bak.$(date +%s)"
 fi
 
-# Step 6: Install agent governance & rules
+# Step 6: Install agent governance & rules (with backup)
 echo ""
 echo "🤖 Step 6: Install agent governance & rules..."
 run_or_preview "Create .agent/rules/" mkdir -p "$WS_ROOT/.agent/rules"
@@ -196,21 +222,28 @@ run_or_preview "Create .agent/rules/" mkdir -p "$WS_ROOT/.agent/rules"
 if [ "$DRY_RUN" = false ]; then
   # Governance
   GOV_SRC="$REPO_ROOT/templates/common/agent/governance.md"
-  [ -f "$GOV_SRC" ] && cp "$GOV_SRC" "$WS_ROOT/.agent/rules/"
-  
+  [ -f "$GOV_SRC" ] && backup_and_copy "$GOV_SRC" "$WS_ROOT/.agent/rules/governance.md"
+
   # Rules Library
   RULE_SRC="$REPO_ROOT/templates/common/agent/rules"
   if [ -d "$RULE_SRC" ]; then
     for f in "$RULE_SRC"/*.md; do
-      cp "$f" "$WS_ROOT/.agent/rules/"
+      [ -f "$f" ] && backup_and_copy "$f" "$WS_ROOT/.agent/rules/$(basename "$f")"
     done
-    echo "     ✓ Governance & Rules installed"
+    echo "     ✓ Governance & Rules installed (with backup)"
   fi
 fi
+
+else
+  echo "⏭️  Skipping v1.3→v1.4.0 steps (FROM=$FROM_VERSION >= 1.4.0)"
+fi  # end v1.3.x → v1.4.0 gate
 
 # ============================================================
 # Migration: v1.4.0 → v1.4.1 (Governed Libraries & Runtime)
 # ============================================================
+
+# Version gate: only run Steps 7-10 if upgrading from pre-1.4.1
+if ! semver_gte "$FROM_VERSION" "1.4.1" 2>/dev/null; then
 
 echo ""
 echo "━━━ v1.4.0 → v1.4.1 Migration ━━━━━━━━━━━━━━━━━━━"
@@ -240,18 +273,18 @@ for lib in rules skills; do
   SNAPSHOT_DIR="$WS_ROOT/Resources/ai-agents/$lib"
   ACTIVE_DIR="$WS_ROOT/.agent/$lib"
   SRC_DIR="$LIB_SRC/$lib"
-  
+
   run_or_preview "Create Resources/ai-agents/$lib/" mkdir -p "$SNAPSHOT_DIR"
   run_or_preview "Create .agent/$lib/" mkdir -p "$ACTIVE_DIR"
 
   if [ "$DRY_RUN" = false ] && [ -d "$SRC_DIR" ]; then
     for f in "$SRC_DIR"/*.md "$SRC_DIR"/catalog.yml; do
-      [ -f "$f" ] && cp "$f" "$SNAPSHOT_DIR/"
+      [ -f "$f" ] && backup_and_copy "$f" "$SNAPSHOT_DIR/$(basename "$f")"
     done
     for f in "$SRC_DIR"/*.md; do
-      [ -f "$f" ] && cp "$f" "$ACTIVE_DIR/"
+      [ -f "$f" ] && backup_and_copy "$f" "$ACTIVE_DIR/$(basename "$f")"
     done
-    echo "     ✓ $lib library synced"
+    echo "     ✓ $lib library synced (with backup)"
   fi
 done
 
@@ -259,10 +292,10 @@ done
 echo ""
 echo "📑 Step 9: Sync catalog.yml files..."
 for lib in workflows rules skills; do
-  CATALOG_SRC="$LIB_SRC/$lib/catalog.yml"
+  CATALOG_SRC_FILE="$LIB_SRC/$lib/catalog.yml"
   CATALOG_DEST="$WS_ROOT/Resources/ai-agents/$lib/catalog.yml"
-  if [ -f "$CATALOG_SRC" ]; then
-    run_or_preview "Copy $lib/catalog.yml" cp "$CATALOG_SRC" "$CATALOG_DEST"
+  if [ -f "$CATALOG_SRC_FILE" ]; then
+    run_or_preview "Copy $lib/catalog.yml" cp "$CATALOG_SRC_FILE" "$CATALOG_DEST"
   fi
 done
 if [ "$DRY_RUN" = false ]; then
@@ -274,16 +307,23 @@ echo ""
 echo "⚙️  Step 10: Update workspace config..."
 if [ -f "$WS_ROOT/.para-workspace.yml" ]; then
   if [ "$DRY_RUN" = false ]; then
-    sed -i "s/^kernel_version:.*/kernel_version: \"$TO_VERSION\"/" "$WS_ROOT/.para-workspace.yml"
+    sed "s/^kernel_version:.*/kernel_version: \"$TO_VERSION\"/" "$WS_ROOT/.para-workspace.yml" > "$WS_ROOT/.para-workspace.yml.tmp" && mv "$WS_ROOT/.para-workspace.yml.tmp" "$WS_ROOT/.para-workspace.yml"
     echo "     ✓ kernel_version updated to $TO_VERSION"
   else
     echo "     → Would update kernel_version to $TO_VERSION"
   fi
 fi
 
+else
+  echo "⏭️  Skipping v1.4.0→v1.4.1 steps (FROM=$FROM_VERSION >= 1.4.1)"
+fi  # end v1.4.0 → v1.4.1 gate
+
 # ============================================================
 # Migration: v1.4.5 → v1.4.6 (Smart Archive)
 # ============================================================
+
+# Version gate: only run Step 11 if upgrading from pre-1.4.6
+if ! semver_gte "$FROM_VERSION" "1.4.6" 2>/dev/null; then
 
 echo ""
 echo "━━━ v1.4.5 → v1.4.6 Migration ━━━━━━━━━━━━━━━━━━━"
@@ -292,7 +332,6 @@ echo ""
 # Step 11: Cleanup old manual migration docs (Smart Archive)
 echo "🧹 Step 11: Smart Archive obsolete files..."
 
-# Ensure we have a target directory setup done mostly by archive_file
 if [ "$DRY_RUN" = false ]; then
   # Check if anything exists to archive
   if [ -f "$WS_ROOT/docs/migration.md" ] || [ -f "$WS_ROOT/artifacts/plans/smart-archive-migration-plan.md" ]; then
@@ -305,6 +344,10 @@ if [ "$DRY_RUN" = false ]; then
 else
   echo "     → Would check and archive obsolete files to .para/archive/${TO_VERSION}-orphans/"
 fi
+
+else
+  echo "⏭️  Skipping v1.4.5→v1.4.6 steps (FROM=$FROM_VERSION >= 1.4.6)"
+fi  # end v1.4.5 → v1.4.6 gate
 
 # === Record migration ===
 if [ "$DRY_RUN" = false ] && [ -d "$WS_ROOT/.para/migrations" ]; then

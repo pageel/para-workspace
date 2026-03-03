@@ -87,10 +87,7 @@ case "$1" in
   version|-v|--version)
     echo "PARA Workspace v$VERSION"
     ;;
-  help|--help|-h)
-    # Fall through to default help
-    ;;&
-  *)
+  help|--help|-h|*)
     echo "PARA Workspace CLI v$VERSION"
     echo ""
     echo "Usage: para <command> [args...]"

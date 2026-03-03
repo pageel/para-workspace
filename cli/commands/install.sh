@@ -224,7 +224,7 @@ else
 fi
 
 if [ -f "$WS_ROOT/.para-workspace.yml" ]; then
-  sed -i "s/^kernel_version:.*/kernel_version: \"$KERNEL_VERSION\"/" "$WS_ROOT/.para-workspace.yml"
+  sed "s/^kernel_version:.*/kernel_version: \"$KERNEL_VERSION\"/" "$WS_ROOT/.para-workspace.yml" > "$WS_ROOT/.para-workspace.yml.tmp" && mv "$WS_ROOT/.para-workspace.yml.tmp" "$WS_ROOT/.para-workspace.yml"
   echo "   ✓ .para-workspace.yml updated to v$KERNEL_VERSION"
 fi
 

@@ -41,7 +41,7 @@ log_audit() {
   local command="$2"
   local params="${3:-}"
   local status="${4:-OK}"
-  local audit_file="${PARA_WORKSPACE_ROOT:-.}/.para/audit.log"
+  local audit_file="${WORKSPACE_ROOT:-.}/.para/audit.log"
 
   if [[ -d "$(dirname "$audit_file")" ]]; then
     local timestamp
