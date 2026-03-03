@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.4.6-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.4.7-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -20,7 +20,7 @@
 
 ## 🌌 Overview
 
-**PARA Workspace** is a governed, open-source standard that defines how humans and AI agents organize knowledge and collaborate on projects. It ships as a **repo** containing a kernel (constitution), CLI tools, and templates — which generates **workspaces** where you actually work. The kernel enforces 10 invariants and 8 heuristics so every workspace is predictable, auditable, and agent-friendly.
+**PARA Workspace** is a governed, open-source standard that defines how humans and AI agents organize knowledge and collaborate on projects. It ships as a **repo** containing a kernel (constitution), CLI tools, and templates — which generates **workspaces** where you actually work. The kernel enforces 10 invariants and 9 heuristics so every workspace is predictable, auditable, and agent-friendly.
 
 ### Three Foundational Principles
 
@@ -53,9 +53,9 @@ para-workspace/
 │   ├── schema/          # workspace, project, backlog, catalog schemas
 │   └── examples/        # valid/ + invalid/ compliance vectors
 ├── cli/                 # 🔧 Compiler
-│   ├── para             # Entry point
-│   ├── lib/             # logger.sh, validator.sh, rollback.sh
-│   └── commands/        # init, scaffold, status, migrate, archive, install...
+│   ├── para             # Entry point (Bash 3.2+ compatible)
+│   ├── lib/             # logger.sh, validator.sh, rollback.sh, fs.sh
+│   └── commands/        # init, scaffold, status, migrate, archive, install, update
 ├── templates/           # 📦 Scaffolding & Governed Libraries
 │   ├── common/agent/    # Centralized workflows/, rules/, skills/ + catalog.yml
 │   │   └── projects/    # .project.yml template
@@ -74,20 +74,21 @@ para-workspace/
 <your-workspace>/
 ├── Projects/                          # Goal-oriented tasks (e.g., website-launch)
 ├── Areas/                             # Ongoing responsibilities (e.g., health, finance)
-|   └── Learning/                      # Shared knowledge (from /learn)
+│   ├── Workspace/                     # Master session log, audits, SYNC queue
+│   └── Learning/                      # Shared knowledge (from /learn)
 ├── Resources/                         # Reference material & tools
-|   ├── ai-agents/                     # The original PARA repository (read-only)
-|   └── references/                    # Library of external knowledge
+│   ├── ai-agents/                     # Kernel snapshot + governed library snapshots
+│   └── references/                    # The original PARA repository (read-only)
 ├── Archive/                           # Cold storage for completed items
 ├── _inbox/                            # Temporary landing zone for external downloads
 ├── .agent/                            # Governed library copies (Auto-synced)
-|   ├── rules/                         # Active agent rules (.md)
-|   ├── skills/                        # Active agent skills (.md, /scripts)
-|   └── workflows/                     # Active agent workflows (.md)
+│   ├── rules/                         # Active agent rules (.md)
+│   ├── skills/                        # Active agent skills (.md, /scripts)
+│   └── workflows/                     # Active agent workflows (.md)
 ├── .para/                             # System state (DO NOT EDIT)
-│   ├── archive/                       # Deprecated architectural files
+│   ├── archive/                       # Smart Archive vault for deprecated files
 │   ├── migrations/                    # Migration execution logs
-|   ├── backups/                       # Automatic workflow backups
+│   ├── backups/                       # Date-stamped workflow & project backups
 │   └── audit.log                      # Action history
 ├── para                               # Bootstrapper CLI
 └── .para-workspace.yml                # Workspace root metadata config
@@ -119,10 +120,9 @@ chmod +x Resources/references/para-workspace/cli/commands/*.sh
 
 > **What just happened?**
 >
-> 1. The repo lives at `Resources/references/para-workspace/` — it's a reference source for governance, not a user project.
+> 1. The repo lives at `Resources/references/para-workspace/` — it's a read-only reference source, not a user project.
 > 2. `chmod +x` ensures all CLI scripts are executable (required on Linux/macOS).
-> 3. `para init` creates the PARA directory structure (including `_inbox/`), runs `install.sh` automatically
->    to sync kernel, workflows, governance rules, and generates a `./para` wrapper.
+> 3. `para init` creates the full PARA directory structure, runs `install.sh` automatically to sync kernel, workflows, governance rules, and generates a `./para` wrapper.
 > 4. You can now use `./para` from your workspace root for all commands.
 
 ### Updating
@@ -132,12 +132,39 @@ chmod +x Resources/references/para-workspace/cli/commands/*.sh
 ./para update
 ```
 
-This will `git pull` the repo and re-run `install.sh` to sync kernel, workflows, and governance. Existing files are backed up to `.bak` before overwriting.
+This will `git pull` the repo, run version-gated migrations, and re-sync all governed libraries. Existing user-customized files are backed up to `.bak` before overwriting (Smart Sync).
+
+**What happens during update:**
+
+1. `git pull` fetches latest code (self-restarts if scripts changed)
+2. `migrate.sh` runs version-gated migration steps (only what's needed)
+3. `install.sh` syncs kernel, workflows, rules, skills to workspace
+4. Audit log is updated in `.para/audit.log`
+
+### Troubleshooting
+
+| Problem                          | Solution                                                  |
+| :------------------------------- | :-------------------------------------------------------- |
+| **macOS: permission denied**     | Run `chmod +x` on CLI scripts (Step 2 above)              |
+| **Windows: file lock on update** | See [Windows Recovery](#windows-recovery) below           |
+| **Stale workspace (v1.3.x)**     | Use [Manual Clean Slate](#mechanism-2-manual-clean-slate) |
+
+#### Windows Recovery
+
+If `para update` fails on Windows due to NTFS file locking:
+
+```cmd
+cd Resources\references\para-workspace
+git checkout -- .
+git pull origin main
+cd ..\..\..
+.\para install
+```
 
 ### Available Profiles
 
 | Profile                                               | Description                         | Best For                |
-| ----------------------------------------------------- | ----------------------------------- | ----------------------- |
+| :---------------------------------------------------- | :---------------------------------- | :---------------------- |
 | [`general`](./templates/profiles/general/README.md)   | Minimal PARA structure              | Personal PKM            |
 | [`dev`](./templates/profiles/dev/README.md)           | Technical Areas + AI tooling        | Software developers     |
 | [`marketer`](./templates/profiles/marketer/README.md) | Campaign & customer Areas           | Marketing professionals |
@@ -207,20 +234,22 @@ The Kernel is the **constitution** of PARA Workspace — the rules that all work
 ```bash
 # Core Commands
 para init [--profile] [--lang]  # Create workspace
-para status [--json]          # System health
-para update                   # Auto-update & migrate
-para scaffold <type> <name>   # Create structured paths
-para install [--force]        # Sync governed libraries
-para archive <type> <name>    # Graduation review
-para migrate [--from] [--to]  # Workspace migration
+para status [--json]            # System health
+para update                     # Auto-update & migrate
+para scaffold <type> <name>     # Create structured paths
+para install [--force]          # Sync governed libraries
+para archive <type> <name>      # Graduation review
+para migrate [--from] [--to]    # Workspace migration
 
 # Configuration
-para config [key] [value]     # Manage workspace settings
+para config [key] [value]       # Manage workspace settings
 
 # Agent Capabilities
-@[/para-workflow] list        # Manage workflows
-@[/para-rule] list            # Manage rules
+@[/para-workflow] list          # Manage workflows
+@[/para-rule] list              # Manage rules
 ```
+
+**Platform Support:** Linux, macOS (Bash 3.2+), Windows (Git Bash / WSL).
 
 ---
 
@@ -229,7 +258,7 @@ para config [key] [value]     # Manage workspace settings
 | Command              | Description                                                |
 | :------------------- | :--------------------------------------------------------- |
 | **`/backlog`**       | Manage project tasks via canonical backlog.md              |
-| **`/backup`**        | Backup workflows, rules, and config                        |
+| **`/backup`**        | Backup workflows, rules, config, and project data          |
 | **`/config`**        | Manage workspace configuration                             |
 | **`/end`**           | Close session with PARA classification + automated cleanup |
 | **`/inbox`**         | Categorize files from `_inbox/` into PARA                  |
@@ -242,7 +271,7 @@ para config [key] [value]     # Manage workspace settings
 | **`/para-audit`**    | Macro Assessor for tracking workspace structural drift     |
 | **`/para-rule`**     | Manage, install, and standardize agent rules               |
 | **`/para-workflow`** | Manage, install, and standardize agent workflows           |
-| **`/plan`** ✨       | Create, review, and update implementation plans            |
+| **`/plan`**          | Create, review, and update implementation plans            |
 | **`/push`**          | Fast commit and push to GitHub                             |
 | **`/release`**       | Pre-release quality gate                                   |
 | **`/retro`**         | Project retrospective before archiving                     |
@@ -255,12 +284,10 @@ para config [key] [value]     # Manage workspace settings
 PARA Workspace uses a **Hybrid 3-File Model**:
 
 ```
-
 artifacts/tasks/
-├── backlog.md # 📌 CANONICAL — all tasks live here
-├── sprint-current.md # 🎯 DERIVED — active tasks only
-└── done.md # ✅ DERIVED — completed tasks archive
-
+├── backlog.md          # 📌 CANONICAL — all tasks live here
+├── sprint-current.md   # 🎯 DERIVED — active tasks only
+└── done.md             # ✅ DERIVED — completed tasks archive
 ```
 
 The agent primarily interacts with `backlog.md` via the `/backlog` workflow. `sprint-current.md` and `done.md` are derived views that keep the backlog clean.
@@ -279,7 +306,7 @@ For most healthy workspaces, the built-in update mechanism handles everything sa
 ./para update
 ```
 
-This will automatically pull the newest core code, sync the libraries, and securely move obsolete structural files to the `.para/archive/` vault without deleting your custom data (Smart Archive).
+This will automatically pull the newest core code, run version-gated migrations (only steps relevant to your current version), sync the libraries, and securely move obsolete structural files to the `.para/archive/` vault without deleting your custom data (Smart Archive). User-customized rules are protected with `.bak` backups.
 
 ### Mechanism 2: Manual Clean Slate (For heavily modified workspaces)
 
@@ -300,7 +327,8 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Plan-Aware Workflows & Token Optimization _(shipped in v1.4.2)_
 - [x] Automated Plan Cleanup via `/end [done]` _(shipped in v1.4.3)_
 - [x] Safety Guardrails & Terminal Allowlist _(shipped in v1.4.5)_
-- [x] Progressive Disclosure & Token/Context Optimization _(shipped in v1.4.5)_
+- [x] Smart Archive & Version Migration _(shipped in v1.4.6)_
+- [x] macOS Compatibility & Safe Migration Pipeline _(shipped in v1.4.7)_
 - [ ] Multi-agent Routing
 - [ ] Context Intelligence & Semantic Search
 
@@ -318,4 +346,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.4.6_
+_Version: 1.4.7_

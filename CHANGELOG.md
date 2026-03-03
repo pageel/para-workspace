@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.7] - 2026-03-03
+
+### Added
+
+- **Workflow: `/backup` Upgrade**: Added `project <name>`, `project-all` targets for backing up project user data (sessions, artifacts, docs, project.md, `.agent/`). **Repos are excluded** — they can be re-cloned from GitHub. Extended `metadata` target to include workspace-level sessions from `Areas/Workspace/` (SESSION_LOG, SYNC, audits). Added `What Gets Backed Up?` reference table.
+- **Safe Copy Helper**: Added `backup_and_copy()` function to `migrate.sh` — creates `.bak` backup before overwriting any user-customized file.
+- **Version Gating**: `migrate.sh` now evaluates `--from` version against three gates (`<1.4.0`, `<1.4.1`, `<1.4.6`) using `semver_gte()`. Steps for already-completed migrations are automatically skipped, reducing runtime and eliminating redundant overwrites.
+- **Update Pipeline Resilience**: `update.sh` now auto-detects `WORKSPACE_ROOT` if not set (via `.para-workspace.yml` scan). Migration failures are non-fatal — `install.sh` always runs even if `migrate.sh` encounters issues.
+
+### Fixed
+
+- **macOS Compatibility (3 critical fixes)**:
+  - `cli/para`: Replaced `;;&` (Bash 4+ only) with merged case pattern `help|--help|-h|*)` for Bash 3.2 compatibility.
+  - `install.sh`, `migrate.sh`: Replaced `sed -i` (GNU-only) with portable `sed ... > tmp && mv tmp file` approach for BSD compatibility.
+  - `init.sh`: Replaced `head -n -1` (GNU-only) with `sed '$d'` for BSD compatibility.
+- **Environment Variable Consistency**: Unified `PARA_WORKSPACE_ROOT` → `WORKSPACE_ROOT` across `logger.sh` and `rollback.sh` to match the convention used in all other scripts. Prevents silent audit log failures.
+- **Rule Protection**: `migrate.sh` Step 6 no longer uses raw `cp` to overwrite governance rules. All copy operations now use `backup_and_copy()` to preserve user customizations.
+
+### Changed
+
+- **Kernel Version**: Bumped to `v1.4.7`.
+
+### Windows Note
+
+> If `para update` fails on Windows due to NTFS file locking (e.g., `update.sh` is in use by another process), the recommended recovery is:
+>
+> ```cmd
+> cd Resources\references\para-workspace
+> git checkout -- .
+> git pull origin main
+> cd ..\..\..
+> .\para install
+> ```
+>
+> This re-clones the locked files and re-syncs the workspace without data loss.
+
 ## [1.4.6] - 2026-03-02
 
 ### Added
