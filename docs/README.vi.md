@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.4.9-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.4.9-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](../CHANGELOG.md)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-tích-hợp-agent)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -333,6 +333,8 @@ Agent tương tác chủ yếu với `backlog.md` qua workflow `/backlog`. `spri
 ---
 
 ## 🔄 Nâng cấp Phiên bản (Upgrading)
+
+> 📖 **Lưu ý:** Để xem chi tiết các tính năng mới, lỗi được sửa và thông tin cập nhật từng phiên bản, vui lòng tham khảo [CHANGELOG](../CHANGELOG.md).
 
 PARA Workspace cung cấp hai cơ chế chính thức để nâng cấp lên phiên bản mới hơn:
 
