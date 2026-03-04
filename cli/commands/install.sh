@@ -2,7 +2,7 @@
 
 # PARA Workspace Installer
 # Syncs kernel, workflows, rules, skills, and governance from repo to workspace
-# Usage: para install [--force]
+# Usage: para install [--force] [--dry-run]
 
 set -e
 
@@ -19,13 +19,23 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(normalize_path "$(cd "$SCRIPT_DIR/../.." && pwd)")"
 LIB_DIR="$SCRIPT_DIR/../lib"
 
+# === Load libraries ===
+if [ -f "$LIB_DIR/logger.sh" ]; then
+  source "$LIB_DIR/logger.sh"
+fi
+if [ -f "$LIB_DIR/rollback.sh" ]; then
+  source "$LIB_DIR/rollback.sh"
+fi
+
 # === Parse arguments (help first, before env check) ===
 FORCE=false
+DRY_RUN=false
 for arg in "$@"; do
   case "$arg" in
     --force) FORCE=true ;;
+    --dry-run) DRY_RUN=true ;;
     --help|-h)
-      echo "Usage: para install [--force]"
+      echo "Usage: para install [--force] [--dry-run]"
       echo ""
       echo "Syncs kernel, workflows, rules, skills, and governance from repo to workspace."
       echo ""
@@ -38,7 +48,8 @@ for arg in "$@"; do
       echo "  📦 CLI wrapper        → ./para"
       echo ""
       echo "Options:"
-      echo "  --force   Overwrite all files, even if local is newer"
+      echo "  --force     Overwrite all files, even if local is newer"
+      echo "  --dry-run   Preview changes without applying"
       echo ""
       echo "Existing files are backed up to .bak before overwriting."
       exit 0
@@ -53,12 +64,41 @@ else
   exit 1
 fi
 
+# === Rollback & error handling ===
+cleanup_on_error() {
+  local exit_code=$?
+  if [ $exit_code -ne 0 ]; then
+    echo ""
+    echo "❌ Install failed (exit $exit_code). Rolling back changes..."
+    if command -v rollback_execute &>/dev/null; then
+      rollback_execute
+    fi
+    if command -v log_audit &>/dev/null; then
+      log_audit "CLI" "para install" "kernel=${KERNEL_VERSION:-unknown}" "ROLLBACK"
+    fi
+    echo ""
+    echo "⚠️  All modified files have been restored to their previous state."
+    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+      echo "💡 Windows: If restore failed, close all terminals and re-run: para install"
+    fi
+  fi
+}
+
+if [ "$DRY_RUN" = false ]; then
+  if command -v rollback_init &>/dev/null; then
+    rollback_init
+  fi
+  trap cleanup_on_error EXIT
+fi
+
 # === Helper: backup file before overwriting ===
 backup_file() {
   local file="$1"
   if [ -f "$file" ]; then
     local bak="${file}.bak"
-    cp "$file" "$bak"
+    if ! cp "$file" "$bak" 2>/dev/null; then
+      echo "   ⚠️  Could not backup $file (file may be locked)"
+    fi
   fi
 }
 
@@ -69,7 +109,11 @@ sync_file() {
 
   local dest_dir
   dest_dir="$(dirname "$dest")"
-  mkdir -p "$dest_dir"
+  if [ "$DRY_RUN" = true ]; then
+    [ ! -d "$dest_dir" ] && echo "     → Would create: $dest_dir"
+  else
+    mkdir -p "$dest_dir"
+  fi
 
   # Skip if same file (same inode)
   if [ -f "$src" ] && [ -f "$dest" ]; then
@@ -80,8 +124,16 @@ sync_file() {
   fi
 
   if [ "$FORCE" = true ] || [ ! -f "$dest" ] || [ "$src" -nt "$dest" ]; then
+    if [ "$DRY_RUN" = true ]; then
+      echo "     → Would sync: $(basename "$src")"
+      return 0
+    fi
     if [ -f "$dest" ]; then
       if ! cmp -s "$src" "$dest"; then
+        # Register for atomic rollback before backup
+        if command -v rollback_register &>/dev/null; then
+          rollback_register "$dest"
+        fi
         backup_file "$dest"
       fi
     fi
@@ -152,7 +204,13 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  Repo:      $REPO_ROOT"
 echo "  Workspace: $WS_ROOT"
 echo "  Kernel:    v$KERNEL_VERSION"
-echo "  Mode:      $( [ "$FORCE" = true ] && echo "FORCE (overwrite all)" || echo "Smart (newer only)")"
+if [ "$DRY_RUN" = true ]; then
+  echo "  Mode:      DRY RUN (preview only)"
+elif [ "$FORCE" = true ]; then
+  echo "  Mode:      FORCE (overwrite all)"
+else
+  echo "  Mode:      Smart (newer only)"
+fi
 echo ""
 
 # === 1. Make all CLI scripts executable ===
@@ -300,15 +358,32 @@ WRAPPER
 fi
 
 # === Done ===
+
+# Remove error trap and commit rollback session (success path)
+if [ "$DRY_RUN" = false ]; then
+  trap - EXIT
+  if command -v rollback_commit &>/dev/null; then
+    rollback_commit
+  fi
+  if command -v log_audit &>/dev/null; then
+    log_audit "CLI" "para install" "kernel=$KERNEL_VERSION" "OK"
+  fi
+fi
+
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🎉 Install & sync complete!"
-echo ""
-echo "  Kernel:    v$KERNEL_VERSION"
-echo "  Libraries: workflows + rules + skills (with catalog.yml)"
-echo "  State:     .para/ (audit.log active)"
-echo ""
-echo "💾 Backed-up files saved as .bak (if any were changed)."
-echo "   To restore: mv <file>.bak <file>"
-echo ""
-echo "Try: ./para status"
+if [ "$DRY_RUN" = true ]; then
+  echo "🔍 Dry run complete. No changes were made."
+  echo "   Remove --dry-run to apply the installation."
+else
+  echo "🎉 Install & sync complete!"
+  echo ""
+  echo "  Kernel:    v$KERNEL_VERSION"
+  echo "  Libraries: workflows + rules + skills (with catalog.yml)"
+  echo "  State:     .para/ (audit.log active)"
+  echo ""
+  echo "💾 Backed-up files saved as .bak (if any were changed)."
+  echo "   To restore: mv <file>.bak <file>"
+  echo ""
+  echo "Try: ./para status"
+fi

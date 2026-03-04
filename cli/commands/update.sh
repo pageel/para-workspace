@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# PARA Workspace Update Script (v1.4.1)
+# PARA Workspace Update Script (v1.4.8)
 # Safely updates templates without overwriting user data
-# Usage: para update
+# Usage: para update [--dry-run]
 
 set -e
 
@@ -33,22 +33,31 @@ get_hash() {
 }
 OLD_SCRIPT_HASH=$(get_hash "$SCRIPT_DIR/update.sh")
 
-# Parse help
+# Parse arguments
+DRY_RUN=false
+PASSTHROUGH_ARGS=()
 for arg in "$@"; do
   case "$arg" in
     --help|-h)
-      echo "Usage: para update"
+      echo "Usage: para update [--dry-run]"
       echo ""
       echo "Pulls the latest PARA Workspace repo from GitHub and re-syncs"
       echo "the workspace (kernel, workflows, rules, skills, CLI wrapper)."
       echo ""
       echo "This command:"
       echo "  1. Runs 'git pull' on the repo"
-      echo "  2. Re-runs 'para install' to sync all libraries"
-      echo "  3. Validates library compatibility"
+      echo "  2. Runs version-gated migrations (if version changed)"
+      echo "  3. Re-runs 'para install' to sync all libraries"
+      echo ""
+      echo "Options:"
+      echo "  --dry-run   Preview all changes without applying"
       echo ""
       echo "Existing files are backed up to .bak before overwriting."
       exit 0
+      ;;
+    --dry-run)
+      DRY_RUN=true
+      PASSTHROUGH_ARGS+=("--dry-run")
       ;;
   esac
 done
@@ -77,27 +86,28 @@ fi
 
 echo "📍 Current Version: $CURRENT_VER"
 
-# Pull latest
-echo "📥 Pulling latest changes..."
-cd "$REPO_ROOT"
-
-# On Windows, git pull might fail to update the running script.
-# We try to catch this or at least warn the user.
-if git pull origin main; then
-    # If the script itself was updated, we need to restart it to pick up changes
-    # and prevent weird behavior from Bash trying to read from a modified file.
-    NEW_SCRIPT_HASH=$(get_hash "$SCRIPT_DIR/update.sh")
-    if [ "$OLD_SCRIPT_HASH" != "$NEW_SCRIPT_HASH" ]; then
-        echo "🔄 CLI scripts updated. Restarting update process..."
-        exec bash "$SCRIPT_DIR/update.sh" "$@"
-    fi
+# Pull latest (skip in dry-run mode)
+if [ "$DRY_RUN" = true ]; then
+  echo "🔍 DRY RUN: Skipping git pull (preview only)..."
 else
-    echo "⚠️  Git pull failed or was partial."
-    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
-        echo "💡 Windows detected: This is often caused by the script file being locked while running."
-        echo "   Please try closing all terminals and running the update again."
-    fi
-    exit 1
+  echo "📥 Pulling latest changes..."
+  cd "$REPO_ROOT"
+
+  # On Windows, git pull might fail to update the running script.
+  if git pull origin main; then
+      NEW_SCRIPT_HASH=$(get_hash "$SCRIPT_DIR/update.sh")
+      if [ "$OLD_SCRIPT_HASH" != "$NEW_SCRIPT_HASH" ]; then
+          echo "🔄 CLI scripts updated. Restarting update process..."
+          exec bash "$SCRIPT_DIR/update.sh" "$@"
+      fi
+  else
+      echo "⚠️  Git pull failed or was partial."
+      if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+          echo "💡 Windows detected: This is often caused by the script file being locked while running."
+          echo "   Please try closing all terminals and running the update again."
+      fi
+      exit 1
+  fi
 fi
 
 # Get new version
@@ -113,17 +123,17 @@ else
     echo "⏫ Upgraded: $CURRENT_VER -> $NEW_VER"
 fi
 
-# Run migrations automatically if versions changed before install overwrites config
+# Run migrations automatically if versions changed
 if [ "$CURRENT_VER" != "$NEW_VER" ] && [ "$CURRENT_VER" != "Unknown" ]; then
     echo "🏗️ Running auto-migration process..."
-    if ! bash "$SCRIPT_DIR/migrate.sh" --from="$CURRENT_VER" --to="$NEW_VER"; then
+    if ! bash "$SCRIPT_DIR/migrate.sh" --from="$CURRENT_VER" --to="$NEW_VER" "${PASSTHROUGH_ARGS[@]}"; then
       echo "⚠️  Migration encountered issues. Continuing with install..."
     fi
 fi
 
 # Re-run installation to sync rules, workflows, skills, and CLI wrapper
 echo "⚙️ Re-installing to sync workspace..."
-bash "$SCRIPT_DIR/install.sh"
+bash "$SCRIPT_DIR/install.sh" "${PASSTHROUGH_ARGS[@]}"
 
 # Audit log
 if [ -n "$WORKSPACE_ROOT" ] && [ -f "$WORKSPACE_ROOT/.para/audit.log" ]; then

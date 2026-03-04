@@ -2,7 +2,7 @@
 
 # PARA Workspace CLI
 # Usage: ./cli/para [command] [args...]
-# Version: 1.4.1
+# Version: 1.4.8
 
 set -e
 
@@ -107,9 +107,10 @@ case "$1" in
     echo ""
     echo "━━━ Sync & Upgrade ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
-    echo "  update                            Pull latest repo + re-sync workspace"
-    echo "  install [--force]                 Sync kernel, workflows, rules, skills"
+    echo "  update [--dry-run]                Pull latest repo + re-sync workspace"
+    echo "  install [--force] [--dry-run]      Sync kernel, workflows, rules, skills"
     echo "       --force                      Overwrite all, even if local is newer"
+    echo "       --dry-run                    Preview changes without applying"
     echo ""
     echo "  migrate [--from=X] [--to=Y]       Migrate workspace to new version"
     echo "       --dry-run                    Preview changes without applying"

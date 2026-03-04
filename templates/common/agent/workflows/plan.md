@@ -48,6 +48,22 @@ Read `Projects/[project-name]/artifacts/tasks/backlog.md` to understand:
 - Known bugs or constraints
 - Total item count and status distribution
 
+#### 2.5. Scan Learnings Index (Lessons Learned)
+
+// turbo
+
+> 🛡️ **Token Optimization:** Only read the index file (`Areas/Learning/README.md`, ~30 lines). Do NOT read all learning files.
+
+1. Read `Areas/Learning/README.md` to get the list of available lessons.
+2. Cross-reference lesson titles with the project's **tech stack** (from `project.md`) and **scope** of the features being planned.
+3. **If matches found** (e.g., project uses Bash CLI → lessons on `cross-platform-bash`, `bash-cli-gotchas` are relevant):
+   - Read only the matched learning files (max 3 files to limit tokens).
+   - Extract **Key Learnings** and **Checklists** from each.
+   - Store these as constraints for the Risk section in Step 9.
+4. **If no matches** → Skip. No overhead.
+
+> **Convention:** This step bridges `/learn` (captures lessons) with `/plan` (applies them). The goal is to prevent repeating past mistakes, not to read the entire knowledge base.
+
 #### 3. Analyze Reference Projects (Optional)
 
 If the project contract references another project (in Dependencies or Key Decisions), analyze its codebase:
@@ -176,6 +192,15 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 ## 🔗 Backlog → Phase Mapping
 
 [Cross-reference table]
+
+## ⚠️ Risks & Lessons Applied
+
+[Risk table with mitigations]
+
+> If Step 2.5 found relevant lessons, list them here:
+>
+> - **Source:** `Areas/Learning/[lesson-name].md`
+> - **Constraint applied:** [What checklist or pattern was incorporated into this plan]
 
 ## ✅ Definition of Done
 

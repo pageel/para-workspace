@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.4.7-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.4.8-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -98,24 +98,52 @@ para-workspace/
 
 ## 📥 Installation
 
-### Quick Start
+### Prerequisites
 
-Open your workspace directory (e.g., in Antigravity or your IDE) and follow these steps:
+- **An AI Agent platform** (see compatibility table below)
+- **Git** (required — to clone and update)
+- **Bash** 3.2+ (Linux/macOS native, Windows via Git Bash or WSL)
+
+### Platform Compatibility
+
+| Platform           | Integration Point              | Status      | Notes                                                |
+| :----------------- | :----------------------------- | :---------- | :--------------------------------------------------- |
+| Google Antigravity | `.agent/` (skills, workflows)  | ✅ Verified | Designed and tested for this platform                |
+| Claude Code        | CLAUDE.md + `.agent/`          | ⚪ Untested | May read `.agent/rules/` directly — needs validation |
+| Cursor             | `.cursor/rules/`               | ⚪ Untested | Theory: copy rules to `.cursor/rules/`               |
+| VS Code + Copilot  | `.github/copilot-instructions` | ⚪ Untested | Theory: instructions only, no auto-trigger           |
+
+### Step 1: Clone & Install
+
+**Bash (Linux / macOS / Windows Git Bash / WSL):**
 
 ```bash
-# 1. Clone repo into Resources (reference source, not a user project)
+# Clone repo into the correct location
 mkdir -p Resources/references
 git clone https://github.com/pageel/para-workspace.git Resources/references/para-workspace
 
-# 2. Set executable permissions (Linux/macOS only)
+# Set executable permissions
 chmod +x Resources/references/para-workspace/cli/para
 chmod +x Resources/references/para-workspace/cli/commands/*.sh
 
-# 3. Initialize your workspace with a profile
+# Initialize your workspace with a profile
 ./Resources/references/para-workspace/cli/para init --profile=dev --lang=en
+```
 
-# 4. Verify everything works
+**PowerShell (alternative for Windows):**
+
+```powershell
+mkdir -Force Resources\references
+git clone https://github.com/pageel/para-workspace.git Resources\references\para-workspace
+# Then open Git Bash or WSL at workspace root:
+./Resources/references/para-workspace/cli/para init --profile=dev --lang=en
+```
+
+### Step 2: Verify
+
+```bash
 ./para status
+# ✅ If you see a health report → installation successful
 ```
 
 > **What just happened?**
@@ -130,22 +158,25 @@ chmod +x Resources/references/para-workspace/cli/commands/*.sh
 ```bash
 # Pull latest from GitHub and re-sync workspace
 ./para update
+
+# Preview changes before applying
+./para update --dry-run
 ```
 
-This will `git pull` the repo, run version-gated migrations, and re-sync all governed libraries. Existing user-customized files are backed up to `.bak` before overwriting (Smart Sync).
+This will `git pull` the repo, run version-gated migrations, and re-sync all governed libraries. Existing user-customized files are backed up to `.bak` before overwriting (Smart Sync). If the install fails mid-operation, all changes are automatically rolled back.
 
 **What happens during update:**
 
 1. `git pull` fetches latest code (self-restarts if scripts changed)
 2. `migrate.sh` runs version-gated migration steps (only what's needed)
-3. `install.sh` syncs kernel, workflows, rules, skills to workspace
+3. `install.sh` syncs kernel, workflows, rules, skills to workspace (with atomic rollback)
 4. Audit log is updated in `.para/audit.log`
 
 ### Troubleshooting
 
 | Problem                          | Solution                                                  |
 | :------------------------------- | :-------------------------------------------------------- |
-| **macOS: permission denied**     | Run `chmod +x` on CLI scripts (Step 2 above)              |
+| **macOS: permission denied**     | Run `chmod +x` on CLI scripts (Step 3 above)              |
 | **Windows: file lock on update** | See [Windows Recovery](#windows-recovery) below           |
 | **Stale workspace (v1.3.x)**     | Use [Manual Clean Slate](#mechanism-2-manual-clean-slate) |
 
@@ -329,8 +360,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Safety Guardrails & Terminal Allowlist _(shipped in v1.4.5)_
 - [x] Smart Archive & Version Migration _(shipped in v1.4.6)_
 - [x] macOS Compatibility & Safe Migration Pipeline _(shipped in v1.4.7)_
-- [ ] Multi-agent Routing
-- [ ] Context Intelligence & Semantic Search
+- [x] Atomic Rollback, Dry-run Pipeline & README Rewrite _(shipped in v1.4.8)_
 
 ---
 
@@ -346,4 +376,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.4.7_
+_Version: 1.4.8_
