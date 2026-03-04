@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.4.9] - 2026-03-04
+
+Centralized Backup & Workspace Cleanup.
+→ [Detailed release notes](docs/changelog/v1.4.9.md)
+
+- **Added**: `para cleanup` command (FEAT-32) — removes old backups, rollback sessions, legacy `.bak` files. Status cleanup warning.
+- **Changed**: `backup_file()` now stores in `.para/backups/<date>/` instead of scattered `.bak` files.
+
 ## [1.4.8] - 2026-03-04
 
 Atomic Rollback, Dry-run Pipeline & README Installation Rewrite.

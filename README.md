@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.4.8-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.4.9-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -361,6 +361,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Smart Archive & Version Migration _(shipped in v1.4.6)_
 - [x] macOS Compatibility & Safe Migration Pipeline _(shipped in v1.4.7)_
 - [x] Atomic Rollback, Dry-run Pipeline & README Rewrite _(shipped in v1.4.8)_
+- [x] Centralized Backup & Workspace Cleanup _(shipped in v1.4.9)_
 
 ---
 
@@ -376,4 +377,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.4.8_
+_Version: 1.4.9_

@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.4.8-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.4.9-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](https://github.com/pageel/para-workspace)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-tích-hợp-agent)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -368,6 +368,7 @@ Nếu workspace của bạn quá cũ (v1.3.x) hoặc đã bị bạn chỉnh s�
 - [x] Smart Archive & Version Migration _(phát hành v1.4.6)_
 - [x] Tương thích macOS & Pipeline Migration an toàn _(phát hành v1.4.7)_
 - [x] Atomic Rollback, Dry-run Pipeline & README Rewrite _(phát hành v1.4.8)_
+- [x] Centralized Backup & Workspace Cleanup _(phát hành v1.4.9)_
 
 ---
 
@@ -383,4 +384,4 @@ Xem [CONTRIBUTING.md](../CONTRIBUTING.md) để biết hướng dẫn. Điểm c
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.4.8_
+_Phiên bản: 1.4.9_

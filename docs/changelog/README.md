@@ -4,6 +4,7 @@ Detailed release notes for each version of PARA Workspace.
 
 | Version             | Date       | Highlights                                         |
 | :------------------ | :--------- | :------------------------------------------------- |
+| [v1.4.9](v1.4.9.md) | 2026-03-04 | Centralized Backup & Workspace Cleanup             |
 | [v1.4.8](v1.4.8.md) | 2026-03-04 | Atomic Rollback, Dry-run Pipeline & README Rewrite |
 | [v1.4.7](v1.4.7.md) | 2026-03-03 | macOS Compatibility & Safe Migration Pipeline      |
 | [v1.4.6](v1.4.6.md) | 2026-03-02 | Smart Archive & Version Migration                  |

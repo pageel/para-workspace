@@ -95,8 +95,14 @@ fi
 backup_file() {
   local file="$1"
   if [ -f "$file" ]; then
-    local bak="${file}.bak"
-    if ! cp "$file" "$bak" 2>/dev/null; then
+    local today
+    today="$(date +%Y-%m-%d)"
+    local backup_dir="$WS_ROOT/.para/backups/$today"
+    mkdir -p "$backup_dir"
+    # Flatten path: remove workspace prefix, replace / with _
+    local flat_name
+    flat_name="$(echo "$file" | sed "s|^$WS_ROOT/||; s|/|_|g")"
+    if ! cp "$file" "$backup_dir/$flat_name" 2>/dev/null; then
       echo "   ⚠️  Could not backup $file (file may be locked)"
     fi
   fi
@@ -382,8 +388,8 @@ else
   echo "  Libraries: workflows + rules + skills (with catalog.yml)"
   echo "  State:     .para/ (audit.log active)"
   echo ""
-  echo "💾 Backed-up files saved as .bak (if any were changed)."
-  echo "   To restore: mv <file>.bak <file>"
+  echo "💾 Backups saved to .para/backups/ (if any files were changed)."
+  echo "   Run './para cleanup' to remove old backups."
   echo ""
   echo "Try: ./para status"
 fi

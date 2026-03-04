@@ -2,7 +2,7 @@
 
 # PARA Workspace CLI
 # Usage: ./cli/para [command] [args...]
-# Version: 1.4.8
+# Version: 1.4.9
 
 set -e
 
@@ -68,6 +68,10 @@ case "$1" in
     shift
     "$COMMANDS_DIR/update.sh" "$@"
     ;;
+  cleanup)
+    shift
+    "$COMMANDS_DIR/cleanup.sh" "$@"
+    ;;
   work)
     shift
     "$COMMANDS_DIR/workflow.sh" "$@"
@@ -111,6 +115,8 @@ case "$1" in
     echo "  install [--force] [--dry-run]      Sync kernel, workflows, rules, skills"
     echo "       --force                      Overwrite all, even if local is newer"
     echo "       --dry-run                    Preview changes without applying"
+    echo "  cleanup [--dry-run] [--force]      Remove old backups and legacy .bak files"
+    echo "       --keep=N                     Keep N most recent backup days (default: 5)"
     echo ""
     echo "  migrate [--from=X] [--to=Y]       Migrate workspace to new version"
     echo "       --dry-run                    Preview changes without applying"

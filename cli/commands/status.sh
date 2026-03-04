@@ -180,5 +180,20 @@ echo "  Rules:     $rl_total"
 
 sk_total=$(find "$WS_ROOT/.agent/skills" -maxdepth 1 -type d 2>/dev/null | tail -n +2 | wc -l || echo 0)
 echo "  Skills:    $sk_total"
+
+# Cleanup warning
+bak_count=$(find "$WS_ROOT" -name "*.bak" -not -path "*/.git/*" -not -path "*/node_modules/*" -not -path "$WS_ROOT/.para/*" 2>/dev/null | wc -l || echo 0)
+old_backup_count=0
+if [ -d "$WS_ROOT/.para/backups" ]; then
+  rollback_dirs=$(find "$WS_ROOT/.para/backups" -maxdepth 1 -type d -name "rollback-*" 2>/dev/null | wc -l || echo 0)
+  old_backup_count=$((old_backup_count + rollback_dirs))
+fi
+cleanup_total=$((bak_count + old_backup_count))
+if [ "$cleanup_total" -gt 0 ]; then
+  echo ""
+  echo "⚠️  $bak_count legacy .bak file(s) + $old_backup_count rollback session(s) found."
+  echo "   Run './para cleanup' to remove."
+fi
+
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
