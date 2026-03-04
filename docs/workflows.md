@@ -29,6 +29,7 @@ Workflows are the **UI layer** for AI agents. They define processes that agents 
 | `/merge`         | Admin    | Merge conflicting workflows                                                    |
 | `/para-rule`     | Admin    | Manage, install, and standardize agent rules                                   |
 | `/para-workflow` | Admin    | Manage, install, and standardize agent workflows                               |
+| `/docs`          | Admin    | Generate, review, and publish technical documentation                          |
 | `/para-audit`    | Audit    | Macro Assessor for tracking workspace structural drift against the Kernel Spec |
 
 ## Kernel Compatibility

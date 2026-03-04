@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.4.10] - 2026-03-04
+
+Documentation Manager (`/docs`) & Workflow Catalog Update.
+→ [Detailed release notes](docs/changelog/v1.4.10.md)
+
+- **Added**: Official `/docs` workflow (internal-first, Doc Index token optimization, auto repo adaptation).
+- **Changed**: Workspace version `1.4.10`, `/docs` added to `catalog.yml`.
+
 ## [1.4.9] - 2026-03-04
 
 Centralized Backup & Workspace Cleanup.

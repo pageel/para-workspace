@@ -172,3 +172,12 @@ items:
     entrypoint: "para-audit.md"
     description: "Scan structural drift against Kernel Specs (I1-I11)."
     tags: ["audit", "governance", "invariants"]
+
+  - id: docs
+    name: "Documentation Manager"
+    version: "1.0.0"
+    kernel_min: "1.4.10"
+    kernel_max: "1.x"
+    entrypoint: "docs.md"
+    description: "Generate, review, and publish project documentation with Doc Index."
+    tags: ["documentation", "docs", "publish"]
