@@ -5,7 +5,7 @@ source: catalog
 
 # /push [project-name] ["message"] [--quick]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 Fast commit and push changes to GitHub with verification.
 

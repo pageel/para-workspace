@@ -54,6 +54,24 @@ Agent should load context in this sequence (highest priority first):
 - **Ignore Passive Projects**: Do not scan other projects unless working on an integration
 - **Beads Priority**: For recurring issues, prefer `.beads/` data over general documentation
 
+### Project Rules Loading (Progressive Disclosure)
+
+When beginning work on a project (via `/open` or context detection), the agent SHOULD load project-specific rules using a lazy-loading protocol:
+
+1. Check for `Projects/<project>/.agent/rules.md` (lightweight index, ~5–10 lines).
+2. If index exists: read it and note trigger conditions. Load a specific rule file **only when** the current action matches its trigger. Do NOT read all rule files upfront.
+3. If index does not exist: check if `Projects/<project>/.agent/rules/` has files. If yes, list names and load on demand. If empty — skip.
+
+**Rules Index format** — each project MAY provide:
+
+```markdown
+# Project Rules Index
+
+| Rule      | Trigger      | File        |
+| :-------- | :----------- | :---------- |
+| Rule Name | When to load | filename.md |
+```
+
 ## H3. Versioning
 
 ### Semantic Versioning

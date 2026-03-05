@@ -5,7 +5,7 @@ source: catalog
 
 # /backup [target]
 
-> **Workspace Version:** 1.4.6
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 Create a date-stamped snapshot of important workspace files into `.para/backups/`.
 

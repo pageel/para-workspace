@@ -5,7 +5,7 @@ source: catalog
 
 # /end [project-name | all | workspace] [done]
 
-> **Workspace Version:** 1.4.3 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final report MUST be translated to this language.**
 
 Summarize accomplishments and log them to the correct context (Project vs. Workspace).

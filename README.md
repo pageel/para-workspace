@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.4.10-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](./CHANGELOG.md)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.5.0-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](./CHANGELOG.md)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -286,28 +286,30 @@ para config [key] [value]       # Manage workspace settings
 
 ## 📑 Workflow Catalog
 
-| Command                                 | Description                                                |
-| :-------------------------------------- | :--------------------------------------------------------- |
-| **`/backlog`**                          | Manage project tasks via canonical backlog.md              |
-| **`/backup`**                           | Backup workflows, rules, config, and project data          |
-| **`/config`**                           | Manage workspace configuration                             |
-| **`/end`**                              | Close session with PARA classification + automated cleanup |
-| **`/inbox`**                            | Categorize files from `_inbox/` into PARA                  |
-| **`/install`**                          | Intelligent installer (handles updates/merges)             |
-| **`/learn`**                            | Capture lessons into Areas/Learning                        |
-| **`/merge`**                            | Semantic merge for workflow conflicts                      |
-| **`/new-project`**                      | Initialize new project with scaffolding                    |
-| **`/open`**                             | Start session with context + plan phase loading            |
-| **`/para`**                             | Master controller for workspace management                 |
-| **[`/docs`](./docs/workflows/docs.md)** | Generate, review, and publish technical documentation      |
-| **`/para-audit`**                       | Macro Assessor for tracking workspace structural drift     |
-| **`/para-rule`**                        | Manage, install, and standardize agent rules               |
-| **`/para-workflow`**                    | Manage, install, and standardize agent workflows           |
-| **`/plan`**                             | Create, review, and update implementation plans            |
-| **`/push`**                             | Fast commit and push to GitHub                             |
-| **`/release`**                          | Pre-release quality gate                                   |
-| **`/retro`**                            | Project retrospective before archiving                     |
-| **`/verify`**                           | Verify task completion with walkthroughs                   |
+| Command                                             | Description                                                |
+| :-------------------------------------------------- | :--------------------------------------------------------- |
+| **`/backlog`**                                      | Manage project tasks via canonical backlog.md              |
+| **`/backup`**                                       | Backup workflows, rules, config, and project data          |
+| **[`/brainstorm`](./docs/workflows/brainstorm.md)** | Collaborative ideation with structured output              |
+| **`/config`**                                       | Manage workspace configuration                             |
+| **`/end`**                                          | Close session with PARA classification + automated cleanup |
+| **`/inbox`**                                        | Categorize files from `_inbox/` into PARA                  |
+| **`/install`**                                      | Intelligent installer (handles updates/merges)             |
+| **`/learn`**                                        | Capture lessons into Areas/Learning                        |
+| **`/merge`**                                        | Semantic merge for workflow conflicts                      |
+| **`/new-project`**                                  | Initialize new project with scaffolding                    |
+| **[`/open`](./docs/workflows/open.md)**             | Start session with context + plan phase loading            |
+| **`/para`**                                         | Master controller for workspace management                 |
+| **[`/docs`](./docs/workflows/docs.md)**             | Generate, review, and publish technical documentation      |
+| **`/para-audit`**                                   | Macro Assessor for tracking workspace structural drift     |
+| **`/para-rule`**                                    | Manage, install, and standardize agent rules               |
+| **`/para-workflow`**                                | Manage, install, and standardize agent workflows           |
+| **`/plan`**                                         | Create, review, and update implementation plans            |
+| **`/push`**                                         | Fast commit and push to GitHub                             |
+| **`/release`**                                      | Pre-release quality gate                                   |
+| **`/retro`**                                        | Project retrospective before archiving                     |
+| **[`/update`](./docs/workflows/update.md)**         | Agent-guided safe workspace update with error recovery     |
+| **`/verify`**                                       | Verify task completion with walkthroughs                   |
 
 ---
 
@@ -365,6 +367,8 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] macOS Compatibility & Safe Migration Pipeline _(shipped in v1.4.7)_
 - [x] Atomic Rollback, Dry-run Pipeline & README Rewrite _(shipped in v1.4.8)_
 - [x] Centralized Backup & Workspace Cleanup _(shipped in v1.4.9)_
+- [x] Documentation Manager Workflow _(shipped in v1.4.10)_
+- [x] Project Rules Loading & Safe Update Workflow _(shipped in v1.5.0)_
 
 ---
 
@@ -380,4 +384,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.4.10_
+_Version: 1.5.0_

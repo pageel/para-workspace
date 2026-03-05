@@ -5,7 +5,7 @@ source: catalog
 
 # /para-audit
 
-> **Workspace Version:** 1.4.5 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 Strict workspace macro-assessor to scan for structural drift against Kernel Specs (I1-I11) and generate a compliance report. This is the **only** daily workflow allowed to full-scan the Kernel Specs.
 

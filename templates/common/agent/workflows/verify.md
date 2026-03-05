@@ -5,7 +5,7 @@ source: catalog
 
 # /verify [project-name] [task-name]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 Verify completion of a feature or task using a Walkthrough artifact.
 

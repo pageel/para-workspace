@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# PARA Workspace Update Script (v1.4.8)
+# PARA Workspace Update Script (v1.5.0)
 # Safely updates templates without overwriting user data
 # Usage: para update [--dry-run]
 
@@ -65,7 +65,9 @@ done
 echo "🔄 Updating PARA Workspace Template from GitHub..."
 
 # Get current version
-if [ -f "$REPO_ROOT/VERSION" ]; then
+if [ -n "$WORKSPACE_ROOT" ] && [ -f "$WORKSPACE_ROOT/.para-workspace.yml" ]; then
+    CURRENT_VER=$(grep '^kernel_version:' "$WORKSPACE_ROOT/.para-workspace.yml" | sed 's/kernel_version:[[:space:]]*//; s/"//g')
+elif [ -f "$REPO_ROOT/VERSION" ]; then
     CURRENT_VER=$(cat "$REPO_ROOT/VERSION")
 else
     CURRENT_VER="Unknown"

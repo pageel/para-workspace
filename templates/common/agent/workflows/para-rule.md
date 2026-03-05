@@ -5,7 +5,7 @@ source: catalog
 
 # /para-rule [action] [name]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 Manage, install, and standardize AI Agent rules within a PARA Workspace.
 
@@ -96,6 +96,7 @@ Create a new PARA-compliant rule.
    - Use affirmative language (Must, Should, Must Not).
    - Categorize clearly (VCS, Naming, Layout, Safety).
    - Ensure rules do not conflict with `para-discipline.md`.
+4. **If project-specific**: Update the project's `.agent/rules.md` index with the new rule name, trigger condition, and filename.
 
 ---
 
@@ -143,7 +144,8 @@ Check a rule for PARA compliance without making changes.
 ## ⚖️ Context Routing (RFC-0003)
 
 - Project Rules (`Projects/[project-name]/.agent/rules/`) take priority over Global Rules (`.agent/rules/`).
-- Use `.agent/rules/context-rules.md` to prevent context bloat.
+- Projects MAY provide a lightweight `rules.md` index at `Projects/[project-name]/.agent/rules.md` for lazy loading (see `context-rules.md` Rule #4).
+- Agent loads project rules **on demand** based on trigger matching, not upfront.
 
 ## 🎓 Graduation (Beads to Rules)
 

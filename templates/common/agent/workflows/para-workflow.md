@@ -5,7 +5,7 @@ source: catalog
 
 # /para-workflow [action] [name]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 Specialized workflow to manage, install, and standardize AI Agent workflows within a PARA Workspace.
 
@@ -82,7 +82,7 @@ source: catalog
 
 # /[name] [args]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 [Purpose and context]
 

@@ -5,7 +5,7 @@ source: catalog
 
 # /release [project-name]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 Pre-merge quality gate for production readiness.
 

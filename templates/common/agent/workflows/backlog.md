@@ -5,7 +5,7 @@ source: catalog
 
 # /backlog [project-name] [action]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and reports MUST be translated to this language.**
 
 Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/backlog.md`.

@@ -1,0 +1,78 @@
+# /plan Workflow
+
+> **Version**: 1.5.0
+
+The `/plan` workflow creates, reviews, and updates phased implementation plans for PARA projects. It integrates with brainstorm outputs, the project backlog, and the learning index to produce comprehensive, actionable plans.
+
+## Commands
+
+```
+/plan [project-name] [action]
+```
+
+| Action   | Description                         |
+| -------- | ----------------------------------- |
+| `create` | Create a new implementation plan    |
+| `review` | Summarize existing plan with status |
+| `update` | Modify phases, status, or timeline  |
+
+## Plan Creation Flow
+
+```
+Contract → Backlog → Brainstorm check → Learnings → Architecture → Phases → Save → Register
+```
+
+### Key Steps
+
+1. **Read Project Contract** — Goal, deadline, DoD from `project.md`
+2. **Read Backlog** — Feature scope, priorities, status distribution
+3. **Check Brainstorm Context** (v1.5.0) — Auto-discovers recent brainstorm outputs in `artifacts/para-decisions/brainstorm-*.md`. If found, uses the Options and Decision sections as baseline context.
+4. **Scan Learnings Index** — Cross-references `Areas/Learning/README.md` with project tech stack. Reads matched lessons (max 3) to prevent repeating past mistakes.
+5. **Analyze Reference Projects** — If contract references another project, checks for reusable code.
+6. **Design Architecture** — Component diagram (ASCII), tech stack table, data flow.
+7. **Define Phases** — 4-7 sequential phases, each with tasks, timeline, and deliverables.
+8. **Map Backlog → Phases** — Links High/Medium priority items to implementation phases.
+9. **Write Plan File** — Saves to `artifacts/plans/[plan-name].md`
+10. **Register in project.md** — Sets `active_plan` field for `/open` and `/end` discovery.
+
+### Phase Structure
+
+| Rule      | Description                             |
+| --------- | --------------------------------------- |
+| Phase 0   | Always "Setup & Infrastructure"         |
+| Phase 1–N | Core feature phases in dependency order |
+| Final     | Always "Polish & Extras"                |
+
+## Plan Review
+
+`/plan [project-name] review` displays a status table:
+
+```
+📋 PLAN REVIEW: [plan-name]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+| Phase   | Status         | Tasks  |
+| ------- | -------------- | ------ |
+| Phase 0 | ✅ Done        | 5/5    |
+| Phase 1 | 🔨 In Progress | 3/5    |
+Overall: 40% complete | Deadline: YYYY-MM-DD
+```
+
+## Integration Points
+
+| Workflow      | Relationship                                              |
+| ------------- | --------------------------------------------------------- |
+| `/brainstorm` | Plan auto-discovers brainstorm outputs (Step 2.5)         |
+| `/learn`      | Plan scans learning index for relevant lessons (Step 2.6) |
+| `/open`       | Open reads `active_plan` to show current phase            |
+| `/end`        | End checks plan completion, cleans up `active_plan`       |
+| `/verify`     | Verify checks task completion against plan                |
+
+## Related
+
+- [Brainstorm Guide](./brainstorm.md) — Ideation before planning
+- [Workflow Documentation](../workflows.md) — Workflow catalog
+- [Planning Guide](../planning.md) — Plan + Backlog combined guide
+
+---
+
+_Updated in v1.5.0 (Step 2.5 brainstorm discovery added)_

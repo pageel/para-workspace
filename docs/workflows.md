@@ -21,12 +21,14 @@ Workflows are the **UI layer** for AI agents. They define processes that agents 
 | `/end`           | Session  | Close session, save logs                                                       |
 | `/plan`          | Planning | Create implementation plans — see [Planning Guide](./planning.md)              |
 | `/backlog`       | Planning | Manage product backlog — see [Planning Guide](./planning.md)                   |
+| `/brainstorm`    | Planning | Collaborative ideation — see [Brainstorm Guide](./workflows/brainstorm.md)     |
 | `/push`          | Dev      | Commit & push code                                                             |
 | `/verify`        | QA       | Check task completion                                                          |
 | `/retro`         | Review   | Retrospective before archive                                                   |
 | `/release`       | Release  | Pre-release quality gate                                                       |
 | `/install`       | Admin    | Install workflow/rule                                                          |
 | `/merge`         | Admin    | Merge conflicting workflows                                                    |
+| `/update`        | Admin    | Agent-guided safe workspace update — see [Update Guide](./workflows/update.md) |
 | `/para-rule`     | Admin    | Manage, install, and standardize agent rules                                   |
 | `/para-workflow` | Admin    | Manage, install, and standardize agent workflows                               |
 | `/docs`          | Admin    | Generate, review, and publish technical documentation                          |

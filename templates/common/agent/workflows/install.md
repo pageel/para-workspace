@@ -5,7 +5,7 @@ source: catalog
 
 # /install [type] [name]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 Install or update components from the governed PARA Catalog into the workspace. Handles conflicts intelligently.
 

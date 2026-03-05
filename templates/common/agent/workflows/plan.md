@@ -5,7 +5,7 @@ source: catalog
 
 # /plan [project-name] [action]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final plan document MUST be translated to this language.**
 
 Create, review, or update a phased implementation plan for a PARA project.
@@ -48,7 +48,20 @@ Read `Projects/[project-name]/artifacts/tasks/backlog.md` to understand:
 - Known bugs or constraints
 - Total item count and status distribution
 
-#### 2.5. Scan Learnings Index (Lessons Learned)
+#### 2.5. Check for Brainstorm Context (if exists)
+
+// turbo
+
+> ⚠️ **Token optimization:** One `ls` command + read at most 1 file.
+
+```bash
+ls -t Projects/[project-name]/artifacts/para-decisions/brainstorm-*.md 2>/dev/null | head -1
+```
+
+- **If brainstorm file found** → Read the most recent one. Use its Options Evaluated and Decision sections as baseline context for architecture and phase design.
+- **If none found** → Skip. Zero overhead.
+
+#### 2.6. Scan Learnings Index (Lessons Learned)
 
 // turbo
 
@@ -305,6 +318,7 @@ Modify an existing plan (add phases, update status, revise timeline).
 
 ## Related
 
+- `/brainstorm` — Explore ideas before planning (auto-discovered by Step 2.5)
 - `/new-project` — Initialize project (run before `/plan`)
 - `/backlog` — Manage features and bugs
 - `/open` — Start session with context loading

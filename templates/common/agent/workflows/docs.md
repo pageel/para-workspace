@@ -5,7 +5,7 @@ source: catalog
 
 # /docs [project-name] [action]
 
-> **Workspace Version:** 1.4.10
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 Generate, review, or update technical documentation for a PARA project. Docs are always created in `Projects/[project-name]/docs/` (internal). Use `publish` to promote selected docs to `repo/docs/` when ready.
 

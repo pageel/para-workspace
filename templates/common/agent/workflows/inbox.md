@@ -5,7 +5,7 @@ source: catalog
 
 # /inbox [filename]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 Automatically or manually categorize incoming files from the `_inbox/` directory into their permanent locations within the PARA structure.
 

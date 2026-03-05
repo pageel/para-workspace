@@ -181,3 +181,21 @@ items:
     entrypoint: "docs.md"
     description: "Generate, review, and publish project documentation with Doc Index."
     tags: ["documentation", "docs", "publish"]
+
+  - id: update
+    name: "Safe Update"
+    version: "1.0.0"
+    kernel_min: "1.5.0"
+    kernel_max: "1.x"
+    entrypoint: "update.md"
+    description: "Agent-guided safe workspace update with pre-flight checks and error recovery."
+    tags: ["update", "sync", "safety"]
+
+  - id: brainstorm
+    name: "Brainstorm"
+    version: "1.0.0"
+    kernel_min: "1.5.0"
+    kernel_max: "1.x"
+    entrypoint: "brainstorm.md"
+    description: "Collaborative ideation with structured output and 5 exit paths."
+    tags: ["brainstorm", "ideation", "planning"]

@@ -5,7 +5,7 @@ source: catalog
 
 # /open [project-name]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 Start a new working session with full context from previous sessions.
 
@@ -29,6 +29,19 @@ Base: Projects/[project-name]/
 //turbo
 
 Read `Projects/[project-name]/project.md` to understand goal, deadline, status, and DoD.
+
+### 2.5. Load project rules index (if exists)
+
+//turbo
+
+> ⚠️ **Token optimization:** Only read the index file (~5–10 lines), NOT individual rule files.
+
+Check if `Projects/[project-name]/.agent/rules.md` exists:
+
+- **If exists** → Read the index and note the trigger conditions for the session.
+- **If not exists** → Skip entirely.
+
+During the session, when performing an action that matches a trigger from the index, the agent **MUST** read the corresponding rule file **BEFORE** acting.
 
 ### 3. Find and read latest session
 

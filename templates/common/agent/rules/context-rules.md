@@ -32,3 +32,25 @@
 - **SHOULD** create friction beads in `Projects/<project>/.beads/` when encountering repeated logic failures, project-specific quirks, or critical decisions.
 - Beads are allowed to be messy, partial, and contradictory while the project is active.
 - **MUST** perform a "Graduation Review" before archiving a project — move valuable knowledge from beads to `Areas/`, `Resources/`, or `.agent/rules/`.
+
+### 4. Project Rules Loading (Progressive Disclosure)
+
+When beginning work on a project (via `/open` or context detection):
+
+- **MUST** check for `Projects/<project>/.agent/rules.md` (Rules Index).
+- **If index exists:**
+  - Read the index file (~5–10 lines) to learn what project-specific rules exist.
+  - Load a specific rule file **ONLY WHEN** the current action matches its trigger.
+  - **MUST NOT** read all rule files upfront — load on demand.
+- **If index does not exist:**
+  - Check if `Projects/<project>/.agent/rules/` directory has files.
+  - If files exist, list names and load only when relevant.
+  - If empty or missing — skip entirely.
+
+> **Rules Index format** — each project MAY provide a `rules.md` at `Projects/<project>/.agent/rules.md`:
+>
+> ```markdown
+> | Rule      | Trigger                | File        |
+> | :-------- | :--------------------- | :---------- |
+> | Rule Name | When to load this rule | filename.md |
+> ```

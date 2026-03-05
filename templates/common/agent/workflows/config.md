@@ -5,7 +5,7 @@ source: catalog
 
 # /config [action]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 Manage the workspace configuration stored in `.para-workspace.yml` and related settings.
 

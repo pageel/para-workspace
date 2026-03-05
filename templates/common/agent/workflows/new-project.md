@@ -5,7 +5,7 @@ source: catalog
 
 # /new-project [project-name]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 Initialize a new PARA project with standard scaffolding and artifacts.
 
@@ -87,6 +87,7 @@ Record the kickoff in `Projects/[project-name]/sessions/YYYY-MM-DD.md`:
 ## Related
 
 - `/open` — Start session with context loading
+- `/brainstorm` — Explore ideas before planning
 - `/plan` — Create implementation plan for the project
 - `/backlog` — Manage project backlog
 - `/config` — Register project in workspace config

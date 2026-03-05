@@ -5,7 +5,7 @@ source: catalog
 
 # /merge [target-workflow]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 Intelligently merge a user's customized workflow with the latest version from the governed catalog.
 

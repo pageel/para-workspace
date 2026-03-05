@@ -5,7 +5,7 @@ source: catalog
 
 # /para
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 The master controller workflow for the PARA Workspace. Use it to audit, configure, and maintain workspace health.
 

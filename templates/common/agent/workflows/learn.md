@@ -5,7 +5,7 @@ source: catalog
 
 # /learn [topic-name]
 
-> **Workspace Version:** 1.4.1 (Governed Libraries)
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
 Capture and standardize knowledge and experience accumulated during development, stored in `Areas/Learning/`.
 
@@ -63,6 +63,7 @@ If the lesson originated from a specific project, add a reference back in the pr
 
 ## Related
 
+- `/brainstorm` — Option E exits to /learn for reusable cross-project insights
 - `/end` — End session (may trigger /learn for significant discoveries)
 - `/retro` — Project retrospective (graduates beads to learnings)
 - `/inbox` — Categorize incoming files
