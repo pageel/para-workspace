@@ -291,30 +291,30 @@ para config [key] [value]     # Quản lý thiết lập trong tệp .para-works
 
 ## 📑 Catalog Workflow
 
-| Lệnh                               | Mô tả                                                     |
-| :--------------------------------- | :-------------------------------------------------------- |
-| **`/backlog`**                     | Quản lý tasks qua backlog.md canonical + plan integration |
-| **`/backup`**                      | Sao lưu workflows, rules, config, và dữ liệu project      |
-| **`/brainstorm`**                  | Brainstorm ý tưởng với cấu trúc và 5 hướng kế tiếp        |
-| **`/config`**                      | Quản lý cấu hình workspace                                |
-| **`/end`**                         | Đóng phiên + dọn dẹp active_plan tự động                  |
-| **`/inbox`**                       | Phân loại file từ `_inbox/` vào PARA                      |
-| **`/install`**                     | Cài đặt thông minh (xử lý cập nhật/merge)                 |
-| **`/learn`**                       | Ghi nhận bài học vào Areas/Learning                       |
-| **`/merge`**                       | Merge ngữ nghĩa cho xung đột workflow                     |
-| **`/new-project`**                 | Khởi tạo project mới với scaffolding                      |
-| **`/open`**                        | Bắt đầu phiên với nạp context + plan phase                |
-| **`/para`**                        | Bộ điều khiển chính cho quản lý workspace                 |
-| **[`/docs`](./workflows/docs.md)** | Tạo, kiểm tra, và xuất bản tài liệu kỹ thuật              |
-| **`/para-audit`**                  | Khảo sát hệ thống, phát hiện độ lệch chuẩn so với Kernel  |
-| **`/para-rule`**                   | Quản lý, cài đặt, chuẩn hoá agent rules                   |
-| **`/para-workflow`**               | Quản lý, cài đặt, chuẩn hoá agent workflows               |
-| **`/plan`**                        | Tạo, xem, và cập nhật kế hoạch triển khai                 |
-| **`/push`**                        | Commit và push nhanh lên GitHub                           |
-| **`/release`**                     | Kiểm tra chất lượng trước release                         |
-| **`/retro`**                       | Retrospective project trước khi archive                   |
-| **`/update`**                      | Cập nhật workspace an toàn với agent hỗ trợ               |
-| **`/verify`**                      | Xác minh hoàn thành task bằng walkthroughs                |
+| Lệnh                                   | Mô tả                                                     |
+| :------------------------------------- | :-------------------------------------------------------- |
+| **`/backlog`**                         | Quản lý tasks qua backlog.md canonical + plan integration |
+| **`/backup`**                          | Sao lưu workflows, rules, config, và dữ liệu project      |
+| **`/brainstorm`**                      | Brainstorm ý tưởng với cấu trúc và 5 hướng kế tiếp        |
+| **`/config`**                          | Quản lý cấu hình workspace                                |
+| **`/end`**                             | Đóng phiên + dọn dẹp active_plan tự động                  |
+| **`/inbox`**                           | Phân loại file từ `_inbox/` vào PARA                      |
+| **`/install`**                         | Cài đặt thông minh (xử lý cập nhật/merge)                 |
+| **`/learn`**                           | Ghi nhận bài học vào Areas/Learning                       |
+| **`/merge`**                           | Merge ngữ nghĩa cho xung đột workflow                     |
+| **`/new-project`**                     | Khởi tạo project mới với scaffolding                      |
+| **[`/open`](./workflows/open.md)**     | Bắt đầu phiên với nạp context + plan phase                |
+| **`/para`**                            | Bộ điều khiển chính cho quản lý workspace                 |
+| **[`/docs`](./workflows/docs.md)**     | Tạo, kiểm tra, và xuất bản tài liệu kỹ thuật              |
+| **`/para-audit`**                      | Khảo sát hệ thống, phát hiện độ lệch chuẩn so với Kernel  |
+| **`/para-rule`**                       | Quản lý, cài đặt, chuẩn hoá agent rules                   |
+| **`/para-workflow`**                   | Quản lý, cài đặt, chuẩn hoá agent workflows               |
+| **[`/plan`](./workflows/plan.md)**     | Tạo, xem, và cập nhật kế hoạch triển khai                 |
+| **`/push`**                            | Commit và push nhanh lên GitHub                           |
+| **`/release`**                         | Kiểm tra chất lượng trước release                         |
+| **`/retro`**                           | Retrospective project trước khi archive                   |
+| **[`/update`](./workflows/update.md)** | Cập nhật workspace an toàn với agent hỗ trợ               |
+| **`/verify`**                          | Xác minh hoàn thành task bằng walkthroughs                |
 
 ---
 

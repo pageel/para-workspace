@@ -304,7 +304,7 @@ para config [key] [value]       # Manage workspace settings
 | **`/para-audit`**                                   | Macro Assessor for tracking workspace structural drift     |
 | **`/para-rule`**                                    | Manage, install, and standardize agent rules               |
 | **`/para-workflow`**                                | Manage, install, and standardize agent workflows           |
-| **`/plan`**                                         | Create, review, and update implementation plans            |
+| **[`/plan`](./docs/workflows/plan.md)**             | Create, review, and update implementation plans            |
 | **`/push`**                                         | Fast commit and push to GitHub                             |
 | **`/release`**                                      | Pre-release quality gate                                   |
 | **`/retro`**                                        | Project retrospective before archiving                     |
