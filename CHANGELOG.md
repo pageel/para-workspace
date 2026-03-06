@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.5.0] - 2026-03-05
+
+Safe Workspace Update, Brainstorming & Progressive Rule Disclosure.
+→ [Detailed release notes](docs/changelog/v1.5.0.md)
+
+- **Added**: `/update` and `/brainstorm` workflows. Progressive Rule disclosure (`.agent/rules.md`).
+- **Fixed**: `update.sh` version state read error skipping migrations.
+- **Changed**: Workspace version `1.5.0`, updated workflow cross-links (`/open`, `/plan`, `/para-rule`).
+
 ## [1.4.10] - 2026-03-04
 
 Documentation Manager (`/docs`) & Workflow Catalog Update.
