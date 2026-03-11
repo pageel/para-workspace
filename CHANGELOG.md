@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.5.1] - 2026-03-11
+
+Hybrid 3-File Synchronization & Fast Mode.
+→ [Detailed release notes](docs/changelog/v1.5.1.md)
+
+- **Added**: Hybrid 3-File Auto-Sync logic to `/backlog update` and new action `/backlog clean`.
+- **Changed**: `/open` now prioritizes fast-mode reading from `sprint-current.md` to save tokens.
+- **Changed**: `/retro` and `/plan review` refactored to use `done.md` as primary completion data source.
+- **Fixed**: Template synchronizations for Profile General (FEAT-25, 34).
+
 ## [1.5.0] - 2026-03-05
 
 Safe Workspace Update, Brainstorming & Progressive Rule Disclosure.

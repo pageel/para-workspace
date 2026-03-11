@@ -1,6 +1,6 @@
 # /plan Workflow
 
-> **Version**: 1.5.0
+> **Version**: 1.5.1
 
 The `/plan` workflow creates, reviews, and updates phased implementation plans for PARA projects. It integrates with brainstorm outputs, the project backlog, and the learning index to produce comprehensive, actionable plans.
 
@@ -50,12 +50,15 @@ Contract → Backlog → Brainstorm check → Learnings → Architecture → Pha
 ```
 📋 PLAN REVIEW: [plan-name]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-| Phase   | Status         | Tasks  |
-| ------- | -------------- | ------ |
-| Phase 0 | ✅ Done        | 5/5    |
-| Phase 1 | 🔨 In Progress | 3/5    |
+| Phase   | Status         | Tasks  | Source    |
+| ------- | -------------- | ------ | --------- |
+| Phase 0 | ✅ Done        | 5/5    | done.md   |
+| Phase 1 | 🔨 In Progress | 3/5    | backlog   |
+| Phase 2 | ⏳ Pending     | 0/4    | —         |
 Overall: 40% complete | Deadline: YYYY-MM-DD
 ```
+
+> **Hybrid 3-File**: `/plan review` cross-references completed task IDs located in `done.md` instead of searching the backlog. This reliably detects when a phase reaches 100% completion in order to suggest a retrospective early.
 
 ## Integration Points
 
@@ -75,4 +78,4 @@ Overall: 40% complete | Deadline: YYYY-MM-DD
 
 ---
 
-_Updated in v1.5.0 (Step 2.5 brainstorm discovery added)_
+_Updated in v1.5.1 (Integrated Hybrid 3-File progress tracking via done.md)_

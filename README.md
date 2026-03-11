@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.5.0-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](./CHANGELOG.md)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.5.1-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](./CHANGELOG.md)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -320,11 +320,11 @@ PARA Workspace uses a **Hybrid 3-File Model**:
 ```
 artifacts/tasks/
 ├── backlog.md          # 📌 CANONICAL — all tasks live here
-├── sprint-current.md   # 🎯 DERIVED — active tasks only
-└── done.md             # ✅ DERIVED — completed tasks archive
+├── sprint-current.md   # 🎯 DERIVED — active focus tasks only
+└── done.md             # ✅ DERIVED — completed tasks log
 ```
 
-The agent primarily interacts with `backlog.md` via the `/backlog` workflow. `sprint-current.md` and `done.md` are derived views that keep the backlog clean.
+**Auto-Sync Architecture:** The agent primarily interacts with `backlog.md` via the `/backlog` workflow. When states are updated, the workflow **auto-syncs** to `sprint-current.md` (overwriting it for a fast, token-efficient view) and appends completed tasks to `done.md`. This "Fast Mode" keeps the canonical backlog token-efficient and clean while providing rapid access for tools like `/open` and `/plan`.
 
 ---
 
@@ -367,8 +367,8 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] macOS Compatibility & Safe Migration Pipeline _(shipped in v1.4.7)_
 - [x] Atomic Rollback, Dry-run Pipeline & README Rewrite _(shipped in v1.4.8)_
 - [x] Centralized Backup & Workspace Cleanup _(shipped in v1.4.9)_
-- [x] Documentation Manager Workflow _(shipped in v1.4.10)_
 - [x] Project Rules Loading & Safe Update Workflow _(shipped in v1.5.0)_
+- [x] Hybrid 3-File Synchronization & Fast Mode _(shipped in v1.5.1)_
 
 ---
 
@@ -384,4 +384,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.5.0_
+_Version: 1.5.1_

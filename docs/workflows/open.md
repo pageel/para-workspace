@@ -1,6 +1,6 @@
 # /open Workflow
 
-> **Version**: 1.5.0
+> **Version**: 1.5.1
 
 The `/open` workflow starts a new working session with full context from previous work. It loads the project contract, latest session log, backlog, and sync queue — then presents a concise report so the user knows exactly where they left off.
 
@@ -48,9 +48,10 @@ During the session, when an action matches a trigger from the index, the agent l
 
 Reads the most recent session log to understand what was done and what's pending.
 
-### 4. Read Backlog
+### 4. Read Task Context (Fast Mode)
 
-Reads `artifacts/tasks/backlog.md` and extracts the summary table (task counts by priority).
+> **Hybrid 3-File Model**: Instead of reading the full backlog, the agent reads `artifacts/tasks/sprint-current.md` first. This file contains only active tasks (ToDo/In Progress) and uses < 100 tokens.
+> If the sprint file is empty, it falls back to reading the `backlog.md` summary table.
 
 ### 5. Read Plan (if active)
 
@@ -91,4 +92,4 @@ Presents a structured summary:
 
 ---
 
-_Updated in v1.5.0 (Step 2.5 added)_
+_Updated in v1.5.1 (Added Fast Mode task context logic)_

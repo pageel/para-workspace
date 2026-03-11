@@ -5,9 +5,12 @@ status: "active"
 created: "YYYY-MM-DD"
 goal: ""
 deadline: ""
-dod: ""
+downstream: []
+dod: []
 active_plan: ""
+last_reviewed: ""
 tags: []
+milestones: []
 ---
 
 # Project: <project-name>

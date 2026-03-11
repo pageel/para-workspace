@@ -1,10 +1,19 @@
 name: "general"
-description: "Standard PARA workspace"
+description: "Standard PARA workspace for knowledge management"
 creates:
   - Projects/
   - Areas/
+  - Areas/Workspace/
+  - Areas/Learning/
   - Resources/
+  - Resources/references/
   - Archive/
+  - _inbox/
 default_workflow: "para"
 default_rules:
   - governance.md
+  - para-discipline.md
+  - naming.md
+  - vcs.md
+  - agent-behavior.md
+  - context-rules.md

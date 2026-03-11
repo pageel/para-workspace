@@ -4,7 +4,7 @@
 
 name: "{{project-name}}"
 status: active # active | inactive | archived
-kernel_version: "1.4.1" # Kernel version at time of creation
+kernel_version: "1.5.0" # Kernel version at time of creation
 created_at: "{{YYYY-MM-DD}}"
 owner: "@{{user}}"
 profile: "{{profile}}" # dev | general | marketer | ceo

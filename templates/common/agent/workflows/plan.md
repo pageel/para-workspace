@@ -252,28 +252,31 @@ Append to the current session log at `Projects/[project-name]/sessions/YYYY-MM-D
 
 ## 📋 Action: review
 
-Summarize an existing plan with status updates.
+Summarize an existing plan with status updates, using `done.md` for accurate progress tracking.
 
 ### Steps
 
 // turbo
 
 1. Read `active_plan` field from `Projects/[project-name]/project.md` to locate the plan file.
-2. Display summary:
+2. Read `Projects/[project-name]/artifacts/tasks/done.md` to get the list of completed task IDs with dates.
+3. Cross-reference `done.md` completed IDs with the plan's **Backlog → Phase Mapping** table.
+4. Display summary:
 
 ```
 📋 PLAN REVIEW: [plan-name]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-| Phase   | Status        | Tasks  |
-| ------- | ------------- | ------ |
-| Phase 0 | ✅ Done       | 5/5    |
-| Phase 1 | 🔨 In Progress| 3/5    |
-| Phase 2 | ⏳ Pending    | 0/4    |
+| Phase   | Status         | Tasks  | Source    |
+| ------- | -------------- | ------ | --------- |
+| Phase 0 | ✅ Done        | 5/5    | done.md   |
+| Phase 1 | 🔨 In Progress | 3/5    | backlog   |
+| Phase 2 | ⏳ Pending     | 0/4    | —         |
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Overall: 40% complete | Deadline: YYYY-MM-DD
 ```
 
-3. Cross-reference with backlog to find items completed but not marked.
+5. If a phase reaches 100% → suggest running `/retro` for phase review.
+6. If ALL phases reach 100% → suggest marking plan as `completed` and running `/retro`.
 
 ---
 

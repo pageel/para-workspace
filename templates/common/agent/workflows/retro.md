@@ -11,7 +11,7 @@ Conduct a project retrospective before archiving to `Archive/`.
 
 ## Steps
 
-### 1. Review Goals
+### 1. Review Goals & Progress
 
 // turbo
 
@@ -20,6 +20,17 @@ Read `Projects/[project-name]/project.md` and evaluate:
 - Were the original goals met?
 - Was the Definition of Done (DoD) satisfied?
 - Was the deadline met?
+
+**Data Sources (Hybrid 3-File):**
+
+1. **`artifacts/tasks/done.md`** — **Primary input**. Read this file for the complete list of completed tasks with dates. Use this to calculate:
+   - Total tasks completed
+   - Velocity (tasks per week)
+   - Phase-by-phase completion timeline
+2. **`artifacts/tasks/backlog.md`** — Check remaining incomplete items.
+3. **`project.md` active_plan** — If a plan exists, cross-reference done.md task IDs against the plan's phase mapping to calculate per-phase completion %.
+
+> 🛡️ **Convention:** Use `done.md` as the authoritative source for completion data instead of scanning session logs. This is faster, more accurate, and token-efficient.
 
 ### 2. Summarize Learnings
 

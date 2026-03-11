@@ -3,7 +3,7 @@ description: Initialize a new PARA-compliant project with scaffolding
 source: catalog
 ---
 
-# /new-project [project-name]
+# /new-project project [project-name]
 
 > **Workspace Version:** 1.5.0 (Governed Libraries)
 

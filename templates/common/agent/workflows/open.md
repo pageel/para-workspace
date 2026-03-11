@@ -53,11 +53,21 @@ ls -t Projects/[project-name]/sessions/*.md | head -3
 
 Read the latest session log for context on previous work.
 
-### 4. Read backlog (if exists)
+### 4. Read task context — Fast Mode (Hybrid 3-File)
 
 //turbo
 
-> ⚠️ **Token optimization:** Use the `view_file` tool to read the entire `Projects/[project-name]/artifacts/tasks/backlog.md` file. Do NOT use `grep` or `head` bash commands to parse it. Instead, extract the task counts directly from the `📊 Summary` table at the bottom of the file.
+> ⚠️ **Token optimization (Hybrid 3-File):** Read `sprint-current.md` first (~5-10 lines) for immediate task context. Only read full `backlog.md` Summary table if sprint file is empty or missing.
+
+**Priority order:**
+
+1. **Fast View:** Read `Projects/[project-name]/artifacts/tasks/sprint-current.md`
+   - If it exists and has active tasks → use this as the task context. Done.
+   - If empty or missing → proceed to step 2.
+
+2. **Fallback:** Read `Projects/[project-name]/artifacts/tasks/backlog.md`
+   - Extract task counts from the `📊 Summary` table at the bottom.
+   - Show top 3 actionable items (🚀 ToDo or 🔨 In Progress).
 
 ### 5. Read implementation plan — summary only (if active)
 

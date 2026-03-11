@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.5.0-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](../CHANGELOG.md)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.5.1-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](../CHANGELOG.md)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-tích-hợp-agent)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -323,15 +323,13 @@ para config [key] [value]     # Quản lý thiết lập trong tệp .para-works
 PARA Workspace sử dụng **Mô hình Hybrid 3 File**:
 
 ```
-
 artifacts/tasks/
-├── backlog.md # 📌 CANONICAL — tất cả tasks ở đây
-├── sprint-current.md # 🎯 DERIVED — chỉ tasks đang hoạt động
-└── done.md # ✅ DERIVED — lưu trữ tasks hoàn thành
-
+├── backlog.md          # 📌 GỐC — tất cả dự án nằm ở đây
+├── sprint-current.md   # 🎯 PHÁI SINH — chỉ task hiển thị làm việc
+└── done.md             # ✅ PHÁI SINH — archives lưu trữ lịch sử hoàn thành
 ```
 
-Agent tương tác chủ yếu với `backlog.md` qua workflow `/backlog`. `sprint-current.md` và `done.md` là các view phái sinh giúp backlog gọn gàng.
+**Kiến trúc Auto-Sync:** Agent chủ yếu làm việc với `backlog.md` qua lệnh `/backlog`. Khi cập nhật thông tin, workflow sẽ **tự động chạy ngầm (auto-sync)** chép đè vào `sprint-current.md` (Chế độ Fast Mode) và nối task đã xong vào `done.md`. Kiến trúc này giữ file gốc luôn sạch và tiết kiệm token tối đa cho các lệnh `/open` và `/plan`.
 
 ---
 
@@ -391,4 +389,4 @@ Xem [CONTRIBUTING.md](../CONTRIBUTING.md) để biết hướng dẫn. Điểm c
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.5.0_
+_Phiên bản: 1.5.1_
