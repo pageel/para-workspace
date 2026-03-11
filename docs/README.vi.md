@@ -318,18 +318,27 @@ para config [key] [value]     # Quản lý thiết lập trong tệp .para-works
 
 ---
 
-## 🧩 Quản lý Task
+## 🧩 Quản lý Tác vụ (Mô hình Hybrid 3-File)
 
-PARA Workspace sử dụng **Mô hình Hybrid 3 File**:
+PARA Workspace giải quyết bài toán "Lãng phí Token & Mất trí nhớ" của AI Agent thông qua kiến trúc **Hybrid 3-File Model** (Giới thiệu ở v1.5.1).
+
+Thay vì bắt tác tử (Agent) phải đọc một file backlog duy nhất khổng lồ mỗi khi mở dự án, danh sách công việc được phân bổ tự động qua ba tệp tin chuyên biệt:
 
 ```
 artifacts/tasks/
-├── backlog.md          # 📌 GỐC — tất cả dự án nằm ở đây
-├── sprint-current.md   # 🎯 PHÁI SINH — chỉ task hiển thị làm việc
-└── done.md             # ✅ PHÁI SINH — archives lưu trữ lịch sử hoàn thành
+├── backlog.md          # 📌 TRẠNG THÁI GỐC (Canonical) — Cơ sở dữ liệu chứa toàn bộ thông tin.
+├── sprint-current.md   # 🎯 FAST MODE — Phái sinh tạm thời. Chỉ chứa task đang làm (ToDo / In Progress).
+└── done.md             # ✅ LƯU TRỮ (Archive) — Nơi ghi lại lịch sử task đã xong theo thời gian.
 ```
 
-**Kiến trúc Auto-Sync:** Agent chủ yếu làm việc với `backlog.md` qua lệnh `/backlog`. Khi cập nhật thông tin, workflow sẽ **tự động chạy ngầm (auto-sync)** chép đè vào `sprint-current.md` (Chế độ Fast Mode) và nối task đã xong vào `done.md`. Kiến trúc này giữ file gốc luôn sạch và tiết kiệm token tối đa cho các lệnh `/open` và `/plan`.
+### Cơ chế Auto-Sync hoạt động
+
+Người dùng và Agent chỉ cần tương tác với file `backlog.md` gốc thông qua lệnh **`/backlog`**. Hệ thống sẽ tự động xử lý phần còn lại:
+
+1. **Góc nhìn Tập trung (`sprint-current.md`)**: Bất cứ khi nào bạn chạy `/backlog update`, hệ thống tự động bóc tách các task đang có nhãn `🚀 ToDo` hoặc `🔨 In Progress` và đổ đè vào tệp `sprint-current.md`.
+   > _Lợi ích: Khi Agent chạy lệnh `/open` vào đầu ngày, nó sẽ đọc tệp `sprint` siêu nhỏ này thay vì load cả backlog nặng nề. Lấy lại Focus cực nhanh, siêu tiết kiệm tokens._
+2. **Lịch sử Vận tốc (`done.md`)**: Khi một nhiệm vụ mang trạng thái `✅ Done`, hệ thống copy và dán nó xuống cuối file `done.md` kèm ngày tháng. Bạn cũng có thể gọi `/backlog clean` để tổng vệ sinh (cắt) tất cả task đã xong từ backlog mang sang cất ở đây.
+   > _Lợi ích: Các lệnh như `/plan review` và `/retro` giờ chỉ đọc duy nhất tệp `done.md` để đối chiếu xem tiến độ đạt 100% chưa, loại bỏ hiện tượng quên lịch sử._
 
 ---
 

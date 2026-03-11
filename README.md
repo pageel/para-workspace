@@ -313,18 +313,27 @@ para config [key] [value]       # Manage workspace settings
 
 ---
 
-## 🧩 Task Management
+## 🧩 Task Management (Hybrid 3-File Model)
 
-PARA Workspace uses a **Hybrid 3-File Model**:
+PARA Workspace uses a proprietary **Hybrid 3-File Architecture** introduced in v1.5.1 to solve the AI Agent "Context Window vs. Amnesia" problem.
+
+Instead of forcing the agent to read one massive backlog file every time it opens a project (which wastes tokens and causes hallucination), tasks are distributed across three highly specialized files:
 
 ```
 artifacts/tasks/
-├── backlog.md          # 📌 CANONICAL — all tasks live here
-├── sprint-current.md   # 🎯 DERIVED — active focus tasks only
-└── done.md             # ✅ DERIVED — completed tasks log
+├── backlog.md          # 📌 CANONICAL — The master database. All tasks live here.
+├── sprint-current.md   # 🎯 FAST MODE — Ephemeral. Only holds active tasks (ToDo/In Progress).
+└── done.md             # ✅ ARCHIVE — Append-only historical log of completed tasks.
 ```
 
-**Auto-Sync Architecture:** The agent primarily interacts with `backlog.md` via the `/backlog` workflow. When states are updated, the workflow **auto-syncs** to `sprint-current.md` (overwriting it for a fast, token-efficient view) and appends completed tasks to `done.md`. This "Fast Mode" keeps the canonical backlog token-efficient and clean while providing rapid access for tools like `/open` and `/plan`.
+### The Auto-Sync Engine
+
+You or your agent primarily interact with `backlog.md` via the **`/backlog`** workflow. The magic happens automatically behind the scenes:
+
+1. **Focus View (`sprint-current.md`)**: Whenever you run `/backlog update`, the engine automatically extracts tasks marked as `🚀 ToDo` or `🔨 In Progress` and completely overwrites `sprint-current.md`.
+   > _Result: When your agent runs `/open` to start the day, it only reads this tiny `sprint` file, instantly grasping what to do next without reading the entire backlog._
+2. **Historical Log (`done.md`)**: When you mark a task as `✅ Done`, the engine automatically appends it to `done.md` with a timestamp. You can also run `/backlog clean` to bulk-sweep old completed tasks out of the master backlog file.
+   > _Result: Workflows like `/plan review` and `/retro` now read exclusively from `done.md` to perfectly calculate project velocity and phase progress without losing historical data._
 
 ---
 
