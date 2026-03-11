@@ -286,30 +286,30 @@ para config [key] [value]       # Manage workspace settings
 
 ## 📑 Workflow Catalog
 
-| Command                                             | Description                                                |
-| :-------------------------------------------------- | :--------------------------------------------------------- |
-| **`/backlog`**                                      | Manage project tasks via canonical backlog.md              |
-| **`/backup`**                                       | Backup workflows, rules, config, and project data          |
-| **[`/brainstorm`](./docs/workflows/brainstorm.md)** | Collaborative ideation with structured output              |
-| **`/config`**                                       | Manage workspace configuration                             |
-| **`/end`**                                          | Close session with PARA classification + automated cleanup |
-| **`/inbox`**                                        | Categorize files from `_inbox/` into PARA                  |
-| **`/install`**                                      | Intelligent installer (handles updates/merges)             |
-| **`/learn`**                                        | Capture lessons into Areas/Learning                        |
-| **`/merge`**                                        | Semantic merge for workflow conflicts                      |
-| **`/new-project`**                                  | Initialize new project with scaffolding                    |
-| **[`/open`](./docs/workflows/open.md)**             | Start session with context + plan phase loading            |
-| **`/para`**                                         | Master controller for workspace management                 |
-| **[`/docs`](./docs/workflows/docs.md)**             | Generate, review, and publish technical documentation      |
-| **`/para-audit`**                                   | Macro Assessor for tracking workspace structural drift     |
-| **`/para-rule`**                                    | Manage, install, and standardize agent rules               |
-| **`/para-workflow`**                                | Manage, install, and standardize agent workflows           |
-| **[`/plan`](./docs/workflows/plan.md)**             | Create, review, and update implementation plans            |
-| **`/push`**                                         | Fast commit and push to GitHub                             |
-| **`/release`**                                      | Pre-release quality gate                                   |
-| **`/retro`**                                        | Project retrospective before archiving                     |
-| **[`/update`](./docs/workflows/update.md)**         | Agent-guided safe workspace update with error recovery     |
-| **`/verify`**                                       | Verify task completion with walkthroughs                   |
+| Command                                                   | Description                                                |
+| :-------------------------------------------------------- | :--------------------------------------------------------- |
+| **[`/backlog`](./docs/workflows/backlog.md)**             | Manage project tasks via canonical backlog.md              |
+| **`/backup`**                                             | Backup workflows, rules, config, and project data          |
+| **[`/brainstorm`](./docs/workflows/brainstorm.md)**       | Collaborative ideation with structured output              |
+| **`/config`**                                             | Manage workspace configuration                             |
+| **[`/end`](./docs/workflows/end.md)**                     | Close session with PARA classification + automated cleanup |
+| **`/inbox`**                                              | Categorize files from `_inbox/` into PARA                  |
+| **[`/install`](./docs/workflows/install.md)**             | Intelligent installer (handles updates/merges)             |
+| **`/learn`**                                              | Capture lessons into Areas/Learning                        |
+| **[`/merge`](./docs/workflows/merge.md)**                 | Semantic merge for workflow conflicts                      |
+| **`/new-project`**                                        | Initialize new project with scaffolding                    |
+| **[`/open`](./docs/workflows/open.md)**                   | Start session with context + plan phase loading            |
+| **[`/para`](./docs/workflows/para.md)**                   | Master controller for workspace management                 |
+| **[`/docs`](./docs/workflows/docs.md)**                   | Generate, review, and publish technical documentation      |
+| **[`/para-audit`](./docs/workflows/para-audit.md)**       | Macro Assessor for tracking workspace structural drift     |
+| **[`/para-rule`](./docs/workflows/para-rule.md)**         | Manage, install, and standardize agent rules               |
+| **[`/para-workflow`](./docs/workflows/para-workflow.md)** | Manage, install, and standardize agent workflows           |
+| **[`/plan`](./docs/workflows/plan.md)**                   | Create, review, and update implementation plans            |
+| **[`/push`](./docs/workflows/push.md)**                   | Fast commit and push to GitHub                             |
+| **[`/release`](./docs/workflows/release.md)**             | Pre-release quality gate                                   |
+| **[`/retro`](./docs/workflows/retro.md)**                 | Project retrospective before archiving                     |
+| **[`/update`](./docs/workflows/update.md)**               | Agent-guided safe workspace update with error recovery     |
+| **[`/verify`](./docs/workflows/verify.md)**               | Verify task completion with walkthroughs                   |
 
 ---
 
