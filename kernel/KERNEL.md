@@ -1,6 +1,6 @@
 # PARA Workspace Kernel
 
-> **Version**: 1.4.0
+> **Version**: 1.5.2
 > **Status**: Canonical — this is the single source of truth for all PARA Workspace rules.
 
 ---
@@ -41,7 +41,11 @@ Agent   = Execution Environment
 | `invariants.md`                    | Hard rules — MUST NOT be violated                  | MAJOR bump    |
 | `heuristics.md`                    | Soft rules — recommended but flexible              | MINOR/PATCH   |
 | `schema/tasks.schema.md`           | Defines format for task management files           | Depends       |
+| `schema/backlog.schema.json`       | JSON Schema for `backlog.md` validation            | Depends       |
 | `schema/decision-plan.schema.json` | JSON Schema for `para-decisions/*.json`            | Depends       |
+| `schema/catalog.schema.json`       | JSON Schema for governed library catalogs          | Depends       |
+| `schema/project.schema.json`       | JSON Schema for `project.md` frontmatter           | Depends       |
+| `schema/workspace.schema.json`     | JSON Schema for `.para-workspace.yml`              | Depends       |
 | `examples/`                        | Compliance test vectors — must pass before release | N/A           |
 
 ## How the Kernel is Used

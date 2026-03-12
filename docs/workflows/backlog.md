@@ -1,6 +1,6 @@
 # /backlog Workflow
 
-> **Version**: 1.5.1
+> **Version**: 1.5.2
 
 The `/backlog` workflow manages the full lifecycle of a project's product backlog: review summaries, add features/bugs, evaluate priorities with ICE scoring, update statuses, and sync with implementation plans.
 
@@ -70,4 +70,4 @@ Cross-references backlog with plan phases. Reports mapped vs. missing items per 
 
 ---
 
-_Updated in v1.5.1 (Added clean action and Hybrid 3-file sync)_
+_Updated in v1.5.2 (Added Working Checkmarks reconcile step and Phase grouping in sprint-current.md)_

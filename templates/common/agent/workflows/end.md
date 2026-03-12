@@ -49,6 +49,23 @@ If yes, **append one row** to `Areas/Workspace/SYNC.md` under the `## Pending` t
 | YYYY-MM-DD | [project-name] | [new-version] | [downstream-project] | [brief action needed] | 🔴 Pending |
 ```
 
+### 3.5. Auto-Reconcile Working Checkmarks
+
+// turbo
+
+> Check if agent marked tasks `[x]` in `sprint-current.md` during this session.
+
+1. Read `artifacts/tasks/sprint-current.md`.
+2. Scan for items marked `[x]` that are NOT yet `✅ Done` in `backlog.md`.
+3. If unreconciled checkmarks found:
+   a. Update corresponding entries in `backlog.md` to `✅ Done (YYYY-MM-DD)`.
+   b. Append to `done.md` under today's date header.
+   c. Re-render `sprint-current.md` from `backlog.md`.
+   d. Report: `🔄 Reconciled [N] Working Checkmarks from sprint-current.md`
+4. If no unreconciled checkmarks → skip silently.
+
+> **Rule:** `hybrid-3-file-integrity.md` C1 — ensures no checkmarks are lost between sessions.
+
 ### 4. Check Plan Phase Progress (if active)
 
 // turbo

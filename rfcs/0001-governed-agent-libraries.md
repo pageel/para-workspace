@@ -3,6 +3,7 @@
 - Feature Name: governed-agent-libraries
 - Start Date: 2026-02-24
 - Status: Implemented
+- Implemented In: v1.4.1 → v1.5.1 (incremental)
 - Target Release: v1.4.1
 - Owners: @pageel (maintainer)
 - Affected: templates/, cli/, workspace runtime layout, kernel heuristics
@@ -134,9 +135,9 @@ Keeps governance assets centralized while preserving Repo ≠ Workspace.
 
 1. ✅ Repo: create `templates/common/agent/{workflows,rules,skills}/catalog.yml`
 2. ✅ Repo: add `kernel/schema/catalog.schema.json`
-3. CLI: update `install.sh` to sync rules + skills (v1.4.1)
-4. CLI: add `cli/lib/validator.sh` (catalog parse + kernel compat check)
-5. CLI: update `para status` to report library drift
+3. ✅ CLI: update `install.sh` to sync rules + skills (v1.4.1) — implemented with `sync_library()` function
+4. ✅ CLI: add `cli/lib/validator.sh` (catalog parse + kernel compat check) — `validate_catalog()` + `validate_all_catalogs()`
+5. ⏳ Deferred: `para status` **exists** but library drift reporting (version comparison across `.agent/` vs `Resources/ai-agents/`) not yet added
 
 ## Migration plan
 
@@ -148,13 +149,13 @@ Keeps governance assets centralized while preserving Repo ≠ Workspace.
 
 ## Testing plan
 
-- `tests/kernel/test-schemas.sh` → validate catalog.schema.json
-- `tests/cli/test-init.sh` → verify all 3 library dirs created
-- `kernel/examples/valid/` → add workspace with all 3 catalog.yml
+- ✅ `tests/kernel/test-schemas.sh` → validate catalog.schema.json
+- ✅ `tests/cli/test-init.sh` → verify all 3 library dirs created
+- ⏳ `kernel/examples/valid/` → catalog workspace example not yet added
 
 ## Unresolved questions
 
-- Do skills need runtime loading from `.agent/skills/` by default, or compiled
-  into workflows at install time?
-- Should catalogs store checksums for drift detection?
-- What is the policy for workspace-local overrides (e.g., `.agent/rules.local.md`)?
+- ~~Do skills need runtime loading from `.agent/skills/` by default, or compiled
+  into workflows at install time?~~ **Resolved (v1.5.0):** Skills are installed to `.agent/skills/` but default OFF. Agents load via `SKILL.md` on-demand when skill is relevant.
+- Should catalogs store checksums for drift detection? **Open** — deferred alongside `para status` drift reporting.
+- ~~What is the policy for workspace-local overrides (e.g., `.agent/rules.local.md`)?~~ **Resolved (v1.5.0):** Project-level rules live in `Projects/<project>/.agent/rules/` with a `rules.md` index. No `.local.md` convention needed.

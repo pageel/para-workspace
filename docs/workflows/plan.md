@@ -1,6 +1,6 @@
 # /plan Workflow
 
-> **Version**: 1.5.1
+> **Version**: 1.5.2
 
 The `/plan` workflow creates, reviews, and updates phased implementation plans for PARA projects. It integrates with brainstorm outputs, the project backlog, and the learning index to produce comprehensive, actionable plans.
 
@@ -78,4 +78,4 @@ Overall: 40% complete | Deadline: YYYY-MM-DD
 
 ---
 
-_Updated in v1.5.1 (Integrated Hybrid 3-File progress tracking via done.md)_
+_Updated in v1.5.2 (Ask-to-activate flow, /backlog sync suggestion, plan archiving to done/)_

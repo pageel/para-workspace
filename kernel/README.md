@@ -11,7 +11,11 @@ kernel/
 ├── heuristics.md                  # Soft rules (change = MINOR/PATCH)
 ├── schema/
 │   ├── tasks.schema.md            # Task file format definition
-│   └── decision-plan.schema.json  # Decision record JSON Schema
+│   ├── backlog.schema.json        # Backlog validation schema
+│   ├── decision-plan.schema.json  # Decision record JSON Schema
+│   ├── catalog.schema.json        # Governed library catalog schema
+│   ├── project.schema.json        # project.md frontmatter schema
+│   └── workspace.schema.json      # .para-workspace.yml schema
 ├── examples/
 │   ├── decisions/                 # Valid decision record examples
 │   │   └── task-management-model.json
@@ -38,6 +42,7 @@ kernel/
 | I8  | No loose files at workspace root                               |
 | I9  | Resources are read-only references                             |
 | I10 | Repo ↔ Workspace separation                                    |
+| I11 | Workflow language compliance (preferences.language)            |
 
 ### Heuristics (Should follow)
 
@@ -51,6 +56,7 @@ kernel/
 | H6  | VCS & Git boundaries                                         |
 | H7  | Cross-project references via Resources                       |
 | H8  | Workflow kernel compatibility declaration                    |
+| H9  | Governed library catalogs (catalog.yml required)             |
 
 ## For Contributors
 

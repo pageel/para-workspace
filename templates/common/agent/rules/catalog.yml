@@ -82,3 +82,12 @@ items:
     entrypoint: "versioning.md"
     description: "Semantic versioning policy for workspace and projects."
     tags: ["versioning", "semver"]
+
+  - id: hybrid-3-file-integrity
+    name: "Hybrid 3-File Integrity"
+    version: "1.0.0"
+    kernel_min: "1.5.2"
+    kernel_max: "1.x"
+    entrypoint: "hybrid-3-file-integrity.md"
+    description: "Working Checkmarks constraints and reconciliation for the Hybrid 3-File task model."
+    tags: ["tasks", "integrity", "3-file"]

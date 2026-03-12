@@ -77,6 +77,10 @@ ls -t Projects/[project-name]/artifacts/para-decisions/brainstorm-*.md 2>/dev/nu
 
 > **Convention:** This step bridges `/learn` (captures lessons) with `/plan` (applies them). The goal is to prevent repeating past mistakes, not to read the entire knowledge base.
 
+**Optional: Scan project docs index**
+
+If `Projects/[project-name]/docs/README.md` exists, read it (~30-80 lines) to discover existing architecture docs, workflow docs, or design decisions. This prevents re-designing what's already documented. Skip if file doesn't exist.
+
 #### 3. Analyze Reference Projects (Optional)
 
 If the project contract references another project (in Dependencies or Key Decisions), analyze its codebase:
@@ -220,18 +224,45 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 [Copied from project.md for quick reference]
 ```
 
-#### 10. Register plan in project.md
+#### 10. Ask to Activate Plan
+
+Present the plan summary and ask the user:
+
+```
+📐 PLAN READY: [plan-name]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Phases: [N] | Timeline: [N] days | Tasks: [N]
+File:   artifacts/plans/[plan-name].md
+
+❓ Activate this plan now?
+   Y → Set as active_plan + run /backlog sync (recommended)
+   N → Save only — activate later with /plan update
+```
+
+**If user confirms (Y):**
 
 // turbo
 
-Set the `active_plan` field in `Projects/[project-name]/project.md` frontmatter:
+1. Set `active_plan` in `project.md` frontmatter:
 
 ```yaml
 active_plan: "plans/[plan-name].md"
 ```
 
-> This enables `/open` and `/end` to locate the plan without scanning directories — saving tokens.
-> Path is relative to `artifacts/`. Remove this field when the plan is completed or archived.
+2. Immediately suggest `/backlog sync`:
+
+```
+⚠️  Plan activated. Run `/backlog sync` to map plan phases to backlog items.
+    This enables sprint-current.md to group tasks by Phase.
+```
+
+> **Why:** Without `/backlog sync`, the Hybrid 3-File system cannot render tasks grouped by Phase in `sprint-current.md`. This step is MANDATORY per RFC-0002 C4.
+
+**If user declines (N):**
+
+Skip activation. Plan is saved but not active. User can activate later via `/plan update`.
+
+> Path is relative to `artifacts/`. Remove `active_plan` field when the plan is completed or archived.
 
 #### 11. Log in Session
 
@@ -245,7 +276,8 @@ Append to the current session log at `Projects/[project-name]/sessions/YYYY-MM-D
 - **Plan**: `artifacts/plans/[plan-name].md`
 - **Phases**: [N] phases defined
 - **Timeline**: [N] days estimated
-- **Code Reuse**: [% or list from reference projects]
+- **Activated**: Yes/No
+- **Next**: Run `/backlog sync` to map phases (if activated)
 ```
 
 ---
@@ -276,7 +308,13 @@ Overall: 40% complete | Deadline: YYYY-MM-DD
 ```
 
 5. If a phase reaches 100% → suggest running `/retro` for phase review.
-6. If ALL phases reach 100% → suggest marking plan as `completed` and running `/retro`.
+6. If ALL phases reach 100% → archive the plan:
+   a. Move plan file to `artifacts/plans/done/[plan-name].md`
+   b. Remove `active_plan` field from `project.md`
+   c. Suggest running `/retro` for full project retrospective
+   d. Log: `Plan [plan-name] archived to plans/done/`
+
+> **Why archive?** Completed plans in `artifacts/plans/` waste tokens when agents scan the directory. Moving to `done/` keeps the active plans directory lean.
 
 ---
 
@@ -317,6 +355,7 @@ Modify an existing plan (add phases, update status, revise timeline).
 - [ ] Code reuse documented (if reference projects exist)
 - [ ] Plan saved to `artifacts/plans/`
 - [ ] `active_plan` field set in `project.md`
+- [ ] `/backlog sync` suggested (or auto-triggered)
 - [ ] Session log updated
 
 ## Related

@@ -1,7 +1,7 @@
 # Task Management Schema
 
 > **Defines**: The format and structure for task files in `artifacts/tasks/`
-> **Kernel Version**: 1.4.0
+> **Kernel Version**: 1.5.2
 
 ---
 
@@ -63,9 +63,13 @@ A focused view showing ONLY the tasks currently in progress. This is a **derived
 > **Source**: backlog.md
 > **Updated**: YYYY-MM-DD
 
-## Active Tasks
+## <Phase Name> (when plan exists)
 
-- [ ] <task-description>
+- [ ] <task-description> #<id> priority: <level>
+- [x] <completed-task> #<id> priority: <level>
+
+## Active Tasks (when no plan)
+
 - [ ] <task-description>
 
 ## Context
@@ -73,11 +77,18 @@ A focused view showing ONLY the tasks currently in progress. This is a **derived
 <optional: brief context about current sprint focus>
 ```
 
-### Rules
+### Rendering Rules
 
-- Content mirrors `backlog.md` → "In Progress" section
-- Agent may auto-update this when modifying backlog
-- Should be small and focused (ideally 3-7 active tasks)
+- If project has an `active_plan` in `project.md`: group tasks by **Phase**
+- If no plan: use single `## Active Tasks` section
+- Content mirrors `backlog.md` → "In Progress" + planned items for current phase
+- Should be small and focused (ideally 3-7 active tasks per phase)
+
+### Working Checkmarks (RFC-0002)
+
+- Agent MAY mark tasks `[x]` in this file while coding (same UX as Planning Mode)
+- Agent MUST NOT add, remove, or edit task descriptions
+- On `/backlog update` or `/end`, checkmarks are reconciled back to `backlog.md`
 
 ## done.md (Derived Archive)
 

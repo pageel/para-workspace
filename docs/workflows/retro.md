@@ -1,6 +1,6 @@
 # /retro Workflow
 
-> **Version**: 1.5.1
+> **Version**: 1.5.2
 
 The `/retro` workflow conducts a structured project retrospective before archiving to `Archive/`. It captures lessons learned, extracts reusable assets, and graduates recurring knowledge into official rules.
 

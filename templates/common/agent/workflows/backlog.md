@@ -106,6 +106,19 @@ Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/ba
 
 > **Triggered automatically** after steps 1-6 complete. See `docs/hybrid-3-file.md`.
 
+**Step 0: Reconcile Working Checkmarks** (before re-render)
+
+// turbo
+
+1. Read `artifacts/tasks/sprint-current.md`.
+2. Scan for items marked `[x]` that are NOT yet `✅ Done` in `backlog.md`.
+3. For each unreconciled `[x]` item:
+   a. Update corresponding entry in `backlog.md` to `✅ Done (YYYY-MM-DD)`.
+   b. Append to `done.md` under today's date header.
+4. If no unreconciled checkmarks found, skip silently.
+
+> **Rule:** `hybrid-3-file-integrity.md` C1 — Working Checkmarks are reconciled here.
+
 **Step A: Render `sprint-current.md`** (One-way Snapshot)
 
 // turbo

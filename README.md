@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.5.1-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](./CHANGELOG.md)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.5.2-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](./CHANGELOG.md)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -45,7 +45,7 @@ Agent    (Execution Environment)
 ```
 para-workspace/
 ├── .github/             # 🤖 CI/CD — validate-pr.yml, CODEOWNERS
-├── rfcs/                # 📝 RFC Process — TEMPLATE.md, proposed/, accepted/
+├── rfcs/                # 📝 RFC Process — TEMPLATE.md, status in header
 ├── kernel/              # 🧠 Constitution
 │   ├── KERNEL.md
 │   ├── invariants.md    # 10 hard rules (MAJOR bump)
@@ -234,6 +234,7 @@ The Kernel is the **constitution** of PARA Workspace — the rules that all work
 | I8  | No loose files at workspace root               |
 | I9  | Resources are read-only references             |
 | I10 | Repo ↔ Workspace separation                    |
+| I11 | Workflow language compliance                   |
 
 ### Heuristics (Soft Rules — change = MINOR/PATCH)
 
@@ -315,7 +316,7 @@ para config [key] [value]       # Manage workspace settings
 
 ## 🧩 Task Management (Hybrid 3-File Model)
 
-PARA Workspace uses a proprietary **Hybrid 3-File Architecture** introduced in v1.5.1 to solve the AI Agent "Context Window vs. Amnesia" problem.
+PARA Workspace uses a proprietary **Hybrid 3-File Architecture** introduced in v1.5.1 (Working Checkmarks in v1.5.2) to solve the AI Agent "Context Window vs. Amnesia" problem.
 
 Instead of forcing the agent to read one massive backlog file every time it opens a project (which wastes tokens and causes hallucination), tasks are distributed across three highly specialized files:
 
@@ -334,6 +335,8 @@ You or your agent primarily interact with `backlog.md` via the **`/backlog`** wo
    > _Result: When your agent runs `/open` to start the day, it only reads this tiny `sprint` file, instantly grasping what to do next without reading the entire backlog._
 2. **Historical Log (`done.md`)**: When you mark a task as `✅ Done`, the engine automatically appends it to `done.md` with a timestamp. You can also run `/backlog clean` to bulk-sweep old completed tasks out of the master backlog file.
    > _Result: Workflows like `/plan review` and `/retro` now read exclusively from `done.md` to perfectly calculate project velocity and phase progress without losing historical data._
+3. **Working Checkmarks** (v1.5.2): Agents MAY mark tasks `[x]` directly in `sprint-current.md` while coding — same UX as Planning Mode. On `/end` or `/backlog update`, checkmarks are automatically reconciled back to `backlog.md`.
+   > _Result: Agents code without interruption, progress is always captured even if `/backlog update` is forgotten._
 
 ---
 
@@ -378,6 +381,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Centralized Backup & Workspace Cleanup _(shipped in v1.4.9)_
 - [x] Project Rules Loading & Safe Update Workflow _(shipped in v1.5.0)_
 - [x] Hybrid 3-File Synchronization & Fast Mode _(shipped in v1.5.1)_
+- [x] Hybrid 3-File Integrity, Working Checkmarks & Docs Overhaul _(shipped in v1.5.2)_
 
 ---
 
@@ -393,4 +397,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.5.1_
+_Version: 1.5.2_

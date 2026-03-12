@@ -1,6 +1,6 @@
 # /open Workflow
 
-> **Version**: 1.5.1
+> **Version**: 1.5.2
 
 The `/open` workflow starts a new working session with full context from previous work. It loads the project contract, latest session log, backlog, and sync queue — then presents a concise report so the user knows exactly where they left off.
 

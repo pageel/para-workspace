@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.5.2] - 2026-03-12
+
+Hybrid 3-File Integrity, Working Checkmarks & Docs Overhaul.
+
+- **Added**: Rule `hybrid-3-file-integrity.md` — Working Checkmarks constraints (C1-C4) and reconciliation process.
+- **Added**: Reconcile step in `/backlog update` (Step 0) and `/end` (Step 3.5) for Working Checkmarks.
+- **Added**: Plan archiving — completed plans auto-move to `artifacts/plans/done/`.
+- **Added**: Ask-to-activate flow in `/plan create` (Step 10) with `/backlog sync` suggestion.
+- **Changed**: `tasks.schema.md` — Phase grouping for `sprint-current.md`, Working Checkmarks documented.
+- **Changed**: Kernel audit — KERNEL.md v1.5.2, +4 schemas, README +I11/+H9.
+- **Changed**: Docs restructured into 6 categories (architecture, reference, guides, rfcs, rules, workflows).
+- **Changed**: RFC-0001 updated with implementation status, RFC-0002 created (Proposed).
+- **Changed**: RFCs flattened — removed `rfcs/accepted/`, status defined in file header.
+
 ## [1.5.1] - 2026-03-11
 
 Hybrid 3-File Synchronization & Fast Mode.
