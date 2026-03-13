@@ -17,7 +17,7 @@ The `/backlog` workflow manages the full lifecycle of a project's product backlo
 | `evaluate` | ICE scoring for priorities                         |
 | `update`   | Update status of existing items                    |
 | `sync`     | Sync backlog with plan (map items to phases)       |
-| `clean`    | Bulk archive `✅ Done` items into `done.md`        |
+| `clean`    | Compress `✅ Done` items into Completed section    |
 
 ## Actions
 
@@ -40,7 +40,7 @@ Sets new status for a specified ID. Adds completion date for `✅ Done` items. A
 
 ### clean
 
-Bulk archives all `✅ Done` or `✅ Fixed` items out of `backlog.md` and appends them to the historical `done.md` log. This keeps the canonical backlog token-efficient and clean.
+Compresses `✅ Done` items from active tables into the `✅ Completed (Archived)` section of `backlog.md` (1 line per plan + IDs). Details are preserved in `done.md` grouped by plan, linking to `plans/done/`. This keeps the canonical backlog readable while preserving it as the single source of truth.
 
 ### sync
 
@@ -70,4 +70,4 @@ Cross-references backlog with plan phases. Reports mapped vs. missing items per 
 
 ---
 
-_Updated in v1.5.3 (Simplified: sync handled by /end Hot Lane Sync)_
+_Updated in v1.5.3 (clean = compress-not-delete, plan-grouped done.md)_

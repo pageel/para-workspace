@@ -5,7 +5,7 @@ source: catalog
 
 # /backlog [project-name] [action]
 
-> **Workspace Version:** 1.5.0 (Governed Libraries)
+> **Workspace Version:** 1.5.3 (Hot Lane)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and reports MUST be translated to this language.**
 
 Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/backlog.md`.
@@ -19,7 +19,7 @@ Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/ba
 | `evaluate` | ICE scoring for priorities                         |
 | `update`   | Update status of existing items                    |
 | `sync`     | Sync backlog with plan (map items to phases)       |
-| `clean`    | Archive ✅ Done items from backlog to done.md      |
+| `clean`    | Compress ✅ Done items into Completed section      |
 
 ---
 
@@ -141,27 +141,33 @@ Synchronize backlog with an existing implementation plan.
 
 ## 🧹 Action: clean
 
-Archive all `✅ Done` items from backlog to `done.md` in bulk.
+Compress `✅ Done` items from backlog active tables into the `✅ Completed (Archived)` section.
 
-> Use this periodically to keep `backlog.md` lean. The `update` action does this per-item automatically, but `clean` processes ALL done items at once.
+> **Important:** `clean` does NOT delete items from backlog. It **compresses** them into 1 line per plan in the Completed section. This preserves backlog as the single source of truth.
 
-1. Scan `backlog.md` for all items with status `✅ Done` or `✅ Fixed`.
-2. For each found item:
-   a. Extract the full row (ID, Story, Priority, completion date).
-   b. Append to `artifacts/tasks/done.md` under the completion date header.
-3. Remove the archived rows from `backlog.md`.
-4. Update Summary counts in `backlog.md`.
-5. Report:
+**Lookup chain:** `backlog.md` (plan + IDs) → `done.md` (per-task detail) → `plans/done/` (full plan)
+
+1. Scan user story and bug tables for items with status `✅ Done` or `✅ Fixed`.
+2. Group Done items by their associated plan (check `plans/done/` for matching plan files).
+3. For each group:
+   a. Append task details to `done.md` under the plan heading (create heading if new).
+   b. Add or update a compressed row in the `✅ Completed (Archived)` section of `backlog.md`:
+   - Plan name (as done.md link) + list of IDs.
+     c. Remove the individual rows from the active user story / bug tables.
+4. Items with no associated plan go under "Standalone Tasks" in both `done.md` and backlog.
+5. Update Summary counts (Active Items, Archived).
+6. Report:
 
 ```
 🧹 BACKLOG CLEAN: [project-name]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📦 Archived: [N] items → done.md
-📋 Backlog: [M] items remaining
+📦 Compressed: [N] items → Completed section
+📝 Details: done.md updated
+📋 Active: [M] items remaining
 ```
 
-> 💡 **Note:** `sprint-current.md` is NOT re-rendered here. It is the Hot Lane for quick tasks, managed independently.
+> 💡 **Note:** `sprint-current.md` is NOT touched here. It is the Hot Lane for quick tasks, managed by `/end`.
 
 ---
 
@@ -182,20 +188,28 @@ When creating a new backlog.md (via `/new-project` or `/backlog add`), use this 
 
 ### User Stories
 
-| ID    | Story                    | Priority  | Status               | Phase |
-| :---- | :----------------------- | :-------- | :------------------- | :---- |
-| XX-01 | [User story description] | 🔴 High   | ⏳ Pending           | 0     |
-| XX-02 | [User story description] | 🟡 Medium | 📊 Evaluated         | 1     |
-| XX-03 | [User story description] | 🟢 Low    | ✅ Done (YYYY-MM-DD) | 2     |
+| ID    | Story                    | Priority  | Status     | Phase |
+| :---- | :----------------------- | :-------- | :--------- | :---- |
+| XX-01 | [User story description] | 🔴 High   | ⏳ Pending | 0     |
+| XX-02 | [User story description] | 🟡 Medium | 🚀 ToDo    | 1     |
 
 ---
 
 ## 🐛 Known Issues & Bugs
 
-| ID     | Issue               | Status                |
-| :----- | :------------------ | :-------------------- |
-| BUG-01 | [Issue description] | ⏳ Pending            |
-| BUG-02 | [Issue description] | ✅ Fixed (YYYY-MM-DD) |
+| ID     | Issue               | Priority  | Status     |
+| :----- | :------------------ | :-------- | :--------- |
+| BUG-01 | [Issue description] | 🟡 Medium | ⏳ Pending |
+
+---
+
+## ✅ Completed (Archived)
+
+> Compressed by plan. Details → [done.md](./done.md) → `plans/done/`
+
+| Plan         | IDs |
+| :----------- | :-- |
+| _(none yet)_ |     |
 
 ---
 
@@ -204,19 +218,19 @@ When creating a new backlog.md (via `/new-project` or `/backlog add`), use this 
 | ID        | Impact | Confidence | Ease | ICE Score | Priority Hint    |
 | :-------- | :----: | :--------: | :--: | :-------: | :--------------- |
 | **XX-01** |   8    |     9      |  6   |  **432**  | 🚀 High Priority |
-| **XX-02** |   5    |     9      |  8   |  **360**  | ✅ Quick Win     |
 
 ---
 
 ## 📊 Summary
 
-| Category    | Count |
-| :---------- | :---- |
-| Total Items | N     |
-| ✅ Done     | N     |
-| 🔴 High     | N     |
-| 🟡 Medium   | N     |
-| 🟢 Low      | N     |
+| Category     | Count |
+| :----------- | :---- |
+| Active Items | N     |
+| ✅ Done      | N     |
+| 🔴 High      | N     |
+| 🟡 Medium    | N     |
+| 🟢 Low       | N     |
+| ✅ Archived  | N     |
 
 ---
 

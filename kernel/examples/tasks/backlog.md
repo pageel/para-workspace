@@ -1,27 +1,51 @@
 # Example Project — Backlog
 
-> **Project**: example-project
-> **Last Updated**: 2026-02-13
+> 🎯 Goal: Build a sample web application with authentication.
 
-## 🔨 In Progress
+---
 
-- [ ] Implement user authentication #auth-01 priority: high
-- [ ] Design database schema #db-01 priority: medium
+## 🏗️ Epic: Core Features
 
-## 📋 Backlog
+### User Stories
 
-### Core Features
+| ID       | Story                         | Priority  | Status         | Phase |
+| :------- | :---------------------------- | :-------- | :------------- | :---- |
+| AUTH-01  | Implement user authentication | 🔴 High   | 🔨 In Progress | 0     |
+| DB-01    | Design database schema        | 🟡 Medium | ⏳ Pending     | 0     |
+| API-01   | Add REST API endpoints        | 🔴 High   | 🚀 ToDo        | 1     |
+| ADMIN-01 | Create admin dashboard        | 🟡 Medium | 🚀 ToDo        | 2     |
 
-- [ ] Add REST API endpoints #api-01
-- [ ] Create admin dashboard #admin-01
-- [ ] Write unit tests for auth module #test-01
+---
 
-### Documentation
+## 🐛 Known Issues & Bugs
 
-- [ ] Write API documentation #docs-01
-- [ ] Create onboarding guide #docs-02
+| ID     | Issue                          | Priority  | Status     |
+| :----- | :----------------------------- | :-------- | :--------- |
+| BUG-01 | Login timeout on slow networks | 🟡 Medium | ⏳ Pending |
 
-## ✅ Recently Done
+---
 
-- [x] Set up project structure (2026-02-12)
-- [x] Configure CI/CD pipeline (2026-02-12)
+## ✅ Completed (Archived)
+
+> Compressed by plan. Details → [done.md](./done.md) → `plans/done/`
+
+| Plan          | IDs                |
+| :------------ | :----------------- |
+| initial-setup | SETUP-01, SETUP-02 |
+
+---
+
+## 📊 Summary
+
+| Category     | Count |
+| :----------- | :---- |
+| Active Items | 5     |
+| ✅ Done      | 0     |
+| 🔴 High      | 2     |
+| 🟡 Medium    | 3     |
+| 🟢 Low       | 0     |
+| ✅ Archived  | 2     |
+
+---
+
+_Last updated: 2026-02-13_

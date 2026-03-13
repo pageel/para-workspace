@@ -34,15 +34,26 @@ Thiết lập dự án ban đầu.
 
 ---
 
+## ✅ Completed (Archived)
+
+> Compressed by plan. Details → [done.md](./done.md) → `plans/done/`
+
+| Plan         | IDs |
+| :----------- | :-- |
+| _(none yet)_ |     |
+
+---
+
 ## 📊 Summary
 
-| Category    | Count |
-| :---------- | :---- |
-| Total Items | 4     |
-| ✅ Done     | 1     |
-| 🔴 High     | 2     |
-| 🟡 Medium   | 1     |
-| 🟢 Low      | 0     |
+| Category     | Count |
+| :----------- | :---- |
+| Active Items | 3     |
+| ✅ Done      | 0     |
+| 🔴 High      | 2     |
+| 🟡 Medium    | 1     |
+| 🟢 Low       | 0     |
+| ✅ Archived  | 0     |
 
 ---
 

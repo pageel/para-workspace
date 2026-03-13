@@ -1,12 +1,19 @@
 # Done — <Project Name>
 
-> **Source**: backlog.md (Hybrid 3-File Model)
-> **Mode**: Append-only — completed tasks are moved here from backlog.md.
-
-## Completed Tasks
-
-_(no completed tasks yet — tasks marked ✅ Done in backlog will be appended here with timestamp)_
+> **Project**: <project-slug>
+> Completed tasks grouped by plan. See plan files at `plans/done/` for full context.
 
 ---
 
-_See `docs/hybrid-3-file.md` for the Hybrid 3-File architecture._
+## Plan: [plan-name](../plans/done/plan-name.md) — vX.Y.Z
+
+> Completed: YYYY-MM-DD
+
+- [x] FEAT-01: Task description #backlog
+- [x] FEAT-02: Task description #backlog
+
+---
+
+## Standalone Tasks (no plan)
+
+- [x] BUG-01: Bug description — YYYY-MM-DD #session

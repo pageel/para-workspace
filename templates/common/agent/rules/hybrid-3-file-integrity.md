@@ -28,14 +28,15 @@
 
 - Agent MUST NOT modify or delete existing entries in `done.md`
 - New entries are added ONLY through `/end` (Hot Lane Sync) or `/backlog clean`
+- Entries are grouped by **plan** (linking to `plans/done/`), with a standalone section for planless tasks
 - Entries include origin tags: `#backlog` (strategic) or `#session` (hot lane)
-- Entries are grouped by completion date, most recent first
 
 ### C3: backlog.md is the OPERATIONAL AUTHORITY
 
 - All structural task mutations (add, remove, re-prioritize, re-phase) MUST go through `backlog.md` via `/backlog` commands
-- `backlog.md` is the **single source of truth** for all tasks (strategic and promoted quick tasks)
-- `backlog.md` + `done.md` together represent the complete project task history
+- `backlog.md` is the **single source of truth** for all tasks (active + archived)
+- `/backlog clean` **compresses** Done items into the `✅ Completed (Archived)` section (1 line per plan + IDs) — it does NOT delete them
+- Lookup chain: `backlog.md` (plan + IDs) → `done.md` (per-task detail) → `plans/done/` (full plan)
 
 ### C4: Plan-Backlog Sync is MANDATORY after /plan create
 
