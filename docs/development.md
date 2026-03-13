@@ -1,6 +1,6 @@
 # Development Workflow Guide
 
-> How the daily, planning, release, and operations workflows fit together.
+> **Version**: 1.5.3 | How the daily, planning, release, and operations workflows fit together.
 
 ## Overview
 
@@ -13,163 +13,62 @@ PARA Workspace organizes development into 4 workflow streams:
 │  ────────────         ──────────          ──────────      ────────  │
 │  /plan create         /open               /release        /retro    │
 │     ↓                    ↓                   ↓            /inbox    │
-│  /backlog sync        [coding]            /deploy                   │
+│  /backlog sync        [coding + hot lane]                           │
 │                          ↓                                          │
 │                       /push                                         │
 │                          ↓                                          │
-│                       /end (+ plan check)                           │
+│                       /end (sync + plan check)                      │
 │                                                                      │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
----
-
-## 0. Planning Flow (New Projects)
-
-Run **once** when starting a project with >5 tasks.
+## Daily Flow
 
 ```
-/new-project [name]
-    ↓
-/plan create          → artifacts/plans/implementation-plan.md
-    ↓                    (sets active_plan in project.md)
-/backlog sync         → Creates backlog items from plan phases
-    ↓
-/open [project]       → Start daily workflow
+/open → [code + hot lane] → /push → /end (sync)
 ```
 
-> Not every project needs a plan. See [Planning Guide](./planning.md) for decision criteria.
+- **`/open`**: Loads session log, backlog summary, Hot Lane, current phase.
+- **Hot Lane** (`sprint-current.md`): Agent-writable buffer for quick tasks. Write `- [ ]` when tasks emerge, tick `[x]` when done.
+- **`/push`**: Commit + push to GitHub.
+- **`/end`**: Sole sync point. Hot Lane Sync moves `[x]` → `done.md`, suggests marking strategic tasks Done.
 
----
+> No need to run `/backlog update` mid-session. `/end` handles all sync.
 
-## 1. Daily Development Flow
-
-This runs **every day** during active development.
-
-```
-/open [project]
-    │
-    │  📋 Load session log + backlog
-    │  📐 Show current phase (if active_plan exists)
-    │  💡 Suggest tasks (prioritize current phase)
-    │
-    ▼
-[Coding & Testing]
-    │
-    ▼
-/push ["message"]
-    │
-    ▼
-/backlog update       → Mark tasks ✅ Done
-    │
-    ▼
-/end [project] [done]
-    │
-    │  💾 Save session log
-    │  📐 Check plan phase progress
-    │  🧹 Auto-cleanup active_plan (if 'done')
-    │  📊 Update SESSION_LOG.md
-```
-
-| Workflow          | Trigger          | Frequency                                      |
-| :---------------- | :--------------- | :--------------------------------------------- |
-| `/open`           | Start working    | 1x/day                                         |
-| `/push`           | Feature/fix done | Multiple/day                                   |
-| `/backlog update` | Task done        | Per task                                       |
-| `/end`            | Stop working     | 1x/day (use `done` when active plan completes) |
-
----
-
-## 2. Release Cycle Flow
-
-This runs when **shipping a new version**.
+## Artifacts
 
 ```
-/plan review          → Phase overview + progress
-    ↓
-/backlog review       → Task status for current phase
-    ↓
-[Development Sprint]  → 1-2 days per phase
-    ↓
-/release [project]    → CHANGELOG, Git tag, push
-    ↓
-/deploy               → Verify production
+project.md (active_plan, has_rules)
+    → Plan (plans/)            ← HOW & ORDER
+    → Backlog (backlog.md)     ← WHAT & STATUS
+    → Hot Lane (sprint-current.md) ← AD-HOC BUFFER
+    → Done (done.md)           ← RECORD (#backlog + #session)
+    → Session Log              ← EVIDENCE
+    → CHANGELOG                ← PUBLIC RECORD
 ```
 
-| Workflow          | Trigger           | Frequency    |
-| :---------------- | :---------------- | :----------- |
-| `/plan review`    | Big-picture check | Start/end    |
-| `/backlog review` | Pick tasks        | Each session |
-| `/release`        | Version ready     | Per phase    |
-| `/deploy`         | Post-release      | Per release  |
+Completed plans archive to `plans/done/` with a completion review alongside.
 
----
+## CLI: update vs install
 
-## 3. Operations Flow
+| Command          | Action               | Use when                  |
+| :--------------- | :------------------- | :------------------------ |
+| `./para update`  | `git pull` + install | Need latest from GitHub   |
+| `./para install` | Sync local only      | Source already up-to-date |
 
-These run **as needed** (not daily).
-
-| Workflow   | Purpose                      | When           |
-| :--------- | :--------------------------- | :------------- |
-| `/inbox`   | Categorize incoming files    | Weekly cleanup |
-| `/install` | Install/update workflows     | After `update` |
-| `/retro`   | Retrospective before archive | Project end    |
-
----
-
-## How Artifacts Connect
-
-```
-project.md (active_plan → "plans/xxx.md")
-    │
-    │ points to
-    ▼
-Plan (artifacts/plans/)              ← HOW & ORDER
-    │
-    │ maps to
-    ▼
-Backlog (artifacts/tasks/backlog.md) ← WHAT & STATUS
-    │
-    │ completed tasks
-    ▼
-Session Log (sessions/YYYY-MM-DD.md) ← EVIDENCE
-    │
-    │ on release
-    ▼
-CHANGELOG → GitHub Release           ← PUBLIC RECORD
-```
-
----
+> ⚠️ `install` does NOT pull. Use `update` for latest version.
 
 ## Best Practices
 
-### ✅ DO
+**DO**: Start with `/open` · Commit often with `/push` · Quick tasks → `sprint-current.md` · End with `/end`  
+**DON'T**: Skip `/open` · Forget `/end` · Run `/backlog update` mid-session · Read full plan in `/open`
 
-- Always start with `/open` for context + current phase
-- Commit often with `/push` (many small commits > 1 big commit)
-- End with `/end` to save progress + check phase completion
-- Use `/end [project] done` when the active plan is complete to auto-cleanup the plan reference
-- Use `/backlog update` to mark tasks done immediately
-- New task discovered? → `/backlog add` FIRST, then code
-- Use `grep` when reading plan in `/open`/`/end` — not the full file
+## Related
 
-### ❌ DON'T
-
-- Skip `/open` and start coding blind
-- Forget `/end` and lose context next day
-- Read entire plan (500-800+ lines) in `/open` — grep headers only
-- Jump to next Phase before current Phase is complete
-- Start coding a new task without adding it to backlog first
-
----
-
-## Related Docs
-
-- [Planning Guide](./planning.md) — Plan + Backlog detailed guide
-- [Workflow Documentation](./workflows.md) — Philosophy and catalog
+- [Planning Guide](./planning.md) — Plan + Backlog workflow
+- [Workflows](./workflows.md) — Catalog and philosophy
 - [CLI Reference](./cli.md) — Command-line tools
-- [Architecture](./architecture.md) — Repo ↔ Workspace structure
 
 ---
 
-_Added in v1.4.2_
+_Updated in v1.5.3 (Hot Lane, /end Sync Point, CLI distinction)_
