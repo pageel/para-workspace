@@ -346,6 +346,7 @@ artifacts/tasks/
    - Quick `[ ]` → hỏi user: giữ hay promote vào backlog?
    - **Smart Suggest** → đọc session log, tìm task IDs được nhắc đến, gợi ý đánh dấu Done (tag `#backlog`)
 4. **Zero Ceremony khi code** — Không cần `/backlog update` giữa phiên. Cứ code thôi.
+5. **`/backlog clean` = Nén, Không Xoá** — Done items được nén thành 1 dòng/plan trong section `✅ Completed` của backlog. Chi tiết nằm ở `done.md` (nhóm theo plan, link sang `plans/done/`). Chuỗi tra cứu: `backlog → done.md → plans/done/`.
 
 ---
 

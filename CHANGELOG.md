@@ -12,8 +12,9 @@ Hot Lane Refactor, `/end` Sync Point & Token Optimization.
 - **Changed**: `/open` token optimization — reads backlog summary (~10 lines) + hot lane; SYNC gate skips if no dependencies.
 - **Changed**: `/end` Step 3.5 — "Working Checkmarks reconcile" → "Hot Lane Sync" with Smart Suggest from session logs.
 - **Changed**: `/backlog update` simplified — removed Auto-Sync Engine (77 lines), sync handled by `/end`.
-- **Changed**: `done.md` now uses origin tags: `#backlog` (strategic) and `#session` (ad-hoc).
-- **Changed**: Rule `hybrid-3-file-integrity.md` v2.0.0 — 5 constraints (C1-C5), log-first principle.
+- **Changed**: `/backlog clean` redesigned — compress-not-delete: Done items compressed into `✅ Completed` section (1 line/plan + IDs). Lookup chain: `backlog → done.md → plans/done/`.
+- **Changed**: `done.md` template restructured — grouped by plan with links to `plans/done/`, origin tags `#backlog` / `#session`.
+- **Changed**: Rule `hybrid-3-file-integrity.md` v2.0.0 — 5 constraints (C1-C5), backlog = compress-not-delete source of truth.
 - **Fixed**: `/inbox` BUG-16 — added Project Context Check to prevent duplicate directory creation.
 
 ## [1.5.2] - 2026-03-12

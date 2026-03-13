@@ -341,6 +341,7 @@ artifacts/tasks/
    - Quick `[ ]` tasks → ask user: keep or promote to backlog?
    - **Smart Suggest** → reads session log, finds mentioned task IDs, suggests marking strategic tasks as Done (tagged `#backlog`)
 4. **Zero Ceremony During Coding** — No `/backlog update` needed mid-session. Just code.
+5. **`/backlog clean` = Compress, Not Delete** — Done items are compressed into 1 line per plan in backlog's `✅ Completed` section. Details live in `done.md` (grouped by plan, linking to `plans/done/`). Lookup chain: `backlog → done.md → plans/done/`.
 
 ---
 
