@@ -111,7 +111,7 @@ Recommended project directory layout:
 ├── artifacts/
 │   ├── tasks/
 │   │   ├── backlog.md      # Canonical task store
-│   │   ├── sprint-current.md  # Active tasks view
+│   │   ├── sprint-current.md  # Hot Lane (quick tasks)
 │   │   └── done.md         # Completed tasks archive
 │   ├── plans/
 │   │   └── plan-v001.md    # Versioned plans

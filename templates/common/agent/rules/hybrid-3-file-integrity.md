@@ -11,66 +11,77 @@
 
 - Reading or writing any file in `artifacts/tasks/`
 - Running `/backlog update`, `/backlog clean`, `/end`
-- Marking tasks as completed during coding sessions
+- Handling ad-hoc user requests not in backlog
 
 ## Constraints
 
-### C1: sprint-current.md — Working Checkmarks Only
+### C1: sprint-current.md — Hot Lane
 
-- Agent MAY mark tasks `[x]` in this file while coding (same UX as Planning Mode)
-- Agent MUST NOT add new tasks
-- Agent MUST NOT remove or delete tasks
-- Agent MUST NOT edit task descriptions, priorities, or phase assignments
-- On session end (`/end`) or `/backlog update`, checkmarks MUST be reconciled back to `backlog.md`
+- Agent MAY **add** quick tasks (`- [ ] <description>`) to this file for ad-hoc work
+- Agent MUST add `- [ ]` entry BEFORE starting ad-hoc code work (log-first principle)
+- Agent MAY mark quick tasks `[x]` when completed
+- Agent MAY add short notes in the `## Notes` section
+- Agent MUST NOT copy strategic tasks from `backlog.md` into this file
+- Agent MUST NOT edit task descriptions, priorities, or phase assignments of existing items
 
 ### C2: done.md is APPEND-ONLY
 
 - Agent MUST NOT modify or delete existing entries in `done.md`
-- New entries are added ONLY through `/backlog update` or `/backlog clean`
+- New entries are added ONLY through `/end` (Hot Lane Sync) or `/backlog clean`
+- Entries include origin tags: `#backlog` (strategic) or `#session` (hot lane)
 - Entries are grouped by completion date, most recent first
 
 ### C3: backlog.md is the OPERATIONAL AUTHORITY
 
-- All structural task mutations (add, remove, re-prioritize, re-phase) MUST go through `backlog.md`
-- Status changes to Done MAY originate from `sprint-current.md` Working Checkmarks but MUST be reconciled to `backlog.md`
+- All structural task mutations (add, remove, re-prioritize, re-phase) MUST go through `backlog.md` via `/backlog` commands
+- `backlog.md` is the **single source of truth** for all tasks (strategic and promoted quick tasks)
 - `backlog.md` + `done.md` together represent the complete project task history
 
 ### C4: Plan-Backlog Sync is MANDATORY after /plan create
 
 - After creating and activating a plan, Agent MUST suggest `/backlog sync`
+  to map plan phases to backlog items
 - If `active_plan` exists in `project.md` but backlog items lack Phase assignments, Agent SHOULD warn
 
-## Reconciliation Process
+### C5: /end is the SOLE Sync Point
 
-When `/end` or `/backlog update` detects Working Checkmarks in `sprint-current.md`:
-
-1. Scan `sprint-current.md` for items marked `[x]`
-2. For each `[x]` item, update corresponding entry in `backlog.md` to `✅ Done (YYYY-MM-DD)`
-3. Append completed items to `done.md` under today's date header
-4. Re-render `sprint-current.md` from `backlog.md` (removes completed items)
-5. Run Plan Completion Check if `active_plan` exists
+- All task reconciliation happens at `/end` — NOT during coding sessions
+- `/end` Hot Lane Sync process:
+  1. Quick tasks `[x]` → append `done.md` with `#session` tag
+  2. Quick tasks `[ ]` → ask user: keep for next session? promote to backlog?
+  3. Smart Suggest: read session log → extract mentioned task IDs → cross-check backlog active items → suggest: "Mark Done?"
+  4. User-confirmed strategic tasks → update `backlog.md` status → append `done.md` with `#backlog` tag
+  5. Clean `sprint-current.md` (remove `[x]` items, keep `[ ]` items)
+- Agent MUST NOT run sync logic during coding sessions (zero ceremony)
 
 ## Examples
 
 ### Allowed
 
 ```markdown
-# sprint-current.md — BEFORE coding
+# sprint-current.md — Hot Lane
 
-- [ ] FEAT-36: Create hybrid-3-file-integrity rule priority: high
+> **Updated**: 2026-03-13
 
-# sprint-current.md — AFTER coding (Working Checkmark)
+## Quick Tasks
 
-- [x] FEAT-36: Create hybrid-3-file-integrity rule priority: high
+- [x] Fix CSS alignment on homepage
+- [ ] Update CTA button colors
+
+## Notes
+
+Found responsive issue on mobile — consider adding to backlog.
 ```
 
 ### NOT Allowed
 
 ```markdown
-# sprint-current.md — INVALID: adding new task
+# sprint-current.md — INVALID: copying strategic tasks
 
-- [x] FEAT-36: Create hybrid-3-file-integrity rule priority: high
-- [ ] FEAT-99: New task I just thought of ← VIOLATION of C1
+## Quick Tasks
+
+- [ ] Fix CSS alignment
+- [ ] FEAT-13: Safety Guardrails ← VIOLATION of C1: copied from backlog
 ```
 
 ## Related

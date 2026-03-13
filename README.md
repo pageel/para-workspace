@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.5.2-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](./CHANGELOG.md)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.5.3-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](./CHANGELOG.md)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -222,19 +222,19 @@ The Kernel is the **constitution** of PARA Workspace — the rules that all work
 
 ### Invariants (Hard Rules — change = MAJOR bump)
 
-| #   | Rule                                           |
-| --- | ---------------------------------------------- |
-| I1  | PARA directory structure is mandatory          |
-| I2  | Hybrid 3-file task model (backlog = canonical) |
-| I3  | kebab-case project naming                      |
-| I4  | No active tasks = inactive project             |
-| I5  | Areas contain no runtime tasks                 |
-| I6  | Archive is immutable cold storage              |
-| I7  | Seeds are raw ideas, not tasks                 |
-| I8  | No loose files at workspace root               |
-| I9  | Resources are read-only references             |
-| I10 | Repo ↔ Workspace separation                    |
-| I11 | Workflow language compliance                   |
+| #   | Rule                                                                |
+| --- | ------------------------------------------------------------------- |
+| I1  | PARA directory structure is mandatory                               |
+| I2  | Hybrid 3-file task model (backlog = canonical, hot lane, /end sync) |
+| I3  | kebab-case project naming                                           |
+| I4  | No active tasks = inactive project                                  |
+| I5  | Areas contain no runtime tasks                                      |
+| I6  | Archive is immutable cold storage                                   |
+| I7  | Seeds are raw ideas, not tasks                                      |
+| I8  | No loose files at workspace root                                    |
+| I9  | Resources are read-only references                                  |
+| I10 | Repo ↔ Workspace separation                                         |
+| I11 | Workflow language compliance                                        |
 
 ### Heuristics (Soft Rules — change = MINOR/PATCH)
 
@@ -316,27 +316,26 @@ para config [key] [value]       # Manage workspace settings
 
 ## 🧩 Task Management (Hybrid 3-File Model)
 
-PARA Workspace uses a proprietary **Hybrid 3-File Architecture** introduced in v1.5.1 (Working Checkmarks in v1.5.2) to solve the AI Agent "Context Window vs. Amnesia" problem.
+PARA Workspace uses a proprietary **Hybrid 3-File Architecture** (v1.5.3: Hot Lane) to solve the AI Agent "Context Window vs. Amnesia" problem.
 
 Instead of forcing the agent to read one massive backlog file every time it opens a project (which wastes tokens and causes hallucination), tasks are distributed across three highly specialized files:
 
 ```
 artifacts/tasks/
-├── backlog.md          # 📌 CANONICAL — The master database. All tasks live here.
-├── sprint-current.md   # 🎯 FAST MODE — Ephemeral. Only holds active tasks (ToDo/In Progress).
-└── done.md             # ✅ ARCHIVE — Append-only historical log of completed tasks.
+├── backlog.md          # 📌 CANONICAL — Operational Authority. All strategic tasks live here.
+├── sprint-current.md   # 🔥 HOT LANE — Agent-writable buffer for ad-hoc quick tasks.
+└── done.md             # ✅ ARCHIVE — Append-only log with origin tags (#backlog / #session).
 ```
 
-### The Auto-Sync Engine
+### How It Works
 
-You or your agent primarily interact with `backlog.md` via the **`/backlog`** workflow. The magic happens automatically behind the scenes:
-
-1. **Focus View (`sprint-current.md`)**: Whenever you run `/backlog update`, the engine automatically extracts tasks marked as `🚀 ToDo` or `🔨 In Progress` and completely overwrites `sprint-current.md`.
-   > _Result: When your agent runs `/open` to start the day, it only reads this tiny `sprint` file, instantly grasping what to do next without reading the entire backlog._
-2. **Historical Log (`done.md`)**: When you mark a task as `✅ Done`, the engine automatically appends it to `done.md` with a timestamp. You can also run `/backlog clean` to bulk-sweep old completed tasks out of the master backlog file.
-   > _Result: Workflows like `/plan review` and `/retro` now read exclusively from `done.md` to perfectly calculate project velocity and phase progress without losing historical data._
-3. **Working Checkmarks** (v1.5.2): Agents MAY mark tasks `[x]` directly in `sprint-current.md` while coding — same UX as Planning Mode. On `/end` or `/backlog update`, checkmarks are automatically reconciled back to `backlog.md`.
-   > _Result: Agents code without interruption, progress is always captured even if `/backlog update` is forgotten._
+1. **Backlog Summary** — `/open` reads only the Summary table (~10 lines) + top active items via `grep`. Never the full file.
+2. **Hot Lane** — Agent writes ad-hoc quick tasks (`- [ ] Fix CSS`) to `sprint-current.md` and ticks `[x]` when done. Strategic tasks from backlog are read directly, not copied.
+3. **`/end` is the Sole Sync Point** — At session close, `/end` runs Hot Lane Sync:
+   - Quick `[x]` tasks → `done.md` (tagged `#session`)
+   - Quick `[ ]` tasks → ask user: keep or promote to backlog?
+   - **Smart Suggest** → reads session log, finds mentioned task IDs, suggests marking strategic tasks as Done (tagged `#backlog`)
+4. **Zero Ceremony During Coding** — No `/backlog update` needed mid-session. Just code.
 
 ---
 
@@ -382,6 +381,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Project Rules Loading & Safe Update Workflow _(shipped in v1.5.0)_
 - [x] Hybrid 3-File Synchronization & Fast Mode _(shipped in v1.5.1)_
 - [x] Hybrid 3-File Integrity, Working Checkmarks & Docs Overhaul _(shipped in v1.5.2)_
+- [x] Hot Lane Refactor, /end Sync Point & Token Optimization _(shipped in v1.5.3)_
 
 ---
 
@@ -397,4 +397,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.5.2_
+_Version: 1.5.3_

@@ -1,7 +1,7 @@
 # Task Management Schema
 
 > **Defines**: The format and structure for task files in `artifacts/tasks/`
-> **Kernel Version**: 1.5.2
+> **Kernel Version**: 1.5.3
 
 ---
 
@@ -9,11 +9,11 @@
 
 PARA Workspace uses a **Hybrid 3-File Model** for task management:
 
-| File                | Role                 | Format        |
-| ------------------- | -------------------- | ------------- |
-| `backlog.md`        | Canonical task store | Structured MD |
-| `sprint-current.md` | Derived focus view   | Structured MD |
-| `done.md`           | Derived archive      | Structured MD |
+| File                | Role                           | Format        |
+| ------------------- | ------------------------------ | ------------- |
+| `backlog.md`        | Canonical task store           | Structured MD |
+| `sprint-current.md` | Hot Lane (session quick tasks) | Structured MD |
+| `done.md`           | Append-only archive            | Structured MD |
 
 ## backlog.md (Canonical)
 
@@ -51,46 +51,45 @@ The primary file for all task management. Agent reads/writes this file via the `
 - The `✅ Recently Done` section temporarily holds completed tasks before moving to `done.md`
 - Tasks use Markdown checkboxes: `- [ ]` (open) or `- [x]` (done)
 
-## sprint-current.md (Derived Focus View)
+## sprint-current.md (Hot Lane)
 
-A focused view showing ONLY the tasks currently in progress. This is a **derived file** — its content reflects the "In Progress" section of `backlog.md`.
+An agent-writable buffer for **ad-hoc quick tasks** during coding sessions. This is NOT a mirror of backlog.md — it contains ONLY quick tasks created by the agent and session notes.
 
 ### Required Structure
 
 ```markdown
 # Sprint Current — <Project Name>
 
-> **Source**: backlog.md
 > **Updated**: YYYY-MM-DD
 
-## <Phase Name> (when plan exists)
-
-- [ ] <task-description> #<id> priority: <level>
-- [x] <completed-task> #<id> priority: <level>
-
-## Active Tasks (when no plan)
+## Quick Tasks
 
 - [ ] <task-description>
+- [x] <completed-task>
 
-## Context
+## Notes
 
-<optional: brief context about current sprint focus>
+<optional: discoveries, observations during coding session>
 ```
 
-### Rendering Rules
+### Rules
 
-- If project has an `active_plan` in `project.md`: group tasks by **Phase**
-- If no plan: use single `## Active Tasks` section
-- Content mirrors `backlog.md` → "In Progress" + planned items for current phase
-- Should be small and focused (ideally 3-7 active tasks per phase)
+- Agent MAY **add** new quick tasks (`- [ ]`) — MUST add before starting ad-hoc work
+- Agent MAY **tick** tasks done (`[x]`) when completed
+- Agent MAY write freeform notes in `## Notes`
+- Agent MUST NOT copy strategic tasks from `backlog.md` into this file
+- `/end` processes this file: `[x]` → done.md, `[ ]` → ask user
 
-### Working Checkmarks (RFC-0002)
+### What goes here vs backlog
 
-- Agent MAY mark tasks `[x]` in this file while coding (same UX as Planning Mode)
-- Agent MUST NOT add, remove, or edit task descriptions
-- On `/backlog update` or `/end`, checkmarks are reconciled back to `backlog.md`
+| Type              | Example                      | Goes in                   |
+| ----------------- | ---------------------------- | ------------------------- |
+| Strategic feature | FEAT-13: Safety Guardrails   | `backlog.md`              |
+| Quick fix         | Fix CSS alignment            | `sprint-current.md`       |
+| Bug from backlog  | BUG-16: Inbox categorization | `backlog.md`              |
+| Ad-hoc discovery  | "Responsive issue on mobile" | `sprint-current.md` Notes |
 
-## done.md (Derived Archive)
+## done.md (Append-only Archive)
 
 Archive of completed tasks, keeping `backlog.md` clean over time.
 
@@ -103,12 +102,12 @@ Archive of completed tasks, keeping `backlog.md` clean over time.
 
 ## YYYY-MM-DD
 
-- [x] <task-description>
-- [x] <task-description>
+- [x] FEAT-XX: <task-description> #backlog
+- [x] <quick-task-description> #session
 
 ## YYYY-MM-DD
 
-- [x] <task-description>
+- [x] <task-description> #backlog
 ```
 
 ### Rules
@@ -116,7 +115,11 @@ Archive of completed tasks, keeping `backlog.md` clean over time.
 - Tasks are grouped by completion date
 - Most recent dates at the top
 - This file is append-only (no editing past entries)
-- Agent moves tasks here when they are marked complete in `backlog.md`
+- Entries include origin tag:
+  - `#backlog` — task originated from backlog.md (strategic)
+  - `#session` — task originated from sprint-current.md (quick/ad-hoc)
+  - No tag — legacy entry (pre-v1.5.3)
+- Agent adds entries here ONLY through `/end` (Hot Lane Sync) or `/backlog clean`
 
 ---
 
@@ -134,12 +137,13 @@ Individual tasks follow this format:
 | Description | Yes      | Free text                     | `Add user authentication` |
 | ID          | No       | `#<number>` or `#<tag>`       | `#42`, `#auth-flow`       |
 | Priority    | No       | `priority: high\|medium\|low` | `priority: high`          |
+| Origin tag  | No       | `#backlog` or `#session`      | `#session`                |
 
 ## Compliance
 
 A valid task management setup requires:
 
 1. `backlog.md` exists and has the required sections
-2. `sprint-current.md` exists (may be empty if no active tasks)
+2. `sprint-current.md` exists OR is created on first ad-hoc task (graceful handling)
 3. `done.md` exists (may be empty if no completed tasks)
 4. All three files are in `artifacts/tasks/` within the project directory

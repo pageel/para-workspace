@@ -1,6 +1,6 @@
 # /backlog Workflow
 
-> **Version**: 1.5.2
+> **Version**: 1.5.3
 
 The `/backlog` workflow manages the full lifecycle of a project's product backlog: review summaries, add features/bugs, evaluate priorities with ICE scoring, update statuses, and sync with implementation plans.
 
@@ -15,7 +15,7 @@ The `/backlog` workflow manages the full lifecycle of a project's product backlo
 | `review`   | Show overview with summary stats and phase context |
 | `add`      | Add new feature, epic, or bug                      |
 | `evaluate` | ICE scoring for priorities                         |
-| `update`   | Update status and auto-sync 3-file architecture    |
+| `update`   | Update status of existing items                    |
 | `sync`     | Sync backlog with plan (map items to phases)       |
 | `clean`    | Bulk archive `✅ Done` items into `done.md`        |
 
@@ -36,7 +36,7 @@ Scores pending items on Impact / Confidence / Ease (1-10). ICE = I × C × E. Pr
 ### update
 
 Sets new status for a specified ID. Adds completion date for `✅ Done` items. Announces phase completion when all phase items are done.  
-**Hybrid 3-File Sync:** After updating, automatically rebuilds the `sprint-current.md` focus view. If an item is marked as Done, it appends it to `done.md`.
+**Note:** Task sync to `done.md` happens at `/end` (Hot Lane Sync). The `update` action focuses on status changes only.
 
 ### clean
 
@@ -70,4 +70,4 @@ Cross-references backlog with plan phases. Reports mapped vs. missing items per 
 
 ---
 
-_Updated in v1.5.2 (Added Working Checkmarks reconcile step and Phase grouping in sprint-current.md)_
+_Updated in v1.5.3 (Simplified: sync handled by /end Hot Lane Sync)_

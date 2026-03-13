@@ -156,6 +156,34 @@ Map each High/Medium priority backlog item to the phase where it will be impleme
 | Admin Dashboard       | High     | Phase 3 |
 ```
 
+#### 8.5. Rule Impact Check
+
+// turbo
+
+> ⚠️ **Auto-detect:** If any plan task modifies files in `rules/` or `kernel/`, add sync tasks automatically.
+
+1. Scan all phase tasks — check if any target file matches:
+   - `templates/common/agent/rules/*.md`
+   - `kernel/invariants.md`, `kernel/heuristics.md`, `kernel/schema/*.md`
+   - `rfcs/*.md` that reference rules
+
+2. **If rule changes detected:**
+   a. Auto-add to final phase: "Sync workspace `.agent/rules/` from repo templates"
+   b. Check if project has `.agent/rules.md` (rules index) — if yes, add task:
+   "Update `.agent/rules.md` trigger conditions to match new rule constraints"
+   c. Display warning:
+
+   ```
+   ⚠️  This plan modifies governance rules.
+       Final phase will include:
+       - Workspace rule sync (.agent/rules/)
+       - Rules index update (if .agent/rules.md exists)
+   ```
+
+3. **If no rule changes** → Skip silently.
+
+> **Why:** Rule changes in repo templates must be synced to workspace. Missing this step causes agent behavior drift.
+
 #### 9. Write Plan File
 
 // turbo
@@ -253,10 +281,10 @@ active_plan: "plans/[plan-name].md"
 
 ```
 ⚠️  Plan activated. Run `/backlog sync` to map plan phases to backlog items.
-    This enables sprint-current.md to group tasks by Phase.
+    This enables `/plan review` and `/retro` to track progress by Phase.
 ```
 
-> **Why:** Without `/backlog sync`, the Hybrid 3-File system cannot render tasks grouped by Phase in `sprint-current.md`. This step is MANDATORY per RFC-0002 C4.
+> **Why:** Without `/backlog sync`, `/plan review` cannot measure progress by Phase. This step is MANDATORY per RFC-0002 C4.
 
 **If user declines (N):**
 

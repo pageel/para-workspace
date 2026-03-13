@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.5.3] - 2026-03-13
+
+Hot Lane Refactor, `/end` Sync Point & Token Optimization.
+→ [Detailed release notes](docs/changelog/v1.5.3.md)
+
+- **Changed**: `sprint-current.md` role: "Derived Focus View" → "Agent-writable Hot Lane" for quick tasks.
+- **Changed**: `/open` token optimization — reads backlog summary (~10 lines) + hot lane; SYNC gate skips if no dependencies.
+- **Changed**: `/end` Step 3.5 — "Working Checkmarks reconcile" → "Hot Lane Sync" with Smart Suggest from session logs.
+- **Changed**: `/backlog update` simplified — removed Auto-Sync Engine (77 lines), sync handled by `/end`.
+- **Changed**: `done.md` now uses origin tags: `#backlog` (strategic) and `#session` (ad-hoc).
+- **Changed**: Rule `hybrid-3-file-integrity.md` v2.0.0 — 5 constraints (C1-C5), log-first principle.
+- **Fixed**: `/inbox` BUG-16 — added Project Context Check to prevent duplicate directory creation.
+
 ## [1.5.2] - 2026-03-12
 
 Hybrid 3-File Integrity, Working Checkmarks & Docs Overhaul.

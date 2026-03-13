@@ -1,262 +1,166 @@
-# RFC-0002: Hybrid 3-File Integrity (Working Checkmarks & Reconcile)
+# RFC-0002: Hybrid 3-File Integrity (Hot Lane & /end Sync)
 
 - Feature Name: hybrid-3-file-integrity
 - Start Date: 2026-03-12
-- Status: Proposed
-- Target Release: v1.6.0
+- Status: Accepted
+- Revision: v2 (2026-03-13)
 - Owners: @pageel (maintainer)
 - Affected:
-  - kernel/ (invariants.md — clarify I2 wording)
-  - templates/common/agent/rules/ (new rule)
-  - templates/common/agent/workflows/ (backlog.md, end.md refinements)
+  - kernel/ (invariants.md I2)
+  - templates/common/agent/rules/ (hybrid-3-file-integrity.md)
+  - templates/common/agent/workflows/ (open, end, backlog, plan)
   - docs/
 - Related:
   - Kernel Invariants: I2 (Task Management — Hybrid 3-File Model)
-  - Prior RFCs: RFC-0001 (Governed Agent Libraries)
-  - Brainstorm: `brainstorm-fast-mode-vs-planning-mode-2026-03-12.md`
+  - RFC-0001 (Governed Agent Libraries)
 
 ## Summary
 
 Codify the interaction rules for the Hybrid 3-File task management system.
-Introduce "Working Checkmarks" — a low-friction mechanism where agents MAY
-mark tasks as done `[x]` directly in `sprint-current.md` during coding sessions,
-then reconcile these marks back to `backlog.md` on session end. Also clarifies
-the "single source of truth" terminology in Invariant I2.
+Define `sprint-current.md` as an agent-writable **Hot Lane** for ad-hoc quick
+tasks, consolidate all synchronization to `/end` as the sole sync point,
+and maintain `backlog.md` as the **Operational Authority** for all tasks.
 
 ## Motivation
 
-Two gaps discovered during docs review and brainstorming (2026-03-12):
+The Hybrid 3-File architecture requires explicit governance rules to:
 
-1. **No enforcement mechanism** — The 3-file architecture relies on Agent
-   discipline, but no rule exists to prevent agents from mutating
-   `sprint-current.md` structure or `done.md` history.
-
-2. **READ-ONLY vs Planning Mode friction** — AI agents in Planning Mode
-   continuously tick `[x]` in their tasks file while coding. If
-   `sprint-current.md` is strictly READ-ONLY, agents must interrupt their
-   coding flow to call `/backlog update` for every completed task. This
-   friction makes the 3-File system inferior to built-in Planning Mode.
+1. **Prevent unauthorized mutations** — Without a rule, agents may arbitrarily
+   modify file structure or mix concerns between files.
+2. **Enable natural agent workflow** — Agents need a low-friction way to track
+   ad-hoc tasks during coding without interrupting flow.
+3. **Give quick tasks a structured home** — User requests that arise during
+   coding sessions ("fix this CSS", "change that color") need structured
+   tracking beyond session logs.
+4. **Minimize ceremony** — Synchronization should happen at natural boundaries
+   (session end), not require manual commands during coding.
 
 Goals:
 
-- Enable agents to track progress inline during coding (like Planning Mode)
-- Maintain `backlog.md` as the Operational Authority for task structure
-- Preserve the one-way architecture for structural data flow
-- Add a governed rule to enforce correct behavior
+- Give quick tasks a structured file (`sprint-current.md` as Hot Lane)
+- Enable agents to write directly during coding (natural behavior)
+- Consolidate sync to `/end` only (zero ceremony during coding)
+- Maintain `backlog.md` as Operational Authority for all tasks
+- Track task origin in `done.md` for analytics
 
 Non-goals:
 
-- Full two-way sync between sprint-current.md and backlog.md
-- Changing the fundamental Hybrid 3-File architecture
-- Modifying any existing workflow semantics
+- Two-way sync between sprint-current.md and backlog.md
+- Making sprint-current.md a mirror/derived view of backlog.md
+- Requiring sync commands during active coding sessions
 
 ## Guide-level explanation
 
-### Before this RFC
+The 3-file system separates concerns:
 
 ```
-Agent codes Feature A → STOPS → calls /backlog update FEAT-01 → waits → resumes coding
-Agent codes Feature B → STOPS → calls /backlog update FEAT-02 → waits → resumes coding
+backlog.md ← Agent reads for strategic context (summary + top items)
+sprint-current.md ← Agent writes quick tasks + ticks [x] directly
+done.md ← /end appends completed work (both strategic and quick)
 ```
 
-### After this RFC
-
-```
-Agent codes Feature A → marks [x] in sprint-current.md → codes Feature B → marks [x] → ...
-                                                                                           │
-At session end (/end or /backlog update):                                                   │
-  Reconcile: read sprint-current.md checkmarks → update backlog.md → re-render + archive ◄──┘
-```
-
-### What agents see
-
-During coding, the agent treats `sprint-current.md` like Planning Mode's
-`tasks` file — checking off items as they're completed. At session boundaries,
-the system reconciles these marks to the canonical `backlog.md` store.
+During a coding session, the agent writes ad-hoc tasks to `sprint-current.md`
+and ticks them off as completed. Strategic tasks from `backlog.md` are read
+directly for context but not copied. At session end (`/end`), all completed
+work is reconciled to `done.md` with origin tracking.
 
 ## Reference-level specification
 
 ### Definitions
 
-- **Working Checkmark**: A `[x]` mark applied by an agent to a task in
-  `sprint-current.md` during a coding session, before reconciliation.
-- **Reconcile**: The process of reading checkmarks from `sprint-current.md`
-  and updating corresponding task statuses in `backlog.md`.
+- **Hot Lane**: `sprint-current.md` as an agent-writable buffer for quick,
+  ad-hoc tasks not in `backlog.md`.
 - **Operational Authority**: The file where all structural task mutations
   (add, delete, re-prioritize, phase change) MUST occur. This is `backlog.md`.
+- **Origin Tag**: `#backlog` or `#session` appended to `done.md` entries
+  to distinguish strategic tasks from quick tasks.
+- **Smart Suggest**: At `/end`, the agent reads the session log, extracts
+  task IDs mentioned, cross-checks backlog active items, and suggests
+  which strategic tasks may be Done.
 
-### Repo changes (normative)
+### Constraints (Rule)
 
-#### 1. New Rule: `templates/common/agent/rules/hybrid-3-file-integrity.md`
+| ID  | Constraint                         | Description                                                          |
+| --- | ---------------------------------- | -------------------------------------------------------------------- |
+| C1  | sprint-current.md = Hot Lane       | Agent writes quick tasks + ticks [x]. MUST NOT copy strategic tasks. |
+| C2  | done.md = Append-only              | No edits to existing entries. Origin tags required.                  |
+| C3  | backlog.md = Operational Authority | Single source of truth for ALL tasks. Mutations via `/backlog` only. |
+| C4  | Plan-Backlog sync mandatory        | After `/plan create`, Agent MUST suggest `/backlog sync`.            |
+| C5  | /end = Sole sync point             | All reconciliation at `/end`. No sync during coding sessions.        |
 
-```markdown
-# Rule: Hybrid 3-File Integrity
+### Workflow integration
 
-> Agent MUST follow these constraints when working with task files
-> in `artifacts/tasks/`.
+| Workflow          | Reads                                | Writes                              |
+| ----------------- | ------------------------------------ | ----------------------------------- |
+| `/open`           | backlog summary, hot lane, plan      | —                                   |
+| coding session    | backlog (strategic context)          | sprint-current.md (quick tasks)     |
+| `/end`            | sprint-current, session log, backlog | done.md, backlog.md, sprint-current |
+| `/backlog update` | backlog.md                           | backlog.md                          |
+| `/backlog clean`  | backlog.md                           | backlog.md, done.md                 |
 
-## Triggers
+### `/end` Hot Lane Sync process
 
-- Writing to or reading from `artifacts/tasks/` directory
-- Running `/backlog`, `/plan`, `/open`, `/end`
+1. Read `sprint-current.md`
+2. Quick tasks marked `[x]` → append to `done.md` with `#session` tag
+3. Quick tasks still `[ ]` → ask user: keep for next session? promote to backlog?
+4. **Smart Suggest**: read session log → extract mentioned task IDs → cross-check
+   backlog active items → suggest: "Mark these as Done?"
+5. User-confirmed strategic tasks → update `backlog.md` → append `done.md`
+   with `#backlog` tag
+6. Clean `sprint-current.md` (remove `[x]` items, keep `[ ]` items)
 
-## Constraints
+### Token optimization for `/open`
 
-### C1: sprint-current.md — Working Checkmarks Only
+- Read `backlog.md` Summary section only (~10 lines via grep)
+- Read `sprint-current.md` (small file, graceful skip if not exists)
+- Read plan headers only if `active_plan` exists in `project.md`
+- Read `SYNC.md` only if `project.md` has `downstream` or `upstream` fields
 
-- Agent MAY mark tasks as done `[x]` in sprint-current.md while coding.
-  This mirrors Planning Mode behavior for low-friction progress tracking.
-- Agent MUST NOT add, remove, or edit task descriptions in this file.
-- Agent MUST NOT change priority or phase in this file.
-- All structural changes go through `/backlog` commands on backlog.md.
-- On `/backlog update` or `/end`, checkmarks are reconciled back to
-  backlog.md before re-rendering.
+### Schema changes
 
-### C2: done.md is APPEND-ONLY
+- `sprint-current.md`: Structure is `## Quick Tasks` (checklist) + `## Notes` (freeform)
+- `done.md`: Entries include origin tag `#backlog` or `#session` at end of line
+- Legacy entries (no tag) remain valid
 
-- Agent MUST NOT edit or delete existing entries in `done.md`.
-- New entries are added via `/backlog update` (Auto-Sync Step B)
-  or `/backlog clean`.
+### Compatibility & versioning
 
-### C3: backlog.md is the OPERATIONAL AUTHORITY
+- **Kernel**: MINOR bump (I2 behavior refined, not broken)
+- **Rule**: Major rewrite (v2.0.0), backward compatible replacement
+- **Workflows**: Simplification, backward compatible
 
-- All task mutations (add, evaluate, re-prioritize, delete, phase change)
-  MUST go through `backlog.md` via `/backlog` commands.
-- Status updates (→ Done) CAN originate from sprint-current.md checkmarks
-  but MUST be reconciled to backlog.md before the session ends.
+### Security / safety
 
-### C4: Plan-Backlog sync is MANDATORY after /plan create
-
-- After creating a new plan, Agent MUST run `/backlog sync`
-  to map plan phases to backlog items.
-- If `active_plan` exists but backlog has no Phase column,
-  Agent MUST warn and suggest `/backlog sync`.
-```
-
-#### 2. Update: `templates/common/agent/rules/catalog.yml`
-
-Add entry for the new rule.
-
-#### 3. Clarify: `kernel/invariants.md` I2 (non-breaking)
-
-Current wording:
-
-```
-- `backlog.md` is the **single source of truth** for all tasks
-```
-
-Proposed wording (clarification, not behavioral change):
-
-```
-- `backlog.md` is the **operational authority** for all task mutations
-  (the only file where tasks are created, edited, re-prioritized, or deleted)
-- Complete project task history spans `backlog.md` (active) + `done.md` (archive)
-```
-
-> **Note**: This is a wording clarification, not a behavioral change.
-> The existing rules already state that done.md "receives completed tasks."
-> No MAJOR version bump required — the invariant behavior is unchanged.
-
-#### 4. Update: `templates/common/agent/workflows/backlog.md`
-
-Add "Reconcile Step" before Auto-Sync in the `update` action:
-
-```
-### 🔄 Reconcile Working Checkmarks (before Auto-Sync)
-
-1. Read `artifacts/tasks/sprint-current.md`.
-2. Find any tasks marked `[x]` that are NOT already Done in `backlog.md`.
-3. For each found:
-   a. Update status in `backlog.md` to `✅ Done (YYYY-MM-DD)`.
-4. Proceed with existing Auto-Sync Steps A/B/C.
-```
-
-#### 5. Update: `templates/common/agent/workflows/end.md`
-
-Add reconcile trigger in Plan Progress check (Step 4):
-
-```
-Before checking plan progress, if `sprint-current.md` contains
-any `[x]` marks → auto-trigger reconcile (same logic as backlog
-update reconcile step).
-```
-
-### Compatibility & versioning (normative)
-
-- **Kernel wording change**: Clarification only — no behavioral change.
-  Does NOT require MAJOR bump.
-- **New rule**: PATCH bump (new governed rule, backward compatible).
-- **Workflow refinement**: PATCH bump (additive reconcile step).
-- **Combined release**: MINOR bump recommended (v1.6.0) since it
-  introduces a new concept (Working Checkmarks).
-
-### Security / safety (normative)
-
-- Reconcile is idempotent — re-running it produces the same result.
-- If `sprint-current.md` has no checkmarks, reconcile is a no-op.
-- Reconcile only reads `[x]` status — it cannot introduce new tasks
-  or modify task descriptions, preserving backlog.md authority.
+- Hot Lane is agent-writable but scoped to quick tasks only
+- Strategic tasks remain protected behind `/backlog` commands
+- `/end` sync is deterministic and user-confirmed for strategic changes
+- Origin tags provide audit trail for all completions
 
 ## Rationale
 
-"Working Checkmarks" is the minimum viable bridge between:
+The Hot Lane approach balances agent autonomy with data integrity:
 
-1. **Planning Mode UX** — agents mark progress inline while coding
-2. **3-File architecture integrity** — one-way data flow for structure
+1. Agents naturally write quick notes and checklists — the Hot Lane leverages
+   this behavior instead of fighting it.
+2. Consolidating sync to `/end` removes friction that causes users and agents
+   to skip synchronization steps.
+3. Origin tags enable future analytics (strategic vs ad-hoc work ratio).
+4. Keeping `backlog.md` as Operational Authority preserves the single source
+   of truth principle while allowing lightweight parallel tracking.
 
-Option A (strict READ-ONLY) was rejected because it creates unbearable
-friction during coding. Option B (full two-way sync) was rejected because
-it destroys the canonical authority concept.
+## Alternatives considered
 
-## Alternatives
-
-1. **Agent edits backlog.md directly during coding**
-   → Rejected: forces agent to open/parse a potentially large file mid-coding.
-   Sprint-current.md is the lightweight focus view specifically designed for this.
-
-2. **Lightweight /backlog tick [ID] command**
-   → Considered: A minimal command that just updates status without conversation.
-   Could complement Working Checkmarks but adds workflow complexity.
-
-3. **No change (keep READ-ONLY)**
-   → Rejected: makes 3-File system objectively worse than Planning Mode for
-   inline progress tracking, undermining its core value proposition.
+1. **Strict read-only sprint-current.md** — Creates unbearable friction
+2. **Eliminate sprint-current.md** — Wastes a useful file
+3. **Full two-way sync** — Destroys canonical authority concept
+4. **Separate hot-lane file** — Redundant when sprint-current.md already exists
 
 ## Drawbacks
 
-- Reconcile adds a small amount of complexity to `/backlog update` and `/end`.
-- Edge case: if an agent marks `[x]` but then backlog is also updated
-  independently (e.g., by another agent or human), reconcile must handle
-  conflicts. Current design: reconcile only adds Done status, never removes it.
-
-## Implementation plan
-
-1. Create `templates/common/agent/rules/hybrid-3-file-integrity.md`
-2. Update `templates/common/agent/rules/catalog.yml`
-3. Clarify `kernel/invariants.md` I2 wording
-4. Add reconcile step to `templates/common/agent/workflows/backlog.md`
-5. Add reconcile trigger to `templates/common/agent/workflows/end.md`
-6. Update `kernel/schema/tasks.schema.md` to document Working Checkmarks
-7. Update `docs/hybrid-3-file.md` with reconcile flow (✅ partially done)
-8. Version bump to v1.6.0
-
-## Migration plan
-
-- `para update` / `para install` syncs new rule and updated workflows.
-- No workspace structure changes required.
-- Existing workspaces gain the rule and reconcile behavior automatically.
-- No data migration needed.
-
-## Testing plan
-
-- Add `kernel/examples/valid/sprint-current-with-checkmarks.md`
-  to show what a sprint-current.md with working checkmarks looks like.
-- Verify reconcile logic manually in a real coding session.
+- Quick tasks may overlap with strategic tasks (mitigated by Smart Suggest)
+- Agent may forget to log (mitigated by Rule C1: MUST log before coding)
+- Origin tags add minor complexity (grep-friendly, backward compatible)
 
 ## Unresolved questions
 
-- Should reconcile run automatically at fixed intervals during long sessions,
-  or only at explicit sync points (`/backlog update`, `/end`)?
-- Should the rule be opt-in (project-level) or always-on (workspace-level)?
-- Is a lightweight `/backlog tick [ID]` command worth adding as a complement
-  to Working Checkmarks?
+- Should promoted quick tasks retain original description or be rewritten?
+- Should Hot Lane have a size limit (e.g., max 20 quick tasks)?

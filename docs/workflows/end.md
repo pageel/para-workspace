@@ -1,6 +1,6 @@
 # /end Workflow
 
-> **Version**: 1.5.0
+> **Version**: 1.5.3
 
 The `/end` workflow closes a working session by summarizing accomplishments and logging them to the correct PARA location. It ensures context is preserved for the next session.
 
@@ -25,7 +25,7 @@ The `/end` workflow closes a working session by summarizing accomplishments and 
 ## Session Close Flow
 
 ```
-Classify changes → Write session log → Sync queue → Plan progress → Master index
+Classify changes → Write session log → Sync queue → Hot Lane Sync → Plan progress → Master index
 ```
 
 ### 1. Classify & Identify Changes
@@ -56,6 +56,23 @@ If `project.md` declares `downstream` dependencies, appends a row to `Areas/Work
 ```
 
 Skipped if no downstream dependencies exist.
+
+### 3.5. Hot Lane Sync
+
+> **Rule:** `hybrid-3-file-integrity.md` C5 — `/end` is the sole sync point.
+
+**Step A: Process Quick Tasks** from `sprint-current.md`:
+
+- `[x]` items → append to `done.md` with `#session` tag
+- `[ ]` items → ask user: keep for next session or promote to backlog?
+- Clean sprint-current.md (remove completed, keep pending)
+
+**Step B: Smart Suggest Strategic Tasks** from session log:
+
+- Extract mentioned task IDs (FEAT-XX, BUG-XX) from session log
+- Cross-reference with active backlog items
+- Suggest to user: "Mark these as Done?"
+- Confirmed items → update backlog, append to `done.md` with `#backlog` tag
 
 ### 4. Check Plan Phase Progress
 
@@ -101,4 +118,4 @@ Work → /push (commit & push) → /end (log session) → /open (next day)
 
 ---
 
-_Added in v1.5.0_
+_Updated in v1.5.3 (Hot Lane Sync replaces Working Checkmarks, Smart Suggest added)_

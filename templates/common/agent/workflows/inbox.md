@@ -40,10 +40,25 @@ ls -la _inbox/
 | **Project Assets**     | `[p]-logo.png`, `.csv` | `Projects/[project-name]/artifacts/assets/` |
 | **Learning**           | Notes, best practices  | `Areas/Learning/`                           |
 
+### 2.5. Project Context Check (BUG-16 fix)
+
+// turbo
+
+> ⚠️ **Before moving files to any project**, agent MUST read the project's existing structure.
+
+If the categorization target is a `Projects/[project-name]/` directory:
+
+1. Read `Projects/[project-name]/docs/README.md` (if exists) to understand directory layout.
+2. List `Projects/[project-name]/` top-level to see existing folder structure.
+3. **Match** the file to an existing folder — do NOT create new top-level directories unless confirmed by user.
+4. If the project has a specific docs index or artifacts structure, respect it.
+
+> **Rule:** Do NOT assume directory structure. Read first, then place.
+
 ### 3. Move File
 
 1. **Check for duplicates**: If target file exists, append timestamp `_YYYYMMDD`.
-2. **Ensure directory exists**: Run `mkdir -p "[target-dir]"`.
+2. **Ensure directory exists**: Run `mkdir -p "[target-dir]"` (only for known paths from Step 2.5).
 3. **Move and report**:
    ```bash
    mv "_inbox/[file]" "[target-dir]/"

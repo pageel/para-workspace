@@ -30,19 +30,19 @@ kernel/
 
 ### Invariants (Must follow)
 
-| #   | Rule                                                           |
-| --- | -------------------------------------------------------------- |
-| I1  | PARA directory structure (Projects, Areas, Resources, Archive) |
-| I2  | Hybrid 3-file task model (backlog = canonical)                 |
-| I3  | kebab-case project naming                                      |
-| I4  | No active tasks = inactive project                             |
-| I5  | Areas contain no runtime tasks                                 |
-| I6  | Archive is immutable cold storage                              |
-| I7  | Seeds are raw ideas, not tasks                                 |
-| I8  | No loose files at workspace root                               |
-| I9  | Resources are read-only references                             |
-| I10 | Repo ↔ Workspace separation                                    |
-| I11 | Workflow language compliance (preferences.language)            |
+| #   | Rule                                                                |
+| --- | ------------------------------------------------------------------- |
+| I1  | PARA directory structure (Projects, Areas, Resources, Archive)      |
+| I2  | Hybrid 3-file task model (backlog = canonical, hot lane, /end sync) |
+| I3  | kebab-case project naming                                           |
+| I4  | No active tasks = inactive project                                  |
+| I5  | Areas contain no runtime tasks                                      |
+| I6  | Archive is immutable cold storage                                   |
+| I7  | Seeds are raw ideas, not tasks                                      |
+| I8  | No loose files at workspace root                                    |
+| I9  | Resources are read-only references                                  |
+| I10 | Repo ↔ Workspace separation                                         |
+| I11 | Workflow language compliance (preferences.language)                 |
 
 ### Heuristics (Should follow)
 

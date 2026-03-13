@@ -4,30 +4,30 @@ description: "Stateless workflow library for PARA Workspace agents."
 items:
   - id: backlog
     name: "Backlog Controller"
-    version: "1.2.0"
-    kernel_min: "1.5.2"
+    version: "1.3.0"
+    kernel_min: "1.5.3"
     kernel_max: "1.x"
     entrypoint: "backlog.md"
-    description: "Manage project tasks via canonical backlog.md with Working Checkmarks reconcile."
+    description: "Manage project tasks via canonical backlog.md. Sync handled by /end."
     tags: ["tasks", "canonical", "3-file"]
 
   - id: open
     name: "Session Open"
-    version: "1.1.0"
-    kernel_min: "1.4.0"
+    version: "1.2.0"
+    kernel_min: "1.5.3"
     kernel_max: "1.x"
     entrypoint: "open.md"
-    description: "Start session with context loading priority (H2)."
-    tags: ["session", "context"]
+    description: "Start session with token-optimized context loading (backlog summary + hot lane + SYNC gate)."
+    tags: ["session", "context", "token-optimized"]
 
   - id: end
     name: "Session End"
-    version: "1.2.0"
-    kernel_min: "1.5.2"
+    version: "1.3.0"
+    kernel_min: "1.5.3"
     kernel_max: "1.x"
     entrypoint: "end.md"
-    description: "Close session with PARA classification and Working Checkmarks auto-reconcile."
-    tags: ["session", "classification", "3-file"]
+    description: "Close session with Hot Lane Sync, Smart Suggest, and PARA classification."
+    tags: ["session", "classification", "3-file", "hot-lane"]
 
   - id: install
     name: "Install / Sync"
@@ -121,12 +121,12 @@ items:
 
   - id: inbox
     name: "Inbox Categorizer"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
+    version: "1.1.0"
+    kernel_min: "1.5.3"
     kernel_max: "1.x"
     entrypoint: "inbox.md"
-    description: "Categorize files from _inbox/ into PARA structure."
-    tags: ["inbox", "classification"]
+    description: "Categorize files from _inbox/ into PARA structure with project context check."
+    tags: ["inbox", "classification", "context"]
 
   - id: learn
     name: "Learn & Capture"
@@ -157,8 +157,8 @@ items:
 
   - id: plan
     name: "Plan Controller"
-    version: "1.1.0"
-    kernel_min: "1.5.2"
+    version: "1.2.0"
+    kernel_min: "1.5.3"
     kernel_max: "1.x"
     entrypoint: "plan.md"
     description: "Create, review, and update phased plans with ask-to-activate and plan archiving."

@@ -5,7 +5,7 @@ source: catalog
 
 # /end [project-name | all | workspace] [done]
 
-> **Workspace Version:** 1.5.0 (Governed Libraries)
+> **Workspace Version:** 1.5.3 (Hot Lane)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final report MUST be translated to this language.**
 
 Summarize accomplishments and log them to the correct context (Project vs. Workspace).
@@ -49,22 +49,45 @@ If yes, **append one row** to `Areas/Workspace/SYNC.md` under the `## Pending` t
 | YYYY-MM-DD | [project-name] | [new-version] | [downstream-project] | [brief action needed] | 🔴 Pending |
 ```
 
-### 3.5. Auto-Reconcile Working Checkmarks
+### 3.5. Hot Lane Sync (sprint-current.md)
 
 // turbo
 
-> Check if agent marked tasks `[x]` in `sprint-current.md` during this session.
+> **Rule:** `hybrid-3-file-integrity.md` C5 — `/end` is the sole sync point for all task reconciliation.
 
-1. Read `artifacts/tasks/sprint-current.md`.
-2. Scan for items marked `[x]` that are NOT yet `✅ Done` in `backlog.md`.
-3. If unreconciled checkmarks found:
-   a. Update corresponding entries in `backlog.md` to `✅ Done (YYYY-MM-DD)`.
-   b. Append to `done.md` under today's date header.
-   c. Re-render `sprint-current.md` from `backlog.md`.
-   d. Report: `🔄 Reconciled [N] Working Checkmarks from sprint-current.md`
-4. If no unreconciled checkmarks → skip silently.
+**Step A: Process Quick Tasks** (from sprint-current.md)
 
-> **Rule:** `hybrid-3-file-integrity.md` C1 — ensures no checkmarks are lost between sessions.
+1. Read `artifacts/tasks/sprint-current.md`. If file not exists → skip to Step B.
+2. For each item marked `[x]` in `## Quick Tasks`:
+   - Append to `artifacts/tasks/done.md` under today’s date header, with `#session` tag:
+     ```markdown
+     - [x] <task-description> #session
+     ```
+3. For each item still `[ ]` in `## Quick Tasks`:
+   - Ask user: **“Giữ cho phiên sau?”** or **“Promote vào backlog?”**
+   - If promote → add to `backlog.md` via normal format, remove from sprint-current
+   - If keep → leave in sprint-current for next session
+4. Clean sprint-current.md: remove all `[x]` items, keep `[ ]` items and `## Notes`.
+5. Report: `🔥 Hot Lane: [N] quick tasks → done.md, [M] pending`
+
+**Step B: Smart Suggest Strategic Tasks** (from session log)
+
+1. Read session log written in Step 2 (current session’s work summary).
+2. Extract any task IDs mentioned (FEAT-XX, BUG-XX patterns).
+3. Cross-reference with `backlog.md` active items (grep for matching IDs).
+4. For each match, suggest to user:
+   ```
+   💡 Phiên này bạn đã làm việc với:
+   - FEAT-13: Safety Guardrails — Đánh dấu Done?
+   - BUG-16: Inbox categorization — Đánh dấu Done?
+   ```
+5. For user-confirmed items:
+   - Update status in `backlog.md` to `✅ Done (YYYY-MM-DD)`
+   - Append to `done.md` with `#backlog` tag:
+     ```markdown
+     - [x] FEAT-13: Safety Guardrails #backlog
+     ```
+6. Report: `📝 Strategic: [N] tasks → done.md`
 
 ### 4. Check Plan Phase Progress (if active)
 

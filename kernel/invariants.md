@@ -26,18 +26,22 @@ Archive/     — Cold storage for completed/cancelled items
 
 Each project manages tasks through three files in `artifacts/tasks/`:
 
-| File                | Role                     | Agent Behavior                    |
-| ------------------- | ------------------------ | --------------------------------- |
-| `backlog.md`        | **CANONICAL** task store | Primary read/write via `/backlog` |
-| `sprint-current.md` | **DERIVED** focus view   | Reflects active/in-progress tasks |
-| `done.md`           | **DERIVED** archive      | Completed tasks moved here        |
+| File                | Role                           | Agent Behavior                                  |
+| ------------------- | ------------------------------ | ----------------------------------------------- |
+| `backlog.md`        | **CANONICAL** task store       | Primary read/write via `/backlog`               |
+| `sprint-current.md` | **Hot Lane** for session tasks | Agent writes quick tasks + ticks `[x]` directly |
+| `done.md`           | **APPEND-ONLY** archive        | Completed tasks appended by `/end`              |
 
 **Rules:**
 
-- `backlog.md` is the **single source of truth** for all tasks
-- `sprint-current.md` reflects only active/in-progress items from backlog
-- `done.md` receives completed tasks to keep backlog clean
-- Agent primarily interacts with `backlog.md` via the `/backlog` workflow
+- `backlog.md` is the **operational authority** for all task mutations
+  (the only file where tasks are created, edited, re-prioritized, or deleted)
+- `sprint-current.md` is for ad-hoc quick tasks during coding sessions
+  — agent MAY write directly. NOT a mirror of backlog.
+- `done.md` receives completed tasks (both strategic and quick).
+  Origin tracked via `#backlog` or `#session` tags.
+- `/end` is the **sole sync point** — reconciles hot lane + strategic tasks
+- Complete project task history spans `backlog.md` (active) + `done.md` (archive)
 
 ## I3. Project Naming
 

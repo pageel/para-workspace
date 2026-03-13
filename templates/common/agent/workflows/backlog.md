@@ -17,7 +17,7 @@ Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/ba
 | `review`   | Show overview with summary stats and phase context |
 | `add`      | Add new feature, epic, or bug                      |
 | `evaluate` | ICE scoring for priorities                         |
-| `update`   | Update status of existing items + auto-sync 3-file |
+| `update`   | Update status of existing items                    |
 | `sync`     | Sync backlog with plan (map items to phases)       |
 | `clean`    | Archive ✅ Done items from backlog to done.md      |
 
@@ -102,80 +102,7 @@ Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/ba
 6. If a plan exists, check if all items in the current Phase are now Done.
    - If yes, display: `🎉 Phase [N] Complete! Ready to start Phase [N+1].`
 
-### 🔄 Hybrid 3-File Auto-Sync (after every update)
-
-> **Triggered automatically** after steps 1-6 complete. See `docs/hybrid-3-file.md`.
-
-**Step 0: Reconcile Working Checkmarks** (before re-render)
-
-// turbo
-
-1. Read `artifacts/tasks/sprint-current.md`.
-2. Scan for items marked `[x]` that are NOT yet `✅ Done` in `backlog.md`.
-3. For each unreconciled `[x]` item:
-   a. Update corresponding entry in `backlog.md` to `✅ Done (YYYY-MM-DD)`.
-   b. Append to `done.md` under today's date header.
-4. If no unreconciled checkmarks found, skip silently.
-
-> **Rule:** `hybrid-3-file-integrity.md` C1 — Working Checkmarks are reconciled here.
-
-**Step A: Render `sprint-current.md`** (One-way Snapshot)
-
-// turbo
-
-1. Scan `backlog.md` for all items with status `🚀 ToDo` or `🔨 In Progress`.
-2. **Overwrite** `artifacts/tasks/sprint-current.md` completely with:
-
-```markdown
-# Sprint Current — [Project Name]
-
-> **Source**: backlog.md (Hybrid 3-File Model)
-> **Updated**: YYYY-MM-DD
-
-## Active Tasks
-
-| ID                            | Story | Priority | Status | Phase |
-| :---------------------------- | :---- | :------- | :----- | :---- |
-| [rows extracted from backlog] |
-
-## Context
-
-_Auto-generated from backlog.md. Do NOT edit directly._
-```
-
-3. If no active tasks found, write: `_(no active tasks)_`.
-
-**Step B: Archive to `done.md`** (Append-only, only when status → Done)
-
-// turbo
-
-If the updated item's new status is `✅ Done`:
-
-1. Extract the full row from `backlog.md`.
-2. Append to `artifacts/tasks/done.md` under a date header:
-
-```markdown
-## YYYY-MM-DD
-
-| ID              | Story      | Priority | Completed |
-| :-------------- | :--------- | :------- | :-------- |
-| [extracted row] | YYYY-MM-DD |
-```
-
-3. If the date header already exists, append under it.
-
-**Step C: Plan Completion Check**
-
-If a plan exists (`active_plan` in `project.md`):
-
-1. Count all Done items in `done.md` that match task IDs from the plan's phase mapping.
-2. If 100% of ALL phases are complete:
-   - Output: `🎉 Project Plan Complete!`
-   - Remove `active_plan` from `project.md`.
-   - Suggest running `/retro`.
-3. If only the current phase is complete:
-   - Output: `🎉 Phase [N] Complete! Phase [N+1] ready.`
-   - Suggest running `/retro` for phase review.
+> 💡 **Note:** Task sync to `done.md` happens at `/end` (Hot Lane Sync). The `update` action focuses on status changes only.
 
 ---
 
@@ -224,8 +151,7 @@ Archive all `✅ Done` items from backlog to `done.md` in bulk.
    b. Append to `artifacts/tasks/done.md` under the completion date header.
 3. Remove the archived rows from `backlog.md`.
 4. Update Summary counts in `backlog.md`.
-5. Re-render `sprint-current.md` (same logic as `update` Step A).
-6. Report:
+5. Report:
 
 ```
 🧹 BACKLOG CLEAN: [project-name]
@@ -233,8 +159,9 @@ Archive all `✅ Done` items from backlog to `done.md` in bulk.
 
 📦 Archived: [N] items → done.md
 📋 Backlog: [M] items remaining
-🔄 sprint-current.md: Re-rendered
 ```
+
+> 💡 **Note:** `sprint-current.md` is NOT re-rendered here. It is the Hot Lane for quick tasks, managed independently.
 
 ---
 

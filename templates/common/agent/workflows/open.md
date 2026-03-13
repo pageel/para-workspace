@@ -5,7 +5,7 @@ source: catalog
 
 # /open [project-name]
 
-> **Workspace Version:** 1.5.0 (Governed Libraries)
+> **Workspace Version:** 1.5.3 (Hot Lane)
 
 Start a new working session with full context from previous sessions.
 
@@ -53,21 +53,32 @@ ls -t Projects/[project-name]/sessions/*.md | head -3
 
 Read the latest session log for context on previous work.
 
-### 4. Read task context — Fast Mode (Hybrid 3-File)
+### 4. Read task context — Token Optimized
 
 //turbo
 
-> ⚠️ **Token optimization (Hybrid 3-File):** Read `sprint-current.md` first (~5-10 lines) for immediate task context. Only read full `backlog.md` Summary table if sprint file is empty or missing.
+> ⚠️ **Token optimization:** Read backlog summary (~10 lines) + hot lane. NEVER read full backlog.
 
-**Priority order:**
+**Step 4a: Backlog Summary** (ALWAYS read)
 
-1. **Fast View:** Read `Projects/[project-name]/artifacts/tasks/sprint-current.md`
-   - If it exists and has active tasks → use this as the task context. Done.
-   - If empty or missing → proceed to step 2.
+```bash
+grep -A 10 "Summary" Projects/[project-name]/artifacts/tasks/backlog.md
+```
 
-2. **Fallback:** Read `Projects/[project-name]/artifacts/tasks/backlog.md`
-   - Extract task counts from the `📊 Summary` table at the bottom.
-   - Show top 3 actionable items (🚀 ToDo or 🔨 In Progress).
+Also extract top active items:
+
+```bash
+grep -E "ToDo|In Progress" Projects/[project-name]/artifacts/tasks/backlog.md | head -5
+```
+
+**Step 4b: Hot Lane** (read IF EXISTS, graceful skip)
+
+Check if `Projects/[project-name]/artifacts/tasks/sprint-current.md` exists:
+
+- **If exists** → Read entire file (small, ~50-100 tokens). Note any pending `[ ]` items.
+- **If not exists** → Skip. Report: `🔥 Hot Lane: trống (chưa có file)`
+
+> **Rule:** `hybrid-3-file-integrity.md` C1 — sprint-current.md is the Hot Lane for quick tasks.
 
 ### 5. Read implementation plan — summary only (if active)
 
@@ -97,25 +108,26 @@ Check the `active_plan` field from `project.md` (already loaded in Step 2):
 
 //turbo
 
-Read `Areas/Workspace/SYNC.md` and **filter rows** where the `Downstream` column matches `[project-name]` and Status is `🔴 Pending`.
+> ⚠️ **Token optimization:** Only read SYNC.md if `project.md` (loaded in Step 2) has `downstream` or `upstream` fields. If neither exists → skip entirely.
 
-If there are pending sync items, display them prominently:
+Check `project.md` frontmatter (already loaded in Step 2):
 
-```
-⚠️ UPSTREAM CHANGES DETECTED:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-| Source: [upstream-project] v[version]
-| Action: [what needs to be done]
-| Date:   [when it was logged]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
+- **If `downstream` or `upstream` field exists:**
+  1. Read `Areas/Workspace/SYNC.md`
+  2. Filter rows where `Downstream` column matches `[project-name]` and Status is `🔴 Pending`
+  3. If pending items found, display prominently:
+     ```
+     ⚠️ UPSTREAM CHANGES DETECTED:
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     | Source: [upstream-project] v[version]
+     | Action: [what needs to be done]
+     | Date:   [when it was logged]
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ```
+  4. Ask user: process or dismiss.
+  5. Update `SYNC.md` accordingly. Auto-trim Completed to 5 most recent.
 
-After presenting the sync items, ask the user whether they want to **process** the changes (update code/content) or simply **dismiss** them (mark as read).
-
-Once the user decides, automatically update `SYNC.md`:
-
-- Move the row from `## Pending` to `## Completed` (remove the Status column).
-- **IMPORTANT:** Auto-trim the `## Completed` table, keeping only the **5 most recent** entries. Delete older rows to prevent file bloat and save system tokens.
+- **If neither field exists** → Skip. No sync overhead.
 
 ### 7. Check Git status
 
@@ -149,9 +161,13 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 
 🔔 SYNC QUEUE: [N pending] / [0 if none]
 
-📥 BACKLOG SUMMARY:
+📝 BACKLOG SUMMARY:
 - High: [N] | Medium: [N] | Low: [N]
 - Top items: [list 2-3 items from current phase]
+
+🔥 HOT LANE:
+- [Pending quick tasks from sprint-current.md]
+- (or: "No pending quick tasks")
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

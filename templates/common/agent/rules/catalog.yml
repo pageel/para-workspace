@@ -85,9 +85,9 @@ items:
 
   - id: hybrid-3-file-integrity
     name: "Hybrid 3-File Integrity"
-    version: "1.0.0"
-    kernel_min: "1.5.2"
+    version: "2.0.0"
+    kernel_min: "1.5.3"
     kernel_max: "1.x"
     entrypoint: "hybrid-3-file-integrity.md"
-    description: "Working Checkmarks constraints and reconciliation for the Hybrid 3-File task model."
-    tags: ["tasks", "integrity", "3-file"]
+    description: "Hot Lane constraints and /end sync for the Hybrid 3-File task model."
+    tags: ["tasks", "integrity", "3-file", "hot-lane"]

@@ -1,6 +1,6 @@
 # /open Workflow
 
-> **Version**: 1.5.2
+> **Version**: 1.5.3
 
 The `/open` workflow starts a new working session with full context from previous work. It loads the project contract, latest session log, backlog, and sync queue — then presents a concise report so the user knows exactly where they left off.
 
@@ -48,18 +48,23 @@ During the session, when an action matches a trigger from the index, the agent l
 
 Reads the most recent session log to understand what was done and what's pending.
 
-### 4. Read Task Context (Fast Mode)
+### 4. Read Task Context (Token Optimized)
 
-> **Hybrid 3-File Model**: Instead of reading the full backlog, the agent reads `artifacts/tasks/sprint-current.md` first. This file contains only active tasks (ToDo/In Progress) and uses < 100 tokens.
-> If the sprint file is empty, it falls back to reading the `backlog.md` summary table.
+> **Token optimization:** Reads backlog _summary_ (~10 lines) + hot lane. Never reads full backlog.
+
+**4a. Backlog Summary** — Always reads the `📊 Summary` table and top active items (grep).
+
+**4b. Hot Lane** — Reads `sprint-current.md` if it exists (small file, ~50-100 tokens). If not exists, reports `🔥 Hot Lane: empty`. This file holds ad-hoc quick tasks from previous sessions.
 
 ### 5. Read Plan (if active)
 
 If `project.md` has an `active_plan` field, reads phase headers and the backlog-to-phase mapping to identify the current phase. Skipped if no plan exists.
 
-### 6. Check Sync Queue
+### 6. Check Sync Queue (Conditional)
 
-Reads `Areas/Workspace/SYNC.md` for pending cross-project notifications targeting this project. Displays upstream changes and asks the user to process or dismiss them.
+> **Token optimization:** Only reads `SYNC.md` if `project.md` (loaded in Step 2) has `downstream` or `upstream` fields. Otherwise skips entirely.
+
+When applicable, reads `Areas/Workspace/SYNC.md` for pending cross-project notifications targeting this project.
 
 ### 7. Check Git Status
 
@@ -79,7 +84,8 @@ Presents a structured summary:
 
 📐 CURRENT PHASE: [Phase N: Name]
 🔔 SYNC QUEUE: [N pending]
-📥 BACKLOG SUMMARY: High: N | Medium: N | Low: N
+📝 BACKLOG SUMMARY: High: N | Medium: N | Low: N
+🔥 HOT LANE: [pending quick tasks or "empty"]
 
 💡 SUGGESTED ACTIONS: [priorities]
 ❓ What would you like to work on?
@@ -92,4 +98,4 @@ Presents a structured summary:
 
 ---
 
-_Updated in v1.5.1 (Added Fast Mode task context logic)_
+_Updated in v1.5.3 (Token optimized: backlog summary + hot lane + SYNC conditional)_
