@@ -166,12 +166,12 @@ items:
 
   - id: para-audit
     name: "Macro Assessor Audit"
-    version: "1.0.0"
-    kernel_min: "1.4.5"
+    version: "1.1.0"
+    kernel_min: "1.5.3"
     kernel_max: "1.x"
     entrypoint: "para-audit.md"
-    description: "Scan structural drift against Kernel Specs (I1-I11)."
-    tags: ["audit", "governance", "invariants"]
+    description: "Full structural audit (I1-I11) + post-update compliance check with changelog-driven suggestions."
+    tags: ["audit", "governance", "invariants", "post-update"]
 
   - id: docs
     name: "Documentation Manager"
