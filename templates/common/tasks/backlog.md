@@ -6,7 +6,7 @@
 
 ## 🏗️ Epic: Initial Setup
 
-Thiết lập dự án ban đầu.
+Initial project setup.
 
 ### User Stories
 
