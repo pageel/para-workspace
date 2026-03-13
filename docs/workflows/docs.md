@@ -64,8 +64,8 @@ Every `docs/` directory MUST have a `README.md` index — a ~10 line table listi
 
 ## Related
 
-- [Workflow Documentation](../workflows.md) — Workflow catalog and philosophy
-- [Development Guide](../development.md) — Daily workflow streams
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog and philosophy
+- [Development Guide](../guides/development.md) — Daily workflow streams
 
 ---
 

@@ -57,7 +57,7 @@ Reviews milestones in `project.md`. If this release completes a milestone, updat
 
 - [/push Workflow](./push.md) — Commit and push to GitHub
 - [/verify Workflow](./verify.md) — Verify specific task completion
-- [Workflow Documentation](../workflows.md) — Workflow catalog
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog
 
 ---
 

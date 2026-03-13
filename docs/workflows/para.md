@@ -45,7 +45,7 @@ The `/para` workflow is the **master controller** for the PARA Workspace. It pro
 
 - [/para-workflow](./para-workflow.md) — Workflow catalog management
 - [/para-rule](./para-rule.md) — Rule catalog management
-- [Workflow Documentation](../workflows.md) — Workflow catalog
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog
 
 ---
 

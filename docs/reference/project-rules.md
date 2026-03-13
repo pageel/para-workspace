@@ -55,8 +55,8 @@ The loading protocol is defined in `context-rules.md` Rule #4 (shipped with the 
 
 ## Related
 
-- [Kernel Documentation](../kernel.md) — Invariants and governance
-- [Workflow Documentation](../workflows.md) — `/para-rule` workflow
+- [Kernel Documentation](../architecture/kernel.md) — Invariants and governance
+- [Workflow Documentation](./workflows.md) — `/para-rule` workflow
 
 ---
 

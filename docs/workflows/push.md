@@ -60,7 +60,7 @@ Executes `git add .`, `git commit`, and `git push`.
 ## Related
 
 - [/end Workflow](./end.md) — Close session (does NOT push)
-- [Workflow Documentation](../workflows.md) — Workflow catalog
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog
 
 ---
 

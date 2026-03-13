@@ -42,7 +42,7 @@ Checks `project.md` for `has_rules: true` (or checks if `Projects/[project-name]
 - If `has_rules: true` (or file exists) → reads the lightweight index (~5–10 lines) and notes trigger conditions for the session.
 - Otherwise → skips entirely. Zero I/O cost.
 
-During the session, when an action matches a trigger from the index, the agent loads the corresponding rule file before acting. See [Project Rules](../project-rules.md) for details.
+During the session, when an action matches a trigger from the index, the agent loads the corresponding rule file before acting. See [Project Rules](../reference/project-rules.md) for details.
 
 ### 3. Find Latest Session
 
@@ -93,8 +93,8 @@ Presents a structured summary:
 
 ## Related
 
-- [Workflow Documentation](../workflows.md) — Workflow catalog and philosophy
-- [Project Rules](../project-rules.md) — Project-specific rules loading
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog and philosophy
+- [Project Rules](../reference/project-rules.md) — Project-specific rules loading
 
 ---
 

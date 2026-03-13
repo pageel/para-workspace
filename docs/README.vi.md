@@ -61,7 +61,12 @@ para-workspace/
 │   │   └── projects/    # .project.yml template
 │   └── profiles/        # Preset: dev, general, marketer, ceo
 ├── tests/               # 🧪 kernel/ + cli/ integration tests
-├── docs/                # 📖 Tài liệu (kiến trúc, CLI, planning, workflows)
+├── docs/                # 📖 Tài liệu
+│   ├── architecture/    # Kiến trúc: overview, kernel
+│   ├── guides/          # Hướng dẫn: development, planning
+│   ├── reference/       # Tra cứu: CLI, workflows, project-rules
+│   ├── changelog/       # Lịch sử phiên bản
+│   └── workflows/       # Chi tiết từng workflow (17 files)
 ├── CONTRIBUTING.md
 ├── VERSIONING.md
 ├── CHANGELOG.md

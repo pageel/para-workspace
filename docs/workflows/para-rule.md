@@ -54,7 +54,7 @@ During `/retro`, if a knowledge point repeats 3+ times, propose graduating it to
 
 - [/para Workflow](./para.md) — Master workspace controller
 - [/para-workflow](./para-workflow.md) — Workflow management (sister workflow)
-- [Workflow Documentation](../workflows.md) — Workflow catalog
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog
 
 ---
 

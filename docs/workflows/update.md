@@ -59,8 +59,8 @@ Confirms success by checking:
 
 ## Related
 
-- [Workflow Documentation](../workflows.md) — Workflow catalog and philosophy
-- [CLI Reference](../cli.md) — `para update` command details
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog and philosophy
+- [CLI Reference](../reference/cli.md) — `para update` command details
 
 ---
 

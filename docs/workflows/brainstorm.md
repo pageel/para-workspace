@@ -56,8 +56,8 @@ If found, the plan uses the brainstorm's Options and Decision sections as baseli
 
 ## Related
 
-- [Workflow Documentation](../workflows.md) — Workflow catalog and philosophy
-- [Planning Guide](../planning.md) — `/plan` workflow details
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog and philosophy
+- [Planning Guide](../guides/planning.md) — `/plan` workflow details
 
 ---
 

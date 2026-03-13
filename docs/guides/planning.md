@@ -202,9 +202,9 @@ Use `/backlog sync` to keep both artifacts aligned:
 
 ## Related
 
-- [Workflow Documentation](./workflows.md) — Philosophy and catalog overview
-- [Architecture](./architecture.md) — Repo ↔ Workspace structure
-- [CLI Reference](./cli.md) — Command-line tools
+- [Workflow Documentation](../reference/workflows.md) — Philosophy and catalog overview
+- [Architecture](../architecture/overview.md) — Repo ↔ Workspace structure
+- [CLI Reference](../reference/cli.md) — Command-line tools
 
 ---
 

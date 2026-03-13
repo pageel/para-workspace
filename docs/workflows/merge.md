@@ -42,7 +42,7 @@ Creates a `.bak` backup, writes merged content, and displays a summary of preser
 ## Related
 
 - [/install Workflow](./install.md) — Install with conflict resolution
-- [Workflow Documentation](../workflows.md) — Workflow catalog
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog
 
 ---
 

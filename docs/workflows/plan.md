@@ -83,8 +83,8 @@ When all phases reach 100%, `/plan review` automatically:
 ## Related
 
 - [Brainstorm Guide](./brainstorm.md) — Ideation before planning
-- [Workflow Documentation](../workflows.md) — Workflow catalog
-- [Planning Guide](../planning.md) — Plan + Backlog combined guide
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog
+- [Planning Guide](../guides/planning.md) — Plan + Backlog combined guide
 
 ---
 

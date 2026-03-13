@@ -46,7 +46,7 @@ Logs verification status in the session file and updates `backlog.md` status.
 
 - [/backlog Workflow](./backlog.md) — Update task status
 - [/release Workflow](./release.md) — Pre-release quality gate
-- [Workflow Documentation](../workflows.md) — Workflow catalog
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog
 
 ---
 

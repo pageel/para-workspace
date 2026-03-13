@@ -66,7 +66,7 @@ Cross-references backlog with plan phases. Reports mapped vs. missing items per 
 ## Related
 
 - [/plan Workflow](./plan.md) — Create and manage implementation plans
-- [Workflow Documentation](../workflows.md) — Workflow catalog
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog
 
 ---
 

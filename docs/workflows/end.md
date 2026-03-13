@@ -114,7 +114,7 @@ Work → /push (commit & push) → /end (log session) → /open (next day)
 ## Related
 
 - [/open Workflow](./open.md) — Start session with context loading
-- [Workflow Documentation](../workflows.md) — Workflow catalog and philosophy
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog and philosophy
 
 ---
 

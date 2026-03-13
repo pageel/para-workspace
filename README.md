@@ -61,7 +61,12 @@ para-workspace/
 │   │   └── projects/    # .project.yml template
 │   └── profiles/        # dev, general, marketer, ceo presets
 ├── tests/               # 🧪 kernel/ + cli/ integration tests
-├── docs/                # 📖 Documentation (architecture, CLI, planning, workflows)
+├── docs/                # 📖 Documentation
+│   ├── architecture/    # Architecture: overview, kernel
+│   ├── guides/          # How-to: development, planning
+│   ├── reference/       # Lookup: CLI, workflows, project-rules
+│   ├── changelog/       # Version history
+│   └── workflows/       # Individual workflow docs (17 files)
 ├── CONTRIBUTING.md
 ├── VERSIONING.md
 ├── CHANGELOG.md

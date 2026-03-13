@@ -16,23 +16,23 @@ Workflows are the **UI layer** for AI agents. They define processes that agents 
 
 | Workflow         | Type     | Description                                                                             |
 | ---------------- | -------- | --------------------------------------------------------------------------------------- |
-| `/para`          | Core     | Master workflow — see [Para Guide](./workflows/para.md)                                 |
-| `/open`          | Session  | Start session, load context — see [Open Guide](./workflows/open.md)                     |
-| `/end`           | Session  | Close session, save logs — see [End Guide](./workflows/end.md)                          |
-| `/plan`          | Planning | Create implementation plans — see [Plan Guide](./workflows/plan.md)                     |
-| `/backlog`       | Planning | Manage product backlog — see [Backlog Guide](./workflows/backlog.md)                    |
-| `/brainstorm`    | Planning | Collaborative ideation — see [Brainstorm Guide](./workflows/brainstorm.md)              |
-| `/push`          | Dev      | Commit & push code — see [Push Guide](./workflows/push.md)                              |
-| `/verify`        | QA       | Check task completion — see [Verify Guide](./workflows/verify.md)                       |
-| `/retro`         | Review   | Retrospective before archive — see [Retro Guide](./workflows/retro.md)                  |
-| `/release`       | Release  | Pre-release quality gate — see [Release Guide](./workflows/release.md)                  |
-| `/install`       | Admin    | Install workflow/rule — see [Install Guide](./workflows/install.md)                     |
-| `/merge`         | Admin    | Merge conflicting workflows — see [Merge Guide](./workflows/merge.md)                   |
-| `/update`        | Admin    | Agent-guided safe workspace update — see [Update Guide](./workflows/update.md)          |
-| `/para-rule`     | Admin    | Manage agent rules — see [Para-Rule Guide](./workflows/para-rule.md)                    |
-| `/para-workflow` | Admin    | Manage agent workflows — see [Para-Workflow Guide](./workflows/para-workflow.md)        |
-| `/docs`          | Admin    | Generate and publish documentation — see [Docs Guide](./workflows/docs.md)              |
-| `/para-audit`    | Audit    | Macro Assessor for structural drift — see [Para-Audit Guide](./workflows/para-audit.md) |
+| `/para`          | Core     | Master workflow — see [Para Guide](../workflows/para.md)                                 |
+| `/open`          | Session  | Start session, load context — see [Open Guide](../workflows/open.md)                     |
+| `/end`           | Session  | Close session, save logs — see [End Guide](../workflows/end.md)                          |
+| `/plan`          | Planning | Create implementation plans — see [Plan Guide](../workflows/plan.md)                     |
+| `/backlog`       | Planning | Manage product backlog — see [Backlog Guide](../workflows/backlog.md)                    |
+| `/brainstorm`    | Planning | Collaborative ideation — see [Brainstorm Guide](../workflows/brainstorm.md)              |
+| `/push`          | Dev      | Commit & push code — see [Push Guide](../workflows/push.md)                              |
+| `/verify`        | QA       | Check task completion — see [Verify Guide](../workflows/verify.md)                       |
+| `/retro`         | Review   | Retrospective before archive — see [Retro Guide](../workflows/retro.md)                  |
+| `/release`       | Release  | Pre-release quality gate — see [Release Guide](../workflows/release.md)                  |
+| `/install`       | Admin    | Install workflow/rule — see [Install Guide](../workflows/install.md)                     |
+| `/merge`         | Admin    | Merge conflicting workflows — see [Merge Guide](../workflows/merge.md)                   |
+| `/update`        | Admin    | Agent-guided safe workspace update — see [Update Guide](../workflows/update.md)          |
+| `/para-rule`     | Admin    | Manage agent rules — see [Para-Rule Guide](../workflows/para-rule.md)                    |
+| `/para-workflow` | Admin    | Manage agent workflows — see [Para-Workflow Guide](../workflows/para-workflow.md)        |
+| `/docs`          | Admin    | Generate and publish documentation — see [Docs Guide](../workflows/docs.md)              |
+| `/para-audit`    | Audit    | Macro Assessor for structural drift — see [Para-Audit Guide](../workflows/para-audit.md) |
 
 ## Kernel Compatibility
 
@@ -94,5 +94,5 @@ preferences:
 
 ## Related Guides
 
-- [Development Workflow Guide](./development.md) — How all 4 workflow streams fit together
-- [Planning Guide](./planning.md) — Plan + Backlog detailed guide
+- [Development Workflow Guide](../guides/development.md) — How all 4 workflow streams fit together
+- [Planning Guide](../guides/planning.md) — Plan + Backlog detailed guide

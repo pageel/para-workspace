@@ -41,7 +41,7 @@ Resolve source & destination → Check conflict → Resolve → Execute
 ## Related
 
 - [/merge Workflow](./merge.md) — Semantic merge for conflicts
-- [Workflow Documentation](../workflows.md) — Workflow catalog
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog
 
 ---
 

@@ -80,6 +80,6 @@ The AI agent reads the kernel snapshot to understand:
 - `heuristics.md` — Soft rules and conventions
 - `schema/` — File format contracts
 - `examples/` — Compliance test vectors
-- `../docs/kernel.md` — Extended kernel documentation
+- `../docs/architecture/kernel.md` — Extended kernel documentation
 - `../VERSIONING.md` — Version policy
 - `../CONTRIBUTING.md` — Change process

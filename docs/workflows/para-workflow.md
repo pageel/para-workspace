@@ -51,7 +51,7 @@ Runs standardize checklist in read-only mode and outputs a compliance report wit
 - [/para Workflow](./para.md) — Master workspace controller
 - [/para-rule](./para-rule.md) — Rule management (sister workflow)
 - [/install Workflow](./install.md) — Generic installer with conflict resolution
-- [Workflow Documentation](../workflows.md) — Workflow catalog
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog
 
 ---
 

@@ -66,8 +66,8 @@ Completed plans archive to `plans/done/` with a completion review alongside.
 ## Related
 
 - [Planning Guide](./planning.md) — Plan + Backlog workflow
-- [Workflows](./workflows.md) — Catalog and philosophy
-- [CLI Reference](./cli.md) — Command-line tools
+- [Workflows](../reference/workflows.md) — Catalog and philosophy
+- [CLI Reference](../reference/cli.md) — Command-line tools
 
 ---
 

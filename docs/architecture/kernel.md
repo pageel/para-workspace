@@ -1,6 +1,6 @@
 # Kernel Documentation
 
-> For the canonical kernel files, see `../kernel/`
+> For the canonical kernel files, see `../../kernel/`
 
 ## What is the Kernel?
 
@@ -12,7 +12,7 @@ The Kernel is the rule system that governs all PARA Workspace instances. It defi
 
 ## Invariants Summary
 
-See `../kernel/invariants.md` for full details.
+See `../../kernel/invariants.md` for full details.
 
 | #   | Rule                                           |
 | --- | ---------------------------------------------- |
@@ -33,7 +33,7 @@ See `../kernel/invariants.md` for full details.
 2. **Heuristic changes**: PR → review → MINOR/PATCH bump
 3. **Schema changes**: Must update templates + examples
 
-All changes must pass test vectors in `kernel/examples/`.
+All changes must pass test vectors in `../../kernel/examples/`.
 
 ## Kernel in Workspaces
 

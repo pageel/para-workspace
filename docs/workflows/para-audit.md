@@ -53,7 +53,7 @@ Creates `Areas/Workspace/audits/audit-report-YYYY-MM-DD.md` with:
 - [/para-rule](./para-rule.md) — Rule management
 - [/para-workflow](./para-workflow.md) — Workflow management
 - [/para Workflow](./para.md) — Master workspace controller
-- [Workflow Documentation](../workflows.md) — Workflow catalog
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog
 
 ---
 

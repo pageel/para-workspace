@@ -53,7 +53,7 @@ Moves the entire project directory to `Archive/[project-name]`.
 ## Related
 
 - [/end Workflow](./end.md) — End session and log progress
-- [Workflow Documentation](../workflows.md) — Workflow catalog
+- [Workflow Documentation](../reference/workflows.md) — Workflow catalog
 
 ---
 
