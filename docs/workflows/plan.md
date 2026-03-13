@@ -19,7 +19,7 @@ The `/plan` workflow creates, reviews, and updates phased implementation plans f
 ## Plan Creation Flow
 
 ```
-Contract → Backlog → Brainstorm check → Learnings → Architecture → Phases → Save → Register
+Contract → Backlog → Brainstorm check → Learnings → Project Knowledge → Architecture → Phases → Save → Register
 ```
 
 ### Key Steps
@@ -28,13 +28,16 @@ Contract → Backlog → Brainstorm check → Learnings → Architecture → Pha
 2. **Read Backlog** — Feature scope, priorities, status distribution
 3. **Check Brainstorm Context** (v1.5.0) — Auto-discovers recent brainstorm outputs in `artifacts/para-decisions/brainstorm-*.md`. If found, uses the Options and Decision sections as baseline context.
 4. **Scan Learnings Index** — Cross-references `Areas/Learning/README.md` with project tech stack. Reads matched lessons (max 3) to prevent repeating past mistakes.
-5. **Analyze Reference Projects** — If contract references another project, checks for reusable code.
-6. **Design Architecture** — Component diagram (ASCII), tech stack table, data flow.
-7. **Define Phases** — 4-7 sequential phases, each with tasks, timeline, and deliverables.
-8. **Map Backlog → Phases** — Links High/Medium priority items to implementation phases.
-9. **Rule Impact Check** (v1.5.3) — If plan tasks modify `rules/` or `kernel/`, auto-adds sync tasks to final phase.
-10. **Write Plan File** — Saves to `artifacts/plans/[plan-name].md`
-11. **Register in project.md** — Sets `active_plan` field for `/open` and `/end` discovery.
+5. **Scan Project Knowledge Base** (v1.5.3) — Reads `docs/README.md` index to discover existing architecture docs, RFCs, and guides. Selectively reads relevant files (max 3, ~300-600 tokens):
+   - **Active RFCs** → hard constraints that phases must not violate
+   - **Architecture overview** → baseline for Step 6 (extend, not replace)
+6. **Analyze Reference Projects** — If contract references another project, checks for reusable code.
+7. **Design Architecture** — Component diagram (ASCII), tech stack table, data flow. If Step 5 found an architecture baseline, **extends** the existing design.
+8. **Define Phases** — 4-7 sequential phases, each with tasks, timeline, and deliverables.
+9. **Map Backlog → Phases** — Links High/Medium priority items to implementation phases.
+10. **Rule Impact Check** (v1.5.3) — If plan tasks modify `rules/` or `kernel/`, auto-adds sync tasks to final phase.
+11. **Write Plan File** — Saves to `artifacts/plans/[plan-name].md`
+12. **Register in project.md** — Sets `active_plan` field for `/open` and `/end` discovery.
 
 ### Phase Structure
 
@@ -72,13 +75,14 @@ When all phases reach 100%, `/plan review` automatically:
 
 ## Integration Points
 
-| Workflow      | Relationship                                              |
-| ------------- | --------------------------------------------------------- |
-| `/brainstorm` | Plan auto-discovers brainstorm outputs (Step 2.5)         |
-| `/learn`      | Plan scans learning index for relevant lessons (Step 2.6) |
-| `/open`       | Open reads `active_plan` to show current phase            |
-| `/end`        | End checks plan completion, cleans up `active_plan`       |
-| `/verify`     | Verify checks task completion against plan                |
+| Workflow      | Relationship                                               |
+| ------------- | ---------------------------------------------------------- |
+| `/brainstorm` | Plan auto-discovers brainstorm outputs (Step 2.5)          |
+| `/learn`      | Plan scans learning index for relevant lessons (Step 2.6)  |
+| `docs/`       | Plan reads docs index + RFCs + architecture baseline (2.7) |
+| `/open`       | Open reads `active_plan` to show current phase             |
+| `/end`        | End checks plan completion, cleans up `active_plan`        |
+| `/verify`     | Verify checks task completion against plan                 |
 
 ## Related
 
@@ -88,4 +92,4 @@ When all phases reach 100%, `/plan review` automatically:
 
 ---
 
-_Updated in v1.5.3 (Rule Impact Check, completion review in plans/done/, has_rules gate)_
+_Updated in v1.5.3 (Project Knowledge Context, Rule Impact Check, completion review in plans/done/, has_rules gate)_

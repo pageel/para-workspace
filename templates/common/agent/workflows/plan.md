@@ -5,7 +5,7 @@ source: catalog
 
 # /plan [project-name] [action]
 
-> **Workspace Version:** 1.5.0 (Governed Libraries)
+> **Workspace Version:** 1.5.3 (Hot Lane)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final plan document MUST be translated to this language.**
 
 Create, review, or update a phased implementation plan for a PARA project.
@@ -77,9 +77,41 @@ ls -t Projects/[project-name]/artifacts/para-decisions/brainstorm-*.md 2>/dev/nu
 
 > **Convention:** This step bridges `/learn` (captures lessons) with `/plan` (applies them). The goal is to prevent repeating past mistakes, not to read the entire knowledge base.
 
-**Optional: Scan project docs index**
+#### 2.7. Scan Project Knowledge Base
 
-If `Projects/[project-name]/docs/README.md` exists, read it (~30-80 lines) to discover existing architecture docs, workflow docs, or design decisions. This prevents re-designing what's already documented. Skip if file doesn't exist.
+// turbo
+
+> 🛡️ **Token Optimization:** Index-first approach. Read index files only (~80 lines), then selectively read max 3 detail files based on relevance match. Total budget: ~300-600 tokens.
+
+**Phase A: Internal Docs Index** (ALWAYS check)
+
+Check if `Projects/[project-name]/docs/README.md` exists:
+
+- **If exists** → Read it (~80 lines). Extract:
+  - Architecture docs list → store as "existing architecture" (for Step 5)
+  - RFCs list with status → store as "active constraints" (for Step 6, 9)
+  - Guides list → store as "established patterns" (avoid re-inventing)
+- **If not exists** → Skip. Zero overhead.
+
+**Phase B: Active RFCs** (read IF Phase A found RFCs)
+
+From Phase A, identify RFCs with status `✅ Implemented` or `📋 Planned`:
+
+- Read max 2 most relevant RFCs (based on plan scope match).
+- Extract **constraints** and **decisions** that affect plan design.
+- Store as hard constraints for Phase definition (Step 6) and Risk section (Step 9).
+
+> **Rule:** Never design a plan phase that contradicts an Implemented RFC.
+
+**Phase C: Architecture Overview** (read IF Phase A found architecture docs)
+
+From Phase A, if architecture docs exist:
+
+- Read the **overview** doc only (1 file, ~60 lines).
+- Extract: component diagram, tech stack, data flow.
+- Use as baseline for Step 5 (Design Architecture) — **EXTEND, don't replace**.
+
+> **Convention:** This step ensures `/plan` builds on existing project knowledge rather than re-designing from scratch. It bridges `docs/` (captures decisions) with `/plan` (applies them).
 
 #### 3. Analyze Reference Projects (Optional)
 
@@ -108,6 +140,8 @@ Create an architecture overview:
 - **Component diagram** (ASCII art — do NOT use Mermaid or external tools)
 - **Technology stack table** (Component | Technology | Deploy Target)
 - **Data flow** between components
+
+> 🛡️ **Architecture Baseline:** If Step 2.7 Phase C found an existing architecture overview, **EXTEND** it rather than creating from scratch. Reference the existing diagram and add new components/flows as needed. If no existing architecture was found, create a new one.
 
 > 🛡️ **Progressive Disclosure:** You may selectively read specific files in `Resources/ai-agents/kernel/` (e.g., `invariants.md`, `heuristics.md`) if you need strict architectural guidance for this step. Do NOT scan the entire kernel directory at once.
 
@@ -242,10 +276,15 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 
 [Risk table with mitigations]
 
-> If Step 2.5 found relevant lessons, list them here:
+> If Step 2.6 found relevant lessons, list them here:
 >
 > - **Source:** `Areas/Learning/[lesson-name].md`
 > - **Constraint applied:** [What checklist or pattern was incorporated into this plan]
+
+> If Step 2.7 found active RFCs, list constraints here:
+>
+> - **RFC:** `docs/rfcs/[rfc-name].md` (Status: Implemented/Planned)
+> - **Constraint applied:** [What decision or rule was incorporated into this plan]
 
 ## ✅ Definition of Done
 
@@ -384,7 +423,8 @@ Modify an existing plan (add phases, update status, revise timeline).
 
 - [ ] Project contract analyzed
 - [ ] Backlog items mapped to phases
-- [ ] Architecture designed with component diagram
+- [ ] Project knowledge scanned (docs index, RFCs, architecture baseline)
+- [ ] Architecture designed with component diagram (extended if baseline exists)
 - [ ] Data schema defined (if applicable)
 - [ ] Phases defined (4-7 phases recommended)
 - [ ] Code reuse documented (if reference projects exist)
