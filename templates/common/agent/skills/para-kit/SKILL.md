@@ -43,7 +43,8 @@ Intelligence for managing an "Agent-Executable" PARA workspace. This skill helps
 
 ### 2. Artifact-Driven Standard & Beads Lifecycle
 
-- **Persistent Mirroring**: ALWAYS mirror creative logic, architectural plans, and verification evidence into `Projects/<project-name>/artifacts/`. Use `plans/` for design, `walkthroughs/` for validation evidence.
+- **Persistent Mirroring**: ALWAYS mirror creative logic, architectural plans, and verification evidence into `Projects/<project-name>/artifacts/`. Use `plans/` for design, `plans/done/` for archived plans + completion reviews, `walkthroughs/` for task verification.
+- **Artifact Location Rule**: Plan completion reviews go in `artifacts/plans/done/` alongside the archived plan. Task verification checklists go in `artifacts/walkthroughs/`. NEVER save project evidence in the conversation brain — brain is for scratch notes only.
 - **Beads Bound to Projects**: Temporary thinking lives in `Projects/<project-name>/.beads/`.
 - **Graduation Ritual**: During `/retro`, analyze Beads for potential graduation to `Areas/` (Standard Operating Procedures), `Resources/` (Reference), or `.agent/rules/` (Codified Guardrails).
 - **Proactive Tagging**: Identify friction points (repeated failures, logic gaps) and suggest creating a Bead.

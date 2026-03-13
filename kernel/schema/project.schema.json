@@ -50,6 +50,11 @@
     "active_plan": {
       "type": ["string", "null"],
       "description": "Relative path to active plan file (from artifacts/). Null or empty when no plan is active."
+    },
+    "has_rules": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this project has custom rules in .agent/rules.md. Used by /open to skip rules check when false."
     }
   }
 }

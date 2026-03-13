@@ -114,7 +114,9 @@ Recommended project directory layout:
 │   │   ├── sprint-current.md  # Hot Lane (quick tasks)
 │   │   └── done.md         # Completed tasks archive
 │   ├── plans/
-│   │   └── plan-v001.md    # Versioned plans
+│   │   ├── [plan-name].md  # Descriptive name (e.g., fix-auth-flow.md)
+│   │   └── done/           # Archived plans + completion reviews
+│   ├── walkthroughs/       # Task verification checklists (from /verify)
 │   ├── para-decisions/
 │   │   └── <timestamp>.json # Decision records
 │   └── outputs/            # Deliverables

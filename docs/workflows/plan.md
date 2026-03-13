@@ -1,6 +1,6 @@
 # /plan Workflow
 
-> **Version**: 1.5.2
+> **Version**: 1.5.3
 
 The `/plan` workflow creates, reviews, and updates phased implementation plans for PARA projects. It integrates with brainstorm outputs, the project backlog, and the learning index to produce comprehensive, actionable plans.
 
@@ -32,8 +32,9 @@ Contract → Backlog → Brainstorm check → Learnings → Architecture → Pha
 6. **Design Architecture** — Component diagram (ASCII), tech stack table, data flow.
 7. **Define Phases** — 4-7 sequential phases, each with tasks, timeline, and deliverables.
 8. **Map Backlog → Phases** — Links High/Medium priority items to implementation phases.
-9. **Write Plan File** — Saves to `artifacts/plans/[plan-name].md`
-10. **Register in project.md** — Sets `active_plan` field for `/open` and `/end` discovery.
+9. **Rule Impact Check** (v1.5.3) — If plan tasks modify `rules/` or `kernel/`, auto-adds sync tasks to final phase.
+10. **Write Plan File** — Saves to `artifacts/plans/[plan-name].md`
+11. **Register in project.md** — Sets `active_plan` field for `/open` and `/end` discovery.
 
 ### Phase Structure
 
@@ -60,6 +61,15 @@ Overall: 40% complete | Deadline: YYYY-MM-DD
 
 > **Hybrid 3-File**: `/plan review` cross-references completed task IDs located in `done.md` instead of searching the backlog. This reliably detects when a phase reaches 100% completion in order to suggest a retrospective early.
 
+### Plan Archiving
+
+When all phases reach 100%, `/plan review` automatically:
+
+1. Moves the plan to `artifacts/plans/done/[plan-name].md`
+2. Creates a **completion review** at `artifacts/plans/done/[plan-name]-review.md` (task status, phase summary, deferred items)
+3. Removes `active_plan` from `project.md`
+4. Suggests running `/retro`
+
 ## Integration Points
 
 | Workflow      | Relationship                                              |
@@ -78,4 +88,4 @@ Overall: 40% complete | Deadline: YYYY-MM-DD
 
 ---
 
-_Updated in v1.5.2 (Ask-to-activate flow, /backlog sync suggestion, plan archiving to done/)_
+_Updated in v1.5.3 (Rule Impact Check, completion review in plans/done/, has_rules gate)_

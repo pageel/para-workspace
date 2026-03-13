@@ -34,12 +34,12 @@ Read `Projects/[project-name]/project.md` to understand goal, deadline, status, 
 
 //turbo
 
-> ⚠️ **Token optimization:** Only read the index file (~5–10 lines), NOT individual rule files.
+> ⚠️ **Token optimization:** Use `project.md` (already read in Step 2) to gate this check. Only read the index file (~5–10 lines), NOT individual rule files.
 
-Check if `Projects/[project-name]/.agent/rules.md` exists:
+Check `project.md` frontmatter for `has_rules: true` (or check if `Projects/[project-name]/.agent/rules.md` exists):
 
-- **If exists** → Read the index and note the trigger conditions for the session.
-- **If not exists** → Skip entirely.
+- **If `has_rules: true`** (or file exists) → Read the rules index and note trigger conditions for the session.
+- **Otherwise** → Skip entirely. Zero I/O cost.
 
 During the session, when performing an action that matches a trigger from the index, the agent **MUST** read the corresponding rule file **BEFORE** acting.
 

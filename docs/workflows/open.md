@@ -37,10 +37,10 @@ Reads `project.md` to extract goal, deadline, status, DoD, and downstream projec
 
 > Added in v1.5.0
 
-Checks for `Projects/[project-name]/.agent/rules.md`:
+Checks `project.md` for `has_rules: true` (or checks if `Projects/[project-name]/.agent/rules.md` exists):
 
-- If exists → reads the lightweight index (~5–10 lines) and notes trigger conditions for the session.
-- If not exists → skips entirely.
+- If `has_rules: true` (or file exists) → reads the lightweight index (~5–10 lines) and notes trigger conditions for the session.
+- Otherwise → skips entirely. Zero I/O cost.
 
 During the session, when an action matches a trigger from the index, the agent loads the corresponding rule file before acting. See [Project Rules](../project-rules.md) for details.
 

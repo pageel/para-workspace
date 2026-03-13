@@ -336,11 +336,18 @@ Overall: 40% complete | Deadline: YYYY-MM-DD
 ```
 
 5. If a phase reaches 100% → suggest running `/retro` for phase review.
-6. If ALL phases reach 100% → archive the plan:
+6. If ALL phases reach 100% → generate review + archive the plan:
    a. Move plan file to `artifacts/plans/done/[plan-name].md`
-   b. Remove `active_plan` field from `project.md`
-   c. Suggest running `/retro` for full project retrospective
-   d. Log: `Plan [plan-name] archived to plans/done/`
+   b. **Create completion review** at `artifacts/plans/done/[plan-name]-review.md`:
+   - Task-by-task completion status (verified against `done.md`)
+   - Phase summary with dates
+   - Items deferred or skipped (with reason)
+   - Bonus work done outside plan scope
+     c. Remove `active_plan` field from `project.md`
+     d. Suggest running `/retro` for full project retrospective
+     e. Log: `Plan [plan-name] archived to plans/done/ (with review)`
+
+> **Why review in `done/`?** Keeps plan + evidence together. `/retro` only needs to read one directory. Review lives in the project (not conversation brain) so it persists across sessions.
 
 > **Why archive?** Completed plans in `artifacts/plans/` waste tokens when agents scan the directory. Moving to `done/` keeps the active plans directory lean.
 
@@ -365,11 +372,11 @@ Modify an existing plan (add phases, update status, revise timeline).
 
 ## 📁 Artifacts Convention
 
-| Path                      | Purpose                                               |
-| :------------------------ | :---------------------------------------------------- |
-| `artifacts/plans/`        | Implementation plans, migration plans, redesign plans |
-| `artifacts/tasks/`        | Backlog and task tracking                             |
-| `artifacts/walkthroughs/` | Verification checklists                               |
+| Path                      | Purpose                                                      |
+| :------------------------ | :----------------------------------------------------------- |
+| `artifacts/plans/`        | Active plans + `done/` (archived plans + completion reviews) |
+| `artifacts/tasks/`        | Backlog and task tracking                                    |
+| `artifacts/walkthroughs/` | Task verification checklists (from `/verify`)                |
 
 > Plans are **living documents** — update them as the project evolves. Use the `update` action to keep them in sync with actual progress.
 
