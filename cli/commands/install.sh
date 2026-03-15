@@ -265,6 +265,13 @@ sync_library "rules" \
   "$WS_ROOT/Resources/ai-agents/rules" \
   "$WS_ROOT/.agent/rules"
 
+# Sync workspace rules index (rules.md sits OUTSIDE rules/ directory)
+if [ -f "$LIB_SRC/rules.md" ]; then
+  if sync_file "$LIB_SRC/rules.md" "$WS_ROOT/.agent/rules.md"; then
+    echo "   ✓ Workspace rules index synced (.agent/rules.md)"
+  fi
+fi
+
 echo "🧩 Syncing skills..."
 sync_library "skills" \
   "$LIB_SRC/skills" \

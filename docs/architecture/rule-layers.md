@@ -1,6 +1,6 @@
 # Rule Layers & Trigger Index Architecture
 
-> **Version**: 1.5.3 | **Last reviewed**: 2026-03-13
+> **Version**: 1.5.4 | **Last reviewed**: 2026-03-15
 
 ## Overview
 
@@ -60,9 +60,21 @@ Synced from `catalog.yml` by `./para install` or `./para update`.
 - **Not synced from repo** — user-created via `/para-rule add`
 - **Supplement** global rules, never override
 
-## Trigger Index (Progressive Disclosure)
+## Trigger Index (Two-Tier Progressive Disclosure)
 
-Each project MAY provide a `rules.md` index at `Projects/<name>/.agent/rules.md`:
+The system uses **two index files** so the agent knows which rules exist and when to load them:
+
+**Tier 1: Workspace Rules Index** (`.agent/rules.md`) — ALWAYS READ
+
+```markdown
+| Rule                    | Trigger                                           | File                             |
+| :---------------------- | :------------------------------------------------ | :------------------------------- |
+| Governance              | Touching kernel/, .para/, or system files         | rules/governance.md              |
+| Hybrid 3-File Integrity | Reading/writing artifacts/tasks/, ad-hoc requests | rules/hybrid-3-file-integrity.md |
+| ...                     | ...                                               | ...                              |
+```
+
+**Tier 2: Project Rules Index** (`Projects/<name>/.agent/rules.md`) — CONDITIONAL
 
 ```markdown
 | Rule              | Trigger                                   | File                 |
@@ -71,43 +83,50 @@ Each project MAY provide a `rules.md` index at `Projects/<name>/.agent/rules.md`
 | Maintenance       | Version bumps, writing docs/changelog     | maintenance.md       |
 ```
 
-### Loading Flow
+### Loading Flow (Two-Tier)
 
 ```
-/open Step 2.5: Read rules.md index (~5 lines) → memorize triggers
-    ↓
+/open
+  ↓
+Step 2.5a: Read .agent/rules.md (workspace index) — ALWAYS
+  → Memorize 10 triggers (do NOT read rule files)
+  ↓
+Step 2.5b: has_rules: true?
+  → YES → Read Projects/<name>/.agent/rules.md (project index)
+  → NO  → Skip (only project rules skipped, workspace rules already loaded)
+  ↓
 Coding session: agent about to edit repo/
-    → Match: "Editing repo/" → load dogfooding-policy.md → comply
-    ↓
-Agent about to commit
-    → No trigger match → skip → save tokens
+  → Match: "Editing repo/" → load dogfooding-policy.md → comply
+  ↓
+Agent receives ad-hoc request "remove download button"
+  → Match: "ad-hoc requests" → load hybrid-3-file-integrity.md → log hot lane first
 ```
 
 ### `has_rules` Gate in project.md
 
 ```yaml
-has_rules: true # Gate for /open Step 2.5 and /plan Step 2.7D
+has_rules: true # Gate for /open Step 2.5b (project rules only)
 ```
 
-- `true` → `/open` reads rules index, `/plan` reads constraints
-- `false` or missing → skip entirely (zero I/O cost)
+- `true` → `/open` reads project rules index
+- `false` or missing → skip project rules (workspace rules still loaded)
 - `/para-audit update` Step 5 checks consistency between `has_rules` and actual files
 
 ## Workflow Coverage
 
-| Workflow      | Reads rules index? | Detail                                                       |
-| :------------ | :----------------- | :----------------------------------------------------------- |
-| `/open`       | ✅ Step 2.5        | Reads index → memorize triggers → load on-demand             |
-| `/plan`       | ✅ Step 2.7D + 8.5 | Phase D: constraints for design. Step 8.5: rule impact check |
-| `/para-audit` | ✅ Step 5 (update) | Consistency check: `has_rules` vs index vs disk              |
-| `/para-rule`  | ✅ Core            | CRUD rule management                                         |
+| Workflow      | Workspace Index       | Project Index              | Detail                                                          |
+| :------------ | :-------------------- | :------------------------- | :-------------------------------------------------------------- |
+| `/open`       | ✅ Step 2.5a (ALWAYS) | ✅ Step 2.5b (conditional) | Workspace: always. Project: if `has_rules: true`                |
+| `/plan`       | ✅ Step 2.7 D1        | ✅ Step 2.7 D2 + Step 8.5  | D1: workspace constraints. D2: project constraints. 8.5: impact |
+| `/para-audit` | —                     | ✅ Step 5 (update)         | Consistency check: `has_rules` vs index vs disk                 |
+| `/para-rule`  | —                     | ✅ Core                    | CRUD rule management                                            |
 
 ## References
 
-- **Rule:** `context-rules.md` Rule #4 — Progressive Disclosure protocol
-- **Workflow:** `/open` Step 2.5, `/plan` Step 2.7D
+- **Rule:** `context-rules.md` Rule #4 — Two-Tier Progressive Disclosure protocol
+- **Workflow:** `/open` Step 2.5a/2.5b, `/plan` Step 2.7 D1/D2
 - **Docs:** [Project Rules](../reference/project-rules.md)
 
 ---
 
-_Published from `docs/architecture/rule-layers.md` (Vietnamese internal) — v1.5.3_
+_Published from `docs/architecture/rule-layers.md` (Vietnamese internal) — v1.5.4 (BUG-17: Two-Tier Rule Gate)_

@@ -113,16 +113,26 @@ From Phase A, if architecture docs exist:
 
 > **Convention:** This step ensures `/plan` builds on existing project knowledge rather than re-designing from scratch. It bridges `docs/` (captures decisions) with `/plan` (applies them).
 
-**Phase D: Project Rules** (read IF `has_rules: true` in project.md)
+**Phase D: Rules Constraints** (Two-Tier)
+
+**D1: Workspace Rules** (ALWAYS read)
+
+Read `.agent/rules.md` (workspace-level rules index, ~20 lines):
+
+- Extract **trigger conditions** that may affect plan design.
+- Store as constraints for Phase definition (Step 6) and Risk section (Step 9).
+- Example: `hybrid-3-file-integrity.md` trigger "ad-hoc requests" → plan must account for Hot Lane logging.
+
+**D2: Project Rules** (read IF `has_rules: true` in project.md)
 
 From Step 1, if `project.md` has `has_rules: true`:
 
-- Read `Projects/[project-name]/.agent/rules.md` (rules index, ~5-10 lines).
+- Read `Projects/[project-name]/.agent/rules.md` (project rules index, ~5-10 lines).
 - Extract **trigger conditions** that may affect plan design.
 - Store as constraints for Phase definition (Step 6) and Risk section (Step 9).
 - Example: `dogfooding-policy.md` trigger "Editing repo/" → plan must include sync tasks when modifying repo templates.
 
-> **Rule:** Project rules can impose hard constraints on plan phases. Always check before designing.
+> **Rule:** Both workspace and project rules can impose hard constraints on plan phases. Always check before designing.
 
 #### 3. Analyze Reference Projects (Optional)
 

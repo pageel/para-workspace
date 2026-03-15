@@ -33,11 +33,20 @@
 - Beads are allowed to be messy, partial, and contradictory while the project is active.
 - **MUST** perform a "Graduation Review" before archiving a project — move valuable knowledge from beads to `Areas/`, `Resources/`, or `.agent/rules/`.
 
-### 4. Project Rules Loading (Progressive Disclosure)
+### 4. Rules Loading (Two-Tier Progressive Disclosure)
 
 When beginning work on a project (via `/open` or context detection):
 
-- **MUST** check for `Projects/<project>/.agent/rules.md` (Rules Index).
+**Tier 1: Workspace Rules (ALWAYS)**
+
+- **MUST** read `.agent/rules.md` (workspace-level rules trigger index).
+- This file lists all **global rules** with trigger conditions (~20 lines, ~200 tokens).
+- Agent memorizes the trigger table and loads specific rule files **on demand**.
+- **MUST NOT** skip this step — global rules apply to ALL projects.
+
+**Tier 2: Project Rules (CONDITIONAL)**
+
+- **MUST** check for `Projects/<project>/.agent/rules.md` (project-level Rules Index).
 - **If index exists:**
   - Read the index file (~5–10 lines) to learn what project-specific rules exist.
   - Load a specific rule file **ONLY WHEN** the current action matches its trigger.
@@ -47,7 +56,9 @@ When beginning work on a project (via `/open` or context detection):
   - If files exist, list names and load only when relevant.
   - If empty or missing — skip entirely.
 
-> **Rules Index format** — each project MAY provide a `rules.md` at `Projects/<project>/.agent/rules.md`:
+During the session, when an action matches a trigger from **EITHER** index, the agent **MUST** read the corresponding rule file **BEFORE** acting.
+
+> **Rules Index format** — workspace (`rules.md`) and project (`Projects/<project>/.agent/rules.md`):
 >
 > ```markdown
 > | Rule      | Trigger                | File        |

@@ -30,18 +30,30 @@ Base: Projects/[project-name]/
 
 Read `Projects/[project-name]/project.md` to understand goal, deadline, status, and DoD.
 
-### 2.5. Load project rules index (if exists)
+### 2.5. Load rules indices
 
 //turbo
+
+#### 2.5a: Workspace rules (ALWAYS)
+
+> This step is **MANDATORY** for every session, regardless of project.
+
+Read `.agent/rules.md` — the workspace-level rules trigger index (~20 lines, ~200 tokens).
+
+- This file lists all **global rules** with their trigger conditions.
+- Agent memorizes the trigger table and loads specific rule files **on demand** during the session.
+- **MUST NOT** skip this step. Global rules apply to ALL projects.
+
+#### 2.5b: Project rules (CONDITIONAL)
 
 > ⚠️ **Token optimization:** Use `project.md` (already read in Step 2) to gate this check. Only read the index file (~5–10 lines), NOT individual rule files.
 
 Check `project.md` frontmatter for `has_rules: true` (or check if `Projects/[project-name]/.agent/rules.md` exists):
 
-- **If `has_rules: true`** (or file exists) → Read the rules index and note trigger conditions for the session.
-- **Otherwise** → Skip entirely. Zero I/O cost.
+- **If `has_rules: true`** (or file exists) → Read the project rules index and note trigger conditions for the session.
+- **Otherwise** → Skip. Zero I/O cost.
 
-During the session, when performing an action that matches a trigger from the index, the agent **MUST** read the corresponding rule file **BEFORE** acting.
+During the session, when performing an action that matches a trigger from **EITHER** index (workspace or project), the agent **MUST** read the corresponding rule file **BEFORE** acting.
 
 ### 3. Find and read latest session
 
