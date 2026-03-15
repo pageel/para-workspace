@@ -1,6 +1,6 @@
 # Rules & Context Loading
 
-> **Version**: 1.5.4
+> **Version**: 1.5.3
 
 PARA Workspace uses a **Two-Tier** rule loading system. Global rules apply to all projects, while project-specific rules add constraints for individual projects. Both tiers use **progressive disclosure** — agents load rules on demand, not all at once.
 
@@ -72,4 +72,4 @@ The Two-Tier loading protocol is defined in `context-rules.md` Rule #4 (shipped 
 
 ---
 
-_Updated in v1.5.4 (BUG-17: Two-Tier Rule Gate)_
+_Updated in v1.5.3 (BUG-17: Two-Tier Rule Gate)_

@@ -91,6 +91,7 @@ para-workspace/
 ├── Archive/                           # Lưu trữ lạnh cho các dự án đã hoàn tất
 ├── _inbox/                            # Vùng đệm tạm thời để hứng dữ liệu ngoài tải về nhanh
 ├── .agent/                            # Thư viện hệ thống Governed Library (Tự động đồng bộ lên)
+│   ├── rules.md                       # Workspace Rules Trigger Index (luôn được load)
 │   ├── rules/                         # Các quy tắc kỹ năng (.md) cho Agent
 │   ├── skills/                        # Các kỹ năng phức hợp (.md, /scripts)
 │   └── workflows/                     # Các luồng làm việc (.md) cho Agent
@@ -218,6 +219,7 @@ cd ..\..\..
 - ✅ Tự động chạy **`install.sh`**, bao gồm:
   - Đồng bộ **governed workflows** từ `catalog.yml` vào `.agent/workflows/`
   - Đồng bộ **governed rules** từ `catalog.yml` vào `.agent/rules/`
+  - Đồng bộ **workspace rules index** vào `.agent/rules.md` (trigger index)
   - Đồng bộ **skills** vào `.agent/skills/` (tuỳ profile)
   - Tạo **`./para`** wrapper tại workspace root
   - Sao lưu file xung đột thành `.bak`

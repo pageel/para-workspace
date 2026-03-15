@@ -1,6 +1,6 @@
 # Rule Layers & Trigger Index Architecture
 
-> **Version**: 1.5.4 | **Last reviewed**: 2026-03-15
+> **Version**: 1.5.3 | **Last reviewed**: 2026-03-15
 
 ## Overview
 
@@ -129,4 +129,4 @@ has_rules: true # Gate for /open Step 2.5b (project rules only)
 
 ---
 
-_Published from `docs/architecture/rule-layers.md` (Vietnamese internal) — v1.5.4 (BUG-17: Two-Tier Rule Gate)_
+_Published from `docs/architecture/rule-layers.md` (Vietnamese internal) — v1.5.3 (BUG-17: Two-Tier Rule Gate)_

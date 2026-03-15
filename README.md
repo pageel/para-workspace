@@ -87,6 +87,7 @@ para-workspace/
 ├── Archive/                           # Cold storage for completed items
 ├── _inbox/                            # Temporary landing zone for external downloads
 ├── .agent/                            # Governed library copies (Auto-synced)
+│   ├── rules.md                       # Workspace Rules Trigger Index (always loaded)
 │   ├── rules/                         # Active agent rules (.md)
 │   ├── skills/                        # Active agent skills (.md, /scripts)
 │   └── workflows/                     # Active agent workflows (.md)
@@ -213,6 +214,7 @@ cd ..\..\..
 - ✅ Runs **`install.sh`** automatically, which:
   - Syncs **governed workflows** from `catalog.yml` into `.agent/workflows/`
   - Syncs **governed rules** from `catalog.yml` into `.agent/rules/`
+  - Syncs **workspace rules index** into `.agent/rules.md` (trigger index)
   - Syncs **skills** into `.agent/skills/` (if profile includes them)
   - Creates **`./para`** wrapper at workspace root
   - Backs up conflicting files to `.bak`
