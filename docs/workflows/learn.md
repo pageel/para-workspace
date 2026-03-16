@@ -36,6 +36,7 @@ If from a project, adds reference in the project's session log.
 
 | Workflow      | Relationship                               |
 | :------------ | :----------------------------------------- |
+| `/plan`       | Step 4 scans `Areas/Learning/` for lessons |
 | `/brainstorm` | Option E exits to `/learn`                 |
 | `/end`        | May trigger `/learn` for discoveries       |
 | `/retro`      | Graduates beads to learnings               |
