@@ -66,7 +66,7 @@ para-workspace/
 │   ├── guides/          # Hướng dẫn: development, planning
 │   ├── reference/       # Tra cứu: CLI, workflows, project-rules
 │   ├── changelog/       # Lịch sử phiên bản
-│   └── workflows/       # Chi tiết từng workflow (17 files)
+│   └── workflows/       # Chi tiết từng workflow (22 files)
 ├── CONTRIBUTING.md
 ├── VERSIONING.md
 ├── CHANGELOG.md
@@ -302,15 +302,15 @@ para config [key] [value]     # Quản lý thiết lập trong tệp .para-works
 | Lệnh                                                 | Mô tả                                                     |
 | :--------------------------------------------------- | :-------------------------------------------------------- |
 | **[`/backlog`](./workflows/backlog.md)**             | Quản lý tasks qua backlog.md canonical + plan integration |
-| **`/backup`**                                        | Sao lưu workflows, rules, config, và dữ liệu project      |
+| **[`/backup`](./workflows/backup.md)**               | Sao lưu workflows, rules, config, và dữ liệu project      |
 | **[`/brainstorm`](./workflows/brainstorm.md)**       | Brainstorm ý tưởng với cấu trúc và 5 hướng kế tiếp        |
-| **`/config`**                                        | Quản lý cấu hình workspace                                |
+| **[`/config`](./workflows/config.md)**               | Quản lý cấu hình workspace                                |
 | **[`/end`](./workflows/end.md)**                     | Đóng phiên + dọn dẹp active_plan tự động                  |
-| **`/inbox`**                                         | Phân loại file từ `_inbox/` vào PARA                      |
+| **[`/inbox`](./workflows/inbox.md)**                 | Phân loại file từ `_inbox/` vào PARA                      |
 | **[`/install`](./workflows/install.md)**             | Cài đặt thông minh (xử lý cập nhật/merge)                 |
-| **`/learn`**                                         | Ghi nhận bài học vào Areas/Learning                       |
+| **[`/learn`](./workflows/learn.md)**                 | Ghi nhận bài học vào Areas/Learning                       |
 | **[`/merge`](./workflows/merge.md)**                 | Merge ngữ nghĩa cho xung đột workflow                     |
-| **`/new-project`**                                   | Khởi tạo project mới với scaffolding                      |
+| **[`/new-project`](./workflows/new-project.md)**     | Khởi tạo project mới với scaffolding                      |
 | **[`/open`](./workflows/open.md)**                   | Bắt đầu phiên với nạp context + plan phase                |
 | **[`/para`](./workflows/para.md)**                   | Bộ điều khiển chính cho quản lý workspace                 |
 | **[`/docs`](./workflows/docs.md)**                   | Tạo, kiểm tra, và xuất bản tài liệu kỹ thuật              |

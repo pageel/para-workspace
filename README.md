@@ -66,7 +66,7 @@ para-workspace/
 │   ├── guides/          # How-to: development, planning
 │   ├── reference/       # Lookup: CLI, workflows, project-rules
 │   ├── changelog/       # Version history
-│   └── workflows/       # Individual workflow docs (17 files)
+│   └── workflows/       # Individual workflow docs (22 files)
 ├── CONTRIBUTING.md
 ├── VERSIONING.md
 ├── CHANGELOG.md
@@ -297,15 +297,15 @@ para config [key] [value]       # Manage workspace settings
 | Command                                                   | Description                                                |
 | :-------------------------------------------------------- | :--------------------------------------------------------- |
 | **[`/backlog`](./docs/workflows/backlog.md)**             | Manage project tasks via canonical backlog.md              |
-| **`/backup`**                                             | Backup workflows, rules, config, and project data          |
+| **[`/backup`](./docs/workflows/backup.md)**               | Backup workflows, rules, config, and project data          |
 | **[`/brainstorm`](./docs/workflows/brainstorm.md)**       | Collaborative ideation with structured output              |
-| **`/config`**                                             | Manage workspace configuration                             |
+| **[`/config`](./docs/workflows/config.md)**               | Manage workspace configuration                             |
 | **[`/end`](./docs/workflows/end.md)**                     | Close session with PARA classification + automated cleanup |
-| **`/inbox`**                                              | Categorize files from `_inbox/` into PARA                  |
+| **[`/inbox`](./docs/workflows/inbox.md)**                 | Categorize files from `_inbox/` into PARA                  |
 | **[`/install`](./docs/workflows/install.md)**             | Intelligent installer (handles updates/merges)             |
-| **`/learn`**                                              | Capture lessons into Areas/Learning                        |
+| **[`/learn`](./docs/workflows/learn.md)**                 | Capture lessons into Areas/Learning                        |
 | **[`/merge`](./docs/workflows/merge.md)**                 | Semantic merge for workflow conflicts                      |
-| **`/new-project`**                                        | Initialize new project with scaffolding                    |
+| **[`/new-project`](./docs/workflows/new-project.md)**     | Initialize new project with scaffolding                    |
 | **[`/open`](./docs/workflows/open.md)**                   | Start session with context + plan phase loading            |
 | **[`/para`](./docs/workflows/para.md)**                   | Master controller for workspace management                 |
 | **[`/docs`](./docs/workflows/docs.md)**                   | Generate, review, and publish technical documentation      |
