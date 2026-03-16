@@ -85,7 +85,15 @@ Skipped if no downstream dependencies exist.
 **When using the `done` keyword:**
 
 - Plan 100% complete → removes `active_plan` from `project.md`
-- Phase complete → announces next phase is ready
+- Prompts user to archive the plan:
+  ```
+  📦 Archive completed plan?
+     [plan-name].md → plans/done/[plan-name].md
+     Y → Move to archive (recommended)
+     N → Keep in place
+  ```
+- If confirmed → moves plan file to `artifacts/plans/done/`
+- Phase complete (not 100%) → announces next phase is ready
 
 ### 5. Update Master Index
 

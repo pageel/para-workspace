@@ -66,7 +66,18 @@ Overall: 40% complete | Deadline: YYYY-MM-DD
 
 ### Plan Archiving
 
-When all phases reach 100%, `/plan review` automatically:
+When all phases reach 100%, `/plan review` prompts the user before archiving:
+
+```
+🎉 Plan 100% complete!
+
+📦 Archive completed plan?
+   [plan-name].md → plans/done/[plan-name].md
+   Y → Move + create review (recommended)
+   N → Keep in place
+```
+
+If confirmed:
 
 1. Moves the plan to `artifacts/plans/done/[plan-name].md`
 2. Creates a **completion review** at `artifacts/plans/done/[plan-name]-review.md` (task status, phase summary, deferred items)
