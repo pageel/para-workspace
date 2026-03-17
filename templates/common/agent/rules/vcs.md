@@ -76,3 +76,37 @@ When running `/push` or `/release`, **MUST**:
 2. Scan for sensitive files being tracked.
 3. Warn the user if sensitive files are found.
 4. **STOP** if critical secrets are detected — never force-push.
+
+### 6. Branch & Merge Safety
+
+#### 6a. Branch Creation
+
+- **MUST** propose branch creation and get user approval before executing.
+- **MUST NOT** auto-create branches — branching is a user decision.
+- **Example**: "Tôi đề xuất tạo branch `feature/xyz`, bạn đồng ý không?"
+
+#### 6b. Merge Prohibition
+
+- **MUST NOT** perform `git merge` into `main` (or primary branch) locally.
+- **MUST** use Pull Request (PR) for all merges into `main`.
+- **Exception**: User explicitly requests local merge.
+
+#### 6c. Pull Request
+
+- **MUST NOT** create a Pull Request (`gh pr create`) without explicit user approval.
+- **SHOULD** propose PR title and body, then ask user to confirm.
+
+#### 6d. Post-Merge
+
+- After PR merge, **MUST** ask user to test before tagging a release.
+- **MUST NOT** auto-tag versions — tagging is a user decision.
+
+#### Summary Flow
+
+```
+Branch:  propose → user approves → create
+Code:    develop on branch → push branch
+PR:      propose → user approves → create PR
+Merge:   user merges on GitHub (not local)
+Tag:     user tests → propose tag → user approves
+```
