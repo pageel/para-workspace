@@ -79,11 +79,20 @@ The system uses **two index files** so the agent knows which rules exist and whe
 **Tier 2: Project Rules Index** (`Projects/<name>/.agent/rules.md`) — CONDITIONAL
 
 ```markdown
-| Rule              | Trigger                                   | File                 | Pri |
-| :---------------- | :---------------------------------------- | :------------------- | :-- |
-| Dogfooding Policy | Editing repo/, syncing files to workspace | dogfooding-policy.md | 🔴  |
-| Maintenance       | Version bumps, writing docs/changelog     | maintenance.md       | 🟡  |
+| Rule          | Trigger                              | File             | Pri |
+| :------------ | :----------------------------------- | :--------------- | :-- |
+| Code Style    | Editing src/, writing new components | code-style.md    | �   |
+| Deploy Safety | Deploying, editing CI/CD configs     | deploy-safety.md | �   |
+
+## File Guards
+
+| File pattern       | MUST re-read     | Reason                        |
+| :----------------- | :--------------- | :---------------------------- |
+| `CHANGELOG.md`     | code-style.md    | Must follow commit convention |
+| `deploy/`, `.env*` | deploy-safety.md | Safety checks before deploy   |
 ```
+
+> **File Guards** (v1.5.4): Optional section in project `rules.md`. Extends the global guards from `agent-behavior.md` §4. Agent reads both global + project guards during Context Recovery.
 
 ### Loading Flow (Two-Tier)
 
