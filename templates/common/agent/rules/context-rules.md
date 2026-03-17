@@ -65,3 +65,15 @@ During the session, when an action matches a trigger from **EITHER** index, the 
 > | :-------- | :--------------------- | :---------- | :-- |
 > | Rule Name | When to load this rule | filename.md | 🔴  |
 > ```
+>
+> **File Guards format** (optional section in project `rules.md`):
+>
+> ```markdown
+> ## File Guards
+>
+> | File pattern   | MUST re-read | Reason                |
+> | :------------- | :----------- | :-------------------- |
+> | `path/to/file` | rule-name.md | Why this guard exists |
+> ```
+>
+> File Guards extend the global table in `agent-behavior.md` §4. Agent reads both global + project guards during Context Recovery.
