@@ -55,3 +55,5 @@ When editing these files **directly** (outside of a workflow), agent **MUST** re
 | `kernel/`, `.para/`       | `governance.md`                 |
 
 > **Why:** Workflows enforce rules via Step 0 Pre-flight, but direct file edits bypass that guard. This table ensures rule compliance even without a workflow.
+>
+> **Extensible:** Project-specific rules MAY define additional file guards in their own rule files (e.g., `maintenance.md` may guard `CHANGELOG.md` and `VERSION`).
