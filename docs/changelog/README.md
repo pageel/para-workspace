@@ -4,6 +4,10 @@ Detailed release notes for each version of PARA Workspace.
 
 | Version               | Date       | Highlights                                         |
 | :-------------------- | :--------- | :------------------------------------------------- |
+| [v1.5.4](v1.5.4.md)   | 2026-03-17 | Defense-in-Depth: Context Recovery & Rule Guards   |
+| [v1.5.3](v1.5.3.md)   | 2026-03-13 | Hot Lane Refactor & /end Sync Point                |
+| [v1.5.1](v1.5.1.md)   | 2026-03-11 | Hybrid 3-File Sync & Template Review               |
+| [v1.5.0](v1.5.0.md)   | 2026-03-06 | Governed Workflow Catalogs & Smart Install         |
 | [v1.4.10](v1.4.10.md) | 2026-03-04 | Documentation Manager (`/docs`) & Workflow Catalog |
 | [v1.4.9](v1.4.9.md)   | 2026-03-04 | Centralized Backup & Workspace Cleanup             |
 | [v1.4.8](v1.4.8.md)   | 2026-03-04 | Atomic Rollback, Dry-run Pipeline & README Rewrite |
