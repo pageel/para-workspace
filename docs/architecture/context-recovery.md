@@ -25,7 +25,7 @@ After truncation, the agent may perform side-effects (git push, edit task files,
 | `.agent/rules/*.md`       | `governance.md`                 |
 | `kernel/`, `.para/`       | `governance.md`                 |
 
-**Strength:** Covers workflow bypass (direct file edits).
+**Strength:** Covers workflow bypass (direct file edits). **Extensible** — project rules MAY define additional guards in their own `rules.md` File Guards section.
 **Weakness:** Passive — depends on agent recognizing context decay.
 
 ### Layer 2: Workflow Output — Safety Block
@@ -88,6 +88,7 @@ Total: **~200-275 tokens/session** (~3-5% of session budget). Negligible cost fo
 
 - `agent-behavior.md` Section 4 — Context Recovery + File-Level Guards
 - `hybrid-3-file-integrity.md` C6 — File Guard Headers
+- `context-rules.md` Rule #4 — File Guards format specification
 - [Rule Layers Architecture](./rule-layers.md) — Workflow Coverage table
 - [Hybrid 3-File Architecture](./hybrid-3-file.md) — C6 guard headers
 

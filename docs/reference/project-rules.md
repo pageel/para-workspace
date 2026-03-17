@@ -56,7 +56,7 @@ This ~5–10 line file tells the agent **what project-specific rules exist** and
 
 After context truncation (checkpoint, sliding window), the agent may lose the rules index from memory. Four layers guard against this:
 
-1. **Rule file** — `agent-behavior.md` Section 4 instructs the agent to re-read `rules.md` when context appears incomplete. Includes a File-Level Guards table mapping specific files to their required rules.
+1. **Rule file** — `agent-behavior.md` Section 4 instructs the agent to re-read `rules.md` when context appears incomplete. Includes a File-Level Guards table mapping specific files to their required rules. **Extensible**: project rules MAY define additional guards in their `rules.md` File Guards section (format in `context-rules.md`).
 2. **Workflow output** — `/open` Step 8 includes a compact Safety Block that survives in checkpoint summaries.
 3. **Workflow pre-flight** — Workflows with side-effects (`/push`, `/release`, `/end`, `/plan`, `/docs`, `/backlog`, `/retro`) re-read `rules.md` from disk as Step 0 before executing.
 4. **File guard headers** — Task files (`done.md`, `sprint-current.md`) include inline `<!-- ⚠️ -->` comments that remind the agent of write constraints even when all rules have been lost from context (`hybrid-3-file-integrity.md` C6).
