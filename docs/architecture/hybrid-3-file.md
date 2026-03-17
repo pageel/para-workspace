@@ -1,6 +1,6 @@
 # Hybrid 3-File Architecture
 
-> **Version**: 1.5.3 | **Last reviewed**: 2026-03-13
+> **Version**: 1.5.4 | **Last reviewed**: 2026-03-17
 
 ## Overview
 
@@ -14,6 +14,8 @@ artifacts/tasks/
 ├── sprint-current.md   # 🔥 Hot Lane — agent-writable buffer for ad-hoc quick tasks
 └── done.md             # ✅ Historical Archive — plan-grouped, append-only log
 ```
+
+Task files include **guard headers** (`<!-- ⚠️ ... -->`) that remind the agent of write constraints even after context truncation (C6).
 
 | File                | Role                                                                             | Read/Write     |
 | :------------------ | :------------------------------------------------------------------------------- | :------------- |
@@ -80,11 +82,11 @@ This preserves `backlog.md` as the **single source of truth** for all tasks whil
 
 ## References
 
-- **Rule:** `hybrid-3-file-integrity.md` — C1 (Hot Lane), C2 (plan-grouped done.md), C3 (compress-not-delete), C5 (/end sync)
+- **Rule:** `hybrid-3-file-integrity.md` — C1 (Hot Lane), C2 (append-only done.md), C3 (compress-not-delete), C5 (/end sync), C6 (File Guard Headers)
 - **RFC-0002:** `rfcs/0002-hybrid-3-file-integrity.md`
 - **Schema:** `kernel/schema/tasks.schema.md`
 - **Kernel:** Invariant I2 (`kernel/invariants.md`)
 
 ---
 
-_Published from `docs/architecture/hybrid-3-file.md` (Vietnamese internal) — v1.5.3_
+_Published from `docs/architecture/hybrid-3-file.md` — v1.5.4 (FEAT-47: C6 Guard Headers)_

@@ -1,6 +1,6 @@
 # /new-project Workflow
 
-> **Version**: 1.5.0
+> **Version**: 1.5.4
 
 Initialize a new PARA-compliant project with standard scaffolding and artifacts.
 
@@ -24,7 +24,10 @@ Runs `./para scaffold [project-name]` to create:
 Projects/[project-name]/
 ├── repo/              # Source code (git init)
 ├── sessions/          # Session logs
-├── artifacts/tasks/backlog.md
+├── artifacts/tasks/
+│   ├── backlog.md         # Operational authority
+│   ├── done.md            # Append-only archive
+│   └── sprint-current.md  # Hot Lane
 ├── docs/
 └── project.md
 ```
@@ -33,9 +36,9 @@ Projects/[project-name]/
 
 Sets `project.md` frontmatter: goal, deadline, status, DoD.
 
-### 3. Initialize Backlog
+### 3. Initialize Task Files
 
-Populates `backlog.md` with the initial roadmap.
+Populates `backlog.md` with the initial roadmap. Creates `done.md` and `sprint-current.md` with guard headers (`<!-- ⚠️ ... -->`) per `hybrid-3-file-integrity.md` C6.
 
 ### 4. Register in Config
 
@@ -51,6 +54,7 @@ Records kickoff in `sessions/YYYY-MM-DD.md`.
 - [ ] Registered in `.para-workspace.yml`
 - [ ] Goals in `project.md`
 - [ ] Backlog initialized
+- [ ] `done.md` + `sprint-current.md` created with guard headers
 - [ ] First session logged
 
 ## Related
@@ -61,4 +65,4 @@ Records kickoff in `sessions/YYYY-MM-DD.md`.
 
 ---
 
-_Updated in v1.5.0_
+_Updated in v1.5.4 (FEAT-47: Companion file templates with guard headers)_

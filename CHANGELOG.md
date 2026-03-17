@@ -12,6 +12,9 @@ Context Recovery & Workflow Pre-flight (FEAT-47: Defense-in-Depth).
 - **Added**: Rules Pre-flight (Step 0) to 7 workflows: `/push`, `/release`, `/retro`, `/end`, `/plan`, `/docs`, `/backlog`. Re-reads `rules.md` from disk before executing side-effects.
 - **Changed**: `rules.md` index — added Priority column (🔴 Critical, 🟡 Important, 🟢 Standard). Reordered rules by priority. Enhanced VCS and Governance trigger descriptions.
 - **Changed**: `context-rules.md` — updated Rules Index format example to include Priority column.
+- **Added**: `agent-behavior.md` Section 4 File-Level Guards — maps specific file patterns to rules that MUST be re-read before direct edits (bypass protection).
+- **Added**: `hybrid-3-file-integrity.md` C6: File Guard Headers — inline `<!-- ⚠️ -->` comments in `done.md` and `sprint-current.md` as last-resort defense against post-truncation violations.
+- **Added**: `/new-project` Companion File Templates — `done.md` and `sprint-current.md` templates with guard headers for new projects.
 - **Updated**: `docs/reference/project-rules.md`, `docs/architecture/rule-layers.md` — reflect Priority classification, Context Recovery, and Workflow Pre-flight coverage.
 
 ## [1.5.3] - 2026-03-13

@@ -55,12 +55,26 @@
   5. Clean `sprint-current.md` (remove `[x]` items, keep `[ ]` items)
 - Agent MUST NOT run sync logic during coding sessions (zero ceremony)
 
+### C6: File Guard Headers
+
+Task files SHOULD include an inline guard comment at the top. Agent MUST read and obey these guards before editing:
+
+```markdown
+<!-- ⚠️ APPEND-ONLY: Write via /end or /backlog clean only (C2) -->
+<!-- ⚠️ HOT LANE ONLY: No strategic tasks from backlog (C1) -->
+```
+
+- Guards act as a **last-resort defense** when agent has lost rule context (post-truncation)
+- When creating task files, agent SHOULD include the appropriate guard header
+
 ## Examples
 
 ### Allowed
 
 ```markdown
 # sprint-current.md — Hot Lane
+
+<!-- ⚠️ HOT LANE ONLY: No strategic tasks from backlog (C1) -->
 
 > **Updated**: 2026-03-13
 

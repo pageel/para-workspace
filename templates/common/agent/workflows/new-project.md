@@ -27,7 +27,9 @@ Projects/[project-name]/
 ├── sessions/          # Session logs
 ├── artifacts/
 │   └── tasks/
-│       └── backlog.md # Product backlog
+│       ├── backlog.md         # Product backlog (operational authority)
+│       ├── done.md            # Completed tasks (append-only)
+│       └── sprint-current.md  # Hot Lane (quick tasks)
 ├── docs/              # Project documentation
 └── project.md         # Project contract (YAML frontmatter)
 ```
@@ -49,11 +51,47 @@ active_plan: ""
 ---
 ```
 
-### 3. Initialize Backlog
+### 3. Initialize Task Files
 
 // turbo
 
-Edit `Projects/[project-name]/artifacts/tasks/backlog.md` to reflect the initial roadmap. Use the template from `/backlog`.
+**3a. Backlog** — Edit `artifacts/tasks/backlog.md` using the template from `/backlog`.
+
+**3b. Companion files** — Create with guard headers:
+
+`artifacts/tasks/done.md`:
+
+```markdown
+# Done — [project-name]
+
+<!-- ⚠️ APPEND-ONLY: Write via /end or /backlog clean only (C2) -->
+
+> **Project**: [project-name]
+> Completed tasks grouped by plan. See plan details at `plans/done/`.
+
+---
+
+## Standalone Tasks
+
+_(none yet)_
+```
+
+`artifacts/tasks/sprint-current.md`:
+
+```markdown
+# Sprint Current — [project-name]
+
+<!-- ⚠️ HOT LANE ONLY: No strategic tasks from backlog (C1) -->
+
+> **Source**: backlog.md (Hybrid 3-File Model)
+> **Updated**: YYYY-MM-DD
+
+## Quick Tasks
+
+## Notes
+```
+
+> **Rule:** Guard headers (`<!-- ⚠️ ... -->`) are required per `hybrid-3-file-integrity.md` C6.
 
 ### 4. Register in Workspace Config
 
@@ -82,6 +120,8 @@ Record the kickoff in `Projects/[project-name]/sessions/YYYY-MM-DD.md`:
 - [ ] Registered in `.para-workspace.yml`
 - [ ] Goals defined in `project.md`
 - [ ] Backlog initialized
+- [ ] `done.md` created with guard header
+- [ ] `sprint-current.md` created with guard header
 - [ ] First session logged
 
 ## Related
