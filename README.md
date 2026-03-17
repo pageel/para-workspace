@@ -8,9 +8,10 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.5.4-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](./CHANGELOG.md)
-[![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
-[![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/badge/version-1.5.4-blue.svg)](./CHANGELOG.md)
+![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
+[![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://blog.google/technology/google-deepmind/antigravity-ai-coding-agent/)
 
 [🇺🇸 English](README.md) • [🇻🇳 Tiếng Việt](./docs/README.vi.md)
 
