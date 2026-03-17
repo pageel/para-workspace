@@ -11,6 +11,12 @@ Pre-merge quality gate for production readiness.
 
 ## Steps
 
+### 0. Rules Pre-flight
+
+// turbo
+
+Re-read `.agent/rules.md` to ensure rules context is loaded (guard against context truncation).
+
 ### 1. Linting & Formatting
 
 // turbo

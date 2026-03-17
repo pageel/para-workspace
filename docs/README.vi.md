@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.5.3-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](../CHANGELOG.md)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.5.4-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](../CHANGELOG.md)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-tích-hợp-agent)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -395,6 +395,7 @@ Nếu workspace của bạn quá cũ (v1.3.x) hoặc đã bị bạn chỉnh s�
 - [x] Project Rules Loading & Safe Update Workflow _(phát hành v1.5.0)_
 - [x] Hybrid 3-File Integrity, Working Checkmarks & Docs Overhaul _(phát hành v1.5.2)_
 - [x] Hot Lane Refactor, /end Sync Point & Token Optimization _(phát hành v1.5.3)_
+- [x] Context Recovery & Workflow Pre-flight _(phát hành v1.5.4)_
 
 ---
 
@@ -410,4 +411,4 @@ Xem [CONTRIBUTING.md](../CONTRIBUTING.md) để biết hướng dẫn. Điểm c
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.5.3_
+_Phiên bản: 1.5.4_

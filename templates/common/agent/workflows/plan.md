@@ -26,6 +26,12 @@ Generate a comprehensive implementation plan based on the project contract, back
 
 ### Steps
 
+#### 0. Rules Pre-flight
+
+// turbo
+
+Re-read `.agent/rules.md` to ensure rules context is loaded (guard against context truncation).
+
 #### 1. Read Project Contract
 
 // turbo

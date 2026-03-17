@@ -23,6 +23,14 @@ Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/ba
 
 ---
 
+## 0. Rules Pre-flight (all actions)
+
+// turbo
+
+Re-read `.agent/rules.md` to ensure rules context is loaded (guard against context truncation).
+
+---
+
 ## 📋 Action: review
 
 // turbo

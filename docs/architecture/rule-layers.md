@@ -1,6 +1,6 @@
 # Rule Layers & Trigger Index Architecture
 
-> **Version**: 1.5.3 | **Last reviewed**: 2026-03-15
+> **Version**: 1.5.4 | **Last reviewed**: 2026-03-17
 
 ## Overview
 
@@ -10,7 +10,8 @@ Three key properties:
 
 1. **Layered** — Kernel → Global → Project
 2. **Progressive Disclosure** — load only when needed, never all at once
-3. **Trigger Index** — lightweight table mapping actions to rule files
+3. **Trigger Index** — lightweight table mapping actions to rule files with priority levels
+4. **Context Recovery** — Defense-in-Depth guardrails against context truncation
 
 ## Rule Layers
 
@@ -67,20 +68,21 @@ The system uses **two index files** so the agent knows which rules exist and whe
 **Tier 1: Workspace Rules Index** (`.agent/rules.md`) — ALWAYS READ
 
 ```markdown
-| Rule                    | Trigger                                           | File                             |
-| :---------------------- | :------------------------------------------------ | :------------------------------- |
-| Governance              | Touching kernel/, .para/, or system files         | rules/governance.md              |
-| Hybrid 3-File Integrity | Reading/writing artifacts/tasks/, ad-hoc requests | rules/hybrid-3-file-integrity.md |
-| ...                     | ...                                               | ...                              |
+| Rule                    | Trigger                                           | File                             | Pri |
+| :---------------------- | :------------------------------------------------ | :------------------------------- | :-- |
+| Governance              | Touching kernel/, .para/ — MUST NOT modify        | rules/governance.md              | 🔴  |
+| VCS                     | Git commit, push, merge, branch, tag, PR          | rules/vcs.md                     | 🔴  |
+| Hybrid 3-File Integrity | Reading/writing artifacts/tasks/, ad-hoc requests | rules/hybrid-3-file-integrity.md | 🟡  |
+| ...                     | ...                                               | ...                              | 🟢  |
 ```
 
 **Tier 2: Project Rules Index** (`Projects/<name>/.agent/rules.md`) — CONDITIONAL
 
 ```markdown
-| Rule              | Trigger                                   | File                 |
-| :---------------- | :---------------------------------------- | :------------------- |
-| Dogfooding Policy | Editing repo/, syncing files to workspace | dogfooding-policy.md |
-| Maintenance       | Version bumps, writing docs/changelog     | maintenance.md       |
+| Rule              | Trigger                                   | File                 | Pri |
+| :---------------- | :---------------------------------------- | :------------------- | :-- |
+| Dogfooding Policy | Editing repo/, syncing files to workspace | dogfooding-policy.md | 🔴  |
+| Maintenance       | Version bumps, writing docs/changelog     | maintenance.md       | 🟡  |
 ```
 
 ### Loading Flow (Two-Tier)
@@ -118,6 +120,13 @@ has_rules: true # Gate for /open Step 2.5b (project rules only)
 | :------------ | :-------------------- | :------------------------- | :-------------------------------------------------------------- |
 | `/open`       | ✅ Step 2.5a (ALWAYS) | ✅ Step 2.5b (conditional) | Workspace: always. Project: if `has_rules: true`                |
 | `/plan`       | ✅ Step 2.7 D1        | ✅ Step 2.7 D2 + Step 8.5  | D1: workspace constraints. D2: project constraints. 8.5: impact |
+| `/push`       | ✅ Step 0 Pre-flight  | —                          | Re-reads rules.md before git operations (v1.5.4)                |
+| `/release`    | ✅ Step 0 Pre-flight  | —                          | Re-reads rules.md before release (v1.5.4)                       |
+| `/end`        | ✅ Step 0 Pre-flight  | —                          | Re-reads rules.md before session sync (v1.5.4)                  |
+| `/plan`       | ✅ Step 0 Pre-flight  | —                          | Re-reads rules.md before plan creation (v1.5.4)                 |
+| `/docs`       | ✅ Step 0 Pre-flight  | —                          | Re-reads rules.md before doc generation (v1.5.4)                |
+| `/backlog`    | ✅ Step 0 Pre-flight  | —                          | Re-reads rules.md before backlog mutation (v1.5.4)              |
+| `/retro`      | ✅ Step 0 Pre-flight  | —                          | Re-reads rules.md before archive (v1.5.4)                       |
 | `/para-audit` | —                     | ✅ Step 5 (update)         | Consistency check: `has_rules` vs index vs disk                 |
 | `/para-rule`  | —                     | ✅ Core                    | CRUD rule management                                            |
 
@@ -129,4 +138,4 @@ has_rules: true # Gate for /open Step 2.5b (project rules only)
 
 ---
 
-_Published from `docs/architecture/rule-layers.md` (Vietnamese internal) — v1.5.3 (BUG-17: Two-Tier Rule Gate)_
+_Published from `docs/architecture/rule-layers.md` — v1.5.4 (FEAT-47: Context Recovery + Workflow Pre-flight)_

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.5.4] - 2026-03-17
+
+Context Recovery & Workflow Pre-flight (FEAT-47: Defense-in-Depth).
+
+- **Added**: `agent-behavior.md` Section 4 — Context Recovery protocol. Agent re-reads `rules.md` when context appears incomplete (truncation, checkpoint, long conversation).
+- **Added**: `/open` Safety Block in Step 8 report — compact rules reminder (~40 tokens) that persists across checkpoint summaries.
+- **Added**: Rules Pre-flight (Step 0) to 7 workflows: `/push`, `/release`, `/retro`, `/end`, `/plan`, `/docs`, `/backlog`. Re-reads `rules.md` from disk before executing side-effects.
+- **Changed**: `rules.md` index — added Priority column (🔴 Critical, 🟡 Important, 🟢 Standard). Reordered rules by priority. Enhanced VCS and Governance trigger descriptions.
+- **Changed**: `context-rules.md` — updated Rules Index format example to include Priority column.
+- **Updated**: `docs/reference/project-rules.md`, `docs/architecture/rule-layers.md` — reflect Priority classification, Context Recovery, and Workflow Pre-flight coverage.
+
 ## [1.5.3] - 2026-03-13
 
 Hot Lane Refactor, `/end` Sync Point & Token Optimization.

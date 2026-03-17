@@ -11,6 +11,12 @@ Conduct a project retrospective before archiving to `Archive/`.
 
 ## Steps
 
+### 0. Rules Pre-flight
+
+// turbo
+
+Re-read `.agent/rules.md` to ensure rules context is loaded (guard against context truncation).
+
 ### 1. Review Goals & Progress
 
 // turbo

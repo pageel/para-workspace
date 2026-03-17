@@ -181,6 +181,11 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 - [Pending quick tasks from sprint-current.md]
 - (or: "No pending quick tasks")
 
+🛡️ SAFETY (persist across truncation):
+- Git: Do NOT merge/branch/tag without user approval. Read rules/vcs.md first.
+- Governance: Do NOT modify Resources/ai-agents/ (read-only).
+- Recovery: If rules forgotten → re-read .agent/rules.md before any side-effect.
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 💡 SUGGESTED ACTIONS:

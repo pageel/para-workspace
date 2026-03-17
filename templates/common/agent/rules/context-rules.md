@@ -61,7 +61,7 @@ During the session, when an action matches a trigger from **EITHER** index, the 
 > **Rules Index format** — workspace (`rules.md`) and project (`Projects/<project>/.agent/rules.md`):
 >
 > ```markdown
-> | Rule      | Trigger                | File        |
-> | :-------- | :--------------------- | :---------- |
-> | Rule Name | When to load this rule | filename.md |
+> | Rule      | Trigger                | File        | Pri |
+> | :-------- | :--------------------- | :---------- | :-- |
+> | Rule Name | When to load this rule | filename.md | 🔴  |
 > ```

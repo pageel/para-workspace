@@ -8,7 +8,7 @@
 
 <br/>
 
-[![PARA Version](https://img.shields.io/badge/PARA-v1.5.3-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](./CHANGELOG.md)
+[![PARA Version](https://img.shields.io/badge/PARA-v1.5.4-00CFE8.svg?style=for-the-badge&logo=gitbook&logoColor=white)](./CHANGELOG.md)
 [![Agent Ready](https://img.shields.io/badge/Agent-Ready-2ECC71.svg?style=for-the-badge&logo=googlecloud&logoColor=white)](#-agent-integration)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F1C40F.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
@@ -87,7 +87,7 @@ para-workspace/
 ├── Archive/                           # Cold storage for completed items
 ├── _inbox/                            # Temporary landing zone for external downloads
 ├── .agent/                            # Governed library copies (Auto-synced)
-│   ├── rules.md                       # Workspace Rules Trigger Index (always loaded)
+│   ├── rules.md                       # Workspace Rules Trigger Index (always loaded, with priority)
 │   ├── rules/                         # Active agent rules (.md)
 │   ├── skills/                        # Active agent skills (.md, /scripts)
 │   └── workflows/                     # Active agent workflows (.md)
@@ -390,6 +390,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Hybrid 3-File Synchronization & Fast Mode _(shipped in v1.5.1)_
 - [x] Hybrid 3-File Integrity, Working Checkmarks & Docs Overhaul _(shipped in v1.5.2)_
 - [x] Hot Lane Refactor, /end Sync Point & Token Optimization _(shipped in v1.5.3)_
+- [x] Context Recovery & Workflow Pre-flight _(shipped in v1.5.4)_
 
 ---
 
@@ -405,4 +406,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.5.3_
+_Version: 1.5.4_

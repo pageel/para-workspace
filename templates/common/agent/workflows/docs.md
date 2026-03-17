@@ -91,6 +91,12 @@ Analyze the project and create documentation appropriate to its type and complex
 
 ### Steps
 
+#### 0. Rules Pre-flight
+
+// turbo
+
+Re-read `.agent/rules.md` to ensure rules context is loaded (guard against context truncation).
+
 #### 1. Read Project Contract
 
 // turbo

@@ -26,6 +26,12 @@ Fast commit and push changes to GitHub with verification.
 
 ## Steps
 
+### 0. Rules Pre-flight
+
+// turbo
+
+Re-read `.agent/rules.md` to ensure rules context is loaded (guard against context truncation).
+
 ### 1. Check Git Status
 
 // turbo

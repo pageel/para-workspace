@@ -24,6 +24,12 @@ Summarize accomplishments and log them to the correct context (Project vs. Works
 
 ## Steps
 
+### 0. Rules Pre-flight
+
+// turbo
+
+Re-read `.agent/rules.md` to ensure rules context is loaded (guard against context truncation).
+
 ### 1. Classify & Identify Changes
 
 // turbo

@@ -27,3 +27,18 @@
 - **MUST** check the build result before reporting "Done".
 - **SHOULD** prioritize using defined workflows in `.agent/workflows/` over ad-hoc commands.
 - **SHOULD** ask the user instead of assuming when uncertain.
+
+### 4. Context Recovery
+
+When context appears incomplete (cannot recall loaded rules, received truncation/checkpoint notice, or conversation has been very long):
+
+1. **MUST** re-read `.agent/rules.md` (workspace rules index) before performing any side-effect.
+2. **MUST** re-read project `.agent/rules.md` (if exists) before project-specific actions.
+3. **SHOULD** inform user: "Context recovery — re-loaded rules index."
+
+Side-effects requiring rules re-read:
+
+- Git operations (commit, push, merge, branch, tag, PR)
+- File deletion, move, or rename outside project scope
+- Install/deploy commands
+- Creating/modifying system config files

@@ -1,8 +1,8 @@
 # Rules & Context Loading
 
-> **Version**: 1.5.3
+> **Version**: 1.5.4
 
-PARA Workspace uses a **Two-Tier** rule loading system. Global rules apply to all projects, while project-specific rules add constraints for individual projects. Both tiers use **progressive disclosure** — agents load rules on demand, not all at once.
+PARA Workspace uses a **Two-Tier** rule loading system. Global rules apply to all projects, while project-specific rules add constraints for individual projects. Both tiers use **progressive disclosure** — agents load rules on demand, not all at once. A **Context Recovery** mechanism ensures rules are re-loaded after context truncation.
 
 ## How It Works
 
@@ -19,7 +19,7 @@ Project rules **supplement** global rules — they do not override them.
 
 ### Tier 1: Workspace Rules Index (ALWAYS)
 
-The file `.agent/rules.md` lists all global rules with trigger conditions (~20 lines, ~200 tokens).
+The file `.agent/rules.md` lists all global rules with trigger conditions and priority levels (~20 lines, ~200 tokens). Rules are classified as 🔴 Critical, 🟡 Important, or 🟢 Standard.
 
 `/open` Step 2.5a **ALWAYS** reads this file, regardless of which project is active. This ensures global rules like `hybrid-3-file-integrity.md` (Hot Lane logging) and `governance.md` (system file protection) are always known to the agent.
 
@@ -34,10 +34,10 @@ Projects/<project>/.agent/rules.md
 This ~5–10 line file tells the agent **what project-specific rules exist** and **when to load them**:
 
 ```markdown
-| Rule              | Trigger                                   | File                 |
-| :---------------- | :---------------------------------------- | :------------------- |
-| Dogfooding Policy | Editing repo/, syncing files to workspace | dogfooding-policy.md |
-| Maintenance       | Version bumps, writing docs/changelog     | maintenance.md       |
+| Rule              | Trigger                                   | File                 | Pri |
+| :---------------- | :---------------------------------------- | :------------------- | :-- |
+| Dogfooding Policy | Editing repo/, syncing files to workspace | dogfooding-policy.md | 🔴  |
+| Maintenance       | Version bumps, writing docs/changelog     | maintenance.md       | 🟡  |
 ```
 
 `/open` Step 2.5b reads this file only when `project.md` has `has_rules: true`.
@@ -51,6 +51,14 @@ This ~5–10 line file tells the agent **what project-specific rules exist** and
 5. Rules not matching any current action are **never loaded**.
 
 > **Why two tiers?** Without the workspace index, agents with `has_rules: false` skip ALL rules — including critical global ones like Hot Lane logging (C1). The workspace tier ensures global rules are always discoverable.
+
+### Context Recovery (v1.5.4)
+
+After context truncation (checkpoint, sliding window), the agent may lose the rules index from memory. Three layers guard against this:
+
+1. **Rule file** — `agent-behavior.md` Section 4 instructs the agent to re-read `rules.md` when context appears incomplete.
+2. **Workflow output** — `/open` Step 8 includes a compact Safety Block that survives in checkpoint summaries.
+3. **Workflow pre-flight** — Workflows with side-effects (`/push`, `/release`, `/end`, `/plan`, `/docs`, `/backlog`, `/retro`) re-read `rules.md` from disk as Step 0 before executing.
 
 ## Creating Project Rules
 
@@ -72,4 +80,4 @@ The Two-Tier loading protocol is defined in `context-rules.md` Rule #4 (shipped 
 
 ---
 
-_Updated in v1.5.3 (BUG-17: Two-Tier Rule Gate)_
+_Updated in v1.5.4 (FEAT-47: Context Recovery + Workflow Pre-flight)_
