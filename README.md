@@ -350,7 +350,7 @@ Rules aren't dumped into context all at once. PARA Workspace uses a **progressiv
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    /open starts session                      │
+│                    /open starts session                     │
 │                                                             │
 │  Step 2.5a: ALWAYS read workspace rules index               │
 │  ┌───────────────────────────────────────────────────┐      │
@@ -362,14 +362,14 @@ Rules aren't dumped into context all at once. PARA Workspace uses a **progressiv
 │  │  │ naming     │ Creating files   │ 🟢  │          │      │
 │  │  │ ...        │ ...              │     │          │      │
 │  │  └────────────┴──────────────────┴─────┘          │      │
-│  │  Agent memorizes triggers → loads rules ON DEMAND  │      │
+│  │  Agent memorizes triggers → loads rules ON DEMAND │      │
 │  └───────────────────────────────────────────────────┘      │
 │                                                             │
 │  Step 2.5b: CONDITIONALLY read project rules index          │
 │  ┌───────────────────────────────────────────────────┐      │
 │  │  Projects/<name>/.agent/rules.md  (~5-10 lines)   │      │
-│  │  Only if project.md has: has_rules: true           │      │
-│  │  Adds project-specific triggers on top of global   │      │
+│  │  Only if project.md has: has_rules: true          │      │
+│  │  Adds project-specific triggers on top of global  │      │
 │  └───────────────────────────────────────────────────┘      │
 │                                                             │
 │  💡 Total cost: ~250 tokens (vs ~2000 if all rules loaded)  │
@@ -393,7 +393,7 @@ Layer   What                         Where                           Survives
 
 ```
 Long conversation → Context window truncated → Agent loses rules
-                                                       │
+                                                        │
                               ┌─────────────────────────┤
                               ▼                         ▼
                      Agent runs /push            Agent edits done.md

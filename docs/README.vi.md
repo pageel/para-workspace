@@ -355,7 +355,7 @@ Rules không bị nhồi nhét vào context cùng lúc. PARA Workspace sử dụ
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    /open bắt đầu session                     │
+│                    /open bắt đầu session                    │
 │                                                             │
 │  Step 2.5a: LUÔN đọc workspace rules index                  │
 │  ┌───────────────────────────────────────────────────┐      │
@@ -370,14 +370,14 @@ Rules không bị nhồi nhét vào context cùng lúc. PARA Workspace sử dụ
 │  │  Agent ghi nhớ triggers → tải rule KHI CẦN        │      │
 │  └───────────────────────────────────────────────────┘      │
 │                                                             │
-│  Step 2.5b: CÓ ĐIỀU KIỆN đọc project rules index           │
+│  Step 2.5b: CÓ ĐIỀU KIỆN đọc project rules index            │
 │  ┌───────────────────────────────────────────────────┐      │
 │  │  Projects/<tên>/.agent/rules.md  (~5-10 dòng)     │      │
 │  │  Chỉ khi project.md có: has_rules: true           │      │
 │  │  Thêm trigger riêng project lên trên global       │      │
 │  └───────────────────────────────────────────────────┘      │
 │                                                             │
-│  💡 Tổng chi phí: ~250 tokens (so với ~2000 nếu tải hết)   │
+│  💡 Tổng chi phí: ~250 tokens (so với ~2000 nếu tải hết)    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
