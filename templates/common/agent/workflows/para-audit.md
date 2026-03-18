@@ -162,6 +162,23 @@ For each project where `project.md` has `has_rules: true`:
    - Flag: rules in index but missing on disk, rules on disk but not in index.
 3. Reverse check: `.agent/rules.md` exists but `has_rules` is missing/false → suggest setting `true`.
 
+### 5.5. Check Guard Headers Coverage (C6)
+
+// turbo
+
+Verify protected files have inline guard headers per `hybrid-3-file-integrity.md` C6:
+
+```bash
+echo "=== Guard Coverage ==="
+echo "Kernel:" && grep -rL "⚠️" Resources/ai-agents/kernel/*.md Resources/ai-agents/kernel/schema/*.md Resources/ai-agents/kernel/examples/tasks/*.md 2>/dev/null | head -5
+echo "Rules:" && grep -rL "⚠️" .agent/rules/*.md 2>/dev/null | head -5
+echo "Tasks:" && for p in Projects/*/artifacts/tasks; do grep -rL "⚠️" "$p"/*.md 2>/dev/null; done | head -10
+```
+
+- **Kernel files** without `<!-- ⚠️ READ-ONLY SNAPSHOT -->` → warn
+- **Rules files** without `<!-- ⚠️ GOVERNED -->` → warn
+- **Task files** without any `<!-- ⚠️ -->` guard → suggest adding (migration from pre-v1.5.4)
+
 ### 6. Generate Post-Update Report
 
 Display an inline report (do NOT create a separate file — this is a quick check, not a full audit):
