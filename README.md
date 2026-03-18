@@ -327,30 +327,18 @@ para config [key] [value]       # Manage workspace settings
 
 Rules govern agent behavior, security, and compliance. Loaded on-demand via a Two-Tier trigger index (~200 tokens). See [Rules & Context Loading](./docs/reference/project-rules.md) for the loading mechanism.
 
-### 🔴 Critical
-
-| Rule                                                              | Description                                            |
-| :---------------------------------------------------------------- | :----------------------------------------------------- |
-| **[`governance`](./docs/rules/governance.md)**                    | Kernel invariants, scope containment, safety guardrails |
-| **[`vcs`](./docs/rules/vcs.md)**                                 | Git safety: 6 rules (commit, branch, merge, PR, secrets) |
-
-### 🟡 Important
-
-| Rule                                                                                    | Description                                             |
-| :-------------------------------------------------------------------------------------- | :------------------------------------------------------ |
-| **[`hybrid-3-file-integrity`](./docs/rules/hybrid-3-file-integrity.md)**                | 6 constraints (C1–C6) for task management               |
-| **[`agent-behavior`](./docs/rules/agent-behavior.md)**                                  | Communication, language, Context Recovery (v1.5.4)      |
-| **[`context-rules`](./docs/rules/context-rules.md)**                                    | Loading order, isolation, Two-Tier trigger               |
-| **[`para-discipline`](./docs/rules/para-discipline.md)**                                | PARA architecture compliance, 7 rules                   |
-
-### 🟢 Standard
-
-| Rule                                                                       | Description                                      |
-| :------------------------------------------------------------------------- | :----------------------------------------------- |
-| **[`artifact-standard`](./docs/rules/artifact-standard.md)**               | Plans, walkthroughs, persistent mirroring         |
-| **[`naming`](./docs/rules/naming.md)**                                     | kebab-case, PascalCase, camelCase conventions     |
-| **[`versioning`](./docs/rules/versioning.md)**                             | SemVer, autonomy levels, multi-location sync      |
-| **[`exports-data`](./docs/rules/exports-data.md)**                         | Data export: `_inbox/`, UTF-8 BOM, naming         |
+| Rule                                                                              | Description                                             | Priority     |
+| :-------------------------------------------------------------------------------- | :------------------------------------------------------ | :----------- |
+| **[`governance`](./docs/rules/governance.md)**                                    | Kernel invariants, scope containment, safety guardrails | 🔴 Critical  |
+| **[`vcs`](./docs/rules/vcs.md)**                                                 | Git safety: commit, branch, merge, PR, secrets          | 🔴 Critical  |
+| **[`hybrid-3-file-integrity`](./docs/rules/hybrid-3-file-integrity.md)**          | 6 constraints (C1–C6) for task management               | 🟡 Important |
+| **[`agent-behavior`](./docs/rules/agent-behavior.md)**                            | Communication, language, Context Recovery (v1.5.4)      | 🟡 Important |
+| **[`context-rules`](./docs/rules/context-rules.md)**                              | Loading order, isolation, Two-Tier trigger               | 🟡 Important |
+| **[`para-discipline`](./docs/rules/para-discipline.md)**                          | PARA architecture compliance, 7 rules                   | 🟡 Important |
+| **[`artifact-standard`](./docs/rules/artifact-standard.md)**                      | Plans, walkthroughs, persistent mirroring               | 🟢 Standard  |
+| **[`naming`](./docs/rules/naming.md)**                                            | kebab-case, PascalCase, camelCase conventions            | 🟢 Standard  |
+| **[`versioning`](./docs/rules/versioning.md)**                                    | SemVer, autonomy levels, multi-location sync            | 🟢 Standard  |
+| **[`exports-data`](./docs/rules/exports-data.md)**                                | Data export: `_inbox/`, UTF-8 BOM, naming               | 🟢 Standard  |
 
 ---
 

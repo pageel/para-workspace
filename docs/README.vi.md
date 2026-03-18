@@ -332,30 +332,18 @@ para config [key] [value]     # Quản lý thiết lập trong tệp .para-works
 
 Rules chi phối hành vi, bảo mật và tuân thủ của Agent. Được tải theo yêu cầu qua cơ chế Two-Tier trigger index (~200 tokens). Xem [Rules & Context Loading](./reference/project-rules.md) cho cơ chế chi tiết.
 
-### 🔴 Critical
-
-| Quy tắc                                                                   | Mô tả                                                  |
-| :------------------------------------------------------------------------- | :------------------------------------------------------ |
-| **[`governance`](./rules/governance.md)**                                  | Kernel invariants, scope containment, safety guardrails  |
-| **[`vcs`](./rules/vcs.md)**                                               | Git safety: 6 rules (commit, branch, merge, PR, secrets) |
-
-### 🟡 Important
-
-| Quy tắc                                                                                  | Mô tả                                                   |
-| :---------------------------------------------------------------------------------------- | :------------------------------------------------------- |
-| **[`hybrid-3-file-integrity`](./rules/hybrid-3-file-integrity.md)**                       | 6 constraints (C1–C6) cho quản lý task                   |
-| **[`agent-behavior`](./rules/agent-behavior.md)**                                         | Giao tiếp, ngôn ngữ, Context Recovery (v1.5.4)          |
-| **[`context-rules`](./rules/context-rules.md)**                                           | Loading order, isolation, Two-Tier trigger                |
-| **[`para-discipline`](./rules/para-discipline.md)**                                       | PARA architecture compliance, 7 rules                    |
-
-### 🟢 Standard
-
-| Quy tắc                                                                    | Mô tả                                                |
-| :-------------------------------------------------------------------------- | :---------------------------------------------------- |
-| **[`artifact-standard`](./rules/artifact-standard.md)**                     | Plans, walkthroughs, persistent mirroring              |
-| **[`naming`](./rules/naming.md)**                                           | kebab-case, PascalCase, camelCase conventions          |
-| **[`versioning`](./rules/versioning.md)**                                   | SemVer, autonomy levels, multi-location sync           |
-| **[`exports-data`](./rules/exports-data.md)**                               | Data export: `_inbox/`, UTF-8 BOM, naming              |
+| Quy tắc                                                                          | Mô tả                                                   | Ưu tiên      |
+| :-------------------------------------------------------------------------------- | :------------------------------------------------------- | :----------- |
+| **[`governance`](./rules/governance.md)**                                         | Kernel invariants, scope containment, safety guardrails  | 🔴 Critical  |
+| **[`vcs`](./rules/vcs.md)**                                                      | Git safety: commit, branch, merge, PR, secrets           | 🔴 Critical  |
+| **[`hybrid-3-file-integrity`](./rules/hybrid-3-file-integrity.md)**               | 6 constraints (C1–C6) cho quản lý task                   | 🟡 Important |
+| **[`agent-behavior`](./rules/agent-behavior.md)**                                 | Giao tiếp, ngôn ngữ, Context Recovery (v1.5.4)          | 🟡 Important |
+| **[`context-rules`](./rules/context-rules.md)**                                   | Loading order, isolation, Two-Tier trigger                | 🟡 Important |
+| **[`para-discipline`](./rules/para-discipline.md)**                               | PARA architecture compliance, 7 rules                    | 🟡 Important |
+| **[`artifact-standard`](./rules/artifact-standard.md)**                           | Plans, walkthroughs, persistent mirroring                | 🟢 Standard  |
+| **[`naming`](./rules/naming.md)**                                                 | kebab-case, PascalCase, camelCase conventions             | 🟢 Standard  |
+| **[`versioning`](./rules/versioning.md)**                                         | SemVer, autonomy levels, multi-location sync              | 🟢 Standard  |
+| **[`exports-data`](./rules/exports-data.md)**                                     | Data export: `_inbox/`, UTF-8 BOM, naming                 | 🟢 Standard  |
 
 ---
 
