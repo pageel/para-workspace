@@ -1,5 +1,7 @@
 # Version Control Rules
 
+<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->
+
 > Agent governance rule for Git and version control safety.
 
 ## Scope

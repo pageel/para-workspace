@@ -1,5 +1,7 @@
 # Naming Conventions
 
+<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->
+
 > Agent governance rule for consistent naming across the workspace.
 
 ## Scope

@@ -1,5 +1,7 @@
 # PARA Discipline
 
+<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->
+
 > Agent governance rule for strict PARA architecture compliance.
 
 ## Scope

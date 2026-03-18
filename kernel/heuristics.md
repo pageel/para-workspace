@@ -1,5 +1,7 @@
 # Kernel Heuristics
 
+<!-- ⚠️ READ-ONLY SNAPSHOT — Do NOT modify (I9) -->
+
 > **Changing heuristics = MINOR/PATCH version bump**
 > These are soft rules and conventions. They are strongly recommended but can be adapted based on context. Violations are not breaking changes.
 

@@ -55,7 +55,25 @@ active_plan: ""
 
 // turbo
 
-**3a. Backlog** — Edit `artifacts/tasks/backlog.md` using the template from `/backlog`.
+**3a. Backlog** — Create `artifacts/tasks/backlog.md` with guard header:
+
+```markdown
+# Backlog — [project-name]
+
+<!-- ⚠️ OPERATIONAL AUTHORITY — Mutations via /backlog only (C3) -->
+
+> **Model**: Hybrid 3-File (backlog → sprint-current → done)
+
+## 📊 Summary
+
+| Category | Count |
+| :--- | :--- |
+| Active Items | 0 |
+
+## 🚀 Features & Enhancements
+
+_(use `/backlog add` to add items)_
+```
 
 **3b. Companion files** — Create with guard headers:
 
@@ -64,7 +82,7 @@ active_plan: ""
 ```markdown
 # Done — [project-name]
 
-<!-- ⚠️ APPEND-ONLY: Write via /end or /backlog clean only (C2) -->
+<!-- ⚠️ APPEND-ONLY — /end or /backlog clean only (C2) -->
 
 > **Project**: [project-name]
 > Completed tasks grouped by plan. See plan details at `plans/done/`.
@@ -81,7 +99,7 @@ _(none yet)_
 ```markdown
 # Sprint Current — [project-name]
 
-<!-- ⚠️ HOT LANE ONLY: No strategic tasks from backlog (C1) -->
+<!-- ⚠️ HOT LANE ONLY — No backlog tasks here (C1) -->
 
 > **Source**: backlog.md (Hybrid 3-File Model)
 > **Updated**: YYYY-MM-DD

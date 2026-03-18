@@ -1,5 +1,7 @@
 # 🧠 PARA Workspace Kernel
 
+<!-- ⚠️ READ-ONLY SNAPSHOT — Do NOT modify (I9) -->
+
 The Kernel is the **canonical rule system** for PARA Workspace. It defines what is allowed, recommended, and enforced across all workspace instances.
 
 ## Structure

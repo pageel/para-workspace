@@ -1,5 +1,7 @@
 # Example Project — Backlog
 
+<!-- ⚠️ READ-ONLY SNAPSHOT — Do NOT modify (I9) -->
+
 > 🎯 Goal: Build a sample web application with authentication.
 
 ---

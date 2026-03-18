@@ -3,6 +3,8 @@ description: Kernel Governance Invariants and Scope Restrictions
 source: catalog
 ---
 
+<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->
+
 # Agent Governance
 
 > **Context:** PARA Workspace Kernel v1.4.5

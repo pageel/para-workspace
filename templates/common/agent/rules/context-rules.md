@@ -1,5 +1,7 @@
 # Agent Routing & Context Loading
 
+<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->
+
 > Agent governance rule for context management and routing. Based on RFC-0003.
 
 ## Scope

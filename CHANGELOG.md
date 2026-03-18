@@ -16,6 +16,10 @@ Context Recovery & Workflow Pre-flight (FEAT-47: Defense-in-Depth).
 - **Added**: `hybrid-3-file-integrity.md` C6: File Guard Headers — inline `<!-- ⚠️ -->` comments in `done.md` and `sprint-current.md` as last-resort defense against post-truncation violations.
 - **Added**: `/new-project` Companion File Templates — `done.md` and `sprint-current.md` templates with guard headers for new projects.
 - **Updated**: `docs/reference/project-rules.md`, `docs/architecture/rule-layers.md` — reflect Priority classification, Context Recovery, and Workflow Pre-flight coverage.
+- **Expanded**: C6 Guard Headers taxonomy — 4 types: `TASK` (C1-C3), `KERNEL` (I9), `GOVERNED` (rules catalog), `WORKSPACE` (session/sync). Position convention defined.
+- **Added**: `READ-ONLY SNAPSHOT` guard headers to 8 kernel files (`repo/kernel/`). Prevents agent modification of canonical kernel.
+- **Added**: `GOVERNED` guard headers to 10 rules template files (`repo/templates/.../rules/`). Warns agent that direct edits are overwritten by `para update`.
+- **Added**: `OPERATIONAL AUTHORITY` guard to `/new-project` backlog template. New projects auto-get all 3 task file guards.
 
 ## [1.5.3] - 2026-03-13
 

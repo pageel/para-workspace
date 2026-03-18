@@ -1,5 +1,7 @@
 # PARA Workspace Kernel
 
+<!-- ⚠️ READ-ONLY SNAPSHOT — Do NOT modify (I9) -->
+
 > **Version**: 1.5.3
 > **Status**: Canonical — this is the single source of truth for all PARA Workspace rules.
 

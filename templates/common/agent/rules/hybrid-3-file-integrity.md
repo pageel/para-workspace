@@ -57,15 +57,29 @@
 
 ### C6: File Guard Headers
 
-Task files SHOULD include an inline guard comment at the top. Agent MUST read and obey these guards before editing:
+Protected files SHOULD include an inline HTML guard comment. Agent MUST read and obey these guards before editing:
 
-```markdown
-<!-- ⚠️ APPEND-ONLY: Write via /end or /backlog clean only (C2) -->
-<!-- ⚠️ HOT LANE ONLY: No strategic tasks from backlog (C1) -->
-```
+**Guard Types:**
+
+| Type | Scope | Guard template |
+|:--|:--|:--|
+| **TASK** | `artifacts/tasks/` | `<!-- ⚠️ APPEND-ONLY — /end or /backlog clean only (C2) -->` |
+| **TASK** | `artifacts/tasks/` | `<!-- ⚠️ HOT LANE ONLY — No backlog tasks here (C1) -->` |
+| **TASK** | `artifacts/tasks/` | `<!-- ⚠️ OPERATIONAL AUTHORITY — Mutations via /backlog only (C3) -->` |
+| **KERNEL** | `kernel/`, `Resources/ai-agents/kernel/` | `<!-- ⚠️ READ-ONLY SNAPSHOT — Do NOT modify (I9) -->` |
+| **GOVERNED** | `.agent/rules/` | `<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->` |
+| **WORKSPACE** | `Areas/Workspace/` | `<!-- ⚠️ APPEND-ONLY — via /end only -->` |
+
+**Position convention:**
+
+- Files with YAML frontmatter: guard goes **after** closing `---`, **before** `# Title`
+- Files without YAML: guard goes after `# Title` (line 3)
+
+**Rules:**
 
 - Guards act as a **last-resort defense** when agent has lost rule context (post-truncation)
 - When creating task files, agent SHOULD include the appropriate guard header
+- Agent MUST NOT remove or modify existing guard headers
 
 ## Examples
 

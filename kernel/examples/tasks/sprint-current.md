@@ -1,5 +1,7 @@
 # Sprint Current — Example Project
 
+<!-- ⚠️ READ-ONLY SNAPSHOT — Do NOT modify (I9) -->
+
 > **Source**: backlog.md
 > **Updated**: 2026-02-13
 

@@ -52,17 +52,28 @@ Seven workflows with side-effects include Step 0 that re-reads `rules.md` from d
 
 ### Layer 4: File Guard Headers ⭐
 
-Inline HTML comments at the top of protected files. The agent **must read the file before editing** — the guard is the first thing it sees:
+Inline HTML comments at the top of protected files. The agent **must read the file before editing** — the guard is the first thing it sees.
 
-```markdown
-<!-- ⚠️ APPEND-ONLY: Write via /end or /backlog clean only (C2) -->
-<!-- ⚠️ HOT LANE ONLY: No strategic tasks from backlog (C1) -->
-```
+**4 Guard Types:**
+
+| Type | Scope | Guard template |
+|:--|:--|:--|
+| `TASK` | `artifacts/tasks/` | `<!-- ⚠️ APPEND-ONLY — /end or /backlog clean only (C2) -->` |
+| `TASK` | `artifacts/tasks/` | `<!-- ⚠️ HOT LANE ONLY — No backlog tasks here (C1) -->` |
+| `TASK` | `artifacts/tasks/` | `<!-- ⚠️ OPERATIONAL AUTHORITY — Mutations via /backlog only (C3) -->` |
+| `KERNEL` | `kernel/`, `Resources/ai-agents/kernel/` | `<!-- ⚠️ READ-ONLY SNAPSHOT — Do NOT modify (I9) -->` |
+| `GOVERNED` | `.agent/rules/` | `<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->` |
+| `WORKSPACE` | `Areas/Workspace/` | `<!-- ⚠️ APPEND-ONLY — via /end only -->` |
+
+**Position convention:**
+
+- Files with YAML frontmatter: after closing `---`, before `# Title`
+- Files without YAML: after `# Title` (line 3)
 
 Defined as constraint C6 in `hybrid-3-file-integrity.md`. Templates provided in `/new-project` workflow.
 
-**Strength:** Closest to the violation point (**Proximity Principle**). Works even when agent has lost all context.
-**Weakness:** Only covers files that have guard headers.
+**Strength:** Closest to the violation point (**Proximity Principle**). Works even when agent has lost all context. Covers kernel, rules, tasks, and workspace files.
+**Weakness:** Only covers files that have guard headers. Migration needed for pre-v1.5.4 projects.
 
 ## Coverage Flow
 

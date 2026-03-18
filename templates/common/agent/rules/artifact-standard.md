@@ -1,5 +1,7 @@
 # Artifact-Driven Development Standard
 
+<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->
+
 > Agent governance rule for managing technical artifacts.
 
 ## Scope

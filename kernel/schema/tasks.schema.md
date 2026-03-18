@@ -1,5 +1,7 @@
 # Task Management Schema
 
+<!-- ⚠️ READ-ONLY SNAPSHOT — Do NOT modify (I9) -->
+
 > **Defines**: The format and structure for task files in `artifacts/tasks/`
 > **Kernel Version**: 1.5.3
 

@@ -1,5 +1,7 @@
 # Kernel Invariants
 
+<!-- ⚠️ READ-ONLY SNAPSHOT — Do NOT modify (I9) -->
+
 > **Breaking any invariant = MAJOR version bump**
 > These are the hard rules of PARA Workspace. They MUST NOT be violated by any agent, CLI tool, workflow, or user operation.
 

@@ -1,5 +1,7 @@
 # Done — Example Project
 
+<!-- ⚠️ READ-ONLY SNAPSHOT — Do NOT modify (I9) -->
+
 > **Project**: example-project
 > Completed tasks grouped by plan. See plan files at `plans/done/` for full context.
 

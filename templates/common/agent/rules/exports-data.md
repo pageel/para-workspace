@@ -1,5 +1,7 @@
 # Data Export Rule
 
+<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->
+
 > Agent governance rule for data export consistency and safety.
 
 ## Scope

@@ -386,8 +386,10 @@ Layer   What                         Where                           Survives
   1     Rule file instructions       agent-behavior.md §4            ⚠️ Lost after truncation
   2     Safety block in output       /open Step 8 report             ✅ In checkpoint summary
   3     Workflow pre-flight          Step 0: re-read rules.md        ✅ Fresh from disk
-  4     File guard headers           <!-- ⚠️ APPEND-ONLY (C2) -->   ✅ Inline in target file
+  4     File guard headers           <!-- ⚠️ ... --> in file         ✅ Inline in target file
 ```
+
+Layer 4 supports **4 guard types**: `TASK` (C1-C3), `KERNEL` (I9), `GOVERNED` (rules), `WORKSPACE` (session/sync).
 
 **Scenario: Agent forgets rules after truncation**
 
@@ -406,7 +408,7 @@ Long conversation → Context window truncated → Agent loses rules
                     → safe commit                → append only ✅
 ```
 
-> 📖 Full architecture: [Context Recovery](./docs/architecture/context-recovery.md) · [Rule Layers](./docs/architecture/rule-layers.md)
+> 📖 Full architecture: [Context Recovery](./docs/architecture/context-recovery.md) · [Defense-in-Depth](./docs/architecture/defense-in-depth.md) · [Rule Layers](./docs/architecture/rule-layers.md)
 
 ---
 
@@ -479,7 +481,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Hybrid 3-File Synchronization & Fast Mode _(shipped in v1.5.1)_
 - [x] Hybrid 3-File Integrity, Working Checkmarks & Docs Overhaul _(shipped in v1.5.2)_
 - [x] Hot Lane Refactor, /end Sync Point & Token Optimization _(shipped in v1.5.3)_
-- [x] Context Recovery & Workflow Pre-flight _(shipped in v1.5.4)_
+- [x] Context Recovery, Workflow Pre-flight & Defense-in-Depth _(shipped in v1.5.4)_
 
 ---
 

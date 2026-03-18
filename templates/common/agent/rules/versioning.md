@@ -1,5 +1,7 @@
 # Versioning Rule
 
+<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->
+
 > Agent governance rule for version management.
 
 ## Scope
