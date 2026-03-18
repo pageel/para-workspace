@@ -354,6 +354,74 @@ Rules govern agent behavior, security, and compliance. Loaded on-demand via a Tw
 
 ---
 
+## 🏗️ Rule Architecture — Two-Tier Loading & Defense-in-Depth
+
+Rules aren't dumped into context all at once. PARA Workspace uses a **progressive disclosure** architecture that loads rules on-demand, saving ~90% of token budget while maintaining full compliance.
+
+### How It Works: Two-Tier Trigger Index
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    /open starts session                      │
+│                                                             │
+│  Step 2.5a: ALWAYS read workspace rules index               │
+│  ┌───────────────────────────────────────────────────┐      │
+│  │  .agent/rules.md  (~20 lines, ~200 tokens)        │      │
+│  │  ┌────────────┬──────────────────┬─────┐          │      │
+│  │  │ governance │ Touching kernel/ │ 🔴  │          │      │
+│  │  │ vcs        │ Git operations   │ 🔴  │          │      │
+│  │  │ hybrid-3   │ tasks/ files     │ 🟡  │          │      │
+│  │  │ naming     │ Creating files   │ 🟢  │          │      │
+│  │  │ ...        │ ...              │     │          │      │
+│  │  └────────────┴──────────────────┴─────┘          │      │
+│  │  Agent memorizes triggers → loads rules ON DEMAND  │      │
+│  └───────────────────────────────────────────────────┘      │
+│                                                             │
+│  Step 2.5b: CONDITIONALLY read project rules index          │
+│  ┌───────────────────────────────────────────────────┐      │
+│  │  Projects/<name>/.agent/rules.md  (~5-10 lines)   │      │
+│  │  Only if project.md has: has_rules: true           │      │
+│  │  Adds project-specific triggers on top of global   │      │
+│  └───────────────────────────────────────────────────┘      │
+│                                                             │
+│  💡 Total cost: ~250 tokens (vs ~2000 if all rules loaded)  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Defense-in-Depth: 4-Layer Rule Protection
+
+After a long conversation, AI agents lose context (truncation). PARA Workspace has **4 independent layers** to ensure rules survive:
+
+```
+Layer   What                         Where                           Survives
+─────   ─────────────────────────    ─────────────────────────────   ────────
+  1     Rule file instructions       agent-behavior.md §4            ⚠️ Lost after truncation
+  2     Safety block in output       /open Step 8 report             ✅ In checkpoint summary
+  3     Workflow pre-flight          Step 0: re-read rules.md        ✅ Fresh from disk
+  4     File guard headers           <!-- ⚠️ APPEND-ONLY (C2) -->   ✅ Inline in target file
+```
+
+**Scenario: Agent forgets rules after truncation**
+
+```
+Long conversation → Context window truncated → Agent loses rules
+                                                       │
+                              ┌─────────────────────────┤
+                              ▼                         ▼
+                     Agent runs /push            Agent edits done.md
+                         │                              │
+                    Layer 3 catches:              Layer 4 catches:
+                    Step 0 re-reads              <!-- ⚠️ APPEND-ONLY -->
+                    .agent/rules.md              reminds C2 constraint
+                         │                              │
+                    VCS rules loaded             Agent obeys guard
+                    → safe commit                → append only ✅
+```
+
+> 📖 Full architecture: [Context Recovery](./docs/architecture/context-recovery.md) · [Rule Layers](./docs/architecture/rule-layers.md)
+
+---
+
 ## 🧩 Task Management (Hybrid 3-File Model)
 
 PARA Workspace uses a proprietary **Hybrid 3-File Architecture** (v1.5.3: Hot Lane) to solve the AI Agent "Context Window vs. Amnesia" problem.
