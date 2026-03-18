@@ -66,6 +66,7 @@ para-workspace/
 │   ├── architecture/    # Kiến trúc: overview, kernel
 │   ├── guides/          # Hướng dẫn: development, planning
 │   ├── reference/       # Tra cứu: CLI, workflows, project-rules
+│   ├── rules/           # Chi tiết từng Rule (10 files)
 │   ├── changelog/       # Lịch sử phiên bản
 │   └── workflows/       # Chi tiết từng workflow (22 files)
 ├── CONTRIBUTING.md

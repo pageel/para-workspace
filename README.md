@@ -66,6 +66,7 @@ para-workspace/
 │   ├── architecture/    # Architecture: overview, kernel
 │   ├── guides/          # How-to: development, planning
 │   ├── reference/       # Lookup: CLI, workflows, project-rules
+│   ├── rules/           # Individual rule documentation (10 files)
 │   ├── changelog/       # Version history
 │   └── workflows/       # Individual workflow docs (22 files)
 ├── CONTRIBUTING.md
