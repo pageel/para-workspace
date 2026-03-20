@@ -5,7 +5,7 @@ source: catalog
 
 # /end [project-name | all | workspace] [done]
 
-> **Workspace Version:** 1.5.3 (Hot Lane)
+> **Workspace Version:** 1.6.0-beta.1 (Ecosystem)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final report MUST be translated to this language.**
 
 Summarize accomplishments and log them to the correct context (Project vs. Workspace).
@@ -95,6 +95,8 @@ If yes, **append one row** to `Areas/Workspace/SYNC.md` under the `## Pending` t
      ```
 6. Report: `📝 Strategic: [N] tasks → done.md`
 
+> **Ecosystem skip (v1.6.0+):** If project `type: ecosystem`, skip git-related suggestions (no repo to commit). Focus on plan progress and backlog updates only.
+
 ### 4. Check Plan Phase Progress (if active)
 
 // turbo
@@ -103,9 +105,20 @@ If yes, **append one row** to `Areas/Workspace/SYNC.md` under the `## Pending` t
 
 If `active_plan` exists in `project.md`:
 
+**Resolve plan path (v1.6.0+):**
+
+```
+IF active_plan starts with "@":
+  1. Extract ecosystem: @{ecosystem}/plans/xxx.md → ecosystem = "{ecosystem}"
+  2. Extract relative: plans/xxx.md
+  3. Resolved path: Projects/{ecosystem}/artifacts/plans/xxx.md
+ELSE:
+  Local path: Projects/[project-name]/artifacts/[active_plan]
+```
+
 1. Extract current phase:
    ```bash
-   grep -n "^### Phase" Projects/[project-name]/artifacts/[active_plan]
+   grep -n "^### Phase" [resolved-plan-path]
    ```
 2. Cross-reference with backlog — count ✅ Done items for the current phase.
 3. Report phase status in the session log:

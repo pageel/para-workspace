@@ -5,7 +5,7 @@ source: catalog
 
 # /para-audit [action]
 
-> **Workspace Version:** 1.5.3 (Hot Lane)
+> **Workspace Version:** 1.6.0-beta.1 (Ecosystem)
 
 Strict workspace macro-assessor. Two modes: full structural audit against Kernel Specs (I1-I11), or post-update compliance check with version-aware suggestions.
 
@@ -132,7 +132,13 @@ For each project in `Projects/` that has a `project.md`:
    - `has_rules` missing → suggest `true` if `.agent/rules/` exists, `false` otherwise
    - `downstream` missing → suggest `[]`
    - `active_plan` missing → suggest `""`
-4. Record findings.
+   - `type` missing → suggest `standard` (v1.6.0+)
+4. **Ecosystem consistency check (v1.6.0+):**
+   - If `type: ecosystem` → verify `satellites` array exists and is non-empty
+   - If `ecosystem` field exists → verify the referenced meta-project exists in `Projects/`
+   - Cross-reference: for each satellite in ecosystem's `satellites` list, check that the satellite project has `ecosystem: [name]`
+   - If `active_plan` starts with `@` → verify the referenced ecosystem exists and the plan file is accessible
+5. Record findings.
 
 ### 4. Check Backlog Template Compliance
 

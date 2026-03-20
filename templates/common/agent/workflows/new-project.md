@@ -5,7 +5,7 @@ source: catalog
 
 # /new-project project [project-name]
 
-> **Workspace Version:** 1.5.0 (Governed Libraries)
+> **Workspace Version:** 1.6.0-beta.1 (Ecosystem)
 
 Initialize a new PARA project with standard scaffolding and artifacts.
 
@@ -50,6 +50,21 @@ last_reviewed: "YYYY-MM-DD"
 active_plan: ""
 ---
 ```
+
+**Ecosystem support (v1.6.0+):**
+
+Ask the user for project type:
+
+```
+❓ Project type?
+   1. standard  — Regular project with source code (default)
+   2. ecosystem — Meta-project coordinating satellite projects
+   3. satellite — Standard project linked to an ecosystem
+```
+
+- **If ecosystem:** Add `type: ecosystem` and `satellites: []` to frontmatter. Skip `repo/` directory creation (no source code).
+- **If satellite:** Ask for ecosystem name. Add `ecosystem: [name]` to frontmatter.
+- **If standard (default):** No extra fields needed.
 
 ### 3. Initialize Task Files
 
@@ -137,6 +152,7 @@ Record the kickoff in `Projects/[project-name]/sessions/YYYY-MM-DD.md`:
 - [ ] Project folder structure created
 - [ ] Registered in `.para-workspace.yml`
 - [ ] Goals defined in `project.md`
+- [ ] Project type set (standard/ecosystem/satellite) ← v1.6.0+
 - [ ] Backlog initialized
 - [ ] `done.md` created with guard header
 - [ ] `sprint-current.md` created with guard header

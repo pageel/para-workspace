@@ -4,7 +4,7 @@
 
 name: "{{project-name}}"
 status: active # active | inactive | archived
-kernel_version: "1.5.0" # Kernel version at time of creation
+kernel_version: "1.6.0" # Kernel version at time of creation
 created_at: "{{YYYY-MM-DD}}"
 owner: "@{{user}}"
 profile: "{{profile}}" # dev | general | marketer | ceo
@@ -13,6 +13,14 @@ profile: "{{profile}}" # dev | general | marketer | ceo
 deadline: null # ISO 8601 date or null
 description: ""
 tags: []
+
+# Ecosystem fields (v1.6.0+)
+# type: standard          # standard | ecosystem (default: standard)
+# ecosystem: null         # Parent ecosystem name (for satellite projects)
+# satellites: []          # Satellite slugs (for ecosystem projects only)
+
+# Plan tracking
+# active_plan: ""         # Relative path or @ecosystem/plans/xxx.md
 
 # Milestones — Strategic roadmap for the project (optional)
 # Use feature-first naming. Only add shipped_in after release.

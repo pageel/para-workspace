@@ -49,12 +49,31 @@
     },
     "active_plan": {
       "type": ["string", "null"],
-      "description": "Relative path to active plan file (from artifacts/). Null or empty when no plan is active."
+      "description": "Relative path to active plan file (from artifacts/). Supports cross-project prefix: @{ecosystem}/plans/xxx.md resolves to Projects/{ecosystem}/artifacts/plans/xxx.md. Null or empty when no plan is active."
     },
     "has_rules": {
       "type": "boolean",
       "default": false,
       "description": "Whether this project has custom rules in .agent/rules.md. Used by /open to skip rules check when false."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["standard", "ecosystem"],
+      "default": "standard",
+      "description": "Project type. 'ecosystem' denotes a meta-project that coordinates satellite projects. Default: standard."
+    },
+    "ecosystem": {
+      "type": ["string", "null"],
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Name of the parent ecosystem (meta-project slug). Set on satellite projects to link them to their ecosystem. Null for standalone or ecosystem projects."
+    },
+    "satellites": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]*$"
+      },
+      "description": "List of satellite project slugs coordinated by this ecosystem project. Only valid when type is 'ecosystem'. Null for standard projects."
     }
   }
 }

@@ -13,21 +13,21 @@ items:
 
   - id: open
     name: "Session Open"
-    version: "1.2.0"
-    kernel_min: "1.5.3"
+    version: "1.3.0"
+    kernel_min: "1.6.0"
     kernel_max: "1.x"
     entrypoint: "open.md"
-    description: "Start session with token-optimized context loading (backlog summary + hot lane + SYNC gate)."
-    tags: ["session", "context", "token-optimized"]
+    description: "Start session with token-optimized context loading. Ecosystem detection + @prefix resolution (v1.6.0)."
+    tags: ["session", "context", "token-optimized", "ecosystem"]
 
   - id: end
     name: "Session End"
-    version: "1.3.0"
-    kernel_min: "1.5.3"
+    version: "1.4.0"
+    kernel_min: "1.6.0"
     kernel_max: "1.x"
     entrypoint: "end.md"
-    description: "Close session with Hot Lane Sync, Smart Suggest, and PARA classification."
-    tags: ["session", "classification", "3-file", "hot-lane"]
+    description: "Close session with Hot Lane Sync, Smart Suggest, @prefix resolution, ecosystem skip."
+    tags: ["session", "classification", "3-file", "hot-lane", "ecosystem"]
 
   - id: install
     name: "Install / Sync"
@@ -40,12 +40,12 @@ items:
 
   - id: new-project
     name: "New Project"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
+    version: "1.1.0"
+    kernel_min: "1.6.0"
     kernel_max: "1.x"
     entrypoint: "new-project.md"
-    description: "Initialize new project with scaffolding."
-    tags: ["scaffold", "project"]
+    description: "Initialize project with scaffolding. Supports ecosystem/satellite types (v1.6.0)."
+    tags: ["scaffold", "project", "ecosystem"]
 
   - id: verify
     name: "Verify Task"
@@ -157,21 +157,21 @@ items:
 
   - id: plan
     name: "Plan Controller"
-    version: "1.2.0"
-    kernel_min: "1.5.3"
+    version: "1.3.0"
+    kernel_min: "1.6.0"
     kernel_max: "1.x"
     entrypoint: "plan.md"
-    description: "Create, review, and update phased plans with ask-to-activate and plan archiving."
-    tags: ["planning", "architecture", "phases"]
+    description: "Create, review, update plans. @prefix cross-project activation (v1.6.0)."
+    tags: ["planning", "architecture", "phases", "ecosystem"]
 
   - id: para-audit
     name: "Macro Assessor Audit"
-    version: "1.1.0"
-    kernel_min: "1.5.3"
+    version: "1.2.0"
+    kernel_min: "1.6.0"
     kernel_max: "1.x"
     entrypoint: "para-audit.md"
-    description: "Full structural audit (I1-I11) + post-update compliance check with changelog-driven suggestions."
-    tags: ["audit", "governance", "invariants", "post-update"]
+    description: "Full structural audit (I1-I11) + ecosystem consistency validation (v1.6.0)."
+    tags: ["audit", "governance", "invariants", "post-update", "ecosystem"]
 
   - id: docs
     name: "Documentation Manager"

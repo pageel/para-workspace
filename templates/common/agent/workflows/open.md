@@ -5,7 +5,7 @@ source: catalog
 
 # /open [project-name]
 
-> **Workspace Version:** 1.5.3 (Hot Lane)
+> **Workspace Version:** 1.6.0-beta.1 (Ecosystem)
 
 Start a new working session with full context from previous sessions.
 
@@ -29,6 +29,14 @@ Base: Projects/[project-name]/
 //turbo
 
 Read `Projects/[project-name]/project.md` to understand goal, deadline, status, and DoD.
+
+**Ecosystem detection (v1.6.0+):**
+
+After reading `project.md`, check the `type` field:
+
+- **If `type: ecosystem`** → This is a meta-project. Note `satellites` list for the report (Step 8). Do NOT read satellite project.md files (token optimization).
+- **If `ecosystem` field exists** (on a satellite) → Note the parent ecosystem name for `@` prefix resolution in Step 5.
+- **Otherwise** → Standard project, proceed normally.
 
 ### 2.5. Load rules indices
 
@@ -100,17 +108,29 @@ Check if `Projects/[project-name]/artifacts/tasks/sprint-current.md` exists:
 
 Check the `active_plan` field from `project.md` (already loaded in Step 2):
 
-- **If `active_plan` exists** (e.g., `active_plan: "plans/implementation-plan.md"`):
+**Resolve plan path (v1.6.0+):**
+
+```
+IF active_plan starts with "@":
+  1. Extract ecosystem: @{ecosystem}/plans/xxx.md → ecosystem = "{ecosystem}"
+  2. Extract relative: plans/xxx.md
+  3. Resolved path: Projects/{ecosystem}/artifacts/plans/xxx.md
+ELSE:
+  Local path: Projects/[project-name]/artifacts/[active_plan]
+```
+
+- **If `active_plan` exists** (local or `@` cross-project):
   1. **Extract phase headers only**:
      ```bash
-     grep -n "^### Phase" Projects/[project-name]/artifacts/[active_plan]
+     grep -n "^### Phase" [resolved-plan-path]
      ```
   2. **Read the Backlog → Phase Mapping table** (~20-30 lines):
      ```bash
-     grep -A 30 "Backlog.*Phase Mapping" Projects/[project-name]/artifacts/[active_plan]
+     grep -A 30 "Backlog.*Phase Mapping" [resolved-plan-path]
      ```
   3. From the mapping, identify the **current phase** (first phase with incomplete items).
   4. Store phase context for the report in Step 8.
+  5. If `@` prefix was used, note: `📐 Plan source: @{ecosystem}` in report.
 
 - **If `active_plan` is empty or missing** → Skip this step entirely. No plan overhead.
 
@@ -145,7 +165,10 @@ Check `project.md` frontmatter (already loaded in Step 2):
 
 //turbo
 
+**Skip condition (v1.6.0+):** If `type: ecosystem` (detected in Step 2) → skip this step entirely. Ecosystem projects do not have a `repo/` directory.
+
 ```bash
+# Only for standard projects (type != ecosystem):
 cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 ```
 
