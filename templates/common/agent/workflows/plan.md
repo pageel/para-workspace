@@ -5,7 +5,7 @@ source: catalog
 
 # /plan [project-name] [action]
 
-> **Workspace Version:** 1.5.3 (Hot Lane)
+> **Workspace Version:** 1.6.0-beta.1 (Ecosystem)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final plan document MUST be translated to this language.**
 
 Create, review, or update a phased implementation plan for a PARA project.
@@ -343,6 +343,23 @@ File:   artifacts/plans/[plan-name].md
 active_plan: "plans/[plan-name].md"
 ```
 
+**Cross-project plan activation (v1.6.0+):**
+
+If building a plan for a satellite project AND the plan is stored in the
+ecosystem meta-project, ask:
+
+```
+📐 This plan is in the ecosystem meta-project @{ecosystem}.
+   Set active_plan: "@{ecosystem}/plans/[plan-name].md"?
+   Y → Cross-project reference (recommended for shared plans)
+   N → Copy plan to local artifacts/ instead
+```
+
+If user confirms cross-project:
+```yaml
+active_plan: "@{ecosystem}/plans/[plan-name].md"
+```
+
 2. Immediately suggest `/backlog sync`:
 
 ```
@@ -385,6 +402,17 @@ Summarize an existing plan with status updates, using `done.md` for accurate pro
 // turbo
 
 1. Read `active_plan` field from `Projects/[project-name]/project.md` to locate the plan file.
+
+**Resolve plan path (v1.6.0+):**
+
+```
+IF active_plan starts with "@":
+  1. Extract ecosystem: @{ecosystem}/plans/xxx.md → ecosystem = "{ecosystem}"
+  2. Resolved path: Projects/{ecosystem}/artifacts/plans/xxx.md
+ELSE:
+  Local path: Projects/[project-name]/artifacts/[active_plan]
+```
+
 2. Read `Projects/[project-name]/artifacts/tasks/done.md` to get the list of completed task IDs with dates.
 3. Cross-reference `done.md` completed IDs with the plan's **Backlog → Phase Mapping** table.
 4. Display summary:

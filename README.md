@@ -9,7 +9,7 @@
 <br/>
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.5.4-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.6.0--beta.1-orange.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://blog.google/technology/google-deepmind/antigravity-ai-coding-agent/)
 
@@ -79,7 +79,18 @@ para-workspace/
 
 ```
 <your-workspace>/
-├── Projects/                          # Goal-oriented tasks (e.g., website-launch)
+├── Projects/                          # Goal-oriented tasks
+│   ├── my-app/                        # Standard project (type: standard)
+│   │   ├── repo/                      #   Source code (git repo)
+│   │   ├── artifacts/                 #   Plans, tasks, decisions
+│   │   ├── sessions/                  #   Session logs
+│   │   ├── docs/                      #   Project documentation
+│   │   └── project.md                 #   Project contract
+│   └── my-ecosystem/                  # Ecosystem project (type: ecosystem) — v1.6.0+
+│       ├── artifacts/                 #   Cross-project plans & backlog
+│       ├── sessions/                  #   Session logs
+│       ├── docs/                      #   Strategy & shared docs
+│       └── project.md                 #   satellites: [app, api, ...], NO repo/
 ├── Areas/                             # Ongoing responsibilities (e.g., health, finance)
 │   ├── Workspace/                     # Master session log, audits, SYNC queue
 │   └── Learning/                      # Shared knowledge (from /learn)
@@ -255,7 +266,7 @@ The Kernel is the **constitution** of PARA Workspace — the rules that all work
 | H4  | Standard project directory structure                       |
 | H5  | Beads lifecycle                                            |
 | H6  | VCS & Git boundaries                                       |
-| H7  | Cross-project references via Resources                     |
+| H7  | Cross-project references + Ecosystem (v1.6.0)             |
 | H8  | Workflow kernel compatibility                              |
 | H9  | Governed libraries require `catalog.yml` with `kernel_min` |
 
@@ -482,6 +493,9 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Hybrid 3-File Integrity, Working Checkmarks & Docs Overhaul _(shipped in v1.5.2)_
 - [x] Hot Lane Refactor, /end Sync Point & Token Optimization _(shipped in v1.5.3)_
 - [x] Context Recovery, Workflow Pre-flight & Defense-in-Depth _(shipped in v1.5.4)_
+- [ ] **Meta-Project & Ecosystem Support** _(v1.6.0-beta.1 — in development)_
+- [ ] Department System _(v1.7.0 — planned)_
+- [ ] Community & Trust Boundary _(v1.8.0 — planned)_
 
 ---
 
@@ -497,4 +511,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.5.4_
+_Version: 1.6.0-beta.1_

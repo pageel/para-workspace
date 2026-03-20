@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.6.0-beta.1] - 2026-03-20
+
+Meta-Project & Ecosystem Support (RFC-0003).
+
+- **Added**: `type` field in `project.schema.json` — `standard` (default) or `ecosystem` (meta-project).
+- **Added**: `ecosystem` field — links satellite projects to their parent ecosystem.
+- **Added**: `satellites` field — lists satellite project slugs for ecosystem projects.
+- **Added**: `@` prefix convention for `active_plan` — cross-project plan references (e.g., `@pageel/plans/xxx.md`).
+- **Added**: Heuristics H7 subsection — Ecosystem Projects conventions (v1.6.0+).
+- **Changed**: `/open` v1.3.0 — ecosystem detection (Step 2), @prefix resolution (Step 5), skip git for ecosystem (Step 7).
+- **Changed**: `/end` v1.4.0 — @prefix resolution (Step 4), skip git suggestions for ecosystem.
+- **Changed**: `/plan` v1.3.0 — cross-project plan activation prompt (Step 10), @prefix in review action.
+- **Changed**: `/new-project` v1.1.0 — ecosystem/satellite type option (Step 2).
+- **Changed**: `/para-audit` v1.2.0 — ecosystem consistency validation (Step 3).
+- **Added**: Project template `.project.yml` — ecosystem fields (commented, opt-in).
+- **Added**: RFC-0003 — Meta-Project & Cross-Project Governance (Progressive, v1.6.0 → v2.0.0).
+- **Added**: Glossary & Impact Map (`docs/reference/glossary.md`) — graph-ready 5-field structure.
+- **Added**: Reference docs `docs/reference/project.md` (EN) — full project schema reference.
+- **Added**: Test vectors `examples/projects/project-schema-vectors.md`.
+
 ## [1.5.4] - 2026-03-17
 
 Context Recovery & Workflow Pre-flight (FEAT-47: Defense-in-Depth).

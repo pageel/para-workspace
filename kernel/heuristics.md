@@ -168,6 +168,37 @@ Rules:
 - Prefer creating a shared resource in `Resources/` over cross-project file dependencies
 - Each project should be as self-contained as possible
 
+### Ecosystem Projects (v1.6.0+)
+
+Projects can declare `type: ecosystem` to act as **meta-projects** coordinating
+multiple satellite projects. Conventions:
+
+**Project Types:**
+
+| Type       | Purpose                  | Has repo/ | Has satellites |
+|:-----------|:-------------------------|:----------|:---------------|
+| `standard` | Regular project (default)| Yes       | No             |
+| `ecosystem`| Coordinates satellites   | No        | Yes            |
+
+**Cross-Project Plan (`@` prefix):**
+
+Satellite projects MAY reference plans from their ecosystem meta-project:
+
+```yaml
+# In satellite project.md:
+ecosystem: my-ecosystem
+active_plan: "@my-ecosystem/plans/shared-plan.md"
+```
+
+Resolution: `@{ecosystem}/plans/xxx.md` → `Projects/{ecosystem}/artifacts/plans/xxx.md`
+
+**Ecosystem Behavior:**
+
+- Ecosystem projects SHOULD NOT have a `repo/` directory (no source code)
+- Workflows SHOULD skip git operations for ecosystem projects
+- `/open` SHOULD display satellite list when opening an ecosystem project
+- `/para-audit` SHOULD validate ecosystem ↔ satellite consistency
+
 ## H8. Workflow Compatibility
 
 Each workflow should declare kernel compatibility:
