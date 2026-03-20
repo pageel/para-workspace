@@ -3,11 +3,15 @@ description: Initialize a new PARA-compliant project with scaffolding
 source: catalog
 ---
 
-# /new-project project [project-name]
+# /new-project [project-name] [--meta]
 
-> **Workspace Version:** 1.6.0-beta.1 (Ecosystem)
+> **Workspace Version:** 1.6.0 (Ecosystem)
 
 Initialize a new PARA project with standard scaffolding and artifacts.
+
+| Flag | Description |
+| :--- | :---------- |
+| `--meta` | Skip type selection, directly create ecosystem meta-project (no repo/) |
 
 ## Steps
 
@@ -53,7 +57,9 @@ active_plan: ""
 
 **Ecosystem support (v1.6.0+):**
 
-Ask the user for project type:
+**If `--meta` flag is provided:** Skip type selection → directly create ecosystem project.
+
+**Otherwise:** Ask the user for project type:
 
 ```
 ❓ Project type?
@@ -62,7 +68,7 @@ Ask the user for project type:
    3. satellite — Standard project linked to an ecosystem
 ```
 
-- **If ecosystem:** Add `type: ecosystem` and `satellites: []` to frontmatter. Skip `repo/` directory creation (no source code).
+- **If ecosystem (or `--meta`):** Add `type: ecosystem` and `satellites: []` to frontmatter. Skip `repo/` directory creation (no source code).
 - **If satellite:** Ask for ecosystem name. Add `ecosystem: [name]` to frontmatter.
 - **If standard (default):** No extra fields needed.
 

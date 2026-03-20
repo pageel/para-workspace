@@ -9,7 +9,7 @@
 <br/>
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.6.0--beta.1-orange.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.6.0-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://blog.google/technology/google-deepmind/antigravity-ai-coding-agent/)
 
@@ -63,8 +63,8 @@ para-workspace/
 │   └── profiles/        # dev, general, marketer, ceo presets
 ├── tests/               # 🧪 kernel/ + cli/ integration tests
 ├── docs/                # 📖 Documentation
-│   ├── architecture/    # Architecture: overview, kernel
-│   ├── guides/          # How-to: development, planning
+│   ├── architecture/    # Architecture: overview, kernel, ecosystem
+│   ├── guides/          # How-to: development, planning, meta-project
 │   ├── reference/       # Lookup: CLI, workflows, project-rules
 │   ├── rules/           # Individual rule documentation (10 files)
 │   ├── changelog/       # Version history
@@ -493,7 +493,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Hybrid 3-File Integrity, Working Checkmarks & Docs Overhaul _(shipped in v1.5.2)_
 - [x] Hot Lane Refactor, /end Sync Point & Token Optimization _(shipped in v1.5.3)_
 - [x] Context Recovery, Workflow Pre-flight & Defense-in-Depth _(shipped in v1.5.4)_
-- [ ] **Meta-Project & Ecosystem Support** _(v1.6.0-beta.1 — in development)_
+- [x] **Meta-Project & Ecosystem Support** _(shipped in v1.6.0)_
 - [ ] Department System _(v1.7.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.8.0 — planned)_
 
@@ -511,4 +511,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.6.0-beta.1_
+_Version: 1.6.0_

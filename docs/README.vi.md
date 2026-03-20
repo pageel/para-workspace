@@ -9,7 +9,7 @@
 <br/>
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.6.0--beta.1-orange.svg)](../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.6.0-blue.svg)](../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://blog.google/technology/google-deepmind/antigravity-ai-coding-agent/)
 
@@ -496,7 +496,7 @@ Nếu workspace của bạn quá cũ (v1.3.x) hoặc đã bị bạn chỉnh s�
 - [x] Hybrid 3-File Integrity, Working Checkmarks & Docs Overhaul _(phát hành v1.5.2)_
 - [x] Hot Lane Refactor, /end Sync Point & Token Optimization _(phát hành v1.5.3)_
 - [x] Context Recovery, Workflow Pre-flight & Defense-in-Depth _(phát hành v1.5.4)_
-- [ ] **Meta-Project & Ecosystem Support** _(v1.6.0-beta.1 — đang phát triển)_
+- [x] **Meta-Project & Ecosystem Support** _(phát hành v1.6.0)_
 - [ ] Department System _(v1.7.0 — lên kế hoạch)_
 - [ ] Community & Trust Boundary _(v1.8.0 — lên kế hoạch)_
 
@@ -514,4 +514,4 @@ Xem [CONTRIBUTING.md](../CONTRIBUTING.md) để biết hướng dẫn. Điểm c
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.6.0-beta.1_
+_Phiên bản: 1.6.0_

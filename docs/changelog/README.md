@@ -2,8 +2,9 @@
 
 Detailed release notes for each version of PARA Workspace.
 
-| Version               | Date       | Highlights                                         |
-| :-------------------- | :--------- | :------------------------------------------------- |
+| Version                | Date       | Highlights                                         |
+| :--------------------- | :--------- | :------------------------------------------------- |
+| [v1.6.0](v1.6.0.md)   | 2026-03-20 | Meta-Project & Ecosystem Support (RFC-0003)        |
 | [v1.5.4](v1.5.4.md)   | 2026-03-17 | Defense-in-Depth: Context Recovery & Rule Guards   |
 | [v1.5.3](v1.5.3.md)   | 2026-03-13 | Hot Lane Refactor & /end Sync Point                |
 | [v1.5.1](v1.5.1.md)   | 2026-03-11 | Hybrid 3-File Sync & Template Review               |
