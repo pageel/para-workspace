@@ -5,7 +5,7 @@ source: catalog
 
 # /docs [project-name] [action]
 
-> **Workspace Version:** 1.5.0 (Governed Libraries)
+> **Workspace Version:** 1.6.1 (Unified Strategy Flow)
 
 Generate, review, or update technical documentation for a PARA project. Docs are always created in `Projects/[project-name]/docs/` (internal). Use `publish` to promote selected docs to `repo/docs/` when ready.
 
@@ -71,6 +71,15 @@ Every project’s `docs/` directory MUST have a `README.md` index file. This is 
 | :-------------------------------- | :---------------------------------- | :--------- |
 | [Architecture](./architecture.md) | System overview & component diagram | YYYY-MM-DD |
 | [CLI](./cli.md)                   | Commands, options, examples         | YYYY-MM-DD |
+
+## Strategy (optional)
+
+> Appears only when `docs/strategy/` exists. See Step 3.5.
+
+| Document                                    | Description               | Updated    |
+| :------------------------------------------ | :------------------------ | :--------- |
+| [Strategy](./strategy/strategy.md)              | Overall strategic vision    | YYYY-MM-DD |
+| [Strategy — [Topic]](./strategy/strategy-[topic].md) | Topic-specific strategy | YYYY-MM-DD |
 
 ---
 
@@ -139,8 +148,39 @@ Determine what documentation this project needs (all created in `docs/`):
 | **Library/SDK** | `lib/`, `src/index.ts`, exports   | architecture, api-reference, getting-started     |
 | **Website**     | Static pages, CMS integration     | architecture, deployment, content-structure      |
 | **Template**    | `templates/`, scaffolding scripts | architecture, cli, workflows, kernel             |
+| **Ecosystem**   | `satellites` field, `type: ecosystem` | architecture, strategy/, roadmap             |
 
 > **Rule:** Do NOT create all possible docs. Only create what the project type requires.
+
+#### 3.5. Strategy Docs Check
+
+// turbo
+
+> 🛡️ **Generic check:** Applies to ALL project types, not just ecosystem.
+
+1. Check `Projects/[project-name]/docs/strategy/` exists?
+
+2. **IF exists** — Note for Step 5 (Doc Plan):
+   - Read `docs/strategy/` file list (~1 ls)
+   - Flag for review/update if any file’s "Last reviewed" date > 30 days
+
+3. **IF not exists** — Check if project should have strategy:
+   - `project.md` has `satellites` field? → 🔴 Strong suggest
+   - `project.md` has `ecosystem` field? → 🟡 Soft suggest
+   - Backlog has > 5 active features? → 🟢 Optional suggest
+   - No match → Skip silently
+
+4. Suggest (if matched):
+   ```
+   📄 This project has no strategy docs.
+      Create docs/strategy/strategy.md? (y/n)
+   ```
+
+> **Smart Routing from /brainstorm (D6):** When `/brainstorm` Step 5 selects
+> Option D (/docs), this workflow detects strategy-related topic keywords
+> ("strategy", "product", "direction", "vision") and routes output to
+> `docs/strategy/` instead of `docs/`. Logic lives HERE — `/brainstorm`
+> itself does NOT change.
 
 #### 4. Read Doc Index (if exists)
 
@@ -451,6 +491,44 @@ All notable changes to this project, ordered by version (newest first).
 ### Fixed
 
 - [Bug fix]
+```
+
+### Strategy Document
+
+> **When to create:** User selects strategy creation (Step 3.5), or `/brainstorm`
+> Option D routes to `docs/strategy/`. Never auto-created.
+> **Location:** `docs/strategy/strategy.md` (overall) or `docs/strategy/strategy-[topic].md` (branch).
+
+```markdown
+# [Project/Domain Name] — Strategy
+
+> **Version**: 1.0 | **Last reviewed**: YYYY-MM-DD
+
+## Vision
+
+[2-3 sentences describing long-term destination]
+
+## Current State
+
+[Current situation — problems, opportunities]
+
+## Strategic Decisions
+
+| #   | Decision                     | Rationale              | Date       |
+|:----|:-----------------------------|:-----------------------|:-----------|
+| 1   | [Strategic decision]         | [Reasoning]            | YYYY-MM-DD |
+
+## Products / Streams
+
+[Product/stream list — if multiple. Omit section if N/A.]
+
+## Roadmap Alignment
+
+> Link: [`../artifacts/plans/*-roadmap.md`] (if exists)
+
+---
+
+_Last updated: YYYY-MM-DD_
 ```
 
 ---

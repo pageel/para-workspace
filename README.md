@@ -9,7 +9,7 @@
 <br/>
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.6.0-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.6.1-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://blog.google/technology/google-deepmind/antigravity-ai-coding-agent/)
 
@@ -494,6 +494,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Hot Lane Refactor, /end Sync Point & Token Optimization _(shipped in v1.5.3)_
 - [x] Context Recovery, Workflow Pre-flight & Defense-in-Depth _(shipped in v1.5.4)_
 - [x] **Meta-Project & Ecosystem Support** _(shipped in v1.6.0)_
+- [x] **Unified Strategy → Plan Flow** _(shipped in v1.6.1)_
 - [ ] Department System _(v1.7.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.8.0 — planned)_
 
@@ -511,4 +512,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.6.0_
+_Version: 1.6.1_

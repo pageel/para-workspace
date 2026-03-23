@@ -13,21 +13,21 @@ items:
 
   - id: open
     name: "Session Open"
-    version: "1.3.0"
-    kernel_min: "1.6.0"
+    version: "1.4.0"
+    kernel_min: "1.6.1"
     kernel_max: "1.x"
     entrypoint: "open.md"
-    description: "Start session with token-optimized context loading. Ecosystem detection + @prefix resolution (v1.6.0)."
-    tags: ["session", "context", "token-optimized", "ecosystem"]
+    description: "Start session with strategy/roadmap/brainstorm context loading, cascade detection (v1.6.1)."
+    tags: ["session", "context", "token-optimized", "ecosystem", "strategy", "roadmap"]
 
   - id: end
     name: "Session End"
-    version: "1.4.0"
-    kernel_min: "1.6.0"
+    version: "1.5.0"
+    kernel_min: "1.6.1"
     kernel_max: "1.x"
     entrypoint: "end.md"
-    description: "Close session with Hot Lane Sync, Smart Suggest, @prefix resolution, ecosystem skip."
-    tags: ["session", "classification", "3-file", "hot-lane", "ecosystem"]
+    description: "Close session with Hot Lane Sync, strategy/roadmap change detection, brainstorm follow-up (v1.6.1)."
+    tags: ["session", "classification", "3-file", "hot-lane", "ecosystem", "strategy"]
 
   - id: install
     name: "Install / Sync"
@@ -157,12 +157,12 @@ items:
 
   - id: plan
     name: "Plan Controller"
-    version: "1.3.0"
-    kernel_min: "1.6.0"
+    version: "1.4.0"
+    kernel_min: "1.6.1"
     kernel_max: "1.x"
     entrypoint: "plan.md"
-    description: "Create, review, update plans. @prefix cross-project activation (v1.6.0)."
-    tags: ["planning", "architecture", "phases", "ecosystem"]
+    description: "Create roadmap/detail plans, strategy priority, roadmap lifecycle (v1.6.1)."
+    tags: ["planning", "architecture", "phases", "ecosystem", "strategy", "roadmap"]
 
   - id: para-audit
     name: "Macro Assessor Audit"
@@ -175,12 +175,12 @@ items:
 
   - id: docs
     name: "Documentation Manager"
-    version: "1.0.0"
-    kernel_min: "1.4.10"
+    version: "1.1.0"
+    kernel_min: "1.6.1"
     kernel_max: "1.x"
     entrypoint: "docs.md"
-    description: "Generate, review, and publish project documentation with Doc Index."
-    tags: ["documentation", "docs", "publish"]
+    description: "Generate, review, publish docs. Strategy discovery + smart routing (v1.6.1)."
+    tags: ["documentation", "docs", "publish", "strategy"]
 
   - id: update
     name: "Safe Update"

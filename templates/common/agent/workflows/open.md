@@ -5,7 +5,7 @@ source: catalog
 
 # /open [project-name]
 
-> **Workspace Version:** 1.6.0-beta.1 (Ecosystem)
+> **Workspace Version:** 1.6.1 (Unified Strategy Flow)
 
 Start a new working session with full context from previous sessions.
 
@@ -37,6 +37,19 @@ After reading `project.md`, check the `type` field:
 - **If `type: ecosystem`** → This is a meta-project. Note `satellites` list for the report (Step 8). Do NOT read satellite project.md files (token optimization).
 - **If `ecosystem` field exists** (on a satellite) → Note the parent ecosystem name for `@` prefix resolution in Step 5.
 - **Otherwise** → Standard project, proceed normally.
+
+**Strategy context (v1.6.1):**
+
+After reading project.md:
+
+1. Check `docs/strategy/strategy.md` exists?
+2. **IF exists:**
+   ```bash
+   head -10 Projects/[project-name]/docs/strategy/strategy.md
+   ```
+   Extract: title + first blockquote → ~30 tokens max.
+3. Store for report (Step 8)
+4. **IF not exists** → Skip
 
 ### 2.5. Load rules indices
 
@@ -72,6 +85,24 @@ ls -t Projects/[project-name]/sessions/*.md | head -3
 ```
 
 Read the latest session log for context on previous work.
+
+### 3.5. Check Pending Brainstorms
+
+// turbo
+
+> ⚗️ **Token budget:** 1 grep, ~20 tokens max (D8).
+
+1. Check for brainstorms with pending decisions:
+   ```bash
+   grep -l "Pending" Projects/[project-name]/artifacts/para-decisions/brainstorm-*.md 2>/dev/null
+   ```
+
+2. **IF found:**
+   - Extract filename → topic + date
+   - Store for report (Step 8):
+     `💭 BRAINSTORM PENDING: [topic] (YYYY-MM-DD)`
+
+3. **IF not found** → Skip
 
 ### 4. Read task context — Token Optimized
 
@@ -136,6 +167,53 @@ ELSE:
 
 > 🛡️ **Progressive Disclosure:** Do NOT read `Resources/ai-agents/kernel/` or any architecture diagrams during `/open`. Keep the context ultra-light to save tokens and prevent attention decay.
 
+### 5.5. Roadmap Context Loading
+
+// turbo
+
+> 🛡️ **Generic:** Filesystem glob detect.
+> ⚗️ **Token budget:** ~80 tokens max.
+
+1. Check `plans/*-roadmap.md` exists?
+   ```bash
+   ls Projects/[project-name]/artifacts/plans/*-roadmap.md 2>/dev/null
+   ```
+
+2. **IF exists:**
+   a. Extract Phases Overview table:
+      ```bash
+      grep -E "^\| [0-9]" [roadmap-file] | head -10
+      ```
+   b. Count: total phases, done, active, planned
+   c. Store for report (Step 8)
+
+3. **IF not exists** → Skip
+
+> **Relationship with Step 5 (active_plan):**
+> - Step 5 loads DETAIL plan (task-level context)
+> - Step 5.5 loads ROADMAP (phase-level overview)
+> - Both display in report, in separate sections
+
+**Strategy cascade detection (D10):**
+
+IF BOTH `docs/strategy/strategy.md` AND `plans/*-roadmap.md` exist:
+
+1. Compare dates:
+   ```bash
+   stat -c %Y docs/strategy/strategy.md   # strategy modified time
+   stat -c %Y plans/*-roadmap.md           # roadmap modified time
+   ```
+
+2. **IF strategy.mtime > roadmap.mtime:**
+   → Strategy NEWER than roadmap → may be outdated
+   → Store warning for report:
+   ```
+   ⚠️ Strategy updated after roadmap. Roadmap may need review.
+      Run /plan review or /plan update?
+   ```
+
+3. **IF roadmap >= strategy** → OK, skip
+
 ### 6. 🔔 Check Sync Queue (Cross-Project Notifications)
 
 //turbo
@@ -187,12 +265,22 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 ⏳ Pending TODO:
 - [ ] [Pending items]
 
-📐 CURRENT PHASE: [Phase N: Name]
-   Progress: [N/M] tasks done | Timeline: [N days estimated]
-   Next tasks:
-   - [Backlog ID] [Story] — ⏳ Pending
-   - [Backlog ID] [Story] — 🚀 ToDo
-   (omit if no plan exists)
+📄 STRATEGY: [one-line summary from docs/strategy/strategy.md]
+   (omit if no strategy docs)
+
+🗺️ ROADMAP: [name] ([N] phases: [done]✅ [active]🔨 [planned]📋)
+   Current: Phase [N]: [Name] (vX.Y)
+   Next:    Phase [N+1]: [Name] — [has plan / needs /plan create]
+   ⚠️ Strategy updated after roadmap — needs review?
+   (omit if no roadmap)
+
+📐 ACTIVE PLAN: [plan-name]
+   Phase [X/Y] | Progress: [N/M] tasks | Timeline: [est]
+   (omit if no active plan)
+
+💭 BRAINSTORM PENDING: [topic] (YYYY-MM-DD)
+   → /brainstorm to continue, or /plan to formalize
+   (omit if no pending brainstorms)
 
 🔔 SYNC QUEUE: [N pending] / [0 if none]
 
@@ -212,18 +300,25 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 💡 SUGGESTED ACTIONS:
-1. [Priority 1 — from current phase if plan exists]
-2. [Priority 2 — sync items if pending]
-3. [Priority 3]
+1. [Priority 1 — from active plan current phase]
+2. [Priority 2 — brainstorm pending / strategy cascade / sync]
+3. [Priority 3 — roadmap next phase if plan nearly done]
 
 ❓ What would you like to work on?
 ```
 
-> **Note:** When a plan exists, Suggested Actions should prioritize tasks from the current phase. Do not suggest tasks from future phases unless the current phase is complete.
+> **Priority logic for Suggested Actions:**
+> 1. Active plan tasks (if any)
+> 2. ⚠️ Strategy cascade / SYNC pending (if any)
+> 3. 💭 Pending brainstorms (if any)
+> 4. 📐 Roadmap next phase — only when no active plan
+> 5. 🔥 Hot lane items
 
 ## Related
 
 - `/end` — End session and log progress
 - `/plan` — View or update implementation plan
+- `/docs` — Strategy docs loaded in Step 2 ext
+- `/brainstorm` — Pending brainstorms detected in Step 3.5
 - `/backlog` — View detailed backlog
 - `/push` — Quick commit and push

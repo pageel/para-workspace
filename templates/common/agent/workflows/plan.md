@@ -5,7 +5,7 @@ source: catalog
 
 # /plan [project-name] [action]
 
-> **Workspace Version:** 1.6.0-beta.1 (Ecosystem)
+> **Workspace Version:** 1.6.1 (Unified Strategy Flow)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final plan document MUST be translated to this language.**
 
 Create, review, or update a phased implementation plan for a PARA project.
@@ -58,13 +58,22 @@ Read `Projects/[project-name]/artifacts/tasks/backlog.md` to understand:
 
 // turbo
 
-> ⚠️ **Token optimization:** One `ls` command + read at most 1 file.
+> ⚗️ **Token optimization:** One `ls` + conditional read. Strategy priority logic (D7).
 
 ```bash
 ls -t Projects/[project-name]/artifacts/para-decisions/brainstorm-*.md 2>/dev/null | head -1
 ```
 
-- **If brainstorm file found** → Read the most recent one. Use its Options Evaluated and Decision sections as baseline context for architecture and phase design.
+- **If brainstorm file found:**
+  1. Extract brainstorm date from filename (YYYY-MM-DD)
+  2. Check `docs/strategy/strategy.md` exists?
+     - **IF strategy exists:**
+       - Extract strategy "Last reviewed" date
+       - **IF brainstorm.date <= strategy.lastReviewed** → Skip brainstorm
+         (already distilled into strategy — D7)
+       - **IF brainstorm.date > strategy.lastReviewed** → Read BOTH
+         (brainstorm has info not yet distilled into strategy)
+     - **IF strategy not exists** → Read brainstorm (current behavior)
 - **If none found** → Skip. Zero overhead.
 
 #### 2.6. Scan Learnings Index (Lessons Learned)
@@ -139,6 +148,81 @@ From Step 1, if `project.md` has `has_rules: true`:
 - Example: `dogfooding-policy.md` trigger "Editing repo/" → plan must include sync tasks when modifying repo templates.
 
 > **Rule:** Both workspace and project rules can impose hard constraints on plan phases. Always check before designing.
+
+#### 2.8. Plan Type Selection
+
+> 🛡️ **Generic:** Applies to ALL projects, not just ecosystem.
+
+**Auto-detect context:**
+
+1. Check `plans/*-roadmap.md` exists?
+   ```bash
+   ls Projects/[project-name]/artifacts/plans/*-roadmap.md 2>/dev/null
+   ```
+   - **YES** → Roadmap exists, suggest Detail Plan for next phase
+   - **NO**  → Both options open
+
+2. Check `docs/strategy/` exists?
+   - **YES** → Note: "Strategy docs found, plan should align"
+   - **NO**  → Skip
+
+3. Count active plans:
+   ```bash
+   ls Projects/[project-name]/artifacts/plans/*.md 2>/dev/null \
+     | grep -v roadmap | grep -v done | wc -l
+   ```
+
+**Present choice:**
+
+```text
+📐 What type of plan to create?
+
+1. 🗺️ Roadmap — Phases + timeline overview (multi-version/feature index)
+2. 📋 Detail Plan — Tasks + implementation details (1 version/feature)
+
+Context:
+  📄 Strategy: [exists: N files / none]
+  🗺️ Roadmap: [exists: X phases, Y done / none]
+  📋 Detail Plans: [N active, M archived]
+```
+
+**If roadmap exists → smart suggest:**
+
+```text
+📐 Roadmap: [name]-roadmap.md (N phases)
+
+Next phase without detail plan:
+→ Phase [N]: [Name] (vX.Y) — 📋 Planned
+
+Create Detail Plan for Phase [N]? (y/n)
+```
+
+> **Roadmap naming convention:** `[scope]-roadmap.md`. Never `active_plan`.
+> **Detail plan:** Standard `*.md` (non-roadmap). IS `active_plan`, archived to `plans/done/` when done.
+
+#### 2.9. Strategy & Roadmap Context Loading
+
+// turbo
+
+> ⚗️ **Only runs when Step 2.8 chose "Detail Plan" AND roadmap/strategy exists.**
+
+**A. Roadmap phase context** (if roadmap exists):
+
+1. Read roadmap file (`plans/*-roadmap.md`)
+2. Extract target phase row:
+   ```bash
+   grep -A 2 "Phase [N]" plans/*-roadmap.md
+   ```
+3. Store: phase scope, version, deliverables → baseline for Step 6
+
+**B. Strategy context** (if strategy exists AND not loaded by Step 2.5):
+
+1. Extract strategy link from roadmap header:
+   ```bash
+   grep "Strategy:" plans/*-roadmap.md
+   ```
+2. IF link found → grep summary (~2 lines header + blockquote)
+3. Store as design constraint for Step 5 (Architecture)
 
 #### 3. Analyze Reference Projects (Optional)
 
@@ -255,9 +339,9 @@ Save the plan to:
 Projects/[project-name]/artifacts/plans/[plan-name].md
 ```
 
-**Naming convention:** Use descriptive names (e.g., `implementation-plan.md`, `migration-plan.md`, `v2-redesign-plan.md`).
+**Naming convention:** Use descriptive names (e.g., `implementation-plan.md`, `migration-plan.md`, `v2-redesign-plan.md`). For roadmaps, use `[scope]-roadmap.md`.
 
-**Plan document structure:**
+**Plan document structure (Detail Plan):**
 
 ```markdown
 # [Plan Title]: [project-name]
@@ -375,6 +459,18 @@ Skip activation. Plan is saved but not active. User can activate later via `/pla
 
 > Path is relative to `artifacts/`. Remove `active_plan` field when the plan is completed or archived.
 
+**NEW — Roadmap auto-update (v1.6.1):**
+
+After setting `active_plan`, check `plans/*-roadmap.md`:
+
+1. **IF roadmap exists:**
+   - Find phase row matching this detail plan (by name or version)
+   - Update: `Detail Plan` column → link to new plan file
+   - Update: `Status` column → `🔨 Active`
+   - Log: `📐 Roadmap updated: Phase [N] → Active`
+
+2. **IF roadmap not exists** → Skip
+
 #### 11. Log in Session
 
 // turbo
@@ -445,6 +541,30 @@ Overall: 40% complete | Deadline: YYYY-MM-DD
 
 > **Why archive?** Completed plans in `artifacts/plans/` waste tokens when agents scan the directory. Moving to `done/` keeps the active plans directory lean.
 
+**Step 6.5 — Roadmap Lifecycle (v1.6.1):**
+
+After archiving a completed plan (Step 6):
+
+1. Check `plans/*-roadmap.md` exists?
+2. **IF exists:**
+   a. Update completed phase: `Status` → `✅ Done`
+   b. Find next phase with `Status: 📋 Planned` (no detail plan)
+   c. **IF next phase found:**
+      ```
+      📐 ROADMAP: Phase [N] complete!
+
+      Next: Phase [N+1]: [Name] (vX.Y) — no detail plan yet
+
+      💡 Run /plan create to create detail plan for Phase [N+1]?
+         Scope (from roadmap): [deliverables list]
+      ```
+   d. **IF all phases done:**
+      ```
+      🎉 ROADMAP COMPLETE! All phases done.
+         Run /retro for retrospective?
+      ```
+3. **IF not exists** → Skip (current behavior)
+
 ---
 
 ## ✏️ Action: update
@@ -474,6 +594,64 @@ Modify an existing plan (add phases, update status, revise timeline).
 
 > Plans are **living documents** — update them as the project evolves. Use the `update` action to keep them in sync with actual progress.
 
+## Roadmap Plan Template
+
+> **Naming:** `[scope]-roadmap.md` (e.g., `cms-roadmap.md`, `ecosystem-roadmap.md`)
+> **Lifecycle:** Never archived — living document, updated when phases complete.
+> **Role:** Index of detail plans — NOT `active_plan`.
+
+```markdown
+# [Name] Roadmap
+
+> **Version**: 1.0 | **Created**: YYYY-MM-DD
+> **Strategy**: [link to docs/strategy/ if exists, or "—"]
+
+---
+
+## Phases Overview
+
+| #   | Phase                 | Version | Detail Plan              | Status     | Est.  |
+|:----|:----------------------|:--------|:-------------------------|:-----------|:------|
+| 1   | [Phase name]          | vX.Y    | plans/[name].md          | ✅ Done    | ~Xh   |
+| 2   | [Phase name]          | vX.Y    | plans/[name].md          | 🔨 Active  | ~Xh   |
+| 3   | [Phase name]          | vX.Y    | —                        | 📋 Planned | ~Xh   |
+
+## Phase Details
+
+### Phase 1: [Name] (vX.Y) ✅
+
+> **Goal:** [one sentence]
+> **Detail plan:** [link or "n/a — simple phase"]
+
+| Deliverable          | Status |
+|:---------------------|:-------|
+| Deliverable 1        | ✅     |
+
+### Phase 2: [Name] (vX.Y) 🔨
+
+> **Goal:** [one sentence]
+> **Detail plan:** [link to active detail plan]
+
+| Deliverable          | Status |
+|:---------------------|:-------|
+| Deliverable 1        | 📋     |
+
+## Backlog → Phase Mapping
+
+| Backlog Item              | Priority   | Phase   |
+|:--------------------------|:-----------|:--------|
+| FEAT-XX: [Story]          | 🔴 High   | Phase 1 |
+
+## Definition of Done (Roadmap-level)
+
+- [ ] All phases completed or deferred with reason
+- [ ] All detail plans archived to plans/done/
+
+---
+
+_Created: YYYY-MM-DD_
+```
+
 ## Output Checklist
 
 - [ ] Project contract analyzed
@@ -481,16 +659,20 @@ Modify an existing plan (add phases, update status, revise timeline).
 - [ ] Project knowledge scanned (docs index, RFCs, architecture baseline, project rules)
 - [ ] Architecture designed with component diagram (extended if baseline exists)
 - [ ] Data schema defined (if applicable)
+- [ ] Plan type selected: Roadmap vs Detail Plan (Step 2.8)
+- [ ] Strategy/roadmap context loaded if applicable (Step 2.9)
 - [ ] Phases defined (4-7 phases recommended)
 - [ ] Code reuse documented (if reference projects exist)
 - [ ] Plan saved to `artifacts/plans/`
-- [ ] `active_plan` field set in `project.md`
+- [ ] `active_plan` field set in `project.md` (detail plans only)
+- [ ] Roadmap auto-updated if exists (Step 10)
 - [ ] `/backlog sync` suggested (or auto-triggered)
 - [ ] Session log updated
 
 ## Related
 
 - `/brainstorm` — Explore ideas before planning (auto-discovered by Step 2.5)
+- `/docs` — Strategy documents feed planning context (Step 2.9)
 - `/new-project` — Initialize project (run before `/plan`)
 - `/backlog` — Manage features and bugs
 - `/open` — Start session with context loading

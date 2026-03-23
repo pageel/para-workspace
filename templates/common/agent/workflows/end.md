@@ -5,7 +5,7 @@ source: catalog
 
 # /end [project-name | all | workspace] [done]
 
-> **Workspace Version:** 1.6.0-beta.1 (Ecosystem)
+> **Workspace Version:** 1.6.1 (Unified Strategy Flow)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final report MUST be translated to this language.**
 
 Summarize accomplishments and log them to the correct context (Project vs. Workspace).
@@ -97,6 +97,57 @@ If yes, **append one row** to `Areas/Workspace/SYNC.md` under the `## Pending` t
 
 > **Ecosystem skip (v1.6.0+):** If project `type: ecosystem`, skip git-related suggestions (no repo to commit). Focus on plan progress and backlog updates only.
 
+### 3.2. Strategy/Roadmap Change Detection
+
+// turbo
+
+> 🛡️ **Generic:** Based on session log (Step 2), no project type check needed.
+
+1. Scan session log for file paths changed during this session
+2. Check pattern match:
+   - `docs/strategy/**` → Strategy changed
+   - `plans/*-roadmap.md` → Roadmap changed
+
+3. **IF match found AND project has `satellites` or `downstream`:**
+   ```
+   📄 Strategy/Roadmap changed during this session.
+      Downstream projects may need updates:
+      - [satellite/downstream]: [brief action]
+      Create SYNC entries? (y/n)
+   ```
+
+4. **IF match found AND project has `ecosystem` ref (satellite):**
+   ```
+   📄 Strategy changed at satellite.
+      Sync up to ecosystem [name]? (y/n)
+   ```
+
+5. **IF no match** → Skip silently
+
+### 3.3. Brainstorm Follow-up
+
+// turbo
+
+> 🛡️ **Detect brainstorm created during session → suggest next step (D9).**
+
+1. Scan session log for `para-decisions/brainstorm-` file mentions
+2. **IF brainstorm created in this session:**
+   a. Read brainstorm file → check "Decision" section
+   b. **IF "Decision: Pending":**
+      ```
+      💭 Brainstorm "[topic]" has no decision yet.
+         Continue next session? (auto-carry to pending TODO)
+      ```
+   c. **IF decision made:**
+      ```
+      💭 Brainstorm "[topic]" has decisions.
+         Next steps:
+         ├── 📄 Update docs/strategy/? (if strategy topic)
+         ├── 📐 Run /plan create? (if needs implementation)
+         └── ✅ Already handled (skip)
+      ```
+3. **IF no brainstorm in session** → Skip silently
+
 ### 4. Check Plan Phase Progress (if active)
 
 // turbo
@@ -139,6 +190,18 @@ ELSE:
      - Output: `🎉 Phase [N] Complete! Phase [N+1] ready to start.`
 5. If the scope or architecture changes during this session, suggest running `/plan update`.
 
+**Step 4.5 — Roadmap Status Sync (v1.6.1):**
+
+After reporting phase status:
+
+1. **IF phase complete** (all tasks done):
+   a. Check `plans/*-roadmap.md` exists?
+   b. **IF exists** → Update phase row: `Status` → `✅ Done`
+   c. Note in session log: `- **Roadmap**: Phase [N] → ✅ Done`
+
+2. **IF plan 100% complete** (done keyword or all phases):
+   a. Update roadmap phase + suggest next phase (like /plan review Step 6.5)
+
 ### 5. Update Master Index
 
 // turbo
@@ -153,6 +216,8 @@ Append a summary line to the global index at `Areas/Workspace/SESSION_LOG.md`:
 
 - `/open` — Start session with context loading
 - `/plan` — View or update implementation plan
+- `/docs` — Strategy docs may trigger SYNC (Step 3.2)
+- `/brainstorm` — Brainstorm follow-up (Step 3.3)
 - `/backlog` — View and manage project tasks
 - `/push` — Quick commit and push
 - `/retro` — Project retrospective before archiving

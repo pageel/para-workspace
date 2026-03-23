@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.6.1] - 2026-03-23
+
+Unified Strategy → Plan Flow (FEAT-52).
+
+- **Changed**: `/docs` v1.1.0 — Strategy docs discovery (Step 3.5), Ecosystem project type, Strategy Document template, Doc Index strategy/ support, smart routing from /brainstorm.
+- **Changed**: `/plan` v1.4.0 — Plan Type Selection (Roadmap vs Detail Plan, Step 2.8), Strategy/Roadmap context loading (Step 2.9), Brainstorm/Strategy priority (D7, Step 2.5), Roadmap Plan template, Roadmap auto-update (Step 10), Roadmap lifecycle in review (Step 6.5).
+- **Changed**: `/end` v1.5.0 — Strategy/Roadmap change detection (Step 3.2), Brainstorm follow-up with next-step suggestions (Step 3.3), Roadmap status sync (Step 4.5).
+- **Changed**: `/open` v1.4.0 — Strategy summary loading (Step 2 ext), Pending brainstorms check (Step 3.5), Roadmap context loading (Step 5.5), Strategy cascade detection (D10), expanded report with Strategy/Roadmap/Brainstorm sections, priority-based Suggested Actions.
+
 ## [1.6.0] - 2026-03-20
 
 Meta-Project & Ecosystem Support (RFC-0003).
