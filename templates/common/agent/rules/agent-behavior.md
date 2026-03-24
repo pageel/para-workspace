@@ -35,10 +35,23 @@
 When context appears incomplete (cannot recall loaded rules, received truncation/checkpoint notice, or conversation has been very long):
 
 1. **MUST** re-read `.agent/rules.md` (workspace rules index) before performing any side-effect.
-2. **MUST** re-read project `.agent/rules.md` (if exists) before project-specific actions.
-3. **SHOULD** inform user: "Context recovery — re-loaded rules index."
+2. **MUST** re-read `.agent/skills.md` (workspace skills index, v1.6.2+) before performing any side-effect.
+3. **MUST** re-read project `.agent/rules.md` (if exists) before project-specific actions.
+4. **MUST** re-read project `.agent/skills.md` (if exists) before project-specific actions.
+5. **SHOULD** inform user: "Context recovery — re-loaded rules + skills indices."
 
-Side-effects requiring rules re-read:
+**Proactive Trigger Check (v1.6.2+):**
+
+BEFORE any action that edits files, runs commands, or creates artifacts — even when context is fresh:
+
+1. Scan workspace `rules.md` trigger table
+2. Scan workspace `skills.md` trigger table
+3. Scan project trigger tables (if loaded)
+4. **IF match found → read the rule/skill file BEFORE acting**
+
+> Principle: Check THEN act — never act THEN check.
+
+Side-effects requiring rules/skills re-read:
 
 - Git operations (commit, push, merge, branch, tag, PR)
 - File deletion, move, or rename outside project scope

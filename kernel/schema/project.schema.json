@@ -54,7 +54,24 @@
     "has_rules": {
       "type": "boolean",
       "default": false,
-      "description": "Whether this project has custom rules in .agent/rules.md. Used by /open to skip rules check when false."
+      "description": "DEPRECATED (v1.6.2): Use 'agent' map instead. Kept for backward compatibility — /open checks agent.rules first, falls back to has_rules."
+    },
+    "agent": {
+      "type": ["object", "null"],
+      "description": "Agent configuration map for project-level indices. Replaces has_rules (v1.6.2). Null or absent for projects with no custom agent config.",
+      "properties": {
+        "rules": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this project has a custom rules index in .agent/rules.md."
+        },
+        "skills": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this project has a custom skills index in .agent/skills.md."
+        }
+      },
+      "additionalProperties": false
     },
     "type": {
       "type": "string",

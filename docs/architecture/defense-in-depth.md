@@ -30,7 +30,7 @@ The agent is instructed to re-read `.agent/rules.md` when it detects context dec
 2. **Forgotten rules** — agent can't recall specific rule details
 3. **Long conversation** — session exceeds typical length
 
-**Recovery chain:** Detect decay → Read workspace `rules.md` → Read project `rules.md` (if `has_rules: true`) → Load specific rule files on demand.
+**Recovery chain:** Detect decay → Read workspace `rules.md` + `skills.md` → Read project indices (if `agent.rules`/`agent.skills`: true, or `has_rules` fallback) → Load specific rule/skill files on demand.
 
 **File-Level Guards** table maps file patterns to rules that MUST be re-read before editing:
 

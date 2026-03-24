@@ -5,7 +5,7 @@ source: catalog
 
 # /plan [project-name] [action]
 
-> **Workspace Version:** 1.6.1 (Unified Strategy Flow)
+> **Workspace Version:** 1.6.2 (Unified Agent Index)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final plan document MUST be translated to this language.**
 
 Create, review, or update a phased implementation plan for a PARA project.
@@ -26,11 +26,16 @@ Generate a comprehensive implementation plan based on the project contract, back
 
 ### Steps
 
-#### 0. Rules Pre-flight
+#### 0. Agent Indices Pre-flight
 
 // turbo
 
-Re-read `.agent/rules.md` to ensure rules context is loaded (guard against context truncation).
+> **Layer 3 defense:** Even if `/open` loaded indices at session start, long conversations
+> cause attention decay. Re-read here to guarantee rules/skills awareness during planning.
+
+1. Re-read `.agent/rules.md` (workspace rules index)
+2. Re-read `.agent/skills.md` (workspace skills index)
+3. Check `project.md` (loaded in Step 1) for `agent.rules` / `agent.skills` — if true, re-read project indices too
 
 #### 1. Read Project Contract
 
@@ -138,16 +143,27 @@ Read `.agent/rules.md` (workspace-level rules index, ~20 lines):
 - Store as constraints for Phase definition (Step 6) and Risk section (Step 9).
 - Example: `hybrid-3-file-integrity.md` trigger "ad-hoc requests" → plan must account for Hot Lane logging.
 
-**D2: Project Rules** (read IF `has_rules: true` in project.md)
+**D2: Project Rules** (read IF `agent.rules: true` or `has_rules: true` in project.md)
 
-From Step 1, if `project.md` has `has_rules: true`:
+From Step 1, check project.md:
+- `agent.rules: true` (v1.6.2+) OR `has_rules: true` (legacy, backward compat)
+
+If either is true:
 
 - Read `Projects/[project-name]/.agent/rules.md` (project rules index, ~5-10 lines).
 - Extract **trigger conditions** that may affect plan design.
 - Store as constraints for Phase definition (Step 6) and Risk section (Step 9).
 - Example: `dogfooding-policy.md` trigger "Editing repo/" → plan must include sync tasks when modifying repo templates.
 
-> **Rule:** Both workspace and project rules can impose hard constraints on plan phases. Always check before designing.
+**D3: Project Skills** (read IF `agent.skills: true` in project.md, v1.6.2+)
+
+From Step 1, if `project.md` has `agent.skills: true`:
+
+- Read `Projects/[project-name]/.agent/skills.md` (project skills index, ~5-10 lines).
+- Check if any skill trigger matches the plan scope.
+- If relevant skills found → note in plan as available tooling.
+
+> **Rule:** Both workspace and project rules/skills can impose constraints on plan phases. Always check before designing.
 
 #### 2.8. Plan Type Selection
 

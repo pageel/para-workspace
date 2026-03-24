@@ -278,6 +278,13 @@ sync_library "skills" \
   "$WS_ROOT/Resources/ai-agents/skills" \
   "$WS_ROOT/.agent/skills"
 
+# Sync workspace skills index (skills.md sits OUTSIDE skills/ directory)
+if [ -f "$LIB_SRC/skills.md" ]; then
+  if sync_file "$LIB_SRC/skills.md" "$WS_ROOT/.agent/skills.md"; then
+    echo "   ✓ Workspace skills index synced (.agent/skills.md)"
+  fi
+fi
+
 # === 4. Sync governance file ===
 # (Luật governance.md giờ đã được cấp phát qua catalog thư viện rules ở Bước 3. Không cần sync cứng nữa).
 

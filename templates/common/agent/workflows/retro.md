@@ -11,7 +11,7 @@ Conduct a project retrospective before archiving to `Archive/`.
 
 ## Steps
 
-### 0. Rules Pre-flight
+### 0. Agent Indices Pre-flight
 
 // turbo
 

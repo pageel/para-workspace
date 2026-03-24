@@ -103,4 +103,4 @@ If confirmed:
 
 ---
 
-_Updated in v1.5.3 (Project Knowledge Context, Rule Impact Check, completion review in plans/done/, has_rules gate)_
+_Updated in v1.5.3 (Project Knowledge Context, Rule Impact Check, completion review in plans/done/, agent map gate)_

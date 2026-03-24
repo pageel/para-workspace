@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.6.2] - 2026-03-24
+
+Unified Agent Index — Skills Loading & Proactive Trigger Check (FEAT-53).
+→ [Detailed release notes](docs/changelog/v1.6.2.md)
+
+- **Added**: `.agent/skills.md` — Workspace Skills Trigger Index template (parallel to `rules.md`).
+- **Added**: `agent` map in `project.schema.json` — replaces `has_rules` (deprecated, backward compat kept).
+- **Added**: Proactive Trigger Check — agent scans trigger tables before ANY side-effect action.
+- **Added**: Agent Indices Pre-flight (Step 0) to 7 workflows: `/plan`, `/docs`, `/backlog`, `/push`, `/release`, `/retro`, `/end`.
+- **Changed**: `/open` v1.5.0 — Step 2.5 split into 2.5a (rules), 2.5b (skills), 2.5c (project agent config with backward compat).
+- **Changed**: `/plan` v1.5.0 — D3 skills check, agent map compat in D2.
+- **Changed**: `/para-audit` v1.3.0 — Agent Index Consistency check (rules + skills), legacy migration detection.
+- **Changed**: `context-rules.md` v1.1.0 — §1 skills in priority, §4 Agent Index Loading with proactive check.
+- **Changed**: `agent-behavior.md` v1.1.0 — §4 Context Recovery with skills, Proactive Trigger Check clause.
+- **Changed**: `install.sh` — syncs `skills.md` alongside `rules.md`.
+- **Changed**: README redesigned — logo, TOC, updated Two-Tier diagram with skills, new slogan.
+
 ## [1.6.1] - 2026-03-23
 
 Unified Strategy → Plan Flow (FEAT-52).

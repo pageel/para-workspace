@@ -1,5 +1,8 @@
 # Workspace Rules Index
 
+> ⚠️ BEFORE performing any side-effect action, agent MUST scan this table
+> and load matching rules FIRST. Do NOT act then check — check then act.
+
 > Agent loads a specific rule ONLY WHEN the current action matches its trigger.
 > This index is read by `/open` Step 2.5a (ALWAYS) and `/plan` Step 2.7D.
 

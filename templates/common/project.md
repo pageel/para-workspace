@@ -8,7 +8,7 @@ deadline: ""
 downstream: []
 dod: []
 active_plan: ""
-has_rules: false
+has_rules: false  # DEPRECATED v1.6.2 — kept for backward compat
 last_reviewed: ""
 tags: []
 milestones: []

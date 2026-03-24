@@ -28,7 +28,8 @@ Schema: `kernel/schema/project.schema.json`
 | `description`  | string         | Project description                        | `""`        |
 | `tags`         | array          | Tag list                                   | `[]`        |
 | `active_plan`  | string \| null | Path to active plan (see below)            | `""`        |
-| `has_rules`    | boolean        | Has custom rules in `.agent/rules.md`      | `false`     |
+| `agent`        | object|null   | Agent config map: `rules`, `skills` booleans (v1.6.2+) | `null`      |
+| `has_rules`    | boolean        | **DEPRECATED** — use `agent.rules` instead | `false`     |
 
 ## Ecosystem Fields (v1.6.0+)
 

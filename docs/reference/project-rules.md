@@ -1,8 +1,8 @@
 # Rules & Context Loading
 
-> **Version**: 1.5.4
+> **Version**: 1.6.2
 
-PARA Workspace uses a **Two-Tier** rule loading system. Global rules apply to all projects, while project-specific rules add constraints for individual projects. Both tiers use **progressive disclosure** — agents load rules on demand, not all at once. A **Context Recovery** mechanism ensures rules are re-loaded after context truncation.
+PARA Workspace uses a **Two-Tier** loading system for both rules and skills. Global indices apply to all projects, while project-specific indices add constraints for individual projects. Both tiers use **progressive disclosure** — agents load rules/skills on demand, not all at once. A **Context Recovery** mechanism ensures indices are re-loaded after context truncation. A **Proactive Trigger Check** (v1.6.2) ensures agents scan trigger tables before any side-effect.
 
 ## How It Works
 
@@ -10,9 +10,11 @@ PARA Workspace uses a **Two-Tier** rule loading system. Global rules apply to al
 
 ```
 .agent/rules.md                    ← Workspace rules INDEX (always loaded)
+.agent/skills.md                   ← Workspace skills INDEX (always loaded, v1.6.2+)
 .agent/rules/                      ← Global rule files (10 rules, loaded on demand)
-Projects/<project>/.agent/rules.md ← Project rules INDEX (loaded if has_rules: true)
-Projects/<project>/.agent/rules/   ← Project rule files (loaded on demand)
+.agent/skills/                     ← Global skill files (loaded on demand)
+Projects/<project>/.agent/rules.md ← Project rules INDEX (loaded if agent.rules: true)
+Projects/<project>/.agent/skills.md← Project skills INDEX (loaded if agent.skills: true)
 ```
 
 Project rules **supplement** global rules — they do not override them.
@@ -40,26 +42,28 @@ This ~5–10 line file tells the agent **what project-specific rules exist** and
 | Maintenance       | Version bumps, writing docs/changelog     | maintenance.md       | 🟡  |
 ```
 
-`/open` Step 2.5b reads this file only when `project.md` has `has_rules: true`.
+`/open` Step 2.5c reads project indices when `project.md` has `agent.rules: true` or `agent.skills: true` (v1.6.2+). Falls back to `has_rules: true` for backward compatibility.
 
-### Loading Protocol
+### Loading Protocol (v1.6.2)
 
 1. Agent starts working on a project (via `/open` or context detection).
 2. **Step 2.5a:** Agent reads `.agent/rules.md` (workspace index) — ALWAYS.
-3. **Step 2.5b:** Agent checks `has_rules` → reads project rules index if true.
-4. During the session, when an action matches a trigger from EITHER index → agent reads that specific rule file.
-5. Rules not matching any current action are **never loaded**.
+3. **Step 2.5b:** Agent reads `.agent/skills.md` (workspace index) — ALWAYS (v1.6.2+).
+4. **Step 2.5c:** Agent checks `project.md` for `agent.rules`/`agent.skills` (or `has_rules` fallback) → reads project indices if true.
+5. During the session, when an action matches a trigger from ANY index → agent reads that specific rule/skill file.
+6. **Proactive Trigger Check** (v1.6.2): BEFORE any side-effect action, agent scans all loaded trigger tables. If a match is found, the rule/skill MUST be read BEFORE acting.
+7. Rules/skills not matching any current action are **never loaded**.
 
-> **Why two tiers?** Without the workspace index, agents with `has_rules: false` skip ALL rules — including critical global ones like Hot Lane logging (C1). The workspace tier ensures global rules are always discoverable.
+> **Why two tiers?** Without the workspace index, agents skip ALL rules/skills — including critical global ones like Hot Lane logging (C1). The workspace tier ensures global governance is always discoverable.
 
 ### Context Recovery (v1.5.4)
 
 After context truncation (checkpoint, sliding window), the agent may lose the rules index from memory. Four layers guard against this:
 
-1. **Rule file** — `agent-behavior.md` Section 4 instructs the agent to re-read `rules.md` when context appears incomplete. Includes a File-Level Guards table mapping specific files to their required rules. **Extensible**: project rules MAY define additional guards in their `rules.md` File Guards section (format in `context-rules.md`).
+1. **Rule/skill files** — `agent-behavior.md` §4 instructs the agent to re-read `rules.md` and `skills.md` when context appears incomplete. Includes File-Level Guards and Proactive Trigger Check.
 2. **Workflow output** — `/open` Step 8 includes a compact Safety Block that survives in checkpoint summaries.
-3. **Workflow pre-flight** — Workflows with side-effects (`/push`, `/release`, `/end`, `/plan`, `/docs`, `/backlog`, `/retro`) re-read `rules.md` from disk as Step 0 before executing.
-4. **File guard headers** — Task files (`done.md`, `sprint-current.md`) include inline `<!-- ⚠️ -->` comments that remind the agent of write constraints even when all rules have been lost from context (`hybrid-3-file-integrity.md` C6).
+3. **Workflow pre-flight** — Workflows with side-effects re-read both `rules.md` AND `skills.md` from disk as Step 0 before executing (Agent Indices Pre-flight, v1.6.2).
+4. **File guard headers** — Task files include inline `<!-- ⚠️ -->` comments that remind the agent of write constraints even when all indices have been lost from context.
 
 ## Creating Project Rules
 
@@ -81,4 +85,4 @@ The Two-Tier loading protocol is defined in `context-rules.md` Rule #4 (shipped 
 
 ---
 
-_Updated in v1.5.4 (FEAT-47: Context Recovery + Workflow Pre-flight)_
+_Updated in v1.6.2 (FEAT-53: Unified Agent Index + Proactive Trigger Check)_

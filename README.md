@@ -1,15 +1,13 @@
-# PARA Workspace
-
-> **The Governed Workspace Standard for AI Agents**
-
 <div align="center">
 
-<img src="./.github/assets/banner.png" width="100%" alt="PARA Workspace Banner">
+<img src="./docs/assets/logo.svg" width="120" alt="PARA Workspace Logo">
 
-<br/>
+# PARA Workspace
+
+**The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.6.1-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.6.2-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://blog.google/technology/google-deepmind/antigravity-ai-coding-agent/)
 
@@ -19,9 +17,23 @@
 
 ---
 
+| Section | Description |
+| :--- | :--- |
+| [🌌 Overview](#-overview) | What it is, three foundational principles |
+| [📂 Architecture](#-architecture) | Repo structure + generated workspace structure |
+| [📥 Installation](#-installation) | Prerequisites, setup, profiles, troubleshooting |
+| [🧠 The Kernel](#-the-kernel) | Invariants, heuristics, contracts |
+| [🛠️ CLI Reference](#️-cli-reference) | All CLI commands |
+| [📑 Workflow Catalog](#-workflow-catalog) | 22 governed workflows |
+| [🛡️ Rule Catalog](#️-rule-catalog) | 10 governance rules |
+| [🏗️ Rule Architecture](#️-rule-architecture--two-tier-loading--defense-in-depth) | Two-Tier loading, defense-in-depth |
+| [🧩 Task Management](#-task-management-hybrid-3-file-model) | Hybrid 3-File model |
+| [🔄 Upgrading](#-upgrading-versions) | Auto update + clean slate |
+| [🗺️ Roadmap](#️-roadmap) | Version history + planned features |
+
 ## 🌌 Overview
 
-**PARA Workspace** is a governed, open-source standard that defines how humans and AI agents organize knowledge and collaborate on projects. It ships as a **repo** containing a kernel (constitution), CLI tools, and templates — which generates **workspaces** where you actually work. The kernel enforces 10 invariants and 9 heuristics so every workspace is predictable, auditable, and agent-friendly.
+**PARA Workspace** is an open-source workspace framework that defines how humans and AI agents organize knowledge and collaborate on projects. It ships as a **repo** containing a kernel (constitution), CLI tools, and templates — which generates **workspaces** where you actually work. The kernel enforces invariants and heuristics so every workspace is predictable, auditable, and agent-friendly.
 
 ### Three Foundational Principles
 
@@ -100,7 +112,8 @@ para-workspace/
 ├── Archive/                           # Cold storage for completed items
 ├── _inbox/                            # Temporary landing zone for external downloads
 ├── .agent/                            # Governed library copies (Auto-synced)
-│   ├── rules.md                       # Workspace Rules Trigger Index (always loaded, with priority)
+│   ├── rules.md                       # Workspace Rules Trigger Index (always loaded)
+│   ├── skills.md                      # Workspace Skills Trigger Index (v1.6.2+)
 │   ├── rules/                         # Active agent rules (.md)
 │   ├── skills/                        # Active agent skills (.md, /scripts)
 │   └── workflows/                     # Active agent workflows (.md)
@@ -336,15 +349,15 @@ para config [key] [value]       # Manage workspace settings
 
 ## 🛡️ Rule Catalog
 
-Rules govern agent behavior, security, and compliance. Loaded on-demand via a Two-Tier trigger index (~200 tokens). See [Rules & Context Loading](./docs/reference/project-rules.md) for the loading mechanism.
+Rules govern agent behavior, security, and compliance. Loaded on-demand via a Two-Tier trigger index (~200 tokens). Skills are loaded via a parallel skills trigger index (v1.6.2). See [Rules & Context Loading](./docs/reference/project-rules.md) for the loading mechanism.
 
 | Rule                                                                              | Description                                             | Priority     |
 | :-------------------------------------------------------------------------------- | :------------------------------------------------------ | :----------- |
 | **[`governance`](./docs/rules/governance.md)**                                    | Kernel invariants, scope containment, safety guardrails | 🔴 Critical  |
 | **[`vcs`](./docs/rules/vcs.md)**                                                 | Git safety: commit, branch, merge, PR, secrets          | 🔴 Critical  |
 | **[`hybrid-3-file-integrity`](./docs/rules/hybrid-3-file-integrity.md)**          | 6 constraints (C1–C6) for task management               | 🟡 Important |
-| **[`agent-behavior`](./docs/rules/agent-behavior.md)**                            | Communication, language, Context Recovery (v1.5.4)      | 🟡 Important |
-| **[`context-rules`](./docs/rules/context-rules.md)**                              | Loading order, isolation, Two-Tier trigger               | 🟡 Important |
+| **[`agent-behavior`](./docs/rules/agent-behavior.md)**                            | Proactive Trigger Check, Context Recovery (v1.6.2)      | 🟡 Important |
+| **[`context-rules`](./docs/rules/context-rules.md)**                              | Agent Index Loading (rules + skills), Two-Tier trigger   | 🟡 Important |
 | **[`para-discipline`](./docs/rules/para-discipline.md)**                          | PARA architecture compliance, 7 rules                   | 🟡 Important |
 | **[`artifact-standard`](./docs/rules/artifact-standard.md)**                      | Plans, walkthroughs, persistent mirroring               | 🟢 Standard  |
 | **[`naming`](./docs/rules/naming.md)**                                            | kebab-case, PascalCase, camelCase conventions            | 🟢 Standard  |
@@ -355,50 +368,52 @@ Rules govern agent behavior, security, and compliance. Loaded on-demand via a Tw
 
 ## 🏗️ Rule Architecture — Two-Tier Loading & Defense-in-Depth
 
-Rules aren't dumped into context all at once. PARA Workspace uses a **progressive disclosure** architecture that loads rules on-demand, saving ~90% of token budget while maintaining full compliance.
+Rules and skills aren't dumped into context all at once. PARA Workspace uses a **progressive disclosure** architecture that loads indices on-demand, saving ~90% of token budget while maintaining full compliance.
 
-### How It Works: Two-Tier Trigger Index
+### How It Works: Two-Tier Trigger Index (v1.6.2)
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    /open starts session                     │
-│                                                             │
-│  Step 2.5a: ALWAYS read workspace rules index               │
-│  ┌───────────────────────────────────────────────────┐      │
-│  │  .agent/rules.md  (~20 lines, ~200 tokens)        │      │
-│  │  ┌────────────┬──────────────────┬─────┐          │      │
-│  │  │ governance │ Touching kernel/ │ 🔴  │          │      │
-│  │  │ vcs        │ Git operations   │ 🔴  │          │      │
-│  │  │ hybrid-3   │ tasks/ files     │ 🟡  │          │      │
-│  │  │ naming     │ Creating files   │ 🟢  │          │      │
-│  │  │ ...        │ ...              │     │          │      │
-│  │  └────────────┴──────────────────┴─────┘          │      │
-│  │  Agent memorizes triggers → loads rules ON DEMAND │      │
-│  └───────────────────────────────────────────────────┘      │
-│                                                             │
-│  Step 2.5b: CONDITIONALLY read project rules index          │
-│  ┌───────────────────────────────────────────────────┐      │
-│  │  Projects/<name>/.agent/rules.md  (~5-10 lines)   │      │
-│  │  Only if project.md has: has_rules: true          │      │
-│  │  Adds project-specific triggers on top of global  │      │
-│  └───────────────────────────────────────────────────┘      │
-│                                                             │
-│  💡 Total cost: ~250 tokens (vs ~2000 if all rules loaded)  │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                    /open starts session                      │
+│                                                              │
+│  Step 2.5a: ALWAYS read workspace rules index                │
+│  ┌────────────────────────────────────────────────────┐      │
+│  │  .agent/rules.md  (~20 lines, ~200 tokens)         │      │
+│  │  Agent memorizes triggers → loads rules ON DEMAND  │      │
+│  └────────────────────────────────────────────────────┘      │
+│                                                              │
+│  Step 2.5b: ALWAYS read workspace skills index  (v1.6.2+)   │
+│  ┌────────────────────────────────────────────────────┐      │
+│  │  .agent/skills.md  (~10 lines, ~100 tokens)        │      │
+│  │  Agent memorizes triggers → loads skills ON DEMAND │      │
+│  └────────────────────────────────────────────────────┘      │
+│                                                              │
+│  Step 2.5c: CONDITIONALLY read project agent indices         │
+│  ┌────────────────────────────────────────────────────┐      │
+│  │  Check project.md:                                 │      │
+│  │    agent.rules: true  → project .agent/rules.md    │      │
+│  │    agent.skills: true → project .agent/skills.md   │      │
+│  │    has_rules: true    → backward compat (legacy)   │      │
+│  └────────────────────────────────────────────────────┘      │
+│                                                              │
+│  💡 Total cost: ~350 tokens (vs ~2000 if all loaded)         │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-### Defense-in-Depth: 4-Layer Rule Protection
+### Defense-in-Depth: 4-Layer Protection
 
-After a long conversation, AI agents lose context (truncation). PARA Workspace has **4 independent layers** to ensure rules survive:
+After a long conversation, AI agents lose context (truncation). PARA Workspace has **4 independent layers** to ensure rules and skills survive:
 
 ```
 Layer   What                         Where                           Survives
 ─────   ─────────────────────────    ─────────────────────────────   ────────
-  1     Rule file instructions       agent-behavior.md §4            ⚠️ Lost after truncation
+  1     Index instructions           agent-behavior.md §4            ⚠️ Lost after truncation
   2     Safety block in output       /open Step 8 report             ✅ In checkpoint summary
-  3     Workflow pre-flight          Step 0: re-read rules.md        ✅ Fresh from disk
+  3     Workflow pre-flight          Step 0: re-read rules + skills  ✅ Fresh from disk
   4     File guard headers           <!-- ⚠️ ... --> in file         ✅ Inline in target file
 ```
+
+Layer 3 uses **Proactive Trigger Check** (v1.6.2): BEFORE any side-effect, agent scans all trigger tables and loads matching rules/skills FIRST.
 
 Layer 4 supports **4 guard types**: `TASK` (C1-C3), `KERNEL` (I9), `GOVERNED` (rules), `WORKSPACE` (session/sync).
 
@@ -495,6 +510,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Context Recovery, Workflow Pre-flight & Defense-in-Depth _(shipped in v1.5.4)_
 - [x] **Meta-Project & Ecosystem Support** _(shipped in v1.6.0)_
 - [x] **Unified Strategy → Plan Flow** _(shipped in v1.6.1)_
+- [x] **Unified Agent Index — Skills Loading & Proactive Trigger Check** _(shipped in v1.6.2)_
 - [ ] Department System _(v1.7.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.8.0 — planned)_
 
@@ -512,4 +528,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.6.1_
+_Version: 1.6.2_

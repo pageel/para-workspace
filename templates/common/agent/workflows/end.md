@@ -24,7 +24,7 @@ Summarize accomplishments and log them to the correct context (Project vs. Works
 
 ## Steps
 
-### 0. Rules Pre-flight
+### 0. Agent Indices Pre-flight
 
 // turbo
 

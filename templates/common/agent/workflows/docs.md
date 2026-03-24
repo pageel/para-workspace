@@ -5,7 +5,7 @@ source: catalog
 
 # /docs [project-name] [action]
 
-> **Workspace Version:** 1.6.1 (Unified Strategy Flow)
+> **Workspace Version:** 1.6.2 (Unified Agent Index)
 
 Generate, review, or update technical documentation for a PARA project. Docs are always created in `Projects/[project-name]/docs/` (internal). Use `publish` to promote selected docs to `repo/docs/` when ready.
 
@@ -100,11 +100,15 @@ Analyze the project and create documentation appropriate to its type and complex
 
 ### Steps
 
-#### 0. Rules Pre-flight
+#### 0. Agent Indices Pre-flight (all actions)
 
 // turbo
 
-Re-read `.agent/rules.md` to ensure rules context is loaded (guard against context truncation).
+> **Layer 3 defense:** Re-read indices to guard against attention decay.
+
+1. Re-read `.agent/rules.md` (workspace rules index)
+2. Re-read `.agent/skills.md` (workspace skills index)
+3. Check `project.md` for `agent.rules` / `agent.skills` — if true, re-read project indices too
 
 #### 1. Read Project Contract
 

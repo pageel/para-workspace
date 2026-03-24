@@ -69,7 +69,7 @@ Reads only the changelog for the new version (`docs/changelog/vX.Y.Z.md`). Extra
 
 ### 3. Check Project Schema Compliance
 
-For each project: reads `project.md` YAML frontmatter and flags missing fields (`has_rules`, `downstream`, `active_plan`) with suggested defaults.
+For each project: reads `project.md` YAML frontmatter and flags missing fields (`agent` map, `has_rules` (legacy), `downstream`, `active_plan`) with suggested defaults.
 
 ### 4. Check Backlog Template Compliance
 
@@ -77,7 +77,7 @@ For each project with `backlog.md`: checks for `✅ Completed (Archived)` sectio
 
 ### 5. Check Rules Index Consistency
 
-For projects with `has_rules: true`: compares `.agent/rules.md` index with actual `.agent/rules/` files on disk. Flags mismatches.
+For projects with `agent.rules: true` (or `has_rules: true`): compares `.agent/rules.md` index with actual `.agent/rules/` files on disk. Flags mismatches.
 
 ### 6. Generate Post-Update Report
 

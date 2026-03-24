@@ -5,7 +5,7 @@ source: catalog
 
 # /para-audit [action]
 
-> **Workspace Version:** 1.6.0-beta.1 (Ecosystem)
+> **Workspace Version:** 1.6.2 (Unified Agent Index)
 
 Strict workspace macro-assessor. Two modes: full structural audit against Kernel Specs (I1-I11), or post-update compliance check with version-aware suggestions.
 
@@ -117,7 +117,7 @@ Build a **check list** from the changelog. Examples of checks that may be genera
 | :---------------------------------------- | :------------------------------------------------- |
 | Template `backlog.md` changed             | Check all projects' backlog.md for new sections    |
 | Template `done.md` changed                | Check all projects' done.md for new structure      |
-| Rule `hybrid-3-file-integrity.md` updated | Check `.agent/rules.md` index if `has_rules: true` |
+| Rule `hybrid-3-file-integrity.md` updated | Check `.agent/rules.md` index if `agent.rules: true` |
 | New schema field added                    | Check all `project.md` YAML frontmatter            |
 
 ### 3. Check Project Schema Compliance
@@ -129,7 +129,8 @@ For each project in `Projects/` that has a `project.md`:
 1. Read `project.md` YAML frontmatter.
 2. Compare against expected fields from `kernel/schema/project.schema.json`.
 3. Flag missing fields with suggested default values:
-   - `has_rules` missing → suggest `true` if `.agent/rules/` exists, `false` otherwise
+   - `agent` missing → suggest `agent: { rules: true }` if `.agent/rules/` exists
+   - `has_rules` present → suggest migration to `agent` map (v1.6.2+)
    - `downstream` missing → suggest `[]`
    - `active_plan` missing → suggest `""`
    - `type` missing → suggest `standard` (v1.6.0+)
@@ -154,19 +155,31 @@ For each project with `artifacts/tasks/backlog.md`:
 4. If project has `artifacts/tasks/done.md`:
    - Check if done.md has plan-grouped structure (## Plan: ...) → if flat/date-grouped, suggest restructuring.
 
-### 5. Check Rules Index Consistency
+### 5. Check Agent Index Consistency
 
-For each project where `project.md` has `has_rules: true`:
+For each project where `project.md` has `agent.rules: true` (or legacy `has_rules: true`):
 
 // turbo
 
 1. Check if `.agent/rules.md` (rules index) exists.
-   - `has_rules: true` but no `.agent/rules.md` → warn.
+   - `agent.rules: true` but no `.agent/rules.md` → warn.
 2. If `.agent/rules.md` exists:
    - Extract listed rule filenames.
    - Compare with actual files in `.agent/rules/` (excluding `catalog.yml`).
    - Flag: rules in index but missing on disk, rules on disk but not in index.
-3. Reverse check: `.agent/rules.md` exists but `has_rules` is missing/false → suggest setting `true`.
+3. Reverse check: `.agent/rules.md` exists but `agent.rules` is missing → suggest adding.
+
+For each project where `project.md` has `agent.skills: true`:
+
+1. Check if `.agent/skills.md` (skills index) exists.
+   - `agent.skills: true` but no `.agent/skills.md` → warn.
+2. If `.agent/skills.md` exists:
+   - Extract listed skill names.
+   - Compare with actual directories in `.agent/skills/`.
+   - Flag: skills in index but missing on disk, skills on disk but not in index.
+
+**Legacy migration check:**
+- `has_rules` field present → suggest migrating to `agent` map (v1.6.2+).
 
 ### 5.5. Check Guard Headers Coverage (C6)
 
@@ -196,10 +209,11 @@ Display an inline report (do NOT create a separate file — this is a quick chec
 📄 CHANGELOG: [summary of key changes]
 
 📐 PROJECT SCHEMA:
-| Project   | Field       | Status     | Suggested Action         |
-| --------- | ----------- | ---------- | ------------------------ |
-| project-a | has_rules   | ❌ Missing | Add `has_rules: true`    |
-| project-b | ✅ OK       |            |                          |
+| Project   | Field       | Status     | Suggested Action              |
+| --------- | ----------- | ---------- | ----------------------------- |
+| project-a | agent       | ❌ Missing | Add `agent: { rules: true }`  |
+| project-b | has_rules   | ⚠️ Legacy | Migrate to `agent` map        |
+| project-c | ✅ OK       |            |                               |
 
 📋 BACKLOG TEMPLATE:
 | Project   | Issue                     | Suggested Action         |

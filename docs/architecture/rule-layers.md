@@ -1,6 +1,6 @@
 # Rule Layers & Trigger Index Architecture
 
-> **Version**: 1.5.4 | **Last reviewed**: 2026-03-17
+> **Version**: 1.6.2 | **Last reviewed**: 2026-03-24
 
 ## Overview
 
@@ -10,8 +10,9 @@ Three key properties:
 
 1. **Layered** — Kernel → Global → Project
 2. **Progressive Disclosure** — load only when needed, never all at once
-3. **Trigger Index** — lightweight table mapping actions to rule files with priority levels
+3. **Trigger Index** — lightweight tables mapping actions to rule/skill files with priority levels
 4. **Context Recovery** — Defense-in-Depth guardrails against context truncation
+5. **Proactive Trigger Check** (v1.6.2) — scan triggers BEFORE any side-effect
 
 ## Rule Layers
 
@@ -63,20 +64,19 @@ Synced from `catalog.yml` by `./para install` or `./para update`.
 
 ## Trigger Index (Two-Tier Progressive Disclosure)
 
-The system uses **two index files** so the agent knows which rules exist and when to load them:
+The system uses **index files** so the agent knows which rules AND skills exist and when to load them:
 
-**Tier 1: Workspace Rules Index** (`.agent/rules.md`) — ALWAYS READ
+**Tier 1a: Workspace Rules Index** (`.agent/rules.md`) — ALWAYS READ
 
 ```markdown
 | Rule                    | Trigger                                           | File                             | Pri |
 | :---------------------- | :------------------------------------------------ | :------------------------------- | :-- |
 | Governance              | Touching kernel/, .para/ — MUST NOT modify        | rules/governance.md              | 🔴  |
 | VCS                     | Git commit, push, merge, branch, tag, PR          | rules/vcs.md                     | 🔴  |
-| Hybrid 3-File Integrity | Reading/writing artifacts/tasks/, ad-hoc requests | rules/hybrid-3-file-integrity.md | 🟡  |
 | ...                     | ...                                               | ...                              | 🟢  |
 ```
 
-**Tier 2: Project Rules Index** (`Projects/<name>/.agent/rules.md`) — CONDITIONAL
+**Tier 1b: Workspace Skills Index** (`.agent/skills.md`) — ALWAYS READ (v1.6.2+)
 
 ```markdown
 | Rule          | Trigger                              | File             | Pri |
@@ -94,57 +94,59 @@ The system uses **two index files** so the agent knows which rules exist and whe
 
 > **File Guards** (v1.5.4): Optional section in project `rules.md`. Extends the global guards from `agent-behavior.md` §4. Agent reads both global + project guards during Context Recovery.
 
-### Loading Flow (Two-Tier)
+### Loading Flow (v1.6.2)
 
 ```
 /open
   ↓
-Step 2.5a: Read .agent/rules.md (workspace index) — ALWAYS
-  → Memorize 10 triggers (do NOT read rule files)
+Step 2.5a: Read .agent/rules.md (workspace rules index) — ALWAYS
+  → Memorize triggers (do NOT read rule files)
   ↓
-Step 2.5b: has_rules: true?
-  → YES → Read Projects/<name>/.agent/rules.md (project index)
-  → NO  → Skip (only project rules skipped, workspace rules already loaded)
+Step 2.5b: Read .agent/skills.md (workspace skills index) — ALWAYS (v1.6.2+)
+  → Memorize skill triggers
+  ↓
+Step 2.5c: agent.rules / agent.skills / has_rules?
+  → YES → Read project indices
+  → NO  → Skip (workspace indices still loaded)
   ↓
 Coding session: agent about to edit repo/
-  → Match: "Editing repo/" → load dogfooding-policy.md → comply
-  ↓
-Agent receives ad-hoc request "remove download button"
-  → Match: "ad-hoc requests" → load hybrid-3-file-integrity.md → log hot lane first
+  → Proactive Trigger Check → Match: "Editing repo/" → load dogfooding-policy.md → comply
 ```
 
-### `has_rules` Gate in project.md
+### `agent` Map in project.md (v1.6.2+)
 
 ```yaml
-has_rules: true # Gate for /open Step 2.5b (project rules only)
+agent:
+  rules: true    # Gate for /open Step 2.5c (project rules)
+  skills: true   # Gate for /open Step 2.5c (project skills)
 ```
 
-- `true` → `/open` reads project rules index
-- `false` or missing → skip project rules (workspace rules still loaded)
-- `/para-audit update` Step 5 checks consistency between `has_rules` and actual files
+- `agent.rules: true` → `/open` reads project rules index
+- `agent.skills: true` → `/open` reads project skills index
+- `has_rules: true` → backward compat fallback (deprecated)
+- `/para-audit update` Step 5 checks consistency between `agent` map and actual files
 
 ## Workflow Coverage
 
-| Workflow      | Workspace Index       | Project Index              | Detail                                                          |
-| :------------ | :-------------------- | :------------------------- | :-------------------------------------------------------------- |
-| `/open`       | ✅ Step 2.5a (ALWAYS) | ✅ Step 2.5b (conditional) | Workspace: always. Project: if `has_rules: true`                |
-| `/plan`       | ✅ Step 2.7 D1        | ✅ Step 2.7 D2 + Step 8.5  | D1: workspace constraints. D2: project constraints. 8.5: impact |
-| `/push`       | ✅ Step 0 Pre-flight  | —                          | Re-reads rules.md before git operations (v1.5.4)                |
-| `/release`    | ✅ Step 0 Pre-flight  | —                          | Re-reads rules.md before release (v1.5.4)                       |
-| `/end`        | ✅ Step 0 Pre-flight  | —                          | Re-reads rules.md before session sync (v1.5.4)                  |
-| `/plan`       | ✅ Step 0 Pre-flight  | —                          | Re-reads rules.md before plan creation (v1.5.4)                 |
-| `/docs`       | ✅ Step 0 Pre-flight  | —                          | Re-reads rules.md before doc generation (v1.5.4)                |
-| `/backlog`    | ✅ Step 0 Pre-flight  | —                          | Re-reads rules.md before backlog mutation (v1.5.4)              |
-| `/retro`      | ✅ Step 0 Pre-flight  | —                          | Re-reads rules.md before archive (v1.5.4)                       |
-| `/para-audit` | —                     | ✅ Step 5 (update)         | Consistency check: `has_rules` vs index vs disk                 |
-| `/para-rule`  | —                     | ✅ Core                    | CRUD rule management                                            |
+| Workflow      | Rules Index           | Skills Index           | Pre-flight             | Detail                                                        |
+| :------------ | :-------------------- | :--------------------- | :--------------------- | :------------------------------------------------------------ |
+| `/open`       | ✅ Step 2.5a (ALWAYS) | ✅ Step 2.5b (ALWAYS)  | — (IS the loader)      | Workspace: always. Project: if `agent.*: true`                |
+| `/plan`       | ✅ Step 2.7 D1-D2     | ✅ Step 2.7 D3          | ✅ Step 0 (v1.6.2)     | D1: workspace. D2: project rules. D3: project skills          |
+| `/docs`       | ✅ Step 0             | ✅ Step 0              | ✅ Step 0 (v1.6.2)     | Re-reads rules + skills before doc generation                  |
+| `/push`       | ✅ Step 0             | ✅ Step 0              | ✅ Step 0 (v1.6.2)     | Re-reads before git operations                                 |
+| `/release`    | ✅ Step 0             | ✅ Step 0              | ✅ Step 0 (v1.6.2)     | Re-reads before release                                        |
+| `/end`        | ✅ Step 0             | ✅ Step 0              | ✅ Step 0 (v1.6.2)     | Re-reads before session sync                                   |
+| `/backlog`    | ✅ Step 0             | ✅ Step 0              | ✅ Step 0 (v1.6.2)     | Re-reads before backlog mutation                               |
+| `/retro`      | ✅ Step 0             | ✅ Step 0              | ✅ Step 0 (v1.6.2)     | Re-reads before archive                                        |
+| `/para-audit` | —                     | —                      | —                      | Agent index consistency check (rules + skills vs disk)         |
+| `/para-rule`  | —                     | —                      | —                      | CRUD rule management                                           |
 
 ## References
 
-- **Rule:** `context-rules.md` Rule #4 — Two-Tier Progressive Disclosure protocol
-- **Workflow:** `/open` Step 2.5a/2.5b, `/plan` Step 2.7 D1/D2
+- **Rule:** `context-rules.md` Rule #4 — Agent Index Loading protocol
+- **Workflow:** `/open` Step 2.5a/2.5b/2.5c, `/plan` Step 2.7 D1/D2/D3
 - **Docs:** [Project Rules](../reference/project-rules.md)
 
 ---
 
-_Published from `docs/architecture/rule-layers.md` — v1.5.4 (FEAT-47: Context Recovery + Workflow Pre-flight)_
+_Published from `docs/architecture/rule-layers.md` — v1.6.2 (FEAT-53: Unified Agent Index)_

@@ -26,7 +26,7 @@ Fast commit and push changes to GitHub with verification.
 
 ## Steps
 
-### 0. Rules Pre-flight
+### 0. Agent Indices Pre-flight
 
 // turbo
 

@@ -11,7 +11,7 @@ Pre-merge quality gate for production readiness.
 
 ## Steps
 
-### 0. Rules Pre-flight
+### 0. Agent Indices Pre-flight
 
 // turbo
 

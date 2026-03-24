@@ -5,7 +5,7 @@ source: catalog
 
 # /open [project-name]
 
-> **Workspace Version:** 1.6.1 (Unified Strategy Flow)
+> **Workspace Version:** 1.6.2 (Unified Agent Index)
 
 Start a new working session with full context from previous sessions.
 
@@ -51,7 +51,7 @@ After reading project.md:
 3. Store for report (Step 8)
 4. **IF not exists** → Skip
 
-### 2.5. Load rules indices
+### 2.5. Load agent indices
 
 //turbo
 
@@ -65,16 +65,42 @@ Read `.agent/rules.md` — the workspace-level rules trigger index (~20 lines, ~
 - Agent memorizes the trigger table and loads specific rule files **on demand** during the session.
 - **MUST NOT** skip this step. Global rules apply to ALL projects.
 
-#### 2.5b: Project rules (CONDITIONAL)
+#### 2.5b: Workspace skills (ALWAYS)
 
-> ⚠️ **Token optimization:** Use `project.md` (already read in Step 2) to gate this check. Only read the index file (~5–10 lines), NOT individual rule files.
+> This step is **MANDATORY** for every session, regardless of project. (v1.6.2+)
 
-Check `project.md` frontmatter for `has_rules: true` (or check if `Projects/[project-name]/.agent/rules.md` exists):
+Read `.agent/skills.md` — the workspace-level skills trigger index (~10 lines, ~100 tokens).
 
-- **If `has_rules: true`** (or file exists) → Read the project rules index and note trigger conditions for the session.
-- **Otherwise** → Skip. Zero I/O cost.
+- This file lists all **skills** with their trigger conditions.
+- Agent memorizes the trigger table and loads specific SKILL.md files **on demand** during the session.
+- **MUST NOT** skip this step. Workspace skills apply to ALL projects.
 
-During the session, when performing an action that matches a trigger from **EITHER** index (workspace or project), the agent **MUST** read the corresponding rule file **BEFORE** acting.
+#### 2.5c: Project agent config (CONDITIONAL)
+
+> ⚠️ **Token optimization:** Use `project.md` (already read in Step 2) to gate this check. Only read the index file (~5–10 lines), NOT individual rule/skill files.
+
+Check `project.md` frontmatter for agent config (v1.6.2+, with backward compat):
+
+```
+IF agent.rules exists and is true  → Read project .agent/rules.md (new schema)
+ELIF has_rules is true             → Read project .agent/rules.md (legacy, backward compat)
+ELSE                               → Skip rules. Zero I/O cost.
+
+IF agent.skills exists and is true → Read project .agent/skills.md
+ELSE                               → Skip skills. Zero I/O cost.
+```
+
+**Proactive Trigger Check (v1.6.2+):**
+
+During the session, BEFORE performing any action that edits files, runs commands, or creates artifacts:
+
+1. Scan workspace `rules.md` trigger table
+2. Scan workspace `skills.md` trigger table
+3. Scan project `rules.md` trigger table (if loaded)
+4. Scan project `skills.md` trigger table (if loaded)
+5. **IF match found → read the rule/skill file BEFORE acting**
+
+> Principle: Check THEN act — never act THEN check.
 
 ### 3. Find and read latest session
 
@@ -295,7 +321,8 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 🛡️ SAFETY (persist across truncation):
 - Git: Do NOT merge/branch/tag without user approval. Read rules/vcs.md first.
 - Governance: Do NOT modify Resources/ai-agents/ (read-only).
-- Recovery: If rules forgotten → re-read .agent/rules.md before any side-effect.
+- Recovery: If rules/skills forgotten → re-read .agent/rules.md + .agent/skills.md.
+- Proactive: BEFORE any side-effect → scan trigger tables → load matching rules/skills.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

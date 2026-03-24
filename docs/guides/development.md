@@ -38,7 +38,7 @@ PARA Workspace organizes development into 4 workflow streams:
 ## Artifacts
 
 ```
-project.md (active_plan, has_rules)
+project.md (active_plan, agent map)
     → Plan (plans/)            ← HOW & ORDER
     → Backlog (backlog.md)     ← WHAT & STATUS
     → Hot Lane (sprint-current.md) ← AD-HOC BUFFER

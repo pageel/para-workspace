@@ -4,29 +4,29 @@ description: "Stateless workflow library for PARA Workspace agents."
 items:
   - id: backlog
     name: "Backlog Controller"
-    version: "1.3.0"
-    kernel_min: "1.5.3"
+    version: "1.3.1"
+    kernel_min: "1.6.2"
     kernel_max: "1.x"
     entrypoint: "backlog.md"
-    description: "Manage project tasks via canonical backlog.md. Sync handled by /end."
+    description: "Manage project tasks via canonical backlog.md. Agent Indices Pre-flight (v1.6.2)."
     tags: ["tasks", "canonical", "3-file"]
 
   - id: open
     name: "Session Open"
-    version: "1.4.0"
-    kernel_min: "1.6.1"
+    version: "1.5.0"
+    kernel_min: "1.6.2"
     kernel_max: "1.x"
     entrypoint: "open.md"
-    description: "Start session with strategy/roadmap/brainstorm context loading, cascade detection (v1.6.1)."
-    tags: ["session", "context", "token-optimized", "ecosystem", "strategy", "roadmap"]
+    description: "Unified Agent Index — load rules + skills indices, proactive trigger check (v1.6.2)."
+    tags: ["session", "context", "token-optimized", "ecosystem", "strategy", "roadmap", "skills"]
 
   - id: end
     name: "Session End"
-    version: "1.5.0"
-    kernel_min: "1.6.1"
+    version: "1.5.1"
+    kernel_min: "1.6.2"
     kernel_max: "1.x"
     entrypoint: "end.md"
-    description: "Close session with Hot Lane Sync, strategy/roadmap change detection, brainstorm follow-up (v1.6.1)."
+    description: "Close session with Hot Lane Sync. Agent Indices Pre-flight (v1.6.2)."
     tags: ["session", "classification", "3-file", "hot-lane", "ecosystem", "strategy"]
 
   - id: install
@@ -58,29 +58,29 @@ items:
 
   - id: retro
     name: "Project Retrospective"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
+    version: "1.0.1"
+    kernel_min: "1.6.2"
     kernel_max: "1.x"
     entrypoint: "retro.md"
-    description: "Project retrospective before archiving."
+    description: "Project retrospective before archiving. Agent Indices Pre-flight (v1.6.2)."
     tags: ["archive", "review"]
 
   - id: push
     name: "Push"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
+    version: "1.0.1"
+    kernel_min: "1.6.2"
     kernel_max: "1.x"
     entrypoint: "push.md"
-    description: "Fast commit and push to GitHub."
+    description: "Fast commit and push to GitHub. Agent Indices Pre-flight (v1.6.2)."
     tags: ["vcs", "git"]
 
   - id: release
     name: "Release Gate"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
+    version: "1.0.1"
+    kernel_min: "1.6.2"
     kernel_max: "1.x"
     entrypoint: "release.md"
-    description: "Pre-release quality gate."
+    description: "Pre-release quality gate. Agent Indices Pre-flight (v1.6.2)."
     tags: ["release", "quality"]
 
   - id: merge
@@ -157,29 +157,29 @@ items:
 
   - id: plan
     name: "Plan Controller"
-    version: "1.4.0"
-    kernel_min: "1.6.1"
+    version: "1.5.0"
+    kernel_min: "1.6.2"
     kernel_max: "1.x"
     entrypoint: "plan.md"
-    description: "Create roadmap/detail plans, strategy priority, roadmap lifecycle (v1.6.1)."
-    tags: ["planning", "architecture", "phases", "ecosystem", "strategy", "roadmap"]
+    description: "Agent Indices Pre-flight, D3 skills check, agent map compat (v1.6.2)."
+    tags: ["planning", "architecture", "phases", "ecosystem", "strategy", "roadmap", "skills"]
 
   - id: para-audit
     name: "Macro Assessor Audit"
-    version: "1.2.0"
-    kernel_min: "1.6.0"
+    version: "1.3.0"
+    kernel_min: "1.6.2"
     kernel_max: "1.x"
     entrypoint: "para-audit.md"
-    description: "Full structural audit (I1-I11) + ecosystem consistency validation (v1.6.0)."
-    tags: ["audit", "governance", "invariants", "post-update", "ecosystem"]
+    description: "Agent map compat, skills index check, legacy migration detection (v1.6.2)."
+    tags: ["audit", "governance", "invariants", "post-update", "ecosystem", "skills"]
 
   - id: docs
     name: "Documentation Manager"
-    version: "1.1.0"
-    kernel_min: "1.6.1"
+    version: "1.1.1"
+    kernel_min: "1.6.2"
     kernel_max: "1.x"
     entrypoint: "docs.md"
-    description: "Generate, review, publish docs. Strategy discovery + smart routing (v1.6.1)."
+    description: "Generate, review, publish docs. Agent Indices Pre-flight (v1.6.2)."
     tags: ["documentation", "docs", "publish", "strategy"]
 
   - id: update

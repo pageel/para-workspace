@@ -16,11 +16,13 @@
 
 1. **Project Contract**: `Projects/<project>/project.md`
 2. **Project Rules**: `Projects/<project>/.agent/rules/`
-3. **Workspace Rules**: `.agent/rules/`
-4. **Artifacts**: `Projects/<project>/artifacts/` (tasks, plans, walkthroughs)
-5. **Active Memory**: `Projects/<project>/.beads/`
-6. **Abstract Knowledge**: `Areas/`
-7. **Reference**: `Resources/`
+3. **Project Skills**: `Projects/<project>/.agent/skills/` (v1.6.2+)
+4. **Workspace Rules**: `.agent/rules/`
+5. **Workspace Skills**: `.agent/skills/` (v1.6.2+)
+6. **Artifacts**: `Projects/<project>/artifacts/` (tasks, plans, walkthroughs)
+7. **Active Memory**: `Projects/<project>/.beads/`
+8. **Abstract Knowledge**: `Areas/`
+9. **Reference**: `Resources/`
 
 ### 2. Isolation & Relevance
 
@@ -35,37 +37,52 @@
 - Beads are allowed to be messy, partial, and contradictory while the project is active.
 - **MUST** perform a "Graduation Review" before archiving a project — move valuable knowledge from beads to `Areas/`, `Resources/`, or `.agent/rules/`.
 
-### 4. Rules Loading (Two-Tier Progressive Disclosure)
+### 4. Agent Index Loading (Two-Tier Progressive Disclosure)
 
 When beginning work on a project (via `/open` or context detection):
 
-**Tier 1: Workspace Rules (ALWAYS)**
+**Tier 1: Workspace Indices (ALWAYS)**
 
 - **MUST** read `.agent/rules.md` (workspace-level rules trigger index).
-- This file lists all **global rules** with trigger conditions (~20 lines, ~200 tokens).
-- Agent memorizes the trigger table and loads specific rule files **on demand**.
-- **MUST NOT** skip this step — global rules apply to ALL projects.
+- **MUST** read `.agent/skills.md` (workspace-level skills trigger index, v1.6.2+).
+- These files list triggers (~20 lines each, ~200 tokens total).
+- Agent memorizes trigger tables and loads specific files **on demand**.
+- **MUST NOT** skip — global rules and skills apply to ALL projects.
 
-**Tier 2: Project Rules (CONDITIONAL)**
+**Tier 2: Project Indices (CONDITIONAL)**
 
-- **MUST** check for `Projects/<project>/.agent/rules.md` (project-level Rules Index).
+- Check `project.md` for `agent` map (v1.6.2+) or `has_rules` (legacy):
+  ```
+  IF agent.rules: true  → read project .agent/rules.md
+  ELIF has_rules: true  → read project .agent/rules.md (backward compat)
+  IF agent.skills: true → read project .agent/skills.md
+  ```
 - **If index exists:**
-  - Read the index file (~5–10 lines) to learn what project-specific rules exist.
-  - Load a specific rule file **ONLY WHEN** the current action matches its trigger.
-  - **MUST NOT** read all rule files upfront — load on demand.
+  - Read the index file (~5–10 lines) to learn triggers.
+  - Load a specific file **ONLY WHEN** the current action matches its trigger.
+  - **MUST NOT** read all files upfront — load on demand.
 - **If index does not exist:**
-  - Check if `Projects/<project>/.agent/rules/` directory has files.
-  - If files exist, list names and load only when relevant.
+  - Check if directory has files. If so, list names and load when relevant.
   - If empty or missing — skip entirely.
 
-During the session, when an action matches a trigger from **EITHER** index, the agent **MUST** read the corresponding rule file **BEFORE** acting.
+**Proactive Trigger Check (v1.6.2+):**
 
-> **Rules Index format** — workspace (`rules.md`) and project (`Projects/<project>/.agent/rules.md`):
+BEFORE any action that edits files, runs commands, or creates artifacts:
+
+1. Scan workspace `rules.md` trigger table
+2. Scan workspace `skills.md` trigger table
+3. Scan project `rules.md` trigger table (if loaded)
+4. Scan project `skills.md` trigger table (if loaded)
+5. **IF match found → read the rule/skill file BEFORE acting**
+
+> Principle: Check THEN act — never act THEN check.
+
+> **Index format** — workspace and project (`rules.md` / `skills.md`):
 >
 > ```markdown
-> | Rule      | Trigger                | File        | Pri |
-> | :-------- | :--------------------- | :---------- | :-- |
-> | Rule Name | When to load this rule | filename.md | 🔴  |
+> | Rule/Skill | Trigger                | File        | Pri |
+> | :--------- | :--------------------- | :---------- | :-- |
+> | Name       | When to load this item | filename.md | 🔴  |
 > ```
 >
 > **File Guards format** (optional section in project `rules.md`):

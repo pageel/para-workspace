@@ -1,6 +1,6 @@
 # Glossary & Impact Map
 
-> **Version:** 1.6.1 | **Last updated:** 2026-03-23
+> **Version:** 1.6.2 | **Last updated:** 2026-03-24
 > **Purpose:** Glossary of terms, variables, and fields used in PARA Workspace.
 > Each entry = 5 uniform fields (graph-ready design).
 
@@ -84,15 +84,39 @@
 
 ## has_rules
 
-- **Definition:** Boolean indicating project has custom rules in `.agent/rules.md`.
-- **Where defined:** `kernel/schema/project.schema.json` (type: boolean, default: false)
+- **Definition:** ~~Boolean indicating project has custom rules.~~ **DEPRECATED v1.6.2** — use `agent` map instead.
+- **Where defined:** `kernel/schema/project.schema.json` (type: boolean, default: false, deprecated)
 - **Where used:**
-  - `/open` (Step 2.5b) — gate rules loading (skip if false)
-  - `/plan` (Step 2.7 D2) — load project rules constraints
-  - `/para-audit` (update Step 5) — verify consistency with disk
-- **Impact if changed:** 3 workflows. Low impact.
-- **Note:** Planned deprecation in v1.6.2 → `agent` map. See FEAT-53.
-- **Related:** —
+  - `/open` (Step 2.5c) — **fallback only** when `agent.rules` absent (backward compat)
+  - `/plan` (Step 2.7 D2) — fallback for project rules loading
+  - `/para-audit` (update Step 5) — legacy migration detection
+- **Impact if changed:** 3 workflows (fallback path only). Removal safe after all projects migrate to `agent` map.
+- **Note:** Replaced by `agent` map (v1.6.2). `/open` checks `agent.rules` first, falls back to `has_rules`.
+- **Related:** `agent`
+
+## agent
+
+- **Definition:** Agent configuration map for project-level indices. Contains `rules` (boolean) and `skills` (boolean) flags.
+- **Where defined:** `kernel/schema/project.schema.json` (type: object|null, v1.6.2+)
+- **Where used:**
+  - `/open` (Step 2.5c) — gate rules/skills index loading
+  - `/plan` (Step 2.7 D2-D3) — load project rules/skills constraints
+  - `/para-audit` (update Step 3, 5) — schema compliance + index consistency
+  - `context-rules.md` (§4) — Two-Tier project index loading
+- **Impact if changed:** 4 workflows + 2 rules. Replaces `has_rules`.
+- **Related:** `has_rules` (deprecated predecessor)
+
+## proactive_trigger_check
+
+- **Definition:** Defense mechanism (v1.6.2) — agent scans ALL trigger tables (rules.md + skills.md, workspace + project) BEFORE any side-effect action. Principle: "Check THEN act".
+- **Where defined:** Convention — `agent-behavior.md` §4 + `context-rules.md` §4 (v1.6.2)
+- **Where used:**
+  - `agent-behavior.md` §4 — Context Recovery + proactive check clause
+  - `context-rules.md` §4 — Agent Index Loading procedure
+  - `/open` Step 2.5 — initial load establishes trigger awareness
+  - All workflows Step 0 — Pre-flight re-reads (Layer 3 defense)
+- **Impact if changed:** 2 rules + 8 workflows. Core behavioral constraint.
+- **Related:** `agent`, `has_rules`
 
 ## strategy
 
@@ -147,9 +171,9 @@
 | `satellites`     | 2         | 1 schema     | 🟢 Low      |
 | `profile`        | 1+CLI     | 2 schemas    | 🔴 High     |
 | `kernel_version` | 1+CLI     | 2 schemas    | 🔴 High     |
-| `has_rules`      | 3         | 1 schema     | 🟢 Low      |
+| `agent`          | 4+2 rules | 1 schema     | 🟡 Medium   |
+| `has_rules`      | 3 (fallback)| 1 schema   | 🟢 Low (deprecated) |
+| `proactive_trigger_check` | 8+2 rules | convention | 🔴 High |
 | `strategy`       | 4         | convention   | 🟡 Medium   |
 | `roadmap`        | 3         | convention   | 🟡 Medium   |
 | `detail_plan`    | 4 (via AP)| convention   | 🟢 Low      |
-
-> Glossary will grow with v1.6.2 (agent map), v1.7.0 (department, tier), and v1.8.0 (provenance, trust).

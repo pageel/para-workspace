@@ -23,11 +23,15 @@ Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/ba
 
 ---
 
-## 0. Rules Pre-flight (all actions)
+## 0. Agent Indices Pre-flight (all actions)
 
 // turbo
 
-Re-read `.agent/rules.md` to ensure rules context is loaded (guard against context truncation).
+> **Layer 3 defense:** Re-read indices to guard against attention decay.
+
+1. Re-read `.agent/rules.md` (workspace rules index)
+2. Re-read `.agent/skills.md` (workspace skills index)
+3. Check `project.md` for `agent.rules` / `agent.skills` — if true, re-read project indices too
 
 ---
 
