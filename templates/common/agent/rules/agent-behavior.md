@@ -13,6 +13,7 @@
 ### 1. Language Configuration
 
 - **MUST** respect the `preferences.language` setting in `.para-workspace.yml` for documentation and chat responses.
+- **MUST** use the configured language for internal reasoning and thinking, not just visible output.
 - **MUST** keep technical artifacts (code variables, commit messages) in English for standard compatibility.
 - **SHOULD** adapt communication language to the user's configured preference.
 
