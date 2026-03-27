@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.6.3] - 2026-03-27
+
+Central Gate — project.md as single source of truth for context loading.
+→ [Detailed release notes](docs/changelog/v1.6.3.md)
+
+- **Added**: `strategy` field in `project.schema.json` — path to strategy doc (supports `@` cross-project prefix).
+- **Added**: `roadmap` field in `project.schema.json` — path to roadmap file (supports `@` cross-project prefix).
+- **Added**: Path Resolution Convention — shared `@{ecosystem}/` resolution for strategy, roadmap, active_plan.
+- **Added**: Completion Gate checklist in `/open` Step 2.6 — prevents skipping project agent indices.
+- **Changed**: `/open` Step 2.5 split into 2.5 (workspace) + 2.6 (project) — fixes recurring agent skip bug.
+- **Changed**: `/open` Step 2 strategy loading — filesystem probe → field-gated.
+- **Changed**: `/open` Step 5.5 roadmap loading — filesystem glob → field-gated.
+- **Changed**: `/plan` — sets `roadmap` field in project.md on roadmap creation.
+- **Changed**: `/docs` — sets `strategy` field in project.md on strategy creation.
+- **Changed**: `/end` Steps 3.2, 4.5 — field-gated change detection.
+
 ## [1.6.2] - 2026-03-24
 
 Unified Agent Index — Skills Loading & Proactive Trigger Check (FEAT-53).

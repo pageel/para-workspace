@@ -5,7 +5,7 @@ source: catalog
 
 # /docs [project-name] [action]
 
-> **Workspace Version:** 1.6.2 (Unified Agent Index)
+> **Workspace Version:** 1.6.3 (Central Gate)
 
 Generate, review, or update technical documentation for a PARA project. Docs are always created in `Projects/[project-name]/docs/` (internal). Use `publish` to promote selected docs to `repo/docs/` when ready.
 
@@ -160,15 +160,16 @@ Determine what documentation this project needs (all created in `docs/`):
 
 // turbo
 
-> 🛡️ **Generic check:** Applies to ALL project types, not just ecosystem.
+> 🛡️ **Field-gated (v1.6.3):** Uses `strategy` field from `project.md` instead of filesystem probe.
 
-1. Check `Projects/[project-name]/docs/strategy/` exists?
+1. Check `strategy` field from `project.md` (already loaded in Step 1):
 
-2. **IF exists** — Note for Step 5 (Doc Plan):
-   - Read `docs/strategy/` file list (~1 ls)
-   - Flag for review/update if any file’s "Last reviewed" date > 30 days
+2. **IF has value** — Strategy doc exists:
+   - Resolve path (IF starts with `@` → cross-project: `Projects/{ecosystem}/...`, ELSE → local)
+   - Read file list from strategy directory (~1 ls)
+   - Flag for review/update if any file's "Last reviewed" date > 30 days
 
-3. **IF not exists** — Check if project should have strategy:
+3. **IF null/empty** — Check if project should have strategy:
    - `project.md` has `satellites` field? → 🔴 Strong suggest
    - `project.md` has `ecosystem` field? → 🟡 Soft suggest
    - Backlog has > 5 active features? → 🟢 Optional suggest
@@ -179,6 +180,20 @@ Determine what documentation this project needs (all created in `docs/`):
    📄 This project has no strategy docs.
       Create docs/strategy/strategy.md? (y/n)
    ```
+
+**Strategy field lifecycle (v1.6.3):**
+
+When user confirms creation (y):
+1. Create the strategy doc in `docs/strategy/strategy.md`
+2. Set `strategy` field in `project.md`:
+   ```yaml
+   strategy: docs/strategy/strategy.md
+   ```
+3. If creating for satellite from ecosystem, suggest:
+   ```yaml
+   strategy: "@{ecosystem}/docs/strategy.md"
+   ```
+4. Log: `📄 strategy field set in project.md`
 
 > **Smart Routing from /brainstorm (D6):** When `/brainstorm` Step 5 selects
 > Option D (/docs), this workflow detects strategy-related topic keywords

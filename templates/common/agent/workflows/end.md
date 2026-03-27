@@ -5,7 +5,7 @@ source: catalog
 
 # /end [project-name | all | workspace] [done]
 
-> **Workspace Version:** 1.6.1 (Unified Strategy Flow)
+> **Workspace Version:** 1.6.3 (Central Gate)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final report MUST be translated to this language.**
 
 Summarize accomplishments and log them to the correct context (Project vs. Workspace).
@@ -101,12 +101,17 @@ If yes, **append one row** to `Areas/Workspace/SYNC.md` under the `## Pending` t
 
 // turbo
 
-> 🛡️ **Generic:** Based on session log (Step 2), no project type check needed.
+> 🛡️ **Field-gated (v1.6.3):** Uses `strategy` and `roadmap` fields from `project.md` to gate scan.
+
+**Pre-check:** Read `strategy` and `roadmap` fields from `project.md` (already loaded in Step 1).
+
+- **IF BOTH fields are null/empty** → Skip entirely. Zero I/O. (Project has no strategy/roadmap → no changes to detect.)
+- **IF EITHER field has value** → Continue:
 
 1. Scan session log for file paths changed during this session
-2. Check pattern match:
-   - `docs/strategy/**` → Strategy changed
-   - `plans/*-roadmap.md` → Roadmap changed
+2. Check pattern match using resolved paths from fields:
+   - Resolved strategy path → Strategy changed
+   - Resolved roadmap path → Roadmap changed
 
 3. **IF match found AND project has `satellites` or `downstream`:**
    ```
@@ -190,17 +195,19 @@ ELSE:
      - Output: `🎉 Phase [N] Complete! Phase [N+1] ready to start.`
 5. If the scope or architecture changes during this session, suggest running `/plan update`.
 
-**Step 4.5 — Roadmap Status Sync (v1.6.1):**
+**Step 4.5 — Roadmap Status Sync (v1.6.3 — field-gated):**
 
 After reporting phase status:
 
 1. **IF phase complete** (all tasks done):
-   a. Check `plans/*-roadmap.md` exists?
-   b. **IF exists** → Update phase row: `Status` → `✅ Done`
-   c. Note in session log: `- **Roadmap**: Phase [N] → ✅ Done`
+   a. Check `roadmap` field from `project.md` (already loaded):
+   b. **IF has value** → Resolve path (IF starts with `@` → cross-project: `Projects/{ecosystem}/...`, ELSE → local) → Update phase row: `Status` → `✅ Done`
+   c. **IF null/empty** → Skip
+   d. Note in session log: `- **Roadmap**: Phase [N] → ✅ Done`
 
 2. **IF plan 100% complete** (done keyword or all phases):
-   a. Update roadmap phase + suggest next phase (like /plan review Step 6.5)
+   a. IF `roadmap` has value → Update roadmap phase + suggest next phase (like /plan review Step 6.5)
+   b. IF `roadmap` is null → Skip
 
 ### 5. Update Master Index
 

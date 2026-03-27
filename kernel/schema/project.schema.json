@@ -91,6 +91,16 @@
         "pattern": "^[a-z][a-z0-9-]*$"
       },
       "description": "List of satellite project slugs coordinated by this ecosystem project. Only valid when type is 'ecosystem'. Null for standard projects."
+    },
+    "strategy": {
+      "type": ["string", "null"],
+      "description": "Path to strategy doc. Relative from project root (e.g., 'docs/strategy/strategy.md'). Supports cross-project prefix: @{ecosystem}/docs/strategy.md resolves to Projects/{ecosystem}/docs/strategy.md. Null or empty when no strategy exists.",
+      "examples": ["docs/strategy/strategy.md", "@pageel/docs/strategy.md"]
+    },
+    "roadmap": {
+      "type": ["string", "null"],
+      "description": "Path to roadmap file. Relative from artifacts/ (e.g., 'plans/ecosystem-roadmap.md'). Supports cross-project prefix: @{ecosystem}/plans/xxx-roadmap.md resolves to Projects/{ecosystem}/artifacts/plans/xxx-roadmap.md. Null or empty when no roadmap exists.",
+      "examples": ["plans/ecosystem-roadmap.md", "@pageel/plans/cms-branch-roadmap.md"]
     }
   }
 }

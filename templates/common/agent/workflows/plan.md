@@ -5,7 +5,7 @@ source: catalog
 
 # /plan [project-name] [action]
 
-> **Workspace Version:** 1.6.2 (Unified Agent Index)
+> **Workspace Version:** 1.6.3 (Central Gate)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final plan document MUST be translated to this language.**
 
 Create, review, or update a phased implementation plan for a PARA project.
@@ -71,14 +71,15 @@ ls -t Projects/[project-name]/artifacts/para-decisions/brainstorm-*.md 2>/dev/nu
 
 - **If brainstorm file found:**
   1. Extract brainstorm date from filename (YYYY-MM-DD)
-  2. Check `docs/strategy/strategy.md` exists?
-     - **IF strategy exists:**
+  2. Check `strategy` field from `project.md` (already loaded in Step 1):
+     - **IF strategy has value:**
+       - Resolve path (IF starts with `@` → cross-project: `Projects/{ecosystem}/...`, ELSE → local)
        - Extract strategy "Last reviewed" date
        - **IF brainstorm.date <= strategy.lastReviewed** → Skip brainstorm
          (already distilled into strategy — D7)
        - **IF brainstorm.date > strategy.lastReviewed** → Read BOTH
          (brainstorm has info not yet distilled into strategy)
-     - **IF strategy not exists** → Read brainstorm (current behavior)
+     - **IF strategy is null/empty** → Read brainstorm (current behavior)
 - **If none found** → Skip. Zero overhead.
 
 #### 2.6. Scan Learnings Index (Lessons Learned)
@@ -169,18 +170,15 @@ From Step 1, if `project.md` has `agent.skills: true`:
 
 > 🛡️ **Generic:** Applies to ALL projects, not just ecosystem.
 
-**Auto-detect context:**
+**Auto-detect context (v1.6.3 — field-gated):**
 
-1. Check `plans/*-roadmap.md` exists?
-   ```bash
-   ls Projects/[project-name]/artifacts/plans/*-roadmap.md 2>/dev/null
-   ```
-   - **YES** → Roadmap exists, suggest Detail Plan for next phase
-   - **NO**  → Both options open
+1. Check `roadmap` field from `project.md` (already loaded in Step 1):
+   - **IF has value** → Resolve path (IF starts with `@` → cross-project: `Projects/{ecosystem}/...`, ELSE → local). Roadmap exists, suggest Detail Plan for next phase.
+   - **IF null/empty** → Both options open
 
-2. Check `docs/strategy/` exists?
-   - **YES** → Note: "Strategy docs found, plan should align"
-   - **NO**  → Skip
+2. Check `strategy` field from `project.md`:
+   - **IF has value** → Note: "Strategy docs found, plan should align"
+   - **IF null/empty** → Skip
 
 3. Count active plans:
    ```bash
@@ -220,25 +218,26 @@ Create Detail Plan for Phase [N]? (y/n)
 
 // turbo
 
-> ⚗️ **Only runs when Step 2.8 chose "Detail Plan" AND roadmap/strategy exists.**
+> ⚗️ **Only runs when Step 2.8 chose "Detail Plan" AND roadmap/strategy fields have values.**
 
-**A. Roadmap phase context** (if roadmap exists):
+**A. Roadmap phase context** (if `roadmap` field has value):
 
-1. Read roadmap file (`plans/*-roadmap.md`)
+1. Resolve roadmap path from `roadmap` field (IF starts with `@` → cross-project: `Projects/{ecosystem}/...`, ELSE → local)
 2. Extract target phase row:
    ```bash
-   grep -A 2 "Phase [N]" plans/*-roadmap.md
+   grep -A 2 "Phase [N]" [resolved-roadmap-path]
    ```
 3. Store: phase scope, version, deliverables → baseline for Step 6
 
-**B. Strategy context** (if strategy exists AND not loaded by Step 2.5):
+**B. Strategy context** (if `strategy` field has value AND not loaded by Step 2.5):
 
-1. Extract strategy link from roadmap header:
+1. Resolve strategy path from `strategy` field
+2. Extract strategy link from roadmap header:
    ```bash
-   grep "Strategy:" plans/*-roadmap.md
+   grep "Strategy:" [resolved-roadmap-path]
    ```
-2. IF link found → grep summary (~2 lines header + blockquote)
-3. Store as design constraint for Step 5 (Architecture)
+3. IF link found → grep summary (~2 lines header + blockquote)
+4. Store as design constraint for Step 5 (Architecture)
 
 #### 3. Analyze Reference Projects (Optional)
 
@@ -475,17 +474,32 @@ Skip activation. Plan is saved but not active. User can activate later via `/pla
 
 > Path is relative to `artifacts/`. Remove `active_plan` field when the plan is completed or archived.
 
-**NEW — Roadmap auto-update (v1.6.1):**
+**NEW — Roadmap auto-update (v1.6.3 — field-gated):**
 
-After setting `active_plan`, check `plans/*-roadmap.md`:
+After setting `active_plan`, check the `roadmap` field from `project.md`:
 
-1. **IF roadmap exists:**
+1. **IF `roadmap` has value:**
+   - Resolve path (IF starts with `@` → cross-project: `Projects/{ecosystem}/...`, ELSE → local)
    - Find phase row matching this detail plan (by name or version)
    - Update: `Detail Plan` column → link to new plan file
    - Update: `Status` column → `🔨 Active`
    - Log: `📐 Roadmap updated: Phase [N] → Active`
 
-2. **IF roadmap not exists** → Skip
+2. **IF `roadmap` is null/empty** → Skip
+
+**NEW — Roadmap field lifecycle (v1.6.3):**
+
+When creating a NEW roadmap (Step 2.8 chose "Roadmap"):
+
+1. After saving the roadmap file, set `roadmap` field in `project.md`:
+   ```yaml
+   roadmap: plans/[scope]-roadmap.md
+   ```
+2. If creating for a satellite from ecosystem, suggest:
+   ```yaml
+   roadmap: "@{ecosystem}/plans/[scope]-roadmap.md"
+   ```
+3. Log: `📐 roadmap field set in project.md`
 
 #### 11. Log in Session
 
@@ -515,15 +529,10 @@ Summarize an existing plan with status updates, using `done.md` for accurate pro
 
 1. Read `active_plan` field from `Projects/[project-name]/project.md` to locate the plan file.
 
-**Resolve plan path (v1.6.0+):**
+**Resolve plan path (v1.6.3):**
 
-```
-IF active_plan starts with "@":
-  1. Extract ecosystem: @{ecosystem}/plans/xxx.md → ecosystem = "{ecosystem}"
-  2. Resolved path: Projects/{ecosystem}/artifacts/plans/xxx.md
-ELSE:
-  Local path: Projects/[project-name]/artifacts/[active_plan]
-```
+Resolve `active_plan` from `project.md` (IF starts with `@` → cross-project: `Projects/{ecosystem}/artifacts/{path}`, ELSE → local: `Projects/[project-name]/artifacts/{value}`).
+The resolved path points to the plan file to read.
 
 2. Read `Projects/[project-name]/artifacts/tasks/done.md` to get the list of completed task IDs with dates.
 3. Cross-reference `done.md` completed IDs with the plan's **Backlog → Phase Mapping** table.
@@ -557,12 +566,13 @@ Overall: 40% complete | Deadline: YYYY-MM-DD
 
 > **Why archive?** Completed plans in `artifacts/plans/` waste tokens when agents scan the directory. Moving to `done/` keeps the active plans directory lean.
 
-**Step 6.5 — Roadmap Lifecycle (v1.6.1):**
+**Step 6.5 — Roadmap Lifecycle (v1.6.3 — field-gated):**
 
 After archiving a completed plan (Step 6):
 
-1. Check `plans/*-roadmap.md` exists?
-2. **IF exists:**
+1. Check `roadmap` field from `project.md`:
+2. **IF has value:**
+   - Resolve path (IF starts with `@` → cross-project: `Projects/{ecosystem}/...`, ELSE → local)
    a. Update completed phase: `Status` → `✅ Done`
    b. Find next phase with `Status: 📋 Planned` (no detail plan)
    c. **IF next phase found:**
@@ -579,7 +589,7 @@ After archiving a completed plan (Step 6):
       🎉 ROADMAP COMPLETE! All phases done.
          Run /retro for retrospective?
       ```
-3. **IF not exists** → Skip (current behavior)
+3. **IF null/empty** → Skip (zero I/O)
 
 ---
 

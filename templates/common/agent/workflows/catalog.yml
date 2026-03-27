@@ -13,20 +13,20 @@ items:
 
   - id: open
     name: "Session Open"
-    version: "1.5.0"
-    kernel_min: "1.6.2"
+    version: "1.6.0"
+    kernel_min: "1.6.3"
     kernel_max: "1.x"
     entrypoint: "open.md"
-    description: "Unified Agent Index — load rules + skills indices, proactive trigger check (v1.6.2)."
+    description: "Central Gate — field-gated strategy/roadmap, Path Resolution Convention, Step 2.5/2.6 split (v1.6.3)."
     tags: ["session", "context", "token-optimized", "ecosystem", "strategy", "roadmap", "skills"]
 
   - id: end
     name: "Session End"
-    version: "1.5.1"
-    kernel_min: "1.6.2"
+    version: "1.6.0"
+    kernel_min: "1.6.3"
     kernel_max: "1.x"
     entrypoint: "end.md"
-    description: "Close session with Hot Lane Sync. Agent Indices Pre-flight (v1.6.2)."
+    description: "Field-gated change detection for strategy/roadmap. Central Gate (v1.6.3)."
     tags: ["session", "classification", "3-file", "hot-lane", "ecosystem", "strategy"]
 
   - id: install
@@ -157,11 +157,11 @@ items:
 
   - id: plan
     name: "Plan Controller"
-    version: "1.5.0"
-    kernel_min: "1.6.2"
+    version: "1.6.0"
+    kernel_min: "1.6.3"
     kernel_max: "1.x"
     entrypoint: "plan.md"
-    description: "Agent Indices Pre-flight, D3 skills check, agent map compat (v1.6.2)."
+    description: "Roadmap field lifecycle, field-gated strategy/roadmap context. Central Gate (v1.6.3)."
     tags: ["planning", "architecture", "phases", "ecosystem", "strategy", "roadmap", "skills"]
 
   - id: para-audit
@@ -175,11 +175,11 @@ items:
 
   - id: docs
     name: "Documentation Manager"
-    version: "1.1.1"
-    kernel_min: "1.6.2"
+    version: "1.2.0"
+    kernel_min: "1.6.3"
     kernel_max: "1.x"
     entrypoint: "docs.md"
-    description: "Generate, review, publish docs. Agent Indices Pre-flight (v1.6.2)."
+    description: "Strategy field lifecycle, field-gated strategy check. Central Gate (v1.6.3)."
     tags: ["documentation", "docs", "publish", "strategy"]
 
   - id: update

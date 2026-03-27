@@ -8,6 +8,8 @@ deadline: ""
 downstream: []
 dod: []
 active_plan: ""
+strategy: ~
+roadmap: ~
 has_rules: false  # DEPRECATED v1.6.2 — kept for backward compat
 last_reviewed: ""
 tags: []

@@ -5,7 +5,7 @@ source: catalog
 
 # /open [project-name]
 
-> **Workspace Version:** 1.6.2 (Unified Agent Index)
+> **Workspace Version:** 1.6.3 (Central Gate)
 
 Start a new working session with full context from previous sessions.
 
@@ -24,6 +24,27 @@ Base: Projects/[project-name]/
 └── project.md      # Project contract (YAML)
 ```
 
+> **Path Resolution Convention (v1.6.3):**
+>
+> Three fields in `project.md` use path references: `strategy`, `roadmap`, `active_plan`.
+> All three support `@{ecosystem}/` cross-project prefix. Resolution rules:
+>
+> ```
+> IF value is null/empty → skip (zero I/O)
+> IF value starts with "@":
+>   Extract: @{ecosystem}/{relative_path}
+>   strategy    → Projects/{ecosystem}/{relative_path}
+>   roadmap     → Projects/{ecosystem}/artifacts/{relative_path}
+>   active_plan → Projects/{ecosystem}/artifacts/{relative_path}
+> ELSE (local):
+>   strategy    → Projects/[project-name]/{value}
+>   roadmap     → Projects/[project-name]/artifacts/{value}
+>   active_plan → Projects/[project-name]/artifacts/{value}
+> ```
+>
+> `strategy` resolves from **project root** (lives in `docs/`).
+> `roadmap` and `active_plan` resolve from **artifacts/** (lives in `artifacts/plans/`).
+
 ### 2. Read project contract
 
 //turbo
@@ -35,47 +56,39 @@ Read `Projects/[project-name]/project.md` to understand goal, deadline, status, 
 After reading `project.md`, check the `type` field:
 
 - **If `type: ecosystem`** → This is a meta-project. Note `satellites` list for the report (Step 8). Do NOT read satellite project.md files (token optimization).
-- **If `ecosystem` field exists** (on a satellite) → Note the parent ecosystem name for `@` prefix resolution in Step 5.
+- **If `ecosystem` field exists** (on a satellite) → Note the parent ecosystem name for `@` prefix resolution.
 - **Otherwise** → Standard project, proceed normally.
 
-**Strategy context (v1.6.1):**
+**Strategy context (v1.6.3 — field-gated):**
 
-After reading project.md:
+Check the `strategy` field from `project.md` (already loaded above):
 
-1. Check `docs/strategy/strategy.md` exists?
-2. **IF exists:**
-   ```bash
-   head -10 Projects/[project-name]/docs/strategy/strategy.md
-   ```
-   Extract: title + first blockquote → ~30 tokens max.
-3. Store for report (Step 8)
-4. **IF not exists** → Skip
+- **IF null, empty, or missing** → Skip. Zero I/O.
+- **IF has value** → Resolve path (see Path Resolution Convention above):
+  ```bash
+  head -10 [resolved-strategy-path]
+  ```
+  Extract: title + first blockquote → ~30 tokens max.
+  - **IF file not found** → Log warning: `⚠️ strategy field points to missing file. Run /docs to fix or clear field.`
+- Store for report (Step 8)
 
-### 2.5. Load agent indices
+### 2.5. Load workspace agent indices (ALWAYS)
 
 //turbo
 
-#### 2.5a: Workspace rules (ALWAYS)
-
 > This step is **MANDATORY** for every session, regardless of project.
+> **MUST NOT** skip. Global rules and skills apply to ALL projects.
 
-Read `.agent/rules.md` — the workspace-level rules trigger index (~20 lines, ~200 tokens).
+Read both workspace-level index files:
 
-- This file lists all **global rules** with their trigger conditions.
-- Agent memorizes the trigger table and loads specific rule files **on demand** during the session.
-- **MUST NOT** skip this step. Global rules apply to ALL projects.
+1. `.agent/rules.md` — workspace rules trigger index (~20 lines, ~200 tokens)
+2. `.agent/skills.md` — workspace skills trigger index (~10 lines, ~100 tokens)
 
-#### 2.5b: Workspace skills (ALWAYS)
+Agent memorizes both trigger tables and loads specific rule/skill files **on demand** during the session.
 
-> This step is **MANDATORY** for every session, regardless of project. (v1.6.2+)
+### 2.6. Load project agent indices (CONDITIONAL)
 
-Read `.agent/skills.md` — the workspace-level skills trigger index (~10 lines, ~100 tokens).
-
-- This file lists all **skills** with their trigger conditions.
-- Agent memorizes the trigger table and loads specific SKILL.md files **on demand** during the session.
-- **MUST NOT** skip this step. Workspace skills apply to ALL projects.
-
-#### 2.5c: Project agent config (CONDITIONAL)
+//turbo
 
 > ⚠️ **Token optimization:** Use `project.md` (already read in Step 2) to gate this check. Only read the index file (~5–10 lines), NOT individual rule/skill files.
 
@@ -89,6 +102,18 @@ ELSE                               → Skip rules. Zero I/O cost.
 IF agent.skills exists and is true → Read project .agent/skills.md
 ELSE                               → Skip skills. Zero I/O cost.
 ```
+
+#### ✅ Agent Index Completion Gate
+
+> ⚠️ Agent MUST verify ALL checks before proceeding to Step 3.
+> If any "true" field was not loaded → READ NOW before continuing.
+
+| # | Check | Source | Required |
+|:--|:------|:-------|:---------|
+| 1 | Workspace rules loaded? | `.agent/rules.md` | ALWAYS |
+| 2 | Workspace skills loaded? | `.agent/skills.md` | ALWAYS |
+| 3 | Project rules resolved? | `agent.rules` field in project.md | IF true |
+| 4 | Project skills resolved? | `agent.skills` field in project.md | IF true |
 
 **Proactive Trigger Check (v1.6.2+):**
 
@@ -165,16 +190,10 @@ Check if `Projects/[project-name]/artifacts/tasks/sprint-current.md` exists:
 
 Check the `active_plan` field from `project.md` (already loaded in Step 2):
 
-**Resolve plan path (v1.6.0+):**
+**Resolve plan path (v1.6.3 — see Path Resolution Convention above):**
 
-```
-IF active_plan starts with "@":
-  1. Extract ecosystem: @{ecosystem}/plans/xxx.md → ecosystem = "{ecosystem}"
-  2. Extract relative: plans/xxx.md
-  3. Resolved path: Projects/{ecosystem}/artifacts/plans/xxx.md
-ELSE:
-  Local path: Projects/[project-name]/artifacts/[active_plan]
-```
+Resolve `active_plan` using the shared convention defined after Step 1.
+The resolved path points to the plan file to read.
 
 - **If `active_plan` exists** (local or `@` cross-project):
   1. **Extract phase headers only**:
@@ -197,37 +216,33 @@ ELSE:
 
 // turbo
 
-> 🛡️ **Generic:** Filesystem glob detect.
-> ⚗️ **Token budget:** ~80 tokens max.
+> ⚗️ **Token budget:** ~80 tokens max. **Field-gated** (v1.6.3).
 
-1. Check `plans/*-roadmap.md` exists?
-   ```bash
-   ls Projects/[project-name]/artifacts/plans/*-roadmap.md 2>/dev/null
-   ```
+Check the `roadmap` field from `project.md` (already loaded in Step 2):
 
-2. **IF exists:**
-   a. Extract Phases Overview table:
-      ```bash
-      grep -E "^\| [0-9]" [roadmap-file] | head -10
-      ```
-   b. Count: total phases, done, active, planned
-   c. Store for report (Step 8)
-
-3. **IF not exists** → Skip
+- **IF null, empty, or missing** → Skip. Zero I/O.
+- **IF has value** → Resolve path (see Path Resolution Convention above):
+  1. Extract Phases Overview table:
+     ```bash
+     grep -E "^\| [0-9]" [resolved-roadmap-path] | head -10
+     ```
+  2. Count: total phases, done, active, planned
+  3. Store for report (Step 8)
+  4. **IF file not found** → Log warning: `⚠️ roadmap field points to missing file. Run /plan to fix or clear field.`
 
 > **Relationship with Step 5 (active_plan):**
 > - Step 5 loads DETAIL plan (task-level context)
 > - Step 5.5 loads ROADMAP (phase-level overview)
 > - Both display in report, in separate sections
 
-**Strategy cascade detection (D10):**
+**Strategy cascade detection (v1.6.3 — field-gated):**
 
-IF BOTH `docs/strategy/strategy.md` AND `plans/*-roadmap.md` exist:
+IF BOTH `strategy` AND `roadmap` fields have non-null values:
 
-1. Compare dates:
+1. Resolve both paths, then compare dates:
    ```bash
-   stat -c %Y docs/strategy/strategy.md   # strategy modified time
-   stat -c %Y plans/*-roadmap.md           # roadmap modified time
+   stat -c %Y [resolved-strategy-path]   # strategy modified time
+   stat -c %Y [resolved-roadmap-path]    # roadmap modified time
    ```
 
 2. **IF strategy.mtime > roadmap.mtime:**
@@ -239,6 +254,8 @@ IF BOTH `docs/strategy/strategy.md` AND `plans/*-roadmap.md` exist:
    ```
 
 3. **IF roadmap >= strategy** → OK, skip
+
+IF EITHER field is null → Skip cascade check entirely. Zero I/O.
 
 ### 6. 🔔 Check Sync Queue (Cross-Project Notifications)
 
