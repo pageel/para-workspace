@@ -149,6 +149,37 @@ sync_file() {
   return 1
 }
 
+# === Helper: recursively sync all files within a directory tree ===
+# Handles arbitrarily nested subdirectories (v1.6.4)
+# Skips catalog.yml (handled separately by sync_library caller)
+sync_directory_recursive() {
+  local src_dir="$1"
+  local catalog_dest="$2"
+  local active_dest="$3"
+
+  for item in "$src_dir"/*; do
+    [ -e "$item" ] || continue  # guard against empty glob
+
+    if [ -f "$item" ]; then
+      local fname
+      fname="$(basename "$item")"
+      # Skip catalog.yml — handled separately in sync_library()
+      [[ "$fname" == "catalog.yml" ]] && continue
+      count=$((count + 1))
+      sync_file "$item" "$catalog_dest/$fname" || true
+      if sync_file "$item" "$active_dest/$fname"; then
+        updated=$((updated + 1))
+      fi
+    elif [ -d "$item" ]; then
+      local dname
+      dname="$(basename "$item")"
+      mkdir -p "$catalog_dest/$dname" "$active_dest/$dname"
+      # Recurse into subdirectory
+      sync_directory_recursive "$item" "$catalog_dest/$dname" "$active_dest/$dname"
+    fi
+  done
+}
+
 # === Helper: sync a governed library (workflows/rules/skills) ===
 sync_library() {
   local lib_name="$1"    # e.g. "workflows"
@@ -163,38 +194,10 @@ sync_library() {
   local updated=0
 
   if [ -d "$src_dir" ]; then
-    # Sync markdown files and subdirectories
-    for item in "$src_dir"/*; do
-      if [ -f "$item" ] && [[ "$item" == *.md ]]; then
-        local fname="$(basename "$item")"
-        count=$((count + 1))
+    # Recursively sync all files and subdirectories (v1.6.4)
+    sync_directory_recursive "$src_dir" "$catalog_dest" "$active_dest"
 
-        # Sync to catalog (read-only snapshot)
-        sync_file "$item" "$catalog_dest/$fname" || true
-
-        # Sync to active directory (user may customize)
-        if sync_file "$item" "$active_dest/$fname"; then
-          updated=$((updated + 1))
-        fi
-      elif [ -d "$item" ]; then
-        local dname="$(basename "$item")"
-        count=$((count + 1))
-        mkdir -p "$catalog_dest/$dname"
-        mkdir -p "$active_dest/$dname"
-        
-        for sub_item in "$item"/*; do
-          if [ -f "$sub_item" ]; then
-            local sub_fname="$(basename "$sub_item")"
-            sync_file "$sub_item" "$catalog_dest/$dname/$sub_fname" || true
-            if sync_file "$sub_item" "$active_dest/$dname/$sub_fname"; then
-              updated=$((updated + 1))
-            fi
-          fi
-        done
-      fi
-    done
-
-    # Sync catalog.yml (v1.4.1)
+    # Sync catalog.yml to catalog only (not to active — it's metadata)
     if [ -f "$src_dir/catalog.yml" ]; then
       sync_file "$src_dir/catalog.yml" "$catalog_dest/catalog.yml" || true
     fi

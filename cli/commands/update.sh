@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# PARA Workspace Update Script (v1.5.0)
+# PARA Workspace Update Script (v1.6.4)
 # Safely updates templates without overwriting user data
 # Usage: para update [--dry-run]
 
@@ -46,8 +46,9 @@ for arg in "$@"; do
       echo ""
       echo "This command:"
       echo "  1. Runs 'git pull' on the repo"
-      echo "  2. Runs version-gated migrations (if version changed)"
-      echo "  3. Re-runs 'para install' to sync all libraries"
+      echo "  2. Detects changes via git commit hash (accurate for hotfixes)"
+      echo "  3. Runs version-gated migrations (if kernel version changed)"
+      echo "  4. Re-runs 'para install' to sync all libraries"
       echo ""
       echo "Options:"
       echo "  --dry-run   Preview all changes without applying"
@@ -64,13 +65,12 @@ done
 
 echo "🔄 Updating PARA Workspace Template from GitHub..."
 
-# Get current version
+# === Get current version from WORKSPACE only (not repo/VERSION) ===
+# This prevents comparing the same file before/after git pull (BUG-20 fix)
 if [ -n "$WORKSPACE_ROOT" ] && [ -f "$WORKSPACE_ROOT/.para-workspace.yml" ]; then
     CURRENT_VER=$(grep '^kernel_version:' "$WORKSPACE_ROOT/.para-workspace.yml" | sed 's/kernel_version:[[:space:]]*//; s/"//g')
-elif [ -f "$REPO_ROOT/VERSION" ]; then
-    CURRENT_VER=$(cat "$REPO_ROOT/VERSION")
 else
-    CURRENT_VER="Unknown"
+    CURRENT_VER="0.0.0"  # Force full migration on first run
 fi
 
 echo "📍 Repo root: $REPO_ROOT"
@@ -85,6 +85,9 @@ if [ ! -d "$REPO_ROOT/.git" ]; then
     echo "If you cloned it elsewhere, make sure the CLI is running from the repo."
     exit 1
 fi
+
+# === Capture commit hash BEFORE pull (for accurate change detection) ===
+OLD_COMMIT=$(cd "$REPO_ROOT" && git rev-parse HEAD 2>/dev/null || echo "unknown")
 
 echo "📍 Current Version: $CURRENT_VER"
 
@@ -112,34 +115,37 @@ else
   fi
 fi
 
-# Get new version
-if [ -f "$REPO_ROOT/VERSION" ]; then
-    NEW_VER=$(cat "$REPO_ROOT/VERSION")
+# === Capture state AFTER pull ===
+NEW_COMMIT=$(cd "$REPO_ROOT" && git rev-parse HEAD 2>/dev/null || echo "unknown")
+NEW_VER=$(cat "$REPO_ROOT/VERSION" 2>/dev/null || echo "Unknown")
+
+# === Change detection: git commit hash (accurate for hotfixes) ===
+COMMIT_COUNT=0
+if [ "$OLD_COMMIT" == "$NEW_COMMIT" ]; then
+    echo "✅ No new changes from remote."
 else
-    NEW_VER="Unknown"
+    COMMIT_COUNT=$(cd "$REPO_ROOT" && git log --oneline "$OLD_COMMIT..$NEW_COMMIT" 2>/dev/null | wc -l | tr -d ' ')
+    echo "📥 Pulled $COMMIT_COUNT new commit(s)"
 fi
 
-if [ "$CURRENT_VER" == "$NEW_VER" ] && [ "$CURRENT_VER" != "Unknown" ]; then
-    echo "✅ Already on latest version ($CURRENT_VER)."
-else
-    echo "⏫ Upgraded: $CURRENT_VER -> $NEW_VER"
-fi
-
-# Run migrations automatically if versions changed
-if [ "$CURRENT_VER" != "$NEW_VER" ] && [ "$CURRENT_VER" != "Unknown" ]; then
+# === Version detection: only used for migration gating ===
+if [ "$CURRENT_VER" != "$NEW_VER" ] && [ "$CURRENT_VER" != "0.0.0" ] && [ "$CURRENT_VER" != "Unknown" ]; then
+    echo "⏫ Version: $CURRENT_VER → $NEW_VER"
     echo "🏗️ Running auto-migration process..."
     if ! bash "$SCRIPT_DIR/migrate.sh" --from="$CURRENT_VER" --to="$NEW_VER" "${PASSTHROUGH_ARGS[@]}"; then
       echo "⚠️  Migration encountered issues. Continuing with install..."
     fi
+elif [ "$CURRENT_VER" == "0.0.0" ]; then
+    echo "📦 First install detected (no workspace version). Skipping migration."
 fi
 
-# Re-run installation to sync rules, workflows, skills, and CLI wrapper
+# ALWAYS re-run installation to sync (idempotent — handles hotfixes without version bump)
 echo "⚙️ Re-installing to sync workspace..."
 bash "$SCRIPT_DIR/install.sh" "${PASSTHROUGH_ARGS[@]}"
 
 # Audit log
 if [ -n "$WORKSPACE_ROOT" ] && [ -f "$WORKSPACE_ROOT/.para/audit.log" ]; then
-  echo "$(date -Iseconds 2>/dev/null || date +"%Y-%m-%dT%H:%M:%S%z") | CLI | para update | from=$CURRENT_VER to=$NEW_VER | OK" >> "$WORKSPACE_ROOT/.para/audit.log"
+  echo "$(date -Iseconds 2>/dev/null || date +"%Y-%m-%dT%H:%M:%S%z") | CLI | para update | from=$CURRENT_VER to=$NEW_VER commits=$COMMIT_COUNT | OK" >> "$WORKSPACE_ROOT/.para/audit.log"
 fi
 
 echo "✨ Update complete!"

@@ -4,6 +4,7 @@ Detailed release notes for each version of PARA Workspace.
 
 | Version                | Date       | Highlights                                         |
 | :--------------------- | :--------- | :------------------------------------------------- |
+| [v1.6.4](v1.6.4.md)   | 2026-03-30 | Para-Kit v1.1.0, Recursive Sync & Git Hash Detection |
 | [v1.6.0](v1.6.0.md)   | 2026-03-20 | Meta-Project & Ecosystem Support (RFC-0003)        |
 | [v1.5.4](v1.5.4.md)   | 2026-03-17 | Defense-in-Depth: Context Recovery & Rule Guards   |
 | [v1.5.3](v1.5.3.md)   | 2026-03-13 | Hot Lane Refactor & /end Sync Point                |

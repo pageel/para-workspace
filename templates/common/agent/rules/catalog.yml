@@ -91,3 +91,12 @@ items:
     entrypoint: "hybrid-3-file-integrity.md"
     description: "Hot Lane constraints and /end sync for the Hybrid 3-File task model."
     tags: ["tasks", "integrity", "3-file", "hot-lane"]
+
+  - id: formatting-tables-diagrams
+    name: "Formatting Standards"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "formatting-tables-diagrams.md"
+    description: "Formatting rules for tables, diagrams, tree listings, and visual markdown elements."
+    tags: ["formatting", "tables", "diagrams", "markdown"]

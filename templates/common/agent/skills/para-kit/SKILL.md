@@ -1,69 +1,136 @@
 ---
 name: PARA Kit
-description: Intelligence for managing an Agent-Executable PARA workspace.
+description: PARA workspace structure reference — schema, layout, kernel governance, and intelligence routing.
 source: catalog
 ---
 
 # Skill: PARA Kit
 
-Intelligence for managing an "Agent-Executable" PARA workspace. This skill helps the agent decide whether to use automated scripts (fast execution) or structured workflows (collaborative refinement).
+> PARA structure reference for AI agents. Use this skill when you need to understand
+> workspace layout, project.md schema, or kernel governance rules.
 
-## Core Capabilities
+## 1. PARA Workspace Structure
 
-1. **Workspace Audit**: Uses `./para status` to identify non-compliant projects or overdue deadlines.
-2. **Project Lifecycle**: Orchestrates `scaffold`, `migrate`, and `archive` operations.
-3. **Strategy Selection**: Decides whether a task requires a full workflow (/retro, /plan) or just a direct CLI command.
-4. **Catalog Management**: Uses `/para-workflow` and `/para-rule` workflows to manage governed libraries.
-5. **Configuration & Customization**: Uses the `/config` workflow for workspace metadata and settings.
-6. **Versioning Discipline**: Enforces the patch branch (user-approved minor jumps only).
+### Four Pillars
 
-## Selection Strategy (Workflow vs. Script)
+```text
+Projects/    — Active work with deadlines or deliverables
+Areas/       — Stable knowledge, SOPs, ongoing responsibilities
+Resources/   — Reference materials, tools, templates (READ-ONLY for ai-agents/)
+Archive/     — Cold storage for completed/cancelled items (never read during normal ops)
+```
 
-### Use CLI Scripts (`./para <cmd>`) when:
+### Standard Project Layout
 
-- Performing **maintenance** (status, install, update).
-- **Low-level Scaffolding** (`./para scaffold`) as an automated step inside a larger wrapper.
-- **Bulk Migration** (migrate).
-- The task is deterministic and requires no human-in-the-loop decision or creative thinking.
+```text
+<project-slug>/           # kebab-case (I3)
+├── project.md            # YAML frontmatter contract (see §2)
+├── repo/                 # Source code (git-tracked)
+├── sessions/             # Daily session logs (YYYY-MM-DD.md)
+├── artifacts/
+│   ├── tasks/
+│   │   ├── backlog.md    # CANONICAL task store (I2)
+│   │   ├── sprint-current.md  # Hot Lane (quick tasks)
+│   │   └── done.md       # Completed tasks archive (append-only)
+│   ├── plans/            # Implementation plans
+│   └── para-decisions/   # Decision records
+├── docs/                 # Internal documentation
+├── .agent/               # Project-specific rules/skills
+│   ├── rules.md          # Rules index (trigger table)
+│   └── rules/            # Rule files (loaded on-demand)
+└── .beads/
+    └── seeds.md          # Ideas, hypotheses, raw notes (I7)
+```
 
-### Use Workflows (`/[cmd]`) when:
+### Ecosystem Projects (v1.6.0+)
 
-- **Collaboration** with the user is needed to define scope or start a new project (e.g., **`/new-project`** instead of raw `./para scaffold`).
-- Performing **analysis** that requires documentation (e.g., /retro, /plan).
-- The task produces a **permanent artifact** (e.g., plan.md, walkthrough.md) following the Artifact-Driven Standard.
-- **Complex validation** is required (/verify).
+| Type       | Purpose                  | Has repo/ | Has satellites |
+|:-----------|:-------------------------|:----------|:---------------|
+| `standard` | Regular project (default)| Yes       | No             |
+| `ecosystem`| Coordinates satellites   | No        | Yes            |
 
-## Intelligence Patterns (RFC-0002 & RFC-0003)
+Cross-project plan reference: `active_plan: "@ecosystem-slug/plans/shared-plan.md"`
 
-### 1. Context Routing (Smart Loading)
+## 2. project.md Schema (v1.6.3)
 
-- **Priority Order**: `project.md` → `active_plan` (if exists) → Project Rules → Global Rules → Artifacts → Beads → Areas → Resources.
-- **Isolation Enforcement**: Always scope research to the active project folder first. Only expand to `Areas/` or `Resources/` if the project context is insufficient.
-- **Archive Policy**: Never read `Archive/` unless explicitly requested.
+All fields in YAML frontmatter:
 
-### 2. Artifact-Driven Standard & Beads Lifecycle
+| Field         | Type       | Required | Default   | Description                        |
+|:--------------|:-----------|:---------|:----------|:-----------------------------------|
+| `goal`        | string     | ✅       | —         | Project objective                  |
+| `deadline`    | date       | ❌       | —         | Target date (YYYY-MM-DD)           |
+| `status`      | enum       | ✅       | `active`  | active / paused / done / archived  |
+| `version`     | semver     | ❌       | —         | Current project version            |
+| `strategy`    | string/~   | ✅       | `~`       | Current strategic approach         |
+| `roadmap`     | path       | ✅       | —         | Relative path to roadmap plan      |
+| `active_plan` | string     | ❌       | `""`      | Current implementation plan path   |
+| `agent.rules` | bool       | ✅       | `false`   | Has project-specific rules?        |
+| `agent.skills`| bool       | ✅       | `false`   | Has project-specific skills?       |
+| `type`        | enum       | ❌       | `standard`| standard / ecosystem               |
+| `ecosystem`   | string     | ❌       | —         | Parent ecosystem slug (satellite)  |
+| `satellites`  | list       | ❌       | —         | Child project slugs (ecosystem)    |
+| `upstream`    | list       | ❌       | —         | Projects this project depends on   |
+| `downstream`  | list       | ❌       | —         | Dependent project slugs            |
+| `dod`         | list       | ❌       | —         | Definition of Done criteria        |
+| `milestones`  | list       | ❌       | —         | Feature-first milestone tracking   |
+| `tags`        | list       | ❌       | —         | Classification tags                |
+| `last_reviewed`| date      | ❌       | —         | Last project review date           |
 
-- **Persistent Mirroring**: ALWAYS mirror creative logic, architectural plans, and verification evidence into `Projects/<project-name>/artifacts/`. Use `plans/` for design, `plans/done/` for archived plans + completion reviews, `walkthroughs/` for task verification.
-- **Artifact Location Rule**: Plan completion reviews go in `artifacts/plans/done/` alongside the archived plan. Task verification checklists go in `artifacts/walkthroughs/`. NEVER save project evidence in the conversation brain — brain is for scratch notes only.
-- **Beads Bound to Projects**: Temporary thinking lives in `Projects/<project-name>/.beads/`.
-- **Graduation Ritual**: During `/retro`, analyze Beads for potential graduation to `Areas/` (Standard Operating Procedures), `Resources/` (Reference), or `.agent/rules/` (Codified Guardrails).
-- **Proactive Tagging**: Identify friction points (repeated failures, logic gaps) and suggest creating a Bead.
+→ Full template: [templates/project-md.md](templates/project-md.md)
+→ Test vectors: [examples/project-schema-vectors.md](examples/project-schema-vectors.md)
 
-### 3. Advanced Auditing (Workspace Health)
+## 3. Quick Reference Card — Kernel Governance
 
-- **Status Reporting**: Uses `./para review` for deep governance analysis and `./para status` for a quick overview of task progress (Done/Total) and rule density.
-- **Sync Queue Awareness**: Actively monitors `Areas/Workspace/SYNC.md` for pending downstream tasks. If a project is blocked by an upstream sync, propose running `/open [project-name]` to resolve it.
-- **Library Health**: Monitors the ratio of Core vs. Library components to ensure standardization.
-- **Stalled Project Detection**: If a project has no tasks in `Current Sprint` and no log in `sessions/` for > 7 days, trigger a `./para status` or `/retro` review.
+> ⚠️ One-liner summary. Full detail → `Resources/ai-agents/kernel/invariants.md`, `heuristics.md`
 
-### 4. Versioning Strategy (Propose & Approve)
+### Invariants (MUST — vi phạm = MAJOR bump)
 
-- **Universal Rule**: Applies to the workspace and ALL projects by default. Project-specific rules take precedence if they exist.
-- **Protocol**: Always propose the **specific next version number** (e.g., `1.3.3`) and wait for user approval before modifying version files.
-- **Elevation Control**: Strictly requests permission for MINOR or MAJOR jumps.
-- **Traceability**: Link version increments to completed tasks in `artifacts/tasks/backlog.md` or `project.md`.
+| ID  | Name                        | Key Constraint                                  |
+|:----|:----------------------------|:------------------------------------------------|
+| I1  | PARA Directory Structure    | Only 4 top-level dirs (PascalCase)              |
+| I2  | Hybrid 3-File Model         | backlog.md = authority, sprint = hot lane       |
+| I3  | Project Naming              | kebab-case only                                 |
+| I4  | Project Inactivity          | No active tasks = inactive, archive = manual    |
+| I5  | Areas No Runtime Tasks      | Areas/ = stable knowledge, not active work      |
+| I6  | Archive Is Cold Storage     | Immutable, never read during normal ops         |
+| I7  | Seeds Are Raw Ideas         | .beads/ = ideas, NOT tasks                      |
+| I8  | No Loose Files              | Every file belongs to P/A/R/Archive             |
+| I9  | Resource Immutability       | Resources/ai-agents/ = READ-ONLY                |
+| I10 | Repo-Workspace Separation   | Repo has no user data, workspace has snapshot    |
+| I11 | Workflow Language Compliance | Output in preferences.language from .para-workspace.yml |
 
-## Directory Structure
+### Heuristics (SHOULD — vi phạm = MINOR/PATCH)
 
-- `scripts/`: Internal helper scripts.
-- `templates/`: Base templates for project metadata.
+| ID  | Name                        | Key Guidance                                    |
+|:----|:----------------------------|:------------------------------------------------|
+| H1  | Naming Conventions          | kebab-case files, PascalCase components         |
+| H2  | Context Loading Priority    | project.md → rules → artifacts → areas          |
+| H3  | Versioning                  | PATCH auto, MINOR/MAJOR ask user                |
+| H4  | Project Structure           | Standard layout: repo/, sessions/, artifacts/   |
+| H5  | Beads Lifecycle             | Create → messy → graduate at /retro             |
+| H6  | VCS & Git Boundaries        | Git only in repo/, not workspace root           |
+| H7  | Cross-Project References    | Full relative paths, prefer Resources/          |
+| H8  | Workflow Compatibility      | Declare kernel_compat in catalog.yml            |
+| H9  | Governed Library Catalogs   | catalog.yml mandatory for workflows/rules/skills|
+
+## 4. Selection Strategy
+
+### Use CLI (`./para <cmd>`) when:
+- Deterministic operations: `install`, `update`, `status`, `archive`
+- System maintenance: `cleanup`, `migrate`
+- Scripted automation or CI/CD pipelines
+
+### Use Workflows (`/<cmd>`) when:
+- Collaboration & analysis: `/brainstorm`, `/plan`, `/retro`
+- Agent-driven: `/open`, `/end`, `/backlog`, `/push`
+- Multi-step reasoning: `/para-audit`, `/verify`, `/release`
+
+## 5. On-demand References
+
+| File                             | Content                                    |
+|:---------------------------------|:-------------------------------------------|
+| `templates/project-md.md`        | Full project.md template with all v1.6.3 fields |
+| `examples/project-schema-vectors.md` | Test vectors for schema validation     |
+
+> **Rules** (formatting, versioning, governance) → `.agent/rules/` (loaded via trigger from `.agent/rules.md`)
+> **Full kernel** → `Resources/ai-agents/kernel/` (read only during `/para-audit`, `/plan`, or scaffolding)

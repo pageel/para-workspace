@@ -4,9 +4,10 @@ description: "Reusable skill building blocks used by workflows and agents."
 items:
   - id: para-kit
     name: "PARA Kit"
-    version: "1.0.0"
-    kernel_min: "1.6.2"
+    version: "1.1.0"
+    kernel_min: "1.6.4"
     kernel_max: "1.x"
     entrypoint: "para-kit/SKILL.md"
-    description: "Core PARA intelligence — classification, workspace navigation, and governance awareness."
-    tags: ["para", "classification", "governance"]
+    description: "PARA workspace structure reference — schema, layout, kernel governance quick reference, and intelligence routing."
+    tags: ["para", "structure", "schema", "governance"]
+

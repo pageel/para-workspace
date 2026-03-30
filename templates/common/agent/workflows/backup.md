@@ -1,5 +1,5 @@
 ---
-description: Backup workflows, rules, and important config files
+description: Backup workflows, rules, skills, and important config files
 source: catalog
 ---
 
@@ -15,6 +15,7 @@ Create a date-stamped snapshot of important workspace files into `.para/backups/
 /backup all                 # Backup system config + workspace sessions + all projects
 /backup workflows           # Only backup workflows
 /backup rules               # Only backup rules
+/backup skills              # Only backup skills
 /backup metadata            # Only backup .para-workspace.yml + workspace sessions
 /backup project <name>      # Backup one project (excludes repo/)
 /backup project-all         # Backup all projects (excludes repo/)
@@ -54,6 +55,17 @@ BACKUP_DIR=".para/backups/$(date +%Y-%m-%d)"
 mkdir -p "$BACKUP_DIR/rules"
 cp .agent/rules/*.md "$BACKUP_DIR/rules/" 2>/dev/null
 echo "✅ Rules: $(ls "$BACKUP_DIR/rules/" 2>/dev/null | wc -l) files backed up"
+```
+
+#### Target: `skills` or `all`
+
+// turbo
+
+```bash
+BACKUP_DIR=".para/backups/$(date +%Y-%m-%d)"
+mkdir -p "$BACKUP_DIR/skills"
+cp -r .agent/skills/* "$BACKUP_DIR/skills/" 2>/dev/null
+echo "✅ Skills: $(find "$BACKUP_DIR/skills" -type f 2>/dev/null | wc -l) files backed up"
 ```
 
 #### Target: `metadata` or `all`
@@ -171,7 +183,7 @@ echo "🧹 Cleanup done. Snapshots remaining: $(ls -d 20??-??-?? 2>/dev/null | w
 ✅ Backup complete!
 📅 Snapshot: YYYY-MM-DD
 📁 Location: .para/backups/YYYY-MM-DD/
-📊 Workflows: N files | Rules: N files | Metadata: ✓/✗
+📊 Workflows: N files | Rules: N files | Skills: N files | Metadata: ✓/✗
 🗂️ Workspace: N session files (SESSION_LOG, SYNC, audits)
 📦 Projects: N projects (M files) — repo/ excluded
 
@@ -199,6 +211,9 @@ cp .para/backups/YYYY-MM-DD/.para-workspace.yml ./.para-workspace.yml
 # Restore a project's user data
 cp -r .para/backups/YYYY-MM-DD/projects/<name>/* Projects/<name>/
 
+# Restore skills
+cp -r .para/backups/YYYY-MM-DD/skills/* .agent/skills/
+
 # Restore project repo (from GitHub)
 cd Projects/<name> && git clone <repo-url> repo
 ```
@@ -216,6 +231,7 @@ cd Projects/<name> && git clone <repo-url> repo
 | `Areas/Workspace/audits/`        | ✅ Yes    | Audit reports            |
 | `.agent/workflows/`              | ✅ Yes    | Customized workflows     |
 | `.agent/rules/`                  | ✅ Yes    | Customized rules         |
+| `.agent/skills/`                 | ✅ Yes    | Customized skills        |
 
 ### Per Project
 

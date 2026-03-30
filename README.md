@@ -7,7 +7,7 @@
 **The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.6.3-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.6.4-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://blog.google/technology/google-deepmind/antigravity-ai-coding-agent/)
 
@@ -25,7 +25,7 @@
 | [🧠 The Kernel](#-the-kernel) | Invariants, heuristics, contracts |
 | [🛠️ CLI Reference](#️-cli-reference) | All CLI commands |
 | [📑 Workflow Catalog](#-workflow-catalog) | 22 governed workflows |
-| [🛡️ Rule Catalog](#️-rule-catalog) | 10 governance rules |
+| [🛡️ Rule Catalog](#️-rule-catalog) | 11 governance rules |
 | [🏗️ Rule Architecture](#️-rule-architecture--two-tier-loading--defense-in-depth) | Two-Tier loading, defense-in-depth |
 | [🧩 Task Management](#-task-management-hybrid-3-file-model) | Hybrid 3-File model |
 | [🔄 Upgrading](#-upgrading-versions) | Auto update + clean slate |
@@ -363,6 +363,7 @@ Rules govern agent behavior, security, and compliance. Loaded on-demand via a Tw
 | **[`naming`](./docs/rules/naming.md)**                                            | kebab-case, PascalCase, camelCase conventions            | 🟢 Standard  |
 | **[`versioning`](./docs/rules/versioning.md)**                                    | SemVer, autonomy levels, multi-location sync            | 🟢 Standard  |
 | **[`exports-data`](./docs/rules/exports-data.md)**                                | Data export: `_inbox/`, UTF-8 BOM, naming               | 🟢 Standard  |
+| **[`formatting`](./docs/rules/formatting-tables-diagrams.md)**                    | Tables, diagrams, tree listings, ASCII box art           | 🟢 Standard  |
 
 ---
 
@@ -512,6 +513,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] **Unified Strategy → Plan Flow** _(shipped in v1.6.1)_
 - [x] **Unified Agent Index — Skills Loading & Proactive Trigger Check** _(shipped in v1.6.2)_
 - [x] **Central Gate — project.md as single source for context loading** _(shipped in v1.6.3)_
+- [x] **Para-Kit Skill v1.1.0, Recursive Sync & Git Hash Detection** _(shipped in v1.6.4)_
 - [ ] Department System _(v1.7.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.8.0 — planned)_
 
@@ -529,4 +531,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.6.3_
+_Version: 1.6.4_

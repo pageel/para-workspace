@@ -8,4 +8,4 @@
 
 | Skill    | Trigger                                                          | Path                     |
 | :------- | :--------------------------------------------------------------- | :----------------------- |
-| PARA Kit | Creating/editing artifacts, tables, diagrams, workspace auditing | skills/para-kit/SKILL.md |
+| PARA Kit | PARA structure questions, project.md schema, CLI vs Workflow routing, kernel quick reference | skills/para-kit/SKILL.md |

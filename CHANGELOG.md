@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.6.4] - 2026-03-30
+
+Para-Kit Skill v1.1.0, Recursive Sync & Git Hash Detection.
+→ [Detailed release notes](docs/changelog/v1.6.4.md)
+
+- **Changed**: `para-kit` SKILL.md rewritten as lean structure reference with Quick Reference Card (I1-I11 + H1-H9).
+- **Added**: `templates/` and `examples/` colocated inside skill folder for automatic sync.
+- **Added**: `sync_directory_recursive()` in `install.sh` — handles arbitrarily nested subdirectories.
+- **Fixed**: `update.sh` version comparison — reads from `.para-workspace.yml` only (not `repo/VERSION`).
+- **Added**: Git commit hash detection in `update.sh` — accurate for hotfixes without version bumps.
+- **Added**: `formatting-tables-diagrams.md` promoted to governed rule with `rules.md` index entry.
+- **Changed**: `/backup` workflow — added `skills` backup target.
+- **Changed**: `upstream` field added to project.md schema (inverse of `downstream`).
+
 ## [1.6.3] - 2026-03-27
 
 Central Gate — project.md as single source of truth for context loading.
