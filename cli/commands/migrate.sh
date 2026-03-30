@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# PARA Workspace Migrator (v1.4.1)
+# PARA Workspace Migrator (v1.6.5)
 # Migrates a workspace between versions
 # Usage: para migrate [--from=1.4.0] [--to=1.4.1] [--dry-run]
 
@@ -95,6 +95,9 @@ echo "  Path: $WS_ROOT"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
+# Track whether any migration step actually executed (v1.6.5 — BUG-23 fix)
+MIGRATION_RAN=false
+
 # === Helper: run or preview ===
 run_or_preview() {
   local desc="$1"
@@ -131,6 +134,7 @@ if ! semver_gte "$FROM_VERSION" "1.4.0" 2>/dev/null; then
 echo ""
 echo "━━━ v1.3.x → v1.4.0 Migration ━━━━━━━━━━━━━━━━━━━"
 echo ""
+MIGRATION_RAN=true
 
 # Step 1: Task file migration (tasks.md → hybrid 3-file)
 echo "📦 Step 1: Migrate task files to hybrid 3-file model..."
@@ -248,6 +252,7 @@ if ! semver_gte "$FROM_VERSION" "1.4.1" 2>/dev/null; then
 echo ""
 echo "━━━ v1.4.0 → v1.4.1 Migration ━━━━━━━━━━━━━━━━━━━"
 echo ""
+MIGRATION_RAN=true
 
 # Step 7: Create .para/ system state
 echo "🔒 Step 7: Initialize .para/ system state..."
@@ -328,6 +333,7 @@ if ! semver_gte "$FROM_VERSION" "1.4.6" 2>/dev/null; then
 echo ""
 echo "━━━ v1.4.5 → v1.4.6 Migration ━━━━━━━━━━━━━━━━━━━"
 echo ""
+MIGRATION_RAN=true
 
 # Step 11: Cleanup old manual migration docs (Smart Archive)
 echo "🧹 Step 11: Smart Archive obsolete files..."
@@ -349,8 +355,8 @@ else
   echo "⏭️  Skipping v1.4.5→v1.4.6 steps (FROM=$FROM_VERSION >= 1.4.6)"
 fi  # end v1.4.5 → v1.4.6 gate
 
-# === Record migration ===
-if [ "$DRY_RUN" = false ] && [ -d "$WS_ROOT/.para/migrations" ]; then
+# === Record migration (only if steps actually ran — v1.6.5 BUG-23 fix) ===
+if [ "$DRY_RUN" = false ] && [ "$MIGRATION_RAN" = true ] && [ -d "$WS_ROOT/.para/migrations" ]; then
   echo "$FROM_VERSION → $TO_VERSION | $(date -Iseconds 2>/dev/null || date +"%Y-%m-%dT%H:%M:%S%z")" >> "$WS_ROOT/.para/migrations/history.log"
 fi
 

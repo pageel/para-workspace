@@ -5,7 +5,7 @@ source: catalog
 
 # /update
 
-> **Workspace Version:** 1.5.0 (Agent-Guided Update)
+> **Workspace Version:** 1.6.5 (Update Flow Fix)
 
 Safely update the PARA Workspace to the latest version with pre-flight checks, dry-run preview, and automatic error recovery.
 
@@ -52,11 +52,16 @@ git -C Resources/references/para-workspace ls-remote --heads origin main 2>&1 | 
 
 **Decision gates:**
 
+> **Note (v1.6.5):** Repo VERSION is read BEFORE `git pull`, so it may be stale.
+> The CLI script handles the actual version comparison after pull. These gates
+> help the agent give early warnings, not make final decisions.
+
 | Condition                               | Action                                                                                                                                                                             |
 | :-------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Network ❌                              | **STOP.** Inform: "Cannot reach GitHub. To re-sync with the local repo version without downloading, try `./para install`." Ask user whether to run `para install` instead or stop. |
 | Git dirty (uncommitted changes in repo) | **WARN.** Display: "Repo has uncommitted changes. `git pull` may cause conflicts." Ask user: (a) Stash first then update, (b) Skip and continue, (c) Stop.                         |
-| Kernel == Repo VERSION                  | **INFO.** "Workspace is already on the latest version. If you know there are changes on GitHub, continue to check." Ask for confirmation to proceed.                               |
+| Kernel > Repo VERSION                   | **WARN.** Workspace is ahead of local repo. Likely the repo hasn't been pulled yet. Suggest: (a) Pull repo first then retry, (b) Continue anyway (CLI will pull during update).    |
+| Kernel == Repo VERSION                  | **INFO.** "Workspace matches local repo. Remote may have newer changes." Ask for confirmation to proceed (CLI will check remote via `git pull`).                                   |
 | All OK                                  | Proceed to step 2.                                                                                                                                                                 |
 
 ### 2. Dry-run preview

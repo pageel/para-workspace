@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# PARA Workspace Update Script (v1.6.4)
+# PARA Workspace Update Script (v1.6.5)
 # Safely updates templates without overwriting user data
 # Usage: para update [--dry-run]
 
@@ -10,6 +10,11 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 LIB_DIR="$SCRIPT_DIR/../lib"
+
+# === Load libraries ===
+if [ -f "$LIB_DIR/validator.sh" ]; then
+  source "$LIB_DIR/validator.sh"
+fi
 
 # === Ensure WORKSPACE_ROOT is set ===
 if [ -z "$WORKSPACE_ROOT" ]; then
@@ -130,10 +135,16 @@ fi
 
 # === Version detection: only used for migration gating ===
 if [ "$CURRENT_VER" != "$NEW_VER" ] && [ "$CURRENT_VER" != "0.0.0" ] && [ "$CURRENT_VER" != "Unknown" ]; then
-    echo "⏫ Version: $CURRENT_VER → $NEW_VER"
-    echo "🏗️ Running auto-migration process..."
-    if ! bash "$SCRIPT_DIR/migrate.sh" --from="$CURRENT_VER" --to="$NEW_VER" "${PASSTHROUGH_ARGS[@]}"; then
-      echo "⚠️  Migration encountered issues. Continuing with install..."
+    # Direction detection (v1.6.5 — BUG-22 fix)
+    if command -v semver_gte &>/dev/null && semver_gte "$CURRENT_VER" "$NEW_VER" 2>/dev/null; then
+        echo "⏬ Downgrade detected: $CURRENT_VER → $NEW_VER"
+        echo "   ⚠️  Workspace kernel is newer than repo. Skipping migration."
+    else
+        echo "⏫ Upgrade: $CURRENT_VER → $NEW_VER"
+        echo "🏗️ Running auto-migration process..."
+        if ! bash "$SCRIPT_DIR/migrate.sh" --from="$CURRENT_VER" --to="$NEW_VER" "${PASSTHROUGH_ARGS[@]}"; then
+          echo "⚠️  Migration encountered issues. Continuing with install..."
+        fi
     fi
 elif [ "$CURRENT_VER" == "0.0.0" ]; then
     echo "📦 First install detected (no workspace version). Skipping migration."

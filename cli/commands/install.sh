@@ -152,6 +152,8 @@ sync_file() {
 # === Helper: recursively sync all files within a directory tree ===
 # Handles arbitrarily nested subdirectories (v1.6.4)
 # Skips catalog.yml (handled separately by sync_library caller)
+# NOTE: `count` and `updated` variables are accessed via bash dynamic scoping
+# from the parent sync_library() function which declares them as `local`.
 sync_directory_recursive() {
   local src_dir="$1"
   local catalog_dest="$2"

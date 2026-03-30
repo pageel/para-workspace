@@ -7,7 +7,7 @@
 **The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.6.4-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.6.5-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://blog.google/technology/google-deepmind/antigravity-ai-coding-agent/)
 
@@ -514,6 +514,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] **Unified Agent Index — Skills Loading & Proactive Trigger Check** _(shipped in v1.6.2)_
 - [x] **Central Gate — project.md as single source for context loading** _(shipped in v1.6.3)_
 - [x] **Para-Kit Skill v1.1.0, Recursive Sync & Git Hash Detection** _(shipped in v1.6.4)_
+- [x] **Update Flow Fix — Version Direction Detection & Migration History** _(shipped in v1.6.5)_
 - [ ] Department System _(v1.7.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.8.0 — planned)_
 
@@ -531,4 +532,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.6.4_
+_Version: 1.6.5_

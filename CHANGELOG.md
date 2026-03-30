@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.6.5] - 2026-03-30
+
+Update Flow Fix — Version Direction Detection & Migration History.
+→ [Detailed release notes](docs/changelog/v1.6.5.md)
+
+- **Fixed**: `update.sh` version direction detection — shows ⏬ for downgrade, skips migration (BUG-22).
+- **Fixed**: `migrate.sh` conditional history logging — only writes when migration steps actually ran (BUG-23).
+- **Fixed**: `/update` workflow decision gates — added "Kernel > Repo VERSION" pre-pull warning (BUG-24).
+- **Changed**: `update.sh` loads `validator.sh` at startup for `semver_gte` access.
+
 ## [1.6.4] - 2026-03-30
 
 Para-Kit Skill v1.1.0, Recursive Sync & Git Hash Detection.
