@@ -7,7 +7,7 @@
 **The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.6.5-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.0-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://blog.google/technology/google-deepmind/antigravity-ai-coding-agent/)
 
@@ -24,9 +24,9 @@
 | [📥 Installation](#-installation) | Prerequisites, setup, profiles, troubleshooting |
 | [🧠 The Kernel](#-the-kernel) | Invariants, heuristics, contracts |
 | [🛠️ CLI Reference](#️-cli-reference) | All CLI commands |
-| [📑 Workflow Catalog](#-workflow-catalog) | 22 governed workflows |
+| [📑 Workflow Catalog](#-workflow-catalog) | 23 governed workflows |
 | [🛡️ Rule Catalog](#️-rule-catalog) | 11 governance rules |
-| [🏗️ Rule Architecture](#️-rule-architecture--two-tier-loading--defense-in-depth) | Two-Tier loading, defense-in-depth |
+| [🧩 Skill Catalog](#-skill-catalog) | 2 reusable skills |
 | [🧩 Task Management](#-task-management-hybrid-3-file-model) | Hybrid 3-File model |
 | [🔄 Upgrading](#-upgrading-versions) | Auto update + clean slate |
 | [🗺️ Roadmap](#️-roadmap) | Version history + planned features |
@@ -282,6 +282,7 @@ The Kernel is the **constitution** of PARA Workspace — the rules that all work
 | H7  | Cross-project references + Ecosystem (v1.6.0)             |
 | H8  | Workflow kernel compatibility                              |
 | H9  | Governed libraries require `catalog.yml` with `kernel_min` |
+| H10 | Knowledge Items — schema, scope, slug validation (v1.7.0)  |
 
 ### Kernel ↔ Workspace Contracts
 
@@ -344,6 +345,7 @@ para config [key] [value]       # Manage workspace settings
 | **[`/retro`](./docs/workflows/retro.md)**                 | Project retrospective before archiving                     |
 | **[`/update`](./docs/workflows/update.md)**               | Agent-guided safe workspace update with error recovery     |
 | **[`/verify`](./docs/workflows/verify.md)**               | Verify task completion with walkthroughs                   |
+| **[`/knowledge`](./docs/workflows/knowledge.md)**         | Manage Knowledge Items — dashboard, create, audit, archive |
 
 ---
 
@@ -355,6 +357,7 @@ Rules govern agent behavior, security, and compliance. Loaded on-demand via a Tw
 | :-------------------------------------------------------------------------------- | :------------------------------------------------------ | :----------- |
 | **[`governance`](./docs/rules/governance.md)**                                    | Kernel invariants, scope containment, safety guardrails | 🔴 Critical  |
 | **[`vcs`](./docs/rules/vcs.md)**                                                 | Git safety: commit, branch, merge, PR, secrets          | 🔴 Critical  |
+| **[`knowledge`](./docs/rules/knowledge.md)**                                      | KI operations — write gate, approval, namespace (v1.7.0)| 🔴 Critical  |
 | **[`hybrid-3-file-integrity`](./docs/rules/hybrid-3-file-integrity.md)**          | 6 constraints (C1–C6) for task management               | 🟡 Important |
 | **[`agent-behavior`](./docs/rules/agent-behavior.md)**                            | Proactive Trigger Check, Context Recovery (v1.6.2)      | 🟡 Important |
 | **[`context-rules`](./docs/rules/context-rules.md)**                              | Agent Index Loading (rules + skills), Two-Tier trigger   | 🟡 Important |
@@ -363,7 +366,17 @@ Rules govern agent behavior, security, and compliance. Loaded on-demand via a Tw
 | **[`naming`](./docs/rules/naming.md)**                                            | kebab-case, PascalCase, camelCase conventions            | 🟢 Standard  |
 | **[`versioning`](./docs/rules/versioning.md)**                                    | SemVer, autonomy levels, multi-location sync            | 🟢 Standard  |
 | **[`exports-data`](./docs/rules/exports-data.md)**                                | Data export: `_inbox/`, UTF-8 BOM, naming               | 🟢 Standard  |
-| **[`formatting`](./docs/rules/formatting-tables-diagrams.md)**                    | Tables, diagrams, tree listings, ASCII box art           | 🟢 Standard  |
+
+---
+
+## 🧩 Skill Catalog
+
+Skills are reusable knowledge modules loaded on-demand via the skills trigger index. Unlike rules (which enforce constraints), skills provide **templates, patterns, and reference material**.
+
+| Skill | Description |
+| :--- | :--- |
+| **[PARA Kit](./docs/skills/para-kit.md)** | PARA workspace structure reference — schema, layout, kernel governance, intelligence routing |
+| **[Formatting](./docs/skills/formatting.md)** | Tables, diagrams, tree listings, ASCII box art |
 
 ---
 
@@ -383,7 +396,7 @@ Rules and skills aren't dumped into context all at once. PARA Workspace uses a *
 │  │  Agent memorizes triggers → loads rules ON DEMAND  │      │
 │  └────────────────────────────────────────────────────┘      │
 │                                                              │
-│  Step 2.5b: ALWAYS read workspace skills index  (v1.6.2+)   │
+│  Step 2.5b: ALWAYS read workspace skills index  (v1.6.2+)    │
 │  ┌────────────────────────────────────────────────────┐      │
 │  │  .agent/skills.md  (~10 lines, ~100 tokens)        │      │
 │  │  Agent memorizes triggers → loads skills ON DEMAND │      │
@@ -465,6 +478,94 @@ artifacts/tasks/
 
 ---
 
+## 📚 Knowledge System (v1.7.0)
+
+AI agents lose context between sessions. **Knowledge Items (KIs)** are a core feature of [Google Antigravity](https://blog.google/technology/google-deepmind/antigravity-ai-coding-agent/) — the AI coding agent platform — that provides persistent memory across sessions, projects, and conversations.
+
+KIs live **outside** the workspace, in Antigravity's platform-managed KI Store (`~/.gemini/antigravity/knowledge/`). This mirrors PARA Workspace's foundational principle: just as the **repo governs but does not contain** user data, PARA Workspace **governs KI operations** (schema, rules, lifecycle workflows) without owning the storage layer.
+
+```
+┌───────────────────────────────────────────────────────────────────┐
+│  Antigravity Platform                                             │
+│  ┌─────────────────────────┐    ┌──────────────────────────────┐  │
+│  │  KI Store               │    │  PARA Workspace              │  │
+│  │  ~/.gemini/antigravity/ │◀──│  Governance: schema, rules,  │  │
+│  │  knowledge/             │    │  /knowledge workflow         │  │
+│  │  (platform-managed)     │    │  (workspace-managed)         │  │
+│  └─────────────────────────┘    └──────────────────────────────┘  │
+└───────────────────────────────────────────────────────────────────┘
+```
+
+### How It Works
+
+```
+Session 1                    Session 2                    Session N
+┌──────────┐                ┌──────────┐                ┌──────────┐
+│ Agent    │                │ Agent    │                │ Agent    │
+│ discovers│──── save ────▶│ auto-    │──── refine ──▶│ applies  │
+│ insight  │     as KI      │ loaded   │    over time   │ instantly│
+└──────────┘                └──────────┘                └──────────┘
+       │                         ▲                           ▲
+       ▼                         │                           │
+  .para/knowledge/          Platform KI                  Platform KI
+  index.md (scope)          Store (auto)                 Store (auto)
+```
+
+Unlike session logs (lost after truncation) or learning files (project-scoped), KIs are:
+
+- **Auto-injected** at session start by the platform
+- **Cross-project** — workspace-scoped KIs apply to all projects
+- **Graph-ready** — domain × purpose taxonomy with `relates_to` and `concepts` fields
+
+### KI Taxonomy
+
+Each KI is classified along two axes — **domain** (what) × **purpose** (how):
+
+```
+                  ┌────────────────────────────────────────────────────────┐
+                  │                      PURPOSE                           │
+                  ├──────────────┬──────────────┬─────────────┬────────────┤
+                  │   context    │  reference   │   pitfall   │  playbook  │
+                  │  (priming)   │  (lookup)    │  (gotchas)  │ (how-to)   │
+     ┌────────────┼──────────────┼──────────────┼─────────────┼────────────┤
+     │ workspace  │ PARA arch    │ kernel specs │ update bugs │ audit proc │
+     │ engineering│ tech stack   │ API docs     │ dep gotchas │ deploy SOP │
+  D  │ operations │ infra setup  │ CI/CD ref    │ env traps   │ rollback   │
+  O  │ content    │ writing std  │ style guide  │ SEO traps   │ publish    │
+  M  │ strategy   │ org context  │ roadmap      │ scope creep │ planning   │
+  A  │ ...        │              │              │             │            │
+  I  ├────────────┘              │              │             │            │
+  N  │  (open — define your own) │              │             │            │
+     └───────────────────────────┴──────────────┴─────────────┴────────────┘
+```
+
+> **Domain** is an open string — define custom domains as needed.
+> **Purpose** is a fixed enum: `context`, `reference`, `pitfall`, `playbook`.
+
+### Lifecycle & Integration
+
+| Workflow | KI Integration |
+|:---------|:---------------|
+| `/open` | Loads KI index, matches scope, reports in session |
+| `/plan` | Pitfall KIs → Risks, Playbook KIs → Phase references |
+| `/end` | Suggests creating KIs from session insights |
+| `/brainstorm` | Option F: Extract insight as KI |
+| `/retro` | Graduates cross-project patterns to KIs |
+| `/knowledge` | Full lifecycle: create, update, audit, archive |
+
+### Governance
+
+KI operations are governed by **5 rules (KR1–KR5)** and validated against **H10** (11 clauses):
+
+- **KR1 Write Gate**: Only `/knowledge` workflow can create/modify KIs
+- **KR2 User Approval**: Every KI creation requires explicit user consent
+- **KR3 Namespace**: `para_` prefix reserved for system KIs
+- **KR5 Recoverability**: All KI operations are reversible
+
+> 📖 Full schema: [`ki.schema.json`](./kernel/schema/ki.schema.json) · Governance: [`heuristics.md` H10](./kernel/heuristics.md)
+
+---
+
 ## 🔄 Upgrading Versions
 
 > 📖 **Note:** For a detailed breakdown of all features, fixes, and updates in each version, please read our [CHANGELOG](./CHANGELOG.md).
@@ -509,14 +610,15 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Hybrid 3-File Integrity, Working Checkmarks & Docs Overhaul _(shipped in v1.5.2)_
 - [x] Hot Lane Refactor, /end Sync Point & Token Optimization _(shipped in v1.5.3)_
 - [x] Context Recovery, Workflow Pre-flight & Defense-in-Depth _(shipped in v1.5.4)_
-- [x] **Meta-Project & Ecosystem Support** _(shipped in v1.6.0)_
-- [x] **Unified Strategy → Plan Flow** _(shipped in v1.6.1)_
-- [x] **Unified Agent Index — Skills Loading & Proactive Trigger Check** _(shipped in v1.6.2)_
-- [x] **Central Gate — project.md as single source for context loading** _(shipped in v1.6.3)_
-- [x] **Para-Kit Skill v1.1.0, Recursive Sync & Git Hash Detection** _(shipped in v1.6.4)_
-- [x] **Update Flow Fix — Version Direction Detection & Migration History** _(shipped in v1.6.5)_
-- [ ] Department System _(v1.7.0 — planned)_
-- [ ] Community & Trust Boundary _(v1.8.0 — planned)_
+- [x] Meta-Project & Ecosystem Support _(shipped in v1.6.0)_
+- [x] Unified Strategy → Plan Flow _(shipped in v1.6.1)_
+- [x] Unified Agent Index — Skills Loading & Proactive Trigger Check _(shipped in v1.6.2)_
+- [x] Central Gate — project.md as single source for context loading _(shipped in v1.6.3)_
+- [x] Para-Kit Skill v1.1.0, Recursive Sync & Git Hash Detection _(shipped in v1.6.4)_
+- [x] Update Flow Fix — Version Direction Detection & Migration History _(shipped in v1.6.5)_
+- [x] **Knowledge System — KI schema, /knowledge workflow, graph-ready taxonomy** _(shipped in v1.7.0)_
+- [ ] Department System _(v1.8.0 — planned)_
+- [ ] Community & Trust Boundary _(v1.9.0 — planned)_
 
 ---
 
@@ -532,4 +634,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.6.5_
+_Version: 1.7.0_

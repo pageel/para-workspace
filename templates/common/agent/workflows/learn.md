@@ -61,6 +61,26 @@ Add a link to the lesson in `Areas/Learning/README.md` under the appropriate cat
 
 If the lesson originated from a specific project, add a reference back in the project's session log.
 
+### 4.5. Knowledge Item Suggestion (CONDITIONAL)
+
+> **Gate:** Only if `.para/knowledge/index.md` exists.
+
+After saving the lesson, evaluate if it qualifies as a Knowledge Item:
+
+- **High-value** (affects multiple projects or sessions)
+- **Cross-project** (not specific to one project)
+- **Persistent** (unlikely to change frequently)
+
+If qualified:
+
+```
+💡 This lesson could also be a Knowledge Item for cross-session persistence.
+   Lessons live in Areas/Learning/ (project-scoped).
+   KIs persist in the AI platform (cross-session, auto-loaded).
+
+   Create KI? Run `/knowledge [topic]` (Y/N)
+```
+
 ## Related
 
 - `/brainstorm` — Option E exits to /learn for reusable cross-project insights

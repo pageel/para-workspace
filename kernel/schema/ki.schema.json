@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PARA Knowledge Item",
+  "description": "Validates metadata.json for Knowledge Items in ~/.gemini/antigravity/knowledge/. Graph-ready fields (relates_to, code_refs, concepts) enable future Knowledge Graph without runtime dependencies.",
+  "type": "object",
+  "required": ["title", "summary", "version", "scope", "domain", "purpose", "owner", "references"],
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Descriptive title for the Knowledge Item."
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 800,
+      "description": "Concise summary of what this KI covers. Injected by Antigravity at session start."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Semver-minor version of this KI (e.g., '1.0', '1.1')."
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["workspace", "project", "ecosystem"],
+      "description": "Visibility scope: workspace (all projects), project (single), ecosystem (multi-project)."
+    },
+    "domain": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 40,
+      "description": "Knowledge domain (open enum). Aligns with future Department System (v1.8.0). Examples: workspace, engineering, content, strategy, operations.",
+      "examples": ["workspace", "engineering", "content", "strategy", "operations"]
+    },
+    "purpose": {
+      "type": "string",
+      "enum": ["context", "playbook", "reference", "pitfall"],
+      "description": "How this KI is used. context=priming, playbook=procedures, reference=lookup, pitfall=gotchas."
+    },
+    "owner": {
+      "type": "string",
+      "enum": ["para", "user"],
+      "description": "para = system-managed (slug starts with para_), user = agent-created."
+    },
+    "para_version": {
+      "type": ["string", "null"],
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "PARA Workspace version at KI creation/update time. Required for owner:para, null for owner:user.",
+      "examples": ["1.6.5", "1.7.0"]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 30
+      },
+      "maxItems": 10,
+      "description": "Searchable tags for categorization."
+    },
+    "references": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "required": ["type", "value"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["file", "conversation_id", "url"],
+            "description": "Reference type."
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Reference value: absolute file path, conversation UUID, or URL."
+          }
+        }
+      },
+      "description": "Source references for traceability."
+    },
+
+    "relates_to": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9_]{3,60}$",
+        "description": "Slug of a related KI."
+      },
+      "maxItems": 10,
+      "description": "Graph-ready: KI-to-KI edges. Optional. Enables future Knowledge Graph traversal."
+    },
+    "code_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Relative path from workspace root to a relevant code file or directory."
+      },
+      "maxItems": 20,
+      "description": "Graph-ready: KI-to-Code edges. Optional. Links KI knowledge to actual implementation files."
+    },
+    "concepts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 50
+      },
+      "maxItems": 15,
+      "description": "Graph-ready: Concept nodes. Optional. Shared concepts across KIs enable semantic clustering."
+    }
+  },
+  "if": {
+    "properties": { "owner": { "const": "para" } }
+  },
+  "then": {
+    "properties": {
+      "para_version": {
+        "type": "string",
+        "pattern": "^\\d+\\.\\d+\\.\\d+$"
+      }
+    },
+    "required": ["para_version"]
+  }
+}

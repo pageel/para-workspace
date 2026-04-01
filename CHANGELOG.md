@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.7.0] - 2026-04-01
+
+Knowledge System — KI schema, `/knowledge` workflow, graph-ready taxonomy.
+→ [Detailed release notes](docs/changelog/v1.7.0.md)
+
 ## [1.6.5] - 2026-03-30
 
 Update Flow Fix — Version Direction Detection & Migration History.

@@ -1,0 +1,64 @@
+{
+  "title": "PARA Workspace Architecture & Governance Standards (v1.6.x)",
+  "summary": "Foundational architecture, governance, and efficiency standards for PARA Workspace v1.6.x ('Central Gate'). Covers: four-pillar structure (.para/, .agent/), Governing Kernel v1.5.3 (11 Invariants, 9 Heuristics), project.md schema v1.6.3 with field-gated I/O and @ecosystem/ path resolution, Ecosystem meta-projects, two-level Agent Index (workspace + project rules/skills with proactive trigger), Skills system v1.6.4, CLI with Smart Archive and catalog.yml governance, SYNC.md cross-project notifications, and token optimization patterns (field-gated I/O, lazy-loading, strategy cascade). Covers 32 workflows and 11 rules.",
+  "version": "1.0",
+  "scope": "workspace",
+  "domain": "workspace",
+  "purpose": "context",
+  "owner": "para",
+  "para_version": "1.6.5",
+  "tags": ["architecture", "governance", "kernel", "invariants", "heuristics", "token-optimization", "ecosystem", "agent-index"],
+  "references": [
+    {
+      "type": "file",
+      "value": "/media/tienle/DATA/WORKSPACE/para/.para-workspace.yml"
+    },
+    {
+      "type": "file",
+      "value": "/media/tienle/DATA/WORKSPACE/para/Resources/ai-agents/kernel/KERNEL.md"
+    },
+    {
+      "type": "file",
+      "value": "/media/tienle/DATA/WORKSPACE/para/Resources/ai-agents/kernel/invariants.md"
+    },
+    {
+      "type": "file",
+      "value": "/media/tienle/DATA/WORKSPACE/para/Resources/ai-agents/kernel/heuristics.md"
+    },
+    {
+      "type": "file",
+      "value": "/media/tienle/DATA/WORKSPACE/para/Resources/ai-agents/kernel/schema/project.schema.json"
+    },
+    {
+      "type": "file",
+      "value": "/media/tienle/DATA/WORKSPACE/para/.agent/rules.md"
+    },
+    {
+      "type": "file",
+      "value": "/media/tienle/DATA/WORKSPACE/para/.agent/skills.md"
+    },
+    {
+      "type": "file",
+      "value": "/media/tienle/DATA/WORKSPACE/para/.agent/skills/para-kit/SKILL.md"
+    },
+    {
+      "type": "conversation_id",
+      "value": "68c5eaab-729e-4b45-b9e6-f20bdcf67d3d"
+    }
+  ],
+  "relates_to": [],
+  "code_refs": [
+    "Resources/ai-agents/kernel/",
+    ".agent/rules/",
+    ".agent/skills/",
+    ".agent/workflows/"
+  ],
+  "concepts": [
+    "PARA methodology",
+    "Governing Kernel",
+    "field-gated I/O",
+    "Agent Index",
+    "token optimization",
+    "Defense-in-Depth"
+  ]
+}

@@ -13,21 +13,21 @@ items:
 
   - id: open
     name: "Session Open"
-    version: "1.6.0"
-    kernel_min: "1.6.3"
+    version: "1.7.0"
+    kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "open.md"
-    description: "Central Gate — field-gated strategy/roadmap, Path Resolution Convention, Step 2.5/2.6 split (v1.6.3)."
-    tags: ["session", "context", "token-optimized", "ecosystem", "strategy", "roadmap", "skills"]
+    description: "KI scope loading (Step 2.7), KI report + safety block (Step 8). Central Gate (v1.7.0)."
+    tags: ["session", "context", "token-optimized", "ecosystem", "strategy", "roadmap", "skills", "knowledge"]
 
   - id: end
     name: "Session End"
-    version: "1.6.0"
-    kernel_min: "1.6.3"
+    version: "1.7.0"
+    kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "end.md"
-    description: "Field-gated change detection for strategy/roadmap. Central Gate (v1.6.3)."
-    tags: ["session", "classification", "3-file", "hot-lane", "ecosystem", "strategy"]
+    description: "KI suggestion hook (Step 4.7). Field-gated change detection. Central Gate (v1.7.0)."
+    tags: ["session", "classification", "3-file", "hot-lane", "ecosystem", "strategy", "knowledge"]
 
   - id: install
     name: "Install / Sync"
@@ -58,12 +58,12 @@ items:
 
   - id: retro
     name: "Project Retrospective"
-    version: "1.0.1"
-    kernel_min: "1.6.2"
+    version: "1.7.0"
+    kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "retro.md"
-    description: "Project retrospective before archiving. Agent Indices Pre-flight (v1.6.2)."
-    tags: ["archive", "review"]
+    description: "KI graduation (Step 4.5). Project retrospective before archiving (v1.7.0)."
+    tags: ["archive", "review", "knowledge"]
 
   - id: push
     name: "Push"
@@ -130,11 +130,11 @@ items:
 
   - id: learn
     name: "Learn & Capture"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
+    version: "1.7.0"
+    kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "learn.md"
-    description: "Capture lessons and experiences into Areas/Learning."
+    description: "KI suggestion (Step 4.5). Capture lessons into Areas/Learning (v1.7.0)."
     tags: ["learning", "knowledge"]
 
   - id: para-workflow
@@ -157,21 +157,21 @@ items:
 
   - id: plan
     name: "Plan Controller"
-    version: "1.6.0"
-    kernel_min: "1.6.3"
+    version: "1.7.0"
+    kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "plan.md"
-    description: "Roadmap field lifecycle, field-gated strategy/roadmap context. Central Gate (v1.6.3)."
-    tags: ["planning", "architecture", "phases", "ecosystem", "strategy", "roadmap", "skills"]
+    description: "KI context Phase E (Step 2.7). Roadmap field lifecycle. Central Gate (v1.7.0)."
+    tags: ["planning", "architecture", "phases", "ecosystem", "strategy", "roadmap", "skills", "knowledge"]
 
   - id: para-audit
     name: "Macro Assessor Audit"
-    version: "1.3.0"
-    kernel_min: "1.6.2"
+    version: "1.7.0"
+    kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "para-audit.md"
-    description: "Agent map compat, skills index check, legacy migration detection (v1.6.2)."
-    tags: ["audit", "governance", "invariants", "post-update", "ecosystem", "skills"]
+    description: "KI Health Check (Step 5.6). Agent map compat, skills index check (v1.7.0)."
+    tags: ["audit", "governance", "invariants", "post-update", "ecosystem", "skills", "knowledge"]
 
   - id: docs
     name: "Documentation Manager"
@@ -193,9 +193,19 @@ items:
 
   - id: brainstorm
     name: "Brainstorm"
-    version: "1.0.0"
-    kernel_min: "1.5.0"
+    version: "1.7.0"
+    kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "brainstorm.md"
-    description: "Collaborative ideation with structured output and 5 exit paths."
-    tags: ["brainstorm", "ideation", "planning"]
+    description: "KI extraction Option F. Collaborative ideation with 6 exit paths (v1.7.0)."
+    tags: ["brainstorm", "ideation", "planning", "knowledge"]
+
+  - id: knowledge
+    name: "Knowledge Manager"
+    version: "1.0.0"
+    kernel_min: "1.7.0"
+    kernel_max: "1.x"
+    entrypoint: "knowledge.md"
+    description: "Manage Knowledge Items — create, update, audit, archive. Graph-ready schema with domain/purpose taxonomy."
+    tags: ["knowledge", "ki", "governance", "graph"]
+

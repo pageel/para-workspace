@@ -106,8 +106,9 @@ Saved: artifacts/para-decisions/brainstorm-[topic]-[date].md
   C. 📥 Add to /backlog — Create simple tasks directly
   D. 📝 Save as project doc — Keep as reference in docs/
   E. 🎓 Extract to /learn — Reusable lesson for other projects
+  F. 📚 Extract to /knowledge — Persistent KI (if KI system exists)
 
-❓ Which option? (A/B/C/D/E)
+❓ Which option? (A/B/C/D/E/F)
 ```
 
 **Option A: Save to Seeds**
@@ -145,6 +146,14 @@ Copy or condense the brainstorm analysis into `Projects/[project-name]/docs/`:
 Suggest: `/learn [project-name]`
 
 Extract the reusable insight (not the project-specific details) into `Areas/Learning/`.
+
+**Option F: Extract as Knowledge Item**
+
+> Only shown if `.para/knowledge/index.md` exists.
+
+Suggest: `/knowledge [topic]`
+
+Extract the insight as a persistent Knowledge Item (cross-session, cross-project).
 
 ## Related
 

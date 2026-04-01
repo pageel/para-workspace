@@ -209,6 +209,31 @@ After reporting phase status:
    a. IF `roadmap` has value → Update roadmap phase + suggest next phase (like /plan review Step 6.5)
    b. IF `roadmap` is null → Skip
 
+### 4.7. Knowledge Suggestion (CONDITIONAL)
+
+> **Gate:** Only trigger if session ≥3 file mutations OR user mentions KI topic.
+> **Governance:** KR1 — `/end` is an allowed suggestion hook (not a write gate).
+
+1. **IF** `.para/knowledge/index.md` exists:
+   a. Scan session log for patterns suggesting valuable knowledge:
+      - Major architectural decisions
+      - Non-obvious gotchas or workarounds
+      - Patterns applicable across projects
+   b. Cross-reference with existing KI titles from index
+   c. **IF match found** (existing KI may need update):
+      ```
+      💡 SESSION KNOWLEDGE
+      This session touched topics related to KI "[title]" (last updated [date]).
+      Update this KI? (Y/N/Later)
+      ```
+   d. **IF new insight** (no matching KI):
+      ```
+      💡 SESSION KNOWLEDGE
+      New insight detected: [topic]
+      Create KI? Run `/knowledge [topic]` (Y/N)
+      ```
+2. **IF** no index or no trigger → Skip silently.
+
 ### 5. Update Master Index
 
 // turbo

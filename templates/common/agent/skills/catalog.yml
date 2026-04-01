@@ -11,3 +11,12 @@ items:
     description: "PARA workspace structure reference — schema, layout, kernel governance quick reference, and intelligence routing."
     tags: ["para", "structure", "schema", "governance"]
 
+  - id: formatting
+    name: "Formatting Tables & Diagrams"
+    version: "1.0.0"
+    kernel_min: "1.4.0"
+    kernel_max: "1.x"
+    entrypoint: "formatting/SKILL.md"
+    description: "Templates and patterns for tables, diagrams, trees, and visual markdown — loaded on demand when formatting artifacts."
+    tags: ["formatting", "tables", "diagrams", "markdown"]
+

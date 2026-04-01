@@ -18,4 +18,4 @@
 | Naming                  | Creating files, directories, branches, commits                                | rules/naming.md                  | 🟢  |
 | Versioning              | Version bumps, changelog updates, releases                                    | rules/versioning.md              | 🟢  |
 | Exports Data            | Exporting data, sharing files externally                                      | rules/exports-data.md            | 🟢  |
-| Formatting              | Drawing tables, creating diagrams, formatting markdown lists, ASCII box art, tree listings | rules/formatting-tables-diagrams.md | 🟢 |
+| Knowledge               | Creating, updating, deleting Knowledge Items (KI operations)                  | rules/knowledge.md               | 🔴  |

@@ -8,4 +8,5 @@
 
 | Skill    | Trigger                                                          | Path                     |
 | :------- | :--------------------------------------------------------------- | :----------------------- |
-| PARA Kit | PARA structure questions, project.md schema, CLI vs Workflow routing, kernel quick reference | skills/para-kit/SKILL.md |
+| PARA Kit    | PARA structure questions, project.md schema, CLI vs Workflow routing, kernel quick reference | skills/para-kit/SKILL.md    |
+| Formatting  | Drawing tables, creating diagrams, formatting markdown lists, ASCII box art, tree listings   | skills/formatting/SKILL.md  |

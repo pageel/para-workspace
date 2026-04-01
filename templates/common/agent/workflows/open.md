@@ -103,17 +103,41 @@ IF agent.skills exists and is true → Read project .agent/skills.md
 ELSE                               → Skip skills. Zero I/O cost.
 ```
 
+### 2.7. Load Knowledge Items scope (CONDITIONAL)
+
+//turbo
+
+> **Field-gate:** Only runs if `.para/knowledge/index.md` exists. If not → skip. Zero I/O.
+> **Token budget:** ~40 tokens for index read + scope match.
+
+```
+IF .para/knowledge/index.md exists:
+  1. Read index.md (trigger table)
+  2. For each KI row, check scope match:
+     - scope: workspace → ALWAYS include
+     - scope: project   → include IF slug matches [project-name]
+     - scope: ecosystem → include IF project is in ecosystem
+  3. Store matched KI slugs for report (Step 8)
+ELSE:
+  Skip. No KI system configured.
+```
+
+> **Note:** This step does NOT load KI artifacts. It only reads the index
+> to know WHICH KIs are relevant. KI content is already injected by the
+> platform at session start (L1 auto-inject).
+
 #### ✅ Agent Index Completion Gate
 
 > ⚠️ Agent MUST verify ALL checks before proceeding to Step 3.
 > If any "true" field was not loaded → READ NOW before continuing.
 
-| # | Check | Source | Required |
-|:--|:------|:-------|:---------|
-| 1 | Workspace rules loaded? | `.agent/rules.md` | ALWAYS |
-| 2 | Workspace skills loaded? | `.agent/skills.md` | ALWAYS |
-| 3 | Project rules resolved? | `agent.rules` field in project.md | IF true |
-| 4 | Project skills resolved? | `agent.skills` field in project.md | IF true |
+| # | Check                    | Source                              | Required  |
+|:--|:-------------------------|:------------------------------------|:----------|
+| 1 | Workspace rules loaded?  | `.agent/rules.md`                   | ALWAYS    |
+| 2 | Workspace skills loaded? | `.agent/skills.md`                  | ALWAYS    |
+| 3 | Project rules resolved?  | `agent.rules` field in project.md   | IF true   |
+| 4 | Project skills resolved? | `agent.skills` field in project.md  | IF true   |
+| 5 | KI index loaded?         | `.para/knowledge/index.md`          | IF exists |
 
 **Proactive Trigger Check (v1.6.2+):**
 
@@ -145,7 +169,7 @@ Read the latest session log for context on previous work.
 
 1. Check for brainstorms with pending decisions:
    ```bash
-   grep -l "Pending" Projects/[project-name]/artifacts/para-decisions/brainstorm-*.md 2>/dev/null
+   grep -l "Decision.*Pending\|Decision: Pending" Projects/[project-name]/artifacts/para-decisions/brainstorm-*.md 2>/dev/null
    ```
 
 2. **IF found:**
@@ -178,7 +202,7 @@ grep -E "ToDo|In Progress" Projects/[project-name]/artifacts/tasks/backlog.md | 
 Check if `Projects/[project-name]/artifacts/tasks/sprint-current.md` exists:
 
 - **If exists** → Read entire file (small, ~50-100 tokens). Note any pending `[ ]` items.
-- **If not exists** → Skip. Report: `🔥 Hot Lane: trống (chưa có file)`
+- **If not exists** → Skip. Report: `🔥 Hot Lane: empty (no file)`
 
 > **Rule:** `hybrid-3-file-integrity.md` C1 — sprint-current.md is the Hot Lane for quick tasks.
 
@@ -325,6 +349,10 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
    → /brainstorm to continue, or /plan to formalize
    (omit if no pending brainstorms)
 
+📚 KNOWLEDGE: [N] KIs matched
+- [slug] — [title] (scope: [scope], purpose: [purpose])
+- (omit if no .para/knowledge/index.md)
+
 🔔 SYNC QUEUE: [N pending] / [0 if none]
 
 📝 BACKLOG SUMMARY:
@@ -339,6 +367,7 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 - Git: Do NOT merge/branch/tag without user approval. Read rules/vcs.md first.
 - Governance: Do NOT modify Resources/ai-agents/ (read-only).
 - Recovery: If rules/skills forgotten → re-read .agent/rules.md + .agent/skills.md.
+- Knowledge: KIs are primed by platform. If lost → re-read .para/knowledge/index.md.
 - Proactive: BEFORE any side-effect → scan trigger tables → load matching rules/skills.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

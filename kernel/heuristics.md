@@ -230,3 +230,33 @@ Schema: `kernel/schema/catalog.schema.json`
 The installer (`para install`, `para update`) MUST validate `kernel_min` / `kernel_max`
 against the workspace's kernel version before syncing. Incompatible items are skipped
 with a clear warning.
+
+## H10. Knowledge Items
+
+Knowledge Items (KIs) are curated, persistent knowledge stored outside the workspace
+in the host AI platform's knowledge store. They bridge ephemeral conversations with
+long-term institutional memory.
+
+### Schema & Conformance
+
+1. KIs MUST conform to `kernel/schema/ki.schema.json`
+2. KIs MUST have at least one artifact file in their `artifacts/` directory
+3. KIs SHOULD be created and updated via the `/knowledge` workflow
+
+### Scope & Ownership
+
+4. KI scope MUST be one of: `workspace`, `project`, `ecosystem`
+5. System KIs (`owner: para`) slug MUST start with `para_` prefix
+6. System KIs MUST NOT be modified by user ad-hoc — only via version alignment
+7. User KIs MUST NOT use the `para_` prefix
+
+### Quality & Freshness
+
+8. Agent MUST verify KI content against active code before applying
+9. KIs with >50% broken references MUST be updated or archived
+10. KI summary MUST NOT exceed 800 characters
+
+### Slug Format
+
+11. KI slug MUST match `^[a-z0-9_]{3,60}$` — no path separators or traversal characters
+

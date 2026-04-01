@@ -92,11 +92,12 @@ items:
     description: "Hot Lane constraints and /end sync for the Hybrid 3-File task model."
     tags: ["tasks", "integrity", "3-file", "hot-lane"]
 
-  - id: formatting-tables-diagrams
-    name: "Formatting Standards"
+  - id: knowledge
+    name: "Knowledge Rules"
     version: "1.0.0"
-    kernel_min: "1.4.0"
+    kernel_min: "1.7.0"
     kernel_max: "1.x"
-    entrypoint: "formatting-tables-diagrams.md"
-    description: "Formatting rules for tables, diagrams, tree listings, and visual markdown elements."
-    tags: ["formatting", "tables", "diagrams", "markdown"]
+    entrypoint: "knowledge.md"
+    description: "Governance rules for Knowledge Item operations (KR1-KR5). Write gate, user approval, namespace, zone boundary, recoverability."
+    tags: ["knowledge", "governance", "safety", "ki"]
+

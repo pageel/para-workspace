@@ -62,6 +62,27 @@ Review recurring knowledge points ("Beads") from session logs:
 
 - If a bead appears 3+ times, propose graduating it to an official Rule in `.agent/rules/`.
 
+### 4.5. Graduate Insights to Knowledge Items
+
+> **Gate:** Only if `.para/knowledge/index.md` exists.
+
+After reviewing beads and learnings, check if any insight qualifies as a Knowledge Item:
+
+1. **Cross-project patterns** → scope: `workspace`
+2. **Non-obvious gotchas** → purpose: `pitfall`
+3. **Proven procedures** → purpose: `playbook`
+
+If candidates found:
+
+```
+💡 KNOWLEDGE GRADUATION
+Insights from [project-name] that could persist as KIs:
+- [Topic 1] — cross-project pattern (scope: workspace)
+- [Topic 2] — non-obvious gotcha (purpose: pitfall)
+
+Graduate to KI? Run `/knowledge [topic]` (Y/N/Later)
+```
+
 ### 5. Record Retrospective
 
 Create `Projects/[project-name]/sessions/RETROSPECTIVE.md`:

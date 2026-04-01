@@ -1,0 +1,261 @@
+# PARA Workspace v1.6.x Architecture Standards
+
+The v1.6.x generation ("Central Gate") of PARA Workspace introduces field-gated context loading, ecosystem project coordination, a formalized skill system, and the Para-Kit consolidated reference. It builds upon the v1.4.x "Governed" architecture with significant efficiency and governance improvements.
+
+## 1. Core Structural Integrity: Pillar Purity
+
+A fundamental principle: the **4 Primary Multi-Project Pillars** (Projects, Areas, Resources, Archives) belong exclusively to the user.
+
+- **System Separation:** All system configs, metadata, logs, and temporary states reside in hidden/dedicated system directories (`.para/`, `.agent/`).
+- **Orphan Management:** Deprecated system files → `.para/archive/[version]-orphans/`, never the user's `Archive/`.
+- **No Loose Files (I8):** Every file belongs to P/A/R/Archive. Root only has approved config: `.para-workspace.yml`.
+
+## 2. The Governing Kernel (v1.5.3 spec, v1.6.5 runtime)
+
+The Kernel (`Resources/ai-agents/kernel/`) is the **"constitution"** — immutable at runtime.
+
+### Components
+
+| File                        | Role                                  | Change Impact |
+|:----------------------------|:--------------------------------------|:--------------|
+| `KERNEL.md`                 | Constitution — supreme law            | MAJOR bump    |
+| `invariants.md`             | 11 hard rules (I1–I11) — MUST NOT violate | MAJOR bump |
+| `heuristics.md`             | 9 soft rules (H1–H9) — recommended   | MINOR/PATCH   |
+| `schema/project.schema.json`| JSON Schema for `project.md` frontmatter | Depends    |
+| `schema/workspace.schema.json` | JSON Schema for `.para-workspace.yml` | Depends   |
+| `schema/backlog.schema.json`| JSON Schema for `backlog.md`          | Depends       |
+| `schema/catalog.schema.json`| JSON Schema for governed catalogs     | Depends       |
+| `examples/`                 | Compliance test vectors               | N/A           |
+
+### Key Invariants (v1.5.3)
+
+| ID  | Name                        | Constraint                                      |
+|:----|:----------------------------|:------------------------------------------------|
+| I1  | PARA Directory Structure    | Only 4 top-level dirs (PascalCase)              |
+| I2  | Hybrid 3-File Model         | backlog.md = authority, sprint = hot lane, done = append-only |
+| I3  | Project Naming              | kebab-case only                                 |
+| I6  | Archive Is Cold Storage     | Immutable, never read during normal ops         |
+| I9  | Resource Immutability       | Resources/ai-agents/ = READ-ONLY                |
+| I10 | Repo-Workspace Separation   | Repo has no user data                           |
+| I11 | Workflow Language Compliance | Output in `preferences.language` from `.para-workspace.yml` |
+
+### Key Heuristics (v1.5.3)
+
+| ID  | Name                        | Guidance                                        |
+|:----|:----------------------------|:------------------------------------------------|
+| H2  | Context Loading Priority    | project.md → rules → artifacts → areas          |
+| H7  | Cross-Project References    | Ecosystem `@` prefix for cross-project plans    |
+| H9  | Governed Library Catalogs   | catalog.yml mandatory with kernel_min/max       |
+
+## 3. Workspace Configuration (`.para-workspace.yml`)
+
+```yaml
+kernel_version: "1.6.5"
+profile: "dev"             # dev | general | marketer | ceo
+language: "vi"             # ISO 639-1
+repo:
+  url: "https://github.com/pageel/para-workspace"
+  branch: "main"
+workspace:
+  version: "1.0.0"
+  created: "2026-02-24"
+projects:                  # Registered projects list
+  - pageel
+  - pageel-page-map
+```
+
+## 4. Project Contract (`project.md`) Schema v1.6.3
+
+All fields in YAML frontmatter:
+
+| Field           | Type       | Required | Description                               |
+|:----------------|:-----------|:---------|:------------------------------------------|
+| `name`          | string     | ✅       | kebab-case project slug                   |
+| `goal`          | string     | ✅       | Project objective                         |
+| `status`        | enum       | ✅       | active / paused / done / archived         |
+| `strategy`      | path/null  | ✅       | Strategy doc path (supports `@ecosystem/`) |
+| `roadmap`       | path/null  | ✅       | Roadmap file path (supports `@ecosystem/`) |
+| `active_plan`   | string     | ❌       | Current impl plan path (supports `@ecosystem/`) |
+| `agent.rules`   | bool       | ✅       | Has project-specific rules?               |
+| `agent.skills`  | bool       | ✅       | Has project-specific skills?              |
+| `type`          | enum       | ❌       | standard / ecosystem (default: standard)  |
+| `ecosystem`     | string     | ❌       | Parent ecosystem slug (for satellites)    |
+| `satellites`    | list       | ❌       | Child project slugs (for ecosystems)      |
+| `upstream`      | list       | ❌       | Projects this depends on                  |
+| `downstream`    | list       | ❌       | Dependent project slugs                   |
+| `kernel_version`| semver     | ✅       | Kernel version at project creation        |
+
+### Path Resolution Convention (v1.6.3)
+
+Three fields support `@{ecosystem}/` cross-project prefix:
+
+```
+IF value starts with "@":
+  Extract: @{ecosystem}/{relative_path}
+  strategy    → Projects/{ecosystem}/{relative_path}
+  roadmap     → Projects/{ecosystem}/artifacts/{relative_path}
+  active_plan → Projects/{ecosystem}/artifacts/{relative_path}
+ELSE (local):
+  strategy    → Projects/[project-name]/{value}
+  roadmap     → Projects/[project-name]/artifacts/{value}
+  active_plan → Projects/[project-name]/artifacts/{value}
+```
+
+## 5. Ecosystem Projects (v1.6.0+)
+
+| Type       | Purpose                  | Has repo/ | Has satellites |
+|:-----------|:-------------------------|:----------|:---------------|
+| `standard` | Regular project (default)| Yes       | No             |
+| `ecosystem`| Coordinates satellites   | No        | Yes            |
+
+- Ecosystem projects have NO `repo/` directory
+- Workflows skip git operations for ecosystem projects
+- Satellites reference ecosystem plans via `@ecosystem/` prefix
+
+## 6. Agent Architecture: Two-Level Index System (v1.6.2+)
+
+### Workspace Level (ALWAYS loaded by `/open`)
+
+```
+.agent/
+├── rules.md          # Workspace rules trigger index (10 rules)
+├── rules/            # Rule files (loaded on-demand by trigger)
+├── skills.md         # Workspace skills trigger index (2 skills)
+├── skills/           # Skill directories
+│   ├── formatting/   # Table/diagram formatting templates
+│   ├── page-map/     # Website visual structure management
+│   └── para-kit/     # PARA reference card (schema, layout, governance)
+└── workflows/        # 32 workflow files
+```
+
+### Project Level (CONDITIONAL — gated by `agent.rules` / `agent.skills`)
+
+```
+Projects/<slug>/.agent/
+├── rules.md          # Project rules trigger index
+└── rules/            # Project-specific rule files
+```
+
+### Proactive Trigger Protocol
+
+BEFORE any side-effect action, agent MUST:
+1. Scan workspace `rules.md` trigger table
+2. Scan workspace `skills.md` trigger table
+3. Scan project `rules.md` trigger table (if loaded)
+4. Scan project `skills.md` trigger table (if loaded)
+5. IF match found → read rule/skill file BEFORE acting
+
+## 7. System State (`.para/`)
+
+```
+.para/
+├── audit.log         # Chronological record of CLI actions
+├── backups/          # Auto-generated backups (.bak files)
+├── migrations/       # Version jump history and scripts
+└── archive/          # Orphaned system files (Smart Archive)
+```
+
+## 8. Cross-Project Sync (`SYNC.md`)
+
+Located at `Areas/Workspace/SYNC.md`, tracks cross-project notifications:
+
+- When a project releases a version affecting downstream projects
+- Entries have: Date | Source | Version | Downstream | Action | Status
+- Status: 🔴 Pending / ✅ Completed
+- `/open` checks for pending items when project has `downstream` or `upstream` fields
+
+## 9. CLI Architecture
+
+- **Universal Wrapper:** Root `./para` bash script → cross-platform command executor
+- **Commands:** `para init`, `para update`, `para install`, `para status`, `para archive`, `para cleanup`
+- **Internal Library (`cli/lib/`):**
+  - `logger.sh` — unified logging
+  - `validator.sh` — semver + schema validation
+  - `rollback.sh` — atomic rollback for failed updates
+  - `fs.sh` — safe file operations (`archive_file` helper)
+- **Smart Archive (H9):** Never `rm` directly — use `archive_file` to move to `.para/archive/`
+- **Git-hash change detection (v1.6.4+):** `commits=0` in audit log = no-op optimization
+
+## 10. Governed Library Catalogs
+
+Workflows, Rules, and Skills managed via `catalog.yml`:
+
+- **Centralized Registry:** Each category has a `catalog.yml` at its root
+- **Snapshot Sync:** `para install` syncs read-only snapshot to `Resources/ai-agents/` and customizable version to `.agent/`
+- **Validation:** CLI validates `kernel_min`/`kernel_max` before syncing; incompatible items skipped with warning
+- **Required fields:** id, name, version, kernel_min, entrypoint, description
+
+## 11. Workflow Library (32 workflows)
+
+### Core PARA Workflows
+| Workflow | Purpose |
+|:---------|:--------|
+| `/open`  | Start session with full context from previous sessions |
+| `/end`   | Log session progress and close working day |
+| `/plan`  | Create implementation plan with phases and timeline |
+| `/backlog` | Manage project features and bugs |
+| `/brainstorm` | Brainstorm context, issues, and solutions |
+| `/push`  | Fast commit and push to GitHub |
+| `/verify` | Verify task completion using walkthroughs |
+| `/release` | Pre-release quality gate |
+| `/retro` | Project retrospective before archiving |
+
+### Workspace Management
+| Workflow | Purpose |
+|:---------|:--------|
+| `/para`  | Master workspace management |
+| `/para-audit` | Check structural drift against Kernel |
+| `/para-rule` | Manage PARA-compliant rules |
+| `/para-workflow` | Manage and standardize workflows |
+| `/update` | Safe workspace update with error recovery |
+| `/install` | Intelligent installer for workflows and rules |
+| `/merge` | Merge user customizations with catalog updates |
+| `/config` | Manage workspace metadata |
+| `/inbox` | Categorize files from `_inbox/` |
+| `/new-project` | Initialize PARA-compliant project |
+| `/backup` | Backup workspace config files |
+| `/remote` | Manage remote repositories |
+
+### Domain-Specific (Pageel)
+| Workflow | Purpose |
+|:---------|:--------|
+| `/pageel-migrate` | Migrate React/Vite → Astro |
+| `/pageel-theme` | Clone theme from Astro projects |
+| `/pageel-component` | Manage reusable component library |
+| `/pageel-cms` | Configure pageel-cms |
+| `/pageel-write` | Write content with AI assist |
+| `/pageel-add` | Add integration templates |
+
+## 12. Skills System (v1.6.4+)
+
+Skills are folders of instructions that extend agent capabilities:
+
+| Skill       | Trigger | Purpose |
+|:------------|:--------|:--------|
+| PARA Kit    | PARA structure questions, schema, quick reference | Consolidated kernel reference card |
+| Formatting  | Tables, diagrams, trees, visual markdown | Templates and patterns |
+| Page Map    | Website visual structure management | AI-driven page/component management |
+
+Skills promoted from rules (experiment from pageel-cms dogfooding): standalone, English-first, constraints + templates merged.
+
+## 13. Token Optimization Patterns
+
+1. **Discovery Optimization:** `active_plan` field in `project.md` → direct jump, no directory scanning
+2. **Context Noise Reduction:** Markdown tables over prose; Progressive Disclosure
+3. **Field-Gated I/O (v1.6.3):** `strategy`, `roadmap`, `active_plan` — IF null → skip, zero I/O
+4. **Task Compression:** Micro-projects merge tasks into backlog epics
+5. **Constraint-Based Output:** Workflows limit output (e.g., "4-7 phases max")
+6. **Git-Hash Detection (v1.6.4):** Skip no-op updates when commits=0
+
+## 14. Version History Highlights
+
+| Version | Codename | Key Changes |
+|:--------|:---------|:------------|
+| 1.4.x   | Governed | Smart Archive, catalog.yml, CLI library |
+| 1.5.x   | — | Kernel spec formalized (KERNEL.md, invariants, heuristics) |
+| 1.6.0   | — | Ecosystem projects, `type` field, `@` prefix resolution |
+| 1.6.1   | — | Brainstorm workflow improvements |
+| 1.6.2   | — | `agent.rules`/`agent.skills` map replaces `has_rules` boolean |
+| 1.6.3   | Central Gate | Field-gated change detection, mandatory `strategy`/`roadmap` fields |
+| 1.6.4   | — | Para-Kit skill, git-hash change detection, recursive dir sync |
+| 1.6.5   | — | Para-Kit skill finalized, documentation cleanup |

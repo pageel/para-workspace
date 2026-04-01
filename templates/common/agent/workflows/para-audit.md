@@ -198,6 +198,38 @@ echo "Tasks:" && for p in Projects/*/artifacts/tasks; do grep -rL "⚠️" "$p"/
 - **Rules files** without `<!-- ⚠️ GOVERNED -->` → warn
 - **Task files** without any `<!-- ⚠️ -->` guard → suggest adding (migration from pre-v1.5.4)
 
+### 5.6. Knowledge Items Health Check (CONDITIONAL)
+
+// turbo
+
+> **Gate:** Only if `.para/knowledge/index.md` exists.
+
+```bash
+# Check if KI system is configured
+test -f .para/knowledge/index.md && echo "KI_SYSTEM=true" || echo "KI_SYSTEM=false"
+```
+
+**IF KI_SYSTEM=true:**
+
+1. Read `.para/knowledge/index.md` → extract KI count and slugs.
+2. For each KI slug, validate against `ki.schema.json` rules:
+   - Summary ≤ 800 chars (H10.10)
+   - Has ≥1 artifact file (H10.2)
+   - Slug matches `^[a-z0-9_]{3,60}$` (H10.11)
+   - `owner: para` → slug starts with `para_` (H10.8)
+3. Check reference integrity (broken file paths).
+4. Check staleness (last modified >90 days).
+5. Report in audit:
+
+```
+📚 KNOWLEDGE ITEMS:
+| Slug              | Health | Summary | Refs   | Last Modified |
+| :---------------- | :----- | :------ | :----- | :------------ |
+| para_workspace_*  | ✅     | 623/800 | 9/9 ✅ | 2026-04-01    |
+```
+
+**IF KI_SYSTEM=false** → Skip.
+
 ### 6. Generate Post-Update Report
 
 Display an inline report (do NOT create a separate file — this is a quick check, not a full audit):
