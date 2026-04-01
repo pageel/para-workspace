@@ -94,10 +94,10 @@ items:
 
   - id: knowledge
     name: "Knowledge Rules"
-    version: "1.0.0"
+    version: "1.1.0"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "knowledge.md"
-    description: "Governance rules for Knowledge Item operations (KR1-KR5). Write gate, user approval, namespace, zone boundary, recoverability."
-    tags: ["knowledge", "governance", "safety", "ki"]
+    description: "Governance rules for Knowledge Item operations (KR1-KR6). Write gate, user approval, namespace guard, zone boundary, recoverability, system KI governed lifecycle."
+    tags: ["knowledge", "governance", "safety", "ki", "system-ki"]
 

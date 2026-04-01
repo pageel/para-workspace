@@ -155,6 +155,9 @@ Suggest: `/knowledge [topic]`
 
 Extract the insight as a persistent Knowledge Item (cross-session, cross-project).
 
+> **System KI hint:** If the insight relates to PARA Workspace architecture,
+> governance, or cross-project patterns, suggest `/knowledge system [topic]` instead.
+
 ## Related
 
 - `/plan` — Formalize decisions into actionable implementation phases

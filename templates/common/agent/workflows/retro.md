@@ -83,6 +83,10 @@ Insights from [project-name] that could persist as KIs:
 Graduate to KI? Run `/knowledge [topic]` (Y/N/Later)
 ```
 
+> **System KI hint:** If the pattern relates to PARA Workspace governance,
+> architecture, or cross-project infrastructure, suggest
+> `/knowledge system [topic]` for governed system KI lifecycle.
+
 ### 5. Record Retrospective
 
 Create `Projects/[project-name]/sessions/RETROSPECTIVE.md`:

@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/version-1.7.0-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
-[![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://blog.google/technology/google-deepmind/antigravity-ai-coding-agent/)
+[![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
 [🇺🇸 English](README.md) • [🇻🇳 Tiếng Việt](./docs/README.vi.md)
 
@@ -480,20 +480,16 @@ artifacts/tasks/
 
 ## 📚 Knowledge System (v1.7.0)
 
-AI agents lose context between sessions. **Knowledge Items (KIs)** are a core feature of [Google Antigravity](https://blog.google/technology/google-deepmind/antigravity-ai-coding-agent/) — the AI coding agent platform — that provides persistent memory across sessions, projects, and conversations.
+AI agents lose context between sessions. **Knowledge Items (KIs)** are a core feature of [Google Antigravity](https://antigravity.google/docs/knowledge) — the AI coding agent platform — that provides persistent memory across sessions, projects, and conversations.
 
 KIs live **outside** the workspace, in Antigravity's platform-managed KI Store (`~/.gemini/antigravity/knowledge/`). This mirrors PARA Workspace's foundational principle: just as the **repo governs but does not contain** user data, PARA Workspace **governs KI operations** (schema, rules, lifecycle workflows) without owning the storage layer.
 
 ```
-┌───────────────────────────────────────────────────────────────────┐
-│  Antigravity Platform                                             │
-│  ┌─────────────────────────┐    ┌──────────────────────────────┐  │
-│  │  KI Store               │    │  PARA Workspace              │  │
-│  │  ~/.gemini/antigravity/ │◀──│  Governance: schema, rules,  │  │
-│  │  knowledge/             │    │  /knowledge workflow         │  │
-│  │  (platform-managed)     │    │  (workspace-managed)         │  │
-│  └─────────────────────────┘    └──────────────────────────────┘  │
-└───────────────────────────────────────────────────────────────────┘
+Antigravity Platform
+  KI Store                      PARA Workspace
+  ~/.gemini/antigravity/  <──  Governance: schema, rules,
+  knowledge/                    /knowledge workflow
+  (platform-managed)            (workspace-managed)
 ```
 
 ### How It Works

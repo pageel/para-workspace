@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/version-1.7.0-blue.svg)](../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
-[![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://blog.google/technology/google-deepmind/antigravity-ai-coding-agent/)
+[![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
 [🇺🇸 English](../README.md) • [🇻🇳 Tiếng Việt](./README.vi.md)
 
@@ -482,7 +482,7 @@ artifacts/tasks/
 
 ## 📚 Hệ thống Kiến thức (v1.7.0)
 
-AI agent mất context giữa các phiên làm việc. **Knowledge Items (KIs)** là tính năng cốt lõi của [Google Antigravity](https://blog.google/technology/google-deepmind/antigravity-ai-coding-agent/) — nền tảng AI coding agent — cung cấp bộ nhớ bền vững xuyên phiên, xuyên dự án và xuyên cuộc hội thoại.
+AI agent mất context giữa các phiên làm việc. **Knowledge Items (KIs)** là tính năng cốt lõi của [Google Antigravity](https://antigravity.google/docs/knowledge) — nền tảng AI coding agent — cung cấp bộ nhớ bền vững xuyên phiên, xuyên dự án và xuyên cuộc hội thoại.
 
 KIs nằm **bên ngoài** workspace, trong KI Store do Antigravity quản lý (`~/.gemini/antigravity/knowledge/`). Điều này phản ánh nguyên tắc nền tảng của PARA Workspace: cũng như **repo quản trị nhưng không chứa** dữ liệu người dùng, PARA Workspace **quản trị các thao tác KI** (schema, rules, lifecycle workflows) mà không sở hữu tầng lưu trữ.
 

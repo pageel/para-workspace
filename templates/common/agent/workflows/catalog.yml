@@ -202,10 +202,10 @@ items:
 
   - id: knowledge
     name: "Knowledge Manager"
-    version: "1.0.0"
+    version: "1.1.0"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "knowledge.md"
-    description: "Manage Knowledge Items — create, update, audit, archive. Graph-ready schema with domain/purpose taxonomy."
-    tags: ["knowledge", "ki", "governance", "graph"]
+    description: "Manage Knowledge Items — create, update, audit, archive. System KI governed lifecycle: template sync, namespace guard, version alignment."
+    tags: ["knowledge", "ki", "governance", "graph", "system-ki"]
 

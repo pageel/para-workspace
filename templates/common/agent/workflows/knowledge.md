@@ -4,7 +4,7 @@ description: Manage Knowledge Items — dashboard, create, update, audit, archiv
 
 # /knowledge [action] [topic]
 
-> **Workspace Version:** 1.7.0
+> **Workspace Version:** 1.7.1
 > **Scope:** Workspace-level — manage Knowledge Items (KI) for AI agent persistence
 > **Governance:** KR1-KR5 (`rules/knowledge.md`), H10 (`kernel/heuristics.md`)
 
@@ -16,6 +16,7 @@ Manage the AI agent's persistent knowledge base. KIs are curated, distilled know
 KI_ROOT   = ~/.gemini/antigravity/knowledge
 APP_DATA  = ~/.gemini/antigravity
 LOCAL_DIR = .para/knowledge          # Workspace-local index + reports
+REPO_TMPL = repo/templates/knowledge  # System KI templates (source of truth)
 ```
 
 ## Steps
@@ -33,10 +34,13 @@ mkdir -p .para/knowledge/reports
 Parse the command to determine action:
 
 ```
-/knowledge              → Dashboard (Step 1)
-/knowledge [topic]      → Smart Create/Update (Step 3)
-/knowledge audit        → Full Audit (Step 5)
-/knowledge archive [id] → Retire a KI (Step 6)
+/knowledge                       → Dashboard (Step 1)
+/knowledge [topic]               → Smart Create/Update (Step 3)
+/knowledge system [topic]        → System KI Create/Update (Step 3, force system mode)
+/knowledge system update         → Sync system KIs from repo templates (Step 7)
+/knowledge system defaults       → Init all default system KIs (Step 8)
+/knowledge audit                 → Full Audit (Step 5)
+/knowledge archive [id]          → Retire a KI (Step 6)
 ```
 
 If no action or unrecognized → default to **Dashboard**.
@@ -85,29 +89,37 @@ done
 
 #### Render Dashboard
 
+Split KIs into two sections based on `owner` field or slug prefix:
+
 ```
 📚 KNOWLEDGE DASHBOARD
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-| #  | Title                                    | Arts | Refs | Size | Modified   | Health |
-|:---|:-----------------------------------------|:-----|:-----|:-----|:-----------|:-------|
-| 1  | [title]                                  | [N]  | [N✅/M🔴] | [N]K | YYYY-MM-DD | ✅/⚠️/🔴 |
-| 2  | ...                                      |      |      |      |            |        |
+🏛️ SYSTEM KIs (para_*) — managed by PARA v[version]
+| #  | Title               | PARA Ver | Arts | Refs  | Health |
+|:---|:--------------------|:---------|:-----|:------|:-------|
+| 1  | [title]             | [ver]    | [N]  | [N/M] | ✅/⚠️  |
+
+👤 USER KIs — managed by agent/user
+| #  | Title               | Scope | Domain | Refs  | Health |
+|:---|:--------------------|:------|:-------|:------|:-------|
+| 2  | [title]             | [sc]  | [dom]  | [N/M] | ✅/⚠️  |
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📈 STATS: [N] KIs | [N] artifacts total | [N]K total size
-🔄 Last modified: [date] — [KI title]
+📈 STATS: [N] system + [N] user = [N] KIs | [N]K total
 ⚠️ STALE: [N] KIs not updated in 30+ days
 🔴 BROKEN: [N] KIs with invalid references
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 💡 ACTIONS:
-  /knowledge [topic]        — Create or update a KI
-  /knowledge audit          — Full health check + save report
-  /knowledge archive [#]    — Retire a KI
-  /knowledge [#]            — View KI details
+  /knowledge [topic]           — Create or update a user KI
+  /knowledge system [topic]    — Create or update a system KI
+  /knowledge system update     — Sync system KIs from repo templates
+  /knowledge audit             — Full health check + save report
+  /knowledge archive [#]       — Retire a KI
+  /knowledge [#]               — View KI details
 
 ❓ What would you like to do?
 ```
@@ -195,19 +207,33 @@ Read and display the selected KI's full info:
 
 ### 3. ✏️ Smart Create / Update
 
-When user runs `/knowledge [topic]`:
+When user runs `/knowledge [topic]` or `/knowledge system [topic]`:
 
-#### 3a. Detect: Create or Update?
+#### 3a. Detect: Create or Update? + Namespace Gate
 
 ```
-1. Scan all KI titles in metadata.json files
-2. Fuzzy match [topic] against existing titles
-3. IF match score > 70% → propose UPDATE (show matched KI)
-4. ELSE → propose CREATE
-5. Confirm with user before proceeding
+1. Generate slug from topic
+2. Scan all KI titles in metadata.json files
+3. Fuzzy match [topic] against existing titles
+4. IF match score > 70% → propose UPDATE (show matched KI)
+5. ELSE → propose CREATE
+6. NAMESPACE GATE:
+   IF slug starts with "para_" OR action = "system":
+     → SYSTEM KI MODE
+     → Show: "🏛️ System KI detected (para_*). Version alignment required."
+     → Confirm with user (KR2)
+     → IF denied → strip "para_" prefix, route to User KI
+   ELSE:
+     → USER KI MODE
+     → Guard: IF slug somehow starts with "para_" → REJECT
+       "❌ Prefix 'para_' is reserved for System KIs.
+        Use `/knowledge system [topic]` or choose a different name."
+7. Confirm with user before proceeding
 ```
 
-#### 3b. CREATE — New Knowledge Item
+#### 3b. CREATE — User Knowledge Item
+
+> This is the default flow for user KIs (slug does NOT start with `para_`).
 
 ```bash
 # Generate slug from topic
@@ -216,6 +242,14 @@ SLUG=$(echo "[topic]" | tr '[:upper:]' '[:lower:]' | tr ' ' '_' | tr -cd 'a-z0-9
 # Validate slug format (H10.11, KR3)
 if ! echo "$SLUG" | grep -qE '^[a-z0-9_]{3,60}$'; then
   echo "ERROR: Invalid slug '$SLUG'. Must be 3-60 chars, a-z0-9_ only."
+  exit 1
+fi
+
+# GUARD: Reject para_ prefix for user KIs (KR3, H10.10)
+if echo "$SLUG" | grep -qE '^para_'; then
+  echo "❌ Prefix 'para_' is reserved for System KIs."
+  echo "   Use: /knowledge system [topic]"
+  echo "   Or choose a name without 'para_' prefix."
   exit 1
 fi
 
@@ -246,7 +280,8 @@ mkdir -p "$KI_DIR/artifacts"
    ```json
    {
      "title": "[Descriptive Title]",
-     "summary": "[Multi-line summary covering all key topics]",
+     "summary": "[Multi-line summary]",
+     "owner": "user",
      "references": [
        { "type": "file", "value": "/absolute/path" },
        { "type": "conversation_id", "value": "uuid" }
@@ -271,6 +306,86 @@ mkdir -p "$KI_DIR/artifacts"
    📦 Size: [N]K
    📋 Index updated: .para/knowledge/index.md
    ```
+
+#### 3d. CREATE/UPDATE — System Knowledge Item (para_*)
+
+> Triggered when action = `system` OR slug starts with `para_`.
+> System KIs follow governed lifecycle: repo templates → sync → read-mostly.
+
+**System KI Create:**
+
+```bash
+# Enforce para_ prefix
+if ! echo "$SLUG" | grep -qE '^para_'; then
+  SLUG="para_$SLUG"
+fi
+
+# Read PARA version
+PARA_VER=$(grep 'version:' .para-workspace.yml 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"')
+
+KI_DIR="$KI_ROOT/$SLUG"
+TMPL_DIR="$REPO_TMPL/$SLUG"
+```
+
+**Workflow:**
+
+1. **Check template** in `repo/templates/knowledge/{slug}/`:
+   - IF template exists → copy `metadata.json` + `artifacts/` as baseline
+   - IF no template → create fresh with system metadata defaults
+
+2. **Set system metadata:**
+   ```json
+   {
+     "title": "[Descriptive Title]",
+     "summary": "[Multi-line summary]",
+     "version": "1.0",
+     "scope": "workspace",
+     "domain": "workspace",
+     "purpose": "context",
+     "owner": "para",
+     "para_version": "[PARA_VER]",
+     "tags": [],
+     "references": [],
+     "relates_to": [],
+     "code_refs": [],
+     "concepts": []
+   }
+   ```
+
+3. **Ask user**: "Add context from current session? (Y/N)"
+   - IF Y: merge session insights into artifacts
+   - IF N: use template/defaults only
+
+4. **Validate** (same as user KI + system-specific):
+   - `owner` MUST be `"para"`
+   - `para_version` MUST be set
+   - slug MUST start with `para_`
+
+5. **Update local index**
+
+6. **Display confirmation:**
+   ```
+   🏛️ SYSTEM KI CREATED: [Title]
+   📁 Artifacts: [N] files
+   🔗 References: [N] sources
+   🏷️ Owner: para | PARA Version: [ver]
+   📋 Index updated: .para/knowledge/index.md
+   ```
+
+**System KI Update:**
+
+1. Read existing KI metadata → compare `para_version`
+2. IF `para_version` < current PARA version:
+   - Show: `"⚠️ KI outdated (v{old} → v{current}). Recommend full refresh."`
+3. Check template for structural changes
+4. **Merge strategy:**
+   - `metadata.json` fields: template wins (except `references` → merge)
+   - `artifacts/`: template files override matching filenames
+   - User-added artifacts (no template match): KEEP
+   - `references`: union set (keep user refs + add template refs)
+   - `timestamps`: KEEP (system-managed)
+5. Bump `para_version` to current
+6. Update local index
 
 #### 3c. UPDATE — Existing Knowledge Item
 
@@ -435,6 +550,105 @@ When user wants to retire a stale or obsolete KI:
 
 ---
 
+### 7. 🔄 System KI Update (Sync from Templates)
+
+When user runs `/knowledge system update`:
+
+// turbo
+
+```bash
+# Scan repo templates for system KIs
+for tmpl_dir in $REPO_TMPL/para_*/; do
+  [ -d "$tmpl_dir" ] || continue
+  slug=$(basename "$tmpl_dir")
+  tmpl_meta="$tmpl_dir/metadata.json"
+  ki_dir="$KI_ROOT/$slug"
+  ki_meta="$ki_dir/metadata.json"
+  [ -f "$tmpl_meta" ] || continue
+  tmpl_ver=$(grep -o '"para_version": "[^"]*"' "$tmpl_meta" | sed 's/.*"para_version": "//;s/"$//')
+  if [ -d "$ki_dir" ]; then
+    ki_ver=$(grep -o '"para_version": "[^"]*"' "$ki_meta" 2>/dev/null | sed 's/.*"para_version": "//;s/"$//')
+    echo "EXISTS|$slug|$ki_ver|$tmpl_ver"
+  else
+    echo "NEW|$slug|$tmpl_ver"
+  fi
+done
+```
+
+**Workflow:**
+
+1. Read PARA version from workspace
+2. Scan `repo/templates/knowledge/` for all `para_*` template slugs
+3. For each template:
+   - **IF KI exists** in KI Store:
+     - Compare `para_version`
+     - IF template newer: upgrade with merge strategy
+     - IF same version: skip
+   - **IF KI not exists**:
+     - Show: `"✨ New system KI available: {title}"`
+     - Ask: `"Install? (Y/N/All)"`
+4. **Merge strategy** (for upgrades):
+   - `metadata.json`: template wins (except `references` → union merge)
+   - `artifacts/`: template files override matching filenames
+   - User-added artifacts (no template filename match): KEEP
+   - `timestamps`: KEEP (system-managed)
+5. Update local index
+6. Display summary:
+   ```
+   🏛️ SYSTEM KI SYNC COMPLETE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🔄 Updated: [N] ([list slugs])
+   ✨ New:     [N] ([list slugs])
+   ⏭️ Unchanged: [N]
+   📋 Index updated: .para/knowledge/index.md
+   ```
+
+---
+
+### 8. 📦 System KI Defaults Init
+
+When user runs `/knowledge system defaults`:
+
+> Run once on first install, or to restore missing system KIs.
+
+// turbo
+
+```bash
+# Install all template KIs that don't already exist
+for tmpl_dir in $REPO_TMPL/para_*/; do
+  [ -d "$tmpl_dir" ] || continue
+  slug=$(basename "$tmpl_dir")
+  ki_dir="$KI_ROOT/$slug"
+  if [ ! -d "$ki_dir" ]; then
+    echo "INSTALL|$slug"
+  else
+    echo "SKIP|$slug"
+  fi
+done
+```
+
+**Workflow:**
+
+1. Scan all templates in `repo/templates/knowledge/`
+2. For each template:
+   - IF KI exists: **skip** (do NOT overwrite)
+   - IF KI not exists: **install** from template
+3. Set `para_version` = current for all installed
+4. Update local index
+5. Display summary:
+   ```
+   🏛️ SYSTEM KI DEFAULTS INSTALLED
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ✨ Installed: [N] system KIs
+   ⏭️ Skipped:  [N] (already exist)
+   📋 Index updated: .para/knowledge/index.md
+   ```
+
+> **Integration:** `./para install` and `./para update` can call this logic
+> to auto-sync system KIs when updating the workspace.
+
+---
+
 ## `/end` Hook (Optional Enhancement)
 
 > Add as optional step in `/end` workflow — lightweight, not mandatory.
@@ -451,6 +665,7 @@ This session touched:
 Suggestions:
   📝 Update "[KI title]" with today's changes?
   ✨ Create new KI for "[Topic 2]"?
+  🏛️ Update system KI? (if session = para-workspace)
   ⏭️ Skip
 
 (U/C/S)
@@ -479,7 +694,7 @@ Suggestions:
 
 ## Related
 
-- `/brainstorm` — Brainstorm decisions that may become KIs
+- `/brainstorm` — Brainstorm decisions that may become KIs (Option F: system hint)
 - `/end` — Session close with optional KI extraction hook
 - `/learn` — Extract reusable lessons to Areas/Learning
-- `/retro` — Project retrospective with graduation ritual
+- `/retro` — Project retrospective with graduation ritual (system KI hint)

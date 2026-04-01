@@ -114,6 +114,12 @@ EOL
 ---
 EOL
 
+    # Docs template (FEAT-58: modular docs scaffold)
+    mkdir -p "$TARGET/docs"
+    if [ -f "$TMPL/docs/README.md" ]; then
+      sed "s/\[project-name\]/$NAME/g; s/\[Project Name\]/$NAME/g; s/YYYY-MM-DD/$(date +%Y-%m-%d)/g" "$TMPL/docs/README.md" > "$TARGET/docs/README.md"
+    fi
+
     echo "✅ Project '$NAME' created at $TARGET"
     echo ""
     echo "Next steps:"
