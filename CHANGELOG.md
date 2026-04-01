@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.7.1] - 2026-04-01
+
+System KI Governed Lifecycle — namespace guard, template sync, governed defaults.
+
+- **Added**: `/knowledge system [topic]` — create/update system KIs with version alignment.
+- **Added**: `/knowledge system update` — sync system KIs from repo templates (merge-safe).
+- **Added**: `/knowledge system defaults` — init all default system KIs from templates.
+- **Added**: Namespace guard — reject `para_*` prefix for user KIs (KR3).
+- **Added**: KR6 — System KI Governed Lifecycle rule (template source, update sync, merge strategy).
+- **Added**: Dashboard split — System KIs vs User KIs sections.
+- **Changed**: `/brainstorm` Option F — system KI hint for PARA patterns.
+- **Changed**: `/retro` Step 4.5 — system KI hint for cross-project governance.
+- **Changed**: `/end` hook — system KI suggestion for para-workspace sessions.
+- **Changed**: Knowledge workflow `1.0.0` → `1.1.0`, rule `1.0.0` → `1.1.0`.
+- **Added**: `repo/templates/common/docs/README.md` — modular docs scaffold (FEAT-58).
+- **Changed**: `scaffold.sh` — auto-creates `docs/` with template on project creation.
+- **Fixed**: Antigravity badge link 404 (`blog.google` → `antigravity.google`).
+
 ## [1.7.0] - 2026-04-01
 
 Knowledge System — KI schema, `/knowledge` workflow, graph-ready taxonomy.
