@@ -335,6 +335,46 @@ if [ -f "$LIB_SRC/skills.md" ]; then
   fi
 fi
 
+# === 3.5. System KI Defaults (v1.7.1, FEAT-60) ===
+# Ship default system KIs from repo/templates/knowledge/ to KI Store.
+# Only installs if KI doesn't already exist (skip existing = safe).
+KI_TMPL_SRC="$REPO_ROOT/templates/knowledge"
+KI_STORE="${HOME}/.gemini/antigravity/knowledge"
+
+if [ -d "$KI_TMPL_SRC" ]; then
+  ki_installed=0
+  ki_skipped=0
+  ki_total=0
+
+  for tmpl_dir in "$KI_TMPL_SRC"/para_*/; do
+    [ -d "$tmpl_dir" ] || continue
+    slug=$(basename "$tmpl_dir")
+    ki_total=$((ki_total + 1))
+    ki_dest="$KI_STORE/$slug"
+
+    if [ -d "$ki_dest" ]; then
+      ki_skipped=$((ki_skipped + 1))
+    else
+      mkdir -p "$ki_dest/artifacts"
+      # Copy metadata.json
+      if [ -f "$tmpl_dir/metadata.json" ]; then
+        cp "$tmpl_dir/metadata.json" "$ki_dest/metadata.json"
+      fi
+      # Copy artifacts
+      if [ -d "$tmpl_dir/artifacts" ]; then
+        for art_file in "$tmpl_dir/artifacts"/*; do
+          [ -f "$art_file" ] && cp "$art_file" "$ki_dest/artifacts/"
+        done
+      fi
+      ki_installed=$((ki_installed + 1))
+    fi
+  done
+
+  if [ "$ki_total" -gt 0 ]; then
+    echo "🧠 System KI defaults: $ki_installed installed, $ki_skipped skipped (of $ki_total templates)"
+  fi
+fi
+
 # === 4. Sync governance file ===
 # (Luật governance.md giờ đã được cấp phát qua catalog thư viện rules ở Bước 3. Không cần sync cứng nữa).
 
