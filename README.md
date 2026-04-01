@@ -387,31 +387,29 @@ Rules and skills aren't dumped into context all at once. PARA Workspace uses a *
 ### How It Works: Two-Tier Trigger Index (v1.6.2)
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                    /open starts session                      │
-│                                                              │
-│  Step 2.5a: ALWAYS read workspace rules index                │
-│  ┌────────────────────────────────────────────────────┐      │
-│  │  .agent/rules.md  (~20 lines, ~200 tokens)         │      │
-│  │  Agent memorizes triggers → loads rules ON DEMAND  │      │
-│  └────────────────────────────────────────────────────┘      │
-│                                                              │
-│  Step 2.5b: ALWAYS read workspace skills index  (v1.6.2+)    │
-│  ┌────────────────────────────────────────────────────┐      │
-│  │  .agent/skills.md  (~10 lines, ~100 tokens)        │      │
-│  │  Agent memorizes triggers → loads skills ON DEMAND │      │
-│  └────────────────────────────────────────────────────┘      │
-│                                                              │
-│  Step 2.5c: CONDITIONALLY read project agent indices         │
-│  ┌────────────────────────────────────────────────────┐      │
-│  │  Check project.md:                                 │      │
-│  │    agent.rules: true  → project .agent/rules.md    │      │
-│  │    agent.skills: true → project .agent/skills.md   │      │
-│  │    has_rules: true    → backward compat (legacy)   │      │
-│  └────────────────────────────────────────────────────┘      │
-│                                                              │
-│  💡 Total cost: ~350 tokens (vs ~2000 if all loaded)         │
-└──────────────────────────────────────────────────────────────┘
+                     /open starts session
+
+  Step 2.5a: ALWAYS read workspace rules index
+  ┌────────────────────────────────────────────────────┐
+  │  .agent/rules.md  (~20 lines, ~200 tokens)         │
+  │  Agent memorizes triggers → loads rules ON DEMAND  │
+  └────────────────────────────────────────────────────┘
+
+  Step 2.5b: ALWAYS read workspace skills index  (v1.6.2+)
+  ┌────────────────────────────────────────────────────┐
+  │  .agent/skills.md  (~10 lines, ~100 tokens)        │
+  │  Agent memorizes triggers → loads skills ON DEMAND │
+  └────────────────────────────────────────────────────┘
+
+  Step 2.5c: CONDITIONALLY read project agent indices
+  ┌────────────────────────────────────────────────────┐
+  │  Check project.md:                                 │
+  │    agent.rules: true  → project .agent/rules.md    │
+  │    agent.skills: true → project .agent/skills.md   │
+  │    has_rules: true    → backward compat (legacy)   │
+  └────────────────────────────────────────────────────┘
+
+  💡 Total cost: ~350 tokens (vs ~2000 if all loaded)
 ```
 
 ### Defense-in-Depth: 4-Layer Protection
@@ -613,6 +611,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Para-Kit Skill v1.1.0, Recursive Sync & Git Hash Detection _(shipped in v1.6.4)_
 - [x] Update Flow Fix — Version Direction Detection & Migration History _(shipped in v1.6.5)_
 - [x] **Knowledge System — KI schema, /knowledge workflow, graph-ready taxonomy** _(shipped in v1.7.0)_
+- [x] **System KI Governed Lifecycle — namespace guard, template sync, CLI hooks** _(shipped in v1.7.1)_
 - [ ] Department System _(v1.8.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.9.0 — planned)_
 
