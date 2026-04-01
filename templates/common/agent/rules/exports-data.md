@@ -1,3 +1,8 @@
+---
+description: Governance rule for exports-data
+source: catalog
+---
+
 # Data Export Rule
 
 <!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->

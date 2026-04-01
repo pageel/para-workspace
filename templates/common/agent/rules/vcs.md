@@ -1,3 +1,8 @@
+---
+description: Governance rule for vcs
+source: catalog
+---
+
 # Version Control Rules
 
 <!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->

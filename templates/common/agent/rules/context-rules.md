@@ -1,3 +1,8 @@
+---
+description: Governance rule for context-rules
+source: catalog
+---
+
 # Agent Routing & Context Loading
 
 <!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->

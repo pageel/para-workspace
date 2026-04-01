@@ -1,3 +1,8 @@
+---
+description: Governance rule for agent-behavior
+source: catalog
+---
+
 # Agent Behavior & Communication
 
 <!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->

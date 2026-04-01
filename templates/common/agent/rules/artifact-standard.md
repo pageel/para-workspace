@@ -1,3 +1,8 @@
+---
+description: Governance rule for artifact-standard
+source: catalog
+---
+
 # Artifact-Driven Development Standard
 
 <!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->

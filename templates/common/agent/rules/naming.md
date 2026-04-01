@@ -1,3 +1,8 @@
+---
+description: Governance rule for naming
+source: catalog
+---
+
 # Naming Conventions
 
 <!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->

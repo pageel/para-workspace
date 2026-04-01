@@ -1,3 +1,8 @@
+---
+description: Governance rule for para-discipline
+source: catalog
+---
+
 # PARA Discipline
 
 <!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->

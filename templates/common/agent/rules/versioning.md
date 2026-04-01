@@ -1,3 +1,8 @@
+---
+description: Governance rule for versioning
+source: catalog
+---
+
 # Versioning Rule
 
 <!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->

@@ -203,6 +203,51 @@ sync_library() {
     if [ -f "$src_dir/catalog.yml" ]; then
       sync_file "$src_dir/catalog.yml" "$catalog_dest/catalog.yml" || true
     fi
+
+    # === Orphan cleanup (BUG-27, v1.7.0) ===
+    # Remove governed files that no longer exist in repo templates.
+    # Strategy: catalog_dest (Resources/ai-agents/X/) is 100% repo-managed.
+    # If a file exists there but NOT in repo → it's an orphan from a previous sync.
+    # Then also clean the matching file from active_dest (.agent/X/) if it exists
+    # AND is not user-created.
+    local orphan_count=0
+    for catalog_file in "$catalog_dest"/*.md; do
+      [ -f "$catalog_file" ] || continue
+      local cf_name
+      cf_name="$(basename "$catalog_file")"
+
+      # Skip if file still exists in repo template → not orphan
+      [ -f "$src_dir/$cf_name" ] && continue
+
+      # Orphan found in catalog_dest → remove
+      if [ "$DRY_RUN" = true ]; then
+        echo "     → Would remove orphan: $cf_name (catalog)"
+      else
+        backup_file "$catalog_file"
+        rm "$catalog_file"
+      fi
+
+      # Also clean from active_dest, but ONLY if not user-created
+      local active_file="$active_dest/$cf_name"
+      if [ -f "$active_file" ]; then
+        # Skip if user-created (has source: user header)
+        if grep -q 'source:[[:space:]]*user' "$active_file" 2>/dev/null; then
+          continue
+        fi
+        if [ "$DRY_RUN" = true ]; then
+          echo "     → Would remove orphan: $cf_name (active)"
+        else
+          backup_file "$active_file"
+          rm "$active_file"
+        fi
+      fi
+
+      orphan_count=$((orphan_count + 1))
+    done
+
+    if [ "$orphan_count" -gt 0 ]; then
+      echo "   🧹 $orphan_count orphan(s) cleaned from $lib_name"
+    fi
   fi
 
   echo "   ✓ $count $lib_name synced ($updated updated)"

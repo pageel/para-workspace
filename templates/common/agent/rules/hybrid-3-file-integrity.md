@@ -1,3 +1,8 @@
+---
+description: Governance rule for hybrid-3-file-integrity
+source: catalog
+---
+
 # Rule: Hybrid 3-File Integrity
 
 > Agent MUST follow these constraints when working with task files

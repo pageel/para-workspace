@@ -1,3 +1,8 @@
+---
+description: Governance rule for knowledge
+source: catalog
+---
+
 # Knowledge Rules
 
 <!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->
