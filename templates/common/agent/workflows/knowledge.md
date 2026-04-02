@@ -157,17 +157,34 @@ Write the dashboard data to `.para/knowledge/index.md` for quick workspace-level
 > Source: `~/.gemini/antigravity/knowledge/`
 > Path: `{source}/{slug}/` → `metadata.json` + `artifacts/`
 
-| #  | Title | Slug | Owner | Scope | Domain | Purpose | PARA Ver | Arts | Refs | Modified | Health |
-|:---|:------|:-----|:------|:------|:-------|:--------|:---------|:-----|:-----|:---------|:-------|
-| 1  | [title] | [slug] | para/user | ws/proj/eco | [domain] | [purpose] | [ver] | [N] | [N/M] | YYYY-MM-DD | ✅/⚠️/🔴 |
+#  | Title | Slug | Owner | Scope | Domain | Purpose | PARA Ver | Arts | Refs | Modified | Health
+:--|:------|:-----|:------|:------|:-------|:--------|:---------|:-----|:-----|:---------|:------
+1  | [title] | [slug] | para/user | ws/proj/eco | [domain] | [purpose] | [ver] | [N] | [N/M] | YYYY-MM-DD | ✅/⚠️/🔴
 
 > **Key:** Owner: `para` (system) / `user`. Scope: `ws` (workspace) / `proj` / `eco` (ecosystem).
+
+## KI #1: [Title]
+
+📁 `~/.gemini/antigravity/knowledge/[slug]/`
+
+Artifact | Link
+:--------|:----
+[relative/path.md] | [open](file:///absolute/path/to/artifact.md)
+[subdir/file.md]   | [open](file:///absolute/path/to/subdir/file.md)
+
+_(Repeat section for each KI)_
 
 ## Stats
 
 - Total: [N] KIs | [N] artifacts | [N]K
 - Healthy: [N] | Stale: [N] | Critical: [N]
 ```
+
+**Artifact listing rules:**
+- List ALL files under `artifacts/` (recursive `find`)
+- Show path relative to `artifacts/` directory
+- Link uses absolute `file:///` URI so user can click to open
+- Directories shown with trailing `/` (no link)
 
 This index file lets user and agent check KI status without navigating to `~/.gemini/`.
 

@@ -6,7 +6,7 @@
 
 Manages Knowledge Items (KI) — persistent cross-session memory for AI agents. Provides 8 operations: dashboard, create/update (user + system), audit, archive, system sync, and system defaults.
 
-Since v1.7.2, other workflows (`/open`, `/end`, `/plan`...) use **platform-injected KI data** instead of reading `index.md` — reducing I/O and token overhead. `.para/knowledge/index.md` (12 columns) is a **user-facing reference** only.
+Since v1.7.2, other workflows (`/open`, `/end`, `/plan`...) use **platform-injected KI data** instead of reading `index.md` — reducing I/O and token overhead. `.para/knowledge/index.md` (12 columns + per-KI artifact listing with file links) is a **user-facing reference** only.
 
 ## Syntax
 

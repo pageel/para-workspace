@@ -31,7 +31,7 @@ Health     | Condition
 ⚠️ Stale   | Modified 30-90 days, OR ≥1 broken ref
 🔴 Critical| Modified >90 days, OR >50% broken refs
 
-After rendering, automatically saves `.para/knowledge/index.md` (12-column schema).
+After rendering, automatically saves `.para/knowledge/index.md` (12-column schema + per-KI artifact listing with clickable `file:///` links).
 
 ## 2. Smart Create/Update
 
