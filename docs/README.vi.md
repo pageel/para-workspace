@@ -7,7 +7,7 @@
 **Workspace Framework cho Con người & AI Agent**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.2-blue.svg)](../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.3-blue.svg)](../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -613,6 +613,7 @@ Nếu workspace của bạn quá cũ (v1.3.x) hoặc đã bị bạn chỉnh s�
 - [x] **Knowledge System — KI schema, /knowledge workflow, graph-ready taxonomy** _(phát hành v1.7.0)_
 - [x] **System KI Governed Lifecycle — namespace guard, template sync, CLI hooks** _(phát hành v1.7.1)_
 - [x] **KI Index Schema Upgrade, Workflow Simplification & Knowledge Graph Seed** _(phát hành v1.7.2)_
+- [x] **Agent Path Convention Fix (BUG-28) & Rule Frontmatter** _(phát hành v1.7.3)_
 - [ ] Department System _(v1.8.0 — lên kế hoạch)_
 - [ ] Community & Trust Boundary _(v1.9.0 — lên kế hoạch)_
 
@@ -630,4 +631,4 @@ Xem [CONTRIBUTING.md](../CONTRIBUTING.md) để biết hướng dẫn. Điểm c
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.7.2_
+_Phiên bản: 1.7.3_
