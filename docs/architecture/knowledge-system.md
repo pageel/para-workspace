@@ -11,23 +11,19 @@ KIs live **outside** the workspace, in the KI Store managed by the Antigravity p
 ## Architecture
 
 ```text
-┌─────────────────────────────────────────────────────────────────────┐
-│  Antigravity Platform                                               │
-│                                                                     │
-│  ┌─────────────────────────────┐    ┌─────────────────────────────┐ │
-│  │  KI Store                   │    │  PARA Workspace             │ │
-│  │  ~/.gemini/antigravity/     │◀──│  Governance Layer:          │ │
-│  │  knowledge/                 │    │  ├─ ki.schema.json          │ │
-│  │  ├─ {slug}/                 │    │  ├─ heuristics.md (H10)     │ │
-│  │  │  ├─ metadata.json        │    │  ├─ rules/knowledge.md      │ │
-│  │  │  ├─ timestamps.json      │    │  └─ workflows/knowledge.md  │ │
-│  │  │  └─ artifacts/           │    │                             │ │
-│  │  └─ .archived/              │    │  Index Layer:               │ │
-│  │     (retired KIs)           │    │  └─ .para/knowledge/        │ │
-│  │                             │    │     ├─ index.md (12-col)    │ │
-│  │  (platform-managed)         │    │     └─ reports/audit-*.md   │ │
-│  └─────────────────────────────┘    └─────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────┐    ┌─────────────────────────────┐
+│  KI Store                   │    │  PARA Workspace             │
+│  ~/.gemini/antigravity/     │◀──│  Governance Layer:          │
+│  knowledge/                 │    │  ├─ ki.schema.json          │
+│  ├─ {slug}/                 │    │  ├─ heuristics.md (H10)     │
+│  │  ├─ metadata.json        │    │  ├─ rules/knowledge.md      │
+│  │  ├─ timestamps.json      │    │  └─ workflows/knowledge.md  │
+│  │  └─ artifacts/           │    │                             │
+│  └─ .archived/              │    │  Index Layer:               │
+│     (retired KIs)           │    │  └─ .para/knowledge/        │
+│                             │    │     ├─ index.md (12-col)    │
+│  (platform-managed)         │    │     └─ reports/audit-*.md   │
+└─────────────────────────────┘    └─────────────────────────────┘
 ```
 
 ## KI Types
@@ -102,20 +98,14 @@ Full schema: [`kernel/schema/ki.schema.json`](../../kernel/schema/ki.schema.json
 Two-axis classification: **domain** (open) × **purpose** (fixed enum).
 
 ```text
-                  ┌──────────────────────────────────────────────────────┐
-                  │                     PURPOSE                          │
-                  ├──────────────┬──────────────┬─────────────┬──────────┤
-                  │   context    │  reference   │   pitfall   │ playbook │
-     ┌────────────┼──────────────┼──────────────┼─────────────┼──────────┤
-     │ workspace  │ PARA arch    │ kernel specs │ update bugs │ audit    │
-     │ engineering│ tech stack   │ API docs     │ dep gotchas │ deploy   │
-  D  │ operations │ infra setup  │ CI/CD ref    │ env traps   │ rollback │
-  O  │ content    │ writing std  │ style guide  │ SEO traps   │ publish  │
-  M  │ strategy   │ org context  │ roadmap      │ scope creep │ planning │
-  A  │ ...        │              │              │             │          │
-  I  ├────────────┘              │              │             │          │
-  N  │  (open — user-defined)    │              │             │          │
-     └───────────────────────────┴──────────────┴─────────────┴──────────┘
+              context      reference    pitfall     playbook
+            ──────────── ──────────── ─────────── ──────────
+workspace   PARA arch    kernel specs update bugs audit
+engineering tech stack   API docs     dep gotchas deploy
+operations  infra setup  CI/CD ref    env traps   rollback
+content     writing std  style guide  SEO traps   publish
+strategy    org context  roadmap      scope creep planning
+...         (open — user-defined domains)
 ```
 
 ## Knowledge Graph Seed (v1.7.2)
@@ -158,13 +148,13 @@ Validation: **H10** (11 clauses) in `kernel/heuristics.md`.
 ## System KI Template Sync
 
 ```text
-repo/templates/knowledge/     CLI install/update        KI Store
-para_workspace_*/         ──────────────────────→  ~/.gemini/antigravity/
-├─ metadata.json               compare para_version     knowledge/para_*/
-└─ artifacts/                  merge strategy:          ├─ metadata.json
-                               template wins metadata    ├─ timestamps.json
-                               union merge references    └─ artifacts/
-                               keep user artifacts
+repo/templates/knowledge/     CLI install/update       KI Store
+para_workspace_*/         ─────────────────────→  ~/.gemini/antigravity/
+├─ metadata.json              compare para_version    knowledge/para_*/
+└─ artifacts/                 merge strategy:         ├─ metadata.json
+                              template wins metadata   ├─ timestamps.json
+                              union merge references   └─ artifacts/
+                              keep user artifacts
 ```
 
 CLI `update.sh` auto-syncs system KIs when template `para_version` changes.
