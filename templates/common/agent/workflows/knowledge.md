@@ -255,6 +255,17 @@ When user runs `/knowledge [topic]` or `/knowledge system [topic]`:
 
 > This is the default flow for user KIs (slug does NOT start with `para_`).
 
+**Slug naming convention:**
+
+| Scope | Prefix | Example | Use case |
+|:---|:---|:---|:---|
+| Project-specific | `project_` | `project_para_workspace` | Dev patterns, pitfalls for a specific project |
+| Topic/domain | (descriptive) | `astro_migration_patterns` | Cross-project technical knowledge |
+| Tool/tech | (tool name) | `cloudflare_workers_gotchas` | Tool-specific gotchas |
+
+> 💡 **Tip:** For project KIs, use `project_` + project name (kebab→snake).
+> Example: project `my-app` → slug `project_my_app`
+
 ```bash
 # Generate slug from topic
 SLUG=$(echo "[topic]" | tr '[:upper:]' '[:lower:]' | tr ' ' '_' | tr -cd 'a-z0-9_')
