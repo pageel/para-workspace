@@ -117,7 +117,7 @@ Build a **check list** from the changelog. Examples of checks that may be genera
 | :---------------------------------------- | :------------------------------------------------- |
 | Template `backlog.md` changed             | Check all projects' backlog.md for new sections    |
 | Template `done.md` changed                | Check all projects' done.md for new structure      |
-| Rule `hybrid-3-file-integrity.md` updated | Check `.agent/rules.md` index if `agent.rules: true` |
+| Rule `hybrid-3-file-integrity.md` updated | Check `.agents/rules.md` index if `agent.rules: true` |
 | New schema field added                    | Check all `project.md` YAML frontmatter            |
 
 ### 3. Check Project Schema Compliance
@@ -129,7 +129,7 @@ For each project in `Projects/` that has a `project.md`:
 1. Read `project.md` YAML frontmatter.
 2. Compare against expected fields from `kernel/schema/project.schema.json`.
 3. Flag missing fields with suggested default values:
-   - `agent` missing → suggest `agent: { rules: true }` if `.agent/rules/` exists
+   - `agent` missing → suggest `agent: { rules: true }` if `.agents/rules/` exists
    - `has_rules` present → suggest migration to `agent` map (v1.6.2+)
    - `downstream` missing → suggest `[]`
    - `active_plan` missing → suggest `""`
@@ -161,21 +161,21 @@ For each project where `project.md` has `agent.rules: true` (or legacy `has_rule
 
 // turbo
 
-1. Check if `.agent/rules.md` (rules index) exists.
-   - `agent.rules: true` but no `.agent/rules.md` → warn.
-2. If `.agent/rules.md` exists:
+1. Check if `.agents/rules.md` (rules index) exists.
+   - `agent.rules: true` but no `.agents/rules.md` → warn.
+2. If `.agents/rules.md` exists:
    - Extract listed rule filenames.
-   - Compare with actual files in `.agent/rules/` (excluding `catalog.yml`).
+   - Compare with actual files in `.agents/rules/` (excluding `catalog.yml`).
    - Flag: rules in index but missing on disk, rules on disk but not in index.
-3. Reverse check: `.agent/rules.md` exists but `agent.rules` is missing → suggest adding.
+3. Reverse check: `.agents/rules.md` exists but `agent.rules` is missing → suggest adding.
 
 For each project where `project.md` has `agent.skills: true`:
 
-1. Check if `.agent/skills.md` (skills index) exists.
-   - `agent.skills: true` but no `.agent/skills.md` → warn.
-2. If `.agent/skills.md` exists:
+1. Check if `.agents/skills.md` (skills index) exists.
+   - `agent.skills: true` but no `.agents/skills.md` → warn.
+2. If `.agents/skills.md` exists:
    - Extract listed skill names.
-   - Compare with actual directories in `.agent/skills/`.
+   - Compare with actual directories in `.agents/skills/`.
    - Flag: skills in index but missing on disk, skills on disk but not in index.
 
 **Legacy migration check:**
@@ -190,7 +190,7 @@ Verify protected files have inline guard headers per `hybrid-3-file-integrity.md
 ```bash
 echo "=== Guard Coverage ==="
 echo "Kernel:" && grep -rL "⚠️" Resources/ai-agents/kernel/*.md Resources/ai-agents/kernel/schema/*.md Resources/ai-agents/kernel/examples/tasks/*.md 2>/dev/null | head -5
-echo "Rules:" && grep -rL "⚠️" .agent/rules/*.md 2>/dev/null | head -5
+echo "Rules:" && grep -rL "⚠️" .agents/rules/*.md 2>/dev/null | head -5
 echo "Tasks:" && for p in Projects/*/artifacts/tasks; do grep -rL "⚠️" "$p"/*.md 2>/dev/null; done | head -10
 ```
 
@@ -256,7 +256,7 @@ Display an inline report (do NOT create a separate file — this is a quick chec
 🔒 RULES INDEX:
 | Project   | Issue                     | Suggested Action         |
 | --------- | ------------------------- | ------------------------ |
-| project-a | rules.md ≠ disk           | Update `.agent/rules.md` |
+| project-a | rules.md ≠ disk           | Update `.agents/rules.md` |
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 💡 SUGGESTED ACTIONS:

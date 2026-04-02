@@ -1,6 +1,7 @@
 ---
-description: Governance rule for hybrid-3-file-integrity
-source: catalog
+description: Hybrid 3-File task management integrity (backlog, sprint-current, done)
+trigger: always_on
+glob: artifacts/tasks/*
 ---
 
 # Rule: Hybrid 3-File Integrity
@@ -72,7 +73,7 @@ Protected files SHOULD include an inline HTML guard comment. Agent MUST read and
 | **TASK** | `artifacts/tasks/` | `<!-- ⚠️ HOT LANE ONLY — No backlog tasks here (C1) -->` |
 | **TASK** | `artifacts/tasks/` | `<!-- ⚠️ OPERATIONAL AUTHORITY — Mutations via /backlog only (C3) -->` |
 | **KERNEL** | `kernel/`, `Resources/ai-agents/kernel/` | `<!-- ⚠️ READ-ONLY SNAPSHOT — Do NOT modify (I9) -->` |
-| **GOVERNED** | `.agent/rules/` | `<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->` |
+| **GOVERNED** | `.agents/rules/` | `<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->` |
 | **WORKSPACE** | `Areas/Workspace/` | `<!-- ⚠️ APPEND-ONLY — via /end only -->` |
 
 **Position convention:**

@@ -6,7 +6,7 @@ The v1.7.x generation builds on v1.6.x "Central Gate" with the **Knowledge Syste
 
 A fundamental principle: the **4 Primary Multi-Project Pillars** (Projects, Areas, Resources, Archives) belong exclusively to the user.
 
-- **System Separation:** All system configs, metadata, logs, and temporary states reside in hidden/dedicated system directories (`.para/`, `.agent/`).
+- **System Separation:** All system configs, metadata, logs, and temporary states reside in hidden/dedicated system directories (`.para/`, `.agents/`).
 - **Orphan Management:** Deprecated system files → `.para/archive/[version]-orphans/`, never the user's `Archive/`.
 - **No Loose Files (I8):** Every file belongs to P/A/R/Archive. Root only has approved config: `.para-workspace.yml`.
 
@@ -118,7 +118,7 @@ ELSE (local):
 ### Workspace Level (ALWAYS loaded by `/open`)
 
 ```
-.agent/
+.agents/
 ├── rules.md          # Workspace rules trigger index (10 rules)
 ├── rules/            # Rule files (loaded on-demand by trigger)
 ├── skills.md         # Workspace skills trigger index (2 skills)
@@ -132,7 +132,7 @@ ELSE (local):
 ### Project Level (CONDITIONAL — gated by `agent.rules` / `agent.skills`)
 
 ```
-Projects/<slug>/.agent/
+Projects/<slug>/.agents/
 ├── rules.md          # Project rules trigger index
 └── rules/            # Project-specific rule files
 ```
@@ -182,7 +182,7 @@ Located at `Areas/Workspace/SYNC.md`, tracks cross-project notifications:
 Workflows, Rules, and Skills managed via `catalog.yml`:
 
 - **Centralized Registry:** Each category has a `catalog.yml` at its root
-- **Snapshot Sync:** `para install` syncs read-only snapshot to `Resources/ai-agents/` and customizable version to `.agent/`
+- **Snapshot Sync:** `para install` syncs read-only snapshot to `Resources/ai-agents/` and customizable version to `.agents/`
 - **Validation:** CLI validates `kernel_min`/`kernel_max` before syncing; incompatible items skipped with warning
 - **Required fields:** id, name, version, kernel_min, entrypoint, description
 

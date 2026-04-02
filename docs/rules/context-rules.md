@@ -17,8 +17,8 @@ Governs how the agent loads and prioritizes context within the workspace. Define
 MUST load context in this sequence (highest priority first):
 
 1. **Project Contract** — `Projects/<project>/project.md`
-2. **Project Rules** — `Projects/<project>/.agent/rules/`
-3. **Workspace Rules** — `.agent/rules/`
+2. **Project Rules** — `Projects/<project>/.agents/rules/`
+3. **Workspace Rules** — `.agents/rules/`
 4. **Artifacts** — `Projects/<project>/artifacts/`
 5. **Active Memory** — `Projects/<project>/.beads/`
 6. **Abstract Knowledge** — `Areas/`
@@ -33,13 +33,13 @@ MUST load context in this sequence (highest priority first):
 
 ### 3. Beads Lifecycle
 
-Beads capture project-specific decisions, failures, and quirks in `Projects/<project>/.beads/`. Allowed to be messy and partial during active development. MUST perform "Graduation Review" before archiving — move valuable knowledge to `Areas/`, `Resources/`, or `.agent/rules/`.
+Beads capture project-specific decisions, failures, and quirks in `Projects/<project>/.beads/`. Allowed to be messy and partial during active development. MUST perform "Graduation Review" before archiving — move valuable knowledge to `Areas/`, `Resources/`, or `.agents/rules/`.
 
 ### 4. Rules Loading — Two-Tier Progressive Disclosure
 
-**Tier 1 (ALWAYS):** Read `.agent/rules.md` (~20 lines, ~200 tokens). Memorize trigger table, load rule files on demand.
+**Tier 1 (ALWAYS):** Read `.agents/rules.md` (~20 lines, ~200 tokens). Memorize trigger table, load rule files on demand.
 
-**Tier 2 (CONDITIONAL):** Check `Projects/<project>/.agent/rules.md`. If exists, read index and load rules when triggers match. If missing, skip.
+**Tier 2 (CONDITIONAL):** Check `Projects/<project>/.agents/rules.md`. If exists, read index and load rules when triggers match. If missing, skip.
 
 **Standard index format:**
 

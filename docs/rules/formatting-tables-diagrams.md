@@ -15,7 +15,7 @@ The `formatting-tables-diagrams` rule defines how AI agents format tables, diagr
 
 ### When is this rule loaded?
 
-Triggered via `.agent/rules.md` when the agent:
+Triggered via `.agents/rules.md` when the agent:
 
 | Trigger | Operation |
 |:--------|:----------|
@@ -57,7 +57,7 @@ Max 3-4 options as columns with standardized status icons (✅ ❌ 🟡 🔴 �
 ## Loading
 
 - **Token cost:** ~800 tokens (single file, no dependencies)
-- **Mechanism:** On-demand via `.agent/rules.md` trigger index
+- **Mechanism:** On-demand via `.agents/rules.md` trigger index
 - **Frequency:** When creating tables, diagrams, or tree listings
 
 ## Quick Checklist

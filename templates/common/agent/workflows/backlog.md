@@ -29,8 +29,8 @@ Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/ba
 
 > **Layer 3 defense:** Re-read indices to guard against attention decay.
 
-1. Re-read `.agent/rules.md` (workspace rules index)
-2. Re-read `.agent/skills.md` (workspace skills index)
+1. Re-read `.agents/rules.md` (workspace rules index)
+2. Re-read `.agents/skills.md` (workspace skills index)
 3. Check `project.md` for `agent.rules` / `agent.skills` — if true, re-read project indices too
 
 ---

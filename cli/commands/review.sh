@@ -60,7 +60,7 @@ if [ -d "$AGENT_DIR" ]; then
     echo "  ✅ Runtime Rules: $rule_count installed"
     echo "  ✅ Runtime Workflows: $work_count installed"
 else
-    echo "  ❌ ERROR: .agent/ directory missing at root"
+    echo "  ❌ ERROR: .agents/ directory missing at root"
 fi
 
 echo "------------------------------------------"

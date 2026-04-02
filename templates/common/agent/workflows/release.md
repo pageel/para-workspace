@@ -15,7 +15,7 @@ Pre-merge quality gate for production readiness.
 
 // turbo
 
-Re-read `.agent/rules.md` to ensure rules context is loaded (guard against context truncation).
+Re-read `.agents/rules.md` to ensure rules context is loaded (guard against context truncation).
 
 ### 1. Linting & Formatting
 

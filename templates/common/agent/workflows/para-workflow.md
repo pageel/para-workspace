@@ -23,7 +23,7 @@ Specialized workflow to manage, install, and standardize AI Agent workflows with
 
 ## 📋 Action: list
 
-Compare workflows currently active in `.agent/workflows/` against the governed catalog.
+Compare workflows currently active in `.agents/workflows/` against the governed catalog.
 
 ### Steps
 
@@ -32,8 +32,8 @@ Compare workflows currently active in `.agent/workflows/` against the governed c
 **Step 1.** List active workflows:
 
 ```bash
-echo "🚀 ACTIVE WORKFLOWS (.agent/workflows):"
-ls -1 .agent/workflows/*.md 2>/dev/null | xargs -I{} basename {} .md | sort
+echo "🚀 ACTIVE WORKFLOWS (.agents/workflows):"
+ls -1 .agents/workflows/*.md 2>/dev/null | xargs -I{} basename {} .md | sort
 echo ""
 ```
 
@@ -59,7 +59,7 @@ Read the file at the **catalog source** (one of these, in priority order):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-- **✅ Installed**: File exists in `.agent/workflows/`.
+- **✅ Installed**: File exists in `.agents/workflows/`.
 - **⚠️ Not installed**: Entry in catalog but missing from active directory.
 - **🔶 Untracked**: File exists locally but is NOT in the catalog (user-created).
 
@@ -71,7 +71,7 @@ Create a new PARA-compliant workflow from scratch.
 
 ### Steps
 
-1. **Create file**: `.agent/workflows/[name].md`
+1. **Create file**: `.agents/workflows/[name].md`
 2. **Apply standard template**:
 
 ```markdown
@@ -115,7 +115,7 @@ Upgrade an existing workflow to the latest PARA v1.4.1 standards.
 
 ### Checklist
 
-The agent will read `.agent/workflows/[name].md` and apply fixes for each item:
+The agent will read `.agents/workflows/[name].md` and apply fixes for each item:
 
 | #   | Check                    | Rule                                                          |
 | --- | ------------------------ | ------------------------------------------------------------- |
@@ -151,13 +151,13 @@ The agent will read `.agent/workflows/[name].md` and apply fixes for each item:
 
 ## 🚀 Action: install [name]
 
-Install a workflow from the governed catalog into `.agent/workflows/`.
+Install a workflow from the governed catalog into `.agents/workflows/`.
 
 ### Steps
 
 1. **Resolve source**: Find the workflow file in the catalog source directory.
-2. **Check conflict**: If `.agent/workflows/[name].md` already exists, delegate to `/install` workflow for conflict resolution (Overwrite / Merge / Rename / Cancel).
-3. **Copy**: Install the file into `.agent/workflows/[name].md`.
+2. **Check conflict**: If `.agents/workflows/[name].md` already exists, delegate to `/install` workflow for conflict resolution (Overwrite / Merge / Rename / Cancel).
+3. **Copy**: Install the file into `.agents/workflows/[name].md`.
 4. **Report**: Confirm installation with version info from `catalog.yml`.
 
 > **Note:** For complex merge scenarios, use `/merge` workflow directly.
@@ -170,7 +170,7 @@ Check a workflow for PARA compliance without making changes.
 
 ### Steps
 
-1. Read `.agent/workflows/[name].md`.
+1. Read `.agents/workflows/[name].md`.
 2. Run the **standardize checklist** (read-only mode).
 3. Output a compliance report:
 

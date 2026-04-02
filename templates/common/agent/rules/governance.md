@@ -1,6 +1,7 @@
 ---
 description: Kernel Governance Invariants and Scope Restrictions
-source: catalog
+trigger: always_on
+glob: kernel/*, .para/*, Resources/ai-agents/*
 ---
 
 <!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->

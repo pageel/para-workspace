@@ -31,7 +31,7 @@ workspace/
 │   │   └── workflows/
 │   └── references/                     # Competitor analysis, inspiration, templates
 ├── Archive/                            # ❄️ Completed campaigns & retired strategies
-├── .agent/                             # Agent runtime (auto-installed)
+├── .agents/                             # Agent runtime (auto-installed)
 │   ├── rules/
 │   └── workflows/
 ├── .para-workspace.yml
@@ -57,7 +57,7 @@ workspace/
 
 ## 📜 Active Rules
 
-After `para init`, the following rules are installed in `.agent/rules/`:
+After `para init`, the following rules are installed in `.agents/rules/`:
 
 - **`governance.md`** — Core PARA discipline (invariants + heuristics)
 

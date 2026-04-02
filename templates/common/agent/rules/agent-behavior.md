@@ -1,6 +1,7 @@
 ---
-description: Governance rule for agent-behavior
-source: catalog
+description: Agent communication, formatting, context recovery after truncation
+trigger: always_on
+glob:
 ---
 
 # Agent Behavior & Communication
@@ -33,17 +34,17 @@ source: catalog
 - **MUST** perform a verification step (`npm run build` or test) after every code change, unless the user explicitly requests `--quick`.
 - **MUST NOT** `git commit` or `git push` without user confirmation, unless explicitly running a trusted workflow (`/push`, `/release`).
 - **MUST** check the build result before reporting "Done".
-- **SHOULD** prioritize using defined workflows in `.agent/workflows/` over ad-hoc commands.
+- **SHOULD** prioritize using defined workflows in `.agents/workflows/` over ad-hoc commands.
 - **SHOULD** ask the user instead of assuming when uncertain.
 
 ### 4. Context Recovery
 
 When context appears incomplete (cannot recall loaded rules, received truncation/checkpoint notice, or conversation has been very long):
 
-1. **MUST** re-read `.agent/rules.md` (workspace rules index) before performing any side-effect.
-2. **MUST** re-read `.agent/skills.md` (workspace skills index, v1.6.2+) before performing any side-effect.
-3. **MUST** re-read project `.agent/rules.md` (if exists) before project-specific actions.
-4. **MUST** re-read project `.agent/skills.md` (if exists) before project-specific actions.
+1. **MUST** re-read `.agents/rules.md` (workspace rules index) before performing any side-effect.
+2. **MUST** re-read `.agents/skills.md` (workspace skills index, v1.6.2+) before performing any side-effect.
+3. **MUST** re-read project `.agents/rules.md` (if exists) before project-specific actions.
+4. **MUST** re-read project `.agents/skills.md` (if exists) before project-specific actions.
 5. **SHOULD** inform user: "Context recovery — re-loaded rules + skills indices."
 
 **Proactive Trigger Check (v1.6.2+):**
@@ -72,7 +73,7 @@ When editing these files **directly** (outside of a workflow), agent **MUST** re
 | :------------------------ | :------------------------------ |
 | `artifacts/tasks/done.md` | `hybrid-3-file-integrity.md` C2 |
 | `artifacts/tasks/*.md`    | `hybrid-3-file-integrity.md`    |
-| `.agent/rules/*.md`       | `governance.md`                 |
+| `.agents/rules/*.md`       | `governance.md`                 |
 | `kernel/`, `.para/`       | `governance.md`                 |
 
 > **Why:** Workflows enforce rules via Step 0 Pre-flight, but direct file edits bypass that guard. This table ensures rule compliance even without a workflow.

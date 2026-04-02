@@ -43,15 +43,15 @@ Field        | Required | Description
 
 1. `para update` → pulls new repo
 2. `para install` → reads catalogs, validates `kernel_min`/`kernel_max`
-3. Files projected into workspace: read-only snapshot → `Resources/ai-agents/`, customizable → `.agent/`
+3. Files projected into workspace: read-only snapshot → `Resources/ai-agents/`, customizable → `.agents/`
 4. Incompatible items skipped with clear warning
 
 ## 4. Agent Protocol (v1.6.2+)
 
 ### Two-Level Index System
 
-- **Workspace level:** `.agent/rules.md` + `.agent/skills.md` — ALWAYS loaded by `/open`
-- **Project level:** `Projects/<slug>/.agent/rules.md` — CONDITIONAL, gated by `agent.rules: true` in project.md
+- **Workspace level:** `.agents/rules.md` + `.agents/skills.md` — ALWAYS loaded by `/open`
+- **Project level:** `Projects/<slug>/.agents/rules.md` — CONDITIONAL, gated by `agent.rules: true` in project.md
 
 ### Trigger Table Format
 
@@ -74,7 +74,7 @@ BEFORE any side-effect action:
 ### Agent Recovery
 
 If rules/skills forgotten after context truncation:
-- Re-read `.agent/rules.md` + `.agent/skills.md`
+- Re-read `.agents/rules.md` + `.agents/skills.md`
 - Re-read project rules if `agent.rules: true`
 
 ## 5. Rules Library (10 workspace rules)

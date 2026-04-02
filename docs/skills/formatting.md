@@ -56,7 +56,7 @@ C5  | Long URLs                | Use reference links `[text][ref]` for URLs > 40
 ## Structure
 
 ```text
-.agent/skills/formatting/
+.agents/skills/formatting/
 └── SKILL.md              # Single file — constraints + templates
 ```
 
@@ -66,7 +66,7 @@ Location                                  | Role           | Updated by
 :-----------------------------------------|:---------------|:-------------------------
 `repo/templates/common/agent/skills/`     | Source of Truth | Developer (git push)
 `Resources/ai-agents/skills/formatting/`  | Read-only (I9) | `para install` / `update`
-`.agent/skills/formatting/`               | Active copy    | `para install` / `update`
+`.agents/skills/formatting/`               | Active copy    | `para install` / `update`
 
 ---
 

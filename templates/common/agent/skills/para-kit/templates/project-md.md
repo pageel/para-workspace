@@ -15,8 +15,8 @@ roadmap: ~                  # ✅ Relative path to roadmap plan (~ = none)
 
 # Agent configuration (v1.6.2+ — replaces deprecated has_rules)
 agent:
-  rules: false              # ✅ true if .agent/rules/ exists with project rules
-  skills: false             # ✅ true if .agent/skills/ exists with project skills
+  rules: false              # ✅ true if .agents/rules/ exists with project rules
+  skills: false             # ✅ true if .agents/skills/ exists with project skills
 
 # Ecosystem (v1.6.0+)
 # type: standard            # standard (default) | ecosystem

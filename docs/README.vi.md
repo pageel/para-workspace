@@ -112,7 +112,7 @@ para-workspace/
 │   └── references/                    # Repo PARA chính thức (chỉ-đọc)
 ├── Archive/                           # Lưu trữ lạnh cho các dự án đã hoàn tất
 ├── _inbox/                            # Vùng đệm tạm thời để hứng dữ liệu ngoài tải về nhanh
-├── .agent/                            # Thư viện hệ thống Governed Library (Tự động đồng bộ lên)
+├── .agents/                            # Thư viện hệ thống Governed Library (Tự động đồng bộ lên)
 │   ├── rules.md                       # Workspace Rules Trigger Index (luôn được load)
 │   ├── skills.md                      # Workspace Skills Trigger Index (v1.6.2+)
 │   ├── rules/                         # Các quy tắc kỹ năng (.md) cho Agent
@@ -141,8 +141,8 @@ para-workspace/
 
 | Nền tảng           | Điểm tích hợp                  | Trạng thái         | Ghi chú                                         |
 | :----------------- | :----------------------------- | :----------------- | :---------------------------------------------- |
-| Google Antigravity | `.agent/` (skills, workflows)  | ✅ Verified        | Thiết kế và test chuyên cho nền tảng này        |
-| Claude Code        | CLAUDE.md + `.agent/`          | ⚪ Chưa kiểm chứng | Có thể đọc `.agent/rules/` — cần xác nhận       |
+| Google Antigravity | `.agents/` (skills, workflows)  | ✅ Verified        | Thiết kế và test chuyên cho nền tảng này        |
+| Claude Code        | CLAUDE.md + `.agents/`          | ⚪ Chưa kiểm chứng | Có thể đọc `.agents/rules/` — cần xác nhận       |
 | Cursor             | `.cursor/rules/`               | ⚪ Chưa test       | Lý thuyết: copy rules sang `.cursor/rules/`     |
 | VS Code + Copilot  | `.github/copilot-instructions` | ⚪ Chưa test       | Lý thuyết: chỉ instructions, không auto-trigger |
 
@@ -238,10 +238,10 @@ cd ..\..\..
 - ✅ Tạo `Projects/`, `Areas/`, `Resources/`, `Archive/`, và `_inbox/`
 - ✅ Cấp **quyền thực thi** cho tất cả CLI scripts
 - ✅ Tự động chạy **`install.sh`**, bao gồm:
-  - Đồng bộ **governed workflows** từ `catalog.yml` vào `.agent/workflows/`
-  - Đồng bộ **governed rules** từ `catalog.yml` vào `.agent/rules/`
-  - Đồng bộ **workspace rules index** vào `.agent/rules.md` (trigger index)
-  - Đồng bộ **skills** vào `.agent/skills/` (tuỳ profile)
+  - Đồng bộ **governed workflows** từ `catalog.yml` vào `.agents/workflows/`
+  - Đồng bộ **governed rules** từ `catalog.yml` vào `.agents/rules/`
+  - Đồng bộ **workspace rules index** vào `.agents/rules.md` (trigger index)
+  - Đồng bộ **skills** vào `.agents/skills/` (tuỳ profile)
   - Tạo **`./para`** wrapper tại workspace root
   - Sao lưu file xung đột thành `.bak`
 - ✅ Tạo **`.para-workspace.yml`** với tracking phiên bản kernel
@@ -391,7 +391,7 @@ Rules không bị nhồi nhét vào context cùng lúc. PARA Workspace sử dụ
 
   Step 2.5a: LUÔN đọc workspace rules index
   ┌───────────────────────────────────────────────────┐
-  │  .agent/rules.md  (~20 dòng, ~200 tokens)         │
+  │  .agents/rules.md  (~20 dòng, ~200 tokens)         │
   │  ┌────────────┬──────────────────┬─────┐          │
   │  │ governance │ Chạm kernel/     │ 🔴  │          │
   │  │ vcs        │ Git operations   │ 🔴  │          │
@@ -404,7 +404,7 @@ Rules không bị nhồi nhét vào context cùng lúc. PARA Workspace sử dụ
 
   Step 2.5b: CÓ ĐIỀU KIỆN đọc project rules index
   ┌───────────────────────────────────────────────────┐
-  │  Projects/<tên>/.agent/rules.md  (~5-10 dòng)     │
+  │  Projects/<tên>/.agents/rules.md  (~5-10 dòng)     │
   │  Chỉ khi project.md có: has_rules: true           │
   │  Thêm trigger riêng project lên trên global       │
   └───────────────────────────────────────────────────┘
@@ -440,7 +440,7 @@ Hội thoại dài → Context window bị cắt → Agent mất rules
                        │                        │
                   Lớp 3 bắt kịp:          Lớp 4 bắt kịp:
                   Step 0 đọc lại         <!-- ⚠️ APPEND-ONLY -->
-                  .agent/rules.md        nhắc ràng buộc C2
+                  .agents/rules.md        nhắc ràng buộc C2
                        │                        │
                   VCS rules loaded         Agent tuân thủ
                   → commit an toàn         → chỉ append ✅

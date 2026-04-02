@@ -45,7 +45,7 @@ Non-goals:
 - Repo authors maintain libraries once, in one place, via PR review.
 - Workspace users run `para init` and get a consistent runtime with pinned
   library snapshots.
-- Agents load runtime workflows/rules from `.agent/`, and may reference
+- Agents load runtime workflows/rules from `.agents/`, and may reference
   read-only copies from `Resources/ai-agents/`.
 
 ## Reference-level specification
@@ -95,7 +95,7 @@ Resources/ai-agents/
 Runtime (mutable, managed by CLI):
 
 ```
-.agent/
+.agents/
   workflows/   → catalog.yml + *.md
   rules/       → catalog.yml + *.md
   skills/      → catalog.yml + para-kit/ (optional, default OFF)
@@ -105,9 +105,9 @@ Runtime (mutable, managed by CLI):
 
 Installer MUST:
 
-1. Copy `templates/common/agent/workflows` → `Resources/ai-agents/workflows` + `.agent/workflows`
-2. Copy `templates/common/agent/rules` → `Resources/ai-agents/rules` + `.agent/rules`
-3. Copy `templates/common/agent/skills` → `Resources/ai-agents/skills` + `.agent/skills` (optional)
+1. Copy `templates/common/agent/workflows` → `Resources/ai-agents/workflows` + `.agents/workflows`
+2. Copy `templates/common/agent/rules` → `Resources/ai-agents/rules` + `.agents/rules`
+3. Copy `templates/common/agent/skills` → `Resources/ai-agents/skills` + `.agents/skills` (optional)
 
 Compatibility gate:
 
@@ -125,7 +125,7 @@ Keeps governance assets centralized while preserving Repo ≠ Workspace.
 1. Keep workflows in repo root `workflows/` and rules/skills elsewhere
    → Rejected: increases cognitive load, complicates versioning
 
-2. Put everything directly under `.agent/` only
+2. Put everything directly under `.agents/` only
    → Rejected: loses read-only reference snapshot for auditability
 
 3. No catalogs, only file conventions
@@ -137,7 +137,7 @@ Keeps governance assets centralized while preserving Repo ≠ Workspace.
 2. ✅ Repo: add `kernel/schema/catalog.schema.json`
 3. ✅ CLI: update `install.sh` to sync rules + skills (v1.4.1) — implemented with `sync_library()` function
 4. ✅ CLI: add `cli/lib/validator.sh` (catalog parse + kernel compat check) — `validate_catalog()` + `validate_all_catalogs()`
-5. ⏳ Deferred: `para status` **exists** but library drift reporting (version comparison across `.agent/` vs `Resources/ai-agents/`) not yet added
+5. ⏳ Deferred: `para status` **exists** but library drift reporting (version comparison across `.agents/` vs `Resources/ai-agents/`) not yet added
 
 ## Migration plan
 
@@ -145,7 +145,7 @@ Keeps governance assets centralized while preserving Repo ≠ Workspace.
 
 - Creates `Resources/ai-agents/rules/` and `skills/` if missing
 - Backfills catalogs with minimal entries
-- Leaves existing `.agent/` content intact unless `--force`
+- Leaves existing `.agents/` content intact unless `--force`
 
 ## Testing plan
 
@@ -155,7 +155,7 @@ Keeps governance assets centralized while preserving Repo ≠ Workspace.
 
 ## Unresolved questions
 
-- ~~Do skills need runtime loading from `.agent/skills/` by default, or compiled
-  into workflows at install time?~~ **Resolved (v1.5.0):** Skills are installed to `.agent/skills/` but default OFF. Agents load via `SKILL.md` on-demand when skill is relevant.
+- ~~Do skills need runtime loading from `.agents/skills/` by default, or compiled
+  into workflows at install time?~~ **Resolved (v1.5.0):** Skills are installed to `.agents/skills/` but default OFF. Agents load via `SKILL.md` on-demand when skill is relevant.
 - Should catalogs store checksums for drift detection? **Open** — deferred alongside `para status` drift reporting.
-- ~~What is the policy for workspace-local overrides (e.g., `.agent/rules.local.md`)?~~ **Resolved (v1.5.0):** Project-level rules live in `Projects/<project>/.agent/rules/` with a `rules.md` index. No `.local.md` convention needed.
+- ~~What is the policy for workspace-local overrides (e.g., `.agents/rules.local.md`)?~~ **Resolved (v1.5.0):** Project-level rules live in `Projects/<project>/.agents/rules/` with a `rules.md` index. No `.local.md` convention needed.

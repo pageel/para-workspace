@@ -19,7 +19,7 @@ Load both files → Semantic analysis → Intelligent merge → Backup & apply �
 
 ### 1. Load Context
 
-Reads both the local (`.agent/workflows/[target].md`) and catalog versions of the workflow.
+Reads both the local (`.agents/workflows/[target].md`) and catalog versions of the workflow.
 
 ### 2. Semantic Analysis
 

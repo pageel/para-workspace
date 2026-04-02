@@ -30,7 +30,7 @@ Fast commit and push changes to GitHub with verification.
 
 // turbo
 
-Re-read `.agent/rules.md` to ensure rules context is loaded (guard against context truncation).
+Re-read `.agents/rules.md` to ensure rules context is loaded (guard against context truncation).
 
 ### 1. Check Git Status
 
@@ -55,7 +55,7 @@ git ls-files | grep -E '\.(env|pem|key|sqlite|db)$|id_rsa|credentials|secrets|\.
 
 **If issues are found:**
 
-- Missing ignore file → Create template (see `.agent/rules/vcs.md`)
+- Missing ignore file → Create template (see `.agents/rules/vcs.md`)
 - Sensitive files found → STOP and warn user
 
 ### 3. (Optional) Build & Test

@@ -35,8 +35,8 @@ Defines how the agent communicates, handles language settings, and self-recovers
 
 When context appears incomplete (cannot recall rules, truncation notice, or very long conversation):
 
-1. MUST re-read `.agent/rules.md` (workspace index) before any side-effect.
-2. MUST re-read project `.agent/rules.md` (if exists) before project-specific actions.
+1. MUST re-read `.agents/rules.md` (workspace index) before any side-effect.
+2. MUST re-read project `.agents/rules.md` (if exists) before project-specific actions.
 3. SHOULD inform user: "Context recovery — re-loaded rules index."
 
 **Side-effects requiring rules re-read:** Git operations, file deletion/move/rename outside project, install/deploy commands, system config changes.
@@ -49,7 +49,7 @@ When editing these files directly (outside a workflow), agent MUST re-read the c
 |:-------------|:-------------|
 | `artifacts/tasks/done.md` | `hybrid-3-file-integrity.md` C2 |
 | `artifacts/tasks/*.md` | `hybrid-3-file-integrity.md` |
-| `.agent/rules/*.md` | `governance.md` |
+| `.agents/rules/*.md` | `governance.md` |
 | `kernel/`, `.para/` | `governance.md` |
 
 Workflows enforce rules via Step 0 Pre-flight, but direct edits bypass that guard. Project rules MAY define additional file guards.

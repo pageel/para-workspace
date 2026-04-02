@@ -8,7 +8,7 @@
 
 ### When is the skill loaded?
 
-Para-Kit is triggered via `.agent/skills.md` when the agent needs to:
+Para-Kit is triggered via `.agents/skills.md` when the agent needs to:
 
 | Trigger | Example operations |
 |:--------|:-------------------|
@@ -33,7 +33,7 @@ Compare: Reading full kernel (`KERNEL.md` + `invariants.md` + `heuristics.md`) c
 ## File Structure
 
 ```
-.agent/skills/para-kit/
+.agents/skills/para-kit/
 ├── SKILL.md                           # Main doc — structure reference + QRC
 ├── templates/
 │   └── project-md.md                  # Full project.md template (all fields v1.6.3)
@@ -47,7 +47,7 @@ Compare: Reading full kernel (`KERNEL.md` + `invariants.md` + `heuristics.md`) c
 |:---------|:-----|:-----------|
 | `repo/templates/common/agent/skills/para-kit/` | Source of Truth | Developer (git push) |
 | `Resources/ai-agents/skills/para-kit/` | Read-only snapshot (I9) | `para install` / `para update` |
-| `.agent/skills/para-kit/` | Active copy (agent reads) | `para install` / `para update` |
+| `.agents/skills/para-kit/` | Active copy (agent reads) | `para install` / `para update` |
 
 > **Note:** Since v1.6.4, `install.sh` uses `sync_directory_recursive()` to sync the **entire directory tree** — including `templates/` and `examples/` inside the skill folder.
 
@@ -61,7 +61,7 @@ SKILL.md is designed as a **lean structure reference** with 5 sections:
 
 Workspace structure map:
 - **4 Pillars**: Projects, Areas, Resources, Archive — each with a one-line explanation.
-- **Standard Project Layout**: canonical directory tree (project.md, repo/, sessions/, artifacts/, docs/, .agent/, .beads/).
+- **Standard Project Layout**: canonical directory tree (project.md, repo/, sessions/, artifacts/, docs/, .agents/, .beads/).
 - **Ecosystem Projects** (v1.6.0+): comparison table `standard` vs `ecosystem`, `@{ecosystem}/` syntax for cross-project plans.
 
 ### §2. project.md Schema (v1.6.3)
@@ -116,7 +116,7 @@ graph LR
     B -->|schema ref| C["templates/project-md.md"]
     B -->|test vectors| D["examples/project-schema-vectors.md"]
     B -->|full detail| E["Resources/ai-agents/kernel/"]
-    F[".agent/rules.md"] -->|rule triggers| G["governance, naming,<br/>versioning rules"]
+    F[".agents/rules.md"] -->|rule triggers| G["governance, naming,<br/>versioning rules"]
     B -.->|cross-ref| G
 ```
 

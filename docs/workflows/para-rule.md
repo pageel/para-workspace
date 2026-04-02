@@ -22,11 +22,11 @@ The `/para-rule` workflow manages, installs, and standardizes AI Agent rules wit
 
 ### list
 
-Lists active rules in `.agent/rules/`, reads `catalog.yml`, and displays comparison: ✅ Installed / ⚠️ Not installed / 🔶 Untracked.
+Lists active rules in `.agents/rules/`, reads `catalog.yml`, and displays comparison: ✅ Installed / ⚠️ Not installed / 🔶 Untracked.
 
 ### add
 
-Creates `.agent/rules/[name].md` with standard template including Scope, Rules (MUST/SHOULD/MUST NOT), and Examples.
+Creates `.agents/rules/[name].md` with standard template including Scope, Rules (MUST/SHOULD/MUST NOT), and Examples.
 
 ### standardize
 
@@ -34,7 +34,7 @@ Checklist: No absolute paths, PARA boundaries, affirmative language, clear agent
 
 ### install
 
-Resolves source from catalog, checks for conflicts (delegates to `/install` if needed), and copies to `.agent/rules/`.
+Resolves source from catalog, checks for conflicts (delegates to `/install` if needed), and copies to `.agents/rules/`.
 
 ### validate
 

@@ -41,9 +41,9 @@ for arg in "$@"; do
       echo ""
       echo "What gets installed:"
       echo "  🧠 Kernel snapshot    → Resources/ai-agents/kernel/"
-      echo "  📑 Workflows + catalog→ Resources/ai-agents/workflows/ + .agent/workflows/"
-      echo "  📏 Rules + catalog    → Resources/ai-agents/rules/ + .agent/rules/"
-      echo "  🧩 Skills + catalog   → Resources/ai-agents/skills/ + .agent/skills/"
+      echo "  📑 Workflows + catalog→ Resources/ai-agents/workflows/ + .agents/workflows/"
+      echo "  📏 Rules + catalog    → Resources/ai-agents/rules/ + .agents/rules/"
+      echo "  🧩 Skills + catalog   → Resources/ai-agents/skills/ + .agents/skills/"
       echo "  🔒 System state       → .para/ (audit.log, migrations/, backups/)"
       echo "  📦 CLI wrapper        → ./para"
       echo ""
@@ -187,7 +187,7 @@ sync_library() {
   local lib_name="$1"    # e.g. "workflows"
   local src_dir="$2"     # e.g. "$REPO_ROOT/templates/common/agent/workflows"
   local catalog_dest="$3" # e.g. "$WS_ROOT/Resources/ai-agents/workflows"
-  local active_dest="$4"  # e.g. "$WS_ROOT/.agent/workflows"
+  local active_dest="$4"  # e.g. "$WS_ROOT/.agents/workflows"
 
   mkdir -p "$catalog_dest"
   mkdir -p "$active_dest"
@@ -208,7 +208,7 @@ sync_library() {
     # Remove governed files that no longer exist in repo templates.
     # Strategy: catalog_dest (Resources/ai-agents/X/) is 100% repo-managed.
     # If a file exists there but NOT in repo → it's an orphan from a previous sync.
-    # Then also clean the matching file from active_dest (.agent/X/) if it exists
+    # Then also clean the matching file from active_dest (.agents/X/) if it exists
     # AND is not user-created.
     local orphan_count=0
     for catalog_file in "$catalog_dest"/*.md; do
@@ -307,18 +307,18 @@ echo "📑 Syncing workflows..."
 sync_library "workflows" \
   "$LIB_SRC/workflows" \
   "$WS_ROOT/Resources/ai-agents/workflows" \
-  "$WS_ROOT/.agent/workflows"
+  "$WS_ROOT/.agents/workflows"
 
 echo "📏 Syncing rules..."
 sync_library "rules" \
   "$LIB_SRC/rules" \
   "$WS_ROOT/Resources/ai-agents/rules" \
-  "$WS_ROOT/.agent/rules"
+  "$WS_ROOT/.agents/rules"
 
 # Sync workspace rules index (rules.md sits OUTSIDE rules/ directory)
 if [ -f "$LIB_SRC/rules.md" ]; then
-  if sync_file "$LIB_SRC/rules.md" "$WS_ROOT/.agent/rules.md"; then
-    echo "   ✓ Workspace rules index synced (.agent/rules.md)"
+  if sync_file "$LIB_SRC/rules.md" "$WS_ROOT/.agents/rules.md"; then
+    echo "   ✓ Workspace rules index synced (.agents/rules.md)"
   fi
 fi
 
@@ -326,12 +326,12 @@ echo "🧩 Syncing skills..."
 sync_library "skills" \
   "$LIB_SRC/skills" \
   "$WS_ROOT/Resources/ai-agents/skills" \
-  "$WS_ROOT/.agent/skills"
+  "$WS_ROOT/.agents/skills"
 
 # Sync workspace skills index (skills.md sits OUTSIDE skills/ directory)
 if [ -f "$LIB_SRC/skills.md" ]; then
-  if sync_file "$LIB_SRC/skills.md" "$WS_ROOT/.agent/skills.md"; then
-    echo "   ✓ Workspace skills index synced (.agent/skills.md)"
+  if sync_file "$LIB_SRC/skills.md" "$WS_ROOT/.agents/skills.md"; then
+    echo "   ✓ Workspace skills index synced (.agents/skills.md)"
   fi
 fi
 

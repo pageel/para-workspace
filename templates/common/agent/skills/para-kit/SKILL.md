@@ -35,7 +35,7 @@ Archive/     — Cold storage for completed/cancelled items (never read during n
 │   ├── plans/            # Implementation plans
 │   └── para-decisions/   # Decision records
 ├── docs/                 # Internal documentation
-├── .agent/               # Project-specific rules/skills
+├── .agents/               # Project-specific rules/skills
 │   ├── rules.md          # Rules index (trigger table)
 │   └── rules/            # Rule files (loaded on-demand)
 └── .beads/
@@ -132,5 +132,5 @@ All fields in YAML frontmatter:
 | `templates/project-md.md`        | Full project.md template with all v1.6.3 fields |
 | `examples/project-schema-vectors.md` | Test vectors for schema validation     |
 
-> **Rules** (formatting, versioning, governance) → `.agent/rules/` (loaded via trigger from `.agent/rules.md`)
+> **Rules** (formatting, versioning, governance) → `.agents/rules/` (loaded via trigger from `.agents/rules.md`)
 > **Full kernel** → `Resources/ai-agents/kernel/` (read only during `/para-audit`, `/plan`, or scaffolding)

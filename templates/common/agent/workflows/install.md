@@ -21,10 +21,10 @@ Install or update components from the governed PARA Catalog into the workspace. 
 1.  **Resolve Source & Destination**:
     - **Workflows**:
       - Source: Governed catalog directory (e.g., `templates/common/agent/workflows/[name].md` in repo)
-      - Destination: `.agent/workflows/[name].md`
+      - Destination: `.agents/workflows/[name].md`
     - **Rules**:
       - Source: Governed catalog directory (e.g., `templates/common/agent/rules/[name].md` in repo)
-      - Destination: `.agent/rules/[name].md`
+      - Destination: `.agents/rules/[name].md`
 
 2.  **Check Status**:
     - If Destination does NOT exist: **Install immediately**.
@@ -64,9 +64,9 @@ TYPE="[type]" # 'work' or 'rule'
 NAME="[name]"
 
 if [ "$TYPE" == "work" ]; then
-    DEST=".agent/workflows/$NAME.md"
+    DEST=".agents/workflows/$NAME.md"
 else
-    DEST=".agent/rules/$NAME.md"
+    DEST=".agents/rules/$NAME.md"
 fi
 
 if [ -f "$DEST" ]; then echo "⚠️ CONFLICT: $DEST already exists"; else echo "✅ No conflict"; fi

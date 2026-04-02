@@ -1,6 +1,7 @@
 ---
-description: Governance rule for context-rules
-source: catalog
+description: Context loading, session start, project detection and rule cascade
+trigger: always_on
+glob:
 ---
 
 # Agent Routing & Context Loading
@@ -20,10 +21,10 @@ source: catalog
 **MUST** load context in this sequence (highest priority first):
 
 1. **Project Contract**: `Projects/<project>/project.md`
-2. **Project Rules**: `Projects/<project>/.agent/rules/`
-3. **Project Skills**: `Projects/<project>/.agent/skills/` (v1.6.2+)
-4. **Workspace Rules**: `.agent/rules/`
-5. **Workspace Skills**: `.agent/skills/` (v1.6.2+)
+2. **Project Rules**: `Projects/<project>/.agents/rules/`
+3. **Project Skills**: `Projects/<project>/.agents/skills/` (v1.6.2+)
+4. **Workspace Rules**: `.agents/rules/`
+5. **Workspace Skills**: `.agents/skills/` (v1.6.2+)
 6. **Artifacts**: `Projects/<project>/artifacts/` (tasks, plans, walkthroughs)
 7. **Active Memory**: `Projects/<project>/.beads/`
 8. **Abstract Knowledge**: `Areas/`
@@ -40,7 +41,7 @@ source: catalog
 
 - **SHOULD** create friction beads in `Projects/<project>/.beads/` when encountering repeated logic failures, project-specific quirks, or critical decisions.
 - Beads are allowed to be messy, partial, and contradictory while the project is active.
-- **MUST** perform a "Graduation Review" before archiving a project — move valuable knowledge from beads to `Areas/`, `Resources/`, or `.agent/rules/`.
+- **MUST** perform a "Graduation Review" before archiving a project — move valuable knowledge from beads to `Areas/`, `Resources/`, or `.agents/rules/`.
 
 ### 4. Agent Index Loading (Two-Tier Progressive Disclosure)
 
@@ -48,8 +49,8 @@ When beginning work on a project (via `/open` or context detection):
 
 **Tier 1: Workspace Indices (ALWAYS)**
 
-- **MUST** read `.agent/rules.md` (workspace-level rules trigger index).
-- **MUST** read `.agent/skills.md` (workspace-level skills trigger index, v1.6.2+).
+- **MUST** read `.agents/rules.md` (workspace-level rules trigger index).
+- **MUST** read `.agents/skills.md` (workspace-level skills trigger index, v1.6.2+).
 - These files list triggers (~20 lines each, ~200 tokens total).
 - Agent memorizes trigger tables and loads specific files **on demand**.
 - **MUST NOT** skip — global rules and skills apply to ALL projects.
@@ -58,9 +59,9 @@ When beginning work on a project (via `/open` or context detection):
 
 - Check `project.md` for `agent` map (v1.6.2+) or `has_rules` (legacy):
   ```
-  IF agent.rules: true  → read project .agent/rules.md
-  ELIF has_rules: true  → read project .agent/rules.md (backward compat)
-  IF agent.skills: true → read project .agent/skills.md
+  IF agent.rules: true  → read project .agents/rules.md
+  ELIF has_rules: true  → read project .agents/rules.md (backward compat)
+  IF agent.skills: true → read project .agents/skills.md
   ```
 - **If index exists:**
   - Read the index file (~5–10 lines) to learn triggers.

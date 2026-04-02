@@ -27,7 +27,7 @@ workspace/
 ├── Resources/                     # 📚 Reference materials & tools
 │   └── references/                # Books, links, templates
 ├── Archive/                       # ❄️ Completed/retired items
-├── .agent/                        # Agent runtime (auto-installed)
+├── .agents/                        # Agent runtime (auto-installed)
 │   ├── rules/                     # AI behavior rules
 │   └── workflows/                 # AI workflow instructions
 ├── .para-workspace.yml            # Workspace configuration
@@ -58,7 +58,7 @@ workspace/
 
 ## 📜 Active Rules
 
-After `para init`, the following rules are installed in `.agent/rules/`:
+After `para init`, the following rules are installed in `.agents/rules/`:
 
 | Rule                 | Purpose                                          |
 | :------------------- | :----------------------------------------------- |

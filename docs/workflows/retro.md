@@ -40,7 +40,7 @@ Structured reflection across three dimensions:
 
 ### 4. Graduate Beads to Rules
 
-Reviews recurring knowledge points from session logs. If a bead appears 3+ times, proposes graduating it to an official Rule in `.agent/rules/`.
+Reviews recurring knowledge points from session logs. If a bead appears 3+ times, proposes graduating it to an official Rule in `.agents/rules/`.
 
 ### 5. Record Retrospective
 

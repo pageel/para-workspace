@@ -1,6 +1,7 @@
 ---
-description: Governance rule for vcs
-source: catalog
+description: Git operations — commit, push, merge, branch, tag, PR safety rules
+trigger: always_on
+glob:
 ---
 
 # Version Control Rules

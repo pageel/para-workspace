@@ -1,6 +1,7 @@
 ---
-description: Governance rule for artifact-standard
-source: catalog
+description: Standards for creating and editing artifacts, plans, walkthroughs
+trigger: manual
+glob: artifacts/*
 ---
 
 # Artifact-Driven Development Standard

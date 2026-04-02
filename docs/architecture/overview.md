@@ -32,7 +32,7 @@ workspace/
 ├── Areas/         # Stable knowledge
 ├── Resources/     # References & tools (includes kernel snapshot)
 ├── Archive/       # Cold storage
-├── .agent/        # Agent runtime guardrails
+├── .agents/        # Agent runtime guardrails
 └── .para-workspace.yml  # Runtime metadata
 ```
 
@@ -42,7 +42,7 @@ workspace/
 
 The AI agent (Antigravity) attaches to a workspace and operates within its rules.
 
-- Reads `.agent/rules/` for guardrails
+- Reads `.agents/rules/` for guardrails
 - Reads `Resources/ai-agents/kernel/` for system rules
 - Operates within `Projects/` for daily work
 

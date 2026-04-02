@@ -29,8 +29,8 @@ Create snapshot dir → Copy by target → Cleanup old → Report
 | :-------------------- | :------- | :--------------------- |
 | `.para-workspace.yml` | ✅       | Core config            |
 | `Areas/Workspace/`    | ✅       | Sessions, SYNC, audits |
-| `.agent/workflows/`   | ✅       | Customized workflows   |
-| `.agent/rules/`       | ✅       | Customized rules       |
+| `.agents/workflows/`   | ✅       | Customized workflows   |
+| `.agents/rules/`       | ✅       | Customized rules       |
 
 ### Per Project
 

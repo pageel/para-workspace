@@ -24,7 +24,7 @@ This circular dependency is why a single-layer approach fails. Each layer below 
 
 **File:** `agent-behavior.md` §4
 
-The agent is instructed to re-read `.agent/rules.md` when it detects context decay. Detection signals:
+The agent is instructed to re-read `.agents/rules.md` when it detects context decay. Detection signals:
 
 1. **Truncation notice** — platform explicitly says context was truncated
 2. **Forgotten rules** — agent can't recall specific rule details
@@ -38,10 +38,10 @@ The agent is instructed to re-read `.agent/rules.md` when it detects context dec
 | :------------------------ | :------------------------------ |
 | `artifacts/tasks/done.md` | `hybrid-3-file-integrity.md` C2 |
 | `artifacts/tasks/*.md`    | `hybrid-3-file-integrity.md`    |
-| `.agent/rules/*.md`       | `governance.md`                 |
+| `.agents/rules/*.md`       | `governance.md`                 |
 | `kernel/`, `.para/`       | `governance.md`                 |
 
-**Extensible:** Project rules MAY define additional guards in `Projects/<name>/.agent/rules.md`.
+**Extensible:** Project rules MAY define additional guards in `Projects/<name>/.agents/rules.md`.
 
 **Strength:** Covers workflow bypass (direct file edits). Two-Tier loading saves ~90% tokens.
 **Weakness:** Passive — depends on agent recognizing it has lost context (circular dependency).
@@ -69,7 +69,7 @@ The `/open` report includes a compact rules reminder (~40 tokens) positioned nea
 🛡️ SAFETY (persist across truncation):
 - Git: Do NOT merge/branch/tag without user approval.
 - Governance: Do NOT modify kernel/ or .para/.
-- Recovery: If rules feel incomplete → re-read .agent/rules.md
+- Recovery: If rules feel incomplete → re-read .agents/rules.md
 ```
 
 **Why only `/open`?** Other workflows have Layer 3 (Pre-flight). `/open` is the session-start workflow that generates the baseline context — the only output that persists across the entire session.
@@ -124,7 +124,7 @@ The **strongest layer** — based on the **Proximity Principle**: the guard is e
 | `TASK` | `artifacts/tasks/` | `<!-- ⚠️ HOT LANE ONLY — No backlog tasks here (C1) -->` |
 | `TASK` | `artifacts/tasks/` | `<!-- ⚠️ OPERATIONAL AUTHORITY — Mutations via /backlog only (C3) -->` |
 | `KERNEL` | `kernel/`, `Resources/ai-agents/kernel/` | `<!-- ⚠️ READ-ONLY SNAPSHOT — Do NOT modify (I9) -->` |
-| `GOVERNED` | `.agent/rules/` | `<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->` |
+| `GOVERNED` | `.agents/rules/` | `<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->` |
 | `WORKSPACE` | `Areas/Workspace/` | `<!-- ⚠️ APPEND-ONLY — via /end only -->` |
 
 **Position convention:**
@@ -173,10 +173,10 @@ Free-form request (no workflow) ⚠️   —    —    ✅  ← Only L4 catches 
 
 | Layer | Implementation files |
 |:--|:--|
-| L1 | `agent-behavior.md` §4, `context-rules.md` Rule 4, `.agent/rules.md` |
+| L1 | `agent-behavior.md` §4, `context-rules.md` Rule 4, `.agents/rules.md` |
 | L2 | `/open` Step 8 report template |
 | L3 | Step 0 in `/push`, `/release`, `/end`, `/plan`, `/docs`, `/backlog`, `/retro` |
-| L4 | `hybrid-3-file-integrity.md` C6, guard headers in `kernel/`, `.agent/rules/`, `artifacts/tasks/`, `Areas/Workspace/` |
+| L4 | `hybrid-3-file-integrity.md` C6, guard headers in `kernel/`, `.agents/rules/`, `artifacts/tasks/`, `Areas/Workspace/` |
 
 ## References
 

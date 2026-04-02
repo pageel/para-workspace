@@ -1,6 +1,7 @@
 ---
-description: Governance rule for para-discipline
-source: catalog
+description: PARA method discipline — creating, moving, organizing workspace files
+trigger: manual
+glob:
 ---
 
 # PARA Discipline

@@ -9,19 +9,19 @@ PARA Workspace uses a **Two-Tier** loading system for both rules and skills. Glo
 ### Rule Hierarchy
 
 ```
-.agent/rules.md                    ← Workspace rules INDEX (always loaded)
-.agent/skills.md                   ← Workspace skills INDEX (always loaded, v1.6.2+)
-.agent/rules/                      ← Global rule files (10 rules, loaded on demand)
-.agent/skills/                     ← Global skill files (loaded on demand)
-Projects/<project>/.agent/rules.md ← Project rules INDEX (loaded if agent.rules: true)
-Projects/<project>/.agent/skills.md← Project skills INDEX (loaded if agent.skills: true)
+.agents/rules.md                    ← Workspace rules INDEX (always loaded)
+.agents/skills.md                   ← Workspace skills INDEX (always loaded, v1.6.2+)
+.agents/rules/                      ← Global rule files (10 rules, loaded on demand)
+.agents/skills/                     ← Global skill files (loaded on demand)
+Projects/<project>/.agents/rules.md ← Project rules INDEX (loaded if agent.rules: true)
+Projects/<project>/.agents/skills.md← Project skills INDEX (loaded if agent.skills: true)
 ```
 
 Project rules **supplement** global rules — they do not override them.
 
 ### Tier 1: Workspace Rules Index (ALWAYS)
 
-The file `.agent/rules.md` lists all global rules with trigger conditions and priority levels (~20 lines, ~200 tokens). Rules are classified as 🔴 Critical, 🟡 Important, or 🟢 Standard.
+The file `.agents/rules.md` lists all global rules with trigger conditions and priority levels (~20 lines, ~200 tokens). Rules are classified as 🔴 Critical, 🟡 Important, or 🟢 Standard.
 
 `/open` Step 2.5a **ALWAYS** reads this file, regardless of which project is active. This ensures global rules like `hybrid-3-file-integrity.md` (Hot Lane logging) and `governance.md` (system file protection) are always known to the agent.
 
@@ -30,7 +30,7 @@ The file `.agent/rules.md` lists all global rules with trigger conditions and pr
 Each project MAY provide a lightweight `rules.md` index at:
 
 ```
-Projects/<project>/.agent/rules.md
+Projects/<project>/.agents/rules.md
 ```
 
 This ~5–10 line file tells the agent **what project-specific rules exist** and **when to load them**:
@@ -47,8 +47,8 @@ This ~5–10 line file tells the agent **what project-specific rules exist** and
 ### Loading Protocol (v1.6.2)
 
 1. Agent starts working on a project (via `/open` or context detection).
-2. **Step 2.5a:** Agent reads `.agent/rules.md` (workspace index) — ALWAYS.
-3. **Step 2.5b:** Agent reads `.agent/skills.md` (workspace index) — ALWAYS (v1.6.2+).
+2. **Step 2.5a:** Agent reads `.agents/rules.md` (workspace index) — ALWAYS.
+3. **Step 2.5b:** Agent reads `.agents/skills.md` (workspace index) — ALWAYS (v1.6.2+).
 4. **Step 2.5c:** Agent checks `project.md` for `agent.rules`/`agent.skills` (or `has_rules` fallback) → reads project indices if true.
 5. During the session, when an action matches a trigger from ANY index → agent reads that specific rule/skill file.
 6. **Proactive Trigger Check** (v1.6.2): BEFORE any side-effect action, agent scans all loaded trigger tables. If a match is found, the rule/skill MUST be read BEFORE acting.
@@ -69,7 +69,7 @@ After context truncation (checkpoint, sliding window), the agent may lose the ru
 
 Use the `/para-rule add` action:
 
-1. Create the rule file in `Projects/<project>/.agent/rules/[name].md`
+1. Create the rule file in `Projects/<project>/.agents/rules/[name].md`
 2. Follow the standard rule template (Scope, Rules, Examples)
 3. Update the project's `rules.md` index with the rule name, trigger, and filename
 

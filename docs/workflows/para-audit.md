@@ -77,7 +77,7 @@ For each project with `backlog.md`: checks for `✅ Completed (Archived)` sectio
 
 ### 5. Check Rules Index Consistency
 
-For projects with `agent.rules: true` (or `has_rules: true`): compares `.agent/rules.md` index with actual `.agent/rules/` files on disk. Flags mismatches.
+For projects with `agent.rules: true` (or `has_rules: true`): compares `.agents/rules.md` index with actual `.agents/rules/` files on disk. Flags mismatches.
 
 ### 6. Generate Post-Update Report
 

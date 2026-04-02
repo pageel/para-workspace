@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# PARA Workspace Update Script (v1.7.1)
+# PARA Workspace Update Script (v1.7.3)
 # Safely updates templates without overwriting user data
 # Usage: para update [--dry-run]
 

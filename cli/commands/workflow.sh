@@ -10,8 +10,8 @@ SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 if [ -z "$WORKSPACE_ROOT" ]; then
     WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
 fi
-CATALOG_DIR="$WORKSPACE_ROOT/.agent/workflows"
-AGENT_DIR="$WORKSPACE_ROOT/.agent/workflows"
+CATALOG_DIR="$WORKSPACE_ROOT/.agents/workflows"
+AGENT_DIR="$WORKSPACE_ROOT/.agents/workflows"
 
 case "$1" in
   list)

@@ -33,7 +33,7 @@ workspace/
 │   ├── references/                # 📚 Reference repos, docs, cheat-sheets
 │   └── tools/                     # 🛠️ Scripts, utilities, CLI tools
 ├── Archive/                       # ❄️ Completed/retired projects & areas
-├── .agent/                        # Agent runtime (auto-installed)
+├── .agents/                        # Agent runtime (auto-installed)
 │   ├── rules/
 │   └── workflows/
 ├── .para-workspace.yml            # Workspace config
@@ -63,7 +63,7 @@ workspace/
 
 ## 📜 Active Rules
 
-After `para init`, the following rules are installed in `.agent/rules/`:
+After `para init`, the following rules are installed in `.agents/rules/`:
 
 - **`governance.md`** — Core PARA discipline rules (invariants + heuristics)
 

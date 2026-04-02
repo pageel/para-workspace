@@ -33,8 +33,8 @@ Generate a comprehensive implementation plan based on the project contract, back
 > **Layer 3 defense:** Even if `/open` loaded indices at session start, long conversations
 > cause attention decay. Re-read here to guarantee rules/skills awareness during planning.
 
-1. Re-read `.agent/rules.md` (workspace rules index)
-2. Re-read `.agent/skills.md` (workspace skills index)
+1. Re-read `.agents/rules.md` (workspace rules index)
+2. Re-read `.agents/skills.md` (workspace skills index)
 3. Check `project.md` (loaded in Step 1) for `agent.rules` / `agent.skills` — if true, re-read project indices too
 
 #### 1. Read Project Contract
@@ -138,7 +138,7 @@ From Phase A, if architecture docs exist:
 
 **D1: Workspace Rules** (ALWAYS read)
 
-Read `.agent/rules.md` (workspace-level rules index, ~20 lines):
+Read `.agents/rules.md` (workspace-level rules index, ~20 lines):
 
 - Extract **trigger conditions** that may affect plan design.
 - Store as constraints for Phase definition (Step 6) and Risk section (Step 9).
@@ -151,7 +151,7 @@ From Step 1, check project.md:
 
 If either is true:
 
-- Read `Projects/[project-name]/.agent/rules.md` (project rules index, ~5-10 lines).
+- Read `Projects/[project-name]/.agents/rules.md` (project rules index, ~5-10 lines).
 - Extract **trigger conditions** that may affect plan design.
 - Store as constraints for Phase definition (Step 6) and Risk section (Step 9).
 - Example: `dogfooding-policy.md` trigger "Editing repo/" → plan must include sync tasks when modifying repo templates.
@@ -160,7 +160,7 @@ If either is true:
 
 From Step 1, if `project.md` has `agent.skills: true`:
 
-- Read `Projects/[project-name]/.agent/skills.md` (project skills index, ~5-10 lines).
+- Read `Projects/[project-name]/.agents/skills.md` (project skills index, ~5-10 lines).
 - Check if any skill trigger matches the plan scope.
 - If relevant skills found → note in plan as available tooling.
 
@@ -335,16 +335,16 @@ Map each High/Medium priority backlog item to the phase where it will be impleme
    - `rfcs/*.md` that reference rules
 
 2. **If rule changes detected:**
-   a. Auto-add to final phase: "Sync workspace `.agent/rules/` from repo templates"
-   b. Check if project has `.agent/rules.md` (rules index) — if yes, add task:
-   "Update `.agent/rules.md` trigger conditions to match new rule constraints"
+   a. Auto-add to final phase: "Sync workspace `.agents/rules/` from repo templates"
+   b. Check if project has `.agents/rules.md` (rules index) — if yes, add task:
+   "Update `.agents/rules.md` trigger conditions to match new rule constraints"
    c. Display warning:
 
    ```
    ⚠️  This plan modifies governance rules.
        Final phase will include:
-       - Workspace rule sync (.agent/rules/)
-       - Rules index update (if .agent/rules.md exists)
+       - Workspace rule sync (.agents/rules/)
+       - Rules index update (if .agents/rules.md exists)
    ```
 
 3. **If no rule changes** → Skip silently.

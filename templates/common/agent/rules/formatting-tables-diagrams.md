@@ -1,6 +1,7 @@
 ---
 description: Formatting standards for tables, diagrams, and visual markdown elements
-source: catalog
+trigger: manual
+glob:
 ---
 
 # Formatting Templates — Tables & Diagrams
@@ -9,7 +10,6 @@ source: catalog
 > Prevents column misalignment, ensures readability in both source and rendered view.
 > Applies to ALL artifacts: plans, brainstorms, docs, backlogs.
 
----
 
 ## 1. Markdown Tables
 
@@ -40,7 +40,6 @@ source: catalog
 
 → The "change" column is 80+ characters, pipes are completely misaligned.
 
----
 
 ## 2. Box Diagrams
 
@@ -108,7 +107,6 @@ Client              Server              Database
   │◀── response ───────│                    │
 ```
 
----
 
 ## 3. Tree Listings
 
@@ -129,7 +127,6 @@ root/
 └── file-4.md
 ```
 
----
 
 ## 4. Comparison Tables (Multiple Options)
 
@@ -157,7 +154,6 @@ root/
 🔄 In Progress
 ```
 
----
 
 ## Quick Checklist
 

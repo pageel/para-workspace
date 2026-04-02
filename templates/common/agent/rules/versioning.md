@@ -1,6 +1,7 @@
 ---
-description: Governance rule for versioning
-source: catalog
+description: Version bumps, changelog updates, and release management
+trigger: manual
+glob: VERSION, CHANGELOG.md
 ---
 
 # Versioning Rule

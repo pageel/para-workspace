@@ -49,8 +49,8 @@ check_dir "_inbox" "_inbox/"
 
 # Agent Runtime
 echo "T2: Agent runtime directories"
-check_dir ".agent/workflows" ".agent/workflows/"
-check_dir ".agent/rules" ".agent/rules/"
+check_dir ".agents/workflows" ".agents/workflows/"
+check_dir ".agents/rules" ".agents/rules/"
 
 # Governed Libraries (read-only snapshots)
 echo "T3: Governed library snapshots"

@@ -22,11 +22,11 @@ The `/para-workflow` workflow manages, installs, and standardizes AI Agent workf
 
 ### list
 
-Lists active workflows in `.agent/workflows/`, reads `catalog.yml`, and displays comparison: ✅ Installed / ⚠️ Not installed / 🔶 Untracked.
+Lists active workflows in `.agents/workflows/`, reads `catalog.yml`, and displays comparison: ✅ Installed / ⚠️ Not installed / 🔶 Untracked.
 
 ### add
 
-Creates `.agent/workflows/[name].md` with required YAML frontmatter (`description`), version label, `[project-name]` placeholders, `// turbo` annotations, and relative paths.
+Creates `.agents/workflows/[name].md` with required YAML frontmatter (`description`), version label, `[project-name]` placeholders, `// turbo` annotations, and relative paths.
 
 ### standardize
 
@@ -34,7 +34,7 @@ Creates `.agent/workflows/[name].md` with required YAML frontmatter (`descriptio
 
 ### install
 
-Resolves source from catalog, checks for conflicts (delegates to `/install` if needed), and copies to `.agent/workflows/`.
+Resolves source from catalog, checks for conflicts (delegates to `/install` if needed), and copies to `.agents/workflows/`.
 
 ### validate
 

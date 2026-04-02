@@ -54,7 +54,7 @@ para archive <type>/<name>
 
 ### `para install`
 
-Sync the kernel and governed libraries from the repo to `.para/` and `.agent/`.
+Sync the kernel and governed libraries from the repo to `.para/` and `.agents/`.
 
 ```bash
 para install [--force]

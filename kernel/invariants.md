@@ -82,12 +82,12 @@ Each project manages tasks through three files in `artifacts/tasks/`:
 
 - Every file must belong to a `Project`, `Area`, `Resource`, or `Archive`
 - No content files at workspace root (except approved config: `.para-workspace.yml`, `README.md`)
-- `.agent/` is the only exception — it contains runtime guardrails
+- `.agents/` is the only exception — it contains runtime guardrails
 
 ## I9. Resource Immutability
 
 - Files in `Resources/ai-agents/` (kernel snapshot, workflow catalog) are **read-only references**
-- Local customizations in `.agent/workflows/` must **NEVER** be written back to `Resources/`
+- Local customizations in `.agents/workflows/` must **NEVER** be written back to `Resources/`
 - Resources are for learning, scaffolding, or installation — not for modification during regular work
 
 ## I10. Repo ↔ Workspace Separation

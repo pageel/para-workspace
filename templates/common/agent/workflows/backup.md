@@ -42,7 +42,7 @@ echo "📁 Backup dir: $BACKUP_DIR"
 ```bash
 BACKUP_DIR=".para/backups/$(date +%Y-%m-%d)"
 mkdir -p "$BACKUP_DIR/workflows"
-cp .agent/workflows/*.md "$BACKUP_DIR/workflows/" 2>/dev/null
+cp .agents/workflows/*.md "$BACKUP_DIR/workflows/" 2>/dev/null
 echo "✅ Workflows: $(ls "$BACKUP_DIR/workflows/" 2>/dev/null | wc -l) files backed up"
 ```
 
@@ -53,7 +53,7 @@ echo "✅ Workflows: $(ls "$BACKUP_DIR/workflows/" 2>/dev/null | wc -l) files ba
 ```bash
 BACKUP_DIR=".para/backups/$(date +%Y-%m-%d)"
 mkdir -p "$BACKUP_DIR/rules"
-cp .agent/rules/*.md "$BACKUP_DIR/rules/" 2>/dev/null
+cp .agents/rules/*.md "$BACKUP_DIR/rules/" 2>/dev/null
 echo "✅ Rules: $(ls "$BACKUP_DIR/rules/" 2>/dev/null | wc -l) files backed up"
 ```
 
@@ -64,7 +64,7 @@ echo "✅ Rules: $(ls "$BACKUP_DIR/rules/" 2>/dev/null | wc -l) files backed up"
 ```bash
 BACKUP_DIR=".para/backups/$(date +%Y-%m-%d)"
 mkdir -p "$BACKUP_DIR/skills"
-cp -r .agent/skills/* "$BACKUP_DIR/skills/" 2>/dev/null
+cp -r .agents/skills/* "$BACKUP_DIR/skills/" 2>/dev/null
 echo "✅ Skills: $(find "$BACKUP_DIR/skills" -type f 2>/dev/null | wc -l) files backed up"
 ```
 
@@ -188,7 +188,7 @@ echo "🧹 Cleanup done. Snapshots remaining: $(ls -d 20??-??-?? 2>/dev/null | w
 📦 Projects: N projects (M files) — repo/ excluded
 
 💡 To restore, copy files from backup to original location:
-   cp .para/backups/YYYY-MM-DD/workflows/* .agent/workflows/
+   cp .para/backups/YYYY-MM-DD/workflows/* .agents/workflows/
    cp -r .para/backups/YYYY-MM-DD/projects/<name>/* Projects/<name>/
 ```
 
@@ -200,10 +200,10 @@ When restoring from a backup:
 
 ```bash
 # Restore all workflows
-cp .para/backups/YYYY-MM-DD/workflows/* .agent/workflows/
+cp .para/backups/YYYY-MM-DD/workflows/* .agents/workflows/
 
 # Restore a single file
-cp .para/backups/YYYY-MM-DD/workflows/backlog.md .agent/workflows/backlog.md
+cp .para/backups/YYYY-MM-DD/workflows/backlog.md .agents/workflows/backlog.md
 
 # Restore metadata
 cp .para/backups/YYYY-MM-DD/.para-workspace.yml ./.para-workspace.yml
@@ -212,7 +212,7 @@ cp .para/backups/YYYY-MM-DD/.para-workspace.yml ./.para-workspace.yml
 cp -r .para/backups/YYYY-MM-DD/projects/<name>/* Projects/<name>/
 
 # Restore skills
-cp -r .para/backups/YYYY-MM-DD/skills/* .agent/skills/
+cp -r .para/backups/YYYY-MM-DD/skills/* .agents/skills/
 
 # Restore project repo (from GitHub)
 cd Projects/<name> && git clone <repo-url> repo
@@ -229,9 +229,9 @@ cd Projects/<name> && git clone <repo-url> repo
 | `Areas/Workspace/SYNC.md`        | ✅ Yes    | Cross-project sync queue |
 | `Areas/Workspace/sessions/`      | ✅ Yes    | Workspace session files  |
 | `Areas/Workspace/audits/`        | ✅ Yes    | Audit reports            |
-| `.agent/workflows/`              | ✅ Yes    | Customized workflows     |
-| `.agent/rules/`                  | ✅ Yes    | Customized rules         |
-| `.agent/skills/`                 | ✅ Yes    | Customized skills        |
+| `.agents/workflows/`              | ✅ Yes    | Customized workflows     |
+| `.agents/rules/`                  | ✅ Yes    | Customized rules         |
+| `.agents/skills/`                 | ✅ Yes    | Customized skills        |
 
 ### Per Project
 
@@ -241,7 +241,7 @@ cd Projects/<name> && git clone <repo-url> repo
 | `artifacts/` | ✅ Yes    | Plans, backlogs, walkthroughs — user work product |
 | `docs/`      | ✅ Yes    | Internal documentation — unique analysis          |
 | `project.md` | ✅ Yes    | Project contract — YAML config + goals            |
-| `.agent/`    | ✅ Yes    | Project-specific rules and overrides              |
+| `.agents/`    | ✅ Yes    | Project-specific rules and overrides              |
 | `repo/`      | ❌ No     | Source code — recoverable via `git clone`         |
 
 ## Related

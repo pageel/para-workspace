@@ -26,7 +26,7 @@ Extend workspace capabilities by managing workflows and rules:
 Managed via **`/para-workflow`**:
 
 - `list`: Compare active workflows vs. governed `catalog.yml`.
-- `install`: Install from governed catalog into `.agent/workflows/`.
+- `install`: Install from governed catalog into `.agents/workflows/`.
 - `standardize`: Upgrade local workflows to v1.4.1 standards.
 - `validate`: Check compliance without making changes.
 
@@ -35,7 +35,7 @@ Managed via **`/para-workflow`**:
 Managed via **`/para-rule`**:
 
 - `list`: Compare active rules vs. governed `catalog.yml`.
-- `install`: Install from governed catalog into `.agent/rules/`.
+- `install`: Install from governed catalog into `.agents/rules/`.
 - `standardize`: Ensure rules comply with `para-discipline.md`.
 
 ---

@@ -111,7 +111,7 @@ para-workspace/
 │   └── references/                    # The original PARA repository (read-only)
 ├── Archive/                           # Cold storage for completed items
 ├── _inbox/                            # Temporary landing zone for external downloads
-├── .agent/                            # Governed library copies (Auto-synced)
+├── .agents/                            # Governed library copies (Auto-synced)
 │   ├── rules.md                       # Workspace Rules Trigger Index (always loaded)
 │   ├── skills.md                      # Workspace Skills Trigger Index (v1.6.2+)
 │   ├── rules/                         # Active agent rules (.md)
@@ -140,8 +140,8 @@ para-workspace/
 
 | Platform           | Integration Point              | Status      | Notes                                                |
 | :----------------- | :----------------------------- | :---------- | :--------------------------------------------------- |
-| Google Antigravity | `.agent/` (skills, workflows)  | ✅ Verified | Designed and tested for this platform                |
-| Claude Code        | CLAUDE.md + `.agent/`          | ⚪ Untested | May read `.agent/rules/` directly — needs validation |
+| Google Antigravity | `.agents/` (skills, workflows)  | ✅ Verified | Designed and tested for this platform                |
+| Claude Code        | CLAUDE.md + `.agents/`          | ⚪ Untested | May read `.agents/rules/` directly — needs validation |
 | Cursor             | `.cursor/rules/`               | ⚪ Untested | Theory: copy rules to `.cursor/rules/`               |
 | VS Code + Copilot  | `.github/copilot-instructions` | ⚪ Untested | Theory: instructions only, no auto-trigger           |
 
@@ -236,10 +236,10 @@ cd ..\..\..
 - ✅ Creates `Projects/`, `Areas/`, `Resources/`, `Archive/`, and `_inbox/`
 - ✅ Sets **executable permissions** on all CLI scripts
 - ✅ Runs **`install.sh`** automatically, which:
-  - Syncs **governed workflows** from `catalog.yml` into `.agent/workflows/`
-  - Syncs **governed rules** from `catalog.yml` into `.agent/rules/`
-  - Syncs **workspace rules index** into `.agent/rules.md` (trigger index)
-  - Syncs **skills** into `.agent/skills/` (if profile includes them)
+  - Syncs **governed workflows** from `catalog.yml` into `.agents/workflows/`
+  - Syncs **governed rules** from `catalog.yml` into `.agents/rules/`
+  - Syncs **workspace rules index** into `.agents/rules.md` (trigger index)
+  - Syncs **skills** into `.agents/skills/` (if profile includes them)
   - Creates **`./para`** wrapper at workspace root
   - Backs up conflicting files to `.bak`
 - ✅ Generates **`.para-workspace.yml`** with kernel version tracking
@@ -389,21 +389,21 @@ Rules and skills aren't dumped into context all at once. PARA Workspace uses a *
 
   Step 2.5a: ALWAYS read workspace rules index
   ┌────────────────────────────────────────────────────┐
-  │  .agent/rules.md  (~20 lines, ~200 tokens)         │
+  │  .agents/rules.md  (~20 lines, ~200 tokens)         │
   │  Agent memorizes triggers → loads rules ON DEMAND  │
   └────────────────────────────────────────────────────┘
 
   Step 2.5b: ALWAYS read workspace skills index  (v1.6.2+)
   ┌────────────────────────────────────────────────────┐
-  │  .agent/skills.md  (~10 lines, ~100 tokens)        │
+  │  .agents/skills.md  (~10 lines, ~100 tokens)        │
   │  Agent memorizes triggers → loads skills ON DEMAND │
   └────────────────────────────────────────────────────┘
 
   Step 2.5c: CONDITIONALLY read project agent indices
   ┌────────────────────────────────────────────────────┐
   │  Check project.md:                                 │
-  │    agent.rules: true  → project .agent/rules.md    │
-  │    agent.skills: true → project .agent/skills.md   │
+  │    agent.rules: true  → project .agents/rules.md    │
+  │    agent.skills: true → project .agents/skills.md   │
   │    has_rules: true    → backward compat (legacy)   │
   └────────────────────────────────────────────────────┘
 
@@ -438,7 +438,7 @@ Long conversation → Context window truncated → Agent loses rules
                          │                              │
                     Layer 3 catches:              Layer 4 catches:
                     Step 0 re-reads              <!-- ⚠️ APPEND-ONLY -->
-                    .agent/rules.md              reminds C2 constraint
+                    .agents/rules.md              reminds C2 constraint
                          │                              │
                     VCS rules loaded             Agent obeys guard
                     → safe commit                → append only ✅

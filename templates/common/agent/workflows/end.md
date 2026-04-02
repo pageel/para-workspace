@@ -28,7 +28,7 @@ Summarize accomplishments and log them to the correct context (Project vs. Works
 
 // turbo
 
-Re-read `.agent/rules.md` to ensure rules context is loaded (guard against context truncation).
+Re-read `.agents/rules.md` to ensure rules context is loaded (guard against context truncation).
 
 ### 1. Classify & Identify Changes
 

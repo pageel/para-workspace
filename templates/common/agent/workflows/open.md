@@ -81,8 +81,8 @@ Check the `strategy` field from `project.md` (already loaded above):
 
 Read both workspace-level index files:
 
-1. `.agent/rules.md` — workspace rules trigger index (~20 lines, ~200 tokens)
-2. `.agent/skills.md` — workspace skills trigger index (~10 lines, ~100 tokens)
+1. `.agents/rules.md` — workspace rules trigger index (~20 lines, ~200 tokens)
+2. `.agents/skills.md` — workspace skills trigger index (~10 lines, ~100 tokens)
 
 Agent memorizes both trigger tables and loads specific rule/skill files **on demand** during the session.
 
@@ -95,11 +95,11 @@ Agent memorizes both trigger tables and loads specific rule/skill files **on dem
 Check `project.md` frontmatter for agent config (v1.6.2+, with backward compat):
 
 ```
-IF agent.rules exists and is true  → Read project .agent/rules.md (new schema)
-ELIF has_rules is true             → Read project .agent/rules.md (legacy, backward compat)
+IF agent.rules exists and is true  → Read project .agents/rules.md (new schema)
+ELIF has_rules is true             → Read project .agents/rules.md (legacy, backward compat)
 ELSE                               → Skip rules. Zero I/O cost.
 
-IF agent.skills exists and is true → Read project .agent/skills.md
+IF agent.skills exists and is true → Read project .agents/skills.md
 ELSE                               → Skip skills. Zero I/O cost.
 ```
 
@@ -116,8 +116,8 @@ From injected KI data, match scope to project. Store matched slugs for report (S
 
 | # | Check                    | Source                              | Required  |
 |:--|:-------------------------|:------------------------------------|:----------|
-| 1 | Workspace rules loaded?  | `.agent/rules.md`                   | ALWAYS    |
-| 2 | Workspace skills loaded? | `.agent/skills.md`                  | ALWAYS    |
+| 1 | Workspace rules loaded?  | `.agents/rules.md`                   | ALWAYS    |
+| 2 | Workspace skills loaded? | `.agents/skills.md`                  | ALWAYS    |
 | 3 | Project rules resolved?  | `agent.rules` field in project.md   | IF true   |
 | 4 | Project skills resolved? | `agent.skills` field in project.md  | IF true   |
 
@@ -348,7 +348,7 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 🛡️ SAFETY (persist across truncation):
 - Git: Do NOT merge/branch/tag without user approval. Read rules/vcs.md first.
 - Governance: Do NOT modify Resources/ai-agents/ (read-only).
-- Recovery: If rules/skills forgotten → re-read .agent/rules.md + .agent/skills.md.
+- Recovery: If rules/skills forgotten → re-read .agents/rules.md + .agents/skills.md.
 - Knowledge: KIs are auto-injected by platform at session start.
 - Proactive: BEFORE any side-effect → scan trigger tables → load matching rules/skills.
 

@@ -1,6 +1,7 @@
 ---
-description: Governance rule for naming
-source: catalog
+description: Naming conventions for files, directories, branches, and commits
+trigger: manual
+glob:
 ---
 
 # Naming Conventions

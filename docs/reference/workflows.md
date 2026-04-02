@@ -10,7 +10,7 @@ Workflows are the **UI layer** for AI agents. They define processes that agents 
 | ------------------------------------------ | -------------------------------- |
 | `repo/workflows/`                          | Reference — canonical source     |
 | `workspace/Resources/ai-agents/workflows/` | Snapshot — versioned copy        |
-| `workspace/.agent/workflows/`              | Active — currently used by agent |
+| `workspace/.agents/workflows/`              | Active — currently used by agent |
 
 ## Standard Workflows
 

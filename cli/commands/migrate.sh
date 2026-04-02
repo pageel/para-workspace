@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# PARA Workspace Migrator (v1.6.5)
+# PARA Workspace Migrator (v1.7.3)
 # Migrates a workspace between versions
 # Usage: para migrate [--from=1.4.0] [--to=1.4.1] [--dry-run]
 
@@ -179,7 +179,7 @@ if [ "$DRY_RUN" = false ] && [ -d "$CATALOG_SRC" ]; then
   done
   echo "     ✓ Workflows updated from templates"
 fi
-run_or_preview "Sync to .agent/workflows/" mkdir -p "$WS_ROOT/.agent/workflows"
+run_or_preview "Sync to .agents/workflows/" mkdir -p "$WS_ROOT/.agents/workflows"
 
 # Step 4: Migrate metadata.json → .para-workspace.yml
 echo ""
@@ -221,18 +221,18 @@ fi
 # Step 6: Install agent governance & rules (with backup)
 echo ""
 echo "🤖 Step 6: Install agent governance & rules..."
-run_or_preview "Create .agent/rules/" mkdir -p "$WS_ROOT/.agent/rules"
+run_or_preview "Create .agents/rules/" mkdir -p "$WS_ROOT/.agents/rules"
 
 if [ "$DRY_RUN" = false ]; then
   # Governance
   GOV_SRC="$REPO_ROOT/templates/common/agent/governance.md"
-  [ -f "$GOV_SRC" ] && backup_and_copy "$GOV_SRC" "$WS_ROOT/.agent/rules/governance.md"
+  [ -f "$GOV_SRC" ] && backup_and_copy "$GOV_SRC" "$WS_ROOT/.agents/rules/governance.md"
 
   # Rules Library
   RULE_SRC="$REPO_ROOT/templates/common/agent/rules"
   if [ -d "$RULE_SRC" ]; then
     for f in "$RULE_SRC"/*.md; do
-      [ -f "$f" ] && backup_and_copy "$f" "$WS_ROOT/.agent/rules/$(basename "$f")"
+      [ -f "$f" ] && backup_and_copy "$f" "$WS_ROOT/.agents/rules/$(basename "$f")"
     done
     echo "     ✓ Governance & Rules installed (with backup)"
   fi
@@ -276,11 +276,11 @@ LIB_SRC="$REPO_ROOT/templates/common/agent"
 
 for lib in rules skills; do
   SNAPSHOT_DIR="$WS_ROOT/Resources/ai-agents/$lib"
-  ACTIVE_DIR="$WS_ROOT/.agent/$lib"
+  ACTIVE_DIR="$WS_ROOT/.agents/$lib"
   SRC_DIR="$LIB_SRC/$lib"
 
   run_or_preview "Create Resources/ai-agents/$lib/" mkdir -p "$SNAPSHOT_DIR"
-  run_or_preview "Create .agent/$lib/" mkdir -p "$ACTIVE_DIR"
+  run_or_preview "Create .agents/$lib/" mkdir -p "$ACTIVE_DIR"
 
   if [ "$DRY_RUN" = false ] && [ -d "$SRC_DIR" ]; then
     for f in "$SRC_DIR"/*.md "$SRC_DIR"/catalog.yml; do
@@ -354,6 +354,60 @@ fi
 else
   echo "⏭️  Skipping v1.4.5→v1.4.6 steps (FROM=$FROM_VERSION >= 1.4.6)"
 fi  # end v1.4.5 → v1.4.6 gate
+
+# ============================================================
+# Migration: v1.7.2 → v1.7.3 (Agent Path Convention Fix)
+# ============================================================
+
+# Version gate: only run if upgrading from pre-1.7.3
+if ! semver_gte "$FROM_VERSION" "1.7.3" 2>/dev/null; then
+
+echo ""
+echo "━━━ v1.7.2 → v1.7.3 Migration ━━━━━━━━━━━━━━━━━━━"
+echo ""
+MIGRATION_RAN=true
+
+# Step 12: Rename .agent/ → .agents/ (BUG-28 fix)
+echo "📂 Step 12: Rename .agent/ → .agents/ (platform convention fix)..."
+
+# 12a: Workspace root
+if [ -d "$WS_ROOT/.agent" ] && [ ! -d "$WS_ROOT/.agents" ]; then
+  run_or_preview "Rename workspace .agent/ → .agents/" mv "$WS_ROOT/.agent" "$WS_ROOT/.agents"
+elif [ -d "$WS_ROOT/.agent" ] && [ -d "$WS_ROOT/.agents" ]; then
+  # Both exist — merge .agent/ contents into .agents/, then remove .agent/
+  echo "  ⚠️  Both .agent/ and .agents/ exist. Merging..."
+  if [ "$DRY_RUN" = false ]; then
+    cp -rn "$WS_ROOT/.agent/"* "$WS_ROOT/.agents/" 2>/dev/null || true
+    rm -rf "$WS_ROOT/.agent"
+    echo "     ✓ Merged .agent/ into .agents/ and removed old directory"
+  else
+    echo "     → Would merge .agent/ into .agents/"
+  fi
+elif [ -d "$WS_ROOT/.agents" ]; then
+  echo "  ✓ Workspace .agents/ already exists"
+fi
+
+# 12b: All project directories
+for project_dir in "$WS_ROOT"/Projects/*/; do
+  [ -d "$project_dir" ] || continue
+  project_name="$(basename "$project_dir")"
+
+  if [ -d "$project_dir/.agent" ] && [ ! -d "$project_dir/.agents" ]; then
+    run_or_preview "Rename $project_name/.agent/ → .agents/" mv "$project_dir/.agent" "$project_dir/.agents"
+  elif [ -d "$project_dir/.agent" ] && [ -d "$project_dir/.agents" ]; then
+    if [ "$DRY_RUN" = false ]; then
+      cp -rn "$project_dir/.agent/"* "$project_dir/.agents/" 2>/dev/null || true
+      rm -rf "$project_dir/.agent"
+      echo "     ✓ $project_name: Merged .agent/ into .agents/"
+    fi
+  fi
+done
+
+echo "     ✓ Agent directory migration complete"
+
+else
+  echo "⏭️  Skipping v1.7.2→v1.7.3 steps (FROM=$FROM_VERSION >= 1.7.3)"
+fi  # end v1.7.2 → v1.7.3 gate
 
 # === Record migration (only if steps actually ran — v1.6.5 BUG-23 fix) ===
 if [ "$DRY_RUN" = false ] && [ "$MIGRATION_RAN" = true ] && [ -d "$WS_ROOT/.para/migrations" ]; then

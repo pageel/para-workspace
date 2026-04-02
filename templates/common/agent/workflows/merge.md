@@ -19,7 +19,7 @@ Intelligently merge a user's customized workflow with the latest version from th
 ## Logic Flow
 
 1.  **Identify Paths**:
-    - **User (Local)**: `.agent/workflows/[target].md`
+    - **User (Local)**: `.agents/workflows/[target].md`
     - **Catalog (Source)**: Governed catalog directory (priority order):
       1. `Projects/para-workspace/repo/templates/common/agent/workflows/[target].md`
       2. `Resources/references/para-workspace/templates/common/agent/workflows/[target].md`
@@ -39,7 +39,7 @@ Intelligently merge a user's customized workflow with the latest version from th
 5.  **Execution**:
     - Generate the fully merged content.
     - Create a backup `.bak` before writing.
-    - Write merged content to `.agent/workflows/[target].md`.
+    - Write merged content to `.agents/workflows/[target].md`.
 
 ## Step-by-Step Instructions
 
@@ -49,7 +49,7 @@ Intelligently merge a user's customized workflow with the latest version from th
 
 Read both files:
 
-- **Local**: `.agent/workflows/[target].md`
+- **Local**: `.agents/workflows/[target].md`
 - **Catalog**: Resolve from governed catalog source (see Logic Flow step 1).
 
 ### 2. Analyze & Plan
@@ -64,8 +64,8 @@ Read both files:
 
 ### 3. Generate & Apply
 
-1. Create backup: copy `.agent/workflows/[target].md` → `.agent/workflows/[target].md.bak`
-2. Write the merged content to `.agent/workflows/[target].md`.
+1. Create backup: copy `.agents/workflows/[target].md` → `.agents/workflows/[target].md.bak`
+2. Write the merged content to `.agents/workflows/[target].md`.
 3. Ensure the frontmatter description reflects any new capabilities.
 
 ### 4. Verify

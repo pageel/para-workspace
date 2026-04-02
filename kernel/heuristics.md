@@ -42,8 +42,8 @@
 Agent should load context in this sequence (highest priority first):
 
 1. **Project Contract**: `Projects/<project>/project.md`
-2. **Project Rules**: `Projects/<project>/.agent/rules/`
-3. **Workspace Rules**: `.agent/rules/`
+2. **Project Rules**: `Projects/<project>/.agents/rules/`
+3. **Workspace Rules**: `.agents/rules/`
 4. **Artifacts**: `Projects/<project>/artifacts/` (tasks, plans, walkthroughs)
 5. **Active Memory**: `Projects/<project>/.beads/`
 6. **Abstract Knowledge**: `Areas/`
@@ -60,9 +60,9 @@ Agent should load context in this sequence (highest priority first):
 
 When beginning work on a project (via `/open` or context detection), the agent SHOULD load project-specific rules using a lazy-loading protocol:
 
-1. Check for `Projects/<project>/.agent/rules.md` (lightweight index, ~5–10 lines).
+1. Check for `Projects/<project>/.agents/rules.md` (lightweight index, ~5–10 lines).
 2. If index exists: read it and note trigger conditions. Load a specific rule file **only when** the current action matches its trigger. Do NOT read all rule files upfront.
-3. If index does not exist: check if `Projects/<project>/.agent/rules/` has files. If yes, list names and load on demand. If empty — skip.
+3. If index does not exist: check if `Projects/<project>/.agents/rules/` has files. If yes, list names and load on demand. If empty — skip.
 
 **Rules Index format** — each project MAY provide:
 
@@ -154,7 +154,7 @@ Rules:
 
 1. **Creation**: Create beads in `.beads/` when encountering repeated issues, project-specific quirks, or critical decisions
 2. **Messy Thinking**: Beads are allowed to be messy, partial, and contradictory while the project is active
-3. **Graduation Ritual**: Before archiving, perform a "Graduation Review" — move valuable knowledge from beads to `Areas/`, `Resources/`, or `.agent/rules/`
+3. **Graduation Ritual**: Before archiving, perform a "Graduation Review" — move valuable knowledge from beads to `Areas/`, `Resources/`, or `.agents/rules/`
 
 ## H6. VCS & Git Boundaries
 

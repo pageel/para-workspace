@@ -10,8 +10,8 @@ SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 if [ -z "$WORKSPACE_ROOT" ]; then
     WORKSPACE_ROOT="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
 fi
-CATALOG_DIR="$WORKSPACE_ROOT/.agent/rules"
-AGENT_DIR="$WORKSPACE_ROOT/.agent/rules"
+CATALOG_DIR="$WORKSPACE_ROOT/.agents/rules"
+AGENT_DIR="$WORKSPACE_ROOT/.agents/rules"
 
 case "$1" in
   list)
@@ -39,7 +39,7 @@ case "$1" in
     fi
     
     if [ -f "$DEST" ]; then
-      echo "⚠️ Warning: Rule '$NAME' already exists in .agent/rules/."
+      echo "⚠️ Warning: Rule '$NAME' already exists in .agents/rules/."
       read -p "Do you want to overwrite it? (y/N) " -n 1 -r
       echo ""
       if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -50,7 +50,7 @@ case "$1" in
     
     mkdir -p "$AGENT_DIR"
     cp "$SOURCE" "$DEST"
-    echo "✅ Rule '$NAME' installed to .agent/rules/"
+    echo "✅ Rule '$NAME' installed to .agents/rules/"
     ;;
   *)
     echo "Usage: $0 [list | install <name>]"

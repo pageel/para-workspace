@@ -1,6 +1,7 @@
 ---
-description: Governance rule for exports-data
-source: catalog
+description: Rules for exporting data and sharing files externally
+trigger: manual
+glob:
 ---
 
 # Data Export Rule

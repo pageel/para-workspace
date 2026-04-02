@@ -15,7 +15,7 @@ Conduct a project retrospective before archiving to `Archive/`.
 
 // turbo
 
-Re-read `.agent/rules.md` to ensure rules context is loaded (guard against context truncation).
+Re-read `.agents/rules.md` to ensure rules context is loaded (guard against context truncation).
 
 ### 1. Review Goals & Progress
 
@@ -60,7 +60,7 @@ Identify and extract reusable artifacts:
 
 Review recurring knowledge points ("Beads") from session logs:
 
-- If a bead appears 3+ times, propose graduating it to an official Rule in `.agent/rules/`.
+- If a bead appears 3+ times, propose graduating it to an official Rule in `.agents/rules/`.
 
 ### 4.5. Graduate Insights to Knowledge Items
 

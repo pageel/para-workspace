@@ -67,8 +67,8 @@ case "$TYPE" in
     mkdir -p "$TARGET/artifacts/para-decisions"
     mkdir -p "$TARGET/artifacts/outputs"
     mkdir -p "$TARGET/.beads"
-    mkdir -p "$TARGET/.agent/rules"
-    mkdir -p "$TARGET/.agent/workflows"
+    mkdir -p "$TARGET/.agents/rules"
+    mkdir -p "$TARGET/.agents/workflows"
 
     # Copy templates
     TMPL="$REPO_ROOT/templates/common"

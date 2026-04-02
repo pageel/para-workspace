@@ -16,13 +16,13 @@ After truncation, the agent may perform side-effects (git push, edit task files,
 
 ### Layer 1: Rule File — Context Recovery Protocol
 
-`agent-behavior.md` Section 4 instructs the agent to re-read `.agent/rules.md` when context appears incomplete. Includes a **File-Level Guards** table mapping file patterns to required rules:
+`agent-behavior.md` Section 4 instructs the agent to re-read `.agents/rules.md` when context appears incomplete. Includes a **File-Level Guards** table mapping file patterns to required rules:
 
 | File pattern              | MUST re-read before editing     |
 | :------------------------ | :------------------------------ |
 | `artifacts/tasks/done.md` | `hybrid-3-file-integrity.md` C2 |
 | `artifacts/tasks/*.md`    | `hybrid-3-file-integrity.md`    |
-| `.agent/rules/*.md`       | `governance.md`                 |
+| `.agents/rules/*.md`       | `governance.md`                 |
 | `kernel/`, `.para/`       | `governance.md`                 |
 
 **Strength:** Covers workflow bypass (direct file edits). **Extensible** — project rules MAY define additional guards in their own `rules.md` File Guards section.
@@ -62,7 +62,7 @@ Inline HTML comments at the top of protected files. The agent **must read the fi
 | `TASK` | `artifacts/tasks/` | `<!-- ⚠️ HOT LANE ONLY — No backlog tasks here (C1) -->` |
 | `TASK` | `artifacts/tasks/` | `<!-- ⚠️ OPERATIONAL AUTHORITY — Mutations via /backlog only (C3) -->` |
 | `KERNEL` | `kernel/`, `Resources/ai-agents/kernel/` | `<!-- ⚠️ READ-ONLY SNAPSHOT — Do NOT modify (I9) -->` |
-| `GOVERNED` | `.agent/rules/` | `<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->` |
+| `GOVERNED` | `.agents/rules/` | `<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->` |
 | `WORKSPACE` | `Areas/Workspace/` | `<!-- ⚠️ APPEND-ONLY — via /end only -->` |
 
 **Position convention:**

@@ -86,7 +86,7 @@ Central Gate — project.md as single source of truth for context loading.
 Unified Agent Index — Skills Loading & Proactive Trigger Check (FEAT-53).
 → [Detailed release notes](docs/changelog/v1.6.2.md)
 
-- **Added**: `.agent/skills.md` — Workspace Skills Trigger Index template (parallel to `rules.md`).
+- **Added**: `.agents/skills.md` — Workspace Skills Trigger Index template (parallel to `rules.md`).
 - **Added**: `agent` map in `project.schema.json` — replaces `has_rules` (deprecated, backward compat kept).
 - **Added**: Proactive Trigger Check — agent scans trigger tables before ANY side-effect action.
 - **Added**: Agent Indices Pre-flight (Step 0) to 7 workflows: `/plan`, `/docs`, `/backlog`, `/push`, `/release`, `/retro`, `/end`.
@@ -191,7 +191,7 @@ Hybrid 3-File Synchronization & Fast Mode.
 Safe Workspace Update, Brainstorming & Progressive Rule Disclosure.
 → [Detailed release notes](docs/changelog/v1.5.0.md)
 
-- **Added**: `/update` and `/brainstorm` workflows. Progressive Rule disclosure (`.agent/rules.md`).
+- **Added**: `/update` and `/brainstorm` workflows. Progressive Rule disclosure (`.agents/rules.md`).
 - **Fixed**: `update.sh` version state read error skipping migrations.
 - **Changed**: Workspace version `1.5.0`, updated workflow cross-links (`/open`, `/plan`, `/para-rule`).
 
@@ -313,3 +313,9 @@ Artifact-Driven Workflow. → [Details](docs/changelog/v1.2.0.md)
 ## [1.1.0] - 2026-02-04
 
 CLI Foundation. → [Details](docs/changelog/v1.1.0.md)
+
+## [1.7.3] - 2026-04-02 — Agent Path Convention Fix (BUG-28)
+
+- **fix:** Renamed `.agent/` → `.agents/` across 90+ files to match Antigravity platform convention
+- **feat:** Added Antigravity-compatible frontmatter to all 12 governed rules (trigger, glob, description)
+- **feat:** Auto-migration in `para update` — renames `.agent/` → `.agents/` for workspace + all projects

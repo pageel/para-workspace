@@ -1,6 +1,7 @@
 ---
-description: Governance rule for knowledge
-source: catalog
+description: Knowledge Item governance — create, update, delete KI operations
+trigger: always_on
+glob: .para/knowledge/*
 ---
 
 # Knowledge Rules
@@ -75,4 +76,4 @@ source: catalog
 
 - `kernel/schema/ki.schema.json` — KI metadata schema
 - `kernel/heuristics.md` H10 — Knowledge Items heuristic
-- `.agent/workflows/knowledge.md` — Primary workflow
+- `.agents/workflows/knowledge.md` — Primary workflow

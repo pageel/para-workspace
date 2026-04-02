@@ -23,12 +23,12 @@ Three key properties:
 │ → 11 invariants (I1-I11), read only by audit │
 ├──────────────────────────────────────────────┤
 │ Layer 2: GOVERNED RULES (Global, from repo)  │
-│ .agent/rules/*.md                            │
+│ .agents/rules/*.md                            │
 │ → 10 rules, synced via ./para install/update │
 │ → Apply to ALL projects in workspace         │
 ├──────────────────────────────────────────────┤
 │ Layer 3: PROJECT RULES (Per-project)         │
-│ Projects/<name>/.agent/rules/*.md            │
+│ Projects/<name>/.agents/rules/*.md            │
 │ → Custom rules, supplement (not override)    │
 │ → Declared via rules.md trigger index        │
 └──────────────────────────────────────────────┘
@@ -58,7 +58,7 @@ Synced from `catalog.yml` by `./para install` or `./para update`.
 
 ### Layer 3: Project Rules
 
-- **Location:** `Projects/<name>/.agent/rules/`
+- **Location:** `Projects/<name>/.agents/rules/`
 - **Not synced from repo** — user-created via `/para-rule add`
 - **Supplement** global rules, never override
 
@@ -66,7 +66,7 @@ Synced from `catalog.yml` by `./para install` or `./para update`.
 
 The system uses **index files** so the agent knows which rules AND skills exist and when to load them:
 
-**Tier 1a: Workspace Rules Index** (`.agent/rules.md`) — ALWAYS READ
+**Tier 1a: Workspace Rules Index** (`.agents/rules.md`) — ALWAYS READ
 
 ```markdown
 | Rule                    | Trigger                                           | File                             | Pri |
@@ -76,7 +76,7 @@ The system uses **index files** so the agent knows which rules AND skills exist 
 | ...                     | ...                                               | ...                              | 🟢  |
 ```
 
-**Tier 1b: Workspace Skills Index** (`.agent/skills.md`) — ALWAYS READ (v1.6.2+)
+**Tier 1b: Workspace Skills Index** (`.agents/skills.md`) — ALWAYS READ (v1.6.2+)
 
 ```markdown
 | Rule          | Trigger                              | File             | Pri |
@@ -99,10 +99,10 @@ The system uses **index files** so the agent knows which rules AND skills exist 
 ```
 /open
   ↓
-Step 2.5a: Read .agent/rules.md (workspace rules index) — ALWAYS
+Step 2.5a: Read .agents/rules.md (workspace rules index) — ALWAYS
   → Memorize triggers (do NOT read rule files)
   ↓
-Step 2.5b: Read .agent/skills.md (workspace skills index) — ALWAYS (v1.6.2+)
+Step 2.5b: Read .agents/skills.md (workspace skills index) — ALWAYS (v1.6.2+)
   → Memorize skill triggers
   ↓
 Step 2.5c: agent.rules / agent.skills / has_rules?
