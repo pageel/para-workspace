@@ -62,7 +62,7 @@ para-workspace/
 ├── kernel/              # 🧠 Constitution
 │   ├── KERNEL.md
 │   ├── invariants.md    # 10 hard rules (MAJOR bump)
-│   ├── heuristics.md    # 9 soft conventions
+│   ├── heuristics.md    # 10 soft conventions
 │   ├── schema/          # workspace, project, backlog, catalog schemas
 │   └── examples/        # valid/ + invalid/ compliance vectors
 ├── cli/                 # 🔧 Compiler
@@ -547,7 +547,7 @@ Each KI is classified along two axes — **domain** (what) × **purpose** (how):
 
 ### Governance
 
-KI operations are governed by **5 rules (KR1–KR5)** and validated against **H10** (11 clauses):
+KI operations are governed by **6 rules (KR1–KR6)** and validated against **H10** (11 clauses):
 
 - **KR1 Write Gate**: Only `/knowledge` workflow can create/modify KIs
 - **KR2 User Approval**: Every KI creation requires explicit user consent

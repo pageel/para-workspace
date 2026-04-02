@@ -61,7 +61,7 @@ para-workspace/
 ├── kernel/              # 🧠 Hiến pháp
 │   ├── KERNEL.md
 │   ├── invariants.md    # 10 luật cứng (MAJOR bump)
-│   ├── heuristics.md    # 9 quy ước mềm
+│   ├── heuristics.md    # 10 quy ước mềm
 │   ├── schema/          # workspace, project, backlog, catalog schemas
 │   └── examples/        # Vector kiểm thử tuân thủ
 ├── cli/                 # 🔧 Trình biên dịch
@@ -549,7 +549,7 @@ Mỗi KI được phân loại theo hai trục — **domain** (chủ đề) × *
 
 ### Quản trị
 
-KI operations được chi phối bởi **5 quy tắc (KR1–KR5)** và xác thực theo **H10** (11 điều khoản):
+KI operations được chi phối bởi **6 quy tắc (KR1–KR6)** và xác thực theo **H10** (11 điều khoản):
 
 - **KR1 Write Gate**: Chỉ `/knowledge` workflow mới được tạo/sửa KI
 - **KR2 User Approval**: Mọi KI đều cần sự xác nhận của người dùng

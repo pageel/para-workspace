@@ -1,6 +1,6 @@
-# PARA Workspace v1.6.x Architecture Standards
+# PARA Workspace v1.7.x Architecture Standards
 
-The v1.6.x generation ("Central Gate") of PARA Workspace introduces field-gated context loading, ecosystem project coordination, a formalized skill system, and the Para-Kit consolidated reference. It builds upon the v1.4.x "Governed" architecture with significant efficiency and governance improvements.
+The v1.7.x generation builds on v1.6.x "Central Gate" with the **Knowledge System** — persistent cross-session memory for AI agents via Knowledge Items (KIs). It also refines ecosystem coordination, governed library catalogs, and token optimization patterns.
 
 ## 1. Core Structural Integrity: Pillar Purity
 
@@ -10,7 +10,7 @@ A fundamental principle: the **4 Primary Multi-Project Pillars** (Projects, Area
 - **Orphan Management:** Deprecated system files → `.para/archive/[version]-orphans/`, never the user's `Archive/`.
 - **No Loose Files (I8):** Every file belongs to P/A/R/Archive. Root only has approved config: `.para-workspace.yml`.
 
-## 2. The Governing Kernel (v1.5.3 spec, v1.6.5 runtime)
+## 2. The Governing Kernel (v1.5.3 spec, v1.7.2 runtime)
 
 The Kernel (`Resources/ai-agents/kernel/`) is the **"constitution"** — immutable at runtime.
 
@@ -46,12 +46,13 @@ The Kernel (`Resources/ai-agents/kernel/`) is the **"constitution"** — immutab
 | H2  | Context Loading Priority    | project.md → rules → artifacts → areas          |
 | H7  | Cross-Project References    | Ecosystem `@` prefix for cross-project plans    |
 | H9  | Governed Library Catalogs   | catalog.yml mandatory with kernel_min/max       |
+| H10 | Knowledge Items Governance  | KR1-KR6 lifecycle rules, system KI sync         |
 
 ## 3. Workspace Configuration (`.para-workspace.yml`)
 
 ```yaml
-kernel_version: "1.6.5"
-profile: "dev"             # dev | general | marketer | ceo
+kernel_version: "1.7.2"
+profile: "dev"             # dev | general
 language: "vi"             # ISO 639-1
 repo:
   url: "https://github.com/pageel/para-workspace"
@@ -258,4 +259,46 @@ Skills promoted from rules (experiment from pageel-cms dogfooding): standalone, 
 | 1.6.2   | — | `agent.rules`/`agent.skills` map replaces `has_rules` boolean |
 | 1.6.3   | Central Gate | Field-gated change detection, mandatory `strategy`/`roadmap` fields |
 | 1.6.4   | — | Para-Kit skill, git-hash change detection, recursive dir sync |
-| 1.6.5   | — | Para-Kit skill finalized, documentation cleanup |
+| 1.6.5   | —            | Para-Kit skill finalized, documentation cleanup |
+| 1.7.0   | Knowledge    | Knowledge System: KI schema, /knowledge workflow, graph-ready taxonomy |
+| 1.7.1   | —            | System KI governed lifecycle: namespace guard, template sync, CLI hooks |
+| 1.7.2   | —            | KI index 12-col, workflow simplification (platform-inject), Knowledge Graph seed |
+
+## 15. Knowledge System (v1.7.0+)
+
+Persistent cross-session memory via Knowledge Items (KIs).
+
+### Architecture
+
+KIs live **outside** workspace in KI Store (`~/.gemini/antigravity/knowledge/`). PARA Workspace provides governance only.
+
+- **System KIs** (`para_*`): Managed by repo templates, synced via `./para update`
+- **User KIs**: Created by `/knowledge [topic]`, scope: workspace/project/ecosystem
+
+### Context Flow (v1.7.2)
+
+Platform auto-injects KI summaries at session start. Workflows use injected data — no `index.md` file I/O needed.
+
+`.para/knowledge/index.md` is the **user-facing** reference (12 columns), not the agent data source.
+
+### Schema (metadata.json)
+
+Graph-ready fields: `title`, `summary`, `version`, `scope`, `domain`, `purpose`, `owner`, `para_version`, `tags`, `references`, `relates_to`, `code_refs`, `concepts`.
+
+### Governance Rules
+
+- **KR1:** Only `/knowledge` can create/modify KIs
+- **KR2:** User approval required
+- **KR3:** `para_*` prefix reserved for system KIs
+- **KR4:** Summary ≤ 800 chars
+- **KR5:** Archive, never delete
+- **KR6:** System KIs sync from repo templates via CLI
+
+### Workflow Integration
+
+- `/open` — Platform-injected KI context, scope matching
+- `/plan` — Pitfall → Risks, Playbook → Phase refs
+- `/end` — Suggests KI create/update from session
+- `/brainstorm` — Option F: extract insight as KI
+- `/retro` — Graduate patterns to KIs
+- `/learn` — KI suggestion after lesson capture

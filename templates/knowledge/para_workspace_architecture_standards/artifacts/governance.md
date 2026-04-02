@@ -1,6 +1,6 @@
 # Governance & Extension: Kernel, Catalogs, and Agent Protocol
 
-PARA Workspace v1.6.x uses a formalized governance layer with three tiers: Constitutional (immutable kernel), Governed (catalog-managed libraries), and Local (project-specific customizations).
+PARA Workspace v1.7.x uses a formalized governance layer with three tiers: Constitutional (immutable kernel), Governed (catalog-managed libraries), and Local (project-specific customizations).
 
 ## 1. The RFC Process
 
@@ -18,9 +18,10 @@ Significant changes to the workspace must follow the **RFC** process:
 
 - **Invariants (I1–I11):** Hard rules — MUST NOT be violated by any agent, CLI, or workflow.
   - **Smart Archive Rule:** Never use `rm` directly to delete user-facing PARA files during updates. MUST use `archive_file` helper → `.para/archive/[version]-orphans/`.
-- **Heuristics (H1–H9):** Soft rules — strongly recommended, flexible based on context.
+- **Heuristics (H1–H10):** Soft rules — strongly recommended, flexible based on context.
   - **Ecosystem (H7 v1.6.0+):** Cross-project `@` prefix, ecosystem meta-projects
   - **Governed Catalogs (H9):** `catalog.yml` mandatory for all libraries
+  - **Knowledge Items (H10 v1.7.0+):** KR1-KR6 lifecycle governance, system KI sync
 
 ## 3. Catalog System (v1.4.1+)
 
@@ -28,15 +29,15 @@ The `catalog.yml` mechanism formalizes how workflows, rules, and skills are intr
 
 ### Required Fields Per Item
 
-| Field        | Required | Description                        |
-|:-------------|:---------|:-----------------------------------|
-| `id`         | ✅       | Stable kebab-case identifier       |
-| `name`       | ✅       | Human-readable name                |
-| `version`    | ✅       | Semver version                     |
-| `kernel_min` | ✅       | Minimum kernel version required    |
-| `kernel_max` | ❌       | Optional max kernel version        |
-| `entrypoint` | ✅       | Relative path to markdown file     |
-| `description`| ✅       | Short description                  |
+Field        | Required | Description
+:------------|:---------|:----------------------------------
+`id`         | ✅       | Stable kebab-case identifier
+`name`       | ✅       | Human-readable name
+`version`    | ✅       | Semver version
+`kernel_min` | ✅       | Minimum kernel version required
+`kernel_max` | ❌       | Optional max kernel version
+`entrypoint` | ✅       | Relative path to markdown file
+`description`| ✅       | Short description
 
 ### Sync Logic
 
@@ -55,9 +56,9 @@ The `catalog.yml` mechanism formalizes how workflows, rules, and skills are intr
 ### Trigger Table Format
 
 ```markdown
-| Rule/Skill | Trigger                              | File              | Pri |
-|:-----------|:-------------------------------------|:------------------|:----|
-| Name       | When this action matches             | path/to/file.md   | 🔴  |
+Rule/Skill | Trigger                              | File              | Pri
+:----------|:-------------------------------------|:------------------|:---
+Name       | When this action matches             | path/to/file.md   | 🔴
 ```
 
 ### Proactive Trigger Protocol
@@ -78,27 +79,56 @@ If rules/skills forgotten after context truncation:
 
 ## 5. Rules Library (10 workspace rules)
 
-| Rule                    | Trigger                              | Priority |
-|:------------------------|:-------------------------------------|:---------|
-| Governance              | Touching kernel/, .para/, Resources/ | 🔴 High  |
-| VCS                     | Git commit, push, merge, branch, tag | 🔴 High  |
-| Hybrid 3-File Integrity | Reading/writing artifacts/tasks/     | 🟡 Med   |
-| Context Rules           | Loading context, starting session    | 🟡 Med   |
-| Agent Behavior          | Communication, formatting, recovery  | 🟡 Med   |
-| PARA Discipline         | Creating/moving files, organizing    | 🟡 Med   |
-| Artifact Standard       | Creating/editing artifacts, plans    | 🟢 Low   |
-| Naming                  | Creating files, directories, branches| 🟢 Low   |
-| Versioning              | Version bumps, changelog updates     | 🟢 Low   |
-| Exports Data            | Exporting data, sharing externally   | 🟢 Low   |
+Rule                    | Trigger                              | Priority
+:-----------------------|:-------------------------------------|:--------
+Governance              | Touching kernel/, .para/, Resources/ | 🔴 High
+VCS                     | Git commit, push, merge, branch, tag | 🔴 High
+Hybrid 3-File Integrity | Reading/writing artifacts/tasks/     | 🟡 Med
+Context Rules           | Loading context, starting session    | 🟡 Med
+Agent Behavior          | Communication, formatting, recovery  | 🟡 Med
+PARA Discipline         | Creating/moving files, organizing    | 🟡 Med
+Artifact Standard       | Creating/editing artifacts, plans    | 🟢 Low
+Naming                  | Creating files, directories, branches| 🟢 Low
+Versioning              | Version bumps, changelog updates     | 🟢 Low
+Exports Data            | Exporting data, sharing externally   | 🟢 Low
 
 ## 6. Skills Library (3 skills, v1.6.4+)
 
 Skills are folder-based, standalone, English-first instruction sets:
 
-| Skill      | Trigger                                    | Structure                |
-|:-----------|:-------------------------------------------|:-------------------------|
-| PARA Kit   | PARA structure, schema, kernel governance  | SKILL.md + templates/ + examples/ |
-| Formatting | Tables, diagrams, trees, visual markdown   | SKILL.md (self-contained) |
-| Page Map   | Website visual structure, PAGE_MAP.md      | SKILL.md (self-contained) |
+Skill      | Trigger                                    | Structure
+:----------|:-------------------------------------------|:------------------------
+PARA Kit   | PARA structure, schema, kernel governance  | SKILL.md + templates/ + examples/
+Formatting | Tables, diagrams, trees, visual markdown   | SKILL.md (self-contained)
+Page Map   | Website visual structure, PAGE_MAP.md      | SKILL.md (self-contained)
 
 Skills were promoted from rules (experiment from pageel-cms dogfooding, v1.6.4). Key difference: rules are constraint-focused (do/don't), skills are capability-focused (how-to + templates).
+
+## 7. Knowledge System Governance (v1.7.0+)
+
+### Rules (KR1–KR6)
+
+Rule   | Description
+:------|:-------------------------------------------
+KR1    | Only `/knowledge` workflow can create/modify KIs
+KR2    | All KI operations require user confirmation
+KR3    | `para_*` prefix reserved for system KIs
+KR4    | Summary ≤ 800 characters
+KR5    | All operations undoable (archive, not delete)
+KR6    | System KIs sync from repo templates via CLI
+
+### System KI Lifecycle
+
+```text
+repo/templates/knowledge/     CLI install/update       KI Store
+para_workspace_*/         ─────────────────────→  ~/.gemini/antigravity/
+├─ metadata.json              compare para_version    knowledge/para_*/
+└─ artifacts/                 merge strategy:         ├─ metadata.json
+                              template wins metadata   ├─ timestamps.json
+                              union merge references   └─ artifacts/
+                              keep user artifacts
+```
+
+### Platform Integration (v1.7.2)
+
+Antigravity platform auto-injects KI summaries at session start. Workflows use injected data — no `index.md` file I/O needed. `.para/knowledge/index.md` is the user-facing reference only.
