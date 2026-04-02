@@ -1,6 +1,6 @@
 # Knowledge System Architecture
 
-> **Version**: 1.7.2 | **Last reviewed**: 2026-04-02
+> **Version**: 1.7.3 | **Last reviewed**: 2026-04-02
 
 ## Overview
 
@@ -44,6 +44,9 @@ Created by users/agents. No prefix restrictions (except `para_` which is reserve
 - Owner: `user`
 - Lifecycle: `/knowledge [topic]` → KI Store
 - Scope: `workspace`, `project`, or `ecosystem`
+- Naming convention: `project_{name}` for project-specific, or descriptive topic slug
+  - Example: project `my-app` → `project_my_app`
+  - See [Slug Naming Convention](./ki-anatomy.md#slug-naming-convention-v173)
 
 ## Context Flow (v1.7.2)
 
@@ -157,7 +160,12 @@ para_workspace_*/         ──────────────────
                               keep user artifacts
 ```
 
-CLI `update.sh` auto-syncs system KIs when template `para_version` changes.
+CLI `update.sh` auto-syncs system KIs using a dual-gate strategy (v1.7.3):
+
+1. **Version gate**: compare `para_version` in template vs installed metadata
+2. **Content hash gate**: compare file hash (catches same-version hotfixes)
+
+If either gate detects a change, the template overrides the installed KI (idempotent — no-op when both match).
 
 ---
 

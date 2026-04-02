@@ -1,6 +1,6 @@
 # Knowledge Rule — KI Operations Governance
 
-> **Version**: 1.7.2 | **Last reviewed**: 2026-04-02
+> **Version**: 1.7.3 | **Last reviewed**: 2026-04-02
 
 ## Overview
 
@@ -18,10 +18,10 @@ Rule | Description
 :----|:--------------------------------------------------
 KR1  | Only `/knowledge` workflow (and hooks from `/end`, `/brainstorm`, `/retro`) can WRITE to KI Store
 KR2  | All mutations require explicit user confirmation
-KR3  | `para_*` prefix reserved for system KIs. User KIs rejected if using `para_` prefix
+KR3  | `para_*` prefix reserved for system KIs. User KIs: use `project_{name}` for project-scoped, descriptive slug for cross-project
 KR4  | MUST NOT touch `~/.gemini/` outside `knowledge/` and `knowledge/.archived/`
 KR5  | All writes must be idempotent + recoverable. Archive instead of delete
-KR6  | System KIs ship from repo templates, sync via `./para update` (v1.7.1)
+KR6  | System KIs ship from repo templates, sync via `./para update` with dual-gate: version + content hash (v1.7.3)
 
 ## Soft Rules: KS1-KS5
 

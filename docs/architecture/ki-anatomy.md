@@ -1,6 +1,6 @@
 # Knowledge Item Anatomy
 
-> **Version**: 1.7.2 | **Last reviewed**: 2026-04-02
+> **Version**: 1.7.3 | **Last reviewed**: 2026-04-02
 
 ## Overview
 
@@ -86,6 +86,7 @@ Agent ─────────────────────→ KI Stor
 Aspect          | System KI (`para_*`)        | User KI
 :---------------|:----------------------------|:---------------------------
 Slug prefix     | `para_*` (required)         | No `para_*` (rejected)
+Naming hint     | `para_{domain}_{topic}`     | `project_{name}` or `{descriptive_topic}`
 Owner           | `"para"`                    | `"user"`
 Source          | `repo/templates/knowledge/` | Agent creates from session
 Update method   | CLI sync / `/knowledge system update` | `/knowledge [topic]`
@@ -98,6 +99,18 @@ Three metadata fields seed the future Knowledge Graph:
 - **`code_refs`** — Impact surface: agent checks before modifying listed files
 - **`concepts`** — Semantic nodes: graph engine connects concept → KI → code_refs
 - **`relates_to`** — KI-to-KI edges: creates clusters when >10 KIs exist
+
+## Slug Naming Convention (v1.7.3)
+
+| Scope | Prefix | Example | Use case |
+|:---|:---|:---|:---|
+| System (PARA) | `para_` | `para_workspace_architecture_standards` | Ships with template for all users |
+| Project-specific | `project_` | `project_my_app` | Dev patterns, pitfalls for a specific project |
+| Topic/domain | (descriptive) | `astro_migration_patterns` | Cross-project technical knowledge |
+| Tool/tech | (tool name) | `cloudflare_workers_gotchas` | Tool-specific gotchas |
+
+> **Tip:** For project KIs, use `project_` + project name (kebab→snake).
+> Example: project `my-app` → slug `project_my_app`
 
 ## Validation Checklist
 

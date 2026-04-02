@@ -1,6 +1,6 @@
 # Workflow `/knowledge` — Knowledge Items Management
 
-> **Version**: 1.7.2 | **Last reviewed**: 2026-04-02
+> **Version**: 1.7.3 | **Last reviewed**: 2026-04-02
 
 ## Overview
 
@@ -35,9 +35,14 @@ Scans all KIs in KI Store, calculates health, renders visual table with System K
 
 Fuzzy-matches topic against existing KIs. Match >70% → UPDATE, otherwise → CREATE. Namespace guard enforces `para_*` for system KIs only.
 
+**Slug naming convention** (v1.7.3):
+- Project-specific: `project_{project_name}` (e.g., `project_my_app`)
+- Topic/domain: descriptive slug (e.g., `astro_migration_patterns`)
+- System: `para_{domain}_{topic}` (reserved, enforced by KR3)
+
 ### System KI Sync
 
-Scans `repo/templates/knowledge/` → compares with KI Store. Newer template → upgrade (merge-safe). New KI → prompt install.
+Scans `repo/templates/knowledge/` → compares with KI Store using dual-gate (v1.7.3): version comparison + content hash comparison. Newer or changed template → upgrade (merge-safe). New KI → prompt install.
 
 ## Governance
 
