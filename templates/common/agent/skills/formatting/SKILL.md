@@ -73,6 +73,7 @@ Group completed items by plan. Use reference links for file paths.
 - MUST use Unicode box-drawing characters (see table below)
 - MUST NOT use plain ASCII (`+-|`)
 - MUST place inside `` ```text `` code blocks
+- MUST NOT wrap the entire diagram in an outer border box. Use inner boxes for each component — outer frame causes alignment drift across renderers.
 
 ### Character Reference
 
@@ -223,4 +224,5 @@ Before finalizing any visual markdown element:
 - [ ] Long URLs use reference links `[text][ref]`?
 - [ ] Diagrams inside `text` code blocks?
 - [ ] Diagrams use Unicode box-drawing (not ASCII)?
+- [ ] No outer border wrapping the entire diagram?
 - [ ] Trees use `├── └── │` characters?
