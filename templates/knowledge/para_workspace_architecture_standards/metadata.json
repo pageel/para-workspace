@@ -1,13 +1,13 @@
 {
-  "title": "PARA Workspace Architecture & Governance Standards (v1.6.x)",
-  "summary": "Foundational architecture, governance, and efficiency standards for PARA Workspace v1.6.x ('Central Gate'). Covers: four-pillar structure (.para/, .agent/), Governing Kernel v1.5.3 (11 Invariants, 9 Heuristics), project.md schema v1.6.3 with field-gated I/O and @ecosystem/ path resolution, Ecosystem meta-projects, two-level Agent Index (workspace + project rules/skills with proactive trigger), Skills system v1.6.4, CLI with Smart Archive and catalog.yml governance, SYNC.md cross-project notifications, and token optimization patterns (field-gated I/O, lazy-loading, strategy cascade). Covers 32 workflows and 11 rules.",
+  "title": "PARA Workspace Architecture & Governance Standards (v1.7.x)",
+  "summary": "Foundational architecture, governance, and efficiency standards for PARA Workspace v1.7.x. Covers: four-pillar structure (.para/, .agent/), Governing Kernel v1.5.3 (11 Invariants, 10 Heuristics incl. H10 KI), project.md schema v1.6.3 with field-gated I/O and @ecosystem/ path resolution, Ecosystem meta-projects, two-level Agent Index (workspace + project rules/skills with proactive trigger), Skills system v1.6.4, CLI with Smart Archive and catalog.yml governance, SYNC.md cross-project notifications, Knowledge System with platform-injected KI context (v1.7.0+), System KI governed lifecycle with template sync (v1.7.1), and token optimization patterns (field-gated I/O, lazy-loading, strategy cascade). Covers 32 workflows and 11 rules.",
   "version": "1.0",
   "scope": "workspace",
   "domain": "workspace",
   "purpose": "context",
   "owner": "para",
-  "para_version": "1.6.5",
-  "tags": ["architecture", "governance", "kernel", "invariants", "heuristics", "token-optimization", "ecosystem", "agent-index"],
+  "para_version": "1.7.2",
+  "tags": ["architecture", "governance", "kernel", "invariants", "heuristics", "token-optimization", "ecosystem", "agent-index", "knowledge-system"],
   "references": [
     {
       "type": "file",
@@ -48,10 +48,22 @@
   ],
   "relates_to": [],
   "code_refs": [
-    "Resources/ai-agents/kernel/",
-    ".agent/rules/",
-    ".agent/skills/",
-    ".agent/workflows/"
+    "templates/common/agent/workflows/knowledge.md",
+    "templates/common/agent/workflows/open.md",
+    "templates/common/agent/workflows/end.md",
+    "templates/common/agent/workflows/plan.md",
+    "templates/common/agent/workflows/learn.md",
+    "templates/common/agent/workflows/brainstorm.md",
+    "templates/common/agent/workflows/retro.md",
+    "templates/common/agent/workflows/para-audit.md",
+    "templates/common/agent/workflows/catalog.yml",
+    "templates/common/agent/rules/knowledge.md",
+    "cli/commands/install.sh",
+    "cli/commands/update.sh",
+    "cli/commands/init.sh",
+    "templates/knowledge/",
+    "kernel/schema/ki.schema.json",
+    "kernel/heuristics.md"
   ],
   "concepts": [
     "PARA methodology",
@@ -59,6 +71,10 @@
     "field-gated I/O",
     "Agent Index",
     "token optimization",
-    "Defense-in-Depth"
+    "Defense-in-Depth",
+    "Knowledge Items",
+    "platform KI inject",
+    "KI lifecycle governance",
+    "System KI template sync"
   ]
 }

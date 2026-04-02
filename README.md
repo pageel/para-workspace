@@ -7,7 +7,7 @@
 **The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.1-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.2-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -72,7 +72,7 @@ para-workspace/
 ├── templates/           # 📦 Scaffolding & Governed Libraries
 │   ├── common/agent/    # Centralized workflows/, rules/, skills/ + catalog.yml
 │   │   └── projects/    # .project.yml template
-│   └── profiles/        # dev, general, marketer, ceo presets
+│   └── profiles/        # dev, general presets
 ├── tests/               # 🧪 kernel/ + cli/ integration tests
 ├── docs/                # 📖 Documentation
 │   ├── architecture/    # Architecture: overview, kernel, ecosystem
@@ -230,8 +230,6 @@ cd ..\..\..
 | :---------------------------------------------------- | :---------------------------------- | :---------------------- |
 | [`general`](./templates/profiles/general/README.md)   | Minimal PARA structure              | Personal PKM            |
 | [`dev`](./templates/profiles/dev/README.md)           | Technical Areas + AI tooling        | Software developers     |
-| [`marketer`](./templates/profiles/marketer/README.md) | Campaign & customer Areas           | Marketing professionals |
-| [`ceo`](./templates/profiles/ceo/README.md)           | Strategy & organizational oversight | Founders & leadership   |
 
 ### What `para init` Does
 
@@ -540,9 +538,9 @@ Each KI is classified along two axes — **domain** (what) × **purpose** (how):
 
 | Workflow | KI Integration |
 |:---------|:---------------|
-| `/open` | Loads KI index, matches scope, reports in session |
+| `/open` | Platform-injected KI context, scope matching for report |
 | `/plan` | Pitfall KIs → Risks, Playbook KIs → Phase references |
-| `/end` | Suggests creating KIs from session insights |
+| `/end` | Suggests creating/updating KIs from session insights |
 | `/brainstorm` | Option F: Extract insight as KI |
 | `/retro` | Graduates cross-project patterns to KIs |
 | `/knowledge` | Full lifecycle: create, update, audit, archive |
@@ -612,6 +610,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Update Flow Fix — Version Direction Detection & Migration History _(shipped in v1.6.5)_
 - [x] **Knowledge System — KI schema, /knowledge workflow, graph-ready taxonomy** _(shipped in v1.7.0)_
 - [x] **System KI Governed Lifecycle — namespace guard, template sync, CLI hooks** _(shipped in v1.7.1)_
+- [x] **KI Index Schema Upgrade, Workflow Simplification & Knowledge Graph Seed** _(shipped in v1.7.2)_
 - [ ] Department System _(v1.8.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.9.0 — planned)_
 
@@ -629,4 +628,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.7.0_
+_Version: 1.7.2_

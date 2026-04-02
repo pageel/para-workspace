@@ -35,7 +35,7 @@ for arg in "$@"; do
       echo "Usage: para init [options]"
       echo ""
       echo "Options:"
-      echo "  --profile=NAME   Workspace profile (general, dev, marketer, ceo)"
+      echo "  --profile=NAME   Workspace profile (general, dev)"
       echo "  --lang=CODE      Language preference (en, vi)"
       echo "  --path=DIR       Target directory (default: current dir)"
       echo ""

@@ -103,28 +103,11 @@ IF agent.skills exists and is true → Read project .agent/skills.md
 ELSE                               → Skip skills. Zero I/O cost.
 ```
 
-### 2.7. Load Knowledge Items scope (CONDITIONAL)
+### 2.7. Knowledge Items context
 
-//turbo
+> Platform auto-injects KI summaries. No file I/O needed.
 
-> **Field-gate:** Only runs if `.para/knowledge/index.md` exists. If not → skip. Zero I/O.
-> **Token budget:** ~40 tokens for index read + scope match.
-
-```
-IF .para/knowledge/index.md exists:
-  1. Read index.md (trigger table)
-  2. For each KI row, check scope match:
-     - scope: workspace → ALWAYS include
-     - scope: project   → include IF slug matches [project-name]
-     - scope: ecosystem → include IF project is in ecosystem
-  3. Store matched KI slugs for report (Step 8)
-ELSE:
-  Skip. No KI system configured.
-```
-
-> **Note:** This step does NOT load KI artifacts. It only reads the index
-> to know WHICH KIs are relevant. KI content is already injected by the
-> platform at session start (L1 auto-inject).
+From injected KI data, match scope to project. Store matched slugs for report (Step 8).
 
 #### ✅ Agent Index Completion Gate
 
@@ -137,7 +120,6 @@ ELSE:
 | 2 | Workspace skills loaded? | `.agent/skills.md`                  | ALWAYS    |
 | 3 | Project rules resolved?  | `agent.rules` field in project.md   | IF true   |
 | 4 | Project skills resolved? | `agent.skills` field in project.md  | IF true   |
-| 5 | KI index loaded?         | `.para/knowledge/index.md`          | IF exists |
 
 **Proactive Trigger Check (v1.6.2+):**
 
@@ -367,7 +349,7 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 - Git: Do NOT merge/branch/tag without user approval. Read rules/vcs.md first.
 - Governance: Do NOT modify Resources/ai-agents/ (read-only).
 - Recovery: If rules/skills forgotten → re-read .agent/rules.md + .agent/skills.md.
-- Knowledge: KIs are primed by platform. If lost → re-read .para/knowledge/index.md.
+- Knowledge: KIs are auto-injected by platform at session start.
 - Proactive: BEFORE any side-effect → scan trigger tables → load matching rules/skills.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

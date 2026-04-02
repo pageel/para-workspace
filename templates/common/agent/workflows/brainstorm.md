@@ -149,7 +149,7 @@ Extract the reusable insight (not the project-specific details) into `Areas/Lear
 
 **Option F: Extract as Knowledge Item**
 
-> Only shown if `.para/knowledge/index.md` exists.
+> KI system is a standard workspace component (v1.7.0+).
 
 Suggest: `/knowledge [topic]`
 

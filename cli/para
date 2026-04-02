@@ -2,7 +2,7 @@
 
 # PARA Workspace CLI
 # Usage: ./cli/para [command] [args...]
-# Version: 1.7.0
+# Version: 1.7.2
 # Kernel Version: 1.4
 
 set -e
@@ -100,7 +100,7 @@ case "$1" in
     echo "━━━ Core Commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
     echo "  init [--profile=X] [--lang=X]     Create a new workspace"
-    echo "       --profile=NAME               Workspace preset (general, dev, marketer, ceo)"
+    echo "       --profile=NAME               Workspace preset (general, dev)"
     echo "       --lang=CODE                  Language (en, vi)"
     echo "       --path=DIR                   Target directory"
     echo ""

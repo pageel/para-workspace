@@ -13,20 +13,20 @@ items:
 
   - id: open
     name: "Session Open"
-    version: "1.7.0"
+    version: "1.7.1"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "open.md"
-    description: "KI scope loading (Step 2.7), KI report + safety block (Step 8). Central Gate (v1.7.0)."
+    description: "Platform-injected KI context (Step 2.7). Central Gate (v1.7.1)."
     tags: ["session", "context", "token-optimized", "ecosystem", "strategy", "roadmap", "skills", "knowledge"]
 
   - id: end
     name: "Session End"
-    version: "1.7.0"
+    version: "1.7.1"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "end.md"
-    description: "KI suggestion hook (Step 4.7). Field-gated change detection. Central Gate (v1.7.0)."
+    description: "Platform-injected KI suggestion hook (Step 4.7). Central Gate (v1.7.1)."
     tags: ["session", "classification", "3-file", "hot-lane", "ecosystem", "strategy", "knowledge"]
 
   - id: install
@@ -58,11 +58,11 @@ items:
 
   - id: retro
     name: "Project Retrospective"
-    version: "1.7.0"
+    version: "1.7.1"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "retro.md"
-    description: "KI graduation (Step 4.5). Project retrospective before archiving (v1.7.0)."
+    description: "KI graduation (Step 4.5). Project retrospective before archiving (v1.7.1)."
     tags: ["archive", "review", "knowledge"]
 
   - id: push
@@ -130,11 +130,11 @@ items:
 
   - id: learn
     name: "Learn & Capture"
-    version: "1.7.0"
+    version: "1.7.1"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "learn.md"
-    description: "KI suggestion (Step 4.5). Capture lessons into Areas/Learning (v1.7.0)."
+    description: "KI suggestion (Step 4.5). Capture lessons into Areas/Learning (v1.7.1)."
     tags: ["learning", "knowledge"]
 
   - id: para-workflow
@@ -157,11 +157,11 @@ items:
 
   - id: plan
     name: "Plan Controller"
-    version: "1.7.0"
+    version: "1.7.1"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "plan.md"
-    description: "KI context Phase E (Step 2.7). Roadmap field lifecycle. Central Gate (v1.7.0)."
+    description: "Platform-injected KI Phase E (Step 2.7). Roadmap field lifecycle. Central Gate (v1.7.1)."
     tags: ["planning", "architecture", "phases", "ecosystem", "strategy", "roadmap", "skills", "knowledge"]
 
   - id: para-audit
@@ -193,16 +193,16 @@ items:
 
   - id: brainstorm
     name: "Brainstorm"
-    version: "1.7.0"
+    version: "1.7.1"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "brainstorm.md"
-    description: "KI extraction Option F. Collaborative ideation with 6 exit paths (v1.7.0)."
+    description: "KI extraction Option F. Collaborative ideation with 6 exit paths (v1.7.1)."
     tags: ["brainstorm", "ideation", "planning", "knowledge"]
 
   - id: knowledge
     name: "Knowledge Manager"
-    version: "1.1.0"
+    version: "1.2.0"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "knowledge.md"

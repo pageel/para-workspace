@@ -61,11 +61,7 @@ Add a link to the lesson in `Areas/Learning/README.md` under the appropriate cat
 
 If the lesson originated from a specific project, add a reference back in the project's session log.
 
-### 4.5. Knowledge Item Suggestion (CONDITIONAL)
-
-> **Gate:** Only if `.para/knowledge/index.md` exists.
-
-After saving the lesson, evaluate if it qualifies as a Knowledge Item:
+### 4.5. Knowledge Item Suggestion
 
 - **High-value** (affects multiple projects or sessions)
 - **Cross-project** (not specific to one project)

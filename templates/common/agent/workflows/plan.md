@@ -166,21 +166,12 @@ From Step 1, if `project.md` has `agent.skills: true`:
 
 > **Rule:** Both workspace and project rules/skills can impose constraints on plan phases. Always check before designing.
 
-**Phase E: Knowledge Items** (read IF `.para/knowledge/index.md` exists)
+**Phase E: Knowledge Items** (platform-injected — no file I/O)
 
-1. Check if `.para/knowledge/index.md` exists:
-   - **If not exists** → Skip. No KI system configured.
-   - **If exists** → Read index (~30 lines).
-2. Cross-reference KI topics with plan scope:
-   - Match KI `domain` with project tech stack
-   - Match KI `purpose: pitfall` → high-priority constraints
-3. **If matches found:**
-   - Note matched KI slugs as available context
-   - `pitfall` KIs → add to Risks section (Step 9)
-   - `playbook` KIs → reference in relevant Phase tasks
-4. **If no matches** → Skip.
-
-> **Convention:** KI content is already primed by the platform at session start. This step ensures plan explicitly references KIs for traceability (`Based on KI: [slug]`).
+From platform-injected KI summaries, cross-reference with plan scope:
+- `pitfall` KIs → add to Risks section (Step 9)
+- `playbook` KIs → reference in relevant Phase tasks
+- Note matched KI slugs for traceability (`Based on KI: [slug]`)
 
 #### 2.8. Plan Type Selection
 

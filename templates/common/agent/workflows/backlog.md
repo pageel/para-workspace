@@ -166,9 +166,10 @@ Compress `✅ Done` items from backlog active tables into the `✅ Completed (Ar
    b. Add or update a compressed row in the `✅ Completed (Archived)` section of `backlog.md`:
    - Plan name (as done.md link) + list of IDs.
      c. Remove the individual rows from the active user story / bug tables.
-4. Items with no associated plan go under "Standalone Tasks" in both `done.md` and backlog.
-5. Update Summary counts (Active Items, Archived).
-6. Report:
+4. If an Epic is 100% completed (all tasks are Done/Archived), remove the entire Epic heading from the active backlog and preserve only 1 row in the `✅ Completed (Archived)` section.
+5. Items with no associated plan go under "Standalone Tasks" in both `done.md` and backlog.
+6. Update Summary counts (Active Items, Archived).
+7. Report:
 
 ```
 🧹 BACKLOG CLEAN: [project-name]
@@ -250,6 +251,7 @@ _Last updated: YYYY-MM-DD_
 ```
 
 > **Note:** The `Phase` column in User Stories is optional. It is used when an implementation plan exists to cross-reference which phase the task belongs to.
+> **Constraint:** Use reference links (e.g. `[link title][ref]`) for long URLs in tables to keep cell width ≤60 characters.
 
 ## ID Prefix Convention
 

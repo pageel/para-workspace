@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.7.2] - 2026-04-02
+
+KI Index Schema Upgrade, Workflow Simplification & Knowledge Graph Seed.
+
+- **Changed**: KI index schema `7` → `12` columns (added Owner, Scope, Domain, Purpose, PARA Ver).
+- **Changed**: `/open` Step 2.7 — platform-injected KI context (removed `index.md` read).
+- **Changed**: `/end` Step 4.7 — platform-injected KI cross-reference (removed file gate).
+- **Changed**: `/plan` Phase E — platform-injected KI matching (removed file gate).
+- **Changed**: `/learn` Step 4.5, `/brainstorm` Option F, `/retro` Step 4.5 — removed `index.md` gates.
+- **Changed**: Knowledge workflow `1.1.0` → `1.2.0`, 6 workflows → `1.7.1`.
+- **Changed**: Available Profiles — removed `marketer` and `ceo` (README, CLI, docs).
+- **Changed**: System KI template `code_refs` — 4 → 16 file-level entries (Knowledge Graph seed).
+- **Changed**: System KI template `concepts` — 6 → 10 entries (enriched).
+- **Changed**: System KI template `para_version` — `1.6.5` → `1.7.2`.
+
 ## [1.7.1] - 2026-04-01
 
 System KI Governed Lifecycle — namespace guard, template sync, governed defaults.

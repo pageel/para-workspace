@@ -64,10 +64,6 @@ Review recurring knowledge points ("Beads") from session logs:
 
 ### 4.5. Graduate Insights to Knowledge Items
 
-> **Gate:** Only if `.para/knowledge/index.md` exists.
-
-After reviewing beads and learnings, check if any insight qualifies as a Knowledge Item:
-
 1. **Cross-project patterns** → scope: `workspace`
 2. **Non-obvious gotchas** → purpose: `pitfall`
 3. **Proven procedures** → purpose: `playbook`
