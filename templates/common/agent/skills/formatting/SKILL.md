@@ -17,22 +17,22 @@ source: catalog
 
 ### Constraints
 
-| ID | Rule                     | Detail                                             |
-|:---|:-------------------------|:---------------------------------------------------|
-| C1 | Pad columns              | All cells in the same column MUST have equal width  |
-| C2 | Cell width limit         | Max ~50-60 characters per cell                      |
-| C3 | Column count             | 3-4 ideal, 5-6 max. More than 6 → restructure      |
-| C4 | Alignment                | Left-align with `:--` for readability               |
-| C5 | Long URLs                | Use reference links `[text][ref]` for URLs > 40 ch  |
+ID  | Rule                     | Detail
+:---|:-------------------------|:---------------------------------------------------
+C1  | Pad columns              | All cells in the same column MUST have equal width
+C2  | Cell width limit         | Max ~50-60 characters per cell
+C3  | Column count             | 3-4 ideal, 5-6 max. More than 6 → restructure
+C4  | Alignment                | Left-align with `:--` for readability
+C5  | Long URLs                | Use reference links `[text][ref]` for URLs > 40 ch
 
 ### Template — Data Table
 
 ```markdown
-| Field          | Type           | Description                  |
-|:---------------|:---------------|:-----------------------------|
-| `name`         | string         | Project name                 |
-| `status`       | enum           | active, archived, completed  |
-| `ecosystem`    | string \| null | Parent ecosystem slug        |
+Field          | Type           | Description
+:--------------|:---------------|:----------------------------
+`name`         | string         | Project name
+`status`       | enum           | active, archived, completed
+`ecosystem`    | string \| null | Parent ecosystem slug
 ```
 
 ### Template — Archived Items (Plan-based)
@@ -40,11 +40,11 @@ source: catalog
 Group completed items by plan. Use reference links for file paths.
 
 ```markdown
-| Plan                       | IDs                           |
-|:---------------------------|:------------------------------|
-| `Initial MVP (v1.0)`       | FT-01→05, BUG-01→03          |
-| [Migration Plan v2][ref1]  | MG-01→08, BUG-10, BUG-11     |
-| [Hotfix Plan][ref2]         | BUG-12                        |
+Plan                       | IDs
+:--------------------------|:-----------------------------
+`Initial MVP (v1.0)`       | FT-01→05, BUG-01→03
+[Migration Plan v2][ref1]  | MG-01→08, BUG-10, BUG-11
+[Hotfix Plan][ref2]         | BUG-12
 
 [ref1]: ../plans/done/migration-v2.md
 [ref2]: ../plans/done/hotfix-login.md
@@ -179,23 +179,23 @@ project-slug/
 ### Template — Options Comparison
 
 ```markdown
-| Criteria      | Option A  | Option B | Option C |
-|:--------------|:----------|:---------|:---------|
-| **Cost**      | $0        | $5/mo    | $20/mo   |
-| **Effort**    | 1 day     | 3 days   | 2 weeks  |
-| **Scale**     | ~50 users | ∞        | ∞        |
-| **Self-host** | ❌        | ✅       | ✅       |
+Criteria      | Option A  | Option B | Option C
+:-------------|:----------|:---------|:--------
+**Cost**      | $0        | $5/mo    | $20/mo
+**Effort**    | 1 day     | 3 days   | 2 weeks
+**Scale**     | ~50 users | ∞        | ∞
+**Self-host** | ❌        | ✅       | ✅
 ```
 
 ### Template — Feature Matrix
 
 ```markdown
-| Feature        | v1.0 | v2.0 | Planned |
-|:---------------|:-----|:-----|:--------|
-| Auth modes     | 1    | 3    | —       |
-| SSR            | ❌   | ✅   | —       |
-| Multi-tenant   | ❌   | ✅   | —       |
-| Plugin system  | ❌   | ❌   | ✅      |
+Feature        | v1.0 | v2.0 | Planned
+:--------------|:-----|:-----|:-------
+Auth modes     | 1    | 3    | —
+SSR            | ❌   | ✅   | —
+Multi-tenant   | ❌   | ✅   | —
+Plugin system  | ❌   | ❌   | ✅
 ```
 
 ---
