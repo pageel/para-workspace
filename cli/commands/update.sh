@@ -154,49 +154,60 @@ fi
 echo "⚙️ Re-installing to sync workspace..."
 bash "$SCRIPT_DIR/install.sh" "${PASSTHROUGH_ARGS[@]}"
 
-# === System KI Upgrade Sync (v1.7.1, FEAT-60) ===
+# === System KI Upgrade Sync (v1.7.1, improved v1.7.3) ===
 # After install (which only creates NEW KIs), upgrade EXISTING system KIs
-# when templates have changed. Merge-safe: user references preserved.
-if [ "$CURRENT_VER" != "$NEW_VER" ] && [ "$CURRENT_VER" != "0.0.0" ]; then
-  KI_TMPL_SRC="$REPO_ROOT/templates/knowledge"
-  KI_STORE="${HOME}/.gemini/antigravity/knowledge"
+# when templates have changed. Runs on every update — content-aware comparison
+# ensures idempotency (no-op when templates haven't changed).
+KI_TMPL_SRC="$REPO_ROOT/templates/knowledge"
+KI_STORE="${HOME}/.gemini/antigravity/knowledge"
 
-  if [ -d "$KI_TMPL_SRC" ]; then
-    ki_upgraded=0
+if [ -d "$KI_TMPL_SRC" ]; then
+  ki_upgraded=0
 
-    for tmpl_dir in "$KI_TMPL_SRC"/para_*/; do
-      [ -d "$tmpl_dir" ] || continue
-      slug=$(basename "$tmpl_dir")
-      ki_dest="$KI_STORE/$slug"
+  for tmpl_dir in "$KI_TMPL_SRC"/para_*/; do
+    [ -d "$tmpl_dir" ] || continue
+    slug=$(basename "$tmpl_dir")
+    ki_dest="$KI_STORE/$slug"
 
-      # Only upgrade existing KIs (new ones handled by install.sh)
-      if [ -d "$ki_dest" ] && [ -f "$tmpl_dir/metadata.json" ] && [ -f "$ki_dest/metadata.json" ]; then
-        # Check if template para_version is newer
-        tmpl_pv=$(grep -o '"para_version": "[^"]*"' "$tmpl_dir/metadata.json" 2>/dev/null | sed 's/.*"para_version": "//;s/"$//')
-        ki_pv=$(grep -o '"para_version": "[^"]*"' "$ki_dest/metadata.json" 2>/dev/null | sed 's/.*"para_version": "//;s/"$//')
+    # Only upgrade existing KIs (new ones handled by install.sh)
+    if [ -d "$ki_dest" ] && [ -f "$tmpl_dir/metadata.json" ] && [ -f "$ki_dest/metadata.json" ]; then
+      needs_upgrade=false
 
-        if [ -n "$tmpl_pv" ] && [ "$tmpl_pv" != "$ki_pv" ]; then
-          # Backup existing metadata references before overwrite
-          user_refs=$(grep -o '"references":[^]]*]' "$ki_dest/metadata.json" 2>/dev/null || echo "")
+      # Check 1: para_version mismatch
+      tmpl_pv=$(grep -o '"para_version": "[^"]*"' "$tmpl_dir/metadata.json" 2>/dev/null | sed 's/.*"para_version": "//;s/"$//')
+      ki_pv=$(grep -o '"para_version": "[^"]*"' "$ki_dest/metadata.json" 2>/dev/null | sed 's/.*"para_version": "//;s/"$//')
 
-          # Override metadata.json from template
-          cp "$tmpl_dir/metadata.json" "$ki_dest/metadata.json"
+      if [ -n "$tmpl_pv" ] && [ "$tmpl_pv" != "$ki_pv" ]; then
+        needs_upgrade=true
+      fi
 
-          # Override template artifacts (matching filenames only)
-          if [ -d "$tmpl_dir/artifacts" ]; then
-            for art_file in "$tmpl_dir/artifacts"/*; do
-              [ -f "$art_file" ] && cp "$art_file" "$ki_dest/artifacts/"
-            done
-          fi
-
-          ki_upgraded=$((ki_upgraded + 1))
+      # Check 2: content hash mismatch (catches same-version hotfixes)
+      if [ "$needs_upgrade" = false ]; then
+        tmpl_hash=$(get_hash "$tmpl_dir/metadata.json")
+        ki_hash=$(get_hash "$ki_dest/metadata.json")
+        if [ "$tmpl_hash" != "$ki_hash" ]; then
+          needs_upgrade=true
         fi
       fi
-    done
 
-    if [ "$ki_upgraded" -gt 0 ]; then
-      echo "🔄 System KI upgrade: $ki_upgraded KI(s) synced to v$NEW_VER"
+      if [ "$needs_upgrade" = true ]; then
+        # Override metadata.json from template
+        cp "$tmpl_dir/metadata.json" "$ki_dest/metadata.json"
+
+        # Override template artifacts (matching filenames only)
+        if [ -d "$tmpl_dir/artifacts" ]; then
+          for art_file in "$tmpl_dir/artifacts"/*; do
+            [ -f "$art_file" ] && cp "$art_file" "$ki_dest/artifacts/"
+          done
+        fi
+
+        ki_upgraded=$((ki_upgraded + 1))
+      fi
     fi
+  done
+
+  if [ "$ki_upgraded" -gt 0 ]; then
+    echo "🔄 System KI upgrade: $ki_upgraded KI(s) synced"
   fi
 fi
 
