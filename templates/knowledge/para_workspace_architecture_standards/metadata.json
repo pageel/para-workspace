@@ -1,12 +1,12 @@
 {
   "title": "PARA Workspace Architecture & Governance Standards (v1.7.x)",
-  "summary": "Foundational architecture, governance, and efficiency standards for PARA Workspace v1.7.x. Covers: four-pillar structure (.para/, .agent/), Governing Kernel v1.5.3 (11 Invariants, 10 Heuristics incl. H10 KI), project.md schema v1.6.3 with field-gated I/O and @ecosystem/ path resolution, Ecosystem meta-projects, two-level Agent Index (workspace + project rules/skills with proactive trigger), Skills system v1.6.4, CLI with Smart Archive and catalog.yml governance, SYNC.md cross-project notifications, Knowledge System with platform-injected KI context (v1.7.0+), System KI governed lifecycle with template sync (v1.7.1), and token optimization patterns (field-gated I/O, lazy-loading, strategy cascade). Covers 32 workflows and 11 rules.",
+  "summary": "Foundational architecture, governance, and efficiency standards for PARA Workspace v1.7.x. Covers: four-pillar structure (.para/, .agents/), Governing Kernel v1.5.3 (11 Invariants, 10 Heuristics incl. H10 KI), project.md schema v1.6.3 with field-gated I/O and @ecosystem/ path resolution, Ecosystem meta-projects, two-level Agent Index (workspace + project rules/skills with proactive trigger), Skills system v1.6.4, CLI with Smart Archive and catalog.yml governance, SYNC.md cross-project notifications, Knowledge System with platform-injected KI context (v1.7.0+), System KI governed lifecycle with template sync (v1.7.1), and token optimization patterns (field-gated I/O, lazy-loading, strategy cascade). Covers 32 workflows and 11 rules.",
   "version": "1.0",
   "scope": "workspace",
   "domain": "workspace",
   "purpose": "context",
   "owner": "para",
-  "para_version": "1.7.2",
+  "para_version": "1.7.3",
   "tags": ["architecture", "governance", "kernel", "invariants", "heuristics", "token-optimization", "ecosystem", "agent-index", "knowledge-system"],
   "references": [
     {
@@ -31,15 +31,15 @@
     },
     {
       "type": "file",
-      "value": "/media/tienle/DATA/WORKSPACE/para/.agent/rules.md"
+      "value": "/media/tienle/DATA/WORKSPACE/para/.agents/rules.md"
     },
     {
       "type": "file",
-      "value": "/media/tienle/DATA/WORKSPACE/para/.agent/skills.md"
+      "value": "/media/tienle/DATA/WORKSPACE/para/.agents/skills.md"
     },
     {
       "type": "file",
-      "value": "/media/tienle/DATA/WORKSPACE/para/.agent/skills/para-kit/SKILL.md"
+      "value": "/media/tienle/DATA/WORKSPACE/para/.agents/skills/para-kit/SKILL.md"
     },
     {
       "type": "conversation_id",
