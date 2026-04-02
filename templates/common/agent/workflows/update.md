@@ -158,6 +158,7 @@ tail -1 .para/audit.log
 1. Run `./para status` — verify workspace health.
 2. Run `./para cleanup` — remove old .bak files (if needed).
 3. Check Sync Queue — if downstream projects need updating.
+4. Run `/knowledge` — review System KIs (auto-synced during update).
 ```
 
 ## Troubleshooting Reference
