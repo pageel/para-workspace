@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# PARA Workspace Update Script (v1.7.3)
+# PARA Workspace Update Script (v1.7.4)
 # Safely updates templates without overwriting user data
 # Usage: para update [--dry-run]
 
@@ -50,13 +50,13 @@ for arg in "$@"; do
       echo "the workspace (kernel, workflows, rules, skills, CLI wrapper)."
       echo ""
       echo "This command:"
-      echo "  1. Runs 'git pull' on the repo"
+      echo "  1. Runs 'git pull' on the repo (always, even in dry-run)"
       echo "  2. Detects changes via git commit hash (accurate for hotfixes)"
       echo "  3. Runs version-gated migrations (if kernel version changed)"
       echo "  4. Re-runs 'para install' to sync all libraries"
       echo ""
       echo "Options:"
-      echo "  --dry-run   Preview all changes without applying"
+      echo "  --dry-run   Pull latest, then preview install without applying"
       echo ""
       echo "Existing files are backed up to .bak before overwriting."
       exit 0
@@ -96,28 +96,27 @@ OLD_COMMIT=$(cd "$REPO_ROOT" && git rev-parse HEAD 2>/dev/null || echo "unknown"
 
 echo "📍 Current Version: $CURRENT_VER"
 
-# Pull latest (skip in dry-run mode)
-if [ "$DRY_RUN" = true ]; then
-  echo "🔍 DRY RUN: Skipping git pull (preview only)..."
-else
-  echo "📥 Pulling latest changes..."
-  cd "$REPO_ROOT"
+# === ALWAYS pull latest (BUG-30 fix: dry-run must see new version) ===
+echo "📥 Pulling latest changes..."
+cd "$REPO_ROOT"
 
-  # On Windows, git pull might fail to update the running script.
-  if git pull origin main; then
-      NEW_SCRIPT_HASH=$(get_hash "$SCRIPT_DIR/update.sh")
-      if [ "$OLD_SCRIPT_HASH" != "$NEW_SCRIPT_HASH" ]; then
-          echo "🔄 CLI scripts updated. Restarting update process..."
-          exec bash "$SCRIPT_DIR/update.sh" "$@"
-      fi
-  else
-      echo "⚠️  Git pull failed or was partial."
-      if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
-          echo "💡 Windows detected: This is often caused by the script file being locked while running."
-          echo "   Please try closing all terminals and running the update again."
-      fi
-      exit 1
-  fi
+# On Windows, git pull might fail to update the running script.
+if git pull origin main; then
+    # Self-restart only in live mode (dry-run doesn't need restart)
+    if [ "$DRY_RUN" = false ]; then
+        NEW_SCRIPT_HASH=$(get_hash "$SCRIPT_DIR/update.sh")
+        if [ "$OLD_SCRIPT_HASH" != "$NEW_SCRIPT_HASH" ]; then
+            echo "🔄 CLI scripts updated. Restarting update process..."
+            exec bash "$SCRIPT_DIR/update.sh" "$@"
+        fi
+    fi
+else
+    echo "⚠️  Git pull failed or was partial."
+    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+        echo "💡 Windows detected: This is often caused by the script file being locked while running."
+        echo "   Please try closing all terminals and running the update again."
+    fi
+    exit 1
 fi
 
 # === Capture state AFTER pull ===
