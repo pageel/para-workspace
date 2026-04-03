@@ -10,7 +10,7 @@ A fundamental principle: the **4 Primary Multi-Project Pillars** (Projects, Area
 - **Orphan Management:** Deprecated system files → `.para/archive/[version]-orphans/`, never the user's `Archive/`.
 - **No Loose Files (I8):** Every file belongs to P/A/R/Archive. Root only has approved config: `.para-workspace.yml`.
 
-## 2. The Governing Kernel (v1.5.3 spec, v1.7.2 runtime)
+## 2. The Governing Kernel (v1.5.3 spec, v1.7.4 runtime)
 
 The Kernel (`Resources/ai-agents/kernel/`) is the **"constitution"** — immutable at runtime.
 
@@ -20,7 +20,7 @@ The Kernel (`Resources/ai-agents/kernel/`) is the **"constitution"** — immutab
 |:----------------------------|:--------------------------------------|:--------------|
 | `KERNEL.md`                 | Constitution — supreme law            | MAJOR bump    |
 | `invariants.md`             | 11 hard rules (I1–I11) — MUST NOT violate | MAJOR bump |
-| `heuristics.md`             | 9 soft rules (H1–H9) — recommended   | MINOR/PATCH   |
+| `heuristics.md`             | 10 soft rules (H1–H10) — recommended | MINOR/PATCH   |
 | `schema/project.schema.json`| JSON Schema for `project.md` frontmatter | Depends    |
 | `schema/workspace.schema.json` | JSON Schema for `.para-workspace.yml` | Depends   |
 | `schema/backlog.schema.json`| JSON Schema for `backlog.md`          | Depends       |
@@ -51,18 +51,18 @@ The Kernel (`Resources/ai-agents/kernel/`) is the **"constitution"** — immutab
 ## 3. Workspace Configuration (`.para-workspace.yml`)
 
 ```yaml
-kernel_version: "1.7.2"
+kernel_version: "1.7.4"
 profile: "dev"             # dev | general
-language: "vi"             # ISO 639-1
+language: "en"             # ISO 639-1
 repo:
-  url: "https://github.com/pageel/para-workspace"
+  url: "https://github.com/<your-org>/para-workspace"
   branch: "main"
 workspace:
   version: "1.0.0"
-  created: "2026-02-24"
+  created: "2026-01-01"
 projects:                  # Registered projects list
-  - pageel
-  - pageel-page-map
+  - my-project
+  - my-app
 ```
 
 ## 4. Project Contract (`project.md`) Schema v1.6.3
@@ -119,14 +119,13 @@ ELSE (local):
 
 ```
 .agents/
-├── rules.md          # Workspace rules trigger index (10 rules)
+├── rules.md          # Workspace rules trigger index (12 rules)
 ├── rules/            # Rule files (loaded on-demand by trigger)
 ├── skills.md         # Workspace skills trigger index (2 skills)
 ├── skills/           # Skill directories
 │   ├── formatting/   # Table/diagram formatting templates
-│   ├── page-map/     # Website visual structure management
 │   └── para-kit/     # PARA reference card (schema, layout, governance)
-└── workflows/        # 32 workflow files
+└── workflows/        # 23 core workflow files
 ```
 
 ### Project Level (CONDITIONAL — gated by `agent.rules` / `agent.skills`)
@@ -186,7 +185,7 @@ Workflows, Rules, and Skills managed via `catalog.yml`:
 - **Validation:** CLI validates `kernel_min`/`kernel_max` before syncing; incompatible items skipped with warning
 - **Required fields:** id, name, version, kernel_min, entrypoint, description
 
-## 11. Workflow Library (32 workflows)
+## 11. Workflow Library (23 core workflows)
 
 ### Core PARA Workflows
 | Workflow | Purpose |
@@ -215,17 +214,11 @@ Workflows, Rules, and Skills managed via `catalog.yml`:
 | `/inbox` | Categorize files from `_inbox/` |
 | `/new-project` | Initialize PARA-compliant project |
 | `/backup` | Backup workspace config files |
-| `/remote` | Manage remote repositories |
+| `/knowledge` | Manage Knowledge Items — dashboard, create, update, audit, archive |
+| `/docs` | Generate and maintain project documentation |
+| `/learn` | Package lessons and knowledge into Areas/Learning |
 
-### Domain-Specific (Pageel)
-| Workflow | Purpose |
-|:---------|:--------|
-| `/pageel-migrate` | Migrate React/Vite → Astro |
-| `/pageel-theme` | Clone theme from Astro projects |
-| `/pageel-component` | Manage reusable component library |
-| `/pageel-cms` | Configure pageel-cms |
-| `/pageel-write` | Write content with AI assist |
-| `/pageel-add` | Add integration templates |
+> **Note:** Users may add domain-specific workflows to their workspace. The count above reflects only core workflows shipped via `catalog.yml`.
 
 ## 12. Skills System (v1.6.4+)
 
@@ -235,9 +228,8 @@ Skills are folders of instructions that extend agent capabilities:
 |:------------|:--------|:--------|
 | PARA Kit    | PARA structure questions, schema, quick reference | Consolidated kernel reference card |
 | Formatting  | Tables, diagrams, trees, visual markdown | Templates and patterns |
-| Page Map    | Website visual structure management | AI-driven page/component management |
 
-Skills promoted from rules (experiment from pageel-cms dogfooding): standalone, English-first, constraints + templates merged.
+Skills promoted from rules: standalone, English-first, constraints + templates merged.
 
 ## 13. Token Optimization Patterns
 
@@ -263,6 +255,8 @@ Skills promoted from rules (experiment from pageel-cms dogfooding): standalone, 
 | 1.7.0   | Knowledge    | Knowledge System: KI schema, /knowledge workflow, graph-ready taxonomy |
 | 1.7.1   | —            | System KI governed lifecycle: namespace guard, template sync, CLI hooks |
 | 1.7.2   | —            | KI index 12-col, workflow simplification (platform-inject), Knowledge Graph seed |
+| 1.7.3   | —            | Defense-in-Depth 4-layer context protection, KI ephemeral ref ban, dual-gate sync |
+| 1.7.4   | —            | `agent.rules`/`agent.skills` fully replaces `has_rules`, hot lane BUG-29 fix |
 
 ## 15. Knowledge System (v1.7.0+)
 

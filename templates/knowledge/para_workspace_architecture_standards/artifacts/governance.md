@@ -77,12 +77,13 @@ If rules/skills forgotten after context truncation:
 - Re-read `.agents/rules.md` + `.agents/skills.md`
 - Re-read project rules if `agent.rules: true`
 
-## 5. Rules Library (10 workspace rules)
+## 5. Rules Library (12 workspace rules)
 
 Rule                    | Trigger                              | Priority
 :-----------------------|:-------------------------------------|:--------
 Governance              | Touching kernel/, .para/, Resources/ | 🔴 High
 VCS                     | Git commit, push, merge, branch, tag | 🔴 High
+Knowledge               | Creating, updating, archiving KIs    | 🔴 High
 Hybrid 3-File Integrity | Reading/writing artifacts/tasks/     | 🟡 Med
 Context Rules           | Loading context, starting session    | 🟡 Med
 Agent Behavior          | Communication, formatting, recovery  | 🟡 Med
@@ -91,8 +92,9 @@ Artifact Standard       | Creating/editing artifacts, plans    | 🟢 Low
 Naming                  | Creating files, directories, branches| 🟢 Low
 Versioning              | Version bumps, changelog updates     | 🟢 Low
 Exports Data            | Exporting data, sharing externally   | 🟢 Low
+Formatting Tables       | Drawing tables, diagrams, trees      | 🟢 Low
 
-## 6. Skills Library (3 skills, v1.6.4+)
+## 6. Skills Library (2 core skills, v1.6.4+)
 
 Skills are folder-based, standalone, English-first instruction sets:
 
@@ -100,9 +102,8 @@ Skill      | Trigger                                    | Structure
 :----------|:-------------------------------------------|:------------------------
 PARA Kit   | PARA structure, schema, kernel governance  | SKILL.md + templates/ + examples/
 Formatting | Tables, diagrams, trees, visual markdown   | SKILL.md (self-contained)
-Page Map   | Website visual structure, PAGE_MAP.md      | SKILL.md (self-contained)
 
-Skills were promoted from rules (experiment from pageel-cms dogfooding, v1.6.4). Key difference: rules are constraint-focused (do/don't), skills are capability-focused (how-to + templates).
+Skills were promoted from rules: standalone, English-first, constraints + templates merged. Users may add project-specific skills via their project `.agents/skills/` directory.
 
 ## 7. Knowledge System Governance (v1.7.0+)
 

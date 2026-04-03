@@ -1,6 +1,6 @@
 {
   "title": "PARA Workspace Architecture & Governance Standards (v1.7.x)",
-  "summary": "Foundational architecture, governance, and efficiency standards for PARA Workspace v1.7.x. Covers: four-pillar structure (.para/, .agents/), Governing Kernel v1.5.3 (11 Invariants, 10 Heuristics incl. H10 KI), project.md schema v1.6.3 with field-gated I/O and @ecosystem/ path resolution, Ecosystem meta-projects, two-level Agent Index (workspace + project rules/skills with proactive trigger), Skills system v1.6.4, CLI with Smart Archive and catalog.yml governance, SYNC.md cross-project notifications, Knowledge System with platform-injected KI context (v1.7.0+), System KI governed lifecycle with template sync (v1.7.1), and token optimization patterns (field-gated I/O, lazy-loading, strategy cascade). Covers 32 workflows and 11 rules.",
+  "summary": "Foundational architecture, governance, and efficiency standards for PARA Workspace v1.7.x. Covers: four-pillar structure (.para/, .agents/), Governing Kernel v1.5.3 (11 Invariants, 10 Heuristics incl. H10 KI), project.md schema v1.6.3 with field-gated I/O and @ecosystem/ path resolution, Ecosystem meta-projects, two-level Agent Index (workspace + project rules/skills with proactive trigger), Skills system v1.6.4, CLI with Smart Archive and catalog.yml governance, SYNC.md cross-project notifications, Knowledge System with platform-injected KI context (v1.7.0+), System KI governed lifecycle with template sync (v1.7.1), and token optimization patterns (field-gated I/O, lazy-loading, strategy cascade). Covers 23 core workflows and 12 rules.",
   "version": "1.0",
   "scope": "workspace",
   "domain": "workspace",
@@ -11,39 +11,35 @@
   "references": [
     {
       "type": "file",
-      "value": "/media/tienle/DATA/WORKSPACE/para/.para-workspace.yml"
+      "value": ".para-workspace.yml"
     },
     {
       "type": "file",
-      "value": "/media/tienle/DATA/WORKSPACE/para/Resources/ai-agents/kernel/KERNEL.md"
+      "value": "Resources/ai-agents/kernel/KERNEL.md"
     },
     {
       "type": "file",
-      "value": "/media/tienle/DATA/WORKSPACE/para/Resources/ai-agents/kernel/invariants.md"
+      "value": "Resources/ai-agents/kernel/invariants.md"
     },
     {
       "type": "file",
-      "value": "/media/tienle/DATA/WORKSPACE/para/Resources/ai-agents/kernel/heuristics.md"
+      "value": "Resources/ai-agents/kernel/heuristics.md"
     },
     {
       "type": "file",
-      "value": "/media/tienle/DATA/WORKSPACE/para/Resources/ai-agents/kernel/schema/project.schema.json"
+      "value": "Resources/ai-agents/kernel/schema/project.schema.json"
     },
     {
       "type": "file",
-      "value": "/media/tienle/DATA/WORKSPACE/para/.agents/rules.md"
+      "value": ".agents/rules.md"
     },
     {
       "type": "file",
-      "value": "/media/tienle/DATA/WORKSPACE/para/.agents/skills.md"
+      "value": ".agents/skills.md"
     },
     {
       "type": "file",
-      "value": "/media/tienle/DATA/WORKSPACE/para/.agents/skills/para-kit/SKILL.md"
-    },
-    {
-      "type": "conversation_id",
-      "value": "68c5eaab-729e-4b45-b9e6-f20bdcf67d3d"
+      "value": ".agents/skills/para-kit/SKILL.md"
     }
   ],
   "relates_to": [],

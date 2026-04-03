@@ -12,9 +12,9 @@ Instead of scanning directories, project metadata contains direct links:
 
 ```yaml
 # In project.md frontmatter:
-strategy: "@pageel/docs/strategy-cms.md"
-roadmap: "@pageel/plans/cms-branch-roadmap.md"
-active_plan: "plans/editor-ux-stable-v2.1.md"
+strategy: "@my-ecosystem/docs/strategy-plan.md"
+roadmap: "@my-ecosystem/plans/product-roadmap.md"
+active_plan: "plans/feature-implementation-v2.1.md"
 ```
 
 ## 2. Field-Gated I/O (v1.6.3 — "Central Gate")
