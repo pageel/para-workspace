@@ -21,8 +21,8 @@ Intelligently merge a user's customized workflow with the latest version from th
 1.  **Identify Paths**:
     - **User (Local)**: `.agents/workflows/[target].md`
     - **Catalog (Source)**: Governed catalog directory (priority order):
-      1. `Projects/para-workspace/repo/templates/common/agent/workflows/[target].md`
-      2. `Resources/references/para-workspace/templates/common/agent/workflows/[target].md`
+      1. `Projects/para-workspace/repo/templates/common/agents/workflows/[target].md`
+      2. `Resources/references/para-workspace/templates/common/agents/workflows/[target].md`
 
 2.  **Read Content**:
     - Read both files to understand the context.

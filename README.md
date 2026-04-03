@@ -7,7 +7,7 @@
 **The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.3-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.4-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -70,7 +70,7 @@ para-workspace/
 │   ├── lib/             # logger.sh, validator.sh, rollback.sh, fs.sh
 │   └── commands/        # init, scaffold, status, migrate, archive, install, update
 ├── templates/           # 📦 Scaffolding & Governed Libraries
-│   ├── common/agent/    # Centralized workflows/, rules/, skills/ + catalog.yml
+│   ├── common/agents/    # Centralized workflows/, rules/, skills/ + catalog.yml
 │   │   └── projects/    # .project.yml template
 │   └── profiles/        # dev, general presets
 ├── tests/               # 🧪 kernel/ + cli/ integration tests
@@ -612,6 +612,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] **System KI Governed Lifecycle — namespace guard, template sync, CLI hooks** _(shipped in v1.7.1)_
 - [x] **KI Index Schema Upgrade, Workflow Simplification & Knowledge Graph Seed** _(shipped in v1.7.2)_
 - [x] **Agent Path Convention Fix (BUG-28) & Rule Frontmatter** _(shipped in v1.7.3)_
+- [x] **Repo Path Standardization, Pending TODO Fix & Project Profile Skill** _(shipped in v1.7.4)_
 - [ ] Department System _(v1.8.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.9.0 — planned)_
 
@@ -629,4 +630,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.7.3_
+_Version: 1.7.4_

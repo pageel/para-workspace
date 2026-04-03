@@ -58,4 +58,4 @@ Workflows enforce rules via Step 0 Pre-flight, but direct edits bypass that guar
 
 - [Context Recovery Architecture](../architecture/context-recovery.md) — 4-layer Defense-in-Depth
 - [Rule Layers](../architecture/rule-layers.md) — Two-Tier trigger mechanism
-- **Source**: `templates/common/agent/rules/agent-behavior.md`
+- **Source**: `templates/common/agents/rules/agent-behavior.md`

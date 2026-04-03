@@ -34,4 +34,4 @@ MUST provide the full path to the exported file. SHOULD provide brief instructio
 
 - [PARA Discipline](./para-discipline.md) — `_inbox/` directory mapping
 - [Naming Conventions](./naming.md) — kebab-case convention
-- **Source**: `templates/common/agent/rules/exports-data.md`
+- **Source**: `templates/common/agents/rules/exports-data.md`

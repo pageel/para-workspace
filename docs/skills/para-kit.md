@@ -45,7 +45,7 @@ Compare: Reading full kernel (`KERNEL.md` + `invariants.md` + `heuristics.md`) c
 
 | Location | Role | Updated by |
 |:---------|:-----|:-----------|
-| `repo/templates/common/agent/skills/para-kit/` | Source of Truth | Developer (git push) |
+| `repo/templates/common/agents/skills/para-kit/` | Source of Truth | Developer (git push) |
 | `Resources/ai-agents/skills/para-kit/` | Read-only snapshot (I9) | `para install` / `para update` |
 | `.agents/skills/para-kit/` | Active copy (agent reads) | `para install` / `para update` |
 
@@ -143,7 +143,7 @@ graph LR
 
 ### Adding new templates/examples
 
-1. Place file in `repo/templates/common/agent/skills/para-kit/{templates,examples}/`.
+1. Place file in `repo/templates/common/agents/skills/para-kit/{templates,examples}/`.
 2. Add reference in §5 "On-demand References" of SKILL.md.
 3. `para install` will auto-sync recursively via `sync_directory_recursive()` (v1.6.4+).
 

@@ -63,4 +63,4 @@ Beads capture project-specific decisions, failures, and quirks in `Projects/<pro
 - [Rule Layers Architecture](../architecture/rule-layers.md)
 - [Context Recovery](../architecture/context-recovery.md)
 - [Agent Behavior](./agent-behavior.md) — Context Recovery protocol
-- **Source**: `templates/common/agent/rules/context-rules.md`
+- **Source**: `templates/common/agents/rules/context-rules.md`

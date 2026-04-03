@@ -7,8 +7,8 @@
 - Owners: @pageel (maintainer)
 - Affected:
   - kernel/ (invariants.md I2)
-  - templates/common/agent/rules/ (hybrid-3-file-integrity.md)
-  - templates/common/agent/workflows/ (open, end, backlog, plan)
+  - templates/common/agents/rules/ (hybrid-3-file-integrity.md)
+  - templates/common/agents/workflows/ (open, end, backlog, plan)
   - docs/
 - Related:
   - Kernel Invariants: I2 (Task Management — Hybrid 3-File Model)

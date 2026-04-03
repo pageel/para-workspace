@@ -43,7 +43,6 @@ Create or append to the correct destination based on the rules above. Use "Sessi
 Include:
 
 - **What was done** (completed items, bullet list)
-- **Pending TODOs** (carry-forward items for next session)
 - **Downstream Impact** (if changes affect other projects)
 
 ### 3. Cross-Project Sync Queue
@@ -141,7 +140,7 @@ If yes, **append one row** to `Areas/Workspace/SYNC.md` under the `## Pending` t
    b. **IF "Decision: Pending":**
       ```
       💭 Brainstorm "[topic]" has no decision yet.
-         Continue next session? (auto-carry to pending TODO)
+         Continue next session? (add to sprint-current.md Hot Lane)
       ```
    c. **IF decision made:**
       ```

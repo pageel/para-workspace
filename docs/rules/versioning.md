@@ -49,4 +49,4 @@ MUST NOT change `kernel_min`/`kernel_max` in `catalog.yml` without understanding
 - [Governance](./governance.md) — Kernel version constraints
 - [VCS](./vcs.md) — Git tagging safety
 - Full policy: [`VERSIONING.md`](../../VERSIONING.md)
-- **Source**: `templates/common/agent/rules/versioning.md`
+- **Source**: `templates/common/agents/rules/versioning.md`

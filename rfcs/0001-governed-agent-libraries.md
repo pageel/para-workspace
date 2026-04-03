@@ -26,7 +26,7 @@ This RFC defines:
 ## Motivation
 
 The repo already groups "Centralized Rules, Skills, Workflows" under
-`templates/common/agent/` but the system lacked a consistent library contract:
+`templates/common/agents/` but the system lacked a consistent library contract:
 metadata, compatibility gates, and drift detection.
 
 Goals:
@@ -53,7 +53,7 @@ Non-goals:
 ### Repo: canonical locations (normative)
 
 ```
-templates/common/agent/
+templates/common/agents/
   workflows/
     catalog.yml
     *.md
@@ -105,9 +105,9 @@ Runtime (mutable, managed by CLI):
 
 Installer MUST:
 
-1. Copy `templates/common/agent/workflows` → `Resources/ai-agents/workflows` + `.agents/workflows`
-2. Copy `templates/common/agent/rules` → `Resources/ai-agents/rules` + `.agents/rules`
-3. Copy `templates/common/agent/skills` → `Resources/ai-agents/skills` + `.agents/skills` (optional)
+1. Copy `templates/common/agents/workflows` → `Resources/ai-agents/workflows` + `.agents/workflows`
+2. Copy `templates/common/agents/rules` → `Resources/ai-agents/rules` + `.agents/rules`
+3. Copy `templates/common/agents/skills` → `Resources/ai-agents/skills` + `.agents/skills` (optional)
 
 Compatibility gate:
 
@@ -133,7 +133,7 @@ Keeps governance assets centralized while preserving Repo ≠ Workspace.
 
 ## Implementation plan
 
-1. ✅ Repo: create `templates/common/agent/{workflows,rules,skills}/catalog.yml`
+1. ✅ Repo: create `templates/common/agents/{workflows,rules,skills}/catalog.yml`
 2. ✅ Repo: add `kernel/schema/catalog.schema.json`
 3. ✅ CLI: update `install.sh` to sync rules + skills (v1.4.1) — implemented with `sync_library()` function
 4. ✅ CLI: add `cli/lib/validator.sh` (catalog parse + kernel compat check) — `validate_catalog()` + `validate_all_catalogs()`

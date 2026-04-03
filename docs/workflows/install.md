@@ -21,8 +21,8 @@ Resolve source & destination → Check conflict → Resolve → Execute
 
 | Type     | Source (Catalog)                             | Destination                  |
 | :------- | :------------------------------------------- | :--------------------------- |
-| Workflow | `templates/common/agent/workflows/[name].md` | `.agents/workflows/[name].md` |
-| Rule     | `templates/common/agent/rules/[name].md`     | `.agents/rules/[name].md`     |
+| Workflow | `templates/common/agents/workflows/[name].md` | `.agents/workflows/[name].md` |
+| Rule     | `templates/common/agents/rules/[name].md`     | `.agents/rules/[name].md`     |
 
 ### 2. Check Conflict
 

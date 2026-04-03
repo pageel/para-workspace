@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 For detailed release notes, see [docs/changelog/](docs/changelog/).
 
+## [1.7.4] - 2026-04-03
+
+Repo Path Standardization, Pending TODO Fix & Project Profile Skill.
+→ [Detailed release notes](docs/changelog/v1.7.4.md)
+
+## [1.7.3] - 2026-04-02
+
+Agent Path Convention Fix (BUG-28) & Rule Frontmatter.
+
+- **Fixed:** Renamed `.agent/` → `.agents/` across 90+ files to match Antigravity platform convention.
+- **Added:** Antigravity-compatible frontmatter to all 12 governed rules (trigger, glob, description).
+- **Added:** Auto-migration in `para update` — renames `.agent/` → `.agents/` for workspace + all projects.
+
 ## [1.7.2] - 2026-04-02
 
 KI Index Schema Upgrade, Workflow Simplification & Knowledge Graph Seed.
@@ -314,8 +327,3 @@ Artifact-Driven Workflow. → [Details](docs/changelog/v1.2.0.md)
 
 CLI Foundation. → [Details](docs/changelog/v1.1.0.md)
 
-## [1.7.3] - 2026-04-02 — Agent Path Convention Fix (BUG-28)
-
-- **fix:** Renamed `.agent/` → `.agents/` across 90+ files to match Antigravity platform convention
-- **feat:** Added Antigravity-compatible frontmatter to all 12 governed rules (trigger, glob, description)
-- **feat:** Auto-migration in `para update` — renames `.agent/` → `.agents/` for workspace + all projects

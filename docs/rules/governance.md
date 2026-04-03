@@ -42,4 +42,4 @@ Do NOT read the full Kernel documentation during daily tasks. Only access `Resou
 
 - [Kernel Architecture](../architecture/kernel.md)
 - [Rule Layers](../architecture/rule-layers.md)
-- **Source**: `templates/common/agent/rules/governance.md`
+- **Source**: `templates/common/agents/rules/governance.md`

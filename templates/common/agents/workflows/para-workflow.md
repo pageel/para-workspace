@@ -43,8 +43,8 @@ echo ""
 
 Read the file at the **catalog source** (one of these, in priority order):
 
-1. `Projects/para-workspace/repo/templates/common/agent/workflows/catalog.yml`
-2. `Resources/references/para-workspace/templates/common/agent/workflows/catalog.yml`
+1. `Projects/para-workspace/repo/templates/common/agents/workflows/catalog.yml`
+2. `Resources/references/para-workspace/templates/common/agents/workflows/catalog.yml`
 
 **Step 3.** Display comparison report:
 
@@ -132,9 +132,9 @@ The agent will read `.agents/workflows/[name].md` and apply fixes for each item:
 
 | Old Path (v1.3.x)                | New Path (v1.4.1)                             |
 | -------------------------------- | --------------------------------------------- |
-| `Resources/ai-agents/workflows/` | `templates/common/agent/workflows/` (in repo) |
-| `Resources/ai-agents/rules/`     | `templates/common/agent/rules/` (in repo)     |
-| `Resources/ai-agents/skills/`    | `templates/common/agent/skills/` (in repo)    |
+| `Resources/ai-agents/workflows/` | `templates/common/agents/workflows/` (in repo) |
+| `Resources/ai-agents/rules/`     | `templates/common/agents/rules/` (in repo)     |
+| `Resources/ai-agents/skills/`    | `templates/common/agents/skills/` (in repo)    |
 | `Resources/Themes/`              | `Resources/themes/` (lowercase)               |
 | `Resources/Remotes/`             | `Resources/references/` (renamed)             |
 | `Resources/Reference/`           | `Resources/references/` (lowercase)           |

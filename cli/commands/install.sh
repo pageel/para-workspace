@@ -185,7 +185,7 @@ sync_directory_recursive() {
 # === Helper: sync a governed library (workflows/rules/skills) ===
 sync_library() {
   local lib_name="$1"    # e.g. "workflows"
-  local src_dir="$2"     # e.g. "$REPO_ROOT/templates/common/agent/workflows"
+  local src_dir="$2"     # e.g. "$REPO_ROOT/templates/common/agents/workflows"
   local catalog_dest="$3" # e.g. "$WS_ROOT/Resources/ai-agents/workflows"
   local active_dest="$4"  # e.g. "$WS_ROOT/.agents/workflows"
 
@@ -301,7 +301,7 @@ echo "$KERNEL_VERSION" > "$WS_ROOT/Resources/ai-agents/VERSION"
 echo "   ✓ Kernel v$KERNEL_VERSION synced ($kernel_updated/$kernel_total files updated)"
 
 # === 3. Sync governed libraries (v1.4.1) ===
-LIB_SRC="$REPO_ROOT/templates/common/agent"
+LIB_SRC="$REPO_ROOT/templates/common/agents"
 
 echo "📑 Syncing workflows..."
 sync_library "workflows" \

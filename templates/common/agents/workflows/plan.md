@@ -330,7 +330,7 @@ Map each High/Medium priority backlog item to the phase where it will be impleme
 > ⚠️ **Auto-detect:** If any plan task modifies files in `rules/` or `kernel/`, add sync tasks automatically.
 
 1. Scan all phase tasks — check if any target file matches:
-   - `templates/common/agent/rules/*.md`
+   - `templates/common/agents/rules/*.md`
    - `kernel/invariants.md`, `kernel/heuristics.md`, `kernel/schema/*.md`
    - `rfcs/*.md` that reference rules
 

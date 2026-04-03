@@ -64,10 +64,10 @@ C5  | Long URLs                | Use reference links `[text][ref]` for URLs > 40
 
 Location                                  | Role           | Updated by
 :-----------------------------------------|:---------------|:-------------------------
-`repo/templates/common/agent/skills/`     | Source of Truth | Developer (git push)
+`repo/templates/common/agents/skills/`     | Source of Truth | Developer (git push)
 `Resources/ai-agents/skills/formatting/`  | Read-only (I9) | `para install` / `update`
 `.agents/skills/formatting/`               | Active copy    | `para install` / `update`
 
 ---
 
-_See also: [PARA Kit Skill](./para-kit.md) · [Full SKILL.md](../../templates/common/agent/skills/formatting/SKILL.md)_
+_See also: [PARA Kit Skill](./para-kit.md) · [Full SKILL.md](../../templates/common/agents/skills/formatting/SKILL.md)_

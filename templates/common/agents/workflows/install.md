@@ -20,10 +20,10 @@ Install or update components from the governed PARA Catalog into the workspace. 
 
 1.  **Resolve Source & Destination**:
     - **Workflows**:
-      - Source: Governed catalog directory (e.g., `templates/common/agent/workflows/[name].md` in repo)
+      - Source: Governed catalog directory (e.g., `templates/common/agents/workflows/[name].md` in repo)
       - Destination: `.agents/workflows/[name].md`
     - **Rules**:
-      - Source: Governed catalog directory (e.g., `templates/common/agent/rules/[name].md` in repo)
+      - Source: Governed catalog directory (e.g., `templates/common/agents/rules/[name].md` in repo)
       - Destination: `.agents/rules/[name].md`
 
 2.  **Check Status**:
@@ -50,8 +50,8 @@ Install or update components from the governed PARA Catalog into the workspace. 
 
 Find the catalog source directory (in priority order):
 
-1. `Projects/para-workspace/repo/templates/common/agent/`
-2. `Resources/references/para-workspace/templates/common/agent/`
+1. `Projects/para-workspace/repo/templates/common/agents/`
+2. `Resources/references/para-workspace/templates/common/agents/`
 
 Determine `TYPE` (`work` → `workflows/`, `rule` → `rules/`) and construct full source path.
 

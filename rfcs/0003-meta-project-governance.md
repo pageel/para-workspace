@@ -180,7 +180,7 @@ to invariants at v2.0.0.
 
 ## Testing plan
 
-- ✅ Schema test vectors: `templates/common/agent/skills/para-kit/examples/project-schema-vectors.md`
+- ✅ Schema test vectors: `templates/common/agents/skills/para-kit/examples/project-schema-vectors.md`
 - ⏳ Dogfood: `/open pageel` (ecosystem), `/open pageel-page-map` (satellite)
 - ⏳ Dogfood: `@pageel/` plan resolution across workflows
 - ⏳ `/para-audit update` validates ecosystem consistency

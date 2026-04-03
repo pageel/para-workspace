@@ -311,9 +311,6 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 ✅ Completed:
 - [Items from session log]
 
-⏳ Pending TODO:
-- [ ] [Pending items]
-
 📄 STRATEGY: [one-line summary from docs/strategy/strategy.md]
    (omit if no strategy docs)
 

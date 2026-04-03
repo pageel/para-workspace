@@ -211,7 +211,7 @@ This helps detect issues when the kernel changes (e.g., renamed files, changed s
 
 ## H9. Governed Library Catalogs
 
-Every governed library (workflows, rules, skills) in `templates/common/agent/` MUST include
+Every governed library (workflows, rules, skills) in `templates/common/agents/` MUST include
 a `catalog.yml` file with the following minimum fields per item:
 
 | Field         | Required | Description                        |

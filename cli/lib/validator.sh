@@ -74,7 +74,7 @@ validate_catalog() {
 }
 
 # Validate all catalogs in a directory
-# Usage: validate_all_catalogs "/path/to/templates/common/agent" "1.4.0"
+# Usage: validate_all_catalogs "/path/to/templates/common/agents" "1.4.0"
 validate_all_catalogs() {
   local base_dir="$1"
   local kernel_version="$2"

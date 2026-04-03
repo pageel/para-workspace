@@ -45,4 +45,4 @@ MUST mirror internal thought artifacts (plans, tasks, walkthroughs) to the proje
 
 - [Hybrid 3-File Integrity](./hybrid-3-file-integrity.md) — Task file management
 - [Naming Conventions](./naming.md) — Artifact file naming
-- **Source**: `templates/common/agent/rules/artifact-standard.md`
+- **Source**: `templates/common/agents/rules/artifact-standard.md`

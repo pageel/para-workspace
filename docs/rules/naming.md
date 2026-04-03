@@ -60,4 +60,4 @@ Pillar folder → PascalCase
 
 - [PARA Discipline](./para-discipline.md) — File organization
 - [VCS](./vcs.md) — Commit message conventions
-- **Source**: `templates/common/agent/rules/naming.md`
+- **Source**: `templates/common/agents/rules/naming.md`

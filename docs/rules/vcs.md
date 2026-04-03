@@ -55,4 +55,4 @@ Tag:     user tests → propose tag → user approves
 
 - [Agent Behavior](./agent-behavior.md) — Context Recovery includes VCS triggers
 - [Governance](./governance.md) — Repository Protection (I10)
-- **Source**: `templates/common/agent/rules/vcs.md`
+- **Source**: `templates/common/agents/rules/vcs.md`

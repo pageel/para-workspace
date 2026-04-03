@@ -82,4 +82,4 @@ Workflows that resolve `active_plan`: `/open`, `/end`, `/plan`, `/para-audit`.
 
 - [Project Schema](../../kernel/schema/project.schema.json)
 - [Heuristics H7: Cross-Project References](../../kernel/heuristics.md)
-- [Workflow: /new-project](../../../templates/common/agent/workflows/new-project.md)
+- [Workflow: /new-project](../../../templates/common/agents/workflows/new-project.md)

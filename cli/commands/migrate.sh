@@ -170,7 +170,7 @@ fi
 echo ""
 echo "📑 Step 3: Update workflow catalog..."
 WF_TARGET="$WS_ROOT/Resources/ai-agents/workflows"
-CATALOG_SRC="$REPO_ROOT/templates/common/agent/workflows"
+CATALOG_SRC="$REPO_ROOT/templates/common/agents/workflows"
 
 run_or_preview "Create workflow catalog directory" mkdir -p "$WF_TARGET"
 if [ "$DRY_RUN" = false ] && [ -d "$CATALOG_SRC" ]; then
@@ -225,11 +225,11 @@ run_or_preview "Create .agents/rules/" mkdir -p "$WS_ROOT/.agents/rules"
 
 if [ "$DRY_RUN" = false ]; then
   # Governance
-  GOV_SRC="$REPO_ROOT/templates/common/agent/governance.md"
+  GOV_SRC="$REPO_ROOT/templates/common/agents/governance.md"
   [ -f "$GOV_SRC" ] && backup_and_copy "$GOV_SRC" "$WS_ROOT/.agents/rules/governance.md"
 
   # Rules Library
-  RULE_SRC="$REPO_ROOT/templates/common/agent/rules"
+  RULE_SRC="$REPO_ROOT/templates/common/agents/rules"
   if [ -d "$RULE_SRC" ]; then
     for f in "$RULE_SRC"/*.md; do
       [ -f "$f" ] && backup_and_copy "$f" "$WS_ROOT/.agents/rules/$(basename "$f")"
@@ -272,7 +272,7 @@ fi
 # Step 8: Create Resources/ai-agents/rules/ & skills/
 echo ""
 echo "📏 Step 8: Create governed library snapshots..."
-LIB_SRC="$REPO_ROOT/templates/common/agent"
+LIB_SRC="$REPO_ROOT/templates/common/agents"
 
 for lib in rules skills; do
   SNAPSHOT_DIR="$WS_ROOT/Resources/ai-agents/$lib"

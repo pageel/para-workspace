@@ -55,4 +55,4 @@ Guards act as a last-resort defense when agent has lost rule context post-trunca
 - [Hybrid 3-File Architecture](../architecture/hybrid-3-file.md)
 - [Context Recovery](../architecture/context-recovery.md) — File Guard Headers (Layer 4)
 - [RFC-0002](../../rfcs/0002-hybrid-3-file-integrity.md)
-- **Source**: `templates/common/agent/rules/hybrid-3-file-integrity.md`
+- **Source**: `templates/common/agents/rules/hybrid-3-file-integrity.md`

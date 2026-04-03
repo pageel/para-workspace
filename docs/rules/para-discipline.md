@@ -51,4 +51,4 @@ MUST only `git commit`/`push` within `repo/`. MUST NOT commit `sessions/`, `docs
 - [Overview Architecture](../architecture/overview.md)
 - [Governance](./governance.md) — Invariants this rule extends
 - [VCS](./vcs.md) — Git boundaries in detail
-- **Source**: `templates/common/agent/rules/para-discipline.md`
+- **Source**: `templates/common/agents/rules/para-discipline.md`
