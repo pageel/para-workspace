@@ -1,6 +1,6 @@
 # Ecosystem Architecture
 
-> **Version**: 1.6.0 | **Last reviewed**: 2026-03-20
+> **Version**: 1.7.4 | **Last reviewed**: 2026-04-03
 
 ## Overview
 
@@ -9,31 +9,29 @@ PARA Workspace v1.6.0 introduces **Ecosystem Projects** — meta-projects that c
 ## Model
 
 ```text
-┌───────────────────────────────────────────────────────┐
-│                       Projects/                       │
-│                                                       │
-│  ┌────────────────────────────┐                       │
-│  │     my-ecosystem/          │  ECOSYSTEM            │
-│  │  ├─ project.md             │  type: ecosystem      │
-│  │  ├─ artifacts/plans/  ─────┼── Shared plans        │
-│  │  └─ docs/strategy.md       │  No repo/             │
-│  └─────────────┬──────────────┘                       │
-│                │                                      │
-│                │  @my-ecosystem/ prefix               │
-│                │  (cross-project plan resolution)     │
-│                │                                      │
-│      ┌─────────┼─────────┬──────────┐                 │
-│      ▼         ▼         ▼          ▼                 │
-│  ┌───────┐ ┌───────┐ ┌───────┐ ┌───────┐              │
-│  │ app-a │ │ app-b │ │ lib-c │ │ lib-d │ SATELLITES   │
-│  │ repo/ │ │ repo/ │ │ repo/ │ │ repo/ │              │
-│  └───────┘ └───────┘ └───────┘ └───────┘              │
-│                                                       │
-│  ┌────────────────────────────┐                       │
-│  │     standalone-project/    │  STANDARD             │
-│  │  └─ repo/                  │  type: standard       │
-│  └────────────────────────────┘                       │
-└───────────────────────────────────────────────────────┘
+                      Projects/
+
+  ┌────────────────────────────┐
+  │     my-ecosystem/          │  ECOSYSTEM
+  │  ├─ project.md             │  type: ecosystem
+  │  ├─ artifacts/plans/  ─────┼── Shared plans
+  │  └─ docs/strategy.md       │  No repo/
+  └─────────────┬──────────────┘
+                │
+                │  @my-ecosystem/ prefix
+                │  (cross-project plan resolution)
+                │
+      ┌─────────┼─────────┬──────────┐
+      ▼         ▼         ▼          ▼
+  ┌───────┐ ┌───────┐ ┌───────┐ ┌───────┐
+  │ app-a │ │ app-b │ │ lib-c │ │ lib-d │  SATELLITES
+  │ repo/ │ │ repo/ │ │ repo/ │ │ repo/ │
+  └───────┘ └───────┘ └───────┘ └───────┘
+
+  ┌────────────────────────────┐
+  │     standalone-project/    │  STANDARD
+  │  └─ repo/                  │  type: standard
+  └────────────────────────────┘
 ```
 
 ## Schema
@@ -112,8 +110,24 @@ Resolution: `@{name}/path` → `Projects/{name}/artifacts/path`
 
 ## Governance
 
-Ecosystem conventions are managed by **Heuristic H7** (Cross-Project References) in the kernel. These are SHOULD-level guidelines, planned for promotion to invariants at v2.0.0 after stabilization.
+Ecosystem conventions are managed by **Heuristic H7** (Cross-Project References) in the kernel. These are SHOULD-level guidelines.
+
+Governance roadmap:
+
+```text
+v1.6.0  Heuristic H7 (SHOULD)
+   │
+v1.7.0  Knowledge System + H10 (KI)  ← Shipped
+   │
+v1.8.0  Department System
+   │
+v2.0.0  Invariant I12 (MUST)   ← Promote when stable
+```
 
 ---
 
-_See also: [RFC-0003](../../rfcs/0003-meta-project-governance.md) · [Project Reference](../reference/project.md) · [Glossary](../reference/glossary.md)_
+_See also: [Knowledge System](./knowledge-system.md) · [RFC-0003](../../rfcs/0003-meta-project-governance.md) · [Project Reference](../reference/project.md) · [Glossary](../reference/glossary.md)_
+
+---
+
+_Last updated: 2026-04-03 (FEAT-61: v1.7.4)_

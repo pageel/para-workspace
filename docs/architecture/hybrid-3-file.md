@@ -1,6 +1,6 @@
 # Hybrid 3-File Architecture
 
-> **Version**: 1.5.4 | **Last reviewed**: 2026-03-17
+> **Version**: 1.7.4 | **Last reviewed**: 2026-04-03
 
 ## Overview
 
@@ -86,7 +86,8 @@ This preserves `backlog.md` as the **single source of truth** for all tasks whil
 - **RFC-0002:** `rfcs/0002-hybrid-3-file-integrity.md`
 - **Schema:** `kernel/schema/tasks.schema.md`
 - **Kernel:** Invariant I2 (`kernel/invariants.md`)
+- **Related:** [knowledge-system.md](knowledge-system.md) — KI governance (v1.7.0+)
 
 ---
 
-_Published from `docs/architecture/hybrid-3-file.md` — v1.5.4 (FEAT-47: C6 Guard Headers)_
+_Last updated: 2026-04-03 (FEAT-61: v1.7.4)_

@@ -1,12 +1,12 @@
 # Defense-in-Depth: Context Recovery After Truncation
 
-> **Version**: 1.5.4 | **Last reviewed**: 2026-03-17
+> **Version**: 1.7.4 | **Last reviewed**: 2026-04-03
 
 ## Overview
 
 AI Agents in long conversations experience **context truncation** — the system drops earlier context to stay within token limits. When this happens, the agent loses all rules loaded at session start, leading to silent rule violations.
 
-PARA Workspace v1.5.4 implements a **4-layer Defense-in-Depth** strategy. No single layer is perfect; the strength lies in their combination.
+PARA Workspace implements a **4-layer Defense-in-Depth** strategy. No single layer is perfect; the strength lies in their combination.
 
 ## The Problem
 
@@ -16,7 +16,7 @@ After truncation, the agent may perform side-effects (git push, edit task files,
 
 ### Layer 1: Rule File — Context Recovery Protocol
 
-`agent-behavior.md` Section 4 instructs the agent to re-read `.agents/rules.md` when context appears incomplete. Includes a **File-Level Guards** table mapping file patterns to required rules:
+`agent-behavior.md` Section 4 instructs the agent to re-read `.agents/rules.md` + `.agents/skills.md` (v1.6.2+) when context appears incomplete. **Proactive Trigger Check**: BEFORE any side-effect, scan ALL trigger tables. Includes a **File-Level Guards** table mapping file patterns to required rules:
 
 | File pattern              | MUST re-read before editing     |
 | :------------------------ | :------------------------------ |
@@ -45,7 +45,7 @@ After truncation, the agent may perform side-effects (git push, edit task files,
 
 Seven workflows with side-effects include Step 0 that re-reads `rules.md` from disk:
 
-`/push`, `/release`, `/end`, `/plan`, `/docs`, `/backlog`, `/retro`
+`/push`, `/release`, `/end`, `/plan`, `/docs`, `/backlog`, `/retro`, `/knowledge` (v1.7.0+)
 
 **Strength:** Active — forces re-read from disk, not memory.
 **Weakness:** Only triggers when agent **uses a workflow**. Bypassed workflows = bypassed pre-flight.
@@ -102,7 +102,8 @@ Total: **~200-275 tokens/session** (~3-5% of session budget). Negligible cost fo
 - `context-rules.md` Rule #4 — File Guards format specification
 - [Rule Layers Architecture](./rule-layers.md) — Workflow Coverage table
 - [Hybrid 3-File Architecture](./hybrid-3-file.md) — C6 guard headers
+- [Knowledge System](./knowledge-system.md) — KI governance (v1.7.0+)
 
 ---
 
-_Published from `docs/architecture/context-recovery.md` — v1.5.4 (FEAT-47)_
+_Last updated: 2026-04-03 (FEAT-61: v1.7.4)_

@@ -1,6 +1,6 @@
 # Knowledge Item Anatomy
 
-> **Version**: 1.7.3 | **Last reviewed**: 2026-04-02
+> **Version**: 1.7.4 | **Last reviewed**: 2026-04-03
 
 ## Overview
 

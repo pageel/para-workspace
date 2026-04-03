@@ -1,6 +1,6 @@
 # Rule Layers & Trigger Index Architecture
 
-> **Version**: 1.6.2 | **Last reviewed**: 2026-03-24
+> **Version**: 1.7.4 | **Last reviewed**: 2026-04-03
 
 ## Overview
 
@@ -24,7 +24,7 @@ Three key properties:
 ├──────────────────────────────────────────────┤
 │ Layer 2: GOVERNED RULES (Global, from repo)  │
 │ .agents/rules/*.md                            │
-│ → 10 rules, synced via ./para install/update │
+│ → 11 rules, synced via ./para install/update │
 │ → Apply to ALL projects in workspace         │
 ├──────────────────────────────────────────────┤
 │ Layer 3: PROJECT RULES (Per-project)         │
@@ -49,6 +49,7 @@ Synced from `catalog.yml` by `./para install` or `./para update`.
 | `governance.md`              | Kernel boundaries — restrict system modifications | Touching kernel/ or .para/ |
 | `context-rules.md`           | Context loading order + trigger index protocol    | Every session              |
 | `hybrid-3-file-integrity.md` | Hot Lane + compress-not-delete + /end sync        | Operating on tasks/        |
+| `knowledge.md`               | KI governance — write gate, namespace, safety    | Creating/updating KIs      |
 | `para-discipline.md`         | PARA classification enforcement                   | Creating/moving files      |
 | `artifact-standard.md`       | Document format standards                         | Creating artifacts         |
 | `naming.md`                  | File/branch/commit naming                         | Creating new files         |
@@ -145,8 +146,9 @@ agent:
 
 - **Rule:** `context-rules.md` Rule #4 — Agent Index Loading protocol
 - **Workflow:** `/open` Step 2.5a/2.5b/2.5c, `/plan` Step 2.7 D1/D2/D3
+- **Docs:** [Knowledge System](knowledge-system.md) — KI governance (v1.7.0+)
 - **Docs:** [Project Rules](../reference/project-rules.md)
 
 ---
 
-_Published from `docs/architecture/rule-layers.md` — v1.6.2 (FEAT-53: Unified Agent Index)_
+_Last updated: 2026-04-03 (FEAT-61: v1.7.4)_

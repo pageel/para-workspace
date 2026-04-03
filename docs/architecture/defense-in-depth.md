@@ -1,6 +1,6 @@
 # Defense-in-Depth: Agent Rule Compliance After Truncation
 
-> **Version**: 1.5.4 | **Last reviewed**: 2026-03-18
+> **Version**: 1.7.4 | **Last reviewed**: 2026-04-03
 
 ## Overview
 
@@ -30,7 +30,9 @@ The agent is instructed to re-read `.agents/rules.md` when it detects context de
 2. **Forgotten rules** — agent can't recall specific rule details
 3. **Long conversation** — session exceeds typical length
 
-**Recovery chain:** Detect decay → Read workspace `rules.md` + `skills.md` → Read project indices (if `agent.rules`/`agent.skills`: true, or `has_rules` fallback) → Load specific rule/skill files on demand.
+**Recovery chain:** Detect decay → Read workspace `rules.md` + `skills.md` (v1.6.2+) → Read project indices (if `agent.rules`/`agent.skills`: true) → Load specific rule/skill files on demand.
+
+**Proactive Trigger Check** (v1.6.2+): BEFORE any side-effect, scan ALL trigger tables (workspace + project, rules + skills). If match found → read rule/skill BEFORE acting.
 
 **File-Level Guards** table maps file patterns to rules that MUST be re-read before editing:
 
@@ -43,7 +45,7 @@ The agent is instructed to re-read `.agents/rules.md` when it detects context de
 
 **Extensible:** Project rules MAY define additional guards in `Projects/<name>/.agents/rules.md`.
 
-**Strength:** Covers workflow bypass (direct file edits). Two-Tier loading saves ~90% tokens.
+**Strength:** Covers workflow bypass (direct file edits). Two-Tier loading saves ~80% tokens. Proactive Trigger Check provides pre-action scanning.
 **Weakness:** Passive — depends on agent recognizing it has lost context (circular dependency).
 
 ---
@@ -93,13 +95,14 @@ Step 0 is a **mandatory first step** in workflows that perform side-effects:
 
 | Workflow | Side-effect risk |
 |:--|:--|
-| `/push` | Git commit, push |
-| `/release` | Version bump, tag |
-| `/end` | Task file mutations |
-| `/plan` | Plan file creation |
-| `/docs` | File generation |
-| `/backlog` | Task mutations |
-| `/retro` | Archive operations |
+| `/push`      | Git commit, push      |
+| `/release`   | Version bump, tag     |
+| `/end`       | Task file mutations   |
+| `/plan`      | Plan file creation    |
+| `/docs`      | File generation       |
+| `/backlog`   | Task mutations        |
+| `/retro`     | Archive operations    |
+| `/knowledge` | KI write/update (v1.7.0+) |
 
 **Why it works:** The agent reads the workflow file from disk → sees Step 0 → executes it → rules are loaded fresh. No dependency on agent memory.
 
@@ -173,7 +176,7 @@ Free-form request (no workflow) ⚠️   —    —    ✅  ← Only L4 catches 
 
 | Layer | Implementation files |
 |:--|:--|
-| L1 | `agent-behavior.md` §4, `context-rules.md` Rule 4, `.agents/rules.md` |
+| L1 | `agent-behavior.md` §4, `context-rules.md` Rule 4, `.agents/rules.md`, `.agents/skills.md` |
 | L2 | `/open` Step 8 report template |
 | L3 | Step 0 in `/push`, `/release`, `/end`, `/plan`, `/docs`, `/backlog`, `/retro` |
 | L4 | `hybrid-3-file-integrity.md` C6, guard headers in `kernel/`, `.agents/rules/`, `artifacts/tasks/`, `Areas/Workspace/` |
@@ -183,9 +186,10 @@ Free-form request (no workflow) ⚠️   —    —    ✅  ← Only L4 catches 
 - [Context Recovery](./context-recovery.md) — Concise 4-layer overview
 - [Rule Layers Architecture](./rule-layers.md) — Two-Tier loading + workflow coverage
 - [Hybrid 3-File Architecture](./hybrid-3-file.md) — C6 guard headers
+- [Knowledge System](./knowledge-system.md) — KI governance (v1.7.0+)
 - `hybrid-3-file-integrity.md` C6 — Guard type taxonomy
 - `agent-behavior.md` §4 — Context Recovery protocol + File-Level Guards
 
 ---
 
-_Published from `docs/architecture/defense-in-depth.md` — v1.5.4_
+_Last updated: 2026-04-03 (FEAT-61: v1.7.4)_
