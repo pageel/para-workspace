@@ -46,7 +46,7 @@ The Kernel (`Resources/ai-agents/kernel/`) is the **"constitution"** — immutab
 | H2  | Context Loading Priority    | project.md → rules → artifacts → areas          |
 | H7  | Cross-Project References    | Ecosystem `@` prefix for cross-project plans    |
 | H9  | Governed Library Catalogs   | catalog.yml mandatory with kernel_min/max       |
-| H10 | Knowledge Items Governance  | KR1-KR6 lifecycle rules, system KI sync         |
+| H10 | Knowledge Items Governance  | KR1-KR7 lifecycle rules, system KI sync         |
 
 ## 3. Workspace Configuration (`.para-workspace.yml`)
 
@@ -257,6 +257,7 @@ Skills promoted from rules: standalone, English-first, constraints + templates m
 | 1.7.2   | —            | KI index 12-col, workflow simplification (platform-inject), Knowledge Graph seed |
 | 1.7.3   | —            | Defense-in-Depth 4-layer context protection, KI ephemeral ref ban, dual-gate sync |
 | 1.7.4   | —            | `agent.rules`/`agent.skills` fully replaces `has_rules`, hot lane BUG-29 fix |
+| 1.7.5   | —            | KR7 Ephemeral Reference Ban, `/knowledge` → `/para-knowledge` rename |
 
 ## 15. Knowledge System (v1.7.0+)
 
@@ -287,6 +288,7 @@ Graph-ready fields: `title`, `summary`, `version`, `scope`, `domain`, `purpose`,
 - **KR4:** Summary ≤ 800 chars
 - **KR5:** Archive, never delete
 - **KR6:** System KIs sync from repo templates via CLI
+- **KR7:** MUST NOT reference ephemeral files (plans, sessions, sprint) in KI metadata
 
 ### Workflow Integration
 

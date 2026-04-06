@@ -21,7 +21,7 @@ Significant changes to the workspace must follow the **RFC** process:
 - **Heuristics (H1–H10):** Soft rules — strongly recommended, flexible based on context.
   - **Ecosystem (H7 v1.6.0+):** Cross-project `@` prefix, ecosystem meta-projects
   - **Governed Catalogs (H9):** `catalog.yml` mandatory for all libraries
-  - **Knowledge Items (H10 v1.7.0+):** KR1-KR6 lifecycle governance, system KI sync
+  - **Knowledge Items (H10 v1.7.0+):** KR1-KR7 lifecycle governance, system KI sync
 
 ## 3. Catalog System (v1.4.1+)
 
@@ -107,7 +107,7 @@ Skills were promoted from rules: standalone, English-first, constraints + templa
 
 ## 7. Knowledge System Governance (v1.7.0+)
 
-### Rules (KR1–KR6)
+### Rules (KR1–KR7)
 
 Rule   | Description
 :------|:-------------------------------------------
@@ -117,6 +117,7 @@ KR3    | `para_*` prefix reserved for system KIs
 KR4    | Summary ≤ 800 characters
 KR5    | All operations undoable (archive, not delete)
 KR6    | System KIs sync from repo templates via CLI
+KR7    | MUST NOT reference ephemeral files (plans, sessions, sprint) in KI metadata
 
 ### System KI Lifecycle
 
