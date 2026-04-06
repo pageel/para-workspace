@@ -16,7 +16,7 @@ Governance rule for Knowledge Item (KI) operations — the persistent cross-sess
 
 Rule | Description
 :----|:--------------------------------------------------
-KR1  | Only `/knowledge` workflow (and hooks from `/end`, `/brainstorm`, `/retro`) can WRITE to KI Store
+KR1  | Only `/para-knowledge` workflow (and hooks from `/end`, `/brainstorm`, `/retro`) can WRITE to KI Store
 KR2  | All mutations require explicit user confirmation
 KR3  | `para_*` prefix reserved for system KIs. User KIs: use `project_{name}` for project-scoped, descriptive slug for cross-project
 KR4  | MUST NOT touch `~/.gemini/` outside `knowledge/` and `knowledge/.archived/`
@@ -39,7 +39,7 @@ KS5  | Each artifact ≤200 lines, summary ≤800 chars
 
 1. MUST comply with `ki.schema.json`
 2. MUST have ≥1 artifact file
-3. SHOULD create/update via `/knowledge` workflow
+3. SHOULD create/update via `/para-knowledge` workflow
 4. scope MUST be: workspace | project | ecosystem
 5. Agent MUST verify KI content against current code
 6. KIs with >50% broken refs MUST be updated or archived
@@ -62,4 +62,4 @@ DELETE      🚫           🚫       🚫        🚫
 
 ---
 
-_See also: [Knowledge System Architecture](../architecture/knowledge-system.md) · [Knowledge Workflow](../workflows/knowledge.md) · [Heuristics H10](../../kernel/heuristics.md)_
+_See also: [Knowledge System Architecture](../architecture/knowledge-system.md) · [Knowledge Workflow](../workflows/para-knowledge.md) · [Heuristics H10](../../kernel/heuristics.md)_

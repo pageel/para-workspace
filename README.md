@@ -7,7 +7,7 @@
 **The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.4-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.5-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -79,7 +79,6 @@ para-workspace/
 │   ├── guides/          # How-to: development, planning, meta-project
 │   ├── reference/       # Lookup: CLI, workflows, project-rules
 │   ├── rules/           # Individual rule documentation (11 files)
-│   ├── changelog/       # Version history
 │   └── workflows/       # Individual workflow docs (22 files)
 ├── CONTRIBUTING.md
 ├── VERSIONING.md
@@ -343,7 +342,7 @@ para config [key] [value]       # Manage workspace settings
 | **[`/retro`](./docs/workflows/retro.md)**                 | Project retrospective before archiving                     |
 | **[`/update`](./docs/workflows/update.md)**               | Agent-guided safe workspace update with error recovery     |
 | **[`/verify`](./docs/workflows/verify.md)**               | Verify task completion with walkthroughs                   |
-| **[`/knowledge`](./docs/workflows/knowledge.md)**         | Manage Knowledge Items — dashboard, create, audit, archive |
+| **[`/para-knowledge`](./docs/workflows/para-knowledge.md)** | Manage Knowledge Items — dashboard, create, audit, archive |
 
 ---
 
@@ -484,7 +483,7 @@ KIs live **outside** the workspace, in Antigravity's platform-managed KI Store (
 Antigravity Platform
   KI Store                      PARA Workspace
   ~/.gemini/antigravity/  <──  Governance: schema, rules,
-  knowledge/                    /knowledge workflow
+  knowledge/                    /para-knowledge workflow
   (platform-managed)            (workspace-managed)
 ```
 
@@ -543,16 +542,17 @@ Each KI is classified along two axes — **domain** (what) × **purpose** (how):
 | `/end` | Suggests creating/updating KIs from session insights |
 | `/brainstorm` | Option F: Extract insight as KI |
 | `/retro` | Graduates cross-project patterns to KIs |
-| `/knowledge` | Full lifecycle: create, update, audit, archive |
+| `/para-knowledge` | Full lifecycle: create, update, audit, archive |
 
 ### Governance
 
-KI operations are governed by **6 rules (KR1–KR6)** and validated against **H10** (11 clauses):
+KI operations are governed by **7 rules (KR1–KR7)** and validated against **H10** (11 clauses):
 
-- **KR1 Write Gate**: Only `/knowledge` workflow can create/modify KIs
+- **KR1 Write Gate**: Only `/para-knowledge` workflow can create/modify KIs
 - **KR2 User Approval**: Every KI creation requires explicit user consent
 - **KR3 Namespace**: `para_` prefix reserved for system KIs
 - **KR5 Recoverability**: All KI operations are reversible
+- **KR7 Ephemeral Ban**: No ephemeral file paths in KI references (v1.7.5)
 
 > 📖 Full schema: [`ki.schema.json`](./kernel/schema/ki.schema.json) · Governance: [`heuristics.md` H10](./kernel/heuristics.md)
 
@@ -613,6 +613,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] **KI Index Schema Upgrade, Workflow Simplification & Knowledge Graph Seed** _(shipped in v1.7.2)_
 - [x] **Agent Path Convention Fix (BUG-28) & Rule Frontmatter** _(shipped in v1.7.3)_
 - [x] **Repo Path Standardization, Pending TODO Fix & Project Profile Skill** _(shipped in v1.7.4)_
+- [x] **KR7 Ephemeral Ban & /knowledge → /para-knowledge Rename** _(shipped in v1.7.5)_
 - [ ] Department System _(v1.8.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.9.0 — planned)_
 
@@ -630,4 +631,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.7.4_
+_Version: 1.7.5_

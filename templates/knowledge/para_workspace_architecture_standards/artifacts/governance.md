@@ -111,7 +111,7 @@ Skills were promoted from rules: standalone, English-first, constraints + templa
 
 Rule   | Description
 :------|:-------------------------------------------
-KR1    | Only `/knowledge` workflow can create/modify KIs
+KR1    | Only `/para-knowledge` workflow can create/modify KIs
 KR2    | All KI operations require user confirmation
 KR3    | `para_*` prefix reserved for system KIs
 KR4    | Summary ≤ 800 characters

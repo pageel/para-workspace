@@ -19,7 +19,7 @@ glob: .para/knowledge/*
 
 ### KR1. Write Gate
 
-- **MUST** only write to KI Store via `/knowledge` workflow.
+- **MUST** only write to KI Store via `/para-knowledge` workflow.
 - **Allowed hooks**: `/end`, `/brainstorm`, `/retro` MAY suggest KI creation.
 - **MUST NOT** create or modify KIs outside these entry points.
 
@@ -34,7 +34,7 @@ glob: .para/knowledge/*
 ### KR3. Namespace Separation
 
 - System KIs (`owner: para`) slug **MUST** start with `para_` prefix.
-- System KIs **MUST** only be updated via `/knowledge system` or version alignment.
+- System KIs **MUST** only be updated via `/para-knowledge system` or version alignment.
 - User KIs **MUST NOT** use the `para_` prefix.
 - Agent **MUST** reject user KI creation if slug starts with `para_`.
 - All slugs **MUST** match `^[a-z0-9_]{3,60}$` — no path separators.
@@ -55,25 +55,40 @@ glob: .para/knowledge/*
 ### KR6. System KI Governed Lifecycle (v1.7.1)
 
 - System KIs **MUST** ship from `repo/templates/knowledge/` (source of truth).
-- `./para update` **SHOULD** sync system KIs via `/knowledge system update` logic.
+- `./para update` **SHOULD** sync system KIs via `/para-knowledge system update` logic.
 - `./para install` **SHOULD** init system KI defaults from templates.
 - System KI update **MUST** use merge strategy: template wins, user refs preserved.
 - System KI archive **MUST** only occur when deprecated by template removal.
+
+### KR7. Ephemeral Reference Ban (v1.7.5)
+
+- **MUST NOT** add ephemeral file paths to KI `references` array.
+- Ephemeral paths include:
+  - `artifacts/plans/*.md` (archived after completion)
+  - `artifacts/tasks/sprint-current.md` (hot lane, changes frequently)
+  - `sessions/*.md` (daily logs, high churn)
+  - Any file expected to be moved, archived, or deleted
+- **MUST** only reference durable files:
+  - `project.md`, `.para-workspace.yml` (project config)
+  - `.agents/rules/*.md`, `.agents/skills/*.md` (governed libraries)
+  - Source code files (`src/`, `repo/`) with stable paths
+  - `conversation_id` references (platform-managed)
+- **Rationale:** Ephemeral refs become `BROKEN_REF` when source files are archived, degrading KI health scores and traceability.
 
 ## Access Control Matrix
 
 | Operation       | User KI        | System KI (para_*)      | Gate                  |
 |:----------------|:---------------|:------------------------|:----------------------|
 | READ            | ✅ Free        | ✅ Free                 | Any workflow          |
-| CREATE          | +ask, no para_ | +ask, version aligned   | /knowledge [system]   |
-| UPDATE content  | +ask           | +ask, version check     | /knowledge [system]   |
-| UPDATE refs     | +ask           | ✅ Merge-safe           | /knowledge [system]   |
-| UPGRADE version | N/A            | Template sync only      | /knowledge system update |
-| ARCHIVE         | +ask           | Deprecated by template  | /knowledge            |
+| CREATE          | +ask, no para_ | +ask, version aligned   | /para-knowledge [system]   |
+| UPDATE content  | +ask           | +ask, version check     | /para-knowledge [system]   |
+| UPDATE refs     | +ask           | ✅ Merge-safe           | /para-knowledge [system]   |
+| UPGRADE version | N/A            | Template sync only      | /para-knowledge system update |
+| ARCHIVE         | +ask           | Deprecated by template  | /para-knowledge            |
 | DELETE          | 🚫 Blocked    | 🚫 Blocked             | —                     |
 
 ## Related
 
 - `kernel/schema/ki.schema.json` — KI metadata schema
 - `kernel/heuristics.md` H10 — Knowledge Items heuristic
-- `.agents/workflows/knowledge.md` — Primary workflow
+- `.agents/workflows/para-knowledge.md` — Primary workflow

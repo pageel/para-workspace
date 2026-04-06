@@ -4,7 +4,7 @@
 
 ## Overview
 
-`/knowledge` manages Knowledge Items (KIs) — persistent cross-session memory for AI agents. This guide covers all 8 operations and how the Knowledge System integrates with other workflows.
+`/para-knowledge` manages Knowledge Items (KIs) — persistent cross-session memory for AI agents. This guide covers all 8 operations and how the Knowledge System integrates with other workflows.
 
 ## Quick Reference
 

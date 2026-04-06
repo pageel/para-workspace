@@ -65,7 +65,7 @@ Reads `kernel_version` from `.para-workspace.yml` and compares with `.para/audit
 
 ### 2. Read Changelog (Token-Optimized)
 
-Reads only the changelog for the new version (`docs/changelog/vX.Y.Z.md`). Extracts breaking changes, template changes, and rule changes to build a targeted check list.
+Reads the CHANGELOG.md section for the new version (search for `## [VERSION]`). Extracts breaking changes, template changes, and rule changes to build a targeted check list.
 
 ### 3. Check Project Schema Compliance
 

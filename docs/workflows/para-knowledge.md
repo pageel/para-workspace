@@ -1,6 +1,6 @@
-# Workflow `/knowledge` — Knowledge Items Management
+# Workflow `/para-knowledge` — Knowledge Items Management
 
-> **Version**: 1.7.3 | **Last reviewed**: 2026-04-02
+> **Version**: 1.7.5 | **Last reviewed**: 2026-04-06
 
 ## Overview
 
@@ -11,20 +11,20 @@ Since v1.7.2, other workflows (`/open`, `/end`, `/plan`...) use **platform-injec
 ## Syntax
 
 ```text
-/knowledge                       → 📊 Dashboard
-/knowledge [topic]               → ✏️ Smart Create/Update (user KI)
-/knowledge system [topic]        → 🏛️ System KI Create/Update
-/knowledge system update         → 🔄 Sync system KIs from repo templates
-/knowledge system defaults       → 📦 Init default system KIs
-/knowledge audit                 → 🔍 Full health check
-/knowledge archive [#]           → 📦 Retire a KI
-/knowledge [#]                   → 🔍 View KI details
+/para-knowledge                       → 📊 Dashboard
+/para-knowledge [topic]               → ✏️ Smart Create/Update (user KI)
+/para-knowledge system [topic]        → 🏛️ System KI Create/Update
+/para-knowledge system update         → 🔄 Sync system KIs from repo templates
+/para-knowledge system defaults       → 📦 Init default system KIs
+/para-knowledge audit                 → 🔍 Full health check
+/para-knowledge archive [#]           → 📦 Retire a KI
+/para-knowledge [#]                   → 🔍 View KI details
 ```
 
 ## Execution Flow
 
 ```text
-/knowledge → Ensure .para/knowledge/ → Route action → Execute → Update index
+/para-knowledge → Ensure .para/knowledge/ → Route action → Execute → Update index
 ```
 
 ### Dashboard
@@ -48,12 +48,13 @@ Scans `repo/templates/knowledge/` → compares with KI Store using dual-gate (v1
 
 Rule | Description
 :----|:-------------------------------------------
-KR1  | Only `/knowledge` workflow can WRITE to KI Store
+KR1  | Only `/para-knowledge` workflow can WRITE to KI Store
 KR2  | User MUST confirm before any mutation
 KR3  | `para_*` reserved for system KIs
 KR4  | MUST NOT touch `~/.gemini/` outside `knowledge/`
 KR5  | Archive instead of delete, idempotent writes
 KR6  | System KIs ship from repo, sync via update
+KR7  | No ephemeral file paths in KI references (v1.7.5)
 
 ## Workflow Integration
 

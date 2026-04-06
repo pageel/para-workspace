@@ -89,7 +89,7 @@ Slug prefix     | `para_*` (required)         | No `para_*` (rejected)
 Naming hint     | `para_{domain}_{topic}`     | `project_{name}` or `{descriptive_topic}`
 Owner           | `"para"`                    | `"user"`
 Source          | `repo/templates/knowledge/` | Agent creates from session
-Update method   | CLI sync / `/knowledge system update` | `/knowledge [topic]`
+Update method   | CLI sync / `/para-knowledge system update` | `/para-knowledge [topic]`
 Ad-hoc edits    | ❌ Not allowed              | ✅ Allowed
 
 ## Graph-Ready Fields

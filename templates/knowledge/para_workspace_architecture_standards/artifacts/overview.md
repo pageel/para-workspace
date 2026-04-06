@@ -214,7 +214,7 @@ Workflows, Rules, and Skills managed via `catalog.yml`:
 | `/inbox` | Categorize files from `_inbox/` |
 | `/new-project` | Initialize PARA-compliant project |
 | `/backup` | Backup workspace config files |
-| `/knowledge` | Manage Knowledge Items — dashboard, create, update, audit, archive |
+| `/para-knowledge` | Manage Knowledge Items — dashboard, create, update, audit, archive |
 | `/docs` | Generate and maintain project documentation |
 | `/learn` | Package lessons and knowledge into Areas/Learning |
 
@@ -252,7 +252,7 @@ Skills promoted from rules: standalone, English-first, constraints + templates m
 | 1.6.3   | Central Gate | Field-gated change detection, mandatory `strategy`/`roadmap` fields |
 | 1.6.4   | — | Para-Kit skill, git-hash change detection, recursive dir sync |
 | 1.6.5   | —            | Para-Kit skill finalized, documentation cleanup |
-| 1.7.0   | Knowledge    | Knowledge System: KI schema, /knowledge workflow, graph-ready taxonomy |
+| 1.7.0   | Knowledge    | Knowledge System: KI schema, /para-knowledge workflow, graph-ready taxonomy |
 | 1.7.1   | —            | System KI governed lifecycle: namespace guard, template sync, CLI hooks |
 | 1.7.2   | —            | KI index 12-col, workflow simplification (platform-inject), Knowledge Graph seed |
 | 1.7.3   | —            | Defense-in-Depth 4-layer context protection, KI ephemeral ref ban, dual-gate sync |
@@ -267,7 +267,7 @@ Persistent cross-session memory via Knowledge Items (KIs).
 KIs live **outside** workspace in KI Store (`~/.gemini/antigravity/knowledge/`). PARA Workspace provides governance only.
 
 - **System KIs** (`para_*`): Managed by repo templates, synced via `./para update`
-- **User KIs**: Created by `/knowledge [topic]`, scope: workspace/project/ecosystem
+- **User KIs**: Created by `/para-knowledge [topic]`, scope: workspace/project/ecosystem
 
 ### Context Flow (v1.7.2)
 
@@ -281,7 +281,7 @@ Graph-ready fields: `title`, `summary`, `version`, `scope`, `domain`, `purpose`,
 
 ### Governance Rules
 
-- **KR1:** Only `/knowledge` can create/modify KIs
+- **KR1:** Only `/para-knowledge` can create/modify KIs
 - **KR2:** User approval required
 - **KR3:** `para_*` prefix reserved for system KIs
 - **KR4:** Summary ≤ 800 chars

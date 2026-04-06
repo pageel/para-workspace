@@ -45,7 +45,7 @@ After truncation, the agent may perform side-effects (git push, edit task files,
 
 Seven workflows with side-effects include Step 0 that re-reads `rules.md` from disk:
 
-`/push`, `/release`, `/end`, `/plan`, `/docs`, `/backlog`, `/retro`, `/knowledge` (v1.7.0+)
+`/push`, `/release`, `/end`, `/plan`, `/docs`, `/backlog`, `/retro`, `/para-knowledge` (v1.7.0+)
 
 **Strength:** Active — forces re-read from disk, not memory.
 **Weakness:** Only triggers when agent **uses a workflow**. Bypassed workflows = bypassed pre-flight.

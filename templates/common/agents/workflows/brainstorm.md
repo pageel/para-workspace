@@ -106,7 +106,7 @@ Saved: artifacts/para-decisions/brainstorm-[topic]-[date].md
   C. 📥 Add to /backlog — Create simple tasks directly
   D. 📝 Save as project doc — Keep as reference in docs/
   E. 🎓 Extract to /learn — Reusable lesson for other projects
-  F. 📚 Extract to /knowledge — Persistent KI (if KI system exists)
+  F. 📚 Extract to /para-knowledge — Persistent KI (if KI system exists)
 
 ❓ Which option? (A/B/C/D/E/F)
 ```
@@ -151,12 +151,12 @@ Extract the reusable insight (not the project-specific details) into `Areas/Lear
 
 > KI system is a standard workspace component (v1.7.0+).
 
-Suggest: `/knowledge [topic]`
+Suggest: `/para-knowledge [topic]`
 
 Extract the insight as a persistent Knowledge Item (cross-session, cross-project).
 
 > **System KI hint:** If the insight relates to PARA Workspace architecture,
-> governance, or cross-project patterns, suggest `/knowledge system [topic]` instead.
+> governance, or cross-project patterns, suggest `/para-knowledge system [topic]` instead.
 
 ## Related
 

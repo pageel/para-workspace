@@ -101,10 +101,10 @@ tail -5 .para/audit.log
 // turbo
 
 ```bash
-cat Resources/references/para-workspace/docs/changelog/v[VERSION].md
+cat Resources/references/para-workspace/CHANGELOG.md
 ```
 
-Read **only** the changelog for the new version. Extract:
+Read **only** the CHANGELOG.md section for the new version (search for `## [VERSION]`). Extract:
 
 - **Breaking Changes** section → mandatory user action items
 - **Templates** table rows → template compliance checks needed

@@ -200,12 +200,12 @@ items:
     description: "KI extraction Option F. Collaborative ideation with 6 exit paths (v1.7.1)."
     tags: ["brainstorm", "ideation", "planning", "knowledge"]
 
-  - id: knowledge
+  - id: para-knowledge
     name: "Knowledge Manager"
-    version: "1.3.0"
-    kernel_min: "1.7.0"
+    version: "1.4.0"
+    kernel_min: "1.7.5"
     kernel_max: "1.x"
-    entrypoint: "knowledge.md"
-    description: "Manage Knowledge Items — create, update, audit, archive. System KI governed lifecycle. Index with per-KI artifact listing and file links (v1.3.0)."
+    entrypoint: "para-knowledge.md"
+    description: "KR7 Ephemeral Ban. Renamed from /knowledge for Governance Pentad consistency (v1.4.0)."
     tags: ["knowledge", "ki", "governance", "graph", "system-ki"]
 

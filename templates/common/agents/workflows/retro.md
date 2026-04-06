@@ -76,12 +76,12 @@ Insights from [project-name] that could persist as KIs:
 - [Topic 1] — cross-project pattern (scope: workspace)
 - [Topic 2] — non-obvious gotcha (purpose: pitfall)
 
-Graduate to KI? Run `/knowledge [topic]` (Y/N/Later)
+Graduate to KI? Run `/para-knowledge [topic]` (Y/N/Later)
 ```
 
 > **System KI hint:** If the pattern relates to PARA Workspace governance,
 > architecture, or cross-project infrastructure, suggest
-> `/knowledge system [topic]` for governed system KI lifecycle.
+> `/para-knowledge system [topic]` for governed system KI lifecycle.
 
 ### 5. Record Retrospective
 

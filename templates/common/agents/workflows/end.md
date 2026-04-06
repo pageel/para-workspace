@@ -229,7 +229,7 @@ After reporting phase status:
    ```
    💡 SESSION KNOWLEDGE
    New insight detected: [topic]
-   Create KI? Run `/knowledge [topic]` (Y/N)
+   Create KI? Run `/para-knowledge [topic]` (Y/N)
    ```
 5. **IF no trigger** → Skip silently.
 

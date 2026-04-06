@@ -95,7 +95,7 @@ Knowledge Items allow agents to learn and accumulate knowledge across sessions:
 
 - **KI Store** (`~/.gemini/antigravity/knowledge/`): Each KI has `metadata.json` + `artifacts/`.
 - **System KIs** (`para_*` prefix): Governed by repo templates, synced via `./para update` (dual-gate: version + hash).
-- **User KIs** (no `para_` prefix): User-created via `/knowledge`, never overwritten.
+- **User KIs** (no `para_` prefix): User-created via `/para-knowledge`, never overwritten.
 - **Platform-injected context**: Summaries auto-injected at conversation start — no file reading needed.
 
 > Details: [knowledge-system.md](knowledge-system.md) | [ki-anatomy.md](ki-anatomy.md)

@@ -6,7 +6,7 @@
   "domain": "workspace",
   "purpose": "context",
   "owner": "para",
-  "para_version": "1.7.4",
+  "para_version": "1.7.5",
   "tags": ["architecture", "governance", "kernel", "invariants", "heuristics", "token-optimization", "ecosystem", "agent-index", "knowledge-system"],
   "references": [
     {

@@ -74,7 +74,7 @@ If qualified:
    Lessons live in Areas/Learning/ (project-scoped).
    KIs persist in the AI platform (cross-session, auto-loaded).
 
-   Create KI? Run `/knowledge [topic]` (Y/N)
+   Create KI? Run `/para-knowledge [topic]` (Y/N)
 ```
 
 ## Related

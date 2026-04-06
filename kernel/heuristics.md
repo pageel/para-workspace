@@ -241,7 +241,7 @@ long-term institutional memory.
 
 1. KIs MUST conform to `kernel/schema/ki.schema.json`
 2. KIs MUST have at least one artifact file in their `artifacts/` directory
-3. KIs SHOULD be created and updated via the `/knowledge` workflow
+3. KIs SHOULD be created and updated via the `/para-knowledge` workflow
 
 ### Scope & Ownership
 

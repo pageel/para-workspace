@@ -102,7 +102,7 @@ Step 0 is a **mandatory first step** in workflows that perform side-effects:
 | `/docs`      | File generation       |
 | `/backlog`   | Task mutations        |
 | `/retro`     | Archive operations    |
-| `/knowledge` | KI write/update (v1.7.0+) |
+| `/para-knowledge` | KI write/update (v1.7.0+) |
 
 **Why it works:** The agent reads the workflow file from disk → sees Step 0 → executes it → rules are loaded fresh. No dependency on agent memory.
 

@@ -409,6 +409,45 @@ else
   echo "⏭️  Skipping v1.7.2→v1.7.3 steps (FROM=$FROM_VERSION >= 1.7.3)"
 fi  # end v1.7.2 → v1.7.3 gate
 
+# ============================================================
+# Migration: v1.7.4 → v1.7.5 (Knowledge Workflow Rename)
+# ============================================================
+
+# Version gate: only run if upgrading from pre-1.7.5
+if ! semver_gte "$FROM_VERSION" "1.7.5" 2>/dev/null; then
+
+echo ""
+echo "━━━ v1.7.4 → v1.7.5 Migration ━━━━━━━━━━━━━━━━━━━"
+echo ""
+MIGRATION_RAN=true
+
+# Step 13: Rename knowledge.md → para-knowledge.md (Governance Pentad)
+echo "📂 Step 13: Rename knowledge.md → para-knowledge.md (Governance Pentad)..."
+
+for target_dir in "$WS_ROOT/.agents/workflows" "$WS_ROOT/Resources/ai-agents/workflows"; do
+  old_file="$target_dir/knowledge.md"
+  new_file="$target_dir/para-knowledge.md"
+  if [ -f "$old_file" ] && [ ! -f "$new_file" ]; then
+    run_or_preview "Rename $(basename "$target_dir")/knowledge.md → para-knowledge.md" \
+      mv "$old_file" "$new_file"
+  elif [ -f "$old_file" ] && [ -f "$new_file" ]; then
+    # Both exist — backup old, keep new (source of truth from install)
+    if [ "$DRY_RUN" = false ]; then
+      cp "$old_file" "${old_file}.bak"
+      rm "$old_file"
+      echo "     ✓ Backed up and removed orphan knowledge.md from $(basename "$target_dir")"
+    else
+      echo "     → Would backup and remove orphan knowledge.md from $(basename "$target_dir")"
+    fi
+  fi
+done
+
+echo "     ✓ Knowledge workflow rename complete"
+
+else
+  echo "⏭️  Skipping v1.7.4→v1.7.5 steps (FROM=$FROM_VERSION >= 1.7.5)"
+fi  # end v1.7.4 → v1.7.5 gate
+
 # === Record migration (only if steps actually ran — v1.6.5 BUG-23 fix) ===
 if [ "$DRY_RUN" = false ] && [ "$MIGRATION_RAN" = true ] && [ -d "$WS_ROOT/.para/migrations" ]; then
   echo "$FROM_VERSION → $TO_VERSION | $(date -Iseconds 2>/dev/null || date +"%Y-%m-%dT%H:%M:%S%z")" >> "$WS_ROOT/.para/migrations/history.log"
