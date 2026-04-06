@@ -59,6 +59,17 @@ Managed via **`/para-rule`**:
 
 ---
 
+## 📚 Onboarding & Guidance
+
+Ensure users can effectively navigate and utilize the workspace:
+
+- **Workspace Manual**: Ask general questions about PARA structure, schemas, or governance. The `para-kit` skill will guide you.
+- **Documentation Manager**: Use **`/docs`** to generate, review, or publish project documentation.
+- **Knowledge Capture**: Use **`/learn`** to package insights into `Areas/Learning/`, or **`/para-knowledge`** to save persistent patterns to the KI Store.
+- **Kernel Rules**: Review immutable workspace laws at `Resources/ai-agents/kernel/`.
+
+---
+
 ## Related
 
 - `/para-workflow` - Workflow automation
