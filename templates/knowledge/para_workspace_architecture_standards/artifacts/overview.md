@@ -51,15 +51,15 @@ The Kernel (`Resources/ai-agents/kernel/`) is the **"constitution"** — immutab
 ## 3. Workspace Configuration (`.para-workspace.yml`)
 
 ```yaml
-kernel_version: "1.7.4"
-profile: "dev"             # dev | general
-language: "en"             # ISO 639-1
+kernel_version: "{{KERNEL_VERSION}}"
+profile: "{{PROFILE}}"             # dev | general
+language: "{{LANGUAGE}}"             # ISO 639-1
 repo:
-  url: "https://github.com/<your-org>/para-workspace"
+  url: "{{REPO_URL}}"
   branch: "main"
 workspace:
   version: "1.0.0"
-  created: "2026-01-01"
+  created: "{{WORKSPACE_CREATED}}"
 projects:                  # Registered projects list
   - my-project
   - my-app

@@ -17,6 +17,7 @@ Skill Catalog Architecture & Meta-Project Type.
 - **Fixed**: `/update` BUG-29 — Agent pre-pull version gate caused false "no update needed". Decision gates now MUST always proceed to dry-run.
 - **Changed**: README modernized — 6 ASCII diagrams replaced with Mermaid (flowchart, sequence, block-beta). GitHub-native rendering.
 - **Added**: `docs/locales/` i18n structure — vi-VN (full), zh-CN, es-ES, fr-FR (placeholders). OSS-style language selector in all READMEs.
+- **Added**: KI template variable substitution — `install.sh` and `update.sh` render `{{KERNEL_VERSION}}`, `{{LANGUAGE}}`, `{{PROFILE}}`, etc. from `.para-workspace.yml` into System KI artifacts. Hash comparison uses rendered output for idempotency.
 
 ## [1.7.5] - 2026-04-06
 

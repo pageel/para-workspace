@@ -338,8 +338,40 @@ fi
 # === 3.5. System KI Defaults (v1.7.1, FEAT-60) ===
 # Ship default system KIs from repo/templates/knowledge/ to KI Store.
 # Only installs if KI doesn't already exist (skip existing = safe).
+# v1.7.6: Template variable substitution — reads .para-workspace.yml and
+# replaces {{KERNEL_VERSION}}, {{LANGUAGE}}, {{PROFILE}}, etc.
 KI_TMPL_SRC="$REPO_ROOT/templates/knowledge"
 KI_STORE="${HOME}/.gemini/antigravity/knowledge"
+
+# Read workspace config for template variables
+WS_CFG="$WS_ROOT/.para-workspace.yml"
+TMPL_KERNEL_VERSION="$KERNEL_VERSION"
+TMPL_LANGUAGE="en"
+TMPL_PROFILE="dev"
+TMPL_WORKSPACE_CREATED=""
+TMPL_REPO_URL=""
+if [ -f "$WS_CFG" ]; then
+  TMPL_LANGUAGE=$(grep '^language:' "$WS_CFG" | sed 's/language:[[:space:]]*//; s/"//g' | tr -d '[:space:]')
+  TMPL_PROFILE=$(grep '^profile:' "$WS_CFG" | sed 's/profile:[[:space:]]*//; s/"//g' | tr -d '[:space:]')
+  TMPL_WORKSPACE_CREATED=$(grep '^  created:' "$WS_CFG" | sed 's/.*created:[[:space:]]*//; s/"//g' | tr -d '[:space:]')
+  TMPL_REPO_URL=$(grep '^  url:' "$WS_CFG" | head -1 | sed 's/.*url:[[:space:]]*//; s/"//g' | tr -d '[:space:]')
+  [ -z "$TMPL_LANGUAGE" ] && TMPL_LANGUAGE="en"
+  [ -z "$TMPL_PROFILE" ] && TMPL_PROFILE="dev"
+fi
+
+# Render template: substitute {{VAR}} placeholders in a file
+# Usage: render_ki_template <src_file> <dest_file>
+render_ki_template() {
+  local src="$1"
+  local dest="$2"
+  sed \
+    -e "s|{{KERNEL_VERSION}}|${TMPL_KERNEL_VERSION}|g" \
+    -e "s|{{LANGUAGE}}|${TMPL_LANGUAGE}|g" \
+    -e "s|{{PROFILE}}|${TMPL_PROFILE}|g" \
+    -e "s|{{WORKSPACE_CREATED}}|${TMPL_WORKSPACE_CREATED}|g" \
+    -e "s|{{REPO_URL}}|${TMPL_REPO_URL}|g" \
+    "$src" > "$dest"
+}
 
 if [ -d "$KI_TMPL_SRC" ]; then
   ki_installed=0
@@ -356,14 +388,14 @@ if [ -d "$KI_TMPL_SRC" ]; then
       ki_skipped=$((ki_skipped + 1))
     else
       mkdir -p "$ki_dest/artifacts"
-      # Copy metadata.json
+      # Copy metadata.json (with template rendering)
       if [ -f "$tmpl_dir/metadata.json" ]; then
-        cp "$tmpl_dir/metadata.json" "$ki_dest/metadata.json"
+        render_ki_template "$tmpl_dir/metadata.json" "$ki_dest/metadata.json"
       fi
-      # Copy artifacts
+      # Copy artifacts (with template rendering)
       if [ -d "$tmpl_dir/artifacts" ]; then
         for art_file in "$tmpl_dir/artifacts"/*; do
-          [ -f "$art_file" ] && cp "$art_file" "$ki_dest/artifacts/"
+          [ -f "$art_file" ] && render_ki_template "$art_file" "$ki_dest/artifacts/$(basename "$art_file")"
         done
       fi
       ki_installed=$((ki_installed + 1))

@@ -153,12 +153,40 @@ fi
 echo "⚙️ Re-installing to sync workspace..."
 bash "$SCRIPT_DIR/install.sh" "${PASSTHROUGH_ARGS[@]}"
 
-# === System KI Upgrade Sync (v1.7.1, improved v1.7.3) ===
+# === System KI Upgrade Sync (v1.7.1, improved v1.7.3, v1.7.6 template vars) ===
 # After install (which only creates NEW KIs), upgrade EXISTING system KIs
 # when templates have changed. Runs on every update — content-aware comparison
 # ensures idempotency (no-op when templates haven't changed).
 KI_TMPL_SRC="$REPO_ROOT/templates/knowledge"
 KI_STORE="${HOME}/.gemini/antigravity/knowledge"
+
+# Read workspace config for template variables (v1.7.6)
+WS_CFG="$WORKSPACE_ROOT/.para-workspace.yml"
+TMPL_KERNEL_VERSION="$NEW_VER"
+TMPL_LANGUAGE="en"
+TMPL_PROFILE="dev"
+TMPL_WORKSPACE_CREATED=""
+TMPL_REPO_URL=""
+if [ -f "$WS_CFG" ]; then
+  TMPL_LANGUAGE=$(grep '^language:' "$WS_CFG" | sed 's/language:[[:space:]]*//; s/"//g' | tr -d '[:space:]')
+  TMPL_PROFILE=$(grep '^profile:' "$WS_CFG" | sed 's/profile:[[:space:]]*//; s/"//g' | tr -d '[:space:]')
+  TMPL_WORKSPACE_CREATED=$(grep '^  created:' "$WS_CFG" | sed 's/.*created:[[:space:]]*//; s/"//g' | tr -d '[:space:]')
+  TMPL_REPO_URL=$(grep '^  url:' "$WS_CFG" | head -1 | sed 's/.*url:[[:space:]]*//; s/"//g' | tr -d '[:space:]')
+  [ -z "$TMPL_LANGUAGE" ] && TMPL_LANGUAGE="en"
+  [ -z "$TMPL_PROFILE" ] && TMPL_PROFILE="dev"
+fi
+
+render_ki_template() {
+  local src="$1"
+  local dest="$2"
+  sed \
+    -e "s|{{KERNEL_VERSION}}|${TMPL_KERNEL_VERSION}|g" \
+    -e "s|{{LANGUAGE}}|${TMPL_LANGUAGE}|g" \
+    -e "s|{{PROFILE}}|${TMPL_PROFILE}|g" \
+    -e "s|{{WORKSPACE_CREATED}}|${TMPL_WORKSPACE_CREATED}|g" \
+    -e "s|{{REPO_URL}}|${TMPL_REPO_URL}|g" \
+    "$src" > "$dest"
+}
 
 if [ -d "$KI_TMPL_SRC" ]; then
   ki_upgraded=0
@@ -181,22 +209,27 @@ if [ -d "$KI_TMPL_SRC" ]; then
       fi
 
       # Check 2: content hash mismatch (catches same-version hotfixes)
+      # v1.7.6: Compare RENDERED template (with vars substituted) vs KI store
+      # to avoid false-positives from {{VAR}} vs rendered value differences
       if [ "$needs_upgrade" = false ]; then
-        tmpl_hash=$(get_hash "$tmpl_dir/metadata.json")
+        rendered_tmp=$(mktemp)
+        render_ki_template "$tmpl_dir/metadata.json" "$rendered_tmp"
+        tmpl_hash=$(get_hash "$rendered_tmp")
         ki_hash=$(get_hash "$ki_dest/metadata.json")
+        rm -f "$rendered_tmp"
         if [ "$tmpl_hash" != "$ki_hash" ]; then
           needs_upgrade=true
         fi
       fi
 
       if [ "$needs_upgrade" = true ]; then
-        # Override metadata.json from template
-        cp "$tmpl_dir/metadata.json" "$ki_dest/metadata.json"
+        # Override metadata.json from template (with variable substitution)
+        render_ki_template "$tmpl_dir/metadata.json" "$ki_dest/metadata.json"
 
-        # Override template artifacts (matching filenames only)
+        # Override template artifacts (matching filenames only, with variable substitution)
         if [ -d "$tmpl_dir/artifacts" ]; then
           for art_file in "$tmpl_dir/artifacts"/*; do
-            [ -f "$art_file" ] && cp "$art_file" "$ki_dest/artifacts/"
+            [ -f "$art_file" ] && render_ki_template "$art_file" "$ki_dest/artifacts/$(basename "$art_file")"
           done
         fi
 
