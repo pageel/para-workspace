@@ -170,19 +170,25 @@ Rules:
 
 ### Ecosystem Projects (v1.6.0+)
 
-Projects can declare `type: ecosystem` to act as **meta-projects** coordinating
-multiple satellite projects. Conventions:
+Projects can declare a coordination type to manage satellite projects. Conventions:
 
 **Project Types:**
 
-| Type       | Purpose                  | Has repo/ | Has satellites |
-|:-----------|:-------------------------|:----------|:---------------|
-| `standard` | Regular project (default)| Yes       | No             |
-| `ecosystem`| Coordinates satellites   | No        | Yes            |
+| Type           | Purpose                          | Has repo/ | Has satellites |
+|:---------------|:---------------------------------|:----------|:---------------|
+| `standard`     | Regular project (default)        | Yes       | No             |
+| `ecosystem`    | Coordinates satellites (no code) | No        | Yes            |
+| `meta-project` | Product + coordinates satellites | Yes       | Yes            |
+
+**Meta-Project Behavior (v1.7.6):**
+
+- Meta-projects combine `standard` behavior (has `repo/`, runs git) with `ecosystem` coordination (has `satellites`, displayed in `/open`, validated by `/para-audit`).
+- Use case: platform projects that produce code AND govern downstream satellites (e.g., a CLI framework coordinating its documentation site and plugin catalog).
+- Workflows SHOULD treat `meta-project` like `standard` for git operations, and like `ecosystem` for satellite display.
 
 **Cross-Project Plan (`@` prefix):**
 
-Satellite projects MAY reference plans from their ecosystem meta-project:
+Satellite projects MAY reference plans from their ecosystem or meta-project:
 
 ```yaml
 # In satellite project.md:
@@ -196,8 +202,8 @@ Resolution: `@{ecosystem}/plans/xxx.md` → `Projects/{ecosystem}/artifacts/plan
 
 - Ecosystem projects SHOULD NOT have a `repo/` directory (no source code)
 - Workflows SHOULD skip git operations for ecosystem projects
-- `/open` SHOULD display satellite list when opening an ecosystem project
-- `/para-audit` SHOULD validate ecosystem ↔ satellite consistency
+- `/open` SHOULD display satellite list when opening an ecosystem or meta-project
+- `/para-audit` SHOULD validate ecosystem/meta-project ↔ satellite consistency
 
 ## H8. Workflow Compatibility
 

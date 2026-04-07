@@ -13,12 +13,12 @@ items:
 
   - id: open
     name: "Session Open"
-    version: "1.7.1"
+    version: "1.7.2"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "open.md"
-    description: "Platform-injected KI context (Step 2.7). Central Gate (v1.7.1)."
-    tags: ["session", "context", "token-optimized", "ecosystem", "strategy", "roadmap", "skills", "knowledge"]
+    description: "Meta-project type detection (v1.7.6). Platform-injected KI context. Central Gate."
+    tags: ["session", "context", "token-optimized", "ecosystem", "meta-project", "strategy", "roadmap", "skills", "knowledge"]
 
   - id: end
     name: "Session End"
@@ -166,12 +166,12 @@ items:
 
   - id: para-audit
     name: "Macro Assessor Audit"
-    version: "1.7.0"
+    version: "1.7.1"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "para-audit.md"
-    description: "KI Health Check (Step 5.6). Agent map compat, skills index check (v1.7.0)."
-    tags: ["audit", "governance", "invariants", "post-update", "ecosystem", "skills", "knowledge"]
+    description: "Meta-project satellite validation (v1.7.6). KI Health Check, Agent map compat."
+    tags: ["audit", "governance", "invariants", "post-update", "ecosystem", "meta-project", "skills", "knowledge"]
 
   - id: docs
     name: "Documentation Manager"
@@ -184,11 +184,11 @@ items:
 
   - id: update
     name: "Safe Update"
-    version: "1.0.0"
+    version: "1.0.1"
     kernel_min: "1.5.0"
     kernel_max: "1.x"
     entrypoint: "update.md"
-    description: "Agent-guided safe workspace update with pre-flight checks and error recovery."
+    description: "BUG-29 fix: MUST always dry-run before deciding 'no update'. Pre-pull version gate."
     tags: ["update", "sync", "safety"]
 
   - id: brainstorm
@@ -208,4 +208,13 @@ items:
     entrypoint: "para-knowledge.md"
     description: "KR7 Ephemeral Ban. Renamed from /knowledge for Governance Pentad consistency (v1.4.0)."
     tags: ["knowledge", "ki", "governance", "graph", "system-ki"]
+
+  - id: para-skill
+    name: "Skill Manager"
+    version: "1.0.0"
+    kernel_min: "1.7.6"
+    kernel_max: "1.x"
+    entrypoint: "para-skill.md"
+    description: "Co-Author engine for creating, validating, and testing AI Agent skills (v1.7.6)."
+    tags: ["skills", "governance", "co-author", "catalog"]
 

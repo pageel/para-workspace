@@ -134,11 +134,12 @@ For each project in `Projects/` that has a `project.md`:
    - `downstream` missing → suggest `[]`
    - `active_plan` missing → suggest `""`
    - `type` missing → suggest `standard` (v1.6.0+)
-4. **Ecosystem consistency check (v1.6.0+):**
-   - If `type: ecosystem` → verify `satellites` array exists and is non-empty
+4. **Ecosystem consistency check (v1.6.0+, updated v1.7.6):**
+   - If `type: ecosystem` or `type: meta-project` → verify `satellites` array exists and is non-empty
    - If `ecosystem` field exists → verify the referenced meta-project exists in `Projects/`
-   - Cross-reference: for each satellite in ecosystem's `satellites` list, check that the satellite project has `ecosystem: [name]`
+   - Cross-reference: for each satellite in ecosystem/meta-project's `satellites` list, check that the satellite project has `ecosystem: [name]`
    - If `active_plan` starts with `@` → verify the referenced ecosystem exists and the plan file is accessible
+   - **Meta-project specific:** If `type: meta-project` → verify `repo/` directory also exists (must have both code and satellites)
 5. Record findings.
 
 ### 4. Check Backlog Template Compliance

@@ -75,9 +75,9 @@
     },
     "type": {
       "type": "string",
-      "enum": ["standard", "ecosystem"],
+      "enum": ["standard", "ecosystem", "meta-project"],
       "default": "standard",
-      "description": "Project type. 'ecosystem' denotes a meta-project that coordinates satellite projects. Default: standard."
+      "description": "Project type. 'ecosystem' coordinates satellites (no code). 'meta-project' produces code AND coordinates satellites. Default: standard."
     },
     "ecosystem": {
       "type": ["string", "null"],
@@ -90,7 +90,7 @@
         "type": "string",
         "pattern": "^[a-z][a-z0-9-]*$"
       },
-      "description": "List of satellite project slugs coordinated by this ecosystem project. Only valid when type is 'ecosystem'. Null for standard projects."
+      "description": "List of satellite project slugs coordinated by this project. Valid when type is 'ecosystem' or 'meta-project'. Null for standard projects."
     },
     "strategy": {
       "type": ["string", "null"],

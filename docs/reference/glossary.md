@@ -1,6 +1,6 @@
 # Glossary & Impact Map
 
-> **Version:** 1.6.2 | **Last updated:** 2026-03-24
+> **Version:** 1.7.6 | **Last updated:** 2026-04-07
 > **Purpose:** Glossary of terms, variables, and fields used in PARA Workspace.
 > Each entry = 5 uniform fields (graph-ready design).
 
@@ -23,8 +23,8 @@
 
 ## type
 
-- **Definition:** Project type. `standard` = regular project, `ecosystem` = meta-project that coordinates satellites.
-- **Where defined:** `kernel/schema/project.schema.json` (enum: standard|ecosystem, default: standard)
+- **Definition:** Project type. `standard` = regular project, `ecosystem` = coordinator with no code, `meta-project` = product that also coordinates satellites (v1.7.6).
+- **Where defined:** `kernel/schema/project.schema.json` (enum: standard|ecosystem|meta-project, default: standard)
 - **Where used:**
   - `/open` (Step 2) — ecosystem detection
   - `/open` (Step 7) — skip git for ecosystem
@@ -48,7 +48,7 @@
 
 ## satellites
 
-- **Definition:** List of satellite project slugs. Only valid when `type: ecosystem`.
+- **Definition:** List of satellite project slugs. Valid when `type: ecosystem` or `type: meta-project`.
 - **Where defined:** `kernel/schema/project.schema.json` (type: array|null, items: kebab-case)
 - **Where used:**
   - `/open` (Step 2, Step 8) — display satellite list in report

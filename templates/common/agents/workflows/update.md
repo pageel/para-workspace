@@ -5,7 +5,7 @@ source: catalog
 
 # /update
 
-> **Workspace Version:** 1.6.5 (Update Flow Fix)
+> **Workspace Version:** 1.7.6 (BUG-29: Pre-pull version gate fix)
 
 Safely update the PARA Workspace to the latest version with pre-flight checks, dry-run preview, and automatic error recovery.
 
@@ -52,17 +52,18 @@ git -C Resources/references/para-workspace ls-remote --heads origin main 2>&1 | 
 
 **Decision gates:**
 
-> **Note (v1.6.5):** Repo VERSION is read BEFORE `git pull`, so it may be stale.
-> The CLI script handles the actual version comparison after pull. These gates
-> help the agent give early warnings, not make final decisions.
+> **⚠️ CRITICAL (v1.7.6 — BUG-29 fix):** Repo VERSION is read BEFORE `git pull`, so it is **always stale**.
+> The agent **MUST ALWAYS proceed to Step 2** (dry-run) regardless of version match.
+> **NEVER stop or suggest "no update needed" based on Step 1 alone.**
+> Only `./para update --dry-run` (Step 2) can determine if changes exist.
 
 | Condition                               | Action                                                                                                                                                                             |
 | :-------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Network ❌                              | **STOP.** Inform: "Cannot reach GitHub. To re-sync with the local repo version without downloading, try `./para install`." Ask user whether to run `para install` instead or stop. |
 | Git dirty (uncommitted changes in repo) | **WARN.** Display: "Repo has uncommitted changes. `git pull` may cause conflicts." Ask user: (a) Stash first then update, (b) Skip and continue, (c) Stop.                         |
-| Kernel > Repo VERSION                   | **WARN.** Workspace is ahead of local repo. Likely the repo hasn't been pulled yet. Suggest: (a) Pull repo first then retry, (b) Continue anyway (CLI will pull during update).    |
-| Kernel == Repo VERSION                  | **INFO.** "Workspace matches local repo. Remote may have newer changes." Ask for confirmation to proceed (CLI will check remote via `git pull`).                                   |
-| All OK                                  | Proceed to step 2.                                                                                                                                                                 |
+| Kernel > Repo VERSION                   | **INFO.** Workspace ahead of local repo — stale repo. **Proceed to Step 2** (dry-run will pull first).                                                                             |
+| Kernel == Repo VERSION                  | **INFO.** Versions match locally, but remote may have updates. **Proceed to Step 2** (dry-run will pull and compare).                                                              |
+| All OK                                  | Proceed to Step 2.                                                                                                                                                                 |
 
 ### 2. Dry-run preview
 

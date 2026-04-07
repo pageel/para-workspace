@@ -20,3 +20,12 @@ items:
     description: "Templates and patterns for tables, diagrams, trees, and visual markdown — loaded on demand when formatting artifacts."
     tags: ["formatting", "tables", "diagrams", "markdown"]
 
+  - id: page-map
+    name: "Page Map"
+    version: "1.0.0"
+    kernel_min: "1.7.0"
+    kernel_max: "1.x"
+    entrypoint: "page-map/SKILL.md"
+    description: "AI Agent skill to read, manage, and manipulate website visual structure using PAGE_MAP.md and BLUEPRINT.md."
+    tags: ["website", "layout", "visual", "structure"]
+

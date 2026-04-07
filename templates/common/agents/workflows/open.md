@@ -51,11 +51,12 @@ Base: Projects/[project-name]/
 
 Read `Projects/[project-name]/project.md` to understand goal, deadline, status, and DoD.
 
-**Ecosystem detection (v1.6.0+):**
+**Ecosystem detection (v1.6.0+, updated v1.7.6):**
 
 After reading `project.md`, check the `type` field:
 
-- **If `type: ecosystem`** → This is a meta-project. Note `satellites` list for the report (Step 8). Do NOT read satellite project.md files (token optimization).
+- **If `type: ecosystem`** → Pure coordinator, no code. Note `satellites` list for the report (Step 8). Do NOT read satellite project.md files (token optimization). Skip git (Step 7).
+- **If `type: meta-project`** → Product that ALSO coordinates satellites. Note `satellites` list for the report (Step 8). DO run git (Step 7).
 - **If `ecosystem` field exists** (on a satellite) → Note the parent ecosystem name for `@` prefix resolution.
 - **Otherwise** → Standard project, proceed normally.
 
@@ -293,9 +294,10 @@ Check `project.md` frontmatter (already loaded in Step 2):
 //turbo
 
 **Skip condition (v1.6.0+):** If `type: ecosystem` (detected in Step 2) → skip this step entirely. Ecosystem projects do not have a `repo/` directory.
+Note: `meta-project` type DOES have `repo/` — do NOT skip git for meta-projects.
 
 ```bash
-# Only for standard projects (type != ecosystem):
+# Only for standard and meta-project types (type != ecosystem):
 cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 ```
 

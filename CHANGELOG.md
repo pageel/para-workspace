@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.7.6] - 2026-04-07
+
+Skill Catalog Architecture & Meta-Project Type.
+
+- **Added**: `meta-project` type in H7 heuristics and `project.schema.json` — projects that produce code AND coordinate satellites.
+- **Added**: `/para-skill` workflow promoted to Core — Co-Author engine for creating, validating, and testing AI Agent skills.
+- **Added**: `page-map` skill registered in Core skills `catalog.yml`.
+- **Changed**: `/open` v1.7.2 — explicit `meta-project` detection (Step 2), git skip condition excludes meta-projects (Step 7).
+- **Changed**: `/para-audit` v1.7.1 — satellite validation extended to `meta-project` type, `repo/` existence check.
+- **Changed**: OSS `para-skills/skills/catalog.yml` migrated to `items[]` array schema (unified with Core).
+- **Changed**: `para-workspace` project type updated to `meta-project` with `satellites: [website-paraworkspace, para-skills]`.
+- **Fixed**: `/update` BUG-29 — Agent pre-pull version gate caused false "no update needed". Decision gates now MUST always proceed to dry-run.
+- **Changed**: README modernized — 6 ASCII diagrams replaced with Mermaid (flowchart, sequence, block-beta). GitHub-native rendering.
+- **Added**: `docs/locales/` i18n structure — vi-VN (full), zh-CN, es-ES, fr-FR (placeholders). OSS-style language selector in all READMEs.
+
 ## [1.7.5] - 2026-04-06
 
 KR7 Ephemeral Ban & `/knowledge` → `/para-knowledge` Rename.
