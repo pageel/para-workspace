@@ -79,7 +79,7 @@ All fields in YAML frontmatter:
 | `active_plan`   | string     | ❌       | Current impl plan path (supports `@ecosystem/`) |
 | `agent.rules`   | bool       | ✅       | Has project-specific rules?               |
 | `agent.skills`  | bool       | ✅       | Has project-specific skills?              |
-| `type`          | enum       | ❌       | standard / ecosystem (default: standard)  |
+| `type`          | enum       | ❌       | standard / ecosystem / meta-project (v1.7.6) |
 | `ecosystem`     | string     | ❌       | Parent ecosystem slug (for satellites)    |
 | `satellites`    | list       | ❌       | Child project slugs (for ecosystems)      |
 | `upstream`      | list       | ❌       | Projects this depends on                  |
@@ -104,13 +104,15 @@ ELSE (local):
 
 ## 5. Ecosystem Projects (v1.6.0+)
 
-| Type       | Purpose                  | Has repo/ | Has satellites |
-|:-----------|:-------------------------|:----------|:---------------|
-| `standard` | Regular project (default)| Yes       | No             |
-| `ecosystem`| Coordinates satellites   | No        | Yes            |
+| Type           | Purpose                  | Has repo/ | Has satellites |
+|:---------------|:-------------------------|:----------|:---------------|
+| `standard`     | Regular project (default)| Yes       | No             |
+| `ecosystem`    | Coordinates satellites   | No        | Yes            |
+| `meta-project` | Product + satellites (v1.7.6) | Yes  | Yes            |
 
 - Ecosystem projects have NO `repo/` directory
-- Workflows skip git operations for ecosystem projects
+- Meta-project projects HAVE `repo/` and also coordinate satellites (v1.7.6)
+- Workflows skip git operations for ecosystem projects (but NOT meta-projects)
 - Satellites reference ecosystem plans via `@ecosystem/` prefix
 
 ## 6. Agent Architecture: Two-Level Index System (v1.6.2+)
@@ -121,11 +123,12 @@ ELSE (local):
 .agents/
 ├── rules.md          # Workspace rules trigger index (12 rules)
 ├── rules/            # Rule files (loaded on-demand by trigger)
-├── skills.md         # Workspace skills trigger index (2 skills)
+├── skills.md         # Workspace skills trigger index (3 skills)
 ├── skills/           # Skill directories
 │   ├── formatting/   # Table/diagram formatting templates
-│   └── para-kit/     # PARA reference card (schema, layout, governance)
-└── workflows/        # 23 core workflow files
+│   ├── para-kit/     # PARA reference card (schema, layout, governance)
+│   └── page-map/     # Website visual structure management (v1.7.6)
+└── workflows/        # 24 core workflow files
 ```
 
 ### Project Level (CONDITIONAL — gated by `agent.rules` / `agent.skills`)
@@ -185,7 +188,7 @@ Workflows, Rules, and Skills managed via `catalog.yml`:
 - **Validation:** CLI validates `kernel_min`/`kernel_max` before syncing; incompatible items skipped with warning
 - **Required fields:** id, name, version, kernel_min, entrypoint, description
 
-## 11. Workflow Library (23 core workflows)
+## 11. Workflow Library (24 core workflows)
 
 ### Core PARA Workflows
 | Workflow | Purpose |
@@ -215,6 +218,7 @@ Workflows, Rules, and Skills managed via `catalog.yml`:
 | `/new-project` | Initialize PARA-compliant project |
 | `/backup` | Backup workspace config files |
 | `/para-knowledge` | Manage Knowledge Items — dashboard, create, update, audit, archive |
+| `/para-skill` | Co-Author engine to create, validate, and test AI Agent skills (v1.7.6) |
 | `/docs` | Generate and maintain project documentation |
 | `/learn` | Package lessons and knowledge into Areas/Learning |
 
@@ -228,6 +232,7 @@ Skills are folders of instructions that extend agent capabilities:
 |:------------|:--------|:--------|
 | PARA Kit    | PARA structure questions, schema, quick reference | Consolidated kernel reference card |
 | Formatting  | Tables, diagrams, trees, visual markdown | Templates and patterns |
+| Page Map    | Website visual structure, PAGE_MAP.md, BLUEPRINT.md (v1.7.6) | Manage page/component structure |
 
 Skills promoted from rules: standalone, English-first, constraints + templates merged.
 
@@ -258,6 +263,7 @@ Skills promoted from rules: standalone, English-first, constraints + templates m
 | 1.7.3   | —            | Defense-in-Depth 4-layer context protection, KI ephemeral ref ban, dual-gate sync |
 | 1.7.4   | —            | `agent.rules`/`agent.skills` fully replaces `has_rules`, hot lane BUG-29 fix |
 | 1.7.5   | —            | KR7 Ephemeral Reference Ban, `/knowledge` → `/para-knowledge` rename |
+| 1.7.6   | —            | Meta-project type, /para-skill workflow, skill catalog unification, i18n locales, Mermaid diagrams |
 
 ## 15. Knowledge System (v1.7.0+)
 
