@@ -1,6 +1,6 @@
 # Project Profile Template
 
-> **Version:** 1.0.0 | **Last reviewed:** 2026-04-06
+> **Version:** 1.1.0 | **Last reviewed:** 2026-04-07
 > Template used by `/para-skill add --template project` to generate a project-specific `SKILL.md`.
 > Agent uses this template as a framework — scan context, generate draft, let user review.
 
@@ -14,40 +14,65 @@ When user runs `/para-skill add [skill-name] --template project`:
 3. Fills the template sections based on scanned data
 4. Presents complete SKILL.md draft for user to approve/edit
 
+**Naming rule:** The skill name MUST equal the project name (from `project.md`).
+Example: project `my-app` → skill name `my-app`, folder `.agents/skills/my-app/`.
+
 ---
 
 ## Template Output
 
 ```markdown
 ---
-name: project-profile
+name: [project-name]
 description: >
-  Project-specific conventions, naming patterns, quality standards, and plan
-  review checklist for [project-name]. Use this skill whenever creating plans,
-  naming files, writing docs, running maintenance checklists, or reviewing
-  plan quality for this project. Even if the user doesn't explicitly mention
-  "conventions" or "standards", consult this skill for any project-level decision.
+  Core DNA and Sub-Skills Router for the [project-name] project.
+  This is the Single Source of Truth — agent MUST read this skill FIRST for ANY task
+  involving this project. Even if the user doesn't explicitly mention "conventions"
+  or "standards", consult this skill for every project-level decision.
 version: "1.0.0"
 ---
 
 # Project Profile: [project-name]
 
-> **Project Type:** [type]
-> **Trigger:** Creating plans, naming files, writing docs, running maintenance checklists, or reviewing plan quality
+> **Project Type:** See `project.md`
+> **Trigger:** Any task within this project — content authoring, plan creation, builds, rule changes.
 
 This skill defines the **DNA** of this project — conventions that influence workspace-level workflows without modifying them.
 
 ## §1. Project Identity
 
-| Field | Value |
-|:------|:------|
-| Type | `[type]` |
-| Primary Language | [languages] |
-| Doc Tone | `[formal-technical | conversational | tutorial-friendly]` |
-| Doc Language | [en | vi | mixed] — per `preferences.language` |
-| Build System | [command or "None"] |
+> **Volatile fields** (version, status, deadline, upstream, type, primary language)
+> already live in `project.md`. Agent MUST read `project.md` for those — do NOT
+> duplicate them here. This section only captures **stable conventions** that
+> rarely change and are not covered by `project.md`.
 
-## §2. Naming Conventions
+| Field            | Value                                          |
+|:-----------------|:-----------------------------------------------|
+| Framework        | [framework or "N/A"]                           |
+| Doc Tone         | `[formal-technical | conversational | tutorial-friendly]` |
+| Doc Language     | [ISO 639-1 code] — per `preferences.language` in `.para-workspace.yml` |
+| Build System     | [command or "None"]                            |
+
+## §2. Sub-Skills Router (Progressive Disclosure)
+
+> **AGENT INSTRUCTION:** MANDATORY CHECK. You MUST scan this routing table.
+> If your current task matches any condition below, you MUST use the `view_file`
+> tool to read ALL corresponding files BEFORE creating plans or writing code.
+> Do NOT bypass this step or assume the process from memory.
+>
+> **Fallback:** If no condition matches, proceed with §3–§7 of this skill
+> as normal. The router only adds depth — it never blocks.
+
+| If task involves...                     | MUST read FIRST                                    |
+|:----------------------------------------|:---------------------------------------------------|
+| [Condition matching project rules]      | `.agents/rules/[rule-file].md`                     |
+| [Condition matching sub-skills]         | `.agents/skills/[sub-skill]/SKILL.md`              |
+
+> Agent: auto-populate this table by scanning `.agents/rules/` and
+> `.agents/skills/` during Phase A (context scan). Each rule/skill
+> with a clear trigger condition gets a row here.
+
+## §3. Naming Conventions
 
 ### Plan Files
 Pattern: `[describe your plan naming pattern]`
@@ -58,7 +83,7 @@ Pattern: `[feat/topic | fix/topic | direct-to-main]`
 ### Commits
 Pattern: `[describe your commit message format]`
 
-## §3. Maintenance Patterns
+## §4. Maintenance Patterns
 
 ### VCS Guardrails 🛡️
 
@@ -68,7 +93,7 @@ Pattern: `[describe your commit message format]`
 > Add additional project-specific checklists here that don't belong in global rules.
 > Reference existing rules instead of duplicating content.
 
-## §4. Quality Standards
+## §5. Quality Standards
 
 ### Build & Test
 \```bash
@@ -84,16 +109,16 @@ Pattern: `[describe your commit message format]`
 # Add project-specific verification commands
 \```
 
-## §5. Documentation Flow
+## §6. Documentation Flow
 
 > Describe the documentation flow for this project.
 > Example: internal docs (VI) → public docs (EN) → website
 
-## §6. Plan Review Checklist
+## §7. Plan Review Checklist
 
 > **Trigger:** AFTER any `/plan create` or `/plan update` — agent MUST run this checklist before presenting plan to user.
 > **Purpose:** Catch logic errors, security gaps, missing scope, and token bloat BEFORE execution.
-> **Defense:** If running `/plan create`, re-read this §6 AFTER writing plan to counter token decay.
+> **Defense:** If running `/plan create`, re-read this §7 AFTER writing plan to counter token decay.
 
 ### A. Logic & Dependency Check
 - [ ] **Phase ordering:** Are phases in correct dependency order?
@@ -112,6 +137,10 @@ Pattern: `[describe your commit message format]`
 - [ ] **Plan size:** < 200 lines for release plan, < 300 for complex multi-feature
 - [ ] **No duplicate info:** Architecture overview doesn't repeat task details
 - [ ] **References over repetition:** Large sections link to separate files
+
+### E. Revision History
+- [ ] Plan has `📝 Revision History` section
+- [ ] `Risks & Lessons Applied` section present
 
 ## 🧪 Test Mode (Sandbox Override)
 
@@ -133,7 +162,7 @@ When in Test Mode, STRICTLY follow these overrides:
    - [List each action performed]
    
    ## Skill Rules Invoked
-   - [Which sections of the skill were applied, e.g., "§2 Naming Conventions"]
+   - [Which sections of the skill were applied, e.g., "§2 Sub-Skills Router"]
    
    ## Files Created
    - [List files created in sandbox/]
@@ -141,6 +170,43 @@ When in Test Mode, STRICTLY follow these overrides:
    ## Self-Assessment
    - [Did the skill provide useful guidance? What was ambiguous?]
    \```
+
+---
+
+## Examples
+
+### ✅ Correct: Agent follows Router before task
+
+User asks: _"[Example task relevant to project]"_
+
+Agent behavior:
+1. Reads this skill (triggered by skills.md index)
+2. Scans §2 Router → matches relevant condition
+3. Reads the corresponding rule/sub-skill file
+4. Executes task with full context from both skill and rule
+5. Runs §7 Plan Review Checklist (if creating/reviewing a plan)
+
+### ❌ Incorrect: Agent skips Router
+
+User asks: _"[Same example task]"_
+
+Agent behavior:
+1. Reads this skill
+2. **Skips §2 Router** — assumes it already knows the process
+3. Misses project-specific constraints from rules
+4. Produces output that violates project conventions
+
+---
+
+## Test Prompts
+
+> For use with `/para-skill test [project-name]` (Quick Eval mode).
+
+| # | Prompt | Expected behavior | Type |
+|:--|:-------|:------------------|:-----|
+| 1 | "[Task that triggers Router]" | Agent reads §2 Router → loads correct rule → applies §7 Checklist | `subjective` |
+| 2 | "[Task that tests naming conventions]" | Agent applies §3 Naming Conventions correctly | `objective` |
+| 3 | "[Task that tests build/verification]" | Agent runs §5 Quality Standards commands | `objective` |
 ```
 
 ---
@@ -153,16 +219,20 @@ When in Test Mode, STRICTLY follow these overrides:
 
 Agent reads the following to gather information:
 - `project.md` — type, language, tags, goal
-- `.agents/rules/*.md` — project constraints
+- `.agents/rules/*.md` — project constraints (for §2 Router population)
+- `.agents/skills/` — existing sub-skills (for §2 Router population)
 - `docs/` structure — documentation flow
 - `.para-workspace.yml` — preferences.language
-- Existing `.agents/skills/` — established patterns
 
 ### Phase B: Fill template
 
-Agent fills §1-§6 based on scanned context:
-- §1-§5: Fill directly from collected data
-- §6: Extract checklist items from project rules + add standard checks
+Agent fills §1-§7 based on scanned context:
+- §1: Fill from collected data (stable fields only, NOT volatile)
+- §2: Auto-populate Router table from `.agents/rules/` + `.agents/skills/` scan
+- §3-§6: Fill from project patterns and existing conventions
+- §7: Extract checklist items from project rules + add standard checks
+- Examples: Generate from Router conditions
+- Test Prompts: Generate from §2-§5 trigger scenarios
 - Mark unknown fields with `[TBD]` for user to complete
 
 ### Phase C: Present draft

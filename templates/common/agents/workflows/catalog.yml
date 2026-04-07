@@ -211,10 +211,10 @@ items:
 
   - id: para-skill
     name: "Skill Manager"
-    version: "1.0.0"
+    version: "1.0.1"
     kernel_min: "1.7.6"
     kernel_max: "1.x"
     entrypoint: "para-skill.md"
-    description: "Co-Author engine for creating, validating, and testing AI Agent skills (v1.7.6)."
+    description: "Co-Author engine for creating, validating, and testing AI Agent skills. Template v1.1.0 with Sub-Skills Router (v1.7.6)."
     tags: ["skills", "governance", "co-author", "catalog"]
 
