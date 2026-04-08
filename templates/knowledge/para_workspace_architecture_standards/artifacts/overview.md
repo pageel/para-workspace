@@ -123,10 +123,11 @@ ELSE (local):
 .agents/
 ├── rules.md          # Workspace rules trigger index (12 rules)
 ├── rules/            # Rule files (loaded on-demand by trigger)
-├── skills.md         # Workspace skills trigger index (3 skills)
+├── skills.md         # Workspace skills trigger index (4 skills)
 ├── skills/           # Skill directories
 │   ├── formatting/   # Table/diagram formatting templates
 │   ├── para-kit/     # PARA reference card (schema, layout, governance)
+│   ├── para-skill/   # Governance & Co-Author engine for skill creation (v1.7.6.3)
 │   └── page-map/     # Website visual structure management (v1.7.6)
 └── workflows/        # 24 core workflow files
 ```
@@ -233,8 +234,22 @@ Skills are folders of instructions that extend agent capabilities:
 | PARA Kit    | PARA structure questions, schema, quick reference | Consolidated kernel reference card |
 | Formatting  | Tables, diagrams, trees, visual markdown | Templates and patterns |
 | Page Map    | Website visual structure, PAGE_MAP.md, BLUEPRINT.md (v1.7.6) | Manage page/component structure |
+| PARA Skill  | /para-skill workflow, skill creation, quality validation (v1.7.6.3) | Governance & Co-Author engine (Sidecar to /para-skill workflow) |
 
 Skills promoted from rules: standalone, English-first, constraints + templates merged.
+
+### Sidecar Skill Pattern (v1.7.6.3)
+
+Workflows should contain **logic only**. Supporting data (templates, checklists, examples) belongs in a companion skill directory:
+
+```
+workflows/[name].md          ← LOGIC (step-by-step actions)
+skills/[name]/
+├── SKILL.md                 ← GOVERNANCE (rules + resource router table)
+└── references/              ← DATA (templates, checklists)
+```
+
+**Why:** Reduces token waste (workflow doesn't load data it may not need), prevents directory pollution in `workflows/`, and enables independent versioning of data vs logic.
 
 ## 13. Token Optimization Patterns
 
@@ -264,6 +279,7 @@ Skills promoted from rules: standalone, English-first, constraints + templates m
 | 1.7.4   | —            | `agent.rules`/`agent.skills` fully replaces `has_rules`, hot lane BUG-29 fix |
 | 1.7.5   | —            | KR7 Ephemeral Reference Ban, `/knowledge` → `/para-knowledge` rename |
 | 1.7.6   | —            | Meta-project type, /para-skill workflow, skill catalog unification, i18n locales, Mermaid diagrams |
+| 1.7.6.3 | —            | Sidecar Skill pattern: migrate para-skill data from workflow subfolder to companion skill directory, orphan directory cleanup in installer |
 
 ## 15. Knowledge System (v1.7.0+)
 

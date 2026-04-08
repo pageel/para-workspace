@@ -1,13 +1,13 @@
 {
   "title": "PARA Workspace Architecture & Governance Standards (v1.7.x)",
-  "summary": "Foundational architecture, governance, and efficiency standards for PARA Workspace v1.7.x. Covers: four-pillar structure (.para/, .agents/), Governing Kernel v1.5.3 (11 Invariants, 10 Heuristics incl. H10 KI), project.md schema v1.6.3 with field-gated I/O and @ecosystem/ path resolution, Ecosystem + Meta-Project types (v1.7.6), two-level Agent Index (workspace + project rules/skills with proactive trigger), Skills system v1.6.4 with /para-skill Co-Author workflow (v1.7.6), CLI with Smart Archive and catalog.yml governance, SYNC.md cross-project notifications, Knowledge System with platform-injected KI context (v1.7.0+), System KI governed lifecycle with template sync (v1.7.1), KR7 Ephemeral Reference Ban (v1.7.5), i18n docs/locales/ architecture (v1.7.6), and token optimization patterns (field-gated I/O, lazy-loading, strategy cascade). Covers 24 core workflows, 12 rules, and 3 skills.",
+  "summary": "Foundational architecture, governance, and efficiency standards for PARA Workspace v1.7.x. Covers: four-pillar structure (.para/, .agents/), Governing Kernel v1.5.3 (11 Invariants, 10 Heuristics incl. H10 KI), project.md schema v1.6.3 with field-gated I/O and @ecosystem/ path resolution, Ecosystem + Meta-Project types (v1.7.6), two-level Agent Index (workspace + project rules/skills with proactive trigger), Skills system v1.6.4 with /para-skill Co-Author workflow (v1.7.6) and Sidecar Skill pattern (v1.7.6.3), CLI with Smart Archive and catalog.yml governance, SYNC.md cross-project notifications, Knowledge System with platform-injected KI context (v1.7.0+), System KI governed lifecycle with template sync (v1.7.1), KR7 Ephemeral Reference Ban (v1.7.5), i18n docs/locales/ architecture (v1.7.6), orphan directory cleanup in installer (v1.7.6.3), and token optimization patterns (field-gated I/O, lazy-loading, strategy cascade). Covers 24 core workflows, 12 rules, and 4 skills.",
   "version": "1.0",
   "scope": "workspace",
   "domain": "workspace",
   "purpose": "context",
   "owner": "para",
-  "para_version": "1.7.6.2",
-  "tags": ["architecture", "governance", "kernel", "invariants", "heuristics", "token-optimization", "ecosystem", "meta-project", "agent-index", "knowledge-system", "skill-catalog", "i18n"],
+  "para_version": "1.7.6.3",
+  "tags": ["architecture", "governance", "kernel", "invariants", "heuristics", "token-optimization", "ecosystem", "meta-project", "agent-index", "knowledge-system", "skill-catalog", "i18n", "sidecar-pattern"],
   "references": [
     {
       "type": "file",
@@ -44,6 +44,10 @@
     {
       "type": "file",
       "value": ".agents/skills/page-map/SKILL.md"
+    },
+    {
+      "type": "file",
+      "value": ".agents/skills/para-skill/SKILL.md"
     }
   ],
   "relates_to": [],
@@ -79,6 +83,7 @@
     "System KI template sync",
     "meta-project type",
     "skill catalog",
+    "sidecar skill pattern",
     "i18n locales"
   ]
 }

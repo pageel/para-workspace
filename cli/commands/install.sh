@@ -245,6 +245,37 @@ sync_library() {
       orphan_count=$((orphan_count + 1))
     done
 
+    # === Orphan DIRECTORY cleanup (v1.7.6.3) ===
+    # Remove subdirectories in catalog_dest/active_dest that no longer exist in repo.
+    # This catches zombie directories like workflows/para-skill/ after data migration.
+    for catalog_subdir in "$catalog_dest"/*/; do
+      [ -d "$catalog_subdir" ] || continue
+      local sd_name
+      sd_name="$(basename "$catalog_subdir")"
+
+      # Skip if directory still exists in repo template → not orphan
+      [ -d "$src_dir/$sd_name" ] && continue
+
+      # Orphan directory found in catalog_dest → remove
+      if [ "$DRY_RUN" = true ]; then
+        echo "     → Would remove orphan dir: $sd_name/ (catalog)"
+      else
+        rm -rf "$catalog_subdir"
+      fi
+
+      # Also clean from active_dest
+      local active_subdir="$active_dest/$sd_name"
+      if [ -d "$active_subdir" ]; then
+        if [ "$DRY_RUN" = true ]; then
+          echo "     → Would remove orphan dir: $sd_name/ (active)"
+        else
+          rm -rf "$active_subdir"
+        fi
+      fi
+
+      orphan_count=$((orphan_count + 1))
+    done
+
     if [ "$orphan_count" -gt 0 ]; then
       echo "   🧹 $orphan_count orphan(s) cleaned from $lib_name"
     fi

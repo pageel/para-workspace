@@ -5,7 +5,12 @@ source: catalog
 
 # /para-skill [action] [name]
 
-> **Workspace Version:** 1.7.5 (Governed Libraries)
+> **Workspace Version:** 1.7.6.3 (Governed Libraries)
+
+> **Sidecar Architecture:** This workflow contains LOGIC ONLY. All supporting data
+> (templates, checklists) is stored in the companion skill at
+> `.agents/skills/para-skill/`. See `SKILL.md` §3 Resource Router for paths.
+> The legacy `workflows/para-skill/` subfolder has been removed.
 
 Specialized workflow to manage, create, and validate AI Agent skills within a PARA Workspace. Integrates a Co-Author engine that interviews users and applies quality best practices during skill creation.
 
@@ -115,7 +120,7 @@ Which template? (1/2/3)
 
 **If template = `project`:**
 
-Read the project-profile template from `references/templates/project-profile.md`.
+Read the project-profile template from `.agents/skills/para-skill/references/templates/project-profile.md`.
 Fill all sections (§1-§6) based on scanned context:
 - §1-§5: Fill directly from collected data
 - §6: Extract checklist items from project rules + add standard checks
@@ -123,7 +128,7 @@ Fill all sections (§1-§6) based on scanned context:
 
 **If template = `tool`:**
 
-Read the tool-skill template from `references/templates/tool-skill.md`.
+Read the tool-skill template from `.agents/skills/para-skill/references/templates/tool-skill.md`.
 Fill based on user's original command intent.
 
 **Phase C: Present for approval** (user decides):
@@ -152,7 +157,7 @@ ask 3-5 core questions:
 
 #### Step 3: Write SKILL.md
 
-1. Read `references/skill-quality-checklist.md`
+1. Read `.agents/skills/para-skill/references/skill-quality-checklist.md`
 2. Draft the `SKILL.md` based on interview answers
 3. Self-review against the quality checklist before presenting to user:
    - D1-D4: Is the description pushy enough?
@@ -218,7 +223,7 @@ Check a skill for PARA + quality compliance without making changes.
 // turbo
 
 1. Read `.agents/skills/[name]/SKILL.md`.
-2. Read `references/skill-quality-checklist.md`.
+2. Read `.agents/skills/para-skill/references/skill-quality-checklist.md`.
 3. Run the **Dual Checklist** (read-only mode):
 
 **PARA Structure (P1-P5):**
