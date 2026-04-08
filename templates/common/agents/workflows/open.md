@@ -124,7 +124,7 @@ From injected KI data, match scope to project. Store matched slugs for report (S
 
 **Proactive Trigger Check (v1.6.2+):**
 
-During the session, BEFORE performing any action that edits files, runs commands, or creates artifacts:
+During the session, BEFORE performing any action that edits files, runs commands, creates artifacts, or brainstorms technical solutions:
 
 1. Scan workspace `rules.md` trigger table
 2. Scan workspace `skills.md` trigger table

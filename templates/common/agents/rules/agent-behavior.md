@@ -49,7 +49,7 @@ When context appears incomplete (cannot recall loaded rules, received truncation
 
 **Proactive Trigger Check (v1.6.2+):**
 
-BEFORE any action that edits files, runs commands, or creates artifacts — even when context is fresh:
+BEFORE any action that edits files, runs commands, creates artifacts, or brainstorms technical solutions — even when context is fresh:
 
 1. Scan workspace `rules.md` trigger table
 2. Scan workspace `skills.md` trigger table

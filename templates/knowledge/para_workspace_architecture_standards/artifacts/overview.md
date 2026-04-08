@@ -142,7 +142,7 @@ Projects/<slug>/.agents/
 
 ### Proactive Trigger Protocol
 
-BEFORE any side-effect action, agent MUST:
+BEFORE any action that edits files, runs commands, creates artifacts, or brainstorms technical solutions, agent MUST:
 1. Scan workspace `rules.md` trigger table
 2. Scan workspace `skills.md` trigger table
 3. Scan project `rules.md` trigger table (if loaded)
@@ -280,6 +280,9 @@ skills/[name]/
 | 1.7.5   | —            | KR7 Ephemeral Reference Ban, `/knowledge` → `/para-knowledge` rename |
 | 1.7.6   | —            | Meta-project type, /para-skill workflow, skill catalog unification, i18n locales, Mermaid diagrams |
 | 1.7.6.3 | —            | Sidecar Skill pattern: migrate para-skill data from workflow subfolder to companion skill directory, orphan directory cleanup in installer |
+| 1.7.7   | —            | Brainstorm Consolidation |
+| 1.7.8   | —            | Workflow Zero-padding optimization |
+| 1.7.9   | Hotfix       | Proactive Trigger Check update for Ideation/Brainstorm |
 
 ## 15. Knowledge System (v1.7.0+)
 

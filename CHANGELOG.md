@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.7.9] - 2026-04-08
+
+Proactive Trigger Check for Brainstorming & Ideation (Hotfix).
+
+- **Changed**: `agent-behavior.md` and `context-rules.md` — extended Proactive Trigger Check to include "brainstorms technical solutions" to prevent context gap during planning phase.
+- **Changed**: `/open` and `/brainstorm` workflows — added explicit Proactive Trigger Check reminder before ideation operations.
+- **Changed**: System KI `para_workspace_architecture_standards` — updated `governance.md` trigger check rule, bumped `para_version` to 1.7.9.
+
 ## [1.7.8] - 2026-04-08
 
 Sidecar Skill & Template Optimization.

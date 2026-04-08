@@ -19,6 +19,8 @@ Collaborative troubleshooting and ideation for a project. Use this workflow to e
 
 First, understand the core topic and the project's current state.
 
+> ⚠️ **Proactive Trigger Check:** BEFORE brainstorming ANY solution that concerns code changes or deployment, YOU MUST scan index triggers based on the intended target of your discussion (e.g. "editing repo/").
+
 ```bash
 # Check for existing seeds
 test -f Projects/[project-name]/.beads/seeds.md && cat Projects/[project-name]/.beads/seeds.md || echo "No seeds.md found."

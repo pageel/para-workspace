@@ -73,7 +73,7 @@ When beginning work on a project (via `/open` or context detection):
 
 **Proactive Trigger Check (v1.6.2+):**
 
-BEFORE any action that edits files, runs commands, or creates artifacts:
+BEFORE any action that edits files, runs commands, creates artifacts, or brainstorms technical solutions:
 
 1. Scan workspace `rules.md` trigger table
 2. Scan workspace `skills.md` trigger table

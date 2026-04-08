@@ -65,7 +65,7 @@ Name       | When this action matches             | path/to/file.md   | 🔴
 
 **Check THEN act — never act THEN check.**
 
-BEFORE any side-effect action:
+BEFORE any action that edits files, runs commands, creates artifacts, or brainstorms technical solutions:
 1. Scan workspace rules trigger table
 2. Scan workspace skills trigger table
 3. Scan project triggers (if loaded)
