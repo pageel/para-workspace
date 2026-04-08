@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.7.7] - 2026-04-08
+
+Brainstorm Consolidation & Naming Convention.
+
+- **Changed**: `/brainstorm` v1.7.7 — Consolidated `brainstorms/` into `para-decisions/`. Dual Output (small/large). Naming convention `{type}-{YYYY-MM-DD}-{topic}.md`. Option G: `docs/researches/` extraction. 7 exit paths.
+- **Changed**: `docs/workflows/brainstorm.md` — updated with v1.7.7 features.
+- **Changed**: System KI `para_workspace_architecture_standards` — added brainstorm consolidation concepts, bumped `para_version`.
+
 ## [1.7.6] - 2026-04-07
 
 Skill Catalog Architecture & Meta-Project Type.

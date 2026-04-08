@@ -1,6 +1,6 @@
 # /brainstorm Workflow
 
-> **Version**: 1.5.0
+> **Version**: 1.7.7
 
 The `/brainstorm` workflow provides collaborative ideation for exploring problem spaces, evaluating solutions, and clarifying thinking before committing to a formal implementation plan.
 
@@ -30,19 +30,38 @@ Collaborates with the user to eliminate, combine, and drill down into the most p
 
 ### 4. Save Structured Output
 
-Saves to `artifacts/para-decisions/brainstorm-[topic]-[date].md` with a standard template: Problem Statement, Options Evaluated, Decision, Next Steps.
+**Dual Output** — evaluates output size before saving:
+
+| Brainstorm Size | Output |
+|:--|:--|
+| **Small** (≤80 lines, ≤2 options) | 1 file: `brainstorm-[YYYY-MM-DD]-[topic].md` in `para-decisions/` |
+| **Large** (>80 lines, ≥3 options, data tables) | 2 files: Decision in `para-decisions/` + Research in `docs/researches/` |
+
+**Naming convention** (v1.7.7):
+
+```
+{type}-{YYYY-MM-DD}-{topic-slug}.md
+```
+
+- `type`: `brainstorm` or `decision`
+- Date ALWAYS right after type prefix (enables chronological sort)
+- `topic-slug`: kebab-case, ≤5 words
+
+> **All output goes to `artifacts/para-decisions/`** — the `brainstorms/` directory was consolidated in v1.7.7.
 
 ### 5. Choose Next Action
 
-Five exit paths:
+Seven exit paths:
 
-| Option         | When to use                    | Destination                         |
-| -------------- | ------------------------------ | ----------------------------------- |
-| **A. Seeds**   | Idea needs more incubation     | `.beads/seeds.md`                   |
-| **B. Plan**    | Ready for implementation       | `/plan` (auto-discovers brainstorm) |
-| **C. Backlog** | Simple isolated tasks          | `/backlog`                          |
-| **D. Doc**     | Analysis worth preserving      | `docs/` + Doc Index                 |
-| **E. Learn**   | Reusable cross-project insight | `/learn` → `Areas/Learning/`        |
+| Option | When to use | Destination |
+|:--|:--|:--|
+| **A. Seeds** | Idea needs more incubation | `.beads/seeds.md` |
+| **B. Plan** | Ready for implementation | `/plan` (auto-discovers brainstorm) |
+| **C. Backlog** | Simple isolated tasks | `/backlog` |
+| **D. Doc** | Analysis worth preserving | `docs/` + Doc Index |
+| **E. Learn** | Reusable cross-project insight | `/learn` → `Areas/Learning/` |
+| **F. Knowledge** | Persistent KI | `/para-knowledge` |
+| **G. Research** | Standalone research document | `docs/researches/` |
 
 ## Integration with `/plan`
 
@@ -61,4 +80,4 @@ If found, the plan uses the brainstorm's Options and Decision sections as baseli
 
 ---
 
-_Added in v1.5.0_
+_Added in v1.5.0. Updated in v1.7.7 (Brainstorm Consolidation & Naming Convention)._

@@ -193,12 +193,12 @@ items:
 
   - id: brainstorm
     name: "Brainstorm"
-    version: "1.7.1"
+    version: "1.7.7"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "brainstorm.md"
-    description: "KI extraction Option F. Collaborative ideation with 6 exit paths (v1.7.1)."
-    tags: ["brainstorm", "ideation", "planning", "knowledge"]
+    description: "Brainstorm Consolidation (v1.7.7): Dual Output, naming convention {type}-{date}-{topic}, Option G docs/researches/, 7 exit paths."
+    tags: ["brainstorm", "ideation", "planning", "knowledge", "dual-output"]
 
   - id: para-knowledge
     name: "Knowledge Manager"
