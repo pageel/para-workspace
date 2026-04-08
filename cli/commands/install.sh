@@ -211,31 +211,33 @@ sync_library() {
     # Then also clean the matching file from active_dest (.agents/X/) if it exists
     # AND is not user-created.
     local orphan_count=0
-    for catalog_file in "$catalog_dest"/*.md; do
+    # Use find to recursively discover all governed files
+    while IFS= read -r catalog_file; do
       [ -f "$catalog_file" ] || continue
-      local cf_name
-      cf_name="$(basename "$catalog_file")"
+      
+      # Extract relative path from catalog_dest
+      local rel_path="${catalog_file#$catalog_dest/}"
 
       # Skip if file still exists in repo template → not orphan
-      [ -f "$src_dir/$cf_name" ] && continue
+      [ -f "$src_dir/$rel_path" ] && continue
 
       # Orphan found in catalog_dest → remove
       if [ "$DRY_RUN" = true ]; then
-        echo "     → Would remove orphan: $cf_name (catalog)"
+        echo "     → Would remove orphan: $rel_path (catalog)"
       else
         backup_file "$catalog_file"
         rm "$catalog_file"
       fi
 
       # Also clean from active_dest, but ONLY if not user-created
-      local active_file="$active_dest/$cf_name"
+      local active_file="$active_dest/$rel_path"
       if [ -f "$active_file" ]; then
         # Skip if user-created (has source: user header)
         if grep -q 'source:[[:space:]]*user' "$active_file" 2>/dev/null; then
           continue
         fi
         if [ "$DRY_RUN" = true ]; then
-          echo "     → Would remove orphan: $cf_name (active)"
+          echo "     → Would remove orphan: $rel_path (active)"
         else
           backup_file "$active_file"
           rm "$active_file"
@@ -243,7 +245,7 @@ sync_library() {
       fi
 
       orphan_count=$((orphan_count + 1))
-    done
+    done < <(find "$catalog_dest" -type f -name "*.md" 2>/dev/null || true)
 
     # === Orphan DIRECTORY cleanup (v1.7.6.3) ===
     # Remove subdirectories in catalog_dest/active_dest that no longer exist in repo.
