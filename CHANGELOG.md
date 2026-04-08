@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.7.8] - 2026-04-08
+
+Sidecar Skill & Template Optimization.
+
+- **Added**: Sidecar Skill architecture pattern — decouples embedded data templates from workflow logic into just-in-time loaded `skills/{name}/references/` directories.
+- **Added**: `plan` Sidecar Skill — Detail Plan & Roadmap templates (plan.md 714→594 lines, -17%).
+- **Added**: `docs` Sidecar Skill — Architecture, CLI, Deployment, Changelog, Strategy templates (docs.md 577→416 lines, -28%).
+- **Changed**: Zero-padding applied to all markdown tables in `plan.md` (-15%) and `docs.md` (-7%).
+- **Changed**: `catalog.yml` — registered `plan` and `docs` Sidecar Skills.
+
 ## [1.7.7] - 2026-04-08
 
 Brainstorm Consolidation & Naming Convention.

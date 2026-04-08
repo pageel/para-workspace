@@ -11,12 +11,12 @@ Generate, review, or update technical documentation for a PARA project. Docs are
 
 ## Actions
 
-| Action    | Description                                                    |
-| :-------- | :------------------------------------------------------------- |
-| `new`     | Analyze project and create appropriate documentation (default) |
-| `review`  | Audit existing docs for completeness and freshness             |
-| `update`  | Update specific doc files to reflect current state             |
-| `publish` | Copy selected docs from `docs/` to `repo/docs/` for shipping   |
+| Action | Description |
+|:--|:--|
+| `new` | Analyze project and create appropriate documentation (default) |
+| `review` | Audit existing docs for completeness and freshness |
+| `update` | Update specific doc files to reflect current state |
+| `publish` | Copy selected docs from `docs/` to `repo/docs/` for shipping |
 
 ---
 
@@ -47,12 +47,12 @@ Projects/[project-name]/
     └── cli.md
 ```
 
-| Criteria        | `docs/` (default)           | `repo/docs/` (after publish)   |
-| :-------------- | :-------------------------- | :----------------------------- |
-| **Created**     | Always — `/docs new`        | Only via `/docs publish`       |
-| **Audience**    | Internal team, AI agent     | Developer, contributor, user   |
-| **Git tracked** | ❌ No (PARA workspace only) | ✅ Yes (shipped with repo)     |
-| **Style**       | Detailed, user's language   | Concise, 40-100 lines, English |
+| Criteria | `docs/` (default) | `repo/docs/` (after publish) |
+|:--|:--|:--|
+| **Created** | Always — `/docs new` | Only via `/docs publish` |
+| **Audience** | Internal team, AI agent | Developer, contributor, user |
+| **Git tracked** | ❌ No (PARA workspace only) | ✅ Yes (shipped with repo) |
+| **Style** | Detailed, user's language | Concise, 40-100 lines, English |
 
 > **Flow:** `/docs new` → create in `docs/` → user review → `/docs publish` → copy to `repo/docs/`
 
@@ -67,18 +67,18 @@ Every project’s `docs/` directory MUST have a `README.md` index file. This is 
 
 > [One-line project description]
 
-| Document                          | Description                         | Updated    |
-| :-------------------------------- | :---------------------------------- | :--------- |
+| Document | Description | Updated |
+|:--|:--|:--|
 | [Architecture](./architecture.md) | System overview & component diagram | YYYY-MM-DD |
-| [CLI](./cli.md)                   | Commands, options, examples         | YYYY-MM-DD |
+| [CLI](./cli.md) | Commands, options, examples | YYYY-MM-DD |
 
 ## Strategy (optional)
 
 > Appears only when `docs/strategy/` exists. See Step 3.5.
 
-| Document                                    | Description               | Updated    |
-| :------------------------------------------ | :------------------------ | :--------- |
-| [Strategy](./strategy/strategy.md)              | Overall strategic vision    | YYYY-MM-DD |
+| Document | Description | Updated |
+|:--|:--|:--|
+| [Strategy](./strategy/strategy.md) | Overall strategic vision | YYYY-MM-DD |
 | [Strategy — [Topic]](./strategy/strategy-[topic].md) | Topic-specific strategy | YYYY-MM-DD |
 
 ---
@@ -145,14 +145,14 @@ Extract:
 
 Determine what documentation this project needs (all created in `docs/`):
 
-| Project Type    | Indicators                        | Recommended Docs                                 |
-| :-------------- | :-------------------------------- | :----------------------------------------------- |
-| **CLI Tool**    | `cli/`, shell scripts, `bin/`     | architecture, cli, development, update-mechanism |
-| **Web App**     | Astro/Next/Vite, `src/pages/`     | architecture, development, deployment            |
-| **Library/SDK** | `lib/`, `src/index.ts`, exports   | architecture, api-reference, getting-started     |
-| **Website**     | Static pages, CMS integration     | architecture, deployment, content-structure      |
-| **Template**    | `templates/`, scaffolding scripts | architecture, cli, workflows, kernel             |
-| **Ecosystem**   | `satellites` field, `type: ecosystem` | architecture, strategy/, roadmap             |
+| Project Type | Indicators | Recommended Docs |
+|:--|:--|:--|
+| **CLI Tool** | `cli/`, shell scripts, `bin/` | architecture, cli, development, update-mechanism |
+| **Web App** | Astro/Next/Vite, `src/pages/` | architecture, development, deployment |
+| **Library/SDK** | `lib/`, `src/index.ts`, exports | architecture, api-reference, getting-started |
+| **Website** | Static pages, CMS integration | architecture, deployment, content-structure |
+| **Template** | `templates/`, scaffolding scripts | architecture, cli, workflows, kernel |
+| **Ecosystem** | `satellites` field, `type: ecosystem` | architecture, strategy/, roadmap |
 
 > **Rule:** Do NOT create all possible docs. Only create what the project type requires.
 
@@ -287,11 +287,11 @@ Audit existing documentation for completeness, accuracy, and freshness.
 📖 Docs Audit: [Project Name]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-| Document         | Status | Issue                           |
-| :--------------- | :----- | :------------------------------ |
-| architecture.md  | ✅ OK  | —                               |
-| cli-reference.md | ⚠️ Stale | Last reviewed 45 days ago      |
-| deployment.md    | 🔴 Missing | No deployment docs found     |
+| Document | Status | Issue |
+|:--|:--|:--|
+| architecture.md | ✅ OK | — |
+| cli-reference.md | ⚠️ Stale | Last reviewed 45 days ago |
+| deployment.md | 🔴 Missing | No deployment docs found |
 
 💡 Recommendations:
   1. Update cli-reference.md (new commands added since last review)
@@ -381,174 +381,14 @@ Append to current session log:
 
 ## Doc Templates
 
-### Architecture Document
-
-```markdown
-# [Project Name] — Architecture
-
-> **Version**: [X.Y.Z] | **Last reviewed**: YYYY-MM-DD
-
-## Overview
-
-[2-3 sentence description of the system]
-
-## System Diagram
-
-[ASCII component diagram — NOT Mermaid, to ensure portability]
-
-## Directory Structure
-
-[Key directories and their purpose — max 20 entries]
-
-## Key Components
-
-### [Component 1]
-
-- **Location**: `path/to/component/`
-- **Purpose**: [what it does]
-- **Key files**: [2-3 important files]
-
-## Data Flow
-
-[How data moves through the system]
-
-## Dependencies
-
-| Dependency | Version | Purpose |
-| :--------- | :------ | :------ |
-
----
-
-_Last updated: YYYY-MM-DD_
-```
-
-### CLI Reference
-
-```markdown
-# [Project Name] — CLI Reference
-
-> **Version**: [X.Y.Z] | **Last reviewed**: YYYY-MM-DD
-
-## Quick Start
-
-[Minimal usage example]
-
-## Commands
-
-### `command-name`
-
-[Description]
-
-**Usage:**
-[code block]
-
-**Options:**
-
-| Flag | Description | Default |
-| :--- | :---------- | :------ |
-
-**Examples:**
-[code blocks with real examples]
-
----
-
-_Last updated: YYYY-MM-DD_
-```
-
-### Deployment Guide
-
-```markdown
-# [Project Name] — Deployment
-
-> **Version**: [X.Y.Z] | **Last reviewed**: YYYY-MM-DD
-
-## Prerequisites
-
-[Required tools, accounts, environment]
-
-## Build
-
-[Build commands with explanation]
-
-## Deploy
-
-[Deployment process, step by step]
-
-## Environment Variables
-
-| Variable | Required | Description | Default |
-| :------- | :------- | :---------- | :------ |
-
-## Troubleshooting
-
-[Common issues and fixes]
-
----
-
-_Last updated: YYYY-MM-DD_
-```
-
-### Changelog
-
-> **Note:** Only create if the project doesn't already maintain a changelog at repo root or in `docs/changelog/`.
-
-```markdown
-# [Project Name] — Changelog
-
-All notable changes to this project, ordered by version (newest first).
-
-## [X.Y.Z] — YYYY-MM-DD
-
-### Added
-
-- [New feature]
-
-### Changed
-
-- [Modified behavior]
-
-### Fixed
-
-- [Bug fix]
-```
-
-### Strategy Document
-
-> **When to create:** User selects strategy creation (Step 3.5), or `/brainstorm`
-> Option D routes to `docs/strategy/`. Never auto-created.
-> **Location:** `docs/strategy/strategy.md` (overall) or `docs/strategy/strategy-[topic].md` (branch).
-
-```markdown
-# [Project/Domain Name] — Strategy
-
-> **Version**: 1.0 | **Last reviewed**: YYYY-MM-DD
-
-## Vision
-
-[2-3 sentences describing long-term destination]
-
-## Current State
-
-[Current situation — problems, opportunities]
-
-## Strategic Decisions
-
-| #   | Decision                     | Rationale              | Date       |
-|:----|:-----------------------------|:-----------------------|:-----------|
-| 1   | [Strategic decision]         | [Reasoning]            | YYYY-MM-DD |
-
-## Products / Streams
-
-[Product/stream list — if multiple. Omit section if N/A.]
-
-## Roadmap Alignment
-
-> Link: [`../artifacts/plans/*-roadmap.md`] (if exists)
-
----
-
-_Last updated: YYYY-MM-DD_
-```
+> 🧩 **Sidecar Skill:** Load document templates from the `docs` skill:
+> - `.agents/skills/docs/references/architecture.md`
+> - `.agents/skills/docs/references/cli.md`
+> - `.agents/skills/docs/references/deployment.md`
+> - `.agents/skills/docs/references/changelog.md`
+> - `.agents/skills/docs/references/strategy.md`
+>
+> Load only the template matching the document type being generated in Step 6.
 
 ---
 

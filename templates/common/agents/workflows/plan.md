@@ -12,11 +12,11 @@ Create, review, or update a phased implementation plan for a PARA project.
 
 ## Actions
 
-| Action   | Description                                           |
-| :------- | :---------------------------------------------------- |
+| Action | Description |
+|:--|:--|
 | `create` | Create a new implementation plan (default if omitted) |
-| `review` | Review and summarize an existing plan                 |
-| `update` | Update phases or status in an existing plan           |
+| `review` | Review and summarize an existing plan |
+| `update` | Update phases or status in an existing plan |
 
 ---
 
@@ -289,11 +289,11 @@ Break the project into sequential phases. Each phase should:
 
 **Phase structure rules:**
 
-| Rule        | Description                                                   |
-| :---------- | :------------------------------------------------------------ |
-| Phase 0     | Always "Setup & Infrastructure" — scaffold, init dependencies |
-| Phase N     | Core feature phases — build in dependency order               |
-| Final Phase | Always "Polish & Extras" — error handling, README, CI/CD      |
+| Rule | Description |
+|:--|:--|
+| Phase 0 | Always "Setup & Infrastructure" — scaffold, init dependencies |
+| Phase N | Core feature phases — build in dependency order |
+| Final Phase | Always "Polish & Extras" — error handling, README, CI/CD |
 
 > **Guideline:** Aim for 4-7 phases total. Each phase should be completable in 1-2 days.
 
@@ -304,10 +304,10 @@ If reference projects were analyzed (Step 3), create a **Code Reuse Table**:
 ```markdown
 ## 📦 Code Reuse from [reference-project]
 
-| Source File        | Function/Module  | Action        | Notes                     |
-| :----------------- | :--------------- | :------------ | :------------------------ |
-| `path/to/file.ts`  | `functionName()` | Port directly | Proven, no changes needed |
-| `path/to/other.ts` | `ClassName`      | Modify        | Remove KV dependency      |
+| Source File | Function/Module | Action | Notes |
+|:--|:--|:--|:--|
+| `path/to/file.ts` | `functionName()` | Port directly | Proven, no changes needed |
+| `path/to/other.ts` | `ClassName` | Modify | Remove KV dependency |
 ```
 
 #### 8. Cross-reference Backlog
@@ -317,10 +317,10 @@ Map each High/Medium priority backlog item to the phase where it will be impleme
 ```markdown
 ## 🔗 Backlog → Phase Mapping
 
-| Backlog Item          | Priority | Phase   |
-| :-------------------- | :------- | :------ |
-| GitHub Storage Engine | High     | Phase 1 |
-| Admin Dashboard       | High     | Phase 3 |
+| Backlog Item | Priority | Phase |
+|:--|:--|:--|
+| GitHub Storage Engine | High | Phase 1 |
+| Admin Dashboard | High | Phase 3 |
 ```
 
 #### 8.5. Rule Impact Check
@@ -363,66 +363,13 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 
 **Naming convention:** Use descriptive names (e.g., `implementation-plan.md`, `migration-plan.md`, `v2-redesign-plan.md`). For roadmaps, use `[scope]-roadmap.md`.
 
-**Plan document structure (Detail Plan):**
+**Plan document structure:**
 
-```markdown
-# [Plan Title]: [project-name]
-
-> **Version:** 1.0 | **Created:** YYYY-MM-DD
-> **Baseline:** [Reference project or context, if any]
-
----
-
-## 📐 Architecture Overview
-
-[Component diagram + Tech stack table]
-
-## 📊 Data Schema
-
-[Schema definition with examples]
-
-## 🗓 Implementation Phases
-
-### Phase 0: Setup & Infrastructure
-
-[Tasks, timeline, output]
-
-### Phase 1: [Core Feature]
-
-[Tasks, timeline, output]
-
-...
-
-### Phase N: Polish & Extras
-
-[Tasks, timeline, output]
-
-## 📦 Code Reuse (if applicable)
-
-[Reuse table from reference projects]
-
-## 🔗 Backlog → Phase Mapping
-
-[Cross-reference table]
-
-## ⚠️ Risks & Lessons Applied
-
-[Risk table with mitigations]
-
-> If Step 2.6 found relevant lessons, list them here:
+> 🧩 **Sidecar Skill:** Load the plan template from the `plan` skill:
+> - **Detail Plan** → read `.agents/skills/plan/references/detail-plan.md`
+> - **Roadmap** → read `.agents/skills/plan/references/roadmap.md`
 >
-> - **Source:** `Areas/Learning/[lesson-name].md`
-> - **Constraint applied:** [What checklist or pattern was incorporated into this plan]
-
-> If Step 2.7 found active RFCs, list constraints here:
->
-> - **RFC:** `docs/rfcs/[rfc-name].md` (Status: Implemented/Planned)
-> - **Constraint applied:** [What decision or rule was incorporated into this plan]
-
-## ✅ Definition of Done
-
-[Copied from project.md for quick reference]
-```
+> Use the template as the document structure. Fill in each section with data gathered from Steps 1-8.
 
 #### 10. Ask to Activate Plan
 
@@ -548,11 +495,11 @@ The resolved path points to the plan file to read.
 ```
 📋 PLAN REVIEW: [plan-name]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-| Phase   | Status         | Tasks  | Source    |
-| ------- | -------------- | ------ | --------- |
-| Phase 0 | ✅ Done        | 5/5    | done.md   |
-| Phase 1 | 🔨 In Progress | 3/5    | backlog   |
-| Phase 2 | ⏳ Pending     | 0/4    | —         |
+| Phase | Status | Tasks | Source |
+|---|---|---|---|
+| Phase 0 | ✅ Done | 5/5 | done.md |
+| Phase 1 | 🔨 In Progress | 3/5 | backlog |
+| Phase 2 | ⏳ Pending | 0/4 | — |
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Overall: 40% complete | Deadline: YYYY-MM-DD
 ```
@@ -619,88 +566,22 @@ Modify an existing plan (add phases, update status, revise timeline).
 
 ## 📁 Artifacts Convention
 
-| Path                      | Purpose                                                      |
-| :------------------------ | :----------------------------------------------------------- |
-| `artifacts/plans/`        | Active plans + `done/` (archived plans + completion reviews) |
-| `artifacts/tasks/`        | Backlog and task tracking                                    |
-| `artifacts/walkthroughs/` | Task verification checklists (from `/verify`)                |
+| Path | Purpose |
+|:--|:--|
+| `artifacts/plans/` | Active plans + `done/` (archived plans + completion reviews) |
+| `artifacts/tasks/` | Backlog and task tracking |
+| `artifacts/walkthroughs/` | Task verification checklists (from `/verify`) |
 
 > Plans are **living documents** — update them as the project evolves. Use the `update` action to keep them in sync with actual progress.
 
 ## Roadmap Plan Template
 
-> **Naming:** `[scope]-roadmap.md` (e.g., `cms-roadmap.md`, `ecosystem-roadmap.md`)
-> **Lifecycle:** Never archived — living document, updated when phases complete.
-> **Role:** Index of detail plans — NOT `active_plan`.
-
-```markdown
-# [Name] Roadmap
-
-> **Version**: 1.0 | **Created**: YYYY-MM-DD
-> **Strategy**: [link to docs/strategy/ if exists, or "—"]
-
----
-
-## Phases Overview
-
-| #   | Phase                 | Version | Detail Plan              | Status     | Est.  |
-|:----|:----------------------|:--------|:-------------------------|:-----------|:------|
-| 1   | [Phase name]          | vX.Y    | plans/[name].md          | ✅ Done    | ~Xh   |
-| 2   | [Phase name]          | vX.Y    | plans/[name].md          | 🔨 Active  | ~Xh   |
-| 3   | [Phase name]          | vX.Y    | —                        | 📋 Planned | ~Xh   |
-
-## Phase Details
-
-### Phase 1: [Name] (vX.Y) ✅
-
-> **Goal:** [one sentence]
-> **Detail plan:** [link or "n/a — simple phase"]
-
-| Deliverable          | Status |
-|:---------------------|:-------|
-| Deliverable 1        | ✅     |
-
-### Phase 2: [Name] (vX.Y) 🔨
-
-> **Goal:** [one sentence]
-> **Detail plan:** [link to active detail plan]
-
-| Deliverable          | Status |
-|:---------------------|:-------|
-| Deliverable 1        | 📋     |
-
-## Backlog → Phase Mapping
-
-| Backlog Item              | Priority   | Phase   |
-|:--------------------------|:-----------|:--------|
-| FEAT-XX: [Story]          | 🔴 High   | Phase 1 |
-
-## Definition of Done (Roadmap-level)
-
-- [ ] All phases completed or deferred with reason
-- [ ] All detail plans archived to plans/done/
-
----
-
-_Created: YYYY-MM-DD_
-```
+> 🧩 **Sidecar Skill:** Load from `.agents/skills/plan/references/roadmap.md`
+> See the `plan` skill for the full template and naming conventions.
 
 ## Output Checklist
 
-- [ ] Project contract analyzed
-- [ ] Backlog items mapped to phases
-- [ ] Project knowledge scanned (docs index, RFCs, architecture baseline, project rules)
-- [ ] Architecture designed with component diagram (extended if baseline exists)
-- [ ] Data schema defined (if applicable)
-- [ ] Plan type selected: Roadmap vs Detail Plan (Step 2.8)
-- [ ] Strategy/roadmap context loaded if applicable (Step 2.9)
-- [ ] Phases defined (4-7 phases recommended)
-- [ ] Code reuse documented (if reference projects exist)
-- [ ] Plan saved to `artifacts/plans/`
-- [ ] `active_plan` field set in `project.md` (detail plans only)
-- [ ] Roadmap auto-updated if exists (Step 10)
-- [ ] `/backlog sync` suggested (or auto-triggered)
-- [ ] Session log updated
+> 🧩 **Sidecar Skill:** Load from `.agents/skills/plan/SKILL.md` — "Output Checklist" section.
 
 ## Related
 

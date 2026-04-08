@@ -6,7 +6,7 @@
   "domain": "workspace",
   "purpose": "context",
   "owner": "para",
-  "para_version": "1.7.7",
+  "para_version": "1.7.8",
   "tags": ["architecture", "governance", "kernel", "invariants", "heuristics", "token-optimization", "ecosystem", "meta-project", "agent-index", "knowledge-system", "skill-catalog", "i18n", "sidecar-pattern", "brainstorm-consolidation"],
   "references": [
     {

@@ -157,11 +157,11 @@ items:
 
   - id: plan
     name: "Plan Controller"
-    version: "1.7.1"
+    version: "1.7.8"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "plan.md"
-    description: "Platform-injected KI Phase E (Step 2.7). Roadmap field lifecycle. Central Gate (v1.7.1)."
+    description: "Sidecar Skill pattern: decouples templates (Detail Plan, Roadmap) into skills/plan/references (v1.7.8)."
     tags: ["planning", "architecture", "phases", "ecosystem", "strategy", "roadmap", "skills", "knowledge"]
 
   - id: para-audit
@@ -175,11 +175,11 @@ items:
 
   - id: docs
     name: "Documentation Manager"
-    version: "1.2.0"
-    kernel_min: "1.6.3"
+    version: "1.7.8"
+    kernel_min: "1.7.8"
     kernel_max: "1.x"
     entrypoint: "docs.md"
-    description: "Strategy field lifecycle, field-gated strategy check. Central Gate (v1.6.3)."
+    description: "Sidecar Skill pattern: decouples 5 templates into skills/docs/references (v1.7.8). Strategy lifecycle."
     tags: ["documentation", "docs", "publish", "strategy"]
 
   - id: update
