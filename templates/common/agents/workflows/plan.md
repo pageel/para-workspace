@@ -5,7 +5,7 @@ source: catalog
 
 # /plan [project-name] [action]
 
-> **Workspace Version:** 1.7.9.1 (Cognitive Bypass Fix)
+> **Workspace Version:** 1.7.10 (Cognitive Bypass Fix)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final plan document MUST be translated to this language.**
 
 Create, review, or update a phased implementation plan for a PARA project.
@@ -34,7 +34,7 @@ Generate a comprehensive implementation plan based on the project contract, back
 > cause attention decay. Force-load here to guarantee rules/skills awareness during planning.
 
 ```bash
-# Tier-1 Index Force Load (Anti-Cognitive-Bypass v1.7.9.1)
+# Tier-1 Index Force Load (Anti-Cognitive-Bypass v1.7.10)
 echo ""
 echo "> ⚠️ Proactive Trigger Scan: .agents/rules.md & .agents/skills.md"
 cat .agents/rules.md 2>/dev/null | head -n 30

@@ -12,15 +12,20 @@
 
 ---
 
-## 📐 Architecture Overview
+## 1. References
+
+> Brainstorm, research, predecessor plans.
+
+| # | File | Vai trò |
+| :-- | :-- | :-- |
+| B1 | [brainstorm-file](path) | [Mô tả] |
+| R1 | [research-file](path) | [Mô tả] |
+
+## 2. Architecture Overview
 
 [Component diagram + Tech stack table]
 
-## 📊 Data Schema
-
-[Schema definition with examples]
-
-## 🗓 Implementation Phases
+## 3. Implementation Phases
 
 ### Phase 0: Setup & Infrastructure
 
@@ -30,35 +35,26 @@
 
 [Tasks, timeline, output]
 
-...
-
-### Phase N: Polish & Extras
-
-[Tasks, timeline, output]
-
-## 📦 Code Reuse (if applicable)
-
-[Reuse table from reference projects]
-
-## 🔗 Backlog → Phase Mapping
+## 4. Backlog → Phase Mapping
 
 [Cross-reference table]
 
-## ⚠️ Risks & Lessons Applied
+## 5. Risks & Mitigations
 
 [Risk table with mitigations]
 
-> If Step 2.6 found relevant lessons, list them here:
->
-> - **Source:** `Areas/Learning/[lesson-name].md`
-> - **Constraint applied:** [What checklist or pattern was incorporated into this plan]
+## 6. Checklist
 
-> If Step 2.7 found active RFCs, list constraints here:
->
-> - **RFC:** `docs/rfcs/[rfc-name].md` (Status: Implemented/Planned)
-> - **Constraint applied:** [What decision or rule was incorporated into this plan]
+### Pre-push
 
-## ✅ Definition of Done
+- [ ] [Core implementation done]
+- [ ] [Tests/dry-run pass]
+- [ ] [Docs updated if needed]
 
-[Copied from project.md for quick reference]
+### Post-push
+
+- [ ] `git commit` + `git push` thành công
+- [ ] `./para update` sync workspace
+- [ ] Verify workspace files
+- [ ] Clear `active_plan` trong `project.md`
 ```

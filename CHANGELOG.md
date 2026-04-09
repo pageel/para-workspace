@@ -3,15 +3,17 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
-## [1.7.9.1] - 2026-04-09
+## [1.7.10] - 2026-04-09
 
-Cognitive Bypass Fix — Soft Dump payload in 3 workflows.
+Cognitive Bypass Fix & Workflow Padding Optimization (OPT-1).
 
-- **Changed**: `/brainstorm` v1.7.9.1 — Injected Tier-1 Index Force Load (Soft Dump) bash script into Step 1 Context Gathering. Physical Force replaces passive text reminder.
-- **Changed**: `/plan` v1.7.9.1 — Replaced Step 0 passive "Re-read" text with Soft Dump bash script.
-- **Changed**: `/docs` v1.7.9.1 — Replaced Step 0 passive "Re-read" text with Soft Dump bash script.
-- **Changed**: `catalog.yml` — bumped brainstorm, plan, docs to v1.7.9.1.
-- **Fixed**: Version drift — `cli/para` (1.7.8→1.7.9.1), `project.md` (1.7.6→1.7.9.1), `vi-VN.md` badge (1.7.8→1.7.9.1).
+- **Changed**: Zero-padding stripped from 76 templates (workflows, rules, skills, docs) saving ~8,100 tokens per workspace sync.
+- **Changed**: `/plan` template (`detail-plan.md`) completely refactored with clean numbered structure, split Pre/Post-push checklists, and prominent References section.
+- **Changed**: `/brainstorm` v1.7.10 — Injected Tier-1 Index Force Load (Soft Dump) bash script into Step 1 Context Gathering. Physical Force replaces passive text reminder.
+- **Changed**: `/plan` v1.7.10 — Replaced Step 0 passive "Re-read" text with Soft Dump bash script.
+- **Changed**: `/docs` v1.7.10 — Replaced Step 0 passive "Re-read" text with Soft Dump bash script.
+- **Changed**: `catalog.yml` — bumped brainstorm, plan, docs to v1.7.10.
+- **Fixed**: Version drift — `cli/para`, `project.md`, `vi-VN.md` synced to 1.7.10.
 
 ## [1.7.9] - 2026-04-08
 

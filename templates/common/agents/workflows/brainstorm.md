@@ -5,7 +5,7 @@ source: catalog
 
 # /brainstorm [project-name] [topic]
 
-> **Workspace Version:** 1.7.9.1 (Cognitive Bypass Fix)
+> **Workspace Version:** 1.7.10 (Cognitive Bypass Fix)
 
 Collaborative troubleshooting and ideation for a project. Use this workflow to explore problem spaces, evaluate potential solutions, and clarify thinking before committing to a formal implementation plan (`/plan`).
 
@@ -22,7 +22,7 @@ First, understand the core topic and the project's current state.
 > ⚠️ **Proactive Trigger Check:** BEFORE brainstorming ANY solution that concerns code changes or deployment, YOU MUST scan index triggers based on the intended target of your discussion (e.g. "editing repo/").
 
 ```bash
-# Tier-1 Index Force Load (Anti-Cognitive-Bypass v1.7.9.1)
+# Tier-1 Index Force Load (Anti-Cognitive-Bypass v1.7.10)
 echo ""
 echo "> ⚠️ Proactive Trigger Scan: .agents/rules.md & .agents/skills.md"
 cat .agents/rules.md 2>/dev/null | head -n 30

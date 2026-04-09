@@ -1,6 +1,6 @@
 # /plan Workflow
 
-> **Version**: 1.7.9.1
+> **Version**: 1.7.10
 
 The `/plan` workflow creates, reviews, and updates phased implementation plans for PARA projects. It integrates with brainstorm outputs, the project backlog, and the learning index to produce comprehensive, actionable plans.
 
@@ -24,7 +24,7 @@ Contract → Backlog → Brainstorm check → Learnings → Project Knowledge �
 
 ### Key Steps
 
-0. **Agent Indices Pre-flight** (v1.7.9.1) — Runs a **Soft Dump** script that force-loads `.agents/rules.md` and `.agents/skills.md` into context (Anti-Cognitive-Bypass). Replaces passive "Re-read" text.
+0. **Agent Indices Pre-flight** (v1.7.10) — Runs a **Soft Dump** script that force-loads `.agents/rules.md` and `.agents/skills.md` into context (Anti-Cognitive-Bypass). Replaces passive "Re-read" text.
 1. **Read Project Contract** — Goal, deadline, DoD from `project.md`
 2. **Read Backlog** — Feature scope, priorities, status distribution
 3. **Check Brainstorm Context** (v1.5.0) — Auto-discovers recent brainstorm outputs in `artifacts/para-decisions/brainstorm-*.md`. If found, uses the Options and Decision sections as baseline context.
@@ -104,4 +104,4 @@ If confirmed:
 
 ---
 
-_Updated in v1.7.9.1 (Cognitive Bypass Fix — Soft Dump payload in Step 0)._
+_Updated in v1.7.10 (Cognitive Bypass Fix — Soft Dump payload in Step 0)._

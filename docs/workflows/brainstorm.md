@@ -1,6 +1,6 @@
 # /brainstorm Workflow
 
-> **Version**: 1.7.9.1
+> **Version**: 1.7.10
 
 The `/brainstorm` workflow provides collaborative ideation for exploring problem spaces, evaluating solutions, and clarifying thinking before committing to a formal implementation plan.
 
@@ -18,7 +18,7 @@ Context → Ideation (3-5 options) → Refinement → Save → Choose next actio
 
 ### 1. Context Gathering
 
-Reads existing seeds (`.beads/seeds.md`) and previous brainstorm outputs from `artifacts/para-decisions/`. Runs a **Soft Dump** script that force-loads `.agents/rules.md` and `.agents/skills.md` into context (Anti-Cognitive-Bypass, v1.7.9.1). Asks the user to elaborate on the problem.
+Reads existing seeds (`.beads/seeds.md`) and previous brainstorm outputs from `artifacts/para-decisions/`. Runs a **Soft Dump** script that force-loads `.agents/rules.md` and `.agents/skills.md` into context (Anti-Cognitive-Bypass, v1.7.10). Asks the user to elaborate on the problem.
 
 ### 2. Ideation & Exploration
 
@@ -80,4 +80,4 @@ If found, the plan uses the brainstorm's Options and Decision sections as baseli
 
 ---
 
-_Added in v1.5.0. Updated in v1.7.9.1 (Cognitive Bypass Fix — Soft Dump payload in Step 1)._
+_Added in v1.5.0. Updated in v1.7.10 (Cognitive Bypass Fix — Soft Dump payload in Step 1)._

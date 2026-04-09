@@ -5,7 +5,7 @@ source: catalog
 
 # /docs [project-name] [action]
 
-> **Workspace Version:** 1.7.9.1 (Cognitive Bypass Fix)
+> **Workspace Version:** 1.7.10 (Cognitive Bypass Fix)
 
 Generate, review, or update technical documentation for a PARA project. Docs are always created in `Projects/[project-name]/docs/` (internal). Use `publish` to promote selected docs to `repo/docs/` when ready.
 
@@ -107,7 +107,7 @@ Analyze the project and create documentation appropriate to its type and complex
 > **Layer 3 defense:** Re-read indices to guard against attention decay.
 
 ```bash
-# Tier-1 Index Force Load (Anti-Cognitive-Bypass v1.7.9.1)
+# Tier-1 Index Force Load (Anti-Cognitive-Bypass v1.7.10)
 echo ""
 echo "> ⚠️ Proactive Trigger Scan: .agents/rules.md & .agents/skills.md"
 cat .agents/rules.md 2>/dev/null | head -n 30

@@ -157,11 +157,11 @@ items:
 
   - id: plan
     name: "Plan Controller"
-    version: "1.7.9.1"
+    version: "1.7.10"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "plan.md"
-    description: "Cognitive Bypass Fix: Soft Dump payload in Step 0 (v1.7.9.1). Sidecar Skill templates."
+    description: "Cognitive Bypass Fix: Soft Dump payload in Step 0 (v1.7.10). Sidecar Skill templates."
     tags: ["planning", "architecture", "phases", "ecosystem", "strategy", "roadmap", "skills", "knowledge"]
 
   - id: para-audit
@@ -175,11 +175,11 @@ items:
 
   - id: docs
     name: "Documentation Manager"
-    version: "1.7.9.1"
+    version: "1.7.10"
     kernel_min: "1.7.8"
     kernel_max: "1.x"
     entrypoint: "docs.md"
-    description: "Cognitive Bypass Fix: Soft Dump payload in Step 0 (v1.7.9.1). Sidecar Skill templates."
+    description: "Cognitive Bypass Fix: Soft Dump payload in Step 0 (v1.7.10). Sidecar Skill templates."
     tags: ["documentation", "docs", "publish", "strategy"]
 
   - id: update
@@ -193,11 +193,11 @@ items:
 
   - id: brainstorm
     name: "Brainstorm"
-    version: "1.7.9.1"
+    version: "1.7.10"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "brainstorm.md"
-    description: "Cognitive Bypass Fix: Soft Dump payload in Step 1 (v1.7.9.1). Dual Output, 7 exit paths."
+    description: "Cognitive Bypass Fix: Soft Dump payload in Step 1 (v1.7.10). Dual Output, 7 exit paths."
     tags: ["brainstorm", "ideation", "planning", "knowledge", "dual-output"]
 
   - id: para-knowledge
