@@ -149,6 +149,17 @@ BEFORE any action that edits files, runs commands, creates artifacts, or brainst
 4. Scan project `skills.md` trigger table (if loaded)
 5. IF match found → read rule/skill file BEFORE acting
 
+### Cognitive Bypass Fix (v1.7.9.1)
+
+High-ideation workflows (`/brainstorm`, `/plan`, `/docs`) inject a **Soft Dump** bash script that force-loads Tier-1 Index files into the agent's context window:
+
+```bash
+cat .agents/rules.md 2>/dev/null | head -n 30
+cat .agents/skills.md 2>/dev/null | head -n 30
+```
+
+**Rationale:** Passive text reminders ("Re-read rules.md") fail because agents optimize for token efficiency and skip non-executable instructions. Physical Force (executable script) ensures 100% compliance.
+
 ## 7. System State (`.para/`)
 
 ```
@@ -283,6 +294,7 @@ skills/[name]/
 | 1.7.7   | —            | Brainstorm Consolidation |
 | 1.7.8   | —            | Workflow Zero-padding optimization |
 | 1.7.9   | Hotfix       | Proactive Trigger Check update for Ideation/Brainstorm |
+| 1.7.9.1 | —            | Cognitive Bypass Fix: Soft Dump payload in brainstorm, plan, docs |
 
 ## 15. Knowledge System (v1.7.0+)
 

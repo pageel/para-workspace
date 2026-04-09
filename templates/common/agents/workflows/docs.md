@@ -5,7 +5,7 @@ source: catalog
 
 # /docs [project-name] [action]
 
-> **Workspace Version:** 1.6.3 (Central Gate)
+> **Workspace Version:** 1.7.9.1 (Cognitive Bypass Fix)
 
 Generate, review, or update technical documentation for a PARA project. Docs are always created in `Projects/[project-name]/docs/` (internal). Use `publish` to promote selected docs to `repo/docs/` when ready.
 
@@ -106,8 +106,14 @@ Analyze the project and create documentation appropriate to its type and complex
 
 > **Layer 3 defense:** Re-read indices to guard against attention decay.
 
-1. Re-read `.agents/rules.md` (workspace rules index)
-2. Re-read `.agents/skills.md` (workspace skills index)
+```bash
+# Tier-1 Index Force Load (Anti-Cognitive-Bypass v1.7.9.1)
+echo ""
+echo "> ⚠️ Proactive Trigger Scan: .agents/rules.md & .agents/skills.md"
+cat .agents/rules.md 2>/dev/null | head -n 30
+cat .agents/skills.md 2>/dev/null | head -n 30
+```
+
 3. Check `project.md` for `agent.rules` / `agent.skills` — if true, re-read project indices too
 
 #### 1. Read Project Contract

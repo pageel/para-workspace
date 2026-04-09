@@ -7,7 +7,7 @@
 **Workspace Framework cho Con người & AI Agent**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.8-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.9.1-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 

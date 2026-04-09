@@ -1,6 +1,6 @@
 # /docs Workflow
 
-> **Version**: 1.4.10
+> **Version**: 1.7.9.1
 
 The `/docs` workflow creates, reviews, and publishes technical documentation for PARA projects. It follows an **internal-first** approach: always create in the project's `docs/` directory, then promote to `repo/docs/` when ready.
 
@@ -42,6 +42,7 @@ Every `docs/` directory MUST have a `README.md` index — a ~10 line table listi
 
 ## `/docs new` Flow
 
+0. **Agent Indices Pre-flight** (v1.7.9.1) — Runs a **Soft Dump** script that force-loads `.agents/rules.md` and `.agents/skills.md` into context (Anti-Cognitive-Bypass).
 1. Read `project.md` (goal, tech stack, status)
 2. Scan source code (structure, entry points)
 3. Classify project type → recommend appropriate docs
@@ -69,4 +70,4 @@ Every `docs/` directory MUST have a `README.md` index — a ~10 line table listi
 
 ---
 
-_Added in v1.4.10_
+_Added in v1.4.10. Updated in v1.7.9.1 (Cognitive Bypass Fix — Soft Dump payload in Step 0)._

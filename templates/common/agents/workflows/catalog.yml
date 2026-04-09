@@ -157,11 +157,11 @@ items:
 
   - id: plan
     name: "Plan Controller"
-    version: "1.7.8"
+    version: "1.7.9.1"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "plan.md"
-    description: "Sidecar Skill pattern: decouples templates (Detail Plan, Roadmap) into skills/plan/references (v1.7.8)."
+    description: "Cognitive Bypass Fix: Soft Dump payload in Step 0 (v1.7.9.1). Sidecar Skill templates."
     tags: ["planning", "architecture", "phases", "ecosystem", "strategy", "roadmap", "skills", "knowledge"]
 
   - id: para-audit
@@ -175,11 +175,11 @@ items:
 
   - id: docs
     name: "Documentation Manager"
-    version: "1.7.8"
+    version: "1.7.9.1"
     kernel_min: "1.7.8"
     kernel_max: "1.x"
     entrypoint: "docs.md"
-    description: "Sidecar Skill pattern: decouples 5 templates into skills/docs/references (v1.7.8). Strategy lifecycle."
+    description: "Cognitive Bypass Fix: Soft Dump payload in Step 0 (v1.7.9.1). Sidecar Skill templates."
     tags: ["documentation", "docs", "publish", "strategy"]
 
   - id: update
@@ -193,11 +193,11 @@ items:
 
   - id: brainstorm
     name: "Brainstorm"
-    version: "1.7.7"
+    version: "1.7.9.1"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "brainstorm.md"
-    description: "Brainstorm Consolidation (v1.7.7): Dual Output, naming convention {type}-{date}-{topic}, Option G docs/researches/, 7 exit paths."
+    description: "Cognitive Bypass Fix: Soft Dump payload in Step 1 (v1.7.9.1). Dual Output, 7 exit paths."
     tags: ["brainstorm", "ideation", "planning", "knowledge", "dual-output"]
 
   - id: para-knowledge
