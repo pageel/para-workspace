@@ -1,13 +1,13 @@
 {
   "title": "PARA Workspace Architecture & Governance Standards (v1.7.x)",
-  "summary": "Foundational architecture, governance, and efficiency standards for PARA Workspace v1.7.x. Covers: four-pillar structure (.para/, .agents/), Governing Kernel v1.5.3 (11 Invariants, 10 Heuristics incl. H10 KI), project.md schema v1.6.3 with field-gated I/O and @ecosystem/ path resolution, Ecosystem + Meta-Project types (v1.7.6), two-level Agent Index (workspace + project rules/skills with proactive trigger), Skills system v1.6.4 with /para-skill Co-Author workflow (v1.7.6) and Sidecar Skill pattern (v1.7.6.3), CLI with Smart Archive and catalog.yml governance, SYNC.md cross-project notifications, Knowledge System with platform-injected KI context (v1.7.0+), System KI governed lifecycle with template sync (v1.7.1), KR7 Ephemeral Reference Ban (v1.7.5), i18n docs/locales/ architecture (v1.7.6), orphan directory cleanup in installer (v1.7.6.3), Brainstorm Consolidation with Dual Output and naming convention {type}-{date}-{topic} (v1.7.7), Cognitive Bypass Fix with Soft Dump payload in brainstorm/plan/docs (v1.7.9.1), and token optimization patterns (field-gated I/O, lazy-loading, strategy cascade). Covers 24 core workflows, 12 rules, and 4 skills.",
+  "summary": "Foundational architecture, governance, and efficiency standards for PARA Workspace v1.7.x. Covers: four-pillar structure (.para/, .agents/), Governing Kernel v1.5.3 (11 Invariants, 10 Heuristics incl. H10 KI), project.md schema v1.6.3 with field-gated I/O and @ecosystem/ path resolution, Ecosystem + Meta-Project types (v1.7.6), two-level Agent Index (workspace + project rules/skills with proactive trigger), Skills system v1.6.4 with /para-skill Co-Author workflow (v1.7.6) and Sidecar Skill pattern (v1.7.6.3), CLI with Smart Archive and catalog.yml governance, SYNC.md cross-project notifications, Knowledge System with platform-injected KI context (v1.7.0+), System KI governed lifecycle with template sync (v1.7.1), KR7 Ephemeral Reference Ban (v1.7.5), i18n docs/locales/ architecture (v1.7.6), orphan directory cleanup in installer (v1.7.6.3), Brainstorm Consolidation with Dual Output and naming convention {type}-{date}-{topic} (v1.7.7), Cognitive Bypass Fix with Soft Dump payload in brainstorm/plan/docs (v1.7.9.1), and token optimization patterns (field-gated I/O, lazy-loading, strategy cascade). New in v1.7.11: Staged Reload for /plan checklists, Phase Pre-flight Traps during execution, Roadmap Sync view-only mirrors, and Generic English-first OSS naming rules. Covers 24 core workflows, 12 rules, and 4 skills.",
   "version": "1.0",
   "scope": "workspace",
   "domain": "workspace",
   "purpose": "context",
   "owner": "para",
-  "para_version": "1.7.9.1",
-  "tags": ["architecture", "governance", "kernel", "invariants", "heuristics", "token-optimization", "ecosystem", "meta-project", "agent-index", "knowledge-system", "skill-catalog", "i18n", "sidecar-pattern", "brainstorm-consolidation", "cognitive-bypass-fix"],
+  "para_version": "1.7.11",
+  "tags": ["architecture", "governance", "kernel", "invariants", "heuristics", "token-optimization", "ecosystem", "meta-project", "agent-index", "knowledge-system", "skill-catalog", "i18n", "sidecar-pattern", "brainstorm-consolidation", "cognitive-bypass-fix", "staged-reload", "phase-pre-flight", "roadmap-sync"],
   "references": [
     {
       "type": "file",
@@ -89,6 +89,10 @@
     "dual brainstorm output",
     "naming convention date-first",
     "cognitive bypass fix",
-    "soft dump physical force"
+    "soft dump physical force",
+    "staged reload",
+    "phase pre-flight trap",
+    "roadmap sync mirror",
+    "english-first oss template"
   ]
 }

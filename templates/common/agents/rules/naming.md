@@ -45,7 +45,24 @@ glob:
 - **MUST** use `kebab-case` for workflow and rule filenames.
 - Examples: `/new-project`, `naming.md`, `para-discipline.md`.
 
-### 6. Exceptions
+### 6. Artifacts (Plans, Brainstorms, Tasks)
+
+- **MUST** use `kebab-case`.
+- **Generic Principle**: Filenames MUST logically include the artifact **type**, **date**, and **topic**.
+- **Exception**: Specific naming formats (e.g., whether to include version numbers or wildcard tokens) are defined inside individual workflow templates and sidecars (e.g., `detail-plan.md` or `/brainstorm`). This rule only enforces generic principles. 
+
+### 7. VCS (Branches & Commits)
+
+- **Branches MUST** use `kebab-case` and include a category prefix (e.g., `feature/`, `bugfix/`, `hotfix/`, `release/`).
+- **Commits MUST** follow Conventional Commits (e.g., `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `chore:`).
+
+### 8. Backlog IDs
+
+- **MUST** use an uppercase prefix followed by a hyphen and a number.
+- **Prefixes**: `FEAT-[N]`, `BUG-[N]`, `IDEA-[N]`, or domain-specific acronyms (e.g., `AUTH-[N]`).
+- **Forbidden**: Do not use ad-hoc string hashes or purely numeric IDs.
+
+### 9. Exceptions
 
 - Standard documentation files (`README.md`, `LICENSE`, `VERSION`, `CHANGELOG.md`) follow established uppercase conventions.
 - Tool-specific config files (`package.json`, `tsconfig.json`) follow the tool's requirements.

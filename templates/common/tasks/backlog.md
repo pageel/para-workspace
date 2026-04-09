@@ -1,10 +1,12 @@
 # <Project Name> - Product Backlog
 
+<!-- ⚠️ OPERATIONAL AUTHORITY — Mutations via /backlog only (C3) -->
+
 > 🎯 Goal: <project-slug>
 
 ---
 
-## 🏗️ Epic: Initial Setup
+## §1 🏗️ Epics & Features
 
 Initial project setup.
 
@@ -18,7 +20,7 @@ Initial project setup.
 
 ---
 
-## 🐛 Known Issues & Bugs
+## §2 🐛 Known Issues & Bugs
 
 | ID | Issue | Status |
 | :-- | :-- | :-- |
@@ -26,15 +28,7 @@ Initial project setup.
 
 ---
 
-## 📊 Evaluation Scores (ICE)
-
-| ID | Impact | Confidence | Ease | ICE Score | Priority Hint |
-| :-- | :--: | :--: | :--: | :--: | :-- |
-| **SU-02** | 8 | 9 | 8 | **576** | 🚀 High Priority |
-
----
-
-## ✅ Completed (Archived)
+## §3 ✅ Completed (Archived)
 
 > Compressed by plan. Details → [done.md](./done.md) → `plans/done/`
 
@@ -44,7 +38,17 @@ Initial project setup.
 
 ---
 
-## 📊 Summary
+## §4 🗺️ Roadmap Sync
+
+> ⚠️ **VIEW-ONLY**: Future work blocks periodically synced from `plans/roadmap.md`. DO NOT manually add tasks/IDs here. Only assign IDs when promoted to §1 (Active Scope).
+
+| Future Epic / Theme | Target Phase |
+| :-- | :-- |
+| _(Pending roadmap sync)_ | |
+
+---
+
+## §5 📊 Summary
 
 | Category | Count |
 | :-- | :-- |

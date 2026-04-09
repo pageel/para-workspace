@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.7.11] - 2026-04-09
+
+Backlog Governance & Staged Reload (Cognitive Bypass Phase 2).
+
+- **Added**: `Step 9.5 Pre-Checklist Context Reload` (Staged Reload) into `/plan` workflow to completely prevent Agent Token Decay when writing plan checklists (Cognitive Bypass).
+- **Added**: `Phase Pre-flight Trap` inside the `detail-plan.md` Sidecar template. This forces the Agent to reload rules & skills prior to executing any planned phase.
+- **Added**: Generic artifact naming rules (`naming.md`) covering Plans, Brainstorms, Backlog IDs, and VCS conventions.
+- **Changed**: Replaced the outdated `Icebox` table with `§4 Roadmap Sync` (View-only mirror) within the backlog templates, preventing data duplication.
+- **Changed**: Standardized `tasks/backlog.md` template with `§1-§5` headers, reflecting the updated `hybrid-3-file-integrity.md` (C3) schema.
+- **Fixed**: Audited `repo/templates/` OSS templates to remove any localized language snippets and ensure strict **English-first** compliance with generic placeholders.
+
 ## [1.7.10] - 2026-04-09
 
 Cognitive Bypass Fix & Workflow Padding Optimization (OPT-1).

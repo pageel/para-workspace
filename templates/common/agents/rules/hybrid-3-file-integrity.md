@@ -43,6 +43,7 @@ glob: artifacts/tasks/*
 - `backlog.md` is the **single source of truth** for all tasks (active + archived)
 - `/backlog clean` **compresses** Done items into the `✅ Completed (Archived)` section (1 line per plan + IDs) — it does NOT delete them
 - Lookup chain: `backlog.md` (plan + IDs) → `done.md` (per-task detail) → `plans/done/` (full plan)
+- **§4 Roadmap Sync** is VIEW-ONLY. Agent MUST NOT manually mutate it via `/backlog add`. It mirrors future scope from `plans/roadmap.md`.
 
 ### C4: Plan-Backlog Sync is MANDATORY after /plan create
 

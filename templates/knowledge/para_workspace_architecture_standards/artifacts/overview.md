@@ -295,6 +295,7 @@ skills/[name]/
 | 1.7.8 | — | Workflow Zero-padding optimization |
 | 1.7.9 | Hotfix | Proactive Trigger Check update for Ideation/Brainstorm |
 | 1.7.10 | — | Cognitive Bypass Fix: Soft Dump payload in brainstorm, plan, docs |
+| 1.7.11 | Feature | Backlog Optimization (v2), Staged Reload, Phase Pre-flight, generic OSS templates |
 
 ## 15. Knowledge System (v1.7.0+)
 

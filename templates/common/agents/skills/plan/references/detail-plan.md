@@ -1,6 +1,6 @@
 # Detail Plan Template
 
-> **Naming:** Descriptive names (e.g., `implementation-plan.md`, `migration-plan.md`, `v2-redesign-plan.md`).
+> **Naming:** `v[ver/X.X.X]-[YYYY-MM-DD]-[topic].md` (e.g., `v1.7.0-2026-04-09-optimization.md`)
 > **Lifecycle:** Active → archived to `plans/done/` when completed.
 > **Role:** IS `active_plan` in `project.md`.
 
@@ -16,10 +16,10 @@
 
 > Brainstorm, research, predecessor plans.
 
-| # | File | Vai trò |
+| # | File | Role |
 | :-- | :-- | :-- |
-| B1 | [brainstorm-file](path) | [Mô tả] |
-| R1 | [research-file](path) | [Mô tả] |
+| B1 | [brainstorm-file](path) | [Description] |
+| R1 | [research-file](path) | [Description] |
 
 ## 2. Architecture Overview
 
@@ -29,9 +29,15 @@
 
 ### Phase 0: Setup & Infrastructure
 
+> ⚠️ **PHASE PRE-FLIGHT (ANTI-BYPASS):** 
+> Before executing any task in this Phase, Agent MUST read project.md and reload `.agents/rules.md` + `.agents/skills.md` based on Phase scope.
+
 [Tasks, timeline, output]
 
 ### Phase 1: [Core Feature]
+
+> ⚠️ **PHASE PRE-FLIGHT (ANTI-BYPASS):** 
+> Before executing any task in this Phase, Agent MUST reload `.agents/rules.md` + `.agents/skills.md`.
 
 [Tasks, timeline, output]
 
@@ -45,16 +51,19 @@
 
 ## 6. Checklist
 
+> ⚠️ **MANDATORY**: Agent MUST only generate this Checklist AFTER executing **Step 9.5 (Pre-Checklist Context Reload)** entirely, to prevent Token Decay from omitting critical rules (like Version Bump, Docs Impact, or KI Sync).
+
 ### Pre-push
 
 - [ ] [Core implementation done]
 - [ ] [Tests/dry-run pass]
 - [ ] [Docs updated if needed]
+- [ ] [Project-specific Governance rules checked (e.g., OSS English-first, linting)]
 
 ### Post-push
 
-- [ ] `git commit` + `git push` thành công
+- [ ] `git commit` + `git push` successful
 - [ ] `./para update` sync workspace
 - [ ] Verify workspace files
-- [ ] Clear `active_plan` trong `project.md`
+- [ ] Clear `active_plan` in `project.md`
 ```

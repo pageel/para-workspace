@@ -16,7 +16,6 @@ Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/ba
 | :-- | :-- |
 | `review` | Show overview with summary stats and phase context |
 | `add` | Add new feature, epic, or bug |
-| `evaluate` | ICE scoring for priorities |
 | `update` | Update status of existing items |
 | `sync` | Sync backlog with plan (map items to phases) |
 | `clean` | Compress ✅ Done items into Completed section |
@@ -78,7 +77,8 @@ Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/ba
 1. Ask: Epic or standalone? Feature or Bug?
 2. If Epic: Ask which existing Epic to join, or create a new one.
 3. Generate next available ID with proper prefix.
-4. Append to the correct section in backlog.md.
+4. Append to the correct section in `backlog.md` (§1 or §2). 
+   ⚠️ **CRITICAL:** DO NOT modify `§4 Roadmap Sync`. It is a view-only mirror of future scope.
 5. If a plan exists, ask which Phase this item belongs to.
    - If identified, suggest updating the plan's "Backlog → Phase Mapping" table.
 6. Update Summary counts.
@@ -86,23 +86,7 @@ Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/ba
 
 ---
 
-## 📊 Action: evaluate
 
-1. List all items with status ⏳ Pending or 🚀 ToDo.
-2. For each, ask user to score Impact / Confidence / Ease (1-10).
-3. Calculate ICE = Impact × Confidence × Ease.
-4. Update the ICE Evaluation table.
-5. Sort by ICE Score descending.
-6. Suggest priority hints based on score ranges:
-
-| ICE Range | Hint |
-| :-- | :-- |
-| 500+ | 🚀 High Priority |
-| 200-499 | ✅ Quick Win |
-| 100-199 | 📋 Backlog |
-| <100 | 🗃 Low Priority |
-
----
 
 ## ✏️ Action: update
 
@@ -191,11 +175,13 @@ When creating a new backlog.md (via `/new-project` or `/backlog add`), use this 
 ```markdown
 # [Project Name] - Product Backlog
 
+<!-- ⚠️ OPERATIONAL AUTHORITY — Mutations via /backlog only (C3) -->
+
 > 🎯 [One-line project goal or description]
 
 ---
 
-## 🏗️ Epic: [Epic Name]
+## §1 🏗️ Epics & Features
 
 [Short description of the epic's purpose.]
 
@@ -208,7 +194,7 @@ When creating a new backlog.md (via `/new-project` or `/backlog add`), use this 
 
 ---
 
-## 🐛 Known Issues & Bugs
+## §2 🐛 Known Issues & Bugs
 
 | ID     | Issue               | Priority  | Status     |
 | :----- | :------------------ | :-------- | :--------- |
@@ -216,7 +202,7 @@ When creating a new backlog.md (via `/new-project` or `/backlog add`), use this 
 
 ---
 
-## ✅ Completed (Archived)
+## §3 ✅ Completed (Archived)
 
 > Compressed by plan. Details → [done.md](./done.md) → `plans/done/`
 
@@ -226,15 +212,17 @@ When creating a new backlog.md (via `/new-project` or `/backlog add`), use this 
 
 ---
 
-## 📊 Evaluation Scores (ICE)
+## §4 🗺️ Roadmap Sync
 
-| ID        | Impact | Confidence | Ease | ICE Score | Priority Hint    |
-| :-------- | :----: | :--------: | :--: | :-------: | :--------------- |
-| **XX-01** |   8    |     9      |  6   |  **432**  | 🚀 High Priority |
+> ⚠️ **VIEW-ONLY**: Các block công việc tương lai được đồng bộ định kỳ từ `plans/roadmap.md`. KHÔNG trực tiếp thêm task/ID vào đây. Chỉ gán ID khi promote lên §1 (Active Scope).
+
+| Future Epic / Theme | Target Phase |
+| :-- | :-- |
+| _(Đợi đồng bộ từ roadmap)_ | |
 
 ---
 
-## 📊 Summary
+## §5 📊 Summary
 
 | Category     | Count |
 | :----------- | :---- |
@@ -266,7 +254,6 @@ _Last updated: YYYY-MM-DD_
 | ⏳ Pending | Not started |
 | 🚀 ToDo | Planned for current phase |
 | 🔨 In Progress | Currently being worked on |
-| 📊 Evaluated | ICE scored, awaiting start |
 | ✅ Done (YYYY-MM-DD) | Completed with date |
 | ✅ Fixed (YYYY-MM-DD) | Bug fixed with date |
 

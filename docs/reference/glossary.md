@@ -1,6 +1,6 @@
 # Glossary & Impact Map
 
-> **Version:** 1.7.6 | **Last updated:** 2026-04-07
+> **Version:** 1.7.11 | **Last updated:** 2026-04-09
 > **Purpose:** Glossary of terms, variables, and fields used in PARA Workspace.
 > Each entry = 5 uniform fields (graph-ready design).
 
@@ -159,6 +159,16 @@
 - **Impact if changed:** Indirectly via `active_plan`. Low standalone impact.
 - **Related:** `roadmap`, `strategy`, `active_plan`
 
+## roadmap_sync
+
+- **Definition:** `§4 Roadmap Sync` section in `backlog.md`. A view-only mirror of future work blocks (phases/epics) synced directly from `plans/roadmap.md` to prevent data duplication and context drift. Replaces the legacy `Icebox` section.
+- **Where defined:** `templates/common/tasks/backlog.md` (hybrid-3-file C3 constraint).
+- **Where used:**
+  - `/backlog` — enforces view-only constraint
+  - Rule `hybrid-3-file-integrity.md` (C3) — Operational Authority rules for `.md` task files
+- **Impact if changed:** 1 workflow + 1 rule. Low.
+- **Related:** `roadmap`
+
 ---
 
 ## Impact Summary
@@ -177,3 +187,4 @@
 | `strategy` | 4 | convention | 🟡 Medium |
 | `roadmap` | 3 | convention | 🟡 Medium |
 | `detail_plan` | 4 (via AP) | convention | 🟢 Low |
+| `roadmap_sync` | 1+1 rule | 1 rule | 🟢 Low |

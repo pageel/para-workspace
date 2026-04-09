@@ -357,6 +357,13 @@ Map each High/Medium priority backlog item to the phase where it will be impleme
 
 > **Why:** Rule changes in repo templates must be synced to workspace. Missing this step causes agent behavior drift.
 
+#### 8.6. Determine Target Version
+
+1. Read `VERSION` file (if exists in repo) or `project.md` to get current project version.
+2. Determine if the plan warrants a PATCH, MINOR, or MAJOR bump based on scope.
+   - If purely R&D, speculative, or undefined scope: use wildcard (e.g., `1.x.x`).
+   - Otherwise, calculate exact target version to include in the plan's filename logic (Step 9).
+
 #### 9. Write Plan File
 
 // turbo
@@ -367,7 +374,10 @@ Save the plan to:
 Projects/[project-name]/artifacts/plans/[plan-name].md
 ```
 
-**Naming convention:** Use descriptive names (e.g., `implementation-plan.md`, `migration-plan.md`, `v2-redesign-plan.md`). For roadmaps, use `[scope]-roadmap.md`.
+**Naming convention:**
+- **Detail Plan (Versioned):** `v[ver]-[YYYY-MM-DD]-[topic].md` (e.g., `v1.7.11-2026-04-09-optimization.md`)
+- **Detail Plan (Wildcard/R&D):** `v[X.X.X]-[YYYY-MM-DD]-[topic].md` (e.g., `v1.x.x-2026-04-09-version-bumper.md`)
+- **Roadmap:** `[topic]-roadmap.md` (e.g., `core-roadmap.md`)
 
 **Plan document structure:**
 
@@ -376,6 +386,19 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 > - **Roadmap** → read `.agents/skills/plan/references/roadmap.md`
 >
 > Use the template as the document structure. Fill in each section with data gathered from Steps 1-8.
+
+#### 9.5. Pre-Checklist Context Reload (Staged Drill-down)
+
+// turbo
+
+> 🛡️ **Layer 4 defense (Anti-Token-Decay):** Before writing the final Checklist, force reload context to avoid losing mandatory governance tasks (like Version Bump or Sync) due to context truncation.
+
+**Execute these sub-steps sequentially:**
+1. **A. Reload Indices (Soft Dump):** Run the `cat` commands from Step 0 to dump workspace + project Index tables into memory.
+2. **B. Drill-down Project Rules:** If Step A triggers any project-specific rules, read them.
+3. **C. Drill-down Project Skills:** If Step A triggers any project-specific skills, read them.
+4. **D. Run Plan Review Protocols:** Explicitly analyze checklist dependencies from governance files (e.g. `maintenance.md`).
+5. **E. Re-read Plan References:** Re-read the brainstorm files loaded in Step 2.5 to ensure the plan structure doesn't contradict past brainstorm decisions.
 
 #### 10. Ask to Activate Plan
 
