@@ -10,23 +10,28 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 # Compare semver: returns 0 if $1 >= $2
+# Supports 3-segment (X.Y.Z) and 4-segment hotfix (X.Y.Z.H) versions
 semver_gte() {
   local v1="$1" v2="$2"
   # Strip anything after the semver core (e.g., -build.6)
   v1="${v1%%-*}"
   v2="${v2%%-*}"
 
-  IFS='.' read -r v1_major v1_minor v1_patch <<< "$v1"
-  IFS='.' read -r v2_major v2_minor v2_patch <<< "$v2"
+  local v1_major v1_minor v1_patch v1_hotfix
+  local v2_major v2_minor v2_patch v2_hotfix
+  IFS='.' read -r v1_major v1_minor v1_patch v1_hotfix <<< "$v1"
+  IFS='.' read -r v2_major v2_minor v2_patch v2_hotfix <<< "$v2"
 
-  v1_major=${v1_major:-0}; v1_minor=${v1_minor:-0}; v1_patch=${v1_patch:-0}
-  v2_major=${v2_major:-0}; v2_minor=${v2_minor:-0}; v2_patch=${v2_patch:-0}
+  v1_major=${v1_major:-0}; v1_minor=${v1_minor:-0}; v1_patch=${v1_patch:-0}; v1_hotfix=${v1_hotfix:-0}
+  v2_major=${v2_major:-0}; v2_minor=${v2_minor:-0}; v2_patch=${v2_patch:-0}; v2_hotfix=${v2_hotfix:-0}
 
   if (( v1_major > v2_major )); then return 0; fi
   if (( v1_major < v2_major )); then return 1; fi
   if (( v1_minor > v2_minor )); then return 0; fi
   if (( v1_minor < v2_minor )); then return 1; fi
-  if (( v1_patch >= v2_patch )); then return 0; fi
+  if (( v1_patch > v2_patch )); then return 0; fi
+  if (( v1_patch < v2_patch )); then return 1; fi
+  if (( v1_hotfix >= v2_hotfix )); then return 0; fi
   return 1
 }
 
