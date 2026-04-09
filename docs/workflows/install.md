@@ -19,10 +19,10 @@ Resolve source & destination → Check conflict → Resolve → Execute
 
 ### 1. Resolve Source & Destination
 
-| Type     | Source (Catalog)                             | Destination                  |
-| :------- | :------------------------------------------- | :--------------------------- |
+| Type | Source (Catalog) | Destination |
+| :-- | :-- | :-- |
 | Workflow | `templates/common/agents/workflows/[name].md` | `.agents/workflows/[name].md` |
-| Rule     | `templates/common/agents/rules/[name].md`     | `.agents/rules/[name].md`     |
+| Rule | `templates/common/agents/rules/[name].md` | `.agents/rules/[name].md` |
 
 ### 2. Check Conflict
 
@@ -31,12 +31,12 @@ Resolve source & destination → Check conflict → Resolve → Execute
 
 ### 3. Conflict Resolution (Interactive)
 
-| Option          | Description                                        |
-| :-------------- | :------------------------------------------------- |
-| **[O]verwrite** | Replace local with catalog version                 |
-| **[M]erge**     | Intelligently combine both (delegates to `/merge`) |
-| **[R]ename**    | Install as `[name]-catalog.md`                     |
-| **[C]ancel**    | Do nothing                                         |
+| Option | Description |
+| :-- | :-- |
+| **[O]verwrite** | Replace local with catalog version |
+| **[M]erge** | Intelligently combine both (delegates to `/merge`) |
+| **[R]ename** | Install as `[name]-catalog.md` |
+| **[C]ancel** | Do nothing |
 
 ## Related
 

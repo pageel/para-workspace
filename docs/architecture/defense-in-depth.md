@@ -36,12 +36,12 @@ The agent is instructed to re-read `.agents/rules.md` when it detects context de
 
 **File-Level Guards** table maps file patterns to rules that MUST be re-read before editing:
 
-| File pattern              | MUST re-read before editing     |
-| :------------------------ | :------------------------------ |
+| File pattern | MUST re-read before editing |
+| :-- | :-- |
 | `artifacts/tasks/done.md` | `hybrid-3-file-integrity.md` C2 |
-| `artifacts/tasks/*.md`    | `hybrid-3-file-integrity.md`    |
-| `.agents/rules/*.md`       | `governance.md`                 |
-| `kernel/`, `.para/`       | `governance.md`                 |
+| `artifacts/tasks/*.md` | `hybrid-3-file-integrity.md` |
+| `.agents/rules/*.md` | `governance.md` |
+| `kernel/`, `.para/` | `governance.md` |
 
 **Extensible:** Project rules MAY define additional guards in `Projects/<name>/.agents/rules.md`.
 
@@ -95,13 +95,13 @@ Step 0 is a **mandatory first step** in workflows that perform side-effects:
 
 | Workflow | Side-effect risk |
 |:--|:--|
-| `/push`      | Git commit, push      |
-| `/release`   | Version bump, tag     |
-| `/end`       | Task file mutations   |
-| `/plan`      | Plan file creation    |
-| `/docs`      | File generation       |
-| `/backlog`   | Task mutations        |
-| `/retro`     | Archive operations    |
+| `/push` | Git commit, push |
+| `/release` | Version bump, tag |
+| `/end` | Task file mutations |
+| `/plan` | Plan file creation |
+| `/docs` | File generation |
+| `/backlog` | Task mutations |
+| `/retro` | Archive operations |
 | `/para-knowledge` | KI write/update (v1.7.0+) |
 
 **Why it works:** The agent reads the workflow file from disk → sees Step 0 → executes it → rules are loaded fresh. No dependency on agent memory.

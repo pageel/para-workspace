@@ -14,7 +14,7 @@ This skill defines the **DNA** of this project — conventions that influence wo
 ## §1. Project Identity
 
 | Field | Value |
-|:------|:------|
+| :-- | :-- |
 | Type | `[type]` |
 | Primary Language | [languages] |
 | Doc Tone | `[formal-technical | conversational | tutorial-friendly]` |

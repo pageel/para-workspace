@@ -26,11 +26,11 @@ Reads `project.md` and evaluates: Were goals met? Was DoD satisfied? Was deadlin
 
 Structured reflection across three dimensions:
 
-| Category           | Prompt                                |
-| :----------------- | :------------------------------------ |
+| Category | Prompt |
+| :-- | :-- |
 | **What went well** | Effective practices, tools, decisions |
-| **Challenges**     | Obstacles and how they were addressed |
-| **Improvements**   | What to do differently next time      |
+| **Challenges** | Obstacles and how they were addressed |
+| **Improvements** | What to do differently next time |
 
 ### 3. Export Reusable Assets
 

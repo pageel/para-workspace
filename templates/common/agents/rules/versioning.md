@@ -23,10 +23,10 @@ glob: VERSION, CHANGELOG.md
 
 ### 2. Agent Autonomy Levels
 
-| Level     | Agent Permission                     |
-| --------- | ------------------------------------ |
-| **PATCH** | Agent MAY increment autonomously     |
-| **MINOR** | Agent MUST ask user for approval     |
+| Level | Agent Permission |
+| -- | -- |
+| **PATCH** | Agent MAY increment autonomously |
+| **MINOR** | Agent MUST ask user for approval |
 | **MAJOR** | Agent MUST present a full plan first |
 
 ### 3. Approval Gate (CRITICAL)

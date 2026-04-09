@@ -38,12 +38,12 @@ PARA Workspace v1.6.0 introduces **Ecosystem Projects** — meta-projects that c
 
 New optional fields in `project.md` frontmatter (v1.6.0+):
 
-| Field         | Type                          | Default      | Description                      |
-| :------------ | :---------------------------- | :----------- | :------------------------------- |
-| `type`        | `"standard"` \| `"ecosystem"` | `"standard"` | Project type                     |
-| `ecosystem`   | `string` \| `null`            | `null`       | Parent ecosystem (for satellite) |
-| `satellites`  | `string[]` \| `null`          | `null`       | Child project IDs                |
-| `active_plan` | `string`                      | `""`         | Supports `@{eco}/path` syntax    |
+| Field | Type | Default | Description |
+| :-- | :-- | :-- | :-- |
+| `type` | `"standard"` \ | `"ecosystem"` | `"standard"` | Project type |
+| `ecosystem` | `string` \ | `null` | `null` | Parent ecosystem (for satellite) |
+| `satellites` | `string[]` \ | `null` | `null` | Child project IDs |
+| `active_plan` | `string` | `""` | Supports `@{eco}/path` syntax |
 
 All fields are optional — existing projects remain valid without changes.
 
@@ -90,23 +90,23 @@ Resolution: `@{name}/path` → `Projects/{name}/artifacts/path`
                  └─────────────┘  └───────────┘
 ```
 
-| Workflow       | Version | Ecosystem Behavior                          |
-| :------------- | :------ | :------------------------------------------ |
-| `/open`        | 1.3.0   | Skip git, list satellites, resolve @prefix  |
-| `/end`         | 1.4.0   | Skip git suggestions, resolve @prefix       |
-| `/plan`        | 1.3.0   | Cross-project plan activation via @prefix   |
-| `/new-project` | 1.1.0   | `--meta` flag for direct ecosystem creation |
-| `/para-audit`  | 1.2.0   | Bidirectional consistency validation        |
+| Workflow | Version | Ecosystem Behavior |
+| :-- | :-- | :-- |
+| `/open` | 1.3.0 | Skip git, list satellites, resolve @prefix |
+| `/end` | 1.4.0 | Skip git suggestions, resolve @prefix |
+| `/plan` | 1.3.0 | Cross-project plan activation via @prefix |
+| `/new-project` | 1.1.0 | `--meta` flag for direct ecosystem creation |
+| `/para-audit` | 1.2.0 | Bidirectional consistency validation |
 
 ## Consistency Checks
 
 `/para-audit` validates ecosystem health:
 
-| Check                    | Description                                      | Severity |
-| :----------------------- | :----------------------------------------------- | :------- |
-| Bidirectional references | Ecosystem ↔ satellite must reference each other  | ⚠️ Warn  |
-| @prefix file exists      | Referenced plan file must exist at resolved path | 🔴 Error |
-| Ecosystem has no `repo/` | Meta-projects should not contain source code     | ⚠️ Warn  |
+| Check | Description | Severity |
+| :-- | :-- | :-- |
+| Bidirectional references | Ecosystem ↔ satellite must reference each other | ⚠️ Warn |
+| @prefix file exists | Referenced plan file must exist at resolved path | 🔴 Error |
+| Ecosystem has no `repo/` | Meta-projects should not contain source code | ⚠️ Warn |
 
 ## Governance
 

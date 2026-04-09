@@ -14,11 +14,11 @@ Create a new workspace from the repo.
 para init [--profile=general] [--lang=vi] [--path=./]
 ```
 
-| Flag        | Default   | Description              |
-| ----------- | --------- | ------------------------ |
+| Flag | Default | Description |
+| -- | -- | -- |
 | `--profile` | `general` | Workspace profile preset |
-| `--lang`    | `en`      | Agent response language  |
-| `--path`    | `./`      | Target directory         |
+| `--lang` | `en` | Agent response language |
+| `--path` | `./` | Target directory |
 
 ### `para status`
 
@@ -81,9 +81,9 @@ para config list
 
 All commands follow these rules:
 
-| Property       | Requirement                                |
-| -------------- | ------------------------------------------ |
-| **Exit codes** | 0 = success, non-zero = failure            |
-| **Output**     | Human-readable default; `--json` for agent |
-| **Idempotent** | Safe to run multiple times                 |
-| **Scriptable** | Works in automation without manual input   |
+| Property | Requirement |
+| -- | -- |
+| **Exit codes** | 0 = success, non-zero = failure |
+| **Output** | Human-readable default; `--json` for agent |
+| **Idempotent** | Safe to run multiple times |
+| **Scriptable** | Works in automation without manual input |

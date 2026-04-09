@@ -11,7 +11,7 @@
 Para-Kit is triggered via `.agents/skills.md` when the agent needs to:
 
 | Trigger | Example operations |
-|:--------|:-------------------|
+| :-- | :-- |
 | Create/modify project structure | `para scaffold project`, `/new-project` |
 | Read project.md schema | `/open`, `/plan`, `/para-audit` |
 | Check invariants/heuristics | `/verify`, `/release`, `/para-audit` |
@@ -20,7 +20,7 @@ Para-Kit is triggered via `.agents/skills.md` when the agent needs to:
 ### Loading cost
 
 | Component | Tokens (est.) | Loaded when |
-|:----------|:-------------:|:------------|
+| :-- | :--: | :-- |
 | SKILL.md | ~800 | On-demand (trigger match) |
 | templates/project-md.md | ~200 | Only when creating new projects |
 | examples/project-schema-vectors.md | ~300 | Only when validating schema |
@@ -44,7 +44,7 @@ Compare: Reading full kernel (`KERNEL.md` + `invariants.md` + `heuristics.md`) c
 ### Source and Sync
 
 | Location | Role | Updated by |
-|:---------|:-----|:-----------|
+| :-- | :-- | :-- |
 | `repo/templates/common/agents/skills/para-kit/` | Source of Truth | Developer (git push) |
 | `Resources/ai-agents/skills/para-kit/` | Read-only snapshot (I9) | `para install` / `para update` |
 | `.agents/skills/para-kit/` | Active copy (agent reads) | `para install` / `para update` |
@@ -91,14 +91,14 @@ Table linking to supplementary resources (`templates/`, `examples/`).
 ## Version History
 
 | Version | Date | Changes |
-|:--------|:-----|:--------|
+| :-- | :-- | :-- |
 | v1.0.0 | 2026-02-27 | Initial version, narrative SKILL.md + examples (FEAT-26) |
 | v1.1.0 | 2026-03-30 | Rewrite: lean structure reference + QRC + colocated templates + examples (FEAT-55, v1.6.4) |
 
 ### Key Differences: v1.0 → v1.1
 
 | Aspect | v1.0 | v1.1 |
-|:-------|:-----|:-----|
+| :-- | :-- | :-- |
 | **Approach** | Detailed narrative guide | Lean structure reference card |
 | **Token cost** | ~1200 tokens | ~800 tokens |
 | **Schema** | v1.4.1 (10 fields) | v1.6.3 (18 fields, ecosystem support) |
@@ -123,7 +123,7 @@ graph LR
 ### Para-Kit vs Rules
 
 | Aspect | Para-Kit (Skill) | Rules |
-|:-------|:-----------------|:------|
+| :-- | :-- | :-- |
 | **Load timing** | On-demand (when structure info needed) | On-demand (when trigger matches) |
 | **Content** | Structure reference, schema | Behavioral constraints |
 | **Load frequency** | Low (mainly scaffold, audit) | High (every side-effect action) |

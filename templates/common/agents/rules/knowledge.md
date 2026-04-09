@@ -77,15 +77,15 @@ glob: .para/knowledge/*
 
 ## Access Control Matrix
 
-| Operation       | User KI        | System KI (para_*)      | Gate                  |
-|:----------------|:---------------|:------------------------|:----------------------|
-| READ            | ✅ Free        | ✅ Free                 | Any workflow          |
-| CREATE          | +ask, no para_ | +ask, version aligned   | /para-knowledge [system]   |
-| UPDATE content  | +ask           | +ask, version check     | /para-knowledge [system]   |
-| UPDATE refs     | +ask           | ✅ Merge-safe           | /para-knowledge [system]   |
-| UPGRADE version | N/A            | Template sync only      | /para-knowledge system update |
-| ARCHIVE         | +ask           | Deprecated by template  | /para-knowledge            |
-| DELETE          | 🚫 Blocked    | 🚫 Blocked             | —                     |
+| Operation | User KI | System KI (para_*) | Gate |
+| :-- | :-- | :-- | :-- |
+| READ | ✅ Free | ✅ Free | Any workflow |
+| CREATE | +ask, no para_ | +ask, version aligned | /para-knowledge [system] |
+| UPDATE content | +ask | +ask, version check | /para-knowledge [system] |
+| UPDATE refs | +ask | ✅ Merge-safe | /para-knowledge [system] |
+| UPGRADE version | N/A | Template sync only | /para-knowledge system update |
+| ARCHIVE | +ask | Deprecated by template | /para-knowledge |
+| DELETE | 🚫 Blocked | 🚫 Blocked | — |
 
 ## Related
 

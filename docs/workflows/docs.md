@@ -10,11 +10,11 @@ The `/docs` workflow creates, reviews, and publishes technical documentation for
 /docs [project-name] [action]
 ```
 
-| Action    | Description                                        |
-| --------- | -------------------------------------------------- |
-| `new`     | Analyze project and create appropriate docs        |
-| `review`  | Audit existing docs for freshness and accuracy     |
-| `update`  | Update specific doc to reflect current code        |
+| Action | Description |
+| -- | -- |
+| `new` | Analyze project and create appropriate docs |
+| `review` | Audit existing docs for freshness and accuracy |
+| `update` | Update specific doc to reflect current code |
 | `publish` | Promote selected docs from `docs/` to `repo/docs/` |
 
 ## Doc Locations
@@ -27,12 +27,12 @@ Projects/[project-name]/
 └── repo/docs/          ← PUBLISH ONLY: Promoted from docs/
 ```
 
-| Criteria     | `docs/` (default)             | `repo/docs/` (after publish) |
-| ------------ | ----------------------------- | ---------------------------- |
-| **Created**  | Always — `/docs new`          | Only via `/docs publish`     |
-| **Audience** | Internal team, AI agent       | Developer, contributor       |
-| **Git**      | ❌ Not tracked                | ✅ Tracked in repo           |
-| **Language** | User's `preferences.language` | Repo's language              |
+| Criteria | `docs/` (default) | `repo/docs/` (after publish) |
+| -- | -- | -- |
+| **Created** | Always — `/docs new` | Only via `/docs publish` |
+| **Audience** | Internal team, AI agent | Developer, contributor |
+| **Git** | ❌ Not tracked | ✅ Tracked in repo |
+| **Language** | User's `preferences.language` | Repo's language |
 
 ## Doc Index
 

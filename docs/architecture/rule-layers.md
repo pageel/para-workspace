@@ -43,19 +43,19 @@ Three key properties:
 
 Synced from `catalog.yml` by `./para install` or `./para update`.
 
-| Rule                         | Purpose                                           | Loaded when                |
-| :--------------------------- | :------------------------------------------------ | :------------------------- |
-| `agent-behavior.md`          | Communication, language, noise reduction          | Always (lightweight)       |
-| `governance.md`              | Kernel boundaries — restrict system modifications | Touching kernel/ or .para/ |
-| `context-rules.md`           | Context loading order + trigger index protocol    | Every session              |
-| `hybrid-3-file-integrity.md` | Hot Lane + compress-not-delete + /end sync        | Operating on tasks/        |
-| `knowledge.md`               | KI governance — write gate, namespace, safety    | Creating/updating KIs      |
-| `para-discipline.md`         | PARA classification enforcement                   | Creating/moving files      |
-| `artifact-standard.md`       | Document format standards                         | Creating artifacts         |
-| `naming.md`                  | File/branch/commit naming                         | Creating new files         |
-| `vcs.md`                     | Git best practices                                | Committing/pushing         |
-| `versioning.md`              | SemVer policy                                     | Version bumps              |
-| `exports-data.md`            | Data export safety                                | Exporting/sharing          |
+| Rule | Purpose | Loaded when |
+| :-- | :-- | :-- |
+| `agent-behavior.md` | Communication, language, noise reduction | Always (lightweight) |
+| `governance.md` | Kernel boundaries — restrict system modifications | Touching kernel/ or .para/ |
+| `context-rules.md` | Context loading order + trigger index protocol | Every session |
+| `hybrid-3-file-integrity.md` | Hot Lane + compress-not-delete + /end sync | Operating on tasks/ |
+| `knowledge.md` | KI governance — write gate, namespace, safety | Creating/updating KIs |
+| `para-discipline.md` | PARA classification enforcement | Creating/moving files |
+| `artifact-standard.md` | Document format standards | Creating artifacts |
+| `naming.md` | File/branch/commit naming | Creating new files |
+| `vcs.md` | Git best practices | Committing/pushing |
+| `versioning.md` | SemVer policy | Version bumps |
+| `exports-data.md` | Data export safety | Exporting/sharing |
 
 ### Layer 3: Project Rules
 
@@ -129,18 +129,18 @@ agent:
 
 ## Workflow Coverage
 
-| Workflow      | Rules Index           | Skills Index           | Pre-flight             | Detail                                                        |
-| :------------ | :-------------------- | :--------------------- | :--------------------- | :------------------------------------------------------------ |
-| `/open`       | ✅ Step 2.5a (ALWAYS) | ✅ Step 2.5b (ALWAYS)  | — (IS the loader)      | Workspace: always. Project: if `agent.*: true`                |
-| `/plan`       | ✅ Step 2.7 D1-D2     | ✅ Step 2.7 D3          | ✅ Step 0 (v1.6.2)     | D1: workspace. D2: project rules. D3: project skills          |
-| `/docs`       | ✅ Step 0             | ✅ Step 0              | ✅ Step 0 (v1.6.2)     | Re-reads rules + skills before doc generation                  |
-| `/push`       | ✅ Step 0             | ✅ Step 0              | ✅ Step 0 (v1.6.2)     | Re-reads before git operations                                 |
-| `/release`    | ✅ Step 0             | ✅ Step 0              | ✅ Step 0 (v1.6.2)     | Re-reads before release                                        |
-| `/end`        | ✅ Step 0             | ✅ Step 0              | ✅ Step 0 (v1.6.2)     | Re-reads before session sync                                   |
-| `/backlog`    | ✅ Step 0             | ✅ Step 0              | ✅ Step 0 (v1.6.2)     | Re-reads before backlog mutation                               |
-| `/retro`      | ✅ Step 0             | ✅ Step 0              | ✅ Step 0 (v1.6.2)     | Re-reads before archive                                        |
-| `/para-audit` | —                     | —                      | —                      | Agent index consistency check (rules + skills vs disk)         |
-| `/para-rule`  | —                     | —                      | —                      | CRUD rule management                                           |
+| Workflow | Rules Index | Skills Index | Pre-flight | Detail |
+| :-- | :-- | :-- | :-- | :-- |
+| `/open` | ✅ Step 2.5a (ALWAYS) | ✅ Step 2.5b (ALWAYS) | — (IS the loader) | Workspace: always. Project: if `agent.*: true` |
+| `/plan` | ✅ Step 2.7 D1-D2 | ✅ Step 2.7 D3 | ✅ Step 0 (v1.6.2) | D1: workspace. D2: project rules. D3: project skills |
+| `/docs` | ✅ Step 0 | ✅ Step 0 | ✅ Step 0 (v1.6.2) | Re-reads rules + skills before doc generation |
+| `/push` | ✅ Step 0 | ✅ Step 0 | ✅ Step 0 (v1.6.2) | Re-reads before git operations |
+| `/release` | ✅ Step 0 | ✅ Step 0 | ✅ Step 0 (v1.6.2) | Re-reads before release |
+| `/end` | ✅ Step 0 | ✅ Step 0 | ✅ Step 0 (v1.6.2) | Re-reads before session sync |
+| `/backlog` | ✅ Step 0 | ✅ Step 0 | ✅ Step 0 (v1.6.2) | Re-reads before backlog mutation |
+| `/retro` | ✅ Step 0 | ✅ Step 0 | ✅ Step 0 (v1.6.2) | Re-reads before archive |
+| `/para-audit` | — | — | — | Agent index consistency check (rules + skills vs disk) |
+| `/para-rule` | — | — | — | CRUD rule management |
 
 ## References
 

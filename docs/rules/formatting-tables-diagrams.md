@@ -18,7 +18,7 @@ The `formatting-tables-diagrams` rule defines how AI agents format tables, diagr
 Triggered via `.agents/rules.md` when the agent:
 
 | Trigger | Operation |
-|:--------|:----------|
+| :-- | :-- |
 | Creates/edits markdown tables | Plans, backlogs, docs, brainstorms |
 | Draws architecture diagrams | Architecture docs, decision records |
 | Displays directory structure | Tree listings in README, docs |
@@ -31,7 +31,7 @@ Triggered via `.agents/rules.md` when the agent:
 ### §1. Markdown Tables
 
 | Rule | Explanation |
-|:-----|:-----------|
+| :-- | :-- |
 | Pad columns | All cells in the same column must have **equal width** |
 | Cell width ≤ 60 chars | Longer cells → shorten or split into rows |
 | 3-4 columns ideal | Max 5-6 columns; more → restructure |

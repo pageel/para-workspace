@@ -35,7 +35,7 @@ When running `/push` or `/release`: check `.gitignore`, scan for sensitive files
 ### 6. Branch & Merge Safety (v1.5.4)
 
 | Sub-rule | Constraint |
-|:---------|:-----------|
+| :-- | :-- |
 | **6a. Branch Creation** | MUST propose and get user approval before creating |
 | **6b. Merge Prohibition** | MUST NOT `git merge` into `main` locally — use PR |
 | **6c. Pull Request** | MUST NOT create PR without user approval |

@@ -19,10 +19,10 @@ Fast commit and push changes to GitHub with verification.
 
 ## Options
 
-| Option    | Description                                                |
-| :-------- | :--------------------------------------------------------- |
-| `--quick` | Skip `npm run build` (Only use for small text changes)     |
-| `--test`  | (Default) Run `npm run build` before commit to verify code |
+| Option | Description |
+| :-- | :-- |
+| `--quick` | Skip `npm run build` (Only use for small text changes) |
+| `--test` | (Default) Run `npm run build` before commit to verify code |
 
 ## Steps
 
@@ -129,12 +129,12 @@ cd Projects/[project-name]/repo && git push
 
 ## Troubleshooting
 
-| Error                   | Solution                                         |
-| ----------------------- | ------------------------------------------------ |
-| `non-fast-forward`      | `git pull --rebase` then push again              |
-| `Permission denied`     | Check SSH key                                    |
-| `Email privacy blocked` | Use `user@users.noreply.github.com`              |
-| `Build failed`          | Report error to user to decide fix or force push |
+| Error | Solution |
+| -- | -- |
+| `non-fast-forward` | `git pull --rebase` then push again |
+| `Permission denied` | Check SSH key |
+| `Email privacy blocked` | Use `user@users.noreply.github.com` |
+| `Build failed` | Report error to user to decide fix or force push |
 
 ## Related
 

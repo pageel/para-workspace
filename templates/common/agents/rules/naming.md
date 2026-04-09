@@ -24,11 +24,11 @@ glob:
 
 ### 2. Source Code
 
-| Object                | Convention         | Examples                          |
-| --------------------- | ------------------ | --------------------------------- |
-| Components & classes  | `PascalCase`       | `UserCard`, `AuthService`         |
-| Variables & functions | `camelCase`        | `isLoading`, `calculateTotal()`   |
-| Constants & env vars  | `UPPER_SNAKE_CASE` | `MAX_RETRY_COUNT`, `API_BASE_URL` |
+| Object | Convention | Examples |
+| -- | -- | -- |
+| Components & classes | `PascalCase` | `UserCard`, `AuthService` |
+| Variables & functions | `camelCase` | `isLoading`, `calculateTotal()` |
+| Constants & env vars | `UPPER_SNAKE_CASE` | `MAX_RETRY_COUNT`, `API_BASE_URL` |
 
 ### 3. Styling & Markup
 

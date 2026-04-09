@@ -46,7 +46,7 @@ When context appears incomplete (cannot recall rules, truncation notice, or very
 When editing these files directly (outside a workflow), agent MUST re-read the corresponding rule first:
 
 | File pattern | MUST re-read |
-|:-------------|:-------------|
+| :-- | :-- |
 | `artifacts/tasks/done.md` | `hybrid-3-file-integrity.md` C2 |
 | `artifacts/tasks/*.md` | `hybrid-3-file-integrity.md` |
 | `.agents/rules/*.md` | `governance.md` |

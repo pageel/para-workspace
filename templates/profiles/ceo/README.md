@@ -42,15 +42,15 @@ workspace/
 
 ## 📑 Recommended Workflows
 
-| Workflow           | When to Use                                        |
-| :----------------- | :------------------------------------------------- |
-| **`/open`**        | Start a strategy session, load initiative context  |
-| **`/backlog`**     | Add/review strategic tasks and decisions           |
-| **`/new-project`** | Launch a new strategic initiative                  |
-| **`/verify`**      | Verify initiative milestones are complete          |
-| **`/end`**         | Close session and capture decisions for the record |
-| **`/retro`**       | Retrospective before completing an initiative      |
-| **`/para`**        | Workspace health check and quarterly review        |
+| Workflow | When to Use |
+| :-- | :-- |
+| **`/open`** | Start a strategy session, load initiative context |
+| **`/backlog`** | Add/review strategic tasks and decisions |
+| **`/new-project`** | Launch a new strategic initiative |
+| **`/verify`** | Verify initiative milestones are complete |
+| **`/end`** | Close session and capture decisions for the record |
+| **`/retro`** | Retrospective before completing an initiative |
+| **`/para`** | Workspace health check and quarterly review |
 
 ---
 

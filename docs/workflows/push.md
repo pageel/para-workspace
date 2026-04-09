@@ -14,10 +14,10 @@ The `/push` workflow commits and pushes code to GitHub with built-in safety chec
 /push [project-name] "feat: new thing"  # With explicit commit message
 ```
 
-| Option    | Description                                    |
-| :-------- | :--------------------------------------------- |
+| Option | Description |
+| :-- | :-- |
 | `--quick` | Skip `npm run build` (small text changes only) |
-| `--test`  | (Default) Run `npm run build` before commit    |
+| `--test` | (Default) Run `npm run build` before commit |
 
 ## Push Flow
 
@@ -51,11 +51,11 @@ Executes `git add .`, `git commit`, and `git push`.
 
 ## Troubleshooting
 
-| Error               | Solution                                    |
-| :------------------ | :------------------------------------------ |
-| `non-fast-forward`  | `git pull --rebase` then push again         |
-| `Permission denied` | Check SSH key                               |
-| `Build failed`      | Report error, ask user to fix or force push |
+| Error | Solution |
+| :-- | :-- |
+| `non-fast-forward` | `git pull --rebase` then push again |
+| `Permission denied` | Check SSH key |
+| `Build failed` | Report error, ask user to fix or force push |
 
 ## Related
 

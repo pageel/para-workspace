@@ -22,7 +22,7 @@
 ---
 
 | Section | Description |
-| :--- | :--- |
+| :-- | :-- |
 | [🌌 Vue d'ensemble](#-vue-densemble) | Ce que c'est, les trois principes fondateurs |
 | [📂 Architecture](#-architecture) | Structure du dépôt + structure de l'espace de travail généré |
 | [📥 Installation](#-installation) | Prérequis, configuration, profils, dépannage |

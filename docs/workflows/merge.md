@@ -29,11 +29,11 @@ Reads both the local (`.agents/workflows/[target].md`) and catalog versions of t
 
 ### 3. Intelligent Merge Strategy
 
-| Action       | Description                                                   |
-| :----------- | :------------------------------------------------------------ |
+| Action | Description |
+| :-- | :-- |
 | **Preserve** | Keep all user variables, custom steps, project-specific logic |
-| **Inject**   | Add new catalog sections that don't conflict with user intent |
-| **Update**   | Upgrade deprecated syntax to new standards                    |
+| **Inject** | Add new catalog sections that don't conflict with user intent |
+| **Update** | Upgrade deprecated syntax to new standards |
 
 ### 4. Apply
 

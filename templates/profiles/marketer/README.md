@@ -43,15 +43,15 @@ workspace/
 
 ## 📑 Recommended Workflows
 
-| Workflow           | When to Use                                      |
-| :----------------- | :----------------------------------------------- |
-| **`/open`**        | Start a working session on a campaign            |
-| **`/backlog`**     | Add/review tasks: content calendar, deliverables |
-| **`/new-project`** | Scaffold a new campaign                          |
-| **`/verify`**      | Verify campaign deliverables are complete        |
-| **`/end`**         | Close session, classify insights and materials   |
-| **`/retro`**       | Campaign retrospective before archiving          |
-| **`/para`**        | Workspace health check                           |
+| Workflow | When to Use |
+| :-- | :-- |
+| **`/open`** | Start a working session on a campaign |
+| **`/backlog`** | Add/review tasks: content calendar, deliverables |
+| **`/new-project`** | Scaffold a new campaign |
+| **`/verify`** | Verify campaign deliverables are complete |
+| **`/end`** | Close session, classify insights and materials |
+| **`/retro`** | Campaign retrospective before archiving |
+| **`/para`** | Workspace health check |
 
 ---
 

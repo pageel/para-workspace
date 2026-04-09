@@ -22,11 +22,11 @@ Pre-flight → Dry-run → Confirm → Live update → Verify → Report
 
 The agent verifies 3 things before proceeding:
 
-| Check          | What                | Failure action                          |
-| -------------- | ------------------- | --------------------------------------- |
-| **Network**    | Can reach GitHub?   | Suggest `./para install` (offline sync) |
-| **Git status** | Dirty working tree? | Offer to stash or skip                  |
-| **Version**    | Already latest?     | Inform and ask to continue              |
+| Check | What | Failure action |
+| -- | -- | -- |
+| **Network** | Can reach GitHub? | Suggest `./para install` (offline sync) |
+| **Git status** | Dirty working tree? | Offer to stash or skip |
+| **Version** | Already latest? | Inform and ask to continue |
 
 ### 2. Dry-run Preview
 
@@ -40,12 +40,12 @@ Executes `./para update`. If it fails, the agent diagnoses the error automatical
 
 Built-in diagnosis for common failures:
 
-| Error              | Root cause                  | Agent action                        |
-| ------------------ | --------------------------- | ----------------------------------- |
-| Network lost       | Connection dropped mid-pull | Suggest offline sync                |
-| Git conflict       | Upstream diverged           | List conflicts, offer `--theirs`    |
-| Permission denied  | Missing `chmod +x`          | Fix permissions                     |
-| Rollback triggered | Install failed              | Confirm rollback, suggest `--force` |
+| Error | Root cause | Agent action |
+| -- | -- | -- |
+| Network lost | Connection dropped mid-pull | Suggest offline sync |
+| Git conflict | Upstream diverged | List conflicts, offer `--theirs` |
+| Permission denied | Missing `chmod +x` | Fix permissions |
+| Rollback triggered | Install failed | Confirm rollback, suggest `--force` |
 
 After recovery, the agent retries once. If still failing, it stops and reports.
 

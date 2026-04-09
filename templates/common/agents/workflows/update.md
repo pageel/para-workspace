@@ -57,13 +57,13 @@ git -C Resources/references/para-workspace ls-remote --heads origin main 2>&1 | 
 > **NEVER stop or suggest "no update needed" based on Step 1 alone.**
 > Only `./para update --dry-run` (Step 2) can determine if changes exist.
 
-| Condition                               | Action                                                                                                                                                                             |
-| :-------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Network ❌                              | **STOP.** Inform: "Cannot reach GitHub. To re-sync with the local repo version without downloading, try `./para install`." Ask user whether to run `para install` instead or stop. |
-| Git dirty (uncommitted changes in repo) | **WARN.** Display: "Repo has uncommitted changes. `git pull` may cause conflicts." Ask user: (a) Stash first then update, (b) Skip and continue, (c) Stop.                         |
-| Kernel > Repo VERSION                   | **INFO.** Workspace ahead of local repo — stale repo. **Proceed to Step 2** (dry-run will pull first).                                                                             |
-| Kernel == Repo VERSION                  | **INFO.** Versions match locally, but remote may have updates. **Proceed to Step 2** (dry-run will pull and compare).                                                              |
-| All OK                                  | Proceed to Step 2.                                                                                                                                                                 |
+| Condition | Action |
+| :-- | :-- |
+| Network ❌ | **STOP.** Inform: "Cannot reach GitHub. To re-sync with the local repo version without downloading, try `./para install`." Ask user whether to run `para install` instead or stop. |
+| Git dirty (uncommitted changes in repo) | **WARN.** Display: "Repo has uncommitted changes. `git pull` may cause conflicts." Ask user: (a) Stash first then update, (b) Skip and continue, (c) Stop. |
+| Kernel > Repo VERSION | **INFO.** Workspace ahead of local repo — stale repo. **Proceed to Step 2** (dry-run will pull first). |
+| Kernel == Repo VERSION | **INFO.** Versions match locally, but remote may have updates. **Proceed to Step 2** (dry-run will pull and compare). |
+| All OK | Proceed to Step 2. |
 
 ### 2. Dry-run preview
 
@@ -110,15 +110,15 @@ Run the live update:
 
 Analyze the error output and apply the diagnosis table:
 
-| Error detected                                          | Root cause                          | Agent action                                                                                                                                                                       |
-| :------------------------------------------------------ | :---------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `fatal: Could not resolve host` or `Connection refused` | Network lost mid-update             | Inform user. Suggest: `./para install` (offline sync).                                                                                                                             |
-| `CONFLICT` or `Merge conflict`                          | Git conflict during pull            | Run `cd Resources/references/para-workspace && git diff --name-only --diff-filter=U` to list conflicted files. Suggest: `git checkout --theirs <file>` for each (prefer upstream). |
-| `Permission denied`                                     | Missing file permissions            | Run `chmod +x ./para Resources/references/para-workspace/cli/para Resources/references/para-workspace/cli/commands/*.sh`.                                                          |
-| `rollback` or `Rolling back`                            | Install failed, already rolled back | Inform: "Auto-rollback completed. Workspace is safe." Read last line of `.para/audit.log` to confirm. Suggest: `./para install --force`.                                           |
-| `command not found: semver_gte`                         | Library not loaded                  | Check if `cli/lib/validator.sh` exists. If missing → run `./para install` first, then retry.                                                                                       |
-| `not a git repository`                                  | Wrong repo path                     | Check if `Resources/references/para-workspace/.git` exists. If not → guide user to re-clone.                                                                                       |
-| Other errors                                            | Unknown                             | Display raw output. Ask user: (a) Try `./para install --force`, (b) Stop for manual debug.                                                                                         |
+| Error detected | Root cause | Agent action |
+| :-- | :-- | :-- |
+| `fatal: Could not resolve host` or `Connection refused` | Network lost mid-update | Inform user. Suggest: `./para install` (offline sync). |
+| `CONFLICT` or `Merge conflict` | Git conflict during pull | Run `cd Resources/references/para-workspace && git diff --name-only --diff-filter=U` to list conflicted files. Suggest: `git checkout --theirs <file>` for each (prefer upstream). |
+| `Permission denied` | Missing file permissions | Run `chmod +x ./para Resources/references/para-workspace/cli/para Resources/references/para-workspace/cli/commands/*.sh`. |
+| `rollback` or `Rolling back` | Install failed, already rolled back | Inform: "Auto-rollback completed. Workspace is safe." Read last line of `.para/audit.log` to confirm. Suggest: `./para install --force`. |
+| `command not found: semver_gte` | Library not loaded | Check if `cli/lib/validator.sh` exists. If missing → run `./para install` first, then retry. |
+| `not a git repository` | Wrong repo path | Check if `Resources/references/para-workspace/.git` exists. If not → guide user to re-clone. |
+| Other errors | Unknown | Display raw output. Ask user: (a) Try `./para install --force`, (b) Stop for manual debug. |
 
 After recovery action → **retry step 3** (max 1 retry). If still fails → report and stop.
 
@@ -164,13 +164,13 @@ tail -1 .para/audit.log
 
 ## Troubleshooting Reference
 
-| Scenario                      | Alternative command                                    |
-| :---------------------------- | :----------------------------------------------------- |
-| Update failed, just need sync | `./para install`                                       |
-| Force sync (overwrite all)    | `./para install --force`                               |
-| Preview changes only          | `./para update --dry-run`                              |
-| Manual rollback               | Check `.para/backups/[date]/` and restore needed files |
-| Clean old backups             | `./para cleanup`                                       |
+| Scenario | Alternative command |
+| :-- | :-- |
+| Update failed, just need sync | `./para install` |
+| Force sync (overwrite all) | `./para install --force` |
+| Preview changes only | `./para update --dry-run` |
+| Manual rollback | Check `.para/backups/[date]/` and restore needed files |
+| Clean old backups | `./para cleanup` |
 
 ## Related
 

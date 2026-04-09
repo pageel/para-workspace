@@ -29,11 +29,11 @@ When the `/para-skill add` workflow is invoked, Agent MUST follow these principl
 
 ### Naming Convention
 
-| Element       | Rule                                           | Example              |
-|:------------- |:---------------------------------------------- |:-------------------- |
-| Directory     | `kebab-case`, matches skill purpose             | `page-map/`          |
-| Entry file    | Always `SKILL.md` (uppercase)                   | `SKILL.md`           |
-| Frontmatter   | MUST have `description` field                   | `description: ...`   |
+| Element | Rule | Example |
+| :-- | :-- | :-- |
+| Directory | `kebab-case`, matches skill purpose | `page-map/` |
+| Entry file | Always `SKILL.md` (uppercase) | `SKILL.md` |
+| Frontmatter | MUST have `description` field | `description: ...` |
 
 ### Structure Convention
 
@@ -53,11 +53,11 @@ When the `/para-skill add` workflow is invoked, Agent MUST follow these principl
 
 > Agent reads this table to locate data files needed by the `/para-skill` workflow.
 
-| Resource              | Relative Path                                      | Description                        |
-|:----------------------|:---------------------------------------------------|:-----------------------------------|
-| Quality Checklist     | `references/skill-quality-checklist.md`             | Validation checklist (D1-D4, C1-C2, W1-W3) |
-| Project Profile Tmpl  | `references/templates/project-profile.md`           | Template for project DNA skills    |
-| Tool Skill Tmpl       | `references/templates/tool-skill.md`                | Template for utility/automation skills |
+| Resource | Relative Path | Description |
+| :-- | :-- | :-- |
+| Quality Checklist | `references/skill-quality-checklist.md` | Validation checklist (D1-D4, C1-C2, W1-W3) |
+| Project Profile Tmpl | `references/templates/project-profile.md` | Template for project DNA skills |
+| Tool Skill Tmpl | `references/templates/tool-skill.md` | Template for utility/automation skills |
 
 **Path resolution:** All paths are relative to this skill's directory (`.agents/skills/para-skill/`).
 

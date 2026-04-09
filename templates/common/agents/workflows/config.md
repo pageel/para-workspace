@@ -11,10 +11,10 @@ Manage the workspace configuration stored in `.para-workspace.yml` and related s
 
 ## Actions
 
-| Action        | Description                                    |
-| :------------ | :--------------------------------------------- |
-| `show`        | Display current workspace configuration        |
-| `update`      | Update a specific configuration value          |
+| Action | Description |
+| :-- | :-- |
+| `show` | Display current workspace configuration |
+| `update` | Update a specific configuration value |
 | `add-project` | Register a new project in the workspace config |
 
 ## Steps

@@ -10,14 +10,14 @@ The `/backlog` workflow manages the full lifecycle of a project's product backlo
 /backlog [project-name] [action]
 ```
 
-| Action     | Description                                        |
-| :--------- | :------------------------------------------------- |
-| `review`   | Show overview with summary stats and phase context |
-| `add`      | Add new feature, epic, or bug                      |
-| `evaluate` | ICE scoring for priorities                         |
-| `update`   | Update status of existing items                    |
-| `sync`     | Sync backlog with plan (map items to phases)       |
-| `clean`    | Compress `✅ Done` items into Completed section    |
+| Action | Description |
+| :-- | :-- |
+| `review` | Show overview with summary stats and phase context |
+| `add` | Add new feature, epic, or bug |
+| `evaluate` | ICE scoring for priorities |
+| `update` | Update status of existing items |
+| `sync` | Sync backlog with plan (map items to phases) |
+| `clean` | Compress `✅ Done` items into Completed section |
 
 ## Actions
 
@@ -48,20 +48,20 @@ Cross-references backlog with plan phases. Reports mapped vs. missing items per 
 
 ## ID Conventions
 
-| Type       | Prefix            | Example          |
-| :--------- | :---------------- | :--------------- |
+| Type | Prefix | Example |
+| :-- | :-- | :-- |
 | Epic-based | Epic abbreviation | `CI-01`, `AU-01` |
-| Feature    | `FEAT-`           | `FEAT-01`        |
-| Bug        | `BUG-`            | `BUG-01`         |
+| Feature | `FEAT-` | `FEAT-01` |
+| Bug | `BUG-` | `BUG-01` |
 
 ## Status Values
 
-| Status               | Meaning                   |
-| :------------------- | :------------------------ |
-| ⏳ Pending           | Not started               |
-| 🚀 ToDo              | Planned for current phase |
-| 🔨 In Progress       | Currently being worked on |
-| ✅ Done (YYYY-MM-DD) | Completed with date       |
+| Status | Meaning |
+| :-- | :-- |
+| ⏳ Pending | Not started |
+| 🚀 ToDo | Planned for current phase |
+| 🔨 In Progress | Currently being worked on |
+| ✅ Done (YYYY-MM-DD) | Completed with date |
 
 ## Related
 

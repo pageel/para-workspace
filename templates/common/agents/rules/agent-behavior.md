@@ -69,12 +69,12 @@ Side-effects requiring rules/skills re-read:
 
 When editing these files **directly** (outside of a workflow), agent **MUST** re-read the corresponding rule first:
 
-| File pattern              | MUST re-read before editing     |
-| :------------------------ | :------------------------------ |
+| File pattern | MUST re-read before editing |
+| :-- | :-- |
 | `artifacts/tasks/done.md` | `hybrid-3-file-integrity.md` C2 |
-| `artifacts/tasks/*.md`    | `hybrid-3-file-integrity.md`    |
-| `.agents/rules/*.md`       | `governance.md`                 |
-| `kernel/`, `.para/`       | `governance.md`                 |
+| `artifacts/tasks/*.md` | `hybrid-3-file-integrity.md` |
+| `.agents/rules/*.md` | `governance.md` |
+| `kernel/`, `.para/` | `governance.md` |
 
 > **Why:** Workflows enforce rules via Step 0 Pre-flight, but direct file edits bypass that guard. This table ensures rule compliance even without a workflow.
 >

@@ -10,7 +10,7 @@ source: catalog
 Initialize a new PARA project with standard scaffolding and artifacts.
 
 | Flag | Description |
-| :--- | :---------- |
+| :-- | :-- |
 | `--meta` | Skip type selection, directly create ecosystem meta-project (no repo/) |
 
 ## Steps

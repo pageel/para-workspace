@@ -68,21 +68,21 @@ Before v1.7.2, workflows read `.para/knowledge/index.md` to discover KIs. This w
 
 Each KI contains a `metadata.json` with graph-ready fields:
 
-| Field           | Type       | Description                                  |
-|:----------------|:-----------|:---------------------------------------------|
-| `title`         | string     | Descriptive title                            |
-| `summary`       | string     | ≤800 chars                                   |
-| `version`       | string     | KI content version                           |
-| `scope`         | enum       | `workspace` / `project` / `ecosystem`        |
-| `domain`        | string     | Open taxonomy (e.g., `workspace`)            |
-| `purpose`       | enum       | `context` / `reference` / `pitfall` / `playbook` |
-| `owner`         | enum       | `para` (system) / `user`                     |
-| `para_version`  | string     | PARA version at creation/update              |
-| `tags`          | string[]   | Free-form tags                               |
-| `references`    | object[]   | File paths, conversation IDs                 |
-| `relates_to`    | string[]   | KI ↔ KI relationships (graph edge)           |
-| `code_refs`     | string[]   | KI ↔ Code relationships (graph edge)         |
-| `concepts`      | string[]   | KI ↔ Concept relationships (graph edge)      |
+| Field | Type | Description |
+| :-- | :-- | :-- |
+| `title` | string | Descriptive title |
+| `summary` | string | ≤800 chars |
+| `version` | string | KI content version |
+| `scope` | enum | `workspace` / `project` / `ecosystem` |
+| `domain` | string | Open taxonomy (e.g., `workspace`) |
+| `purpose` | enum | `context` / `reference` / `pitfall` / `playbook` |
+| `owner` | enum | `para` (system) / `user` |
+| `para_version` | string | PARA version at creation/update |
+| `tags` | string[] | Free-form tags |
+| `references` | object[] | File paths, conversation IDs |
+| `relates_to` | string[] | KI ↔ KI relationships (graph edge) |
+| `code_refs` | string[] | KI ↔ Code relationships (graph edge) |
+| `concepts` | string[] | KI ↔ Concept relationships (graph edge) |
 
 Full schema: [`kernel/schema/ki.schema.json`](../../kernel/schema/ki.schema.json)
 
@@ -125,28 +125,28 @@ relates_to empty       relates_to populated    Dependency traversal
 
 ## Governance
 
-| Rule             | Description                                       |
-|:-----------------|:--------------------------------------------------|
-| **KR1** Write    | Only `/para-knowledge` workflow can create/modify KIs  |
-| **KR2** Approval | All KI operations require user confirmation       |
-| **KR3** Namespace| `para_*` prefix reserved for system KIs           |
-| **KR4** Summary  | Summary ≤ 800 characters                          |
-| **KR5** Recovery | All operations undoable (archive, not delete)     |
-| **KR6** Lifecycle| System KIs sync from repo templates via CLI       |
+| Rule | Description |
+| :-- | :-- |
+| **KR1** Write | Only `/para-knowledge` workflow can create/modify KIs |
+| **KR2** Approval | All KI operations require user confirmation |
+| **KR3** Namespace | `para_*` prefix reserved for system KIs |
+| **KR4** Summary | Summary ≤ 800 characters |
+| **KR5** Recovery | All operations undoable (archive, not delete) |
+| **KR6** Lifecycle | System KIs sync from repo templates via CLI |
 
 Validation: **H10** (11 clauses) in `kernel/heuristics.md`.
 
 ## Workflow Integration
 
-| Workflow       | Integration                                 | Version |
-|:---------------|:--------------------------------------------|:--------|
-| `/para-knowledge`   | Full lifecycle: create, update, audit, sync | 1.2.0   |
-| `/open`        | Platform-injected KI context, scope match   | 1.7.1   |
-| `/plan`        | Pitfall → Risks, Playbook → Phase refs      | 1.7.1   |
-| `/end`         | Suggests creating/updating KIs from session | 1.7.1   |
-| `/brainstorm`  | Option F: Extract insight as KI             | 1.7.1   |
-| `/retro`       | Graduates cross-project patterns to KIs     | 1.7.1   |
-| `/learn`       | KI suggestion after lesson capture          | 1.7.1   |
+| Workflow | Integration | Version |
+| :-- | :-- | :-- |
+| `/para-knowledge` | Full lifecycle: create, update, audit, sync | 1.2.0 |
+| `/open` | Platform-injected KI context, scope match | 1.7.1 |
+| `/plan` | Pitfall → Risks, Playbook → Phase refs | 1.7.1 |
+| `/end` | Suggests creating/updating KIs from session | 1.7.1 |
+| `/brainstorm` | Option F: Extract insight as KI | 1.7.1 |
+| `/retro` | Graduates cross-project patterns to KIs | 1.7.1 |
+| `/learn` | KI suggestion after lesson capture | 1.7.1 |
 
 ## System KI Template Sync
 

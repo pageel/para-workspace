@@ -12,14 +12,14 @@ Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/ba
 
 ## Actions
 
-| Action     | Description                                        |
-| :--------- | :------------------------------------------------- |
-| `review`   | Show overview with summary stats and phase context |
-| `add`      | Add new feature, epic, or bug                      |
-| `evaluate` | ICE scoring for priorities                         |
-| `update`   | Update status of existing items                    |
-| `sync`     | Sync backlog with plan (map items to phases)       |
-| `clean`    | Compress ✅ Done items into Completed section      |
+| Action | Description |
+| :-- | :-- |
+| `review` | Show overview with summary stats and phase context |
+| `add` | Add new feature, epic, or bug |
+| `evaluate` | ICE scoring for priorities |
+| `update` | Update status of existing items |
+| `sync` | Sync backlog with plan (map items to phases) |
+| `clean` | Compress ✅ Done items into Completed section |
 
 ---
 
@@ -95,12 +95,12 @@ Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/ba
 5. Sort by ICE Score descending.
 6. Suggest priority hints based on score ranges:
 
-| ICE Range | Hint             |
-| :-------- | :--------------- |
-| 500+      | 🚀 High Priority |
-| 200-499   | ✅ Quick Win     |
-| 100-199   | 📋 Backlog       |
-| <100      | 🗃 Low Priority  |
+| ICE Range | Hint |
+| :-- | :-- |
+| 500+ | 🚀 High Priority |
+| 200-499 | ✅ Quick Win |
+| 100-199 | 📋 Backlog |
+| <100 | 🗃 Low Priority |
 
 ---
 
@@ -261,33 +261,33 @@ _Last updated: YYYY-MM-DD_
 
 ## Status Values
 
-| Status                | Meaning                    |
-| :-------------------- | :------------------------- |
-| ⏳ Pending            | Not started                |
-| 🚀 ToDo               | Planned for current phase  |
-| 🔨 In Progress        | Currently being worked on  |
-| 📊 Evaluated          | ICE scored, awaiting start |
-| ✅ Done (YYYY-MM-DD)  | Completed with date        |
-| ✅ Fixed (YYYY-MM-DD) | Bug fixed with date        |
+| Status | Meaning |
+| :-- | :-- |
+| ⏳ Pending | Not started |
+| 🚀 ToDo | Planned for current phase |
+| 🔨 In Progress | Currently being worked on |
+| 📊 Evaluated | ICE scored, awaiting start |
+| ✅ Done (YYYY-MM-DD) | Completed with date |
+| ✅ Fixed (YYYY-MM-DD) | Bug fixed with date |
 
 ## Priority Levels
 
-| Level     | Meaning                    |
-| :-------- | :------------------------- |
-| 🔴 High   | Critical for current phase |
+| Level | Meaning |
+| :-- | :-- |
+| 🔴 High | Critical for current phase |
 | 🟡 Medium | Important but not blocking |
-| 🟢 Low    | Nice-to-have, can defer    |
+| 🟢 Low | Nice-to-have, can defer |
 
 ## Plan Integration
 
 When both a plan and backlog exist, they should be kept in sync:
 
-| Scenario                                 | Action                                                   |
-| :--------------------------------------- | :------------------------------------------------------- |
-| New plan created → backlog exists        | Run `/backlog sync` to map existing items to phases      |
-| New backlog item added                   | Ask which Phase it belongs to, update plan mapping       |
-| All items in a Phase are ✅ Done         | Announce Phase completion, suggest starting next Phase   |
-| Plan scope changed                       | Run `/backlog sync` to find new unmapped items           |
+| Scenario | Action |
+| :-- | :-- |
+| New plan created → backlog exists | Run `/backlog sync` to map existing items to phases |
+| New backlog item added | Ask which Phase it belongs to, update plan mapping |
+| All items in a Phase are ✅ Done | Announce Phase completion, suggest starting next Phase |
+| Plan scope changed | Run `/backlog sync` to find new unmapped items |
 | Backlog item moved to different priority | No plan update needed (plan tracks phases, not priority) |
 
 > **Reference:** See `Areas/Learning/plan-backlog-workflow.md` for the complete best practices guide on combining Plan + Backlog.

@@ -23,13 +23,13 @@ glob:
 
 ### 2. Directory Mapping
 
-| Category              | Target Directory           |
-| --------------------- | -------------------------- |
-| Active work           | `Projects/[project-name]/` |
-| Stable knowledge/SOPs | `Areas/`                   |
-| Reference & learning  | `Resources/`               |
-| Completed/cancelled   | `Archive/`                 |
-| Uncategorized input   | `_inbox/`                  |
+| Category | Target Directory |
+| -- | -- |
+| Active work | `Projects/[project-name]/` |
+| Stable knowledge/SOPs | `Areas/` |
+| Reference & learning | `Resources/` |
+| Completed/cancelled | `Archive/` |
+| Uncategorized input | `_inbox/` |
 
 ### 3. Project Scoping
 

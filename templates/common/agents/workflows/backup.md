@@ -222,27 +222,27 @@ cd Projects/<name> && git clone <repo-url> repo
 
 ### Workspace-level
 
-| Component                        | Included? | Reason                   |
-| :------------------------------- | :-------- | :----------------------- |
-| `.para-workspace.yml`            | ✅ Yes    | Core workspace config    |
-| `Areas/Workspace/SESSION_LOG.md` | ✅ Yes    | Global session history   |
-| `Areas/Workspace/SYNC.md`        | ✅ Yes    | Cross-project sync queue |
-| `Areas/Workspace/sessions/`      | ✅ Yes    | Workspace session files  |
-| `Areas/Workspace/audits/`        | ✅ Yes    | Audit reports            |
-| `.agents/workflows/`              | ✅ Yes    | Customized workflows     |
-| `.agents/rules/`                  | ✅ Yes    | Customized rules         |
-| `.agents/skills/`                 | ✅ Yes    | Customized skills        |
+| Component | Included? | Reason |
+| :-- | :-- | :-- |
+| `.para-workspace.yml` | ✅ Yes | Core workspace config |
+| `Areas/Workspace/SESSION_LOG.md` | ✅ Yes | Global session history |
+| `Areas/Workspace/SYNC.md` | ✅ Yes | Cross-project sync queue |
+| `Areas/Workspace/sessions/` | ✅ Yes | Workspace session files |
+| `Areas/Workspace/audits/` | ✅ Yes | Audit reports |
+| `.agents/workflows/` | ✅ Yes | Customized workflows |
+| `.agents/rules/` | ✅ Yes | Customized rules |
+| `.agents/skills/` | ✅ Yes | Customized skills |
 
 ### Per Project
 
-| Component    | Included? | Reason                                            |
-| :----------- | :-------- | :------------------------------------------------ |
-| `sessions/`  | ✅ Yes    | Session logs — unique, irreplaceable              |
-| `artifacts/` | ✅ Yes    | Plans, backlogs, walkthroughs — user work product |
-| `docs/`      | ✅ Yes    | Internal documentation — unique analysis          |
-| `project.md` | ✅ Yes    | Project contract — YAML config + goals            |
-| `.agents/`    | ✅ Yes    | Project-specific rules and overrides              |
-| `repo/`      | ❌ No     | Source code — recoverable via `git clone`         |
+| Component | Included? | Reason |
+| :-- | :-- | :-- |
+| `sessions/` | ✅ Yes | Session logs — unique, irreplaceable |
+| `artifacts/` | ✅ Yes | Plans, backlogs, walkthroughs — user work product |
+| `docs/` | ✅ Yes | Internal documentation — unique analysis |
+| `project.md` | ✅ Yes | Project contract — YAML config + goals |
+| `.agents/` | ✅ Yes | Project-specific rules and overrides |
+| `repo/` | ❌ No | Source code — recoverable via `git clone` |
 
 ## Related
 

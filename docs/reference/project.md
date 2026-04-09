@@ -11,33 +11,33 @@ Schema: `kernel/schema/project.schema.json`
 
 ## Required Fields
 
-| Field            | Type   | Description                         | Example              |
-|:-----------------|:-------|:------------------------------------|:---------------------|
-| `name`           | string | Kebab-case project name             | `my-cms`             |
-| `status`         | enum   | active, inactive, archived          | `active`             |
-| `kernel_version` | string | Kernel version at creation (semver) | `1.6.0`              |
-| `created_at`     | date   | ISO 8601 creation date              | `2026-03-20`         |
+| Field | Type | Description | Example |
+| :-- | :-- | :-- | :-- |
+| `name` | string | Kebab-case project name | `my-cms` |
+| `status` | enum | active, inactive, archived | `active` |
+| `kernel_version` | string | Kernel version at creation (semver) | `1.6.0` |
+| `created_at` | date | ISO 8601 creation date | `2026-03-20` |
 
 ## Optional Fields
 
-| Field          | Type           | Description                                | Default     |
-|:---------------|:---------------|:-------------------------------------------|:------------|
-| `owner`        | string         | GitHub handle or name                      | —           |
-| `profile`      | enum           | dev, general, marketer, ceo                | —           |
-| `deadline`     | date \| null   | Project deadline                           | `null`      |
-| `description`  | string         | Project description                        | `""`        |
-| `tags`         | array          | Tag list                                   | `[]`        |
-| `active_plan`  | string \| null | Path to active plan (see below)            | `""`        |
-| `agent`        | object|null   | Agent config map: `rules`, `skills` booleans (v1.6.2+) | `null`      |
-| `has_rules`    | boolean        | **DEPRECATED** — use `agent.rules` instead | `false`     |
+| Field | Type | Description | Default |
+| :-- | :-- | :-- | :-- |
+| `owner` | string | GitHub handle or name | — |
+| `profile` | enum | dev, general, marketer, ceo | — |
+| `deadline` | date \ | null | Project deadline | `null` |
+| `description` | string | Project description | `""` |
+| `tags` | array | Tag list | `[]` |
+| `active_plan` | string \ | null | Path to active plan (see below) | `""` |
+| `agent` | object | null | Agent config map: `rules`, `skills` booleans (v1.6.2+) | `null` |
+| `has_rules` | boolean | **DEPRECATED** — use `agent.rules` instead | `false` |
 
 ## Ecosystem Fields (v1.6.0+)
 
-| Field        | Type           | Description                            | Default     |
-|:-------------|:---------------|:---------------------------------------|:------------|
-| `type`       | enum           | standard, ecosystem                    | `standard`  |
-| `ecosystem`  | string \| null | Parent ecosystem name (satellites)     | `null`      |
-| `satellites` | array \| null  | Satellite project slugs (ecosystem)    | `null`      |
+| Field | Type | Description | Default |
+| :-- | :-- | :-- | :-- |
+| `type` | enum | standard, ecosystem | `standard` |
+| `ecosystem` | string \ | null | Parent ecosystem name (satellites) | `null` |
+| `satellites` | array \ | null | Satellite project slugs (ecosystem) | `null` |
 
 ### Project Types
 
@@ -62,10 +62,10 @@ Projects/my-ecosystem/ (type: ecosystem)
 
 The `active_plan` field supports cross-project plan references:
 
-| Pattern                      | Resolves to                                      |
-|:-----------------------------|:-------------------------------------------------|
-| `plans/xxx.md`               | `Projects/{project}/artifacts/plans/xxx.md`      |
-| `@{ecosystem}/plans/xxx.md`  | `Projects/{ecosystem}/artifacts/plans/xxx.md`    |
+| Pattern | Resolves to |
+| :-- | :-- |
+| `plans/xxx.md` | `Projects/{project}/artifacts/plans/xxx.md` |
+| `@{ecosystem}/plans/xxx.md` | `Projects/{ecosystem}/artifacts/plans/xxx.md` |
 
 Example:
 

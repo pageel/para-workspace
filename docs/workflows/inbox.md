@@ -23,15 +23,15 @@ Lists files in `_inbox/` for processing.
 
 ### 2. Categorization Logic
 
-| Category        | Indicators             | Target                                     |
-| :-------------- | :--------------------- | :----------------------------------------- |
-| Code Templates  | `.tsx`, `.jsx`, `.vue` | `Resources/references/code/components/`    |
-| Logic Snippets  | `.ts`, `.js`, `.py`    | `Resources/references/code/snippets/`      |
-| Design Patterns | `.md` design docs      | `Resources/references/code/patterns/`      |
-| Integrations    | API/Webhook code       | `Resources/references/code/integrations/`  |
-| Research        | `.md` tutorials        | `Resources/references/articles/tutorials/` |
-| Project Assets  | `[p]-logo.png`, `.csv` | `Projects/[name]/artifacts/assets/`        |
-| Learning        | Notes, best practices  | `Areas/Learning/`                          |
+| Category | Indicators | Target |
+| :-- | :-- | :-- |
+| Code Templates | `.tsx`, `.jsx`, `.vue` | `Resources/references/code/components/` |
+| Logic Snippets | `.ts`, `.js`, `.py` | `Resources/references/code/snippets/` |
+| Design Patterns | `.md` design docs | `Resources/references/code/patterns/` |
+| Integrations | API/Webhook code | `Resources/references/code/integrations/` |
+| Research | `.md` tutorials | `Resources/references/articles/tutorials/` |
+| Project Assets | `[p]-logo.png`, `.csv` | `Projects/[name]/artifacts/assets/` |
+| Learning | Notes, best practices | `Areas/Learning/` |
 
 ### 2.5. Project Context Check
 

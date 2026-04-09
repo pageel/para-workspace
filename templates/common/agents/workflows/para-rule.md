@@ -11,13 +11,13 @@ Manage, install, and standardize AI Agent rules within a PARA Workspace.
 
 ## Actions
 
-| Action        | Description                                             |
-| :------------ | :------------------------------------------------------ |
-| `list`        | Compare active rules vs. governed catalog               |
-| `add`         | Create a new PARA-compliant rule                        |
-| `standardize` | Upgrade an existing rule to v1.4.1 standards            |
-| `install`     | Install or update a rule from the governed catalog      |
-| `validate`    | Check a rule for PARA compliance without making changes |
+| Action | Description |
+| :-- | :-- |
+| `list` | Compare active rules vs. governed catalog |
+| `add` | Create a new PARA-compliant rule |
+| `standardize` | Upgrade an existing rule to v1.4.1 standards |
+| `install` | Install or update a rule from the governed catalog |
+| `validate` | Check a rule for PARA compliance without making changes |
 
 ---
 
@@ -106,13 +106,13 @@ Upgrade an existing rule to v1.4.1 standards.
 
 ### Checklist
 
-| #   | Check                    | Rule                                                         |
-| --- | ------------------------ | ------------------------------------------------------------ |
-| 1   | **No Absolute Paths**    | Remove any hardcoded filesystem paths                        |
-| 2   | **PARA Boundaries**      | References must point to valid PARA directories              |
-| 3   | **Affirmative Language** | Use Must/Should/Must Not (not vague suggestions)             |
-| 4   | **Agent Guidance**       | Rules must provide clear, actionable instructions for the AI |
-| 5   | **No Conflicts**         | Must not contradict `para-discipline.md`                     |
+| # | Check | Rule |
+| -- | -- | -- |
+| 1 | **No Absolute Paths** | Remove any hardcoded filesystem paths |
+| 2 | **PARA Boundaries** | References must point to valid PARA directories |
+| 3 | **Affirmative Language** | Use Must/Should/Must Not (not vague suggestions) |
+| 4 | **Agent Guidance** | Rules must provide clear, actionable instructions for the AI |
+| 5 | **No Conflicts** | Must not contradict `para-discipline.md` |
 
 ---
 

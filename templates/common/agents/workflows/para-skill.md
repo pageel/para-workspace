@@ -16,14 +16,14 @@ Specialized workflow to manage, create, and validate AI Agent skills within a PA
 
 ## Actions
 
-| Action        | Description                                                          |
-| :------------ | :------------------------------------------------------------------- |
-| `list`        | Compare active skills vs. governed catalog                           |
-| `add`         | Create a new skill via guided Co-Author interview                    |
-| `install`     | Install or update a skill from the governed catalog                  |
-| `validate`    | Check a skill for PARA + quality compliance without making changes   |
-| `standardize` | Upgrade an existing skill to current standards                       |
-| `test`        | Run conversational eval on a skill with user-provided test prompts   |
+| Action | Description |
+| :-- | :-- |
+| `list` | Compare active skills vs. governed catalog |
+| `add` | Create a new skill via guided Co-Author interview |
+| `install` | Install or update a skill from the governed catalog |
+| `validate` | Check a skill for PARA + quality compliance without making changes |
+| `standardize` | Upgrade an existing skill to current standards |
+| `test` | Run conversational eval on a skill with user-provided test prompts |
 
 ---
 
@@ -73,11 +73,11 @@ Create a new skill via the **Co-Author Engine** — a guided process that produc
 
 ### Templates
 
-| Template    | Flag                  | Use case                                          |
-| :---------- | :-------------------- | :------------------------------------------------ |
-| `project`   | `--template project`  | Project DNA — conventions, naming, plan checklists |
-| `tool`      | `--template tool`     | Utility/automation — scripts, file ops, transforms |
-| _(default)_ | _(no flag)_           | Minimal — frontmatter + empty body                |
+| Template | Flag | Use case |
+| :-- | :-- | :-- |
+| `project` | `--template project` | Project DNA — conventions, naming, plan checklists |
+| `tool` | `--template tool` | Utility/automation — scripts, file ops, transforms |
+| _(default)_ | _(no flag)_ | Minimal — frontmatter + empty body |
 
 ### Steps
 
@@ -265,15 +265,15 @@ Upgrade an existing skill to current quality standards.
 
 The agent reads `.agents/skills/[name]/SKILL.md` and applies fixes for each item:
 
-| #   | Check                    | Rule                                                           |
-|:----|:-------------------------|:---------------------------------------------------------------|
-| 1   | **YAML Frontmatter**     | Must have `name`, `description`, `version`                     |
-| 2   | **Description Quality**  | Must be >= 20 words, include trigger context, be "pushy"       |
-| 3   | **Progressive Disclosure** | Body must be < 500 lines; overflow to `references/`          |
-| 4   | **Writing Style**        | Use imperative form, explain "why", include examples           |
-| 5   | **No Absolute Paths**    | Remove any hardcoded filesystem paths                          |
-| 6   | **Naming Convention**    | Folder must be `kebab-case`, files lowercase                   |
-| 7   | **Index Entry**          | Must have matching entry in `.agents/skills.md`                |
+| # | Check | Rule |
+| :-- | :-- | :-- |
+| 1 | **YAML Frontmatter** | Must have `name`, `description`, `version` |
+| 2 | **Description Quality** | Must be >= 20 words, include trigger context, be "pushy" |
+| 3 | **Progressive Disclosure** | Body must be < 500 lines; overflow to `references/` |
+| 4 | **Writing Style** | Use imperative form, explain "why", include examples |
+| 5 | **No Absolute Paths** | Remove any hardcoded filesystem paths |
+| 6 | **Naming Convention** | Folder must be `kebab-case`, files lowercase |
+| 7 | **Index Entry** | Must have matching entry in `.agents/skills.md` |
 
 ### Execution
 

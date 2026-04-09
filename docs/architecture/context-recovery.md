@@ -18,12 +18,12 @@ After truncation, the agent may perform side-effects (git push, edit task files,
 
 `agent-behavior.md` Section 4 instructs the agent to re-read `.agents/rules.md` + `.agents/skills.md` (v1.6.2+) when context appears incomplete. **Proactive Trigger Check**: BEFORE any side-effect, scan ALL trigger tables. Includes a **File-Level Guards** table mapping file patterns to required rules:
 
-| File pattern              | MUST re-read before editing     |
-| :------------------------ | :------------------------------ |
+| File pattern | MUST re-read before editing |
+| :-- | :-- |
 | `artifacts/tasks/done.md` | `hybrid-3-file-integrity.md` C2 |
-| `artifacts/tasks/*.md`    | `hybrid-3-file-integrity.md`    |
-| `.agents/rules/*.md`       | `governance.md`                 |
-| `kernel/`, `.para/`       | `governance.md`                 |
+| `artifacts/tasks/*.md` | `hybrid-3-file-integrity.md` |
+| `.agents/rules/*.md` | `governance.md` |
+| `kernel/`, `.para/` | `governance.md` |
 
 **Strength:** Covers workflow bypass (direct file edits). **Extensible** — project rules MAY define additional guards in their own `rules.md` File Guards section.
 **Weakness:** Passive — depends on agent recognizing context decay.

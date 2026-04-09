@@ -45,19 +45,19 @@ workspace/
 
 ## 📑 Recommended Workflows
 
-| Workflow           | When to Use                                  |
-| :----------------- | :------------------------------------------- |
-| **`/plan`**        | Create or review an implementation plan      |
-| **`/open`**        | Start a working session, load context        |
-| **`/backlog`**     | Add/prioritize tasks for a project           |
-| **`/new-project`** | Scaffold a new development project           |
-| **`/learn`**       | Document lessons and knowledge in Areas      |
-| **`/push`**        | Quick commit and push to GitHub              |
-| **`/verify`**      | Verify a feature is complete via walkthrough |
-| **`/release`**     | Pre-release quality gate before publishing   |
-| **`/retro`**       | Retrospective before archiving a project     |
-| **`/end`**         | Close session and log progress               |
-| **`/para`**        | Workspace health check and maintenance       |
+| Workflow | When to Use |
+| :-- | :-- |
+| **`/plan`** | Create or review an implementation plan |
+| **`/open`** | Start a working session, load context |
+| **`/backlog`** | Add/prioritize tasks for a project |
+| **`/new-project`** | Scaffold a new development project |
+| **`/learn`** | Document lessons and knowledge in Areas |
+| **`/push`** | Quick commit and push to GitHub |
+| **`/verify`** | Verify a feature is complete via walkthrough |
+| **`/release`** | Pre-release quality gate before publishing |
+| **`/retro`** | Retrospective before archiving a project |
+| **`/end`** | Close session and log progress |
+| **`/para`** | Workspace health check and maintenance |
 
 ---
 

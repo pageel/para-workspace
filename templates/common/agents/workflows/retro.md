@@ -42,11 +42,11 @@ Read `Projects/[project-name]/project.md` and evaluate:
 
 Facilitate a structured reflection:
 
-| Category           | Prompt                                             |
-| :----------------- | :------------------------------------------------- |
+| Category | Prompt |
+| :-- | :-- |
 | **What went well** | Practices, tools, or decisions that were effective |
-| **Challenges**     | Obstacles encountered and how they were addressed  |
-| **Improvements**   | What would be done differently next time           |
+| **Challenges** | Obstacles encountered and how they were addressed |
+| **Improvements** | What would be done differently next time |
 
 ### 3. Export Reusable Assets
 

@@ -115,12 +115,12 @@ From injected KI data, match scope to project. Store matched slugs for report (S
 > ⚠️ Agent MUST verify ALL checks before proceeding to Step 3.
 > If any "true" field was not loaded → READ NOW before continuing.
 
-| # | Check                    | Source                              | Required  |
-|:--|:-------------------------|:------------------------------------|:----------|
-| 1 | Workspace rules loaded?  | `.agents/rules.md`                   | ALWAYS    |
-| 2 | Workspace skills loaded? | `.agents/skills.md`                  | ALWAYS    |
-| 3 | Project rules resolved?  | `agent.rules` field in project.md   | IF true   |
-| 4 | Project skills resolved? | `agent.skills` field in project.md  | IF true   |
+| # | Check | Source | Required |
+| :-- | :-- | :-- | :-- |
+| 1 | Workspace rules loaded? | `.agents/rules.md` | ALWAYS |
+| 2 | Workspace skills loaded? | `.agents/skills.md` | ALWAYS |
+| 3 | Project rules resolved? | `agent.rules` field in project.md | IF true |
+| 4 | Project skills resolved? | `agent.skills` field in project.md | IF true |
 
 **Proactive Trigger Check (v1.6.2+):**
 

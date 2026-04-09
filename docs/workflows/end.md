@@ -15,12 +15,12 @@ The `/end` workflow closes a working session by summarizing accomplishments and 
 /end [project-name] done     # Close + clean up completed plan
 ```
 
-| Option         | Description                                                           |
-| :------------- | :-------------------------------------------------------------------- |
-| `project-name` | Target project to close                                               |
-| `all`          | Close all projects with changes in the current session                |
-| `workspace`    | Log to `Areas/Workspace/sessions/` instead of a project               |
-| `done`         | If `active_plan` is 100% complete, remove the field from `project.md` |
+| Option | Description |
+| :-- | :-- |
+| `project-name` | Target project to close |
+| `all` | Close all projects with changes in the current session |
+| `workspace` | Log to `Areas/Workspace/sessions/` instead of a project |
+| `done` | If `active_plan` is 100% complete, remove the field from `project.md` |
 
 ## Session Close Flow
 
@@ -32,9 +32,9 @@ Classify changes → Write session log → Sync queue → Hot Lane Sync → Plan
 
 Determines whether work belongs to a specific **Project** or to **Workspace/Learning**:
 
-| Type                 | Criteria                                   | Log Destination                          |
-| :------------------- | :----------------------------------------- | :--------------------------------------- |
-| Project Work         | Development, bug fixes, project docs       | `Projects/[name]/sessions/YYYY-MM-DD.md` |
+| Type | Criteria | Log Destination |
+| :-- | :-- | :-- |
+| Project Work | Development, bug fixes, project docs | `Projects/[name]/sessions/YYYY-MM-DD.md` |
 | Workspace & Learning | Structure refactoring, learning, standards | `Areas/Workspace/sessions/YYYY-MM-DD.md` |
 
 ### 2. Log Session
@@ -105,13 +105,13 @@ Appends a one-line summary to `Areas/Workspace/SESSION_LOG.md`:
 
 ## What `/end` Does NOT Do
 
-| Does not        | Use instead    |
-| :-------------- | :------------- |
-| Commit code     | `/push`        |
-| Push to remote  | `/push`        |
-| Run build/test  | `/push --test` |
-| Create releases | `/release`     |
-| Review code     | `/verify`      |
+| Does not | Use instead |
+| :-- | :-- |
+| Commit code | `/push` |
+| Push to remote | `/push` |
+| Run build/test | `/push --test` |
+| Create releases | `/release` |
+| Review code | `/verify` |
 
 ## Recommended Flow
 

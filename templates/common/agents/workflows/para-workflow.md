@@ -11,13 +11,13 @@ Specialized workflow to manage, install, and standardize AI Agent workflows with
 
 ## Actions
 
-| Action        | Description                                            |
-| :------------ | :----------------------------------------------------- |
-| `list`        | Compare active workflows vs. governed catalog          |
-| `add`         | Create a new PARA-compliant workflow                   |
-| `standardize` | Upgrade an existing workflow to v1.4.1 standards       |
-| `install`     | Install or update a workflow from the governed catalog |
-| `validate`    | Check a workflow for PARA compliance issues            |
+| Action | Description |
+| :-- | :-- |
+| `list` | Compare active workflows vs. governed catalog |
+| `add` | Create a new PARA-compliant workflow |
+| `standardize` | Upgrade an existing workflow to v1.4.1 standards |
+| `install` | Install or update a workflow from the governed catalog |
+| `validate` | Check a workflow for PARA compliance issues |
 
 ---
 
@@ -117,28 +117,28 @@ Upgrade an existing workflow to the latest PARA v1.4.1 standards.
 
 The agent will read `.agents/workflows/[name].md` and apply fixes for each item:
 
-| #   | Check                    | Rule                                                          |
-| --- | ------------------------ | ------------------------------------------------------------- |
-| 1   | **YAML Frontmatter**     | Must have `description` field                                 |
-| 2   | **Version Label**        | Must say `1.4.1` (not 1.3.6 or older)                         |
-| 3   | **Language**             | Instructions should be in English                             |
-| 4   | **Relative Paths**       | No absolute paths (e.g., `/media/tienle/...`)                 |
-| 5   | **Project Placeholders** | Use `[project-name]` instead of hardcoded project names       |
-| 6   | **Catalog Paths**        | Reference governed catalog, NOT legacy `Resources/ai-agents/` |
-| 7   | **Turbo Annotations**    | Mark safe-to-autorun steps with `// turbo`                    |
-| 8   | **No Duplicate Scope**   | Don't duplicate logic that belongs to `/install` or `/para`   |
+| # | Check | Rule |
+| -- | -- | -- |
+| 1 | **YAML Frontmatter** | Must have `description` field |
+| 2 | **Version Label** | Must say `1.4.1` (not 1.3.6 or older) |
+| 3 | **Language** | Instructions should be in English |
+| 4 | **Relative Paths** | No absolute paths (e.g., `/media/tienle/...`) |
+| 5 | **Project Placeholders** | Use `[project-name]` instead of hardcoded project names |
+| 6 | **Catalog Paths** | Reference governed catalog, NOT legacy `Resources/ai-agents/` |
+| 7 | **Turbo Annotations** | Mark safe-to-autorun steps with `// turbo` |
+| 8 | **No Duplicate Scope** | Don't duplicate logic that belongs to `/install` or `/para` |
 
 ### Legacy Path Migration Table
 
-| Old Path (v1.3.x)                | New Path (v1.4.1)                             |
-| -------------------------------- | --------------------------------------------- |
+| Old Path (v1.3.x) | New Path (v1.4.1) |
+| -- | -- |
 | `Resources/ai-agents/workflows/` | `templates/common/agents/workflows/` (in repo) |
-| `Resources/ai-agents/rules/`     | `templates/common/agents/rules/` (in repo)     |
-| `Resources/ai-agents/skills/`    | `templates/common/agents/skills/` (in repo)    |
-| `Resources/Themes/`              | `Resources/themes/` (lowercase)               |
-| `Resources/Remotes/`             | `Resources/references/` (renamed)             |
-| `Resources/Reference/`           | `Resources/references/` (lowercase)           |
-| `Projects/_playground/`          | `Projects/_playground/` (unchanged)           |
+| `Resources/ai-agents/rules/` | `templates/common/agents/rules/` (in repo) |
+| `Resources/ai-agents/skills/` | `templates/common/agents/skills/` (in repo) |
+| `Resources/Themes/` | `Resources/themes/` (lowercase) |
+| `Resources/Remotes/` | `Resources/references/` (renamed) |
+| `Resources/Reference/` | `Resources/references/` (lowercase) |
+| `Projects/_playground/` | `Projects/_playground/` (unchanged) |
 
 ### Execution
 

@@ -163,17 +163,17 @@
 
 ## Impact Summary
 
-| Term             | Workflows | Files        | Impact      |
-|:-----------------|:----------|:-------------|:------------|
-| `active_plan`    | 4         | 1 schema     | 🔴 High     |
-| `type`           | 5         | 1 schema     | 🟡 Medium   |
-| `ecosystem`      | 4         | 1 schema     | 🟡 Medium   |
-| `satellites`     | 2         | 1 schema     | 🟢 Low      |
-| `profile`        | 1+CLI     | 2 schemas    | 🔴 High     |
-| `kernel_version` | 1+CLI     | 2 schemas    | 🔴 High     |
-| `agent`          | 4+2 rules | 1 schema     | 🟡 Medium   |
-| `has_rules`      | 3 (fallback)| 1 schema   | 🟢 Low (deprecated) |
+| Term | Workflows | Files | Impact |
+| :-- | :-- | :-- | :-- |
+| `active_plan` | 4 | 1 schema | 🔴 High |
+| `type` | 5 | 1 schema | 🟡 Medium |
+| `ecosystem` | 4 | 1 schema | 🟡 Medium |
+| `satellites` | 2 | 1 schema | 🟢 Low |
+| `profile` | 1+CLI | 2 schemas | 🔴 High |
+| `kernel_version` | 1+CLI | 2 schemas | 🔴 High |
+| `agent` | 4+2 rules | 1 schema | 🟡 Medium |
+| `has_rules` | 3 (fallback) | 1 schema | 🟢 Low (deprecated) |
 | `proactive_trigger_check` | 8+2 rules | convention | 🔴 High |
-| `strategy`       | 4         | convention   | 🟡 Medium   |
-| `roadmap`        | 3         | convention   | 🟡 Medium   |
-| `detail_plan`    | 4 (via AP)| convention   | 🟢 Low      |
+| `strategy` | 4 | convention | 🟡 Medium |
+| `roadmap` | 3 | convention | 🟡 Medium |
+| `detail_plan` | 4 (via AP) | convention | 🟢 Low |

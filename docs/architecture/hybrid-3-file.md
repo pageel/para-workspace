@@ -17,11 +17,11 @@ artifacts/tasks/
 
 Task files include **guard headers** (`<!-- ⚠️ ... -->`) that remind the agent of write constraints even after context truncation (C6).
 
-| File                | Role                                                                             | Read/Write     |
-| :------------------ | :------------------------------------------------------------------------------- | :------------- |
-| `backlog.md`        | Operational Authority — all tasks (active tables + compressed Completed section) | Agent + User   |
-| `sprint-current.md` | Hot Lane — ad-hoc quick tasks during coding session                              | Agent-writable |
-| `done.md`           | Historical Archive — completed tasks grouped by plan, with origin tags           | Append-only    |
+| File | Role | Read/Write |
+| :-- | :-- | :-- |
+| `backlog.md` | Operational Authority — all tasks (active tables + compressed Completed section) | Agent + User |
+| `sprint-current.md` | Hot Lane — ad-hoc quick tasks during coding session | Agent-writable |
+| `done.md` | Historical Archive — completed tasks grouped by plan, with origin tags | Append-only |
 
 ## Backlog Compression (`/backlog clean`)
 
@@ -48,37 +48,37 @@ This preserves `backlog.md` as the **single source of truth** for all tasks whil
 
 ### Key Workflow Integration
 
-| Workflow         | Role                                                                  |
-| :--------------- | :-------------------------------------------------------------------- |
-| `/open`          | Reads backlog Summary (~10 lines) + hot lane. Never the full backlog. |
-| `/end`           | **Sole sync point** — Hot Lane Sync + Smart Suggest + plan check      |
-| `/backlog clean` | Compress Done items into Completed section. Details → `done.md`       |
-| `/plan review`   | Counts task IDs in `done.md` to measure Phase progress                |
-| `/retro`         | Analyzes `done.md` — `#backlog` vs `#session` ratio for velocity      |
+| Workflow | Role |
+| :-- | :-- |
+| `/open` | Reads backlog Summary (~10 lines) + hot lane. Never the full backlog. |
+| `/end` | **Sole sync point** — Hot Lane Sync + Smart Suggest + plan check |
+| `/backlog clean` | Compress Done items into Completed section. Details → `done.md` |
+| `/plan review` | Counts task IDs in `done.md` to measure Phase progress |
+| `/retro` | Analyzes `done.md` — `#backlog` vs `#session` ratio for velocity |
 
 ## Token Budget
 
-| Source             | Tokens       | Condition                      |
-| :----------------- | :----------- | :----------------------------- |
-| project.md         | ~80-120      | Always                         |
-| sprint-current.md  | ~50-100      | Always (if exists)             |
-| backlog.md Summary | ~80-130      | Always (grep summary + active) |
-| session log        | ~50-100      | Always (tail)                  |
-| plan (if active)   | ~30-50       | Only if `active_plan` set      |
-| SYNC.md            | ~50-100      | Only if `downstream` set       |
-| **Total (simple)** | **~260-450** | No plan, no sync               |
-| **Total (full)**   | **~360-640** | Plan + sync                    |
+| Source | Tokens | Condition |
+| :-- | :-- | :-- |
+| project.md | ~80-120 | Always |
+| sprint-current.md | ~50-100 | Always (if exists) |
+| backlog.md Summary | ~80-130 | Always (grep summary + active) |
+| session log | ~50-100 | Always (tail) |
+| plan (if active) | ~30-50 | Only if `active_plan` set |
+| SYNC.md | ~50-100 | Only if `downstream` set |
+| **Total (simple)** | **~260-450** | No plan, no sync |
+| **Total (full)** | **~360-640** | Plan + sync |
 
 ## Version History
 
-| Aspect                 | v1.5.2 (Working Checkmarks) | v1.5.3 (Hot Lane)                |
-| :--------------------- | :-------------------------- | :------------------------------- |
-| sprint-current.md      | Mirror backlog (unused)     | Hot Lane — agent writes directly |
-| Quick tasks            | Unstructured                | sprint-current.md = Hot Lane     |
-| Sync point             | Multiple commands           | `/end` only                      |
-| Ceremony during coding | `/backlog update` per task  | Zero                             |
-| done.md structure      | Flat, date-grouped          | Plan-grouped with origin tags    |
-| `/backlog clean`       | Delete from backlog         | Compress into Completed section  |
+| Aspect | v1.5.2 (Working Checkmarks) | v1.5.3 (Hot Lane) |
+| :-- | :-- | :-- |
+| sprint-current.md | Mirror backlog (unused) | Hot Lane — agent writes directly |
+| Quick tasks | Unstructured | sprint-current.md = Hot Lane |
+| Sync point | Multiple commands | `/end` only |
+| Ceremony during coding | `/backlog update` per task | Zero |
+| done.md structure | Flat, date-grouped | Plan-grouped with origin tags |
+| `/backlog clean` | Delete from backlog | Compress into Completed section |
 
 ## References
 

@@ -19,7 +19,7 @@ MUST place every file in a Project, Area, or Resource. MUST NOT create files at 
 ### 2. Directory Mapping
 
 | Category | Target Directory |
-|:---------|:----------------|
+| :-- | :-- |
 | Active work | `Projects/[project-name]/` |
 | Stable knowledge/SOPs | `Areas/` |
 | Reference & learning | `Resources/` |

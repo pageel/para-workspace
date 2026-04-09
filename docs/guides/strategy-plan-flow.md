@@ -28,11 +28,11 @@ v1.6.1 adds a **3-tier planning model** to 4 workflows (`/docs`, `/plan`, `/open
 
 Use as many tiers as your project needs:
 
-| Project Size         | Tier 1 (Strategy) | Tier 2 (Roadmap) | Tier 3 (Detail) |
-|:---------------------|:-------------------|:------------------|:-----------------|
-| Small (1-2 features) | —                  | —                 | 1 plan           |
-| Medium (CLI, app)    | optional           | ✅                | multiple plans   |
-| Ecosystem (meta)     | ✅                 | ✅                | per satellite    |
+| Project Size | Tier 1 (Strategy) | Tier 2 (Roadmap) | Tier 3 (Detail) |
+| :-- | :-- | :-- | :-- |
+| Small (1-2 features) | — | — | 1 plan |
+| Medium (CLI, app) | optional | ✅ | multiple plans |
+| Ecosystem (meta) | ✅ | ✅ | per satellite |
 
 ---
 
@@ -57,22 +57,22 @@ Use as many tiers as your project needs:
 
 ## Key Decisions
 
-| #   | Decision                             | Resolution                          |
-|:----|:-------------------------------------|:------------------------------------|
-| D7  | Brainstorm vs Strategy priority      | Strategy wins — skip older brainstorm |
-| D10 | Strategy change cascade              | Date compare → warn if roadmap stale |
-| D4  | `active_plan` scope                  | Detail plans only, never roadmap    |
-| D6  | `/brainstorm` Option F "Strategy"?   | No — smart routing via Option D     |
+| # | Decision | Resolution |
+| :-- | :-- | :-- |
+| D7 | Brainstorm vs Strategy priority | Strategy wins — skip older brainstorm |
+| D10 | Strategy change cascade | Date compare → warn if roadmap stale |
+| D4 | `active_plan` scope | Detail plans only, never roadmap |
+| D6 | `/brainstorm` Option F "Strategy"? | No — smart routing via Option D |
 
 ## Filesystem Detection
 
 No configuration or schema fields needed — all tiers are detected by file existence:
 
-| Tier     | Detection Pattern                  | Used By                           |
-|:---------|:-----------------------------------|:----------------------------------|
-| Strategy | `docs/strategy/` directory exists  | `/docs`, `/plan`, `/open`, `/end` |
-| Roadmap  | `plans/*-roadmap.md` glob match    | `/plan`, `/open`, `/end`          |
-| Detail   | `plans/*.md` (non-roadmap)         | All workflows (via `active_plan`) |
+| Tier | Detection Pattern | Used By |
+| :-- | :-- | :-- |
+| Strategy | `docs/strategy/` directory exists | `/docs`, `/plan`, `/open`, `/end` |
+| Roadmap | `plans/*-roadmap.md` glob match | `/plan`, `/open`, `/end` |
+| Detail | `plans/*.md` (non-roadmap) | All workflows (via `active_plan`) |
 
 ## Roadmap Rules
 

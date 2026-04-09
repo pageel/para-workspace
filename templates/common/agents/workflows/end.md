@@ -10,9 +10,9 @@ source: catalog
 
 Summarize accomplishments and log them to the correct context (Project vs. Workspace).
 
-| Option | Description                                                                                                      |
-| :----- | :--------------------------------------------------------------------------------------------------------------- |
-| `all`  | Close the working session for all modified projects in git status.                                               |
+| Option | Description |
+| :-- | :-- |
+| `all` | Close the working session for all modified projects in git status. |
 | `done` | (Optional) If the active plan (`active_plan`) is 100% complete, automatically remove this field in `project.md`. |
 
 ## Classification Rules

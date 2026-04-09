@@ -47,7 +47,7 @@ fi
 ```
 
 | Gate | Steps | Description |
-| :--- | :---- | :---------- |
+| :-- | :-- | :-- |
 | < 1.4.0 | 1-6 | Task model, kernel, catalog, metadata migration |
 | < 1.4.1 | 7-10 | .para/ state, governed libraries, kernel version |
 | < 1.4.6 | 11 | Smart Archive obsolete files |

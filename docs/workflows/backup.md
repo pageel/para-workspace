@@ -25,22 +25,22 @@ Create snapshot dir → Copy by target → Cleanup old → Report
 
 ### Workspace
 
-| Component             | Included | Reason                 |
-| :-------------------- | :------- | :--------------------- |
-| `.para-workspace.yml` | ✅       | Core config            |
-| `Areas/Workspace/`    | ✅       | Sessions, SYNC, audits |
-| `.agents/workflows/`   | ✅       | Customized workflows   |
-| `.agents/rules/`       | ✅       | Customized rules       |
+| Component | Included | Reason |
+| :-- | :-- | :-- |
+| `.para-workspace.yml` | ✅ | Core config |
+| `Areas/Workspace/` | ✅ | Sessions, SYNC, audits |
+| `.agents/workflows/` | ✅ | Customized workflows |
+| `.agents/rules/` | ✅ | Customized rules |
 
 ### Per Project
 
-| Component    | Included | Reason                      |
-| :----------- | :------- | :-------------------------- |
-| `sessions/`  | ✅       | Irreplaceable session logs  |
-| `artifacts/` | ✅       | Plans, backlogs             |
-| `docs/`      | ✅       | Internal documentation      |
-| `project.md` | ✅       | Project contract            |
-| `repo/`      | ❌       | Recoverable via `git clone` |
+| Component | Included | Reason |
+| :-- | :-- | :-- |
+| `sessions/` | ✅ | Irreplaceable session logs |
+| `artifacts/` | ✅ | Plans, backlogs |
+| `docs/` | ✅ | Internal documentation |
+| `project.md` | ✅ | Project contract |
+| `repo/` | ❌ | Recoverable via `git clone` |
 
 Automatically keeps **5 most recent** snapshots.
 

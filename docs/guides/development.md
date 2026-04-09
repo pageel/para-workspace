@@ -51,10 +51,10 @@ Completed plans archive to `plans/done/` with a completion review alongside.
 
 ## CLI: update vs install
 
-| Command          | Action               | Use when                  |
-| :--------------- | :------------------- | :------------------------ |
-| `./para update`  | `git pull` + install | Need latest from GitHub   |
-| `./para install` | Sync local only      | Source already up-to-date |
+| Command | Action | Use when |
+| :-- | :-- | :-- |
+| `./para update` | `git pull` + install | Need latest from GitHub |
+| `./para install` | Sync local only | Source already up-to-date |
 
 > ⚠️ `install` does NOT pull. Use `update` for latest version.
 

@@ -10,11 +10,11 @@ The `/plan` workflow creates, reviews, and updates phased implementation plans f
 /plan [project-name] [action]
 ```
 
-| Action   | Description                         |
-| -------- | ----------------------------------- |
-| `create` | Create a new implementation plan    |
+| Action | Description |
+| -- | -- |
+| `create` | Create a new implementation plan |
 | `review` | Summarize existing plan with status |
-| `update` | Modify phases, status, or timeline  |
+| `update` | Modify phases, status, or timeline |
 
 ## Plan Creation Flow
 
@@ -42,11 +42,11 @@ Contract → Backlog → Brainstorm check → Learnings → Project Knowledge �
 
 ### Phase Structure
 
-| Rule      | Description                             |
-| --------- | --------------------------------------- |
-| Phase 0   | Always "Setup & Infrastructure"         |
+| Rule | Description |
+| -- | -- |
+| Phase 0 | Always "Setup & Infrastructure" |
 | Phase 1–N | Core feature phases in dependency order |
-| Final     | Always "Polish & Extras"                |
+| Final | Always "Polish & Extras" |
 
 ## Plan Review
 
@@ -87,14 +87,14 @@ If confirmed:
 
 ## Integration Points
 
-| Workflow      | Relationship                                               |
-| ------------- | ---------------------------------------------------------- |
-| `/brainstorm` | Plan auto-discovers brainstorm outputs (Step 2.5)          |
-| `/learn`      | Plan scans learning index for relevant lessons (Step 2.6)  |
-| `docs/`       | Plan reads docs index + RFCs + architecture baseline (2.7) |
-| `/open`       | Open reads `active_plan` to show current phase             |
-| `/end`        | End checks plan completion, cleans up `active_plan`        |
-| `/verify`     | Verify checks task completion against plan                 |
+| Workflow | Relationship |
+| -- | -- |
+| `/brainstorm` | Plan auto-discovers brainstorm outputs (Step 2.5) |
+| `/learn` | Plan scans learning index for relevant lessons (Step 2.6) |
+| `docs/` | Plan reads docs index + RFCs + architecture baseline (2.7) |
+| `/open` | Open reads `active_plan` to show current phase |
+| `/end` | End checks plan completion, cleans up `active_plan` |
+| `/verify` | Verify checks task completion against plan |
 
 ## Related
 

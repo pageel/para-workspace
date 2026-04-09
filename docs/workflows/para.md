@@ -14,10 +14,10 @@ The `/para` workflow is the **master controller** for the PARA Workspace. It pro
 
 ### Workspace Intelligence & Audit
 
-| Command          | Description                                         |
-| :--------------- | :-------------------------------------------------- |
-| `./para status`  | Bird's-eye view of all projects                     |
-| `./para review`  | Deep analysis of structure, rules, docs             |
+| Command | Description |
+| :-- | :-- |
+| `./para status` | Bird's-eye view of all projects |
+| `./para review` | Deep analysis of structure, rules, docs |
 | Activity Monitor | Identifies stalled projects (no activity in 7 days) |
 
 ### Catalog Management
@@ -28,12 +28,12 @@ The `/para` workflow is the **master controller** for the PARA Workspace. It pro
 
 ### Operations & Lifecycle
 
-| Operation                 | Command                    |
-| :------------------------ | :------------------------- |
-| Scaffold new project      | `./para scaffold [name]`   |
-| Migrate legacy project    | `./para migrate [project]` |
-| Archive completed project | `/retro` → `Archive/`      |
-| Configure workspace       | `/config`                  |
+| Operation | Command |
+| :-- | :-- |
+| Scaffold new project | `./para scaffold [name]` |
+| Migrate legacy project | `./para migrate [project]` |
+| Archive completed project | `/retro` → `Archive/` |
+| Configure workspace | `/config` |
 
 ### Rules & Governance
 

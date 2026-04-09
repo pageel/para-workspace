@@ -6,11 +6,11 @@
 
 A Meta-Project is a coordination project that manages strategy, roadmaps, and cross-project plans for a group of related projects (an ecosystem). It has **no source code** — only documentation and plans.
 
-| Scenario                         | Solution                                  |
-|:---------------------------------|:------------------------------------------|
-| Single product, single repo      | Standard project (`type: standard`)       |
-| Single product, multiple repos   | **Meta-Project** (`type: ecosystem`)      |
-| Unrelated products               | No need — each project is independent     |
+| Scenario | Solution |
+| :-- | :-- |
+| Single product, single repo | Standard project (`type: standard`) |
+| Single product, multiple repos | **Meta-Project** (`type: ecosystem`) |
+| Unrelated products | No need — each project is independent |
 
 ## Creating an Ecosystem
 
@@ -89,22 +89,22 @@ Rules:
 
 ## Workflow Differences
 
-| Step            | Standard Project | Ecosystem Project                |
-|:----------------|:-----------------|:---------------------------------|
-| Git status      | ✅ Runs           | ⏭️ Skipped (no repo/)            |
-| Git log         | ✅ Runs           | ⏭️ Skipped                       |
-| Satellites list | ❌ N/A            | ✅ Displayed                      |
-| Backlog         | ✅ Read           | ✅ Read (ecosystem-level)         |
-| Active plan     | ✅ Read           | ✅ Read                           |
+| Step | Standard Project | Ecosystem Project |
+| :-- | :-- | :-- |
+| Git status | ✅ Runs | ⏭️ Skipped (no repo/) |
+| Git log | ✅ Runs | ⏭️ Skipped |
+| Satellites list | ❌ N/A | ✅ Displayed |
+| Backlog | ✅ Read | ✅ Read (ecosystem-level) |
+| Active plan | ✅ Read | ✅ Read |
 
 ## Schema Reference
 
-| Field         | Type                          | Default      | Description                      |
-|:--------------|:------------------------------|:-------------|:---------------------------------|
-| `type`        | `"standard"` \| `"ecosystem"` | `"standard"` | Project type                     |
-| `ecosystem`   | `string` \| `null`            | `null`       | Parent ecosystem (for satellite) |
-| `satellites`  | `string[]` \| `null`          | `null`       | List of satellite project IDs    |
-| `active_plan` | `string`                      | `""`         | Supports `@{ecosystem}/path`     |
+| Field | Type | Default | Description |
+| :-- | :-- | :-- | :-- |
+| `type` | `"standard"` \ | `"ecosystem"` | `"standard"` | Project type |
+| `ecosystem` | `string` \ | `null` | `null` | Parent ecosystem (for satellite) |
+| `satellites` | `string[]` \ | `null` | `null` | List of satellite project IDs |
+| `active_plan` | `string` | `""` | Supports `@{ecosystem}/path` |
 
 All fields are optional — existing projects work without changes.
 

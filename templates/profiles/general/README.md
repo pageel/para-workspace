@@ -41,18 +41,18 @@ workspace/
 
 ## 📑 Recommended Workflows
 
-| Workflow           | When to Use                               |
-| :----------------- | :---------------------------------------- |
-| **`/open`**        | Start a working session, load context     |
-| **`/backlog`**     | Add/review tasks for a project            |
-| **`/plan`**        | Create phased implementation plans        |
-| **`/brainstorm`**  | Explore ideas before committing to a plan |
-| **`/new-project`** | Scaffold a new project                    |
-| **`/end`**         | Close session and classify work into PARA |
-| **`/push`**        | Commit and push code to GitHub            |
-| **`/para`**        | Workspace health check and maintenance    |
-| **`/retro`**       | Retrospective before archiving a project  |
-| **`/docs`**        | Generate and publish documentation        |
+| Workflow | When to Use |
+| :-- | :-- |
+| **`/open`** | Start a working session, load context |
+| **`/backlog`** | Add/review tasks for a project |
+| **`/plan`** | Create phased implementation plans |
+| **`/brainstorm`** | Explore ideas before committing to a plan |
+| **`/new-project`** | Scaffold a new project |
+| **`/end`** | Close session and classify work into PARA |
+| **`/push`** | Commit and push code to GitHub |
+| **`/para`** | Workspace health check and maintenance |
+| **`/retro`** | Retrospective before archiving a project |
+| **`/docs`** | Generate and publish documentation |
 
 ---
 
@@ -60,14 +60,14 @@ workspace/
 
 After `para init`, the following rules are installed in `.agents/rules/`:
 
-| Rule                 | Purpose                                          |
-| :------------------- | :----------------------------------------------- |
-| `governance.md`      | Core PARA discipline (invariants + heuristics)   |
-| `para-discipline.md` | Enforce PARA classification (P/A/R/A/\_inbox)    |
-| `naming.md`          | File and directory naming standards              |
-| `vcs.md`             | Git and version control best practices           |
-| `agent-behavior.md`  | Core behavioral constraints for AI agents        |
-| `context-rules.md`   | Rules for context loading and session management |
+| Rule | Purpose |
+| :-- | :-- |
+| `governance.md` | Core PARA discipline (invariants + heuristics) |
+| `para-discipline.md` | Enforce PARA classification (P/A/R/A/\_inbox) |
+| `naming.md` | File and directory naming standards |
+| `vcs.md` | Git and version control best practices |
+| `agent-behavior.md` | Core behavioral constraints for AI agents |
+| `context-rules.md` | Rules for context loading and session management |
 
 ---
 

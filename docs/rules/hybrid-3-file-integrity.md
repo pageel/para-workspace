@@ -15,7 +15,7 @@ Governs the 3-file task management system: `backlog.md` (source of truth), `spri
 ### C1: sprint-current.md — Hot Lane
 
 | Action | Permission |
-|:-------|:-----------|
+| :-- | :-- |
 | Add quick task (`- [ ] description`) | ✅ Allowed |
 | Add `- [ ]` BEFORE starting code | ✅ Required (log-first) |
 | Mark `[x]` when done | ✅ Allowed |

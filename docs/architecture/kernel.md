@@ -52,25 +52,25 @@ Knowledge Items metadata schema:
 
 11 rules that ensure workspace structural integrity. Any change requires RFC + MAJOR bump.
 
-| #   | Rule                                           |
-| :-- | :--------------------------------------------- |
-| I1  | PARA directory structure is mandatory          |
-| I2  | Hybrid 3-file task model (backlog = canonical) |
-| I3  | kebab-case project naming                      |
-| I6  | Archive is immutable cold storage              |
-| I8  | No loose files at workspace root               |
-| I9  | Resources are read-only references             |
-| I10 | Repo ↔ Workspace separation                    |
+| # | Rule |
+| :-- | :-- |
+| I1 | PARA directory structure is mandatory |
+| I2 | Hybrid 3-file task model (backlog = canonical) |
+| I3 | kebab-case project naming |
+| I6 | Archive is immutable cold storage |
+| I8 | No loose files at workspace root |
+| I9 | Resources are read-only references |
+| I10 | Repo ↔ Workspace separation |
 
 ### 2. Heuristics (Soft Rules — SHOULD)
 
 Recommended practices. Changes via MINOR/PATCH bump.
 
-| ID  | Rule                                            | Added  |
-| :-- | :---------------------------------------------- | :----- |
-| H1  | Semantic file naming                            | v1.3   |
-| H7  | Cross-project ecosystem references              | v1.6.0 |
-| H10 | Knowledge Items — 11 clauses for KI governance  | v1.7.0 |
+| ID | Rule | Added |
+| :-- | :-- | :-- |
+| H1 | Semantic file naming | v1.3 |
+| H7 | Cross-project ecosystem references | v1.6.0 |
+| H10 | Knowledge Items — 11 clauses for KI governance | v1.7.0 |
 
 ### 3. Consistency Constraints
 

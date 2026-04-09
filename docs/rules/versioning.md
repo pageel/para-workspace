@@ -19,7 +19,7 @@ MUST use Semantic Versioning (`MAJOR.MINOR.PATCH`). MUST label current version i
 ### 2. Agent Autonomy Levels
 
 | Level | Permission | Example |
-|:------|:-----------|:--------|
+| :-- | :-- | :-- |
 | **PATCH** | Agent MAY increment autonomously | Bug fix, typo |
 | **MINOR** | Agent MUST ask user | New feature |
 | **MAJOR** | Agent MUST present full plan | Breaking change |
@@ -33,7 +33,7 @@ MUST NOT increment MINOR or MAJOR without explicit user approval. SHOULD propose
 When bumping a version, MUST update ALL locations:
 
 | Location | File |
-|:---------|:-----|
+| :-- | :-- |
 | Changelog | `CHANGELOG.md` (new entry at top) |
 | Version file | `VERSION` (if exists at repo root) |
 | Project contract | `project.md` frontmatter |

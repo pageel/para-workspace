@@ -10,13 +10,13 @@ The `/para-workflow` workflow manages, installs, and standardizes AI Agent workf
 /para-workflow [action] [name]
 ```
 
-| Action        | Description                                   |
-| :------------ | :-------------------------------------------- |
-| `list`        | Compare active workflows vs. governed catalog |
-| `add`         | Create a new PARA-compliant workflow          |
-| `standardize` | Upgrade workflow to v1.4.1 standards          |
-| `install`     | Install workflow from governed catalog        |
-| `validate`    | Check compliance without making changes       |
+| Action | Description |
+| :-- | :-- |
+| `list` | Compare active workflows vs. governed catalog |
+| `add` | Create a new PARA-compliant workflow |
+| `standardize` | Upgrade workflow to v1.4.1 standards |
+| `install` | Install workflow from governed catalog |
+| `validate` | Check compliance without making changes |
 
 ## Actions
 

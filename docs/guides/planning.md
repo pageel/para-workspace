@@ -6,10 +6,10 @@
 
 PARA Workspace provides two complementary tools for project management:
 
-| Tool           | Purpose                                             | Analogy                        |
-| :------------- | :-------------------------------------------------- | :----------------------------- |
-| **`/plan`**    | Strategic roadmap — **HOW** to build, in what order | Blueprint of a house           |
-| **`/backlog`** | Tactical tracker — **WHAT** to do, current status   | Today's construction checklist |
+| Tool | Purpose | Analogy |
+| :-- | :-- | :-- |
+| **`/plan`** | Strategic roadmap — **HOW** to build, in what order | Blueprint of a house |
+| **`/backlog`** | Tactical tracker — **WHAT** to do, current status | Today's construction checklist |
 
 You don't always need both. Use this guide to decide.
 
@@ -17,13 +17,13 @@ You don't always need both. Use this guide to decide.
 
 ## When to Use What
 
-| Scenario                    | Plan?  | Backlog? |
-| :-------------------------- | :----- | :------- |
-| New project, >5 tasks       | ✅ Yes | ✅ Yes   |
-| Small project, <5 tasks     | ❌ No  | ✅ Yes   |
-| Bug fixes / maintenance     | ❌ No  | ✅ Yes   |
-| Major architecture refactor | ✅ Yes | ✅ Yes   |
-| Adding a single feature     | ❌ No  | ✅ Yes   |
+| Scenario | Plan? | Backlog? |
+| :-- | :-- | :-- |
+| New project, >5 tasks | ✅ Yes | ✅ Yes |
+| Small project, <5 tasks | ❌ No | ✅ Yes |
+| Bug fixes / maintenance | ❌ No | ✅ Yes |
+| Major architecture refactor | ✅ Yes | ✅ Yes |
+| Adding a single feature | ❌ No | ✅ Yes |
 
 **Rule of thumb:** Every project needs a backlog. Only create a plan when you need phased architecture decisions.
 
@@ -142,14 +142,14 @@ When all tasks in a phase are done, the agent announces:
 
 ## Golden Rules
 
-| #   | Rule                                   | Why                                                                                                |
-| :-- | :------------------------------------- | :------------------------------------------------------------------------------------------------- |
-| 1   | **Read plan at start, rarely edit**    | Only change when scope/architecture shifts. Don't edit daily.                                      |
-| 2   | **Update backlog every session**       | Mark done, add new tasks, adjust priority.                                                         |
-| 3   | **Session log = evidence**             | Record what you ACTUALLY did — not what you planned.                                               |
-| 4   | **Phase = natural sprint**             | Each phase ≈ 1-2 days. Don't skip ahead.                                                           |
-| 5   | **New task? Add to backlog first**     | Don't start coding immediately. Log it, evaluate priority.                                         |
-| 6   | **Use `grep`, don't read entire plan** | Plans can be 500-800+ lines. `/open` and `/end` use `grep` to read only phase headers (~30 lines). |
+| # | Rule | Why |
+| :-- | :-- | :-- |
+| 1 | **Read plan at start, rarely edit** | Only change when scope/architecture shifts. Don't edit daily. |
+| 2 | **Update backlog every session** | Mark done, add new tasks, adjust priority. |
+| 3 | **Session log = evidence** | Record what you ACTUALLY did — not what you planned. |
+| 4 | **Phase = natural sprint** | Each phase ≈ 1-2 days. Don't skip ahead. |
+| 5 | **New task? Add to backlog first** | Don't start coding immediately. Log it, evaluate priority. |
+| 6 | **Use `grep`, don't read entire plan** | Plans can be 500-800+ lines. `/open` and `/end` use `grep` to read only phase headers (~30 lines). |
 
 ---
 
@@ -175,28 +175,28 @@ Use `/backlog sync` to keep both artifacts aligned:
 
 ### When to Sync
 
-| Event                  | Action                                  |
-| :--------------------- | :-------------------------------------- |
-| Plan just created      | Run `/backlog sync` to populate backlog |
-| New backlog item added | Agent asks which Phase it belongs to    |
-| All phase items done   | Agent announces phase completion        |
-| Plan scope changed     | Run `/backlog sync` to find gaps        |
+| Event | Action |
+| :-- | :-- |
+| Plan just created | Run `/backlog sync` to populate backlog |
+| New backlog item added | Agent asks which Phase it belongs to |
+| All phase items done | Agent announces phase completion |
+| Plan scope changed | Run `/backlog sync` to find gaps |
 
 ---
 
 ## Workflow Commands Reference
 
-| Command             | Action               | When to Use                |
-| :------------------ | :------------------- | :------------------------- |
-| `/plan create`      | Create new plan      | Start of a new project     |
-| `/plan review`      | Show phase progress  | Need big-picture view      |
-| `/plan update`      | Modify plan          | Architecture/scope changed |
-| `/backlog review`   | Show task summary    | Every session start        |
-| `/backlog add`      | Add new item         | Discovered new task        |
-| `/backlog update`   | Change item status   | Completed or started work  |
-| `/backlog sync`     | Align with plan      | After plan changes         |
-| `/backlog evaluate` | ICE score priorities | Need to reprioritize       |
-| `/end [proj] done`  | Close + Cleanup plan | Active plan 100% complete  |
+| Command | Action | When to Use |
+| :-- | :-- | :-- |
+| `/plan create` | Create new plan | Start of a new project |
+| `/plan review` | Show phase progress | Need big-picture view |
+| `/plan update` | Modify plan | Architecture/scope changed |
+| `/backlog review` | Show task summary | Every session start |
+| `/backlog add` | Add new item | Discovered new task |
+| `/backlog update` | Change item status | Completed or started work |
+| `/backlog sync` | Align with plan | After plan changes |
+| `/backlog evaluate` | ICE score priorities | Need to reprioritize |
+| `/end [proj] done` | Close + Cleanup plan | Active plan 100% complete |
 
 ---
 

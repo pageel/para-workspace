@@ -22,7 +22,7 @@
 ---
 
 | Sección | Descripción |
-| :--- | :--- |
+| :-- | :-- |
 | [🌌 Descripción General](#-descripción-general) | Qué es PARA Workspace, sus tres principios fundamentales |
 | [📂 Arquitectura](#-arquitectura) | Estructura del repositorio + estructura del espacio de trabajo generado |
 | [📥 Instalación](#-instalación) | Requisitos previos, configuración, perfiles, solución de problemas |

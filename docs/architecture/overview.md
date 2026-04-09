@@ -102,11 +102,11 @@ Knowledge Items allow agents to learn and accumulate knowledge across sessions:
 
 ## Version Tracking
 
-| Location                        | Tracks                     |
-| :------------------------------ | :------------------------- |
-| Repo `VERSION`                  | Kernel version             |
-| `.para-workspace.yml`           | Kernel + workspace version |
-| `Resources/ai-agents/VERSION`   | Snapshot version           |
+| Location | Tracks |
+| :-- | :-- |
+| Repo `VERSION` | Kernel version |
+| `.para-workspace.yml` | Kernel + workspace version |
+| `Resources/ai-agents/VERSION` | Snapshot version |
 
 ---
 

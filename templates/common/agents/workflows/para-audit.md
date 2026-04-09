@@ -11,10 +11,10 @@ Strict workspace macro-assessor. Two modes: full structural audit against Kernel
 
 ## Actions
 
-| Action      | Description                                                  |
-| :---------- | :----------------------------------------------------------- |
-| _(default)_ | Full-scan: structural drift against Kernel Specs (I1-I11)    |
-| `update`    | Post-update: changelog-driven schema, template & rules check |
+| Action | Description |
+| :-- | :-- |
+| _(default)_ | Full-scan: structural drift against Kernel Specs (I1-I11) |
+| `update` | Post-update: changelog-driven schema, template & rules check |
 
 ---
 
@@ -113,12 +113,12 @@ Read **only** the CHANGELOG.md section for the new version (search for `## [VERS
 
 Build a **check list** from the changelog. Examples of checks that may be generated:
 
-| Changelog Signal                          | Generated Check                                    |
-| :---------------------------------------- | :------------------------------------------------- |
-| Template `backlog.md` changed             | Check all projects' backlog.md for new sections    |
-| Template `done.md` changed                | Check all projects' done.md for new structure      |
+| Changelog Signal | Generated Check |
+| :-- | :-- |
+| Template `backlog.md` changed | Check all projects' backlog.md for new sections |
+| Template `done.md` changed | Check all projects' done.md for new structure |
 | Rule `hybrid-3-file-integrity.md` updated | Check `.agents/rules.md` index if `agent.rules: true` |
-| New schema field added                    | Check all `project.md` YAML frontmatter            |
+| New schema field added | Check all `project.md` YAML frontmatter |
 
 ### 3. Check Project Schema Compliance
 

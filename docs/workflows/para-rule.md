@@ -10,13 +10,13 @@ The `/para-rule` workflow manages, installs, and standardizes AI Agent rules wit
 /para-rule [action] [name]
 ```
 
-| Action        | Description                               |
-| :------------ | :---------------------------------------- |
-| `list`        | Compare active rules vs. governed catalog |
-| `add`         | Create a new PARA-compliant rule          |
+| Action | Description |
+| :-- | :-- |
+| `list` | Compare active rules vs. governed catalog |
+| `add` | Create a new PARA-compliant rule |
 | `standardize` | Upgrade existing rule to v1.4.1 standards |
-| `install`     | Install rule from governed catalog        |
-| `validate`    | Check compliance without making changes   |
+| `install` | Install rule from governed catalog |
+| `validate` | Check compliance without making changes |
 
 ## Actions
 
