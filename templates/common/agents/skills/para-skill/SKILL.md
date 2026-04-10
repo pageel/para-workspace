@@ -92,3 +92,20 @@ and prevents directory pollution in the `workflows/` namespace.
 > `workflows/para-skill/` (a subfolder within workflows). This has been
 > migrated to `skills/para-skill/references/`. Any references to the old
 > location are obsolete.
+
+## 6. Integration with `/plan` (v1.7.12)
+
+When `/plan create` Step 5 (Design Architecture) involves creating a **new Sidecar Skill**:
+
+1. Agent MUST load this skill (`para-skill/SKILL.md`) to get structure standards (§2).
+2. The plan MUST include the Sidecar directory tree in its Architecture Overview:
+   ```
+   skills/[name]/
+   ├── SKILL.md              ← Router + When to Load
+   └── references/           ← Data files (templates, checklists)
+   ```
+3. The plan MUST include tasks for:
+   - Creating `SKILL.md` with Router Table
+   - Creating data files in `references/`
+   - Registering trigger in `skills.md` workspace index
+   - Adding entry to `skills/catalog.yml`

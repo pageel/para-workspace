@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.7.12] - 2026-04-10
+
+Extract Paradigm, Brainstorm Sidecar Skill & Catalog Version Convention.
+
+- **Added**: Brainstorm Sidecar Skill (`skills/brainstorm/`) — Decision and Research document templates extracted from workflow into just-in-time loaded skill. Reduces `brainstorm.md` by ~70 lines.
+- **Added**: Extract Paradigm for `/brainstorm` Step 4 — brainstorm file always kept intact, Research is a NEW file via COPY+TRANSFORM. User consent required. Threshold raised from 80 to 500 lines.
+- **Added**: `§9.5 Catalog Version Convention` in maintenance rules — all catalog `version` fields MUST equal workspace VERSION at time of last modification.
+- **Added**: `§6 Integration with /plan` in `para-skill/SKILL.md` — guidance for plans that design new Sidecar Skills.
+- **Changed**: Step 3 (Refinement) now has mandatory `MUST NOT skip` guard preventing Agent from bypassing user evaluation.
+- **Changed**: All 3 catalog.yml files (workflows, rules, skills) standardized to version `1.7.12`.
+
 ## [1.7.11] - 2026-04-09
 
 Backlog Governance & Staged Reload (Cognitive Bypass Phase 2).

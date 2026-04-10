@@ -13,3 +13,4 @@
 | PARA Skill | Creating skills, /para-skill workflow, skill quality validation, Co-Author engine | skills/para-skill/SKILL.md |
 | Plan Templates | /plan create Step 9 (writing plan file), need Detail Plan or Roadmap template | skills/plan/SKILL.md |
 | Docs Templates | /docs new Step 6 (generating docs), need Architecture/CLI/Deployment/Changelog/Strategy template | skills/docs/SKILL.md |
+| Brainstorm Templates | /brainstorm Step 4 (saving structured output), need Decision or Research template | skills/brainstorm/SKILL.md |

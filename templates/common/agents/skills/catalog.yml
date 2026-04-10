@@ -4,7 +4,7 @@ description: "Reusable skill building blocks used by workflows and agents."
 items:
   - id: para-kit
     name: "PARA Kit"
-    version: "1.1.0"
+    version: "1.7.12"
     kernel_min: "1.6.4"
     kernel_max: "1.x"
     entrypoint: "para-kit/SKILL.md"
@@ -13,7 +13,7 @@ items:
 
   - id: formatting
     name: "Formatting Tables & Diagrams"
-    version: "1.1.0"
+    version: "1.7.12"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "formatting/SKILL.md"
@@ -22,7 +22,7 @@ items:
 
   - id: page-map
     name: "Page Map"
-    version: "1.0.0"
+    version: "1.7.12"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "page-map/SKILL.md"
@@ -31,7 +31,7 @@ items:
 
   - id: para-skill
     name: "PARA Skill Governance"
-    version: "1.0.0"
+    version: "1.7.12"
     kernel_min: "1.7.6"
     kernel_max: "1.x"
     entrypoint: "para-skill/SKILL.md"
@@ -40,7 +40,7 @@ items:
 
   - id: plan
     name: "Plan Templates"
-    version: "1.0.1"
+    version: "1.7.12"
     kernel_min: "1.7.8"
     kernel_max: "1.x"
     entrypoint: "plan/SKILL.md"
@@ -49,10 +49,19 @@ items:
 
   - id: docs
     name: "Docs Templates"
-    version: "1.0.0"
+    version: "1.7.12"
     kernel_min: "1.7.8"
     kernel_max: "1.x"
     entrypoint: "docs/SKILL.md"
     description: "Sidecar data for /docs workflow — Architecture, CLI, Deployment, Changelog, Strategy templates loaded just-in-time. Reduces docs.md by ~160 lines."
     tags: ["docs", "sidecar", "templates", "token-optimization"]
+
+  - id: brainstorm
+    name: "Brainstorm Templates"
+    version: "1.7.12"
+    kernel_min: "1.7.12"
+    kernel_max: "1.x"
+    entrypoint: "brainstorm/SKILL.md"
+    description: "Sidecar data for /brainstorm workflow — Decision and Research document templates loaded just-in-time. Extract Paradigm governance (v1.7.12)."
+    tags: ["brainstorm", "sidecar", "templates", "token-optimization", "extract-paradigm"]
 

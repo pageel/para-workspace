@@ -5,7 +5,7 @@ source: catalog
 
 # /brainstorm [project-name] [topic]
 
-> **Workspace Version:** 1.7.10 (Cognitive Bypass Fix)
+> **Workspace Version:** 1.7.12 (Extract Paradigm + Sidecar Skill)
 
 Collaborative troubleshooting and ideation for a project. Use this workflow to explore problem spaces, evaluate potential solutions, and clarify thinking before committing to a formal implementation plan (`/plan`).
 
@@ -58,20 +58,25 @@ Generate 3-5 distinct perspectives, solutions, or root causes related to the top
 
 ### 3. Refinement & Evaluation
 
+> ⚠️ **MUST NOT skip this step.** Agent MUST present the options to the user and
+> wait for explicit feedback before proceeding to Step 4. Skipping refinement
+> leads to premature decisions and consent violations.
+
 Collaborate with the user to evaluate the options:
 
 - Eliminate unviable ideas.
 - Combine overlapping concepts.
 - Drill down into the technical, architectural, or operational details of the most promising approach.
+- _Wait for user confirmation that refinement is complete before saving._
 
 ### 4. Save Structured Output
 
 // turbo
 
-**Evaluate output size before saving:**
-
-- **Small brainstorm** (≤ 80 lines, ≤ 2 options, no data tables): Save 1 file only (Decision)
-- **Large brainstorm** (> 80 lines, ≥ 3 options, has data tables/risk analysis/prototypes): Save 2 files (Decision + Research)
+> 🧩 **Sidecar Skill:** Load document templates from `.agents/skills/brainstorm/`.
+> Read `SKILL.md` for the Router Table, then load the template file needed:
+> - **Decision template** → `references/templates/decision.md`
+> - **Research template** → `references/templates/research.md`
 
 > **Naming convention:** `{type}-{YYYY-MM-DD}-{topic-slug}.md`
 > - `type`: `brainstorm` or `decision`
@@ -84,76 +89,44 @@ mkdir -p Projects/[project-name]/artifacts/para-decisions
 
 #### File 1 — Decision (always saved)
 
-Save to `Projects/[project-name]/artifacts/para-decisions/brainstorm-[YYYY-MM-DD]-[topic].md`:
+Save to `Projects/[project-name]/artifacts/para-decisions/brainstorm-[YYYY-MM-DD]-[topic].md`
+using the **Decision template** from the Sidecar Skill.
 
-```markdown
-# Brainstorm: [Topic]
+#### File 2 — Research (Extract Paradigm — user consent required)
 
-> **Date:** YYYY-MM-DD | **Project:** [project-name]
-> **Research:** `docs/researches/[topic]-[YYYY-MM-DD].md` ← (only if large brainstorm)
+> ⚠️ **MUST ask user before creating File 2.** Agent MUST NOT auto-create
+> the Research file. Present the evaluation to the user and wait for consent.
 
-## Problem
+**Evaluate whether to propose extraction:**
 
-[1-2 sentences]
+- **Threshold:** Brainstorm content ≥ **500 lines** OR ≥ 5 refinement rounds
+- **Below threshold:** Save Decision only. Do NOT propose Research extraction.
+- **Above threshold:** Present to user:
 
-## Options
+```
+📊 BRAINSTORM SIZE: [N] lines, [N] refinement rounds
 
-| # | Option | Key Trade-off | Score |
-|---|---|---|---|
-| 1 | [Name] | [Pro vs Con] | |
-| 2 | [Name] | [Pro vs Con] | |
+This brainstorm exceeds the extraction threshold (500+ lines).
+I recommend extracting detailed analysis into a standalone Research document.
 
-## Decision
+⚠️ EXTRACT PARADIGM:
+  - Brainstorm file: KEPT INTACT (not modified)
+  - Research file: NEW file created via COPY + TRANSFORM
+  - No content is removed from the original brainstorm.
 
-[Selected approach and rationale — or "Pending" if still incubating]
-
-### Key Principles
-
-1. ...
-2. ...
-
-## Next Steps
-
-1. ...
+Proceed with Research extraction? (y/n)
 ```
 
-#### File 2 — Research (large brainstorm only)
+**If user confirms (y):**
 
 ```bash
 mkdir -p Projects/[project-name]/docs/researches
 ```
 
-Save to `Projects/[project-name]/docs/researches/[topic]-[YYYY-MM-DD].md`:
+Save to `Projects/[project-name]/docs/researches/[topic]-[YYYY-MM-DD].md`
+using the **Research template** from the Sidecar Skill.
 
-```markdown
-# Research: [Topic]
-
-> **Date:** YYYY-MM-DD | **Project:** [project-name]
-> **Decision file:** `artifacts/para-decisions/brainstorm-[YYYY-MM-DD]-[topic].md`
-
-## 1. Context & Data
-
-[Raw data, statistics, measurements]
-
-## 2. Analysis
-
-[Detailed breakdown, anatomy, line-by-line if needed]
-
-## 3. Options Evaluated
-
-### Option 1: [Name]
-- **Concept:** ...
-- **Pros:** ...
-- **Cons/Risks:** ...
-
-## 4. Chosen Option — Deep Dive
-
-[Prototype, diagrams, risk matrix, implementation details]
-
-## 5+. Supplementary
-
-[Ecosystem impact, related patterns, future evolution]
-```
+**If user declines (n):** Skip. Save Decision only.
 
 ### 5. Choose Next Action
 
@@ -238,7 +211,7 @@ mkdir -p Projects/[project-name]/docs/researches
 1. Save analysis as `docs/researches/[topic]-[YYYY-MM-DD].md` using the Research template from Step 4
 2. Add cross-reference header pointing back to the brainstorm Decision file
 
-> **When to use:** The brainstorm produced valuable analysis data (benchmarks, comparisons, prototypes) worth preserving separately, but didn't trigger the automatic Dual Output threshold in Step 4.
+> **When to use:** The brainstorm produced valuable analysis data (benchmarks, comparisons, prototypes) worth preserving separately, but didn't trigger the Extract threshold in Step 4.
 
 ## Related
 

@@ -4,7 +4,7 @@ description: "Stateless workflow library for PARA Workspace agents."
 items:
   - id: backlog
     name: "Backlog Controller"
-    version: "1.3.1"
+    version: "1.7.12"
     kernel_min: "1.6.2"
     kernel_max: "1.x"
     entrypoint: "backlog.md"
@@ -13,7 +13,7 @@ items:
 
   - id: open
     name: "Session Open"
-    version: "1.7.2"
+    version: "1.7.12"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "open.md"
@@ -22,7 +22,7 @@ items:
 
   - id: end
     name: "Session End"
-    version: "1.7.1"
+    version: "1.7.12"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "end.md"
@@ -31,7 +31,7 @@ items:
 
   - id: install
     name: "Install / Sync"
-    version: "1.0.0"
+    version: "1.7.12"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "install.md"
@@ -40,7 +40,7 @@ items:
 
   - id: new-project
     name: "New Project"
-    version: "1.1.0"
+    version: "1.7.12"
     kernel_min: "1.6.0"
     kernel_max: "1.x"
     entrypoint: "new-project.md"
@@ -49,7 +49,7 @@ items:
 
   - id: verify
     name: "Verify Task"
-    version: "1.0.0"
+    version: "1.7.12"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "verify.md"
@@ -58,7 +58,7 @@ items:
 
   - id: retro
     name: "Project Retrospective"
-    version: "1.7.1"
+    version: "1.7.12"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "retro.md"
@@ -67,7 +67,7 @@ items:
 
   - id: push
     name: "Push"
-    version: "1.0.1"
+    version: "1.7.12"
     kernel_min: "1.6.2"
     kernel_max: "1.x"
     entrypoint: "push.md"
@@ -76,7 +76,7 @@ items:
 
   - id: release
     name: "Release Gate"
-    version: "1.0.1"
+    version: "1.7.12"
     kernel_min: "1.6.2"
     kernel_max: "1.x"
     entrypoint: "release.md"
@@ -85,7 +85,7 @@ items:
 
   - id: merge
     name: "Semantic Merge"
-    version: "1.0.0"
+    version: "1.7.12"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "merge.md"
@@ -94,7 +94,7 @@ items:
 
   - id: config
     name: "Config Manager"
-    version: "1.0.0"
+    version: "1.7.12"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "config.md"
@@ -103,7 +103,7 @@ items:
 
   - id: backup
     name: "Backup"
-    version: "1.0.0"
+    version: "1.7.12"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "backup.md"
@@ -112,7 +112,7 @@ items:
 
   - id: para
     name: "PARA Master Controller"
-    version: "1.1.0"
+    version: "1.7.12"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "para.md"
@@ -121,7 +121,7 @@ items:
 
   - id: inbox
     name: "Inbox Categorizer"
-    version: "1.1.0"
+    version: "1.7.12"
     kernel_min: "1.5.3"
     kernel_max: "1.x"
     entrypoint: "inbox.md"
@@ -130,7 +130,7 @@ items:
 
   - id: learn
     name: "Learn & Capture"
-    version: "1.7.1"
+    version: "1.7.12"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "learn.md"
@@ -139,7 +139,7 @@ items:
 
   - id: para-workflow
     name: "Workflow Manager"
-    version: "1.0.0"
+    version: "1.7.12"
     kernel_min: "1.4.1"
     kernel_max: "1.x"
     entrypoint: "para-workflow.md"
@@ -148,7 +148,7 @@ items:
 
   - id: para-rule
     name: "Rule Manager"
-    version: "1.0.0"
+    version: "1.7.12"
     kernel_min: "1.4.1"
     kernel_max: "1.x"
     entrypoint: "para-rule.md"
@@ -157,7 +157,7 @@ items:
 
   - id: plan
     name: "Plan Controller"
-    version: "1.7.10"
+    version: "1.7.12"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "plan.md"
@@ -166,7 +166,7 @@ items:
 
   - id: para-audit
     name: "Macro Assessor Audit"
-    version: "1.7.1"
+    version: "1.7.12"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "para-audit.md"
@@ -175,7 +175,7 @@ items:
 
   - id: docs
     name: "Documentation Manager"
-    version: "1.7.10"
+    version: "1.7.12"
     kernel_min: "1.7.8"
     kernel_max: "1.x"
     entrypoint: "docs.md"
@@ -184,7 +184,7 @@ items:
 
   - id: update
     name: "Safe Update"
-    version: "1.0.1"
+    version: "1.7.12"
     kernel_min: "1.5.0"
     kernel_max: "1.x"
     entrypoint: "update.md"
@@ -193,16 +193,16 @@ items:
 
   - id: brainstorm
     name: "Brainstorm"
-    version: "1.7.10"
+    version: "1.7.12"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "brainstorm.md"
-    description: "Cognitive Bypass Fix: Soft Dump payload in Step 1 (v1.7.10). Dual Output, 7 exit paths."
-    tags: ["brainstorm", "ideation", "planning", "knowledge", "dual-output"]
+    description: "Extract Paradigm + Sidecar Skill (v1.7.12). Consent gate, 500-line threshold, MUST NOT skip Step 3."
+    tags: ["brainstorm", "ideation", "planning", "knowledge", "extract-paradigm", "sidecar"]
 
   - id: para-knowledge
     name: "Knowledge Manager"
-    version: "1.4.0"
+    version: "1.7.12"
     kernel_min: "1.7.5"
     kernel_max: "1.x"
     entrypoint: "para-knowledge.md"
@@ -211,7 +211,7 @@ items:
 
   - id: para-skill
     name: "Skill Manager"
-    version: "1.0.1"
+    version: "1.7.12"
     kernel_min: "1.7.6"
     kernel_max: "1.x"
     entrypoint: "para-skill.md"

@@ -123,11 +123,14 @@ ELSE (local):
 .agents/
 ├── rules.md          # Workspace rules trigger index (12 rules)
 ├── rules/            # Rule files (loaded on-demand by trigger)
-├── skills.md         # Workspace skills trigger index (4 skills)
+├── skills.md         # Workspace skills trigger index (7 skills)
 ├── skills/           # Skill directories
 │   ├── formatting/   # Table/diagram formatting templates
 │   ├── para-kit/     # PARA reference card (schema, layout, governance)
 │   ├── para-skill/   # Governance & Co-Author engine for skill creation (v1.7.6.3)
+│   ├── plan/         # Sidecar data for /plan workflow (v1.7.8)
+│   ├── docs/         # Sidecar data for /docs workflow (v1.7.8)
+│   ├── brainstorm/   # Sidecar data for /brainstorm workflow (v1.7.12)
 │   └── page-map/     # Website visual structure management (v1.7.6)
 └── workflows/        # 24 core workflow files
 ```
@@ -246,8 +249,13 @@ Skills are folders of instructions that extend agent capabilities:
 | Formatting | Tables, diagrams, trees, visual markdown | Templates and patterns |
 | Page Map | Website visual structure, PAGE_MAP.md, BLUEPRINT.md (v1.7.6) | Manage page/component structure |
 | PARA Skill | /para-skill workflow, skill creation, quality validation (v1.7.6.3) | Governance & Co-Author engine (Sidecar to /para-skill workflow) |
+| Plan Templates | /plan create Step 9 (writing plan file) (v1.7.8) | Sidecar data: Detail Plan and Roadmap document templates |
+| Docs Templates | /docs new Step 6 (generating docs) (v1.7.8) | Sidecar data: Architecture, CLI, Deployment, Changelog, Strategy templates |
+| Brainstorm Templates | /brainstorm Step 4 (saving output) (v1.7.12) | Sidecar data: Decision and Research document templates (Extract Paradigm) |
 
 Skills promoted from rules: standalone, English-first, constraints + templates merged.
+
+Total: **7 skills** (4 standalone + 3 sidecar).
 
 ### Sidecar Skill Pattern (v1.7.6.3)
 
@@ -296,6 +304,7 @@ skills/[name]/
 | 1.7.9 | Hotfix | Proactive Trigger Check update for Ideation/Brainstorm |
 | 1.7.10 | — | Cognitive Bypass Fix: Soft Dump payload in brainstorm, plan, docs |
 | 1.7.11 | Feature | Backlog Optimization (v2), Staged Reload, Phase Pre-flight, generic OSS templates |
+| 1.7.12 | Feature | Extract Paradigm for /brainstorm (consent gate, 500-line threshold), Brainstorm Sidecar Skill, Catalog Version Convention, /plan integration with para-skill |
 
 ## 15. Knowledge System (v1.7.0+)
 
