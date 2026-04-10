@@ -385,6 +385,9 @@ Skills are reusable knowledge modules loaded on-demand via the skills trigger in
 | **[PARA Kit](./docs/skills/para-kit.md)** | PARA workspace structure reference — schema, layout, kernel governance, intelligence routing |
 | **[Formatting](./docs/skills/formatting.md)** | Tables, diagrams, tree listings, ASCII box art |
 | **[Page Map](./docs/skills/page-map.md)** | Website visual structure management using PAGE_MAP.md and BLUEPRINT.md |
+| **[Plan Templates](./docs/skills/plan.md)** | Detail Plan & Roadmap templates (Sidecar, v1.7.8)  |
+| **[Docs Templates](./docs/skills/docs.md)** | Architecture, CLI, Strategy templates (Sidecar, v1.7.8)  |
+| **[Brainstorm Templates](./docs/skills/brainstorm.md)** | Decision & Research templates (Sidecar, v1.7.12)  |
 
 ---
 

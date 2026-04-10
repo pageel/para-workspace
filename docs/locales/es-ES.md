@@ -30,7 +30,7 @@
 | [🛠️ Referencia de CLI](#-referencia-cli) | Todos los comandos de CLI |
 | [📑 Catálogo de Workflows](#-catálogo-de-workflows) | 24 flujos de trabajo (workflows) gobernados |
 | [🛡️ Catálogo de Reglas](#-catálogo-de-reglas) | 11 reglas de gobernanza |
-| [🧩 Catálogo de Skills](#-catálogo-de-skills) | 3 habilidades (skills) reutilizables |
+| [🧩 Catálogo de Skills](#-catálogo-de-skills) | 6 habilidades (skills) reutilizables |
 | [🧩 Gestión de Tareas](#-gestión-de-tareas-modelo-híbrido-de-3-archivos) | Modelo híbrido de 3 archivos |
 | [🔄 Actualización](#-actualizando-versiones) | Actualización automática + instalación limpia |
 | [🗺️ Hoja de Ruta](#-hoja-de-ruta) | Historial de versiones + próximas características |
@@ -206,7 +206,7 @@ para migrate [--from] [--to]    # Utilidad de migración
 El sistema incluye:
 - **24 Workflows:** Desde gestores de tareas (`/backlog`), flujos de apertura (`/open`), auditorías (`/para-audit`) hasta sistemas de conocimiento cruzado (`/para-knowledge`).
 - **11 Reglas de Gobernabilidad:** Defienden el versionado, las buenas prácticas de Git (VCS) o evitan mutaciones riesgosas. Todas optimizadas bajo un Índice Disparador.
-- **3 Skills Base:** Facilitan el entendimiento de componentes estáticos como `PARA Kit`, diagramas visuales, y mapas de página (`Page Map`).
+- **6 Skills Base:** Facilitan el entendimiento de componentes estáticos como `PARA Kit`, diagramas visuales, y mapas de página (`Page Map`).
 
 ---
 
@@ -243,7 +243,7 @@ Una vez que se estandaricen nuevos workflows, correcciones en kernel el comando 
 
 ## 🗺️ Hoja de Ruta
 
-Versión actual: **1.7.6** (Skill Catalog Architecture).
+Versión actual: **1.7.12** (Skill Catalog Architecture).
 Próximos lanzamientos vislumbrados: **v1.8.0** (Sistemas por Departamento) y **v1.9.0** (Fronteras Comunitarias & Confianza).
 
 ---

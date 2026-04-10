@@ -387,6 +387,9 @@ Skills là các module kiến thức tái sử dụng, được load theo yêu c
 | **[PARA Kit](../skills/para-kit.md)** | Cấu trúc PARA workspace — schema, layout, kernel governance, intelligence routing |
 | **[Formatting](../skills/formatting.md)** | Bảng, biểu đồ, tree listings, ASCII box art |
 | **[Page Map](../skills/page-map.md)** | Quản lý cấu trúc visual website với PAGE_MAP.md và BLUEPRINT.md |
+| **[Plan Templates](../skills/plan.md)** | Template Detail Plan & Roadmap (Sidecar, v1.7.8) |
+| **[Docs Templates](../skills/docs.md)** | Template Architecture, CLI, Strategy (Sidecar, v1.7.8) |
+| **[Brainstorm Templates](../skills/brainstorm.md)** | Template Decision & Research (Sidecar, v1.7.12) |
 
 ---
 
@@ -677,4 +680,4 @@ Xem [CONTRIBUTING.md](../../CONTRIBUTING.md) để biết hướng dẫn. Điể
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.7.6_
+_Phiên bản: 1.7.12_
