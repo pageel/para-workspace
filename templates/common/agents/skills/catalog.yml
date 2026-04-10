@@ -40,11 +40,11 @@ items:
 
   - id: plan
     name: "Plan Templates"
-    version: "1.0.0"
+    version: "1.0.1"
     kernel_min: "1.7.8"
     kernel_max: "1.x"
     entrypoint: "plan/SKILL.md"
-    description: "Sidecar data for /plan workflow — Detail Plan and Roadmap templates loaded just-in-time. Reduces plan.md by ~120 lines."
+    description: "Sidecar data for /plan workflow — Detail Plan and Roadmap templates loaded just-in-time. Plan naming convention clarified (v1.0.1)."
     tags: ["plan", "sidecar", "templates", "token-optimization"]
 
   - id: docs

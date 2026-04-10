@@ -1,6 +1,6 @@
 # Glossary & Impact Map
 
-> **Version:** 1.7.11 | **Last updated:** 2026-04-09
+> **Version:** 1.7.11.1 | **Last updated:** 2026-04-10
 > **Purpose:** Glossary of terms, variables, and fields used in PARA Workspace.
 > Each entry = 5 uniform fields (graph-ready design).
 
@@ -169,6 +169,54 @@
 - **Impact if changed:** 1 workflow + 1 rule. Low.
 - **Related:** `roadmap`
 
+## sidecar_skill
+
+- **Definition:** Architecture pattern (v1.7.8) for separating data templates from workflow logic. Workflows contain steps only; data templates live in `.agents/skills/{name}/references/`.
+- **Where defined:** Convention — `.agents/skills/{name}/SKILL.md` + `references/` directory.
+- **Where used:**
+  - `/plan` (Step 9) — loads template from `skills/plan/references/detail-plan.md`
+  - `/docs` (Step 6) — loads template from `skills/docs/references/`
+  - `catalog.yml` (skills) — registered as versioned items
+- **Impact if changed:** 2 workflows + 2 catalogs. Medium.
+- **Related:** `agent`, `proactive_trigger_check`
+
+## soft_dump
+
+- **Definition:** Layer 3 defense mechanism (v1.7.9.1) — mandatory bash script injected into workflow Step 0. Dumps `.agents/rules.md` + `.agents/skills.md` content into the context window. The agent cannot ignore data already present in context.
+- **Where defined:** Convention — `agent-behavior.md` §4, embedded in `/brainstorm`, `/plan`, `/docs` Step 0.
+- **Where used:**
+  - `/brainstorm` (Step 1) — Soft Dump payload
+  - `/plan` (Step 0) — Soft Dump payload
+  - `/docs` (Step 0) — Soft Dump payload
+- **Impact if changed:** 3 workflows. Removing breaks cognitive bypass defense.
+- **Related:** `cognitive_bypass`, `proactive_trigger_check`
+
+## cognitive_bypass
+
+- **Definition:** Failure mode where AI agent skips rule-reading steps to jump directly into ideation/output. Passive text reminders are ineffective; only physical force (Soft Dump) resolves it.
+- **Where defined:** Research — `docs/researches/` (internal). Defense in `defense-in-depth.md` Layer 3.
+- **Where used:** Architecture reference only — not a schema field.
+- **Impact if changed:** N/A — descriptive term.
+- **Related:** `soft_dump`, `proactive_trigger_check`
+
+## staged_reload
+
+- **Definition:** `/plan create` Step 9.5 (v1.7.11) — agent reloads rules/skills indices before writing the final Checklist section. Prevents Token Decay from omitting critical governance tasks (Version Bump, Docs Impact, KI Sync).
+- **Where defined:** Convention — `/plan` workflow Step 9.5.
+- **Where used:**
+  - `/plan` (Step 9.5) — Pre-Checklist Context Reload
+- **Impact if changed:** 1 workflow. Low.
+- **Related:** `soft_dump`, `phase_preflight`
+
+## phase_preflight
+
+- **Definition:** Trap embedded in plan template Phase headers (v1.7.11). Each Phase includes a blockquote requiring the agent to reload rules/skills before executing any task in that Phase.
+- **Where defined:** Convention — plan Sidecar Skill `references/detail-plan.md`.
+- **Where used:**
+  - Plan template — Phase 0, Phase 1, etc. header blockquotes
+- **Impact if changed:** 1 skill template. Low.
+- **Related:** `staged_reload`, `soft_dump`, `sidecar_skill`
+
 ---
 
 ## Impact Summary
@@ -188,3 +236,8 @@
 | `roadmap` | 3 | convention | 🟡 Medium |
 | `detail_plan` | 4 (via AP) | convention | 🟢 Low |
 | `roadmap_sync` | 1+1 rule | 1 rule | 🟢 Low |
+| `sidecar_skill` | 2+2 catalogs | convention | 🟡 Medium |
+| `soft_dump` | 3 | convention | 🟡 Medium |
+| `cognitive_bypass` | — | research | 🟢 Descriptive |
+| `staged_reload` | 1 | convention | 🟢 Low |
+| `phase_preflight` | 1 template | convention | 🟢 Low |

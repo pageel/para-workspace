@@ -19,9 +19,9 @@ Workflows are the **UI layer** for AI agents. They define processes that agents 
 | `/para` | Core | Master workflow — see [Para Guide](../workflows/para.md) |
 | `/open` | Session | Start session, load context — see [Open Guide](../workflows/open.md) |
 | `/end` | Session | Close session, save logs — see [End Guide](../workflows/end.md) |
-| `/plan` | Planning | Create implementation plans — see [Plan Guide](../workflows/plan.md) |
-| `/backlog` | Planning | Manage product backlog — see [Backlog Guide](../workflows/backlog.md) |
-| `/brainstorm` | Planning | Collaborative ideation — see [Brainstorm Guide](../workflows/brainstorm.md) |
+| `/plan` | Planning | Create implementation plans. Sidecar Skill templates (v1.7.8). Step 9.5 Staged Reload (v1.7.11) — see [Plan Guide](../workflows/plan.md) |
+| `/backlog` | Planning | Manage product backlog. Backlog v2 §1-§5 structure (v1.7.11) — see [Backlog Guide](../workflows/backlog.md) |
+| `/brainstorm` | Planning | Collaborative ideation. Dual Output + 7 exit paths (v1.7.7). Soft Dump Pre-flight (v1.7.9.1) — see [Brainstorm Guide](../workflows/brainstorm.md) |
 | `/push` | Dev | Commit & push code — see [Push Guide](../workflows/push.md) |
 | `/verify` | QA | Check task completion — see [Verify Guide](../workflows/verify.md) |
 | `/retro` | Review | Retrospective before archive — see [Retro Guide](../workflows/retro.md) |
@@ -31,8 +31,10 @@ Workflows are the **UI layer** for AI agents. They define processes that agents 
 | `/update` | Admin | Agent-guided safe workspace update — see [Update Guide](../workflows/update.md) |
 | `/para-rule` | Admin | Manage agent rules — see [Para-Rule Guide](../workflows/para-rule.md) |
 | `/para-workflow` | Admin | Manage agent workflows — see [Para-Workflow Guide](../workflows/para-workflow.md) |
-| `/docs` | Admin | Generate and publish documentation — see [Docs Guide](../workflows/docs.md) |
+| `/para-skill` | Admin | Manage agent skills via Co-Author engine (v1.7.6) — see [Para-Skill Guide](../workflows/para-skill.md) |
+| `/docs` | Admin | Generate and publish documentation. Sidecar Skill templates (v1.7.8). Soft Dump Pre-flight (v1.7.10) — see [Docs Guide](../workflows/docs.md) |
 | `/para-audit` | Audit | Macro Assessor for structural drift — see [Para-Audit Guide](../workflows/para-audit.md) |
+| `/para-knowledge` | Knowledge | Manage Knowledge Items — dashboard, create, update, audit, archive (v1.7.0+) |
 
 ## Kernel Compatibility
 
@@ -96,3 +98,5 @@ preferences:
 
 - [Development Workflow Guide](../guides/development.md) — How all 4 workflow streams fit together
 - [Planning Guide](../guides/planning.md) — Plan + Backlog detailed guide
+- [Sidecar Skill Architecture](../architecture/sidecar-skill.md) — How workflows delegate to skill templates
+- [Defense-in-Depth](../architecture/defense-in-depth.md) — Step 0 Pre-flight + Soft Dump layer

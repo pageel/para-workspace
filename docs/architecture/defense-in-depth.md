@@ -1,12 +1,12 @@
 # Defense-in-Depth: Agent Rule Compliance After Truncation
 
-> **Version**: 1.7.4 | **Last reviewed**: 2026-04-03
+> **Version**: 1.7.11 | **Last reviewed**: 2026-04-10
 
 ## Overview
 
 AI agents in long conversations experience **context truncation** — the platform drops earlier context to stay within token limits. When this happens, the agent silently loses all rules loaded at session start.
 
-PARA Workspace implements a **4-layer Defense-in-Depth** strategy to ensure rule compliance survives truncation. No single layer is perfect; the strength lies in their combination and independence.
+PARA Workspace implements a **4-layer Defense-in-Depth** strategy to ensure rule compliance survives truncation. No single layer is perfect; the strength lies in their combination and independence. Layer 3 (Physical Force) is the only layer that **breaks the circular dependency** — strengthened with the Soft Dump mechanism since v1.7.9.1.
 
 ## The Core Problem: Circular Dependency
 
@@ -81,9 +81,9 @@ The `/open` report includes a compact rules reminder (~40 tokens) positioned nea
 
 ---
 
-## Layer 3: Workflow Pre-flight — Step 0
+## Layer 3: Workflow Pre-flight — Step 0 + Soft Dump
 
-**Files:** 7 workflows with side-effects
+**Files:** 8 workflows with side-effects + 3 ideation workflows
 
 The **only layer that breaks the circular dependency**:
 
@@ -93,23 +93,40 @@ Agent runs /push → Step 0 FORCES re-read rules.md → Rules restored → Safe 
 
 Step 0 is a **mandatory first step** in workflows that perform side-effects:
 
-| Workflow | Side-effect risk |
-|:--|:--|
-| `/push` | Git commit, push |
-| `/release` | Version bump, tag |
-| `/end` | Task file mutations |
-| `/plan` | Plan file creation |
-| `/docs` | File generation |
-| `/backlog` | Task mutations |
-| `/retro` | Archive operations |
-| `/para-knowledge` | KI write/update (v1.7.0+) |
+| Workflow | Side-effect risk | Pre-flight type |
+|:--|:--|:--|
+| `/push` | Git commit, push | Step 0 passive |
+| `/release` | Version bump, tag | Step 0 passive |
+| `/end` | Task file mutations | Step 0 passive |
+| `/plan` | Plan file creation | Step 0 + **Soft Dump** |
+| `/docs` | File generation | Step 0 + **Soft Dump** |
+| `/backlog` | Task mutations | Step 0 passive |
+| `/retro` | Archive operations | Step 0 passive |
+| `/para-knowledge` | KI write/update (v1.7.0+) | Step 0 passive |
+| `/brainstorm` | Decision + research docs | **Soft Dump** (v1.7.9.1) |
 
-**Why it works:** The agent reads the workflow file from disk → sees Step 0 → executes it → rules are loaded fresh. No dependency on agent memory.
+### Soft Dump Payload (v1.7.9.1 — Physical Force)
 
-**Why Step 0?** Before any other step. If placed at Step 3, Steps 1-2 would execute unprotected.
+Workflows with **high ideation + low trigger awareness** (especially `/brainstorm`, `/plan`, `/docs`) are susceptible to **Cognitive Bypass** — the agent skips rule-reading steps to jump directly into thinking.
 
-**Strength:** Active protection. Breaks circular dependency. Fresh from disk.
-**Weakness:** Only triggers when agent uses a workflow. Direct file edits bypass this.
+Passive text reminders ("Re-read rules.md") **failed in v1.7.9** because the agent still skipped them.
+
+**Solution: Inject mandatory bash script** (Soft Dump) — the agent must RUN the command, data flows from disk into the context window, impossible to ignore:
+
+```bash
+# Tier-1 Index Force Load (Anti-Cognitive-Bypass v1.7.9.1)
+cat .agents/rules.md 2>/dev/null | head -n 30
+cat .agents/skills.md 2>/dev/null | head -n 30
+```
+
+**Principle:** Agent cannot ignore data already present in the context window → 100% governance compliance.
+
+**`// turbo`** annotation → auto-run, zero friction.
+
+**Why it works:** The agent reads the workflow file from disk → sees Step 0 / Soft Dump → executes it → rules are loaded fresh. No dependency on agent memory.
+
+**Strength:** Active. Breaks circular dependency. Fresh from disk. Defeats Cognitive Bypass.
+**Weakness:** Only triggers when agent uses a workflow. Direct file edits bypass this. ~200 tokens overhead per Soft Dump workflow.
 
 ---
 
@@ -153,8 +170,9 @@ Defined as constraint C6 in `hybrid-3-file-integrity.md`.
 
 ```
 Action                          L1   L2   L3   L4
-──────────────────────────────  ──   ──   ──   ──
+────────────────────────────────  ──   ──   ──   ──
 Agent runs /push                ⚠️   ✅   ✅   —
+Agent runs /brainstorm          ⚠️   —   ✅⭐ —    ← Soft Dump
 Agent runs /end                 ⚠️   ✅   ✅   ✅
 Agent edits done.md directly    ✅   —    —    ✅  ← L4 is the last defense
 Agent modifies kernel file      ✅   ✅   —    ✅
@@ -162,15 +180,18 @@ Agent edits rules file          ✅   —    —    ✅
 Free-form request (no workflow) ⚠️   —    —    ✅  ← Only L4 catches this
 ```
 
+> ⭐ = Soft Dump (Physical Force) — stronger than passive Step 0.
+
 ## Token Budget
 
 | Layer | Per-session cost | When |
 |:--|:--|:--|
 | L1 | ~200 tokens | Rules index read |
 | L2 | ~40 tokens | In /open report |
-| L3 | ~30 tokens | Per workflow invoke |
+| L3 passive | ~30 tokens | Per workflow invoke |
+| L3 Soft Dump | ~200 tokens | /brainstorm, /plan, /docs |
 | L4 | ~10-13 tokens/file | When file is opened |
-| **Total** | **~300 tokens** | **~3-5% of session budget** |
+| **Total** | **~400-600 tokens** | **~3-5% of session budget** |
 
 ## File Map
 
@@ -186,10 +207,11 @@ Free-form request (no workflow) ⚠️   —    —    ✅  ← Only L4 catches 
 - [Context Recovery](./context-recovery.md) — Concise 4-layer overview
 - [Rule Layers Architecture](./rule-layers.md) — Two-Tier loading + workflow coverage
 - [Hybrid 3-File Architecture](./hybrid-3-file.md) — C6 guard headers
+- [Sidecar Skill Pattern](./sidecar-skill.md) — Separating logic from data (v1.7.8+)
 - [Knowledge System](./knowledge-system.md) — KI governance (v1.7.0+)
 - `hybrid-3-file-integrity.md` C6 — Guard type taxonomy
 - `agent-behavior.md` §4 — Context Recovery protocol + File-Level Guards
 
 ---
 
-_Last updated: 2026-04-03 (FEAT-61: v1.7.4)_
+_Last updated: 2026-04-10 (FEAT-70: v1.7.11.1 docs publish)_
