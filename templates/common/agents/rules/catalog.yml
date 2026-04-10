@@ -4,7 +4,7 @@ description: "Governance rule library applied to agent runtime."
 items:
   - id: agent-behavior
     name: "Agent Behavior"
-    version: "1.7.12"
+    version: "1.1.0"
     kernel_min: "1.6.2"
     kernel_max: "1.x"
     entrypoint: "agent-behavior.md"
@@ -13,7 +13,7 @@ items:
 
   - id: governance
     name: "Agent Governance"
-    version: "1.7.12"
+    version: "1.0.0"
     kernel_min: "1.4.5"
     kernel_max: "1.x"
     entrypoint: "governance.md"
@@ -22,7 +22,7 @@ items:
 
   - id: artifact-standard
     name: "Artifact Standard"
-    version: "1.7.12"
+    version: "1.0.0"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "artifact-standard.md"
@@ -31,7 +31,7 @@ items:
 
   - id: context-rules
     name: "Context Rules"
-    version: "1.7.12"
+    version: "1.1.0"
     kernel_min: "1.6.2"
     kernel_max: "1.x"
     entrypoint: "context-rules.md"
@@ -40,7 +40,7 @@ items:
 
   - id: exports-data
     name: "Data Export Rules"
-    version: "1.7.12"
+    version: "1.0.0"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "exports-data.md"
@@ -49,7 +49,7 @@ items:
 
   - id: naming
     name: "Naming Conventions"
-    version: "1.7.12"
+    version: "1.0.0"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "naming.md"
@@ -58,7 +58,7 @@ items:
 
   - id: para-discipline
     name: "PARA Discipline"
-    version: "1.7.12"
+    version: "1.0.0"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "para-discipline.md"
@@ -67,7 +67,7 @@ items:
 
   - id: vcs
     name: "Version Control"
-    version: "1.7.12"
+    version: "1.0.0"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "vcs.md"
@@ -76,7 +76,7 @@ items:
 
   - id: versioning
     name: "Versioning Policy"
-    version: "1.7.12"
+    version: "1.0.0"
     kernel_min: "1.4.0"
     kernel_max: "1.x"
     entrypoint: "versioning.md"
@@ -94,7 +94,7 @@ items:
 
   - id: knowledge
     name: "Knowledge Rules"
-    version: "1.7.12"
+    version: "1.1.0"
     kernel_min: "1.7.0"
     kernel_max: "1.x"
     entrypoint: "knowledge.md"
