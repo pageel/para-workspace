@@ -35,6 +35,8 @@ Workflows are the **UI layer** for AI agents. They define processes that agents 
 | `/docs` | Admin | Generate and publish documentation. Sidecar Skill templates (v1.7.8). Soft Dump Pre-flight (v1.7.10) — see [Docs Guide](../workflows/docs.md) |
 | `/para-audit` | Audit | Macro Assessor for structural drift — see [Para-Audit Guide](../workflows/para-audit.md) |
 | `/para-knowledge` | Knowledge | Manage Knowledge Items — dashboard, create, update, audit, archive (v1.7.0+) |
+| `/write` | Content | Write deep-dive content (ebook, paper, tutorial, blog, social). Sidecar Skill templates (v1.7.14) |
+| `/logs` | Diagnostics | Session telemetry — Fast Glance and Structured Audit modes with scope filtering (v1.7.14) |
 
 ## Kernel Compatibility
 

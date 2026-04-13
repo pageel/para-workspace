@@ -77,7 +77,7 @@ Create a new PARA-compliant workflow from scratch.
 ```markdown
 ---
 description: [Short description of the workflow]
-source: catalog
+source: user
 ---
 
 # /[name] [args]

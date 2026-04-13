@@ -1,6 +1,6 @@
 # Sidecar Skill Architecture (v1.7.8+)
 
-> **Version**: 1.7.11 | **Last reviewed**: 2026-04-10
+> **Version**: 1.7.14 | **Last reviewed**: 2026-04-13
 
 ## Overview
 
@@ -38,6 +38,13 @@ Sidecar Skill = Data router (templates, references, loaded on demand)
 │       ├── deployment.md
 │       ├── changelog.md
 │       └── strategy.md
+├── write/                   # Sidecar for /write (v1.7.14)
+│   ├── SKILL.md
+│   └── references/
+│       ├── templates/       # 5 content type templates
+│       ├── options.md
+│       ├── writing-rules.md
+│       └── quality-checklist.md
 ├── formatting/              # Standalone skill
 │   └── SKILL.md
 ├── para-kit/                # Standalone skill
@@ -76,6 +83,13 @@ Sidecar Skill = Data router (templates, references, loaded on demand)
 - 5 document templates: Architecture, CLI, Deployment, Changelog, Strategy
 - Workflow Step 6 selects template by doc type → reads from `references/`
 
+### `/write` Sidecar (v1.7.14)
+
+- 5 content type templates: Ebook, Paper, Tutorial, Blog, Social
+- Writing rules reference (`writing-rules.md`) — loaded during content writing step
+- Quality checklist (`quality-checklist.md`) — loaded by `/write review` action
+- Options reference (`options.md`) — loaded when user provides `--style`, `--depth`, `--tools`
+
 ---
 
 ## Standalone Skills vs Sidecar Skills
@@ -84,7 +98,7 @@ Sidecar Skill = Data router (templates, references, loaded on demand)
 |:--|:--|:--|
 | **Purpose** | Provides independent expertise (formatting, schema reference) | Provides data templates for a specific workflow |
 | **Trigger** | Agent needs knowledge (e.g. "draw a table") | Specific workflow step needs a template |
-| **Examples** | `para-kit`, `formatting`, `para-skill` | `plan`, `docs` |
+| **Examples** | `para-kit`, `formatting`, `para-skill` | `plan`, `docs`, `write`, `brainstorm` |
 | **Has `references/`?** | Not required | Always |
 | **Workflow relationship** | N/A — multiple workflows can use | 1:1 with parent workflow |
 
@@ -118,4 +132,4 @@ All skills (standalone + sidecar) must be registered in two places:
 
 ---
 
-_Last updated: 2026-04-10 (FEAT-70: v1.7.11.1 docs publish)_
+_Last updated: 2026-04-13 (v1.7.14: write sidecar skill)_

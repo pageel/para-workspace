@@ -1,0 +1,121 @@
+---
+description: Analyze session telemetry, context budget, and agent footprint
+source: catalog
+---
+
+# /logs [mode] [scope]
+
+> **Workspace Version:** 1.7.14
+> **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language`. **All output reports MUST be translated to this language.**
+
+Diagnostic workflow to track performance, context budget, and Agent I/O. Useful for debugging context decay, agent hallucination, or token bloatedness.
+
+## Arguments
+
+**1. Mode (How to analyze)**
+- `(empty)`: **Fast Glance** mode (Default). Quick summary table using Agent's short-term memory impression.
+- `--deep` or `deep`: **Structured Audit** mode. Agent performs a meticulous, item-by-item scan of the full conversation context window, producing an exhaustive breakdown with exact lists.
+
+**2. Scope (What to analyze)**
+- `--all` (Default): Covers the entire chat session from the start.
+- `--last`: Covers ONLY the most recent user request and Agent response cycle.
+- `--workflow [name]`: Filters metrics for a specific workflow execution within the session (e.g., `/logs --deep --workflow plan`).
+
+## Steps
+
+### 1. Resolve Mode & Scope
+
+Determine the execution path based on user arguments:
+- If `mode` is `--deep` or `deep` → proceed to **Step 3 (Structured Audit)**.
+- Otherwise → proceed to **Step 2 (Fast Glance)**.
+- Apply `scope` boundaries (`--last`, `--all`, or `--workflow`) strictly to the chosen mode.
+
+### 2. Fast Glance Mode (Impression-based)
+
+The Agent uses its short-term memory impression to quickly estimate the session footprint. Output a concise summary table:
+
+```markdown
+📊 **SESSION TELEMETRY (Fast Glance) — Scope: [All / Last / Workflow: name]**
+
+| Category | Count | Notes |
+| :--- | :--- | :--- |
+| 📚 Knowledge Items | [N] | (KI names) |
+| 🛡️ Rules & Skills | [N] | (Names loaded) |
+| 📄 Files Read | [N] | (Brief summary) |
+| 🛠️ Tools Invoked | [N] | (Tool types) |
+| 📝 Artifacts Mutated | [N] | Total files modified or created |
+| 🚧 Agent Friction | [N] | (Errors, retries, corrections) |
+| ✅ Tasks Progress | [N] | (Done or added) |
+
+> 💡 *Metrics are estimated from memory. Use `--deep` for an exhaustive item-by-item audit.*
+```
+
+*(Stop workflow execution after printing the table.)*
+
+### 3. Structured Audit Mode (Exhaustive)
+
+The Agent performs a **deliberate, systematic scan** of the entire conversation context window within the defined `scope`. Unlike Fast Glance (which relies on impression), this mode requires the Agent to explicitly enumerate every single item.
+
+**Process:**
+1. Scan the conversation context from start to end (or within `scope` boundary).
+2. For each category below, list **every individual item** — do not estimate, do not round.
+3. Format as the detailed report below.
+
+```markdown
+📊 **SESSION TELEMETRY (Structured Audit) — Scope: [All / Last / Workflow: name]**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### 📚 Knowledge Items ([N] total)
+| # | KI Name | Usage |
+|:--|:--|:--|
+| 1 | [slug] | [How it was used] |
+
+### 🛡️ Rules & Skills ([N] total)
+| # | Type | Name | Trigger |
+|:--|:--|:--|:--|
+| 1 | Rule | [name] | [Why loaded] |
+| 2 | Skill | [name] | [Why loaded] |
+
+### 📄 Files Read ([N] total)
+| # | File Path | Purpose |
+|:--|:--|:--|
+| 1 | `[path]` | [Why read] |
+
+### 🛠️ Tools Invoked ([N] total)
+| # | Tool | Count | Context |
+|:--|:--|:--|:--|
+| 1 | [tool_name] | [N]x | [What for] |
+
+### 📝 Artifacts Mutated ([N] total)
+| # | Action | File Path |
+|:--|:--|:--|
+| 1 | Created | `[path]` |
+| 2 | Modified | `[path]` |
+
+### 🚧 Agent Friction ([N] total)
+| # | Type | Description |
+|:--|:--|:--|
+| 1 | [Error/Retry/Correction] | [What happened] |
+
+### ✅ Tasks & Progress ([N] total)
+| # | Action | Item |
+|:--|:--|:--|
+| 1 | [Done/Added/Reverted] | [Description] |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+*(Stop workflow execution after printing the report.)*
+
+## Design Notes
+
+- **No artifacts generated.** All output is printed directly to chat. Zero file pollution.
+- **No filesystem dependency.** Both modes rely on the Agent's conversation context window, not on external system logs. This ensures portability across AI platforms.
+- **Fast Glance vs Deep tradeoff:** Fast Glance is ~50 tokens output, Deep is ~200-400 tokens but provides full traceability for governance audits.
+
+## Related
+
+- `/end` — Conclude session and output persistent review.
+- `/plan` — Generate architectural implementation plans.
+- `/para-audit` — Macro structural audit (complementary to session-level `/logs`).

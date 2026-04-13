@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.7.14] - 2026-04-13
+
+Content Authoring Ecosystem & Session Telemetry.
+
+- **Added**: `/write` workflow — structured content authoring (ebook, paper, tutorial, blog, social) with Sidecar Skill for just-in-time template loading.
+- **Added**: `write` Sidecar Skill (`skills/write/`) — 5 content type templates, writing rules, and quality checklist loaded on-demand.
+- **Added**: `/logs` workflow — session telemetry diagnostics with Fast Glance (memory-based) and Structured Audit (`--deep`) modes. Scope filtering: `--all`, `--last`, `--workflow`.
+- **Fixed**: BUG-32 — `/para-workflow add` template defaulted `source: catalog` instead of `source: user`. User-created workflows now correctly tagged.
+- **Fixed**: `/write` boundary violation — path references corrected from `docs/` to `writings/`.
+- **Added**: `quality-checklist.md` — missing quality gate for `/write review` action.
+
 ## [1.7.13.2] - 2026-04-13
 
 Anti-Token-Decay Guardrails & Git Consent Protection.

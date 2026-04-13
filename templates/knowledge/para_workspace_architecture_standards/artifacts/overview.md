@@ -308,6 +308,7 @@ skills/[name]/
 | 1.7.11 | Feature | Backlog Optimization (v2), Staged Reload, Phase Pre-flight, generic OSS templates |
 | 1.7.12 | Feature | Extract Paradigm for /brainstorm (consent gate, 500-line threshold), Brainstorm Sidecar Skill, Catalog Version Convention, /plan integration with para-skill |
 | 1.7.13 | Fix | VERSIONS.yml migration: centralized version tracking, version field deprecated in catalogs, preferences.date_format in naming/config, anti-bulk-overwrite convention |
+| 1.7.14 | Feature | Content Authoring Ecosystem: /write workflow + sidecar skill (ebook, paper, tutorial, blog, social), /logs session telemetry (Fast Glance + Structured Audit), BUG-32 fix (para-workflow add source metadata) |
 
 ## 15. Knowledge System (v1.7.0+)
 

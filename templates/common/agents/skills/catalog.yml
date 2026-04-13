@@ -87,3 +87,16 @@ items:
   - templates
   - token-optimization
   - extract-paradigm
+- id: write
+  name: Write Templates
+  kernel_min: 1.7.14
+  kernel_max: 1.x
+  entrypoint: write/SKILL.md
+  description: Sidecar data for /write workflow — content type templates (ebook,
+    blog, tutorial, guide, paper, social) and writing rules loaded just-in-time.
+  tags:
+  - write
+  - sidecar
+  - templates
+  - token-optimization
+  - content

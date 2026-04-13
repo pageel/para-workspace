@@ -248,6 +248,31 @@ items:
   - knowledge
   - extract-paradigm
   - sidecar
+- id: write
+  name: Content Writer
+  kernel_min: 1.7.14
+  kernel_max: 1.x
+  entrypoint: write.md
+  description: Write deep-dive content (ebook, paper, guide) with structured templates
+    and quality gates. Sidecar Skill for just-in-time template loading.
+  tags:
+  - content
+  - writing
+  - sidecar
+  - templates
+  - token-optimization
+- id: logs
+  name: Session Telemetry
+  kernel_min: 1.7.14
+  kernel_max: 1.x
+  entrypoint: logs.md
+  description: Diagnostic workflow for session analytics — Fast Glance (memory-based)
+    and Structured Audit (exhaustive item-by-item) modes with scope filtering.
+  tags:
+  - diagnostics
+  - telemetry
+  - session
+  - context-budget
 - id: para-knowledge
   name: Knowledge Manager
   kernel_min: 1.7.5
