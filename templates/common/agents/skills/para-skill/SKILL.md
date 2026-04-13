@@ -1,5 +1,6 @@
 ---
-description: Governance skill for creating and validating PARA skills via Co-Author engine
+name: para-skill
+description: "Governance skill for creating and validating PARA workspace skills via the Co-Author engine. Use when running /para-skill add or /para-skill validate to enforce naming conventions, quality standards, size constraints, and sidecar architecture patterns."
 ---
 
 # PARA Skill — Governance & Co-Author Engine
@@ -66,32 +67,17 @@ Agent MUST use the Router Table above to find resources, NOT hardcoded paths or 
 
 ## 4. Validation Rules
 
-When running `/para-skill validate [name]`, check against these criteria:
+When running `/para-skill validate [name]`, check each criterion and fix failures before proceeding:
 
-- [ ] `SKILL.md` exists with valid YAML frontmatter (`description` field present)
-- [ ] File is under 500 lines
-- [ ] Contains actionable instructions (not just metadata)
-- [ ] No placeholder text (`[TBD]`, `TODO`, `FIXME`) in production skills
-- [ ] Trigger description is specific enough for index matching
+| Check | How to Verify | Fix |
+| :-- | :-- | :-- |
+| Frontmatter valid | YAML `description` field present in `SKILL.md` | Add `description: "..."` to frontmatter |
+| Under 500 lines | Count lines in `SKILL.md` | Split heavy content to `references/` |
+| Actionable content | Body contains instructions, not just metadata | Add workflow steps or guidance |
+| No placeholders | Search for `[TBD]`, `TODO`, `FIXME` | Replace with real content or remove |
+| Specific trigger | Description enables index matching | Add explicit "Use when..." clause |
 
-## 5. Architecture Note — Sidecar Pattern
-
-```
-workflows/para-skill.md     ← LOGIC ONLY (step-by-step actions)
-skills/para-skill/
-├── SKILL.md                ← GOVERNANCE (this file: rules + router)
-└── references/             ← DATA (templates, checklists)
-```
-
-**Why Sidecar?** Workflow files should contain only sequential logic. All supporting
-data (templates, checklists, examples) belongs in the companion skill directory.
-This separation reduces token waste (workflow doesn't load data it may not need)
-and prevents directory pollution in the `workflows/` namespace.
-
-> ⚠️ **Legacy note:** Prior to v1.7.6.3, data files were stored in
-> `workflows/para-skill/` (a subfolder within workflows). This has been
-> migrated to `skills/para-skill/references/`. Any references to the old
-> location are obsolete.
+If validation fails → fix the issue → re-run `/para-skill validate [name]`.
 
 ## 6. Integration with `/plan` (v1.7.12)
 

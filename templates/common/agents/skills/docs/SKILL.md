@@ -1,15 +1,15 @@
 ---
-name: Docs Templates
-description: Sidecar data for /docs workflow — document templates loaded just-in-time when generating docs.
-source: catalog
+name: docs
+description: "Sidecar data for /docs workflow — loads document templates (architecture, CLI, deployment, changelog, strategy) just-in-time when generating documentation. Use when running /docs new to select and apply the correct reference template."
+metadata:
+  source: catalog
 ---
 
 # Skill: Docs Templates
 
-> Sidecar Skill for the `/docs` workflow. Contains document templates
-> that the Agent loads **only when generating documentation** (Step 6).
->
-> **Pattern:** Workflow = Logic → Sidecar Skill = Data Router.
+> Provides pre-built document templates for architecture docs, CLI references,
+> deployment guides, changelogs, and strategy documents. Loaded by the `/docs`
+> workflow **only during `/docs new`** (Step 6 — Generate Documentation).
 
 ## When to Load
 
@@ -17,6 +17,13 @@ source: catalog
 - `/docs review` → NOT needed
 - `/docs update` → NOT needed
 - `/docs publish` → NOT needed
+
+## How to Apply
+
+1. Read the template file from `references/` that matches the document type
+2. Use the template as the structural skeleton for the generated document
+3. Fill all placeholder sections with project-specific content
+4. Verify no template markers (e.g. `[placeholder]`, `TODO`) remain in the output
 
 ## References
 

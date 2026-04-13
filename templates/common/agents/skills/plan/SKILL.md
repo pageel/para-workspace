@@ -1,22 +1,28 @@
 ---
-name: Plan Templates
-description: Sidecar data for /plan workflow — Detail Plan and Roadmap templates loaded just-in-time.
-source: catalog
+name: plan
+description: "Sidecar data for /plan workflow — loads Detail Plan and Roadmap document templates just-in-time at Step 9. Use when running /plan create to select and apply the correct plan structure from references/."
+metadata:
+  source: catalog
 ---
 
 # Skill: Plan Templates
 
-> Sidecar Skill for the `/plan` workflow. Contains plan document templates
-> that the Agent loads **only when writing the plan file** (Step 9).
->
-> **Pattern:** Workflow = Logic → Sidecar Skill = Data Router.
-> The `/plan` workflow instructs the Agent to read this skill at template-write time.
+> Provides Detail Plan and Roadmap document templates for structuring project plans.
+> Loaded by the `/plan` workflow **only during `/plan create`** (Step 9 — Write Plan File).
 
 ## When to Load
 
 - `/plan create` → Step 9 (Write Plan File): load `references/detail-plan.md` or `references/roadmap.md`
 - `/plan review` → NOT needed (no templates)
 - `/plan update` → NOT needed (no templates)
+
+## How to Apply
+
+1. Determine plan type: **Detail Plan** (single implementation) or **Roadmap** (multi-phase)
+2. Read the matching template from `references/`
+3. Fill all sections with project-specific content from analyzed context
+4. Save completed plan to `artifacts/plans/<plan-name>.md`
+5. If checklist items below are not satisfied, revisit the relevant workflow step before proceeding
 
 ## References
 
@@ -26,7 +32,6 @@ source: catalog
 | `references/roadmap.md` | Step 9 — Plan Type = Roadmap | Document structure for multi-phase roadmaps |
 
 > **Convention:** Data files live in `references/` (not `templates/`).
-> This follows the Sidecar Skill convention formalized in v1.7.6.3.
 
 ## Output Checklist
 

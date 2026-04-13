@@ -1,7 +1,8 @@
 ---
-name: PARA Kit
-description: PARA workspace structure reference — schema, layout, kernel governance, and intelligence routing.
-source: catalog
+name: para-kit
+description: "PARA workspace structure reference covering directory layout, project.md schema (v1.6.3), kernel invariants and heuristics, and CLI vs workflow selection. Use when understanding workspace structure, validating project schemas, or checking governance rules."
+metadata:
+  source: catalog
 ---
 
 # Skill: PARA Kit

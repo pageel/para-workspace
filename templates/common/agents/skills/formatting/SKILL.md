@@ -1,7 +1,8 @@
 ---
-name: Formatting Tables & Diagrams
-description: Templates and patterns for tables, diagrams, trees, and visual markdown — loaded on demand when formatting artifacts.
-source: catalog
+name: formatting
+description: "Markdown formatting templates and constraints for tables, box diagrams, tree listings, comparison matrices, and status icons. Use when creating or reviewing visual markdown elements in plans, backlogs, brainstorms, docs, or session logs."
+metadata:
+  source: catalog
 ---
 
 # Skill: Formatting
