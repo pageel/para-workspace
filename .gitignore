@@ -8,6 +8,7 @@ Thumbs.db
 .vscode/
 .idea/
 *.log
+*.fuse_hidden*
 
 # Dependencies
 node_modules/
