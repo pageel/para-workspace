@@ -28,9 +28,9 @@
 | [📥 Installation](#-installation) | Prerequisites, setup, profiles, troubleshooting |
 | [🧠 The Kernel](#-the-kernel) | Invariants, heuristics, contracts |
 | [🛠️ CLI Reference](#️-cli-reference) | All CLI commands |
-| [📑 Workflow Catalog](#-workflow-catalog) | 24 governed workflows |
+| [📑 Workflow Catalog](#-workflow-catalog) | 26 governed workflows |
 | [🛡️ Rule Catalog](#️-rule-catalog) | 11 governance rules |
-| [🧩 Skill Catalog](#-skill-catalog) | 7 reusable skills |
+| [🧩 Skill Catalog](#-skill-catalog) | 8 reusable skills |
 | [🧩 Task Management](#-task-management-hybrid-3-file-model) | Hybrid 3-File model |
 | [🔄 Upgrading](#-upgrading-versions) | Auto update + clean slate |
 | [🗺️ Roadmap](#️-roadmap) | Version history + planned features |
@@ -353,6 +353,8 @@ para config [key] [value]       # Manage workspace settings
 | **[`/verify`](./docs/workflows/verify.md)**               | Verify task completion with walkthroughs                   |
 | **[`/para-knowledge`](./docs/workflows/para-knowledge.md)** | Manage Knowledge Items — dashboard, create, audit, archive |
 | **[`/para-skill`](./docs/workflows/para-skill.md)** | Co-Author engine for creating, validating, and testing AI Agent skills |
+| **[`/write`](./docs/workflows/write.md)**                 | Write deep-dive content with structured sidecar templates  |
+| **[`/logs`](./docs/workflows/logs.md)**                   | Session telemetry diagnostics and context budget analytics |
 
 ---
 
@@ -389,6 +391,7 @@ Skills are reusable knowledge modules loaded on-demand via the skills trigger in
 | **[Plan Templates](./docs/skills/plan.md)** | Detail Plan & Roadmap templates (Sidecar, v1.7.8)  |
 | **[Docs Templates](./docs/skills/docs.md)** | Architecture, CLI, Strategy templates (Sidecar, v1.7.8)  |
 | **[Brainstorm Templates](./docs/skills/brainstorm.md)** | Decision & Research templates (Sidecar, v1.7.12)  |
+| **[Write Templates](./docs/skills/write.md)** | Content type templates and writing rules (Sidecar, v1.7.14)  |
 
 ---
 
@@ -662,6 +665,11 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] **Repo Path Standardization, Pending TODO Fix & Project Profile Skill** _(shipped in v1.7.4)_
 - [x] **KR7 Ephemeral Ban & /knowledge → /para-knowledge Rename** _(shipped in v1.7.5)_
 - [x] **Skill Catalog Architecture & Meta-Project Type** _(shipped in v1.7.6)_
+- [x] **Brainstorm Consolidation, Sidecar Skill & /docs** _(shipped in v1.7.7-1.7.8)_
+- [x] **Proactive Trigger Check & Cognitive Bypass Fix** _(shipped in v1.7.9-1.7.10)_
+- [x] **Backlog Governance & Extract Paradigm** _(shipped in v1.7.11-1.7.12)_
+- [x] **VERSIONS.yml Migration & Anti-Token Decay** _(shipped in v1.7.13)_
+- [x] **Content Authoring Ecosystem & Session Telemetry** _(shipped in v1.7.14)_
 - [ ] Department System _(v1.8.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.9.0 — planned)_
 

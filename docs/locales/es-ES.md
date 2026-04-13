@@ -28,9 +28,9 @@
 | [📥 Instalación](#-instalación) | Requisitos previos, configuración, perfiles, solución de problemas |
 | [🧠 El Kernel](#-el-kernel) | Invariantes, reglas heurísticas, contratos |
 | [🛠️ Referencia de CLI](#-referencia-cli) | Todos los comandos de CLI |
-| [📑 Catálogo de Workflows](#-catálogo-de-workflows) | 24 flujos de trabajo (workflows) gobernados |
+| [📑 Catálogo de Workflows](#-catálogo-de-workflows) | 26 flujos de trabajo (workflows) gobernados |
 | [🛡️ Catálogo de Reglas](#-catálogo-de-reglas) | 11 reglas de gobernanza |
-| [🧩 Catálogo de Skills](#-catálogo-de-skills) | 7 habilidades (skills) reutilizables |
+| [🧩 Catálogo de Skills](#-catálogo-de-skills) | 8 habilidades (skills) reutilizables |
 | [🧩 Gestión de Tareas](#-gestión-de-tareas-modelo-híbrido-de-3-archivos) | Modelo híbrido de 3 archivos |
 | [🔄 Actualización](#-actualizando-versiones) | Actualización automática + instalación limpia |
 | [🗺️ Hoja de Ruta](#-hoja-de-ruta) | Historial de versiones + próximas características |
@@ -204,9 +204,9 @@ para migrate [--from] [--to]    # Utilidad de migración
 ## 📑 Catálogo de Workflows, Reglas y Skills
 
 El sistema incluye:
-- **24 Workflows:** Desde gestores de tareas (`/backlog`), flujos de apertura (`/open`), auditorías (`/para-audit`) hasta sistemas de conocimiento cruzado (`/para-knowledge`).
+- **26 Workflows:** Desde gestores de tareas (`/backlog`), flujos de apertura (`/open`), auditorías (`/para-audit`), sistemas de conocimiento cruzado (`/para-knowledge`), hasta generación de contenido (`/write`) y telemetría (`/logs`).
 - **11 Reglas de Gobernabilidad:** Defienden el versionado, las buenas prácticas de Git (VCS) o evitan mutaciones riesgosas. Todas optimizadas bajo un Índice Disparador.
-- **7 Skills Base:** Facilitan el entendimiento de componentes estáticos como `PARA Kit`, diagramas visuales, y mapas de página (`Page Map`).
+- **8 Skills Base:** Facilitan el entendimiento de componentes estáticos como `PARA Kit`, diagramas visuales, mapas de página (`Page Map`), y plantillas de redacción de contenidos (`Write Templates`).
 
 ---
 
@@ -243,7 +243,7 @@ Una vez que se estandaricen nuevos workflows, correcciones en kernel el comando 
 
 ## 🗺️ Hoja de Ruta
 
-Versión actual: **1.7.12** (Skill Catalog Architecture).
+Versión actual: **1.7.14** (Content Authoring Ecosystem & Session Telemetry).
 Próximos lanzamientos vislumbrados: **v1.8.0** (Sistemas por Departamento) y **v1.9.0** (Fronteras Comunitarias & Confianza).
 
 ---
