@@ -19,6 +19,7 @@ glob:
 ### 1. Golden Rule
 
 - **MUST NOT** perform `git commit` or `git push` without explicit user approval.
+- **MUST** set `SafeToAutoRun: false` for any auto-generated `git commit` or `git push` tool calls to trigger explicit UI consent popup.
 - **Exception**: Approved workflows (`/push`, `/release`) include built-in user confirmation.
 
 ### 2. Ignore Before Commit

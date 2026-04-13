@@ -77,6 +77,13 @@ If rules/skills forgotten after context truncation:
 - Re-read `.agents/rules.md` + `.agents/skills.md`
 - Re-read project rules if `agent.rules: true`
 
+### Anti-Token-Decay Guardrails (v1.7.13.2)
+
+To prevent LLMs from hallucinating past critical checklists due to context truncation:
+- **Phase Pre-flight HTML Locks:** Essential rule reloads are hardcoded in templates as `<!-- ⚠️ DO NOT MODIFY THIS BLOCK -->`.
+- **Staged Drill-down:** Post-push operations require an explicit `> 🛑 **STOP HERE**` gate, forcing user UI consent.
+- **Git Auto-Run Shield:** Auto-generated `git commit` commands must set `SafeToAutoRun: false` in agents code.
+
 ## 5. Rules Library (12 workspace rules)
 
 Rule                    | Trigger                              | Priority

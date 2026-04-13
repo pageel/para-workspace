@@ -7,7 +7,7 @@
 **El Framework de Espacio de Trabajo para Humanos y Agentes IA**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.13-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.13.2-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -256,4 +256,4 @@ Consulte el documento [CONTRIBUTING.md](../../CONTRIBUTING.md) para los lineamie
 
 Construido con ❤️ por **Pageel**. Estandarizando el futuro de los PKMs para Agentes.
 
-_Versión: 1.7.13_
+_Versión: 1.7.13.2_

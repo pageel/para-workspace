@@ -31,8 +31,7 @@
 
 ### Phase 0: Setup & Infrastructure
 
-> ⚠️ **PHASE PRE-FLIGHT (ANTI-BYPASS):** 
-> Before executing any task in this Phase, Agent MUST read project.md and reload `.agents/rules.md` + `.agents/skills.md` based on Phase scope.
+<!-- ⚠️ DO NOT MODIFY THIS BLOCK: Agent MUST read project.md and reload .agents/rules.md + .agents/skills.md -->
 
 **Goal:** [One sentence]
 
@@ -45,8 +44,7 @@
 
 ### Phase 1: [Core Feature]
 
-> ⚠️ **PHASE PRE-FLIGHT (ANTI-BYPASS):** 
-> Before executing any task in this Phase, Agent MUST reload `.agents/rules.md` + `.agents/skills.md`.
+<!-- ⚠️ DO NOT MODIFY THIS BLOCK: Agent MUST reload .agents/rules.md + .agents/skills.md -->
 
 **Goal:** [One sentence]
 
@@ -83,6 +81,8 @@
 - [ ] [Tests/dry-run pass]
 - [ ] [Docs updated if needed]
 - [ ] [Project-specific Governance rules checked (e.g., OSS English-first, linting)]
+
+> 🛑 **STOP HERE:** Agent MUST explicitly ask the User to verify the Pre-push checklist BEFORE executing git commit.
 
 ### Post-completion
 

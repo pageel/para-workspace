@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.7.13.2] - 2026-04-13
+
+Anti-Token-Decay Guardrails & Git Consent Protection.
+
+- **Added**: `SafeToAutoRun: false` requirement in `vcs.md` rule. All auto-generated Git commmit/push commands must explicitly trigger the IDE graphical consent loop. LLM auto-commit bypassing is now physically blocked.
+- **Added**: "Staged Drill-down Gate" (`🛑 STOP HERE`) inside `detail-plan.md` Checklist. The Agent is forced to ask the User to verify all checklist items before advancing to the final Git stage.
+- **Added**: "Phase Pre-flight HTML Locks" (`<!-- ⚠️ DO NOT MODIFY THIS BLOCK -->`) inside `detail-plan.md`. These un-editable tags force the Agent to deterministically reload Rule + Skill indices prior to every Phase execution.
+- **Changed**: System KI Governance Metadata (`para_workspace_architecture_standards`) updated with `Anti-Token-Decay Guardrails` concepts. Workspace version bumped to `1.7.13.2`.
+
 ## [1.7.13] - 2026-04-13
 
 VERSIONS.yml Migration & Anti-Bulk-Overwrite Convention.
