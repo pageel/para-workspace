@@ -12,7 +12,7 @@ workspace: "1.7.13.2"
 
 workflows:
   backlog:         "1.3.1"
-  open:            "1.7.2"
+  open:            "1.7.13.2" # updated: file link constraint
   end:             "1.7.1"
   install:         "1.0.0"
   new-project:     "1.1.0"

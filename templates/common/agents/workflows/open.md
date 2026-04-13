@@ -367,6 +367,8 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 > 3. 💭 Pending brainstorms (if any)
 > 4. 📐 Roadmap next phase — only when no active plan
 > 5. 🔥 Hot lane items
+>
+> 🔗 **Display constraint:** When suggesting an action that refers to a specific document (e.g., a detail plan, brainstorm file, roadmap, or hot lane file), **MUST** include a clickable markdown file link to that document so the user can open it instantly. (Format: `[filename](file:///absolute/path/to/file)`)
 
 ## Related
 
