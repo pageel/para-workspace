@@ -1,9 +1,9 @@
 ---
-name: write
+name: Write Templates
 description: >
   Sidecar data for /write workflow — best-practice templates and quality checklists
   for deep-dive content types (ebook, paper, guide). Loaded just-in-time by the workflow.
-version: "1.0.0"
+source: catalog
 ---
 
 # Skill: Write Templates

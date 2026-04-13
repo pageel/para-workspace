@@ -1,5 +1,7 @@
 ---
+name: PARA Skill Governance
 description: Governance skill for creating and validating PARA skills via Co-Author engine
+source: catalog
 ---
 
 # PARA Skill — Governance & Co-Author Engine
