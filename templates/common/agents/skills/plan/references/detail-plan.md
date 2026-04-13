@@ -64,6 +64,13 @@
 
 [Risk table with mitigations]
 
+> 💡 **[Optional] Complex & Meta-Project Add-ons:**
+> If this plan is for an **Architecture Refactor** or a **Meta-Project (like PARA Workspace)**, you MUST insert the following sections here to prevent cascading failures:
+> - **Execution Order**: Explicit dependency chain of tasks.
+> - **File Inventory**: Modified/Created tables.
+> - **Impact Analysis**: Blast radius across systems/workflows.
+> - **Version Decision**: Justification for version bump level.
+
 ## 6. Checklist
 
 > ⚠️ **MANDATORY**: Agent MUST only generate this Checklist AFTER executing **Step 9.5 (Pre-Checklist Context Reload)** entirely, to prevent Token Decay from omitting critical rules (like Version Bump, Docs Impact, or KI Sync).

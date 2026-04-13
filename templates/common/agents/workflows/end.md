@@ -38,12 +38,29 @@ Review your task and determine if it belongs to a specific Project or a Global A
 
 ### 2. Log Session
 
-Create or append to the correct destination based on the rules above. Use "Session X" headers if multiple topics were covered.
+// turbo
 
-Include:
+> ⚠️ **Defense-in-depth (Layer 1):** Diagnose file status before attempting to write.
 
+```bash
+# Agent MUST substitute [project-name] before running this snippet.
+LOG_P="Projects/[project-name]/sessions/$(date +%Y-%m-%d).md"
+LOG_W="Areas/Workspace/sessions/$(date +%Y-%m-%d).md"
+test -f "$LOG_P" && echo "🔴 PROJECT LOG EXISTS: You MUST APPEND. NEVER use Overwrite:true!" || echo "✅ PROJECT LOG NEW: Safe to create."
+test -f "$LOG_W" && echo "🔴 WORKSPACE LOG EXISTS: You MUST APPEND. NEVER use Overwrite:true!" || echo "✅ WORKSPACE LOG NEW: Safe to create."
+```
+
+> **Tool Mandate (Layer 2):**
+> - **If File Exists (Append):** You MUST NOT use `write_to_file` with `Overwrite: true` blindly. You MUST use `replace_file_content` / `multi_replace_file_content` to append to EOF, or read the file first and preserve all existing content.
+
+> **Formatting Rule (Layer 3):** 
+> To prevent text bleeding, ALWAYS separate sessions within the same day using this exact sub-header:
+
+```markdown
+## Session HH:MM: [Brief Focus]
 - **What was done** (completed items, bullet list)
 - **Downstream Impact** (if changes affect other projects)
+```
 
 ### 3. Cross-Project Sync Queue
 
