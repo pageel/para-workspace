@@ -49,7 +49,9 @@ glob:
 
 - **MUST** use `kebab-case`.
 - **Generic Principle**: Filenames MUST logically include the artifact **type**, **date**, and **topic**.
-- **Exception**: Specific naming formats (e.g., whether to include version numbers or wildcard tokens) are defined inside individual workflow templates and sidecars (e.g., `detail-plan.md` or `/brainstorm`). This rule only enforces generic principles. 
+- **Date in filenames**: **MUST** use `YYYY-MM-DD` (ISO 8601) for natural sorting. Example: `brainstorm-2026-04-13-topic.md`.
+- **Date in content**: **SHOULD** read `preferences.date_format` from `.para-workspace.yml` for display dates (e.g., headers, metadata). Default: `YYYY-MM-DD` if not configured.
+- **Exception**: Specific naming formats (e.g., whether to include version numbers or wildcard tokens) are defined inside individual workflow templates and sidecars (e.g., `detail-plan.md` or `/brainstorm`). This rule only enforces generic principles.
 
 ### 7. VCS (Branches & Commits)
 

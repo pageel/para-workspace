@@ -48,7 +48,8 @@ When bumping a version, **MUST** update ALL relevant locations:
 ### 5. Governed Library Items
 
 - **MUST NOT** change `kernel_min` or `kernel_max` in `catalog.yml` without understanding compatibility implications.
-- **SHOULD** increment item `version` in `catalog.yml` when the item's content changes significantly.
+- **SHOULD** update the item's entry in `VERSIONS.yml` (repo root) when the item's content changes — set version to the current workspace VERSION.
+- **MUST NOT** bulk-update `VERSIONS.yml` when bumping the workspace version. Only update entries for items that actually changed.
 
 ## Reference
 

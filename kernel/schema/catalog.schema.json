@@ -24,7 +24,7 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "name", "version", "kernel_min", "entrypoint", "description"],
+        "required": ["id", "name", "kernel_min", "entrypoint", "description"],
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -37,7 +37,8 @@
           },
           "version": {
             "type": "string",
-            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "description": "Deprecated (v1.7.13). Use VERSIONS.yml instead. Kept for backward compatibility."
           },
           "kernel_min": {
             "type": "string",

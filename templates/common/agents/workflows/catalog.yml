@@ -1,219 +1,275 @@
 version: 1
 library: workflows
-description: "Stateless workflow library for PARA Workspace agents."
+description: Stateless workflow library for PARA Workspace agents.
 items:
-  - id: backlog
-    name: "Backlog Controller"
-    version: "1.3.1"
-    kernel_min: "1.6.2"
-    kernel_max: "1.x"
-    entrypoint: "backlog.md"
-    description: "Manage project tasks via canonical backlog.md. Agent Indices Pre-flight (v1.6.2)."
-    tags: ["tasks", "canonical", "3-file"]
-
-  - id: open
-    name: "Session Open"
-    version: "1.7.2"
-    kernel_min: "1.7.0"
-    kernel_max: "1.x"
-    entrypoint: "open.md"
-    description: "Meta-project type detection (v1.7.6). Platform-injected KI context. Central Gate."
-    tags: ["session", "context", "token-optimized", "ecosystem", "meta-project", "strategy", "roadmap", "skills", "knowledge"]
-
-  - id: end
-    name: "Session End"
-    version: "1.7.1"
-    kernel_min: "1.7.0"
-    kernel_max: "1.x"
-    entrypoint: "end.md"
-    description: "Platform-injected KI suggestion hook (Step 4.7). Central Gate (v1.7.1)."
-    tags: ["session", "classification", "3-file", "hot-lane", "ecosystem", "strategy", "knowledge"]
-
-  - id: install
-    name: "Install / Sync"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
-    kernel_max: "1.x"
-    entrypoint: "install.md"
-    description: "Intelligent installer — sync kernel/workflows/rules into workspace."
-    tags: ["sync", "governance"]
-
-  - id: new-project
-    name: "New Project"
-    version: "1.1.0"
-    kernel_min: "1.6.0"
-    kernel_max: "1.x"
-    entrypoint: "new-project.md"
-    description: "Initialize project with scaffolding. Supports ecosystem/satellite types (v1.6.0)."
-    tags: ["scaffold", "project", "ecosystem"]
-
-  - id: verify
-    name: "Verify Task"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
-    kernel_max: "1.x"
-    entrypoint: "verify.md"
-    description: "Verify task completion with walkthroughs."
-    tags: ["tasks", "verification"]
-
-  - id: retro
-    name: "Project Retrospective"
-    version: "1.7.1"
-    kernel_min: "1.7.0"
-    kernel_max: "1.x"
-    entrypoint: "retro.md"
-    description: "KI graduation (Step 4.5). Project retrospective before archiving (v1.7.1)."
-    tags: ["archive", "review", "knowledge"]
-
-  - id: push
-    name: "Push"
-    version: "1.0.1"
-    kernel_min: "1.6.2"
-    kernel_max: "1.x"
-    entrypoint: "push.md"
-    description: "Fast commit and push to GitHub. Agent Indices Pre-flight (v1.6.2)."
-    tags: ["vcs", "git"]
-
-  - id: release
-    name: "Release Gate"
-    version: "1.0.1"
-    kernel_min: "1.6.2"
-    kernel_max: "1.x"
-    entrypoint: "release.md"
-    description: "Pre-release quality gate. Agent Indices Pre-flight (v1.6.2)."
-    tags: ["release", "quality"]
-
-  - id: merge
-    name: "Semantic Merge"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
-    kernel_max: "1.x"
-    entrypoint: "merge.md"
-    description: "Resolve workflow conflicts with structured merge rules."
-    tags: ["merge", "conflict"]
-
-  - id: config
-    name: "Config Manager"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
-    kernel_max: "1.x"
-    entrypoint: "config.md"
-    description: "Manage workspace configuration."
-    tags: ["config"]
-
-  - id: backup
-    name: "Backup"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
-    kernel_max: "1.x"
-    entrypoint: "backup.md"
-    description: "Backup workflows, rules, and config."
-    tags: ["backup", "safety"]
-
-  - id: para
-    name: "PARA Master Controller"
-    version: "1.1.0"
-    kernel_min: "1.4.0"
-    kernel_max: "1.x"
-    entrypoint: "para.md"
-    description: "Master controller for workspace management. Includes Onboarding & Guidance (v1.1.0)."
-    tags: ["master", "governance", "onboarding", "guidance"]
-
-  - id: inbox
-    name: "Inbox Categorizer"
-    version: "1.1.0"
-    kernel_min: "1.5.3"
-    kernel_max: "1.x"
-    entrypoint: "inbox.md"
-    description: "Categorize files from _inbox/ into PARA structure with project context check."
-    tags: ["inbox", "classification", "context"]
-
-  - id: learn
-    name: "Learn & Capture"
-    version: "1.7.1"
-    kernel_min: "1.7.0"
-    kernel_max: "1.x"
-    entrypoint: "learn.md"
-    description: "KI suggestion (Step 4.5). Capture lessons into Areas/Learning (v1.7.1)."
-    tags: ["learning", "knowledge"]
-
-  - id: para-workflow
-    name: "Workflow Manager"
-    version: "1.0.0"
-    kernel_min: "1.4.1"
-    kernel_max: "1.x"
-    entrypoint: "para-workflow.md"
-    description: "Manage, install, and standardize AI Agent workflows."
-    tags: ["workflows", "governance", "catalog"]
-
-  - id: para-rule
-    name: "Rule Manager"
-    version: "1.0.0"
-    kernel_min: "1.4.1"
-    kernel_max: "1.x"
-    entrypoint: "para-rule.md"
-    description: "Manage, install, and standardize AI Agent rules."
-    tags: ["rules", "governance", "catalog"]
-
-  - id: plan
-    name: "Plan Controller"
-    version: "1.7.10"
-    kernel_min: "1.7.0"
-    kernel_max: "1.x"
-    entrypoint: "plan.md"
-    description: "Cognitive Bypass Fix: Soft Dump payload in Step 0 (v1.7.10). Sidecar Skill templates."
-    tags: ["planning", "architecture", "phases", "ecosystem", "strategy", "roadmap", "skills", "knowledge"]
-
-  - id: para-audit
-    name: "Macro Assessor Audit"
-    version: "1.7.1"
-    kernel_min: "1.7.0"
-    kernel_max: "1.x"
-    entrypoint: "para-audit.md"
-    description: "Meta-project satellite validation (v1.7.6). KI Health Check, Agent map compat."
-    tags: ["audit", "governance", "invariants", "post-update", "ecosystem", "meta-project", "skills", "knowledge"]
-
-  - id: docs
-    name: "Documentation Manager"
-    version: "1.7.10"
-    kernel_min: "1.7.8"
-    kernel_max: "1.x"
-    entrypoint: "docs.md"
-    description: "Cognitive Bypass Fix: Soft Dump payload in Step 0 (v1.7.10). Sidecar Skill templates."
-    tags: ["documentation", "docs", "publish", "strategy"]
-
-  - id: update
-    name: "Safe Update"
-    version: "1.0.1"
-    kernel_min: "1.5.0"
-    kernel_max: "1.x"
-    entrypoint: "update.md"
-    description: "BUG-29 fix: MUST always dry-run before deciding 'no update'. Pre-pull version gate."
-    tags: ["update", "sync", "safety"]
-
-  - id: brainstorm
-    name: "Brainstorm"
-    version: "1.7.12"
-    kernel_min: "1.7.0"
-    kernel_max: "1.x"
-    entrypoint: "brainstorm.md"
-    description: "Extract Paradigm + Sidecar Skill (v1.7.12). Consent gate, 500-line threshold, MUST NOT skip Step 3."
-    tags: ["brainstorm", "ideation", "planning", "knowledge", "extract-paradigm", "sidecar"]
-
-  - id: para-knowledge
-    name: "Knowledge Manager"
-    version: "1.4.0"
-    kernel_min: "1.7.5"
-    kernel_max: "1.x"
-    entrypoint: "para-knowledge.md"
-    description: "KR7 Ephemeral Ban. Renamed from /knowledge for Governance Pentad consistency (v1.4.0)."
-    tags: ["knowledge", "ki", "governance", "graph", "system-ki"]
-
-  - id: para-skill
-    name: "Skill Manager"
-    version: "1.0.1"
-    kernel_min: "1.7.6"
-    kernel_max: "1.x"
-    entrypoint: "para-skill.md"
-    description: "Co-Author engine for creating, validating, and testing AI Agent skills. Template v1.1.0 with Sub-Skills Router (v1.7.6)."
-    tags: ["skills", "governance", "co-author", "catalog"]
+- id: backlog
+  name: Backlog Controller
+  kernel_min: 1.6.2
+  kernel_max: 1.x
+  entrypoint: backlog.md
+  description: Manage project tasks via canonical backlog.md. Agent Indices Pre-flight
+    (v1.6.2).
+  tags:
+  - tasks
+  - canonical
+  - 3-file
+- id: open
+  name: Session Open
+  kernel_min: 1.7.0
+  kernel_max: 1.x
+  entrypoint: open.md
+  description: Meta-project type detection (v1.7.6). Platform-injected KI context.
+    Central Gate.
+  tags:
+  - session
+  - context
+  - token-optimized
+  - ecosystem
+  - meta-project
+  - strategy
+  - roadmap
+  - skills
+  - knowledge
+- id: end
+  name: Session End
+  kernel_min: 1.7.0
+  kernel_max: 1.x
+  entrypoint: end.md
+  description: Platform-injected KI suggestion hook (Step 4.7). Central Gate (v1.7.1).
+  tags:
+  - session
+  - classification
+  - 3-file
+  - hot-lane
+  - ecosystem
+  - strategy
+  - knowledge
+- id: install
+  name: Install / Sync
+  kernel_min: 1.4.0
+  kernel_max: 1.x
+  entrypoint: install.md
+  description: Intelligent installer — sync kernel/workflows/rules into workspace.
+  tags:
+  - sync
+  - governance
+- id: new-project
+  name: New Project
+  kernel_min: 1.6.0
+  kernel_max: 1.x
+  entrypoint: new-project.md
+  description: Initialize project with scaffolding. Supports ecosystem/satellite types
+    (v1.6.0).
+  tags:
+  - scaffold
+  - project
+  - ecosystem
+- id: verify
+  name: Verify Task
+  kernel_min: 1.4.0
+  kernel_max: 1.x
+  entrypoint: verify.md
+  description: Verify task completion with walkthroughs.
+  tags:
+  - tasks
+  - verification
+- id: retro
+  name: Project Retrospective
+  kernel_min: 1.7.0
+  kernel_max: 1.x
+  entrypoint: retro.md
+  description: KI graduation (Step 4.5). Project retrospective before archiving (v1.7.1).
+  tags:
+  - archive
+  - review
+  - knowledge
+- id: push
+  name: Push
+  kernel_min: 1.6.2
+  kernel_max: 1.x
+  entrypoint: push.md
+  description: Fast commit and push to GitHub. Agent Indices Pre-flight (v1.6.2).
+  tags:
+  - vcs
+  - git
+- id: release
+  name: Release Gate
+  kernel_min: 1.6.2
+  kernel_max: 1.x
+  entrypoint: release.md
+  description: Pre-release quality gate. Agent Indices Pre-flight (v1.6.2).
+  tags:
+  - release
+  - quality
+- id: merge
+  name: Semantic Merge
+  kernel_min: 1.4.0
+  kernel_max: 1.x
+  entrypoint: merge.md
+  description: Resolve workflow conflicts with structured merge rules.
+  tags:
+  - merge
+  - conflict
+- id: config
+  name: Config Manager
+  kernel_min: 1.4.0
+  kernel_max: 1.x
+  entrypoint: config.md
+  description: Manage workspace configuration.
+  tags:
+  - config
+- id: backup
+  name: Backup
+  kernel_min: 1.4.0
+  kernel_max: 1.x
+  entrypoint: backup.md
+  description: Backup workflows, rules, and config.
+  tags:
+  - backup
+  - safety
+- id: para
+  name: PARA Master Controller
+  kernel_min: 1.4.0
+  kernel_max: 1.x
+  entrypoint: para.md
+  description: Master controller for workspace management. Includes Onboarding & Guidance
+    (v1.1.0).
+  tags:
+  - master
+  - governance
+  - onboarding
+  - guidance
+- id: inbox
+  name: Inbox Categorizer
+  kernel_min: 1.5.3
+  kernel_max: 1.x
+  entrypoint: inbox.md
+  description: Categorize files from _inbox/ into PARA structure with project context
+    check.
+  tags:
+  - inbox
+  - classification
+  - context
+- id: learn
+  name: Learn & Capture
+  kernel_min: 1.7.0
+  kernel_max: 1.x
+  entrypoint: learn.md
+  description: KI suggestion (Step 4.5). Capture lessons into Areas/Learning (v1.7.1).
+  tags:
+  - learning
+  - knowledge
+- id: para-workflow
+  name: Workflow Manager
+  kernel_min: 1.4.1
+  kernel_max: 1.x
+  entrypoint: para-workflow.md
+  description: Manage, install, and standardize AI Agent workflows.
+  tags:
+  - workflows
+  - governance
+  - catalog
+- id: para-rule
+  name: Rule Manager
+  kernel_min: 1.4.1
+  kernel_max: 1.x
+  entrypoint: para-rule.md
+  description: Manage, install, and standardize AI Agent rules.
+  tags:
+  - rules
+  - governance
+  - catalog
+- id: plan
+  name: Plan Controller
+  kernel_min: 1.7.0
+  kernel_max: 1.x
+  entrypoint: plan.md
+  description: 'Cognitive Bypass Fix: Soft Dump payload in Step 0 (v1.7.10). Sidecar
+    Skill templates.'
+  tags:
+  - planning
+  - architecture
+  - phases
+  - ecosystem
+  - strategy
+  - roadmap
+  - skills
+  - knowledge
+- id: para-audit
+  name: Macro Assessor Audit
+  kernel_min: 1.7.0
+  kernel_max: 1.x
+  entrypoint: para-audit.md
+  description: Meta-project satellite validation (v1.7.6). KI Health Check, Agent
+    map compat.
+  tags:
+  - audit
+  - governance
+  - invariants
+  - post-update
+  - ecosystem
+  - meta-project
+  - skills
+  - knowledge
+- id: docs
+  name: Documentation Manager
+  kernel_min: 1.7.8
+  kernel_max: 1.x
+  entrypoint: docs.md
+  description: 'Cognitive Bypass Fix: Soft Dump payload in Step 0 (v1.7.10). Sidecar
+    Skill templates.'
+  tags:
+  - documentation
+  - docs
+  - publish
+  - strategy
+- id: update
+  name: Safe Update
+  kernel_min: 1.5.0
+  kernel_max: 1.x
+  entrypoint: update.md
+  description: 'BUG-29 fix: MUST always dry-run before deciding ''no update''. Pre-pull
+    version gate.'
+  tags:
+  - update
+  - sync
+  - safety
+- id: brainstorm
+  name: Brainstorm
+  kernel_min: 1.7.0
+  kernel_max: 1.x
+  entrypoint: brainstorm.md
+  description: Extract Paradigm + Sidecar Skill (v1.7.12). Consent gate, 500-line
+    threshold, MUST NOT skip Step 3.
+  tags:
+  - brainstorm
+  - ideation
+  - planning
+  - knowledge
+  - extract-paradigm
+  - sidecar
+- id: para-knowledge
+  name: Knowledge Manager
+  kernel_min: 1.7.5
+  kernel_max: 1.x
+  entrypoint: para-knowledge.md
+  description: KR7 Ephemeral Ban. Renamed from /knowledge for Governance Pentad consistency
+    (v1.4.0).
+  tags:
+  - knowledge
+  - ki
+  - governance
+  - graph
+  - system-ki
+- id: para-skill
+  name: Skill Manager
+  kernel_min: 1.7.6
+  kernel_max: 1.x
+  entrypoint: para-skill.md
+  description: Co-Author engine for creating, validating, and testing AI Agent skills.
+    Template v1.1.0 with Sub-Skills Router (v1.7.6).
+  tags:
+  - skills
+  - governance
+  - co-author
+  - catalog

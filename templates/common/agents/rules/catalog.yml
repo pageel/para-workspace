@@ -1,103 +1,115 @@
 version: 1
 library: rules
-description: "Governance rule library applied to agent runtime."
+description: Governance rule library applied to agent runtime.
 items:
-  - id: agent-behavior
-    name: "Agent Behavior"
-    version: "1.1.0"
-    kernel_min: "1.6.2"
-    kernel_max: "1.x"
-    entrypoint: "agent-behavior.md"
-    description: "Proactive Trigger Check, Context Recovery with skills.md (v1.6.2)."
-    tags: ["governance", "safety", "skills"]
-
-  - id: governance
-    name: "Agent Governance"
-    version: "1.0.0"
-    kernel_min: "1.4.5"
-    kernel_max: "1.x"
-    entrypoint: "governance.md"
-    description: "Kernel Governance Invariants and Scope Restrictions."
-    tags: ["governance", "kernel", "invariants"]
-
-  - id: artifact-standard
-    name: "Artifact Standard"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
-    kernel_max: "1.x"
-    entrypoint: "artifact-standard.md"
-    description: "Standards for task lists, plans, and walkthroughs."
-    tags: ["artifacts", "standards"]
-
-  - id: context-rules
-    name: "Context Rules"
-    version: "1.1.0"
-    kernel_min: "1.6.2"
-    kernel_max: "1.x"
-    entrypoint: "context-rules.md"
-    description: "Agent Index Loading (rules + skills), Proactive Trigger Check (v1.6.2)."
-    tags: ["context", "session", "skills"]
-
-  - id: exports-data
-    name: "Data Export Rules"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
-    kernel_max: "1.x"
-    entrypoint: "exports-data.md"
-    description: "Rules governing data export and external sharing."
-    tags: ["data", "exports", "safety"]
-
-  - id: naming
-    name: "Naming Conventions"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
-    kernel_max: "1.x"
-    entrypoint: "naming.md"
-    description: "File and directory naming standards."
-    tags: ["naming", "conventions"]
-
-  - id: para-discipline
-    name: "PARA Discipline"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
-    kernel_max: "1.x"
-    entrypoint: "para-discipline.md"
-    description: "Enforce PARA classification discipline (P/A/R/A/_inbox)."
-    tags: ["para", "classification", "universal"]
-
-  - id: vcs
-    name: "Version Control"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
-    kernel_max: "1.x"
-    entrypoint: "vcs.md"
-    description: "Git and version control best practices."
-    tags: ["vcs", "git"]
-
-  - id: versioning
-    name: "Versioning Policy"
-    version: "1.0.0"
-    kernel_min: "1.4.0"
-    kernel_max: "1.x"
-    entrypoint: "versioning.md"
-    description: "Semantic versioning policy for workspace and projects."
-    tags: ["versioning", "semver"]
-
-  - id: hybrid-3-file-integrity
-    name: "Hybrid 3-File Integrity"
-    version: "2.0.0"
-    kernel_min: "1.5.3"
-    kernel_max: "1.x"
-    entrypoint: "hybrid-3-file-integrity.md"
-    description: "Hot Lane constraints and /end sync for the Hybrid 3-File task model."
-    tags: ["tasks", "integrity", "3-file", "hot-lane"]
-
-  - id: knowledge
-    name: "Knowledge Rules"
-    version: "1.1.0"
-    kernel_min: "1.7.0"
-    kernel_max: "1.x"
-    entrypoint: "knowledge.md"
-    description: "Governance rules for Knowledge Item operations (KR1-KR6). Write gate, user approval, namespace guard, zone boundary, recoverability, system KI governed lifecycle."
-    tags: ["knowledge", "governance", "safety", "ki", "system-ki"]
-
+- id: agent-behavior
+  name: Agent Behavior
+  kernel_min: 1.6.2
+  kernel_max: 1.x
+  entrypoint: agent-behavior.md
+  description: Proactive Trigger Check, Context Recovery with skills.md (v1.6.2).
+  tags:
+  - governance
+  - safety
+  - skills
+- id: governance
+  name: Agent Governance
+  kernel_min: 1.4.5
+  kernel_max: 1.x
+  entrypoint: governance.md
+  description: Kernel Governance Invariants and Scope Restrictions.
+  tags:
+  - governance
+  - kernel
+  - invariants
+- id: artifact-standard
+  name: Artifact Standard
+  kernel_min: 1.4.0
+  kernel_max: 1.x
+  entrypoint: artifact-standard.md
+  description: Standards for task lists, plans, and walkthroughs.
+  tags:
+  - artifacts
+  - standards
+- id: context-rules
+  name: Context Rules
+  kernel_min: 1.6.2
+  kernel_max: 1.x
+  entrypoint: context-rules.md
+  description: Agent Index Loading (rules + skills), Proactive Trigger Check (v1.6.2).
+  tags:
+  - context
+  - session
+  - skills
+- id: exports-data
+  name: Data Export Rules
+  kernel_min: 1.4.0
+  kernel_max: 1.x
+  entrypoint: exports-data.md
+  description: Rules governing data export and external sharing.
+  tags:
+  - data
+  - exports
+  - safety
+- id: naming
+  name: Naming Conventions
+  kernel_min: 1.4.0
+  kernel_max: 1.x
+  entrypoint: naming.md
+  description: File and directory naming standards.
+  tags:
+  - naming
+  - conventions
+- id: para-discipline
+  name: PARA Discipline
+  kernel_min: 1.4.0
+  kernel_max: 1.x
+  entrypoint: para-discipline.md
+  description: Enforce PARA classification discipline (P/A/R/A/_inbox).
+  tags:
+  - para
+  - classification
+  - universal
+- id: vcs
+  name: Version Control
+  kernel_min: 1.4.0
+  kernel_max: 1.x
+  entrypoint: vcs.md
+  description: Git and version control best practices.
+  tags:
+  - vcs
+  - git
+- id: versioning
+  name: Versioning Policy
+  kernel_min: 1.4.0
+  kernel_max: 1.x
+  entrypoint: versioning.md
+  description: Semantic versioning policy for workspace and projects.
+  tags:
+  - versioning
+  - semver
+- id: hybrid-3-file-integrity
+  name: Hybrid 3-File Integrity
+  kernel_min: 1.5.3
+  kernel_max: 1.x
+  entrypoint: hybrid-3-file-integrity.md
+  description: Hot Lane constraints and /end sync for the Hybrid 3-File task model.
+  tags:
+  - tasks
+  - integrity
+  - 3-file
+  - hot-lane
+- id: knowledge
+  name: Knowledge Rules
+  kernel_min: 1.7.0
+  kernel_max: 1.x
+  entrypoint: knowledge.md
+  description: Governance rules for Knowledge Item operations (KR1-KR6). Write gate,
+    user approval, namespace guard, zone boundary, recoverability, system KI governed
+    lifecycle.
+  tags:
+  - knowledge
+  - governance
+  - safety
+  - ki
+  - system-ki

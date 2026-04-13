@@ -1,66 +1,89 @@
 version: 1
 library: skills
-description: "Reusable skill building blocks used by workflows and agents."
+description: Reusable skill building blocks used by workflows and agents.
 items:
-  - id: para-kit
-    name: "PARA Kit"
-    version: "1.1.0"
-    kernel_min: "1.6.4"
-    kernel_max: "1.x"
-    entrypoint: "para-kit/SKILL.md"
-    description: "PARA workspace structure reference — schema, layout, kernel governance quick reference, and intelligence routing."
-    tags: ["para", "structure", "schema", "governance"]
-
-  - id: formatting
-    name: "Formatting Tables & Diagrams"
-    version: "1.1.0"
-    kernel_min: "1.4.0"
-    kernel_max: "1.x"
-    entrypoint: "formatting/SKILL.md"
-    description: "Templates and patterns for tables, diagrams, trees, and visual markdown — loaded on demand when formatting artifacts."
-    tags: ["formatting", "tables", "diagrams", "markdown"]
-
-  - id: page-map
-    name: "Page Map"
-    version: "1.0.0"
-    kernel_min: "1.7.0"
-    kernel_max: "1.x"
-    entrypoint: "page-map/SKILL.md"
-    description: "AI Agent skill to read, manage, and manipulate website visual structure using PAGE_MAP.md and BLUEPRINT.md."
-    tags: ["website", "layout", "visual", "structure"]
-
-  - id: para-skill
-    name: "PARA Skill Governance"
-    version: "1.0.0"
-    kernel_min: "1.7.6"
-    kernel_max: "1.x"
-    entrypoint: "para-skill/SKILL.md"
-    description: "Governance skill for creating and validating PARA skills via Co-Author engine. Sidecar companion to /para-skill workflow."
-    tags: ["governance", "skills", "co-author", "quality"]
-
-  - id: plan
-    name: "Plan Templates"
-    version: "1.0.1"
-    kernel_min: "1.7.8"
-    kernel_max: "1.x"
-    entrypoint: "plan/SKILL.md"
-    description: "Sidecar data for /plan workflow — Detail Plan and Roadmap templates loaded just-in-time. Plan naming convention clarified (v1.0.1)."
-    tags: ["plan", "sidecar", "templates", "token-optimization"]
-
-  - id: docs
-    name: "Docs Templates"
-    version: "1.0.0"
-    kernel_min: "1.7.8"
-    kernel_max: "1.x"
-    entrypoint: "docs/SKILL.md"
-    description: "Sidecar data for /docs workflow — Architecture, CLI, Deployment, Changelog, Strategy templates loaded just-in-time. Reduces docs.md by ~160 lines."
-    tags: ["docs", "sidecar", "templates", "token-optimization"]
-
-  - id: brainstorm
-    name: "Brainstorm Templates"
-    version: "1.0.0"
-    kernel_min: "1.7.12"
-    kernel_max: "1.x"
-    entrypoint: "brainstorm/SKILL.md"
-    description: "Sidecar data for /brainstorm workflow — Decision and Research document templates loaded just-in-time. Extract Paradigm governance (v1.7.12)."
-    tags: ["brainstorm", "sidecar", "templates", "token-optimization", "extract-paradigm"]
+- id: para-kit
+  name: PARA Kit
+  kernel_min: 1.6.4
+  kernel_max: 1.x
+  entrypoint: para-kit/SKILL.md
+  description: PARA workspace structure reference — schema, layout, kernel governance
+    quick reference, and intelligence routing.
+  tags:
+  - para
+  - structure
+  - schema
+  - governance
+- id: formatting
+  name: Formatting Tables & Diagrams
+  kernel_min: 1.4.0
+  kernel_max: 1.x
+  entrypoint: formatting/SKILL.md
+  description: Templates and patterns for tables, diagrams, trees, and visual markdown
+    — loaded on demand when formatting artifacts.
+  tags:
+  - formatting
+  - tables
+  - diagrams
+  - markdown
+- id: page-map
+  name: Page Map
+  kernel_min: 1.7.0
+  kernel_max: 1.x
+  entrypoint: page-map/SKILL.md
+  description: AI Agent skill to read, manage, and manipulate website visual structure
+    using PAGE_MAP.md and BLUEPRINT.md.
+  tags:
+  - website
+  - layout
+  - visual
+  - structure
+- id: para-skill
+  name: PARA Skill Governance
+  kernel_min: 1.7.6
+  kernel_max: 1.x
+  entrypoint: para-skill/SKILL.md
+  description: Governance skill for creating and validating PARA skills via Co-Author
+    engine. Sidecar companion to /para-skill workflow.
+  tags:
+  - governance
+  - skills
+  - co-author
+  - quality
+- id: plan
+  name: Plan Templates
+  kernel_min: 1.7.8
+  kernel_max: 1.x
+  entrypoint: plan/SKILL.md
+  description: Sidecar data for /plan workflow — Detail Plan and Roadmap templates
+    loaded just-in-time. Plan naming convention clarified (v1.0.1).
+  tags:
+  - plan
+  - sidecar
+  - templates
+  - token-optimization
+- id: docs
+  name: Docs Templates
+  kernel_min: 1.7.8
+  kernel_max: 1.x
+  entrypoint: docs/SKILL.md
+  description: Sidecar data for /docs workflow — Architecture, CLI, Deployment, Changelog,
+    Strategy templates loaded just-in-time. Reduces docs.md by ~160 lines.
+  tags:
+  - docs
+  - sidecar
+  - templates
+  - token-optimization
+- id: brainstorm
+  name: Brainstorm Templates
+  kernel_min: 1.7.12
+  kernel_max: 1.x
+  entrypoint: brainstorm/SKILL.md
+  description: Sidecar data for /brainstorm workflow — Decision and Research document
+    templates loaded just-in-time. Extract Paradigm governance (v1.7.12).
+  tags:
+  - brainstorm
+  - sidecar
+  - templates
+  - token-optimization
+  - extract-paradigm

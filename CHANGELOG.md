@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.7.13] - 2026-04-13
+
+VERSIONS.yml Migration & Anti-Bulk-Overwrite Convention.
+
+- **Added**: `VERSIONS.yml` at repo root — centralized single source of truth for governed library item versions. Replaces per-item `version` field in catalogs.
+- **Added**: `preferences.date_format` field in `.para-workspace.yml` — configurable content display date format (default: `YYYY-MM-DD`). Filenames always use ISO 8601.
+- **Added**: Date format convention in `naming.md` §6 — filenames MUST use `YYYY-MM-DD`, content display SHOULD read `preferences.date_format`.
+- **Added**: `/config` workflow — `show` displays `preferences.date_format`, `update` suggests common format options.
+- **Changed**: `catalog.schema.json` — `version` field no longer required in items (deprecated, kept for backward compatibility).
+- **Changed**: `heuristics.md` H9 — `version` field marked optional with `VERSIONS.yml` reference.
+- **Changed**: `versioning.md` §5 — references `VERSIONS.yml` instead of `catalog.yml`; adds anti-bulk-update guard.
+- **Removed**: `§9.5 Catalog Version Convention` from project maintenance rules — root cause of catalog version bulk-overwrite corruption.
+- **Removed**: `version` field from all 42 catalog items (24 workflows, 11 rules, 7 skills).
+
 ## [1.7.12] - 2026-04-10
 
 Extract Paradigm, Brainstorm Sidecar Skill & Catalog Version Convention.

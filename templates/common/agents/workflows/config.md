@@ -28,19 +28,26 @@ Read `.para-workspace.yml` and display a formatted overview:
 ```
 ⚙️ WORKSPACE CONFIGURATION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Name:       [workspace-name]
-Version:    [version]
-Language:   [preferences.language]
-Projects:   [list of registered projects]
+Name:        [workspace-name]
+Version:     [version]
+Language:    [language]
+Date Format: [preferences.date_format] (or "YYYY-MM-DD" if not set)
+Profile:     [profile]
+Projects:    [list of registered projects]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 ### update
 
-1. Ask: Which key to update? (e.g., `preferences.language`, `version`)
+1. Ask: Which key to update? (e.g., `language`, `preferences.date_format`, `profile`)
 2. Read current value from `.para-workspace.yml`.
-3. Apply new value and write back.
-4. Confirm the change.
+3. If updating `preferences.date_format`, suggest common options:
+   - `YYYY-MM-DD` — ISO 8601 (default, recommended)
+   - `DD/MM/YYYY` — European / Vietnamese
+   - `MM/DD/YYYY` — US
+   > ⚠️ This only affects **content display dates**. Filenames always use `YYYY-MM-DD` per naming rule §6.
+4. Apply new value and write back.
+5. Confirm the change.
 
 ### add-project
 
@@ -53,3 +60,4 @@ Projects:   [list of registered projects]
 
 - `/para` — Master workspace controller
 - `/open` — Start session (reads config for language preference)
+- `naming.md` §6 — Date format convention (filenames vs content display)

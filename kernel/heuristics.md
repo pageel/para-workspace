@@ -224,7 +224,7 @@ a `catalog.yml` file with the following minimum fields per item:
 | ------------- | -------- | ---------------------------------- |
 | `id`          | ✅       | Stable kebab-case identifier       |
 | `name`        | ✅       | Human-readable name                |
-| `version`     | ✅       | Semver version of the library item |
+| `version`     | ❌       | Deprecated (v1.7.13) — use `VERSIONS.yml` |
 | `kernel_min`  | ✅       | Minimum kernel version required    |
 | `kernel_max`  | ❌       | Optional max kernel version        |
 | `entrypoint`  | ✅       | Relative path to the markdown file |
@@ -232,6 +232,9 @@ a `catalog.yml` file with the following minimum fields per item:
 | `tags`        | ❌       | Optional list of tags              |
 
 Schema: `kernel/schema/catalog.schema.json`
+
+> **Version tracking (v1.7.13):** Item versions are tracked centrally in `VERSIONS.yml` at the repo root.
+> The `version` field in catalog items is deprecated and optional for backward compatibility.
 
 The installer (`para install`, `para update`) MUST validate `kernel_min` / `kernel_max`
 against the workspace's kernel version before syncing. Incompatible items are skipped
