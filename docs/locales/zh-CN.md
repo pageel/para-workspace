@@ -30,7 +30,7 @@
 | [🛠️ CLI 参考](#-cli-参考) | 所有 CLI 命令 |
 | [📑 工作流目录](#-工作流目录) | 24 个受治理的工作流 |
 | [🛡️ 规则目录](#-规则目录) | 11 条治理规则 |
-| [🧩 技能目录](#-技能目录) | 6 个可复用技能 |
+| [🧩 技能目录](#-技能目录) | 7 个可复用技能 |
 | [🧩 任务管理](#-任务管理混合-3-文件模型) | 混合 3-文件模型 |
 | [🔄 升级](#-升级版本) | 自动更新 + 全新安装 |
 | [🗺️ 路线图](#-路线图) | 版本历史 + 计划中的功能 |
@@ -213,13 +213,14 @@ para migrate [--from] [--to]    # 工作空间迁移
 
 ## 🧩 技能目录
 
-目前包含 6 个复用技能（`PARA Kit`, `Formatting`, `Page Map`, `Plan Templates`, `Docs Templates`, `Brainstorm Templates`），按需加载并提供模板、模式和参考资料。
+目前包含 7 个复用技能（`PARA Kit`, `Formatting`, `Page Map`, `PARA Skill`, `Plan Templates`, `Docs Templates`, `Brainstorm Templates`），按需加载并提供模板、模式和参考资料。
 
 | 技能 | 说明 |
 | :--- | :--- |
 | **[PARA Kit](../skills/para-kit.md)** | PARA 工作空间结构参考 — 模式、布局、内核治理、智能路由 |
 | **[Formatting](../skills/formatting.md)** | 表格、图表、树形列表、ASCII 字符艺术 |
 | **[Page Map](../skills/page-map.md)** | 使用 PAGE_MAP.md 和 BLUEPRINT.md 管理网站视觉结构 |
+| **[PARA Skill](../skills/para-skill.md)** | 通过 Co-Author 引擎创建、验证和测试 PARA 技能的治理技能 |
 | **[Plan Templates](../skills/plan.md)** | 详细计划与路线图模板 (Sidecar, v1.7.8) |
 | **[Docs Templates](../skills/docs.md)** | 架构、CLI、战略模板 (Sidecar, v1.7.8) |
 | **[Brainstorm Templates](../skills/brainstorm.md)** | 决策与研究模板 (Sidecar, v1.7.12) |

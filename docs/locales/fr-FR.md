@@ -30,7 +30,7 @@
 | [🛠️ Référence CLI](#-référence-cli) | Toutes les commandes CLI |
 | [📑 Catalogue des Workflows](#-catalogue-des-workflows) | 24 flux de travail (workflows) régis |
 | [🛡️ Catalogue des Règles](#-catalogue-des-règles) | 11 règles de gouvernance |
-| [🧩 Catalogue des Compétences](#-catalogue-des-compétences) | 6 compétences (skills) réutilisables |
+| [🧩 Catalogue des Compétences](#-catalogue-des-compétences) | 7 compétences (skills) réutilisables |
 | [🧩 Gestion des Tâches](#-gestion-des-tâches-modèle-hybride-à-3-fichiers) | Modèle hybride à 3 fichiers |
 | [🔄 Mise à jour](#-mise-à-jour-des-versions) | Mise à jour automatique + nouvelle installation |
 | [🗺️ Feuille de Route](#-feuille-de-route) | Historique des versions + fonctionnalités prévues |
@@ -206,7 +206,7 @@ para migrate [--from] [--to]    # Utilitaire de migration
 Le système intègre :
 - **24 Workflows :** Des gestionnaires de tâches (`/backlog`), des scénarios d'ouverture (`/open`), des audits (`/para-audit`) jusqu'aux systèmes de connaissances (`/para-knowledge`).
 - **11 Règles de Gouvernance :** Protègent le versionnement, les bonnes pratiques Git (VCS) ou évitent les mutations risquées.
-- **6 Compétences (Skills) :** Facilitent la compréhension des composants statiques (`PARA Kit`), des diagrammes ou de l'architecture des pages web (`Page Map`).
+- **7 Compétences (Skills) :** Facilitent la compréhension des composants statiques (`PARA Kit`), des diagrammes ou de l'architecture des pages web (`Page Map`).
 
 ---
 

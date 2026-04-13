@@ -29,8 +29,9 @@
 | [🧠 Kernel](#-kernel-nhân-hệ-thống) | Invariants, heuristics, hợp đồng |
 | [🛠️ CLI](#️-tham-chiếu-cli) | Tất cả lệnh CLI |
 | [📑 Workflow Catalog](#-catalog-workflow) | 24 governed workflows |
-| [🛡️ Rule Catalog](#️-catalog-quy-tắc-rules) | 11 governance rules |
-| [🧩 Skill Catalog](#-catalog-kỹ-năng-skills) | 3 reusable skills |
+| [🛡️ Rule Catalog](#️-rule-catalog) | 11 governance rules |
+| [🧩 Skill Catalog](#-catalog-kỹ-năng-skills) | 7 reusable skills |
+| [🧩 Task Management](#-task-management-hybrid-3-file-model) | Hybrid 3-File model |
 | [🔄 Nâng cấp](#-nâng-cấp-phiên-bản-upgrading) | Auto update + clean slate |
 | [🗺️ Lộ trình](#️-lộ-trình) | Lịch sử version + kế hoạch |
 
@@ -387,6 +388,7 @@ Skills là các module kiến thức tái sử dụng, được load theo yêu c
 | **[PARA Kit](../skills/para-kit.md)** | Cấu trúc PARA workspace — schema, layout, kernel governance, intelligence routing |
 | **[Formatting](../skills/formatting.md)** | Bảng, biểu đồ, tree listings, ASCII box art |
 | **[Page Map](../skills/page-map.md)** | Quản lý cấu trúc visual website với PAGE_MAP.md và BLUEPRINT.md |
+| **[PARA Skill](../skills/para-skill.md)** | Governance skill tạo, kiểm tra và test PARA skills qua Co-Author engine |
 | **[Plan Templates](../skills/plan.md)** | Template Detail Plan & Roadmap (Sidecar, v1.7.8) |
 | **[Docs Templates](../skills/docs.md)** | Template Architecture, CLI, Strategy (Sidecar, v1.7.8) |
 | **[Brainstorm Templates](../skills/brainstorm.md)** | Template Decision & Research (Sidecar, v1.7.12) |
