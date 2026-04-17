@@ -7,7 +7,7 @@
 **El Framework de Espacio de Trabajo para Humanos y Agentes IA**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.14-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.15-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -30,7 +30,7 @@
 | [🛠️ Referencia de CLI](#-referencia-cli) | Todos los comandos de CLI |
 | [📑 Catálogo de Workflows](#-catálogo-de-workflows) | 26 flujos de trabajo (workflows) gobernados |
 | [🛡️ Catálogo de Reglas](#-catálogo-de-reglas) | 11 reglas de gobernanza |
-| [🧩 Catálogo de Skills](#-catálogo-de-skills) | 8 habilidades (skills) reutilizables |
+| [🧩 Catálogo de Skills](#-catálogo-de-skills) | 9 habilidades (skills) reutilizables |
 | [🧩 Gestión de Tareas](#-gestión-de-tareas-modelo-híbrido-de-3-archivos) | Modelo híbrido de 3 archivos |
 | [🔄 Actualización](#-actualizando-versiones) | Actualización automática + instalación limpia |
 | [🗺️ Hoja de Ruta](#-hoja-de-ruta) | Historial de versiones + próximas características |
@@ -206,7 +206,7 @@ para migrate [--from] [--to]    # Utilidad de migración
 El sistema incluye:
 - **26 Workflows:** Desde gestores de tareas (`/backlog`), flujos de apertura (`/open`), auditorías (`/para-audit`), sistemas de conocimiento cruzado (`/para-knowledge`), hasta generación de contenido (`/write`) y telemetría (`/logs`).
 - **11 Reglas de Gobernabilidad:** Defienden el versionado, las buenas prácticas de Git (VCS) o evitan mutaciones riesgosas. Todas optimizadas bajo un Índice Disparador.
-- **8 Skills Base:** Facilitan el entendimiento de componentes estáticos como `PARA Kit`, diagramas visuales, mapas de página (`Page Map`), y plantillas de redacción de contenidos (`Write Templates`).
+- **9 Skills Base:** Facilitan el entendimiento de componentes estáticos como `PARA Kit`, diagramas visuales, mapas de página (`Page Map`), plantillas de redacción de contenidos (`Write Templates`), y catálogos de guardias de seguridad (`Harness Guards`).
 
 ---
 
@@ -243,7 +243,7 @@ Una vez que se estandaricen nuevos workflows, correcciones en kernel el comando 
 
 ## 🗺️ Hoja de Ruta
 
-Versión actual: **1.7.14** (Content Authoring Ecosystem & Session Telemetry).
+Versión actual: **1.7.15** (Harness Skill, Plan Status Gate & Roadmap Prefix Convention).
 Próximos lanzamientos vislumbrados: **v1.8.0** (Sistemas por Departamento) y **v1.9.0** (Fronteras Comunitarias & Confianza).
 
 ---
@@ -256,4 +256,4 @@ Consulte el documento [CONTRIBUTING.md](../../CONTRIBUTING.md) para los lineamie
 
 Construido con ❤️ por **Pageel**. Estandarizando el futuro de los PKMs para Agentes.
 
-_Versión: 1.7.14_
+_Versión: 1.7.15_

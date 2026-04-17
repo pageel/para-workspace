@@ -7,7 +7,7 @@
 **The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.14-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.15-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -30,7 +30,7 @@
 | [🛠️ CLI Reference](#️-cli-reference) | All CLI commands |
 | [📑 Workflow Catalog](#-workflow-catalog) | 26 governed workflows |
 | [🛡️ Rule Catalog](#️-rule-catalog) | 11 governance rules |
-| [🧩 Skill Catalog](#-skill-catalog) | 8 reusable skills |
+| [🧩 Skill Catalog](#-skill-catalog) | 9 reusable skills |
 | [🧩 Task Management](#-task-management-hybrid-3-file-model) | Hybrid 3-File model |
 | [🔄 Upgrading](#-upgrading-versions) | Auto update + clean slate |
 | [🗺️ Roadmap](#️-roadmap) | Version history + planned features |
@@ -392,6 +392,7 @@ Skills are reusable knowledge modules loaded on-demand via the skills trigger in
 | **[Docs Templates](./docs/skills/docs.md)** | Architecture, CLI, Strategy templates (Sidecar, v1.7.8)  |
 | **[Brainstorm Templates](./docs/skills/brainstorm.md)** | Decision & Research templates (Sidecar, v1.7.12)  |
 | **[Write Templates](./docs/skills/write.md)** | Content type templates and writing rules (Sidecar, v1.7.14)  |
+| **[Harness Guards](./docs/skills/harness.md)** | Guard catalog and auto-scan protocol for context-aware safety guards (Sidecar, v1.7.15) |
 
 ---
 
@@ -456,7 +457,7 @@ block-beta
 
 Layer 3 uses **Proactive Trigger Check** (v1.6.2): BEFORE any side-effect, agent scans all trigger tables and loads matching rules/skills FIRST.
 
-Layer 4 supports **4 guard types**: `TASK` (C1-C3), `KERNEL` (I9), `GOVERNED` (rules), `WORKSPACE` (session/sync).
+Layer 4 supports **6 guard types**: `STATUS GATE`, `MANDATORY`, `HARNESS GUARD`, `FILE GUARD` (C1-C3, I9, GOVERNED), `WORKFLOW GATE`, `CONTEXT RECOVERY`.
 
 **Scenario: Agent forgets rules after truncation**
 
@@ -670,6 +671,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] **Backlog Governance & Extract Paradigm** _(shipped in v1.7.11-1.7.12)_
 - [x] **VERSIONS.yml Migration & Anti-Token Decay** _(shipped in v1.7.13)_
 - [x] **Content Authoring Ecosystem & Session Telemetry** _(shipped in v1.7.14)_
+- [x] **Harness Skill, Plan Status Gate & Roadmap Prefix Convention** _(shipped in v1.7.15)_
 - [ ] Department System _(v1.8.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.9.0 — planned)_
 
@@ -687,4 +689,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.7.14_
+_Version: 1.7.15_

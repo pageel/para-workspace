@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.7.15] - 2026-04-17
+
+Harness Skill, Plan Status Gate & Roadmap Prefix Convention.
+
+- **Added**: `harness` Sidecar Skill (`skills/harness/`) — centralized guard catalog (6 guard types) and auto-scan protocol for generating context-aware safety guards across plans, workflows, and artifacts.
+- **Added**: Plan Status Gate (`📝 Draft` → `🔨 Active` lifecycle) — agent execution blocked until user explicitly activates a plan. Injected into `detail-plan.md` template and `/plan` workflow.
+- **Added**: `email` content type template for `/write` workflow — professional communication template with 6 categories (outreach, proposal, follow-up, announcement, inquiry, thank-you).
+- **Changed**: Roadmap naming convention — prefix-based `roadmap-[scope].md` replaces `[scope]-roadmap.md` for OSSS compliance (FEAT-76).
+- **Changed**: `detail-plan.md` template — Status Gate header, Phase-specific push logic, and Harness Guard integration.
+- **Changed**: Guard taxonomy expanded from 4 types to 6: `STATUS GATE`, `MANDATORY`, `HARNESS GUARD`, `FILE GUARD`, `WORKFLOW GATE`, `CONTEXT RECOVERY`.
+- **Changed**: `skills.md` index — added Harness Guards trigger entry.
+- **Changed**: `catalog.yml` — registered `harness` skill (kernel_min: 1.7.15), updated `write` description to include `email`.
+- **Changed**: Strategy reference (`docs/references/strategy.md`) — roadmap link pattern updated to match new naming convention.
+- **Changed**: README and all 4 locales (vi-VN, zh-CN, es-ES, fr-FR) updated — version badge, skill count (8→9), roadmap entry, guard type count.
+
 ## [1.7.14] - 2026-04-13
 
 Content Authoring Ecosystem & Session Telemetry.
