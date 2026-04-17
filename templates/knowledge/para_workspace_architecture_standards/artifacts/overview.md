@@ -124,7 +124,7 @@ ELSE (local):
 .agents/
 ├── rules.md          # Workspace rules trigger index (12 rules)
 ├── rules/            # Rule files (loaded on-demand by trigger)
-├── skills.md         # Workspace skills trigger index (7 skills)
+├── skills.md         # Workspace skills trigger index (9 skills)
 ├── skills/           # Skill directories
 │   ├── formatting/   # Table/diagram formatting templates
 │   ├── para-kit/     # PARA reference card (schema, layout, governance)
@@ -132,8 +132,10 @@ ELSE (local):
 │   ├── plan/         # Sidecar data for /plan workflow (v1.7.8)
 │   ├── docs/         # Sidecar data for /docs workflow (v1.7.8)
 │   ├── brainstorm/   # Sidecar data for /brainstorm workflow (v1.7.12)
+│   ├── write/        # Sidecar data for /write workflow (v1.7.14)
+│   ├── harness/      # Guard catalog & auto-scan protocol (v1.7.15)
 │   └── page-map/     # Website visual structure management (v1.7.6)
-└── workflows/        # 24 core workflow files
+└── workflows/        # 26 core workflow files
 ```
 
 ### Project Level (CONDITIONAL — gated by `agent.rules` / `agent.skills`)
@@ -254,10 +256,12 @@ Skills are folders of instructions that extend agent capabilities:
 | Plan Templates | /plan create Step 9 (writing plan file) (v1.7.8) | Sidecar data: Detail Plan and Roadmap document templates |
 | Docs Templates | /docs new Step 6 (generating docs) (v1.7.8) | Sidecar data: Architecture, CLI, Deployment, Changelog, Strategy templates |
 | Brainstorm Templates | /brainstorm Step 4 (saving output) (v1.7.12) | Sidecar data: Decision and Research document templates (Extract Paradigm) |
+| Write Templates | /write workflow (ebook, paper, tutorial, blog, social, email) (v1.7.14) | Sidecar data: Content type templates and writing rules |
+| Harness Guards | Creating plans, writing workflow steps, generating phased artifacts (v1.7.15) | Sidecar data: Guard catalog (6 types) and auto-scan protocol for context-aware safety guards |
 
 Skills promoted from rules: standalone, English-first, constraints + templates merged.
 
-Total: **7 skills** (4 standalone + 3 sidecar).
+Total: **9 skills** (4 standalone + 5 sidecar).
 
 ### Sidecar Skill Pattern (v1.7.6.3)
 
@@ -309,6 +313,7 @@ skills/[name]/
 | 1.7.12 | Feature | Extract Paradigm for /brainstorm (consent gate, 500-line threshold), Brainstorm Sidecar Skill, Catalog Version Convention, /plan integration with para-skill |
 | 1.7.13 | Fix | VERSIONS.yml migration: centralized version tracking, version field deprecated in catalogs, preferences.date_format in naming/config, anti-bulk-overwrite convention |
 | 1.7.14 | Feature | Content Authoring Ecosystem: /write workflow + sidecar skill (ebook, paper, tutorial, blog, social), /logs session telemetry (Fast Glance + Structured Audit), BUG-32 fix (para-workflow add source metadata) |
+| 1.7.15 | Feature | Harness Skill (guard catalog + auto-scan protocol), Plan Status Gate (Draft/Active lifecycle), roadmap prefix convention, email template for /write, guard taxonomy expanded to 6 types |
 
 ## 15. Knowledge System (v1.7.0+)
 
