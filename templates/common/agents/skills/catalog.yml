@@ -87,13 +87,25 @@ items:
   - templates
   - token-optimization
   - extract-paradigm
+- id: harness
+  name: Harness Guards
+  kernel_min: 1.7.15
+  kernel_max: 1.x
+  entrypoint: harness/SKILL.md
+  description: Centralized guard catalog and auto-scan protocol for generating
+    context-aware safety guards across plans, workflows, and artifacts.
+  tags:
+  - harness
+  - guards
+  - safety
+  - sidecar
 - id: write
   name: Write Templates
   kernel_min: 1.7.14
   kernel_max: 1.x
   entrypoint: write/SKILL.md
   description: Sidecar data for /write workflow — content type templates (ebook,
-    blog, tutorial, guide, paper, social) and writing rules loaded just-in-time.
+    blog, tutorial, guide, paper, social, email) and writing rules loaded just-in-time.
   tags:
   - write
   - sidecar

@@ -20,6 +20,7 @@ source: catalog
 | Tutorial Template  | `references/templates/tutorial.md`   | `/write new` with type `tutorial`   |
 | Blog Template      | `references/templates/blog.md`       | `/write new` with type `blog`       |
 | Social Template    | `references/templates/social.md`     | `/write new` with type `social`  |
+| Email Template     | `references/templates/email.md`      | `/write new` with type `email`   |
 | Options Reference  | `references/options.md`              | User provides `--style`, `--depth`, `--tools`, or `--platform` |
 | Writing Rules      | `references/writing-rules.md`        | Always loaded during Step 5 (Write Content)                    |
 | Quality Checklist  | `references/quality-checklist.md`    | `/write review`                  |

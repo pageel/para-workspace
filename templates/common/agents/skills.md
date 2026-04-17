@@ -14,3 +14,4 @@
 | Plan Templates | /plan create Step 9 (writing plan file), need Detail Plan or Roadmap template | skills/plan/SKILL.md |
 | Docs Templates | /docs new Step 6 (generating docs), need Architecture/CLI/Deployment/Changelog/Strategy template | skills/docs/SKILL.md |
 | Brainstorm Templates | /brainstorm Step 4 (saving structured output), need Decision or Research template | skills/brainstorm/SKILL.md |
+| Harness Guards | Creating plans, writing workflow steps, generating artifacts with phases/progression | skills/harness/SKILL.md |
