@@ -17,6 +17,8 @@ Harness Skill, Plan Status Gate & Roadmap Prefix Convention.
 - **Changed**: `catalog.yml` — registered `harness` skill (kernel_min: 1.7.15), updated `write` description to include `email`.
 - **Changed**: Strategy reference (`docs/references/strategy.md`) — roadmap link pattern updated to match new naming convention.
 - **Changed**: README and all 4 locales (vi-VN, zh-CN, es-ES, fr-FR) updated — version badge, skill count (8→9), roadmap entry, guard type count.
+- **Fixed**: FEAT-78 — `/logs deep` command granularity: `🛠️ Tools Invoked` now splits `run_command` into individual rows with exact `CommandLine`, preventing traceability loss from grouping.
+- **Fixed**: FEAT-73 (partial) — `/logs` Token Budget Estimate: added `💰 Token Budget` section counting platform-injected KI tokens (~200-800/KI) that were previously invisible in estimates.
 
 ## [1.7.14] - 2026-04-13
 

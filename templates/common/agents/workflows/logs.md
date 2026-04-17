@@ -5,7 +5,7 @@ source: catalog
 
 # /logs [mode] [scope]
 
-> **Workspace Version:** 1.7.14
+> **Workspace Version:** 1.7.15
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language`. **All output reports MUST be translated to this language.**
 
 Diagnostic workflow to track performance, context budget, and Agent I/O. Useful for debugging context decay, agent hallucination, or token bloatedness.
@@ -42,12 +42,14 @@ The Agent uses its short-term memory impression to quickly estimate the session 
 | 📚 Knowledge Items | [N] | (KI names) |
 | 🛡️ Rules & Skills | [N] | (Names loaded) |
 | 📄 Files Read | [N] | (Brief summary) |
-| 🛠️ Tools Invoked | [N] | (Tool types) |
+| 🛠️ Tools Invoked | [N] | (Tool types — for `run_command`: list key commands) |
 | 📝 Artifacts Mutated | [N] | Total files modified or created |
+| 💰 Token Budget | ~[N]k | (Incl. KI injection ~[N]k + rules ~[N]k) |
 | 🚧 Agent Friction | [N] | (Errors, retries, corrections) |
 | ✅ Tasks Progress | [N] | (Done or added) |
 
 > 💡 *Metrics are estimated from memory. Use `--deep` for an exhaustive item-by-item audit.*
+> ⚠️ *Token Budget includes platform-injected KI context (`~200-800 tokens/KI`) which is invisible in conversation but consumes context window.*
 ```
 
 *(Stop workflow execution after printing the table.)*
@@ -83,9 +85,19 @@ The Agent performs a **deliberate, systematic scan** of the entire conversation 
 | 1 | `[path]` | [Why read] |
 
 ### 🛠️ Tools Invoked ([N] total)
+
+**Non-command tools:**
 | # | Tool | Count | Context |
 |:--|:--|:--|:--|
-| 1 | [tool_name] | [N]x | [What for] |
+| 1 | [view_file / grep_search / write_to_file / etc.] | [N]x | [What for] |
+
+**Commands executed** (each `run_command` = 1 row):
+| # | Command | Cwd | Purpose |
+|:--|:--|:--|:--|
+| 1 | `[exact command line]` | `[working directory]` | [What it did] |
+| 2 | `[exact command line]` | `[working directory]` | [What it did] |
+
+> ⚠️ Agent MUST list **every** `run_command` individually with exact `CommandLine`. Grouping like `run_command 9x` is PROHIBITED — it destroys traceability.
 
 ### 📝 Artifacts Mutated ([N] total)
 | # | Action | File Path |
@@ -102,6 +114,18 @@ The Agent performs a **deliberate, systematic scan** of the entire conversation 
 | # | Action | Item |
 |:--|:--|:--|
 | 1 | [Done/Added/Reverted] | [Description] |
+
+### 💰 Token Budget Estimate
+| Source | Est. Tokens | Notes |
+|:--|:--|:--|
+| 📚 KI Injection (platform) | ~[N] | [N] KIs × ~200-800 tokens each (invisible in chat, injected at session start) |
+| 🛡️ User Rules (system prompt) | ~[N] | Rules loaded via user_rules block |
+| 💬 Conversation turns | ~[N] | User requests + Agent responses |
+| 📄 File reads (view_file) | ~[N] | [N] files, avg ~[N] lines each |
+| 🛠️ Tool I/O overhead | ~[N] | Tool call/response metadata |
+| **Total estimated** | **~[N]k** | |
+
+> ⚠️ KI tokens are **platform-injected** at session start and invisible in the conversation transcript. They consume context window budget but are never shown in chat. Always count them to avoid underestimating total usage.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
