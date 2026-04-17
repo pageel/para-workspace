@@ -29,7 +29,7 @@
 
 ## Roadmap Alignment
 
-> Link: [`../artifacts/plans/*-roadmap.md`] (if exists)
+> Link: [`../artifacts/plans/roadmap-*.md`] (if exists)
 
 ---
 

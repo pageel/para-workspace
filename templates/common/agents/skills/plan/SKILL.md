@@ -28,6 +28,24 @@ source: catalog
 > **Convention:** Data files live in `references/` (not `templates/`).
 > This follows the Sidecar Skill convention formalized in v1.7.6.3.
 
+## Template Adaptation Rules
+
+When generating a plan from `detail-plan.md`, Agent MUST read `project.md` first and adapt:
+
+| Condition | Action |
+|:--|:--|
+| Plan Status is `📝 Draft` | Agent MUST NOT execute Phase tasks. Only review/edit the plan content. |
+| Plan Status is `🔨 Active` | Agent MAY execute Phase tasks following the plan sequence. |
+| Project has no `repo/` | Omit Git checkpoint steps and Git items in Walkthrough |
+| Project has no build tool | Omit `Build/Test pass` from Audit Tracking |
+| Project is not bilingual | Omit 1:N EN/VI task expansion pattern |
+| Project has `agent.rules: true` | Keep `<!-- ⚠️ MANDATORY -->` guards in every Phase |
+| Plan scope is documentation-only | Risks table may reference `docs-authoring` rules as harness |
+| Risks & Mitigations table has entries | Add `<!-- ⚠️ HARNESS GUARD (Phase N Risk): ... -->` comment to each mapped Phase |
+
+> **Principle:** Template = clean skeleton. Adaptation = Skill responsibility.
+> **Status lifecycle:** 📝 Draft → 🔨 Active → ✅ Done. Transition from Draft → Active requires explicit user approval at `/plan create` Step 10 or `/plan update`.
+
 ## Output Checklist
 
 After writing the plan, verify:

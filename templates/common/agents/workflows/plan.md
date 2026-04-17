@@ -216,7 +216,7 @@ Context:
 **If roadmap exists → smart suggest:**
 
 ```text
-📐 Roadmap: [name]-roadmap.md (N phases)
+📐 Roadmap: roadmap-[name].md (N phases)
 
 Next phase without detail plan:
 → Phase [N]: [Name] (vX.Y) — 📋 Planned
@@ -224,7 +224,7 @@ Next phase without detail plan:
 Create Detail Plan for Phase [N]? (y/n)
 ```
 
-> **Roadmap naming convention:** `[scope]-roadmap.md`. Never `active_plan`.
+> **Roadmap naming convention:** `roadmap-[scope].md`. Never `active_plan`.
 > **Detail plan:** Standard `*.md` (non-roadmap). IS `active_plan`, archived to `plans/done/` when done.
 
 #### 2.9. Strategy & Roadmap Context Loading
@@ -377,7 +377,7 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 **Naming convention:**
 - **Detail Plan (Versioned):** `v[ver]-[YYYY-MM-DD]-[topic].md` (e.g., `v1.7.11-2026-04-09-optimization.md`)
 - **Detail Plan (Wildcard/R&D):** `v[X.X.X]-[YYYY-MM-DD]-[topic].md` (e.g., `v1.x.x-2026-04-09-version-bumper.md`)
-- **Roadmap:** `[topic]-roadmap.md` (e.g., `core-roadmap.md`)
+- **Roadmap:** `roadmap-[topic].md` (e.g., `roadmap-core.md`)
 
 **Plan document structure:**
 
@@ -386,6 +386,10 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 > - **Roadmap** → read `.agents/skills/plan/references/roadmap.md`
 >
 > Use the template as the document structure. Fill in each section with data gathered from Steps 1-8.
+
+> ⚠️ **Status Gate:** New plans MUST be created with `Status: 📝 Draft`.
+> Agent MUST NOT execute any Phase tasks nor modify project files while Status is Draft.
+> Status transitions to `🔨 Active` ONLY at Step 10 after explicit user approval.
 
 #### 9.5. Pre-Checklist Context Reload (Staged Drill-down)
 
@@ -407,19 +411,21 @@ Present the plan summary and ask the user:
 ```
 📐 PLAN READY: [plan-name]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Status: 📝 Draft (not yet executable)
 Phases: [N] | Timeline: [N] days | Tasks: [N]
 File:   artifacts/plans/[plan-name].md
 
 ❓ Activate this plan now?
-   Y → Set as active_plan + run /backlog sync (recommended)
-   N → Save only — activate later with /plan update
+   Y → Change Status to 🔨 Active + set active_plan + run /backlog sync
+   N → Keep as 📝 Draft — activate later with /plan update
 ```
 
 **If user confirms (Y):**
 
 // turbo
 
-1. Set `active_plan` in `project.md` frontmatter:
+1. Update plan `Status` from `📝 Draft` → `🔨 Active` in the plan file header.
+2. Set `active_plan` in `project.md` frontmatter:
 
 ```yaml
 active_plan: "plans/[plan-name].md"
@@ -476,11 +482,11 @@ When creating a NEW roadmap (Step 2.8 chose "Roadmap"):
 
 1. After saving the roadmap file, set `roadmap` field in `project.md`:
    ```yaml
-   roadmap: plans/[scope]-roadmap.md
+   roadmap: plans/roadmap-[scope].md
    ```
 2. If creating for a satellite from ecosystem, suggest:
    ```yaml
-   roadmap: "@{ecosystem}/plans/[scope]-roadmap.md"
+   roadmap: "@{ecosystem}/plans/roadmap-[scope].md"
    ```
 3. Log: `📐 roadmap field set in project.md`
 

@@ -10,11 +10,20 @@
 # [Plan Title]: [project-name]
 
 > **Version:** 1.0 | **Created:** YYYY-MM-DD
+> **Status:** 📝 Draft
 > **Baseline:** [Reference project or context, if any]
+
+<!-- ⚠️ STATUS GATE: Agent MUST NOT execute any Phase tasks while Status is "📝 Draft".
+     Agent may only execute when Status is "🔨 Active".
+     Status lifecycle: 📝 Draft → 🔨 Active → ✅ Done
+     - 📝 Draft:   Plan is being written/reviewed. No file modifications allowed.
+     - 🔨 Active:  User has approved the plan. Execution permitted.
+     - ✅ Done:    All phases completed. Ready for archive to plans/done/.
+     Transition from Draft → Active requires explicit user approval. -->
 
 ---
 
-## 1. References
+## References
 
 > Brainstorm, research, predecessor plans.
 
@@ -23,74 +32,125 @@
 | B1 | [brainstorm-file](path) | [Description] |
 | R1 | [research-file](path) | [Description] |
 
-## 2. Architecture Overview
+## Architecture Overview & Execution Logic
 
 [Component diagram + Tech stack table]
 
-## 3. Implementation Phases
+**Execution Logic Map:**
 
-### Phase 0: Setup & Infrastructure
+> ASCII flowchart showing Phase sequence, Guards, and Dependencies.
+> Helps verify logic, security, and context coverage before execution.
 
-<!-- ⚠️ DO NOT MODIFY THIS BLOCK: Agent MUST read project.md and reload .agents/rules.md + .agents/skills.md -->
+## Implementation Phases
 
-**Goal:** [One sentence]
+### Phase 0. Setup & Infrastructure
 
-| # | Task | Target | Description |
-|:--|:--|:--|:--|
-| 1 | [ID or name] | `[file/path]` | [What to do] |
-| 2 | [ID or name] | `[file/path]` | [What to do] |
+<!-- ⚠️ MANDATORY: Agent MUST read project.md and reload .agents/rules.md + .agents/skills.md BEFORE executing any tasks here -->
 
-**Output:** [Deliverables]
+#### Implementation Plan
 
-### Phase 1: [Core Feature]
+[Technical blueprint — specific file paths, line numbers, commands.
+User reviews this artifact before Agent takes action.
+Number steps as `X.Y` (X = Phase, Y = step).
+Each step should specify: target file, exact operation, source reference if applicable.]
 
-<!-- ⚠️ DO NOT MODIFY THIS BLOCK: Agent MUST reload .agents/rules.md + .agents/skills.md -->
+0.1 **[Step 1 name]** — [Detail: file path, line number, operation]
+0.2 **[Step 2 name]** — [Detail: ...]
 
-**Goal:** [One sentence]
+> ⚠️ Phase 0 does not produce a Git commit. Setup only.
 
-| # | Task | Target | Description |
-|:--|:--|:--|:--|
-| 1 | [ID or name] | `[file/path]` | [What to do] |
+#### Task List
 
-**Output:** [Deliverables]
+[Progress tracking checklist — Agent ticks items when completed.
+1:N relationship with Implementation Plan — one plan step may spawn multiple tasks.
+Example: step 1.1 in Plan produces task 1.1a (EN) and 1.1b (VI).]
 
-## 4. Backlog → Phase Mapping
+[ ] 0.1 [Task description]
+[ ] 0.2 [Task description]
 
-[Cross-reference table]
+---
 
-## 5. Risks & Mitigations
+### Phase 1. [Core Feature]
 
-[Risk table with mitigations]
+<!-- ⚠️ MANDATORY: Agent MUST reload .agents/rules.md + .agents/skills.md BEFORE modifying files or executing git commands -->
+<!-- ⚠️ HARNESS GUARD (Phase 1 Risk): [Derived from Risks & Mitigations table. Leave empty if no risk mapped to this Phase.] -->
+
+#### Implementation Plan
+
+[Goal in 1-2 sentences.]
+
+1.1 **[Step name]** — [Detail: file path, line number, operation, source reference if applicable.]
+1.2 **[Step name]** — [...]
+
+1.N **Git checkpoint Phase 1**
+```bash
+git add [scope]
+git commit -m "[conventional commit message]"
+git push
+```
+
+#### Task List
+
+[ ] 1.1a [Specific task — e.g. EN file]
+[ ] 1.1b [Specific task — e.g. VI file]
+[ ] 1.2 [Task]
+[ ] 1.N Git commit + push Phase 1 successful.
+
+---
+
+### Phase 2. [Next Feature]
+
+[Repeat structure: MANDATORY + HARNESS GUARD + Implementation Plan + Task List + Git checkpoint]
+
+---
+
+## Backlog → Phase Mapping
+
+| Backlog Item | Priority | Phase |
+|:--|:--|:--|
+| [Item ID] | 🔴 High | Phase 1 |
 
 > 💡 **[Optional] Complex & Meta-Project Add-ons:**
-> If this plan is for an **Architecture Refactor** or a **Meta-Project (like PARA Workspace)**, you MUST insert the following sections here to prevent cascading failures:
+> If this plan is for an **Architecture Refactor** or a **Meta-Project (like PARA Workspace)**, insert:
 > - **Execution Order**: Explicit dependency chain of tasks.
-> - **File Inventory**: Modified/Created tables.
 > - **Impact Analysis**: Blast radius across systems/workflows.
 > - **Version Decision**: Justification for version bump level.
 
-## 6. Checklist
+## Walkthrough (Completion Gate)
 
-> ⚠️ **MANDATORY**: Agent MUST only generate this Checklist AFTER executing **Step 9.5 (Pre-Checklist Context Reload)** entirely, to prevent Token Decay from omitting critical rules (like Version Bump, Docs Impact, or KI Sync).
+> Final verification checklist — only tick when ALL Phase Task Lists are complete.
+> Equivalent to the Walkthrough artifact in Antigravity Planning mode.
 
-> ⚠️ **COMPLETION GATE**: Agent MUST explicitly verify EVERY pre-completion item is Done (with evidence) BEFORE proposing next step (push or close). Do NOT skip verification.
+[ ] All Task List items from Phase 0 → Phase N are [x].
+[ ] All Git commit + push commands executed.
+[ ] [Project-specific checks: build pass, docs updated, governance rules...]
+[ ] Clear `active_plan` in `project.md`.
 
-### Pre-completion
+> 🛑 **STOP HERE:** Agent MUST explicitly ask the User to verify BEFORE executing the final git push in the last Phase.
 
-- [ ] [Core implementation done]
-- [ ] [Tests/dry-run pass]
-- [ ] [Docs updated if needed]
-- [ ] [Project-specific Governance rules checked (e.g., OSS English-first, linting)]
+### Risks & Mitigations
 
-> 🛑 **STOP HERE:** Agent MUST explicitly ask the User to verify the Pre-push checklist BEFORE executing git commit.
+> Risks serve as a source to reinforce guardrails at each Phase.
+> When a new risk is discovered during execution → add it here → update the
+> `<!-- ⚠️ MANDATORY -->` guard of the related Phase accordingly.
 
-### Post-completion
+| Risk | Mitigation | Harness (related Phase) |
+|:--|:--|:--|
+| [Risk description] | [Mitigation strategy] | [Phase N guard] |
 
-- [ ] Clear `active_plan` in `project.md`
+### Review & Audit Tracking
 
-#### If plan involves `repo/` changes:
+> Counter table to assess plan health. Update after each working session.
 
-- [ ] `git commit` + `git push` successful
-- [ ] `./para update` sync workspace (if governed files changed)
-- [ ] Verify workspace files
+| Criteria | Count | Last reviewed |
+|:--|:--|:--|
+| Logic review (Phase sequence, Task coverage) | 0 | — |
+| Security review (context guards, published-only) | 0 | — |
+| Checklist review (completeness, no missing files) | 0 | — |
+| Build/Test pass | 0 | — |
+
+### Suggested Next Steps
+
+1. **Activate Plan:** Set `active_plan` in `project.md`.
+2. [Project-specific next step...]
 ```

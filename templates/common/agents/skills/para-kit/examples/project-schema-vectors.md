@@ -15,7 +15,7 @@ deadline: "2026-06-30"
 type: standard
 active_plan: "plans/mvp-launch.md"
 strategy: "Mobile-first PWA with offline support"
-roadmap: "plans/product-roadmap.md"
+roadmap: "plans/roadmap-product.md"
 agent:
   rules: true
   skills: false
@@ -42,7 +42,7 @@ created: "2026-03-20"
 goal: "Coordinate the ACME platform ecosystem."
 type: ecosystem
 strategy: "Microservices architecture with shared auth"
-roadmap: "plans/ecosystem-roadmap.md"
+roadmap: "plans/roadmap-ecosystem.md"
 agent:
   rules: true
   skills: false
@@ -88,7 +88,7 @@ type: standard
 ecosystem: acme-platform
 active_plan: "plans/api-v2-migration.md"
 strategy: "Gradual migration from Express to Fastify"
-roadmap: "plans/api-roadmap.md"
+roadmap: "plans/roadmap-api.md"
 agent:
   rules: true
   skills: false
