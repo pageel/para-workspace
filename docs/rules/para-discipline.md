@@ -32,7 +32,7 @@ MUST stay within the active project directory. MUST use full relative paths for 
 
 ### 4. Resource Immutability
 
-MUST NOT modify files in `Resources/references/`. Resources are for learning, scaffolding, and installation only.
+MUST NOT modify files in `Resources/repo/`. Resources are for learning, scaffolding, and installation only.
 
 ### 5. Protected Projects
 

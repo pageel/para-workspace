@@ -17,7 +17,7 @@
 | Session file        | `YYYY-MM-DD.md`    | `2026-02-13.md`                                 |
 | Decision file       | `<timestamp>.json` | `1739001234.json`                               |
 | Plan file           | `plan-v<NNN>.md`   | `plan-v001.md`                                  |
-| Folder names (PARA) | PascalCase         | `Projects/`, `Areas/`, `Resources/`, `Archive/` |
+| Folder names (PARA) | layout-dependent   | `Projects/`, `1_Projects/`, `10_PROJECTS/` (see I1) |
 | Sub-folder names    | kebab-case         | `ai-agents/`, `web-development/`                |
 | Workflow files      | kebab-case         | `new-project.md`, `para-discipline.md`          |
 

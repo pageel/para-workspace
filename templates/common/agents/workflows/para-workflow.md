@@ -44,7 +44,7 @@ echo ""
 Read the file at the **catalog source** (one of these, in priority order):
 
 1. `Projects/para-workspace/repo/templates/common/agents/workflows/catalog.yml`
-2. `Resources/references/para-workspace/templates/common/agents/workflows/catalog.yml`
+2. `Resources/repo/para-workspace/templates/common/agents/workflows/catalog.yml`
 
 **Step 3.** Display comparison report:
 
@@ -136,8 +136,8 @@ The agent will read `.agents/workflows/[name].md` and apply fixes for each item:
 | `Resources/ai-agents/rules/` | `templates/common/agents/rules/` (in repo) |
 | `Resources/ai-agents/skills/` | `templates/common/agents/skills/` (in repo) |
 | `Resources/Themes/` | `Resources/themes/` (lowercase) |
-| `Resources/Remotes/` | `Resources/references/` (renamed) |
-| `Resources/Reference/` | `Resources/references/` (lowercase) |
+| `Resources/Remotes/` | `Resources/repo/` (renamed) |
+| `Resources/Reference/` | `Resources/repo/` (lowercase) |
 | `Projects/_playground/` | `Projects/_playground/` (unchanged) |
 
 ### Execution

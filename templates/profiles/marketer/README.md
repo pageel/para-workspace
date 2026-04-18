@@ -118,7 +118,7 @@ Use your agent to accelerate content creation:
 
 - Summarize completed deliverables
 - Log outstanding tasks for next session
-- Process `_inbox/`: move insights to `Areas/marketing/customers/`, inspiration to `Resources/references/`
+- Process `_inbox/`: move insights to `Areas/marketing/customers/`, inspiration to `Resources/repo/`
 - Log campaign learnings in `Areas/marketing/strategy/`
 
 ---

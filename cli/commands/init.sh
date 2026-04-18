@@ -21,16 +21,21 @@ normalize_path() {
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(normalize_path "$(cd "$SCRIPT_DIR/../.." && pwd)")"
 
+# Load fs.sh for get_para_dir
+source "$SCRIPT_DIR/../lib/fs.sh" 2>/dev/null || true
+
 # === Parse arguments ===
 PROFILE="general"
 LANG_PREF="en"
 TARGET_PATH=""
+LAYOUT="standard"
 
 for arg in "$@"; do
   case "$arg" in
     --profile=*)  PROFILE="${arg#--profile=}" ;;
     --lang=*)     LANG_PREF="${arg#--lang=}" ;;
     --path=*)     TARGET_PATH="$(normalize_path "${arg#--path=}")" ;;
+    --layout=*)   LAYOUT="${arg#--layout=}" ;;
     --help|-h)
       echo "Usage: para init [options]"
       echo ""
@@ -38,14 +43,28 @@ for arg in "$@"; do
       echo "  --profile=NAME   Workspace profile (general, dev)"
       echo "  --lang=CODE      Language preference (en, vi)"
       echo "  --path=DIR       Target directory (default: current dir)"
+      echo "  --layout=MODE    Directory layout: standard | numeric | numeric-wide"
+      echo "                   standard      → Projects/ Areas/ Resources/ Archive/"
+      echo "                   numeric       → 1_Projects/ 2_Areas/ 3_Resources/ 4_Archive/"
+      echo "                   numeric-wide  → 10_PROJECTS/ 20_AREAS/ 30_RESOURCES/ 40_ARCHIVE/"
       echo ""
       echo "Examples:"
       echo "  para init --profile=dev --lang=en"
-      echo "  para init --profile=dev --path=./my-workspace"
+      echo "  para init --profile=dev --lang=en --layout=numeric-wide"
       exit 0
       ;;
   esac
 done
+
+# Validate layout value
+case "$LAYOUT" in
+  standard|numeric|numeric-wide) ;;
+  *)
+    echo "❌ Error: Invalid layout '$LAYOUT'."
+    echo "   Valid options: standard | numeric | numeric-wide"
+    exit 1
+    ;;
+esac
 
 # Default target path
 if [ -z "$TARGET_PATH" ]; then
@@ -81,6 +100,7 @@ fi
 echo "🚀 Initializing PARA Workspace"
 echo "   Profile: $PROFILE"
 echo "   Language: $LANG_PREF"
+echo "   Layout:  $LAYOUT"
 echo "   Path: $TARGET_PATH"
 echo ""
 
@@ -102,11 +122,12 @@ while IFS= read -r line; do
   fi
 done < <(sed -n '/^creates:/,/^[a-z]/p' "$PROFILE_DIR/preset.yaml" | sed '$d')
 
-# Fallback: ensure PARA dirs always exist (invariant I1)
-mkdir -p "$TARGET_PATH/Projects"
-mkdir -p "$TARGET_PATH/Areas"
-mkdir -p "$TARGET_PATH/Resources"
-mkdir -p "$TARGET_PATH/Archive"
+# Fallback: ensure PARA dirs always exist (invariant I1) — layout-aware
+export WORKSPACE_ROOT="$TARGET_PATH"
+mkdir -p "$TARGET_PATH/$(get_para_dir projects)"
+mkdir -p "$TARGET_PATH/$(get_para_dir areas)"
+mkdir -p "$TARGET_PATH/$(get_para_dir resources)"
+mkdir -p "$TARGET_PATH/$(get_para_dir archive)"
 mkdir -p "$TARGET_PATH/_inbox"
 
 # === Set executable permissions on all CLI scripts (BUG-01 fix) ===
@@ -128,6 +149,7 @@ cat > "$TARGET_PATH/.para-workspace.yml" <<EOL
 kernel_version: "$KERNEL_VERSION"
 profile: "$PROFILE"
 language: "$LANG_PREF"
+layout: "$LAYOUT"
 
 # Repo source for updates
 repo:

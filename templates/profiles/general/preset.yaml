@@ -6,7 +6,7 @@ creates:
   - Areas/Workspace/
   - Areas/Learning/
   - Resources/
-  - Resources/references/
+  - Resources/repo/
   - Archive/
   - _inbox/
 default_workflow: "para"

@@ -24,6 +24,10 @@ else
   exit 1
 fi
 
+# Load fs.sh for get_para_dir
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/../lib/fs.sh" 2>/dev/null || true
+
 # === Parse arguments ===
 JSON_MODE=false
 for arg in "$@"; do
@@ -42,6 +46,8 @@ if [ -f "$CONFIG_FILE" ]; then
   KERNEL_VERSION=$(grep '^kernel_version:' "$CONFIG_FILE" | sed 's/kernel_version:[[:space:]]*//; s/"//g' || echo "unknown")
   PROFILE=$(grep '^profile:' "$CONFIG_FILE" | sed 's/profile:[[:space:]]*//; s/"//g' || echo "unknown")
   LANG_PREF=$(grep '^language:' "$CONFIG_FILE" | sed 's/language:[[:space:]]*//; s/"//g' || echo "unknown")
+  LAYOUT=$(grep '^layout:' "$CONFIG_FILE" | sed 's/layout:[[:space:]]*//; s/"//g' || echo "standard")
+  LAYOUT="${LAYOUT:-standard}"
 fi
 
 # === Count workspace stats ===
@@ -56,10 +62,10 @@ count_projects() {
   echo "$count"
 }
 
-PROJECTS_COUNT=$(count_projects "$WS_ROOT/Projects")
-AREAS_COUNT=$(count_projects "$WS_ROOT/Areas")
-RESOURCES_COUNT=$(count_projects "$WS_ROOT/Resources")
-ARCHIVE_COUNT=$(count_projects "$WS_ROOT/Archive")
+PROJECTS_COUNT=$(count_projects "$WS_ROOT/$(get_para_dir projects)")
+AREAS_COUNT=$(count_projects "$WS_ROOT/$(get_para_dir areas)")
+RESOURCES_COUNT=$(count_projects "$WS_ROOT/$(get_para_dir resources)")
+ARCHIVE_COUNT=$(count_projects "$WS_ROOT/$(get_para_dir archive)")
 
 # === JSON output mode ===
 if [ "$JSON_MODE" = true ]; then

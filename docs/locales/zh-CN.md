@@ -140,15 +140,15 @@ para-workspace/
 
 ```bash
 # 将仓库克隆到正确位置
-mkdir -p Resources/references
-git clone https://github.com/pageel/para-workspace.git Resources/references/para-workspace
+mkdir -p Resources/repo
+git clone https://github.com/pageel/para-workspace.git Resources/repo/para-workspace
 
 # 赋予执行权限
-chmod +x Resources/references/para-workspace/cli/para
-chmod +x Resources/references/para-workspace/cli/commands/*.sh
+chmod +x Resources/repo/para-workspace/cli/para
+chmod +x Resources/repo/para-workspace/cli/commands/*.sh
 
 # 使用预设配置初始化工作空间
-./Resources/references/para-workspace/cli/para init --profile=dev --lang=en
+./Resources/repo/para-workspace/cli/para init --profile=dev --lang=en
 ```
 
 ### 步骤 2: 验证

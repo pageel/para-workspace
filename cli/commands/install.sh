@@ -489,7 +489,7 @@ export WORKSPACE_ROOT="$WS_ROOT"
 # Find repo location from known paths
 REPO_CLI=""
 for candidate in \
-  "$WS_ROOT/Resources/references/para-workspace/cli/para" \
+  "$WS_ROOT/Resources/repo/para-workspace/cli/para" \
   "$WS_ROOT/Projects/para-workspace/repo/cli/para" \
   "$WS_ROOT/.para-repo/cli/para" \
   "$(command -v para 2>/dev/null)"; do
@@ -502,7 +502,7 @@ done
 if [ -z "$REPO_CLI" ]; then
   echo "❌ Error: Could not find PARA CLI."
   echo "Make sure the para-workspace repo is available at:"
-  echo "  $WS_ROOT/Resources/references/para-workspace/"
+  echo "  $WS_ROOT/Resources/repo/para-workspace/"
   exit 1
 fi
 

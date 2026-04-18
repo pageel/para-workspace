@@ -39,7 +39,7 @@ glob:
 
 ### 4. Resource Immutability
 
-- **MUST NOT** modify files in `Resources/references/` — these are read-only catalog sources.
+- **MUST NOT** modify files in `Resources/repo/` — these are read-only catalog sources.
 - **MUST NOT** write local customizations back to the governed catalog source.
 - Resources are for learning, scaffolding, and installation only.
 

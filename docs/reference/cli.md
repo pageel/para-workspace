@@ -19,6 +19,17 @@ para init [--profile=general] [--lang=vi] [--path=./]
 | `--profile` | `general` | Workspace profile preset |
 | `--lang` | `en` | Agent response language |
 | `--path` | `./` | Target directory |
+| `--layout` | `standard` | Directory naming scheme: `standard` \| `numeric` \| `numeric-wide` |
+
+**Layout modes:**
+
+| Value | Projects dir | Areas dir | Resources dir | Archive dir |
+| -- | -- | -- | -- | -- |
+| `standard` | `Projects` | `Areas` | `Resources` | `Archive` |
+| `numeric` | `1_Projects` | `2_Areas` | `3_Resources` | `4_Archive` |
+| `numeric-wide` | `10_PROJECTS` | `20_AREAS` | `30_RESOURCES` | `40_ARCHIVE` |
+
+`_inbox` is unaffected by layout. The chosen layout is stored in `.para-workspace.yml` and honoured by all subsequent CLI commands automatically.
 
 ### `para status`
 

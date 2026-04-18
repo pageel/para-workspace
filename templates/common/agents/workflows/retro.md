@@ -52,8 +52,8 @@ Facilitate a structured reflection:
 
 Identify and extract reusable artifacts:
 
-- Move generic code snippets to `Resources/references/code/snippets/`.
-- Add new patterns to `Resources/references/code/patterns/`.
+- Move generic code snippets to `Resources/repo/code/snippets/`.
+- Add new patterns to `Resources/repo/code/patterns/`.
 - Capture key learnings via `/learn` workflow.
 
 ### 4. Graduate Beads to Rules

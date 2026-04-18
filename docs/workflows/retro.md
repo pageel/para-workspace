@@ -34,8 +34,8 @@ Structured reflection across three dimensions:
 
 ### 3. Export Reusable Assets
 
-- Move generic code snippets to `Resources/references/code/snippets/`
-- Add patterns to `Resources/references/code/patterns/`
+- Move generic code snippets to `Resources/repo/code/snippets/`
+- Add patterns to `Resources/repo/code/patterns/`
 - Capture key learnings via `/learn`
 
 ### 4. Graduate Beads to Rules

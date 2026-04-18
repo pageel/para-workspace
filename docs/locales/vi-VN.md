@@ -161,24 +161,24 @@ para-workspace/
 
 ```bash
 # Clone repo vào đúng vị trí
-mkdir -p Resources/references
-git clone https://github.com/pageel/para-workspace.git Resources/references/para-workspace
+mkdir -p Resources/repo
+git clone https://github.com/pageel/para-workspace.git Resources/repo/para-workspace
 
 # Cấp quyền thực thi
-chmod +x Resources/references/para-workspace/cli/para
-chmod +x Resources/references/para-workspace/cli/commands/*.sh
+chmod +x Resources/repo/para-workspace/cli/para
+chmod +x Resources/repo/para-workspace/cli/commands/*.sh
 
 # Khởi tạo workspace với profile
-./Resources/references/para-workspace/cli/para init --profile=dev --lang=vi
+./Resources/repo/para-workspace/cli/para init --profile=dev --lang=vi
 ```
 
 **PowerShell (tuỳ chọn thay thế cho Windows):**
 
 ```powershell
-mkdir -Force Resources\references
-git clone https://github.com/pageel/para-workspace.git Resources\references\para-workspace
+mkdir -Force Resources\repo
+git clone https://github.com/pageel/para-workspace.git Resources\repo\para-workspace
 # Sau đó mở Git Bash hoặc WSL tại workspace root:
-./Resources/references/para-workspace/cli/para init --profile=dev --lang=vi
+./Resources/repo/para-workspace/cli/para init --profile=dev --lang=vi
 ```
 
 ### Bước 2: Xác nhận
@@ -190,7 +190,7 @@ git clone https://github.com/pageel/para-workspace.git Resources\references\para
 
 > **Chuyện gì vừa xảy ra?**
 >
-> 1. Repo nằm tại `Resources/references/para-workspace/` — nguồn tham khảo quản trị, không phải project người dùng.
+> 1. Repo nằm tại `Resources/repo/para-workspace/` — nguồn tham khảo quản trị, không phải project người dùng.
 > 2. `chmod +x` đảm bảo các CLI scripts có quyền thực thi (bắt buộc trên Linux/macOS).
 > 3. `para init` tạo cấu trúc thư mục PARA (bao gồm cả `_inbox/`), tự động chạy `install.sh`
 >    để đồng bộ kernel, workflows, governance rules, và tạo wrapper `./para`.
@@ -228,7 +228,7 @@ Lệnh này sẽ `git pull` repo, chạy migration phân tầng theo phiên bả
 Nếu `para update` bị lỗi trên Windows do NTFS file locking:
 
 ```cmd
-cd Resources\references\para-workspace
+cd Resources\repo\para-workspace
 git checkout -- .
 git pull origin main
 cd ..\..\..

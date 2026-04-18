@@ -159,24 +159,24 @@ para-workspace/
 
 ```bash
 # Clone repo into the correct location
-mkdir -p Resources/references
-git clone https://github.com/pageel/para-workspace.git Resources/references/para-workspace
+mkdir -p Resources/repo
+git clone https://github.com/pageel/para-workspace.git Resources/repo/para-workspace
 
 # Set executable permissions
-chmod +x Resources/references/para-workspace/cli/para
-chmod +x Resources/references/para-workspace/cli/commands/*.sh
+chmod +x Resources/repo/para-workspace/cli/para
+chmod +x Resources/repo/para-workspace/cli/commands/*.sh
 
 # Initialize your workspace with a profile
-./Resources/references/para-workspace/cli/para init --profile=dev --lang=en
+./Resources/repo/para-workspace/cli/para init --profile=dev --lang=en
 ```
 
 **PowerShell (alternative for Windows):**
 
 ```powershell
-mkdir -Force Resources\references
-git clone https://github.com/pageel/para-workspace.git Resources\references\para-workspace
+mkdir -Force Resources\repo
+git clone https://github.com/pageel/para-workspace.git Resources\repo\para-workspace
 # Then open Git Bash or WSL at workspace root:
-./Resources/references/para-workspace/cli/para init --profile=dev --lang=en
+./Resources/repo/para-workspace/cli/para init --profile=dev --lang=en
 ```
 
 ### Step 2: Verify
@@ -188,7 +188,7 @@ git clone https://github.com/pageel/para-workspace.git Resources\references\para
 
 > **What just happened?**
 >
-> 1. The repo lives at `Resources/references/para-workspace/` — it's a read-only reference source, not a user project.
+> 1. The repo lives at `Resources/repo/para-workspace/` — it's a read-only reference source, not a user project.
 > 2. `chmod +x` ensures all CLI scripts are executable (required on Linux/macOS).
 > 3. `para init` creates the full PARA directory structure, runs `install.sh` automatically to sync kernel, workflows, governance rules, and generates a `./para` wrapper.
 > 4. You can now use `./para` from your workspace root for all commands.
@@ -225,7 +225,7 @@ This will `git pull` the repo, run version-gated migrations, and re-sync all gov
 If `para update` fails on Windows due to NTFS file locking:
 
 ```cmd
-cd Resources\references\para-workspace
+cd Resources\repo\para-workspace
 git checkout -- .
 git pull origin main
 cd ..\..\..

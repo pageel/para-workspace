@@ -117,7 +117,7 @@ Use your agent as a strategic thinking partner:
 
 - Summarize decisions made and outcomes reached
 - Log open items and blockers for next session
-- Process `_inbox/`: file meeting notes in appropriate Areas, move research to `Resources/references/`
+- Process `_inbox/`: file meeting notes in appropriate Areas, move research to `Resources/repo/`
 - Note any cross-initiative impacts in the Sync Queue
 
 ---

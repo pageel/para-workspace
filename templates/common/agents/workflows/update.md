@@ -21,7 +21,7 @@ Gather current workspace state. All 3 checks run in parallel:
 
 ```bash
 # Check 1: Current version & git status
-cd Resources/references/para-workspace && \
+cd Resources/repo/para-workspace && \
   echo "=== VERSION ===" && cat VERSION && \
   echo "=== GIT STATUS ===" && git status --short && \
   echo "=== BRANCH ===" && git branch --show-current
@@ -34,7 +34,7 @@ grep 'kernel_version:' .para-workspace.yml
 
 ```bash
 # Check 3: Network connectivity
-git -C Resources/references/para-workspace ls-remote --heads origin main 2>&1 | head -3
+git -C Resources/repo/para-workspace ls-remote --heads origin main 2>&1 | head -3
 ```
 
 **Evaluate results and display Pre-flight Report:**
@@ -113,11 +113,11 @@ Analyze the error output and apply the diagnosis table:
 | Error detected | Root cause | Agent action |
 | :-- | :-- | :-- |
 | `fatal: Could not resolve host` or `Connection refused` | Network lost mid-update | Inform user. Suggest: `./para install` (offline sync). |
-| `CONFLICT` or `Merge conflict` | Git conflict during pull | Run `cd Resources/references/para-workspace && git diff --name-only --diff-filter=U` to list conflicted files. Suggest: `git checkout --theirs <file>` for each (prefer upstream). |
-| `Permission denied` | Missing file permissions | Run `chmod +x ./para Resources/references/para-workspace/cli/para Resources/references/para-workspace/cli/commands/*.sh`. |
+| `CONFLICT` or `Merge conflict` | Git conflict during pull | Run `cd Resources/repo/para-workspace && git diff --name-only --diff-filter=U` to list conflicted files. Suggest: `git checkout --theirs <file>` for each (prefer upstream). |
+| `Permission denied` | Missing file permissions | Run `chmod +x ./para Resources/repo/para-workspace/cli/para Resources/repo/para-workspace/cli/commands/*.sh`. |
 | `rollback` or `Rolling back` | Install failed, already rolled back | Inform: "Auto-rollback completed. Workspace is safe." Read last line of `.para/audit.log` to confirm. Suggest: `./para install --force`. |
 | `command not found: semver_gte` | Library not loaded | Check if `cli/lib/validator.sh` exists. If missing → run `./para install` first, then retry. |
-| `not a git repository` | Wrong repo path | Check if `Resources/references/para-workspace/.git` exists. If not → guide user to re-clone. |
+| `not a git repository` | Wrong repo path | Check if `Resources/repo/para-workspace/.git` exists. If not → guide user to re-clone. |
 | Other errors | Unknown | Display raw output. Ask user: (a) Try `./para install --force`, (b) Stop for manual debug. |
 
 After recovery action → **retry step 3** (max 1 retry). If still fails → report and stop.

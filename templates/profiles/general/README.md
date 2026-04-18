@@ -25,7 +25,7 @@ workspace/
 │   ├── Workspace/                 # Workspace-level sessions, sync queue, audits
 │   └── Learning/                  # Cross-project reusable lessons
 ├── Resources/                     # 📚 Reference materials & tools
-│   └── references/                # Books, links, templates
+│   └── repo/                      # Books, links, templates
 ├── Archive/                       # ❄️ Completed/retired items
 ├── .agents/                        # Agent runtime (auto-installed)
 │   ├── rules/                     # AI behavior rules

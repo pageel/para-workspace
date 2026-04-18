@@ -32,11 +32,11 @@ ls -la _inbox/
 
 | Category | Indicators | Target Directory |
 | :-- | :-- | :-- |
-| **Code Templates** | `.tsx`, `.jsx`, `.vue` | `Resources/references/code/components/` |
-| **Logic Snippets** | `.ts`, `.js`, `.py` | `Resources/references/code/snippets/` |
-| **Design Patterns** | `.md` regarding design | `Resources/references/code/patterns/` |
-| **Integrations** | API/Webhook code | `Resources/references/code/integrations/` |
-| **Research/Tutorials** | `.md` how-to guides | `Resources/references/articles/tutorials/` |
+| **Code Templates** | `.tsx`, `.jsx`, `.vue` | `Resources/repo/code/components/` |
+| **Logic Snippets** | `.ts`, `.js`, `.py` | `Resources/repo/code/snippets/` |
+| **Design Patterns** | `.md` regarding design | `Resources/repo/code/patterns/` |
+| **Integrations** | API/Webhook code | `Resources/repo/code/integrations/` |
+| **Research/Tutorials** | `.md` how-to guides | `Resources/repo/articles/tutorials/` |
 | **Project Assets** | `[p]-logo.png`, `.csv` | `Projects/[project-name]/artifacts/assets/` |
 | **Learning** | Notes, best practices | `Areas/Learning/` |
 

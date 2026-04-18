@@ -7,7 +7,7 @@ creates:
   - Areas/ops/
   - Resources/ai-agents/
   - Resources/tools/
-  - Resources/references/
+  - Resources/repo/
   - Archive/
 default_workflow: "para"
 default_rules:

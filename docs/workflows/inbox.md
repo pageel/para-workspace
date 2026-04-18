@@ -25,11 +25,11 @@ Lists files in `_inbox/` for processing.
 
 | Category | Indicators | Target |
 | :-- | :-- | :-- |
-| Code Templates | `.tsx`, `.jsx`, `.vue` | `Resources/references/code/components/` |
-| Logic Snippets | `.ts`, `.js`, `.py` | `Resources/references/code/snippets/` |
-| Design Patterns | `.md` design docs | `Resources/references/code/patterns/` |
-| Integrations | API/Webhook code | `Resources/references/code/integrations/` |
-| Research | `.md` tutorials | `Resources/references/articles/tutorials/` |
+| Code Templates | `.tsx`, `.jsx`, `.vue` | `Resources/repo/code/components/` |
+| Logic Snippets | `.ts`, `.js`, `.py` | `Resources/repo/code/snippets/` |
+| Design Patterns | `.md` design docs | `Resources/repo/code/patterns/` |
+| Integrations | API/Webhook code | `Resources/repo/code/integrations/` |
+| Research | `.md` tutorials | `Resources/repo/articles/tutorials/` |
 | Project Assets | `[p]-logo.png`, `.csv` | `Projects/[name]/artifacts/assets/` |
 | Learning | Notes, best practices | `Areas/Learning/` |
 

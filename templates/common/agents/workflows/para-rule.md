@@ -40,7 +40,7 @@ echo ""
 **Step 2.** Read `catalog.yml` from the governed catalog source (priority order):
 
 1. `Projects/para-workspace/repo/templates/common/agents/rules/catalog.yml`
-2. `Resources/references/para-workspace/templates/common/agents/rules/catalog.yml`
+2. `Resources/repo/para-workspace/templates/common/agents/rules/catalog.yml`
 
 **Step 3.** Display comparison report:
 

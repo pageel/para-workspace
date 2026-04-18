@@ -30,7 +30,7 @@ workspace/
 │   ├── ai-agents/                 # 🤖 Kernel snapshot, agent workflows
 │   │   ├── kernel/
 │   │   └── workflows/
-│   ├── references/                # 📚 Reference repos, docs, cheat-sheets
+│   ├── repo/                      # 📚 Reference repos, docs, cheat-sheets
 │   └── tools/                     # 🛠️ Scripts, utilities, CLI tools
 ├── Archive/                       # ❄️ Completed/retired projects & areas
 ├── .agents/                        # Agent runtime (auto-installed)
@@ -143,4 +143,4 @@ Work on your project. Use the following helpers as needed:
 - **One git repo per Project folder**: the `repo/` sub-folder is the git root
 - **`_inbox/` is your capture zone**: drop notes, code snippets, links here — process later during `/end`
 - **Areas are evergreen SOPs**: runbooks in `Areas/infra/` should always be accurate
-- **Resources are read-only references**: don't do active work inside `Resources/`
+- **Resources are read-only references**: don't do active work inside `Resources/repo/`

@@ -9,20 +9,29 @@
 
 ## I1. PARA Directory Structure
 
-Every workspace MUST have exactly four top-level directories:
+Every workspace MUST have exactly four top-level directories corresponding to
+the four PARA pillars: **Projects**, **Areas**, **Resources**, and **Archive**.
+Their resolved filesystem names are determined by the workspace `layout` setting
+in `.para-workspace.yml` (default: `standard`).
 
-```
-Projects/    — Active work with deadlines or deliverables
-Areas/       — Stable knowledge, SOPs, ongoing responsibilities
-Resources/   — Reference materials, tools, templates
-Archive/     — Cold storage for completed/cancelled items
-```
+### Layout modes
+
+| `layout` value  | Projects dir   | Areas dir   | Resources dir   | Archive dir   |
+|:----------------|:---------------|:------------|:----------------|:--------------|
+| `standard`      | `Projects`     | `Areas`     | `Resources`     | `Archive`     |
+| `numeric`       | `1_Projects`   | `2_Areas`   | `3_Resources`   | `4_Archive`   |
+| `numeric-wide`  | `10_PROJECTS`  | `20_AREAS`  | `30_RESOURCES`  | `40_ARCHIVE`  |
+
+`_inbox` is a fifth optional directory excluded from layout modes; its `_`
+prefix already guarantees correct sort order in all three schemes.
 
 **Constraints:**
 
-- These directories use **PascalCase** (the only exception to kebab-case convention)
+- Exactly one of the three layout modes MUST be declared (or implied by absence,
+  which defaults to `standard`)
 - No other top-level content directories are allowed
-- Sub-folders within these use **kebab-case**
+- Sub-folders within the four PARA dirs use **kebab-case** regardless of layout
+- The layout is set once at `para init` and is workspace-wide
 
 ## I2. Task Management — Hybrid 3-File Model
 
@@ -48,7 +57,7 @@ Each project manages tasks through three files in `artifacts/tasks/`:
 ## I3. Project Naming
 
 - Project slugs MUST use **kebab-case**: `my-saas-app`, `campaign-q1-2026`
-- No spaces, underscores, or PascalCase in project directory names
+- No spaces or PascalCase in project directory names (note: underscores are used by layout modes for top-level PARA dirs, but NOT in project slugs)
 - This ensures agent parsability and cross-platform path safety
 
 ## I4. Project Inactivity

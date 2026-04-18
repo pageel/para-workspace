@@ -21,6 +21,12 @@
       "enum": ["dev", "general", "marketer", "ceo"],
       "description": "Active profile used during init."
     },
+    "layout": {
+      "type": "string",
+      "enum": ["standard", "numeric", "numeric-wide"],
+      "description": "Directory naming layout for the four PARA pillars. standard=PascalCase, numeric=1_PascalCase, numeric-wide=10_UPPERCASE. Default: standard.",
+      "default": "standard"
+    },
     "language": {
       "type": "string",
       "pattern": "^[a-z]{2}$",

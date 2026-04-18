@@ -140,15 +140,15 @@ para-workspace/
 
 ```bash
 # Cloner le dépôt au bon endroit
-mkdir -p Resources/references
-git clone https://github.com/pageel/para-workspace.git Resources/references/para-workspace
+mkdir -p Resources/repo
+git clone https://github.com/pageel/para-workspace.git Resources/repo/para-workspace
 
 # Accorder les permissions d'exécution
-chmod +x Resources/references/para-workspace/cli/para
-chmod +x Resources/references/para-workspace/cli/commands/*.sh
+chmod +x Resources/repo/para-workspace/cli/para
+chmod +x Resources/repo/para-workspace/cli/commands/*.sh
 
 # Initialiser l'espace de travail avec un profil
-./Resources/references/para-workspace/cli/para init --profile=dev --lang=en
+./Resources/repo/para-workspace/cli/para init --profile=dev --lang=en
 ```
 
 ### Étape 2 : Vérifier

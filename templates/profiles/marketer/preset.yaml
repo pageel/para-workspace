@@ -5,7 +5,7 @@ creates:
   - Areas/marketing/customers/
   - Areas/marketing/strategy/
   - Projects/
-  - Resources/references/
+  - Resources/repo/
   - Archive/
 default_workflow: "para"
 default_rules:

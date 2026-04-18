@@ -51,7 +51,7 @@ Install or update components from the governed PARA Catalog into the workspace. 
 Find the catalog source directory (in priority order):
 
 1. `Projects/para-workspace/repo/templates/common/agents/`
-2. `Resources/references/para-workspace/templates/common/agents/`
+2. `Resources/repo/para-workspace/templates/common/agents/`
 
 Determine `TYPE` (`work` → `workflows/`, `rule` → `rules/`) and construct full source path.
 
