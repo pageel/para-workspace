@@ -1,0 +1,15 @@
+# PARA Workspace Configuration — standard layout example
+# Compliance vector for kernel/schema/workspace.schema.json
+# Tests: default layout behaviour (no layout field = standard)
+
+kernel_version: "2.0.0"
+profile: "general"
+language: "en"
+
+repo:
+  url: "https://github.com/pageel/para-workspace"
+  branch: "main"
+
+workspace:
+  version: "1.0.0"
+  created: "2026-04-18"

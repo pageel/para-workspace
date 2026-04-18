@@ -1,0 +1,16 @@
+# PARA Workspace Configuration — numeric layout example
+# Compliance vector for kernel/schema/workspace.schema.json
+# Tests: layout field enum validation (feat/layout-modes, RFC-0004)
+
+kernel_version: "2.0.0"
+profile: "general"
+language: "en"
+layout: "numeric"
+
+repo:
+  url: "https://github.com/pageel/para-workspace"
+  branch: "main"
+
+workspace:
+  version: "1.0.0"
+  created: "2026-04-18"
