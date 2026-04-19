@@ -135,12 +135,11 @@ echo "  $(get_para_dir archive):   $ARCHIVE_COUNT"
 
 # List active projects
 if [ "$PROJECTS_COUNT" -gt 0 ]; then
-echo ""
-echo "🚀 Active Projects:"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  echo "🚀 Active Projects:"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-for project_dir in "$WS_ROOT"/$(get_para_dir projects)/*/; do
-
+  for project_dir in "$WS_ROOT"/$(get_para_dir projects)/*/; do
     if [ -d "$project_dir" ]; then
       project_name="$(basename "$project_dir")"
       project_md="$project_dir/project.md"
