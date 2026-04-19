@@ -24,6 +24,8 @@ else
   exit 1
 fi
 
+export WORKSPACE_ROOT="$WS_ROOT"
+
 # Load fs.sh for get_para_dir
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$SCRIPT_DIR/../lib/fs.sh" 2>/dev/null || true
@@ -83,7 +85,7 @@ if [ "$JSON_MODE" = true ]; then
   echo "  \"projects\": ["
 
   first=true
-  for project_dir in "$WS_ROOT"/Projects/*/; do
+  for project_dir in "$WS_ROOT"/$(get_para_dir projects)/*/; do
     if [ -d "$project_dir" ]; then
       project_name="$(basename "$project_dir")"
       project_md="$project_dir/project.md"
@@ -119,24 +121,26 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  🧠 Kernel: v$KERNEL_VERSION"
 echo "  🎭 Profile: $PROFILE"
 echo "  🌐 Language: $LANG_PREF"
+echo "  📐 Layout: $LAYOUT"
 echo "  📂 Root: $WS_ROOT"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # PARA Directory counts
 echo ""
 echo "📦 Workspace Structure:"
-echo "  Projects:  $PROJECTS_COUNT"
-echo "  Areas:     $AREAS_COUNT"
-echo "  Resources: $RESOURCES_COUNT"
-echo "  Archive:   $ARCHIVE_COUNT"
+echo "  $(get_para_dir projects):  $PROJECTS_COUNT"
+echo "  $(get_para_dir areas):     $AREAS_COUNT"
+echo "  $(get_para_dir resources): $RESOURCES_COUNT"
+echo "  $(get_para_dir archive):   $ARCHIVE_COUNT"
 
 # List active projects
 if [ "$PROJECTS_COUNT" -gt 0 ]; then
-  echo ""
-  echo "🚀 Active Projects:"
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "🚀 Active Projects:"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-  for project_dir in "$WS_ROOT"/Projects/*/; do
+for project_dir in "$WS_ROOT"/$(get_para_dir projects)/*/; do
+
     if [ -d "$project_dir" ]; then
       project_name="$(basename "$project_dir")"
       project_md="$project_dir/project.md"

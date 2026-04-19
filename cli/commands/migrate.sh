@@ -69,6 +69,13 @@ else
   echo "Run this from the workspace root or set WORKSPACE_ROOT."
   exit 1
 fi
+export WORKSPACE_ROOT="$WS_ROOT"
+
+# Resolve pillar names
+P_PROJECTS=$(get_para_dir projects)
+P_AREAS=$(get_para_dir areas)
+P_RESOURCES=$(get_para_dir resources)
+P_ARCHIVE=$(get_para_dir archive)
 
 # Auto-detect current version
 if [ -z "$FROM_VERSION" ]; then
@@ -138,7 +145,7 @@ MIGRATION_RAN=true
 
 # Step 1: Task file migration (tasks.md → hybrid 3-file)
 echo "📦 Step 1: Migrate task files to hybrid 3-file model..."
-for project_dir in "$WS_ROOT"/Projects/*/; do
+for project_dir in "$WS_ROOT/$P_PROJECTS"/*/; do
   if [ -d "$project_dir" ]; then
     project_name="$(basename "$project_dir")"
     old_tasks="$project_dir/artifacts/tasks.md"
@@ -159,7 +166,7 @@ done
 # Step 2: Install kernel snapshot
 echo ""
 echo "🧠 Step 2: Install kernel snapshot..."
-KERNEL_TARGET="$WS_ROOT/Resources/ai-agents/kernel"
+KERNEL_TARGET="$WS_ROOT/$P_RESOURCES/ai-agents/kernel"
 run_or_preview "Create kernel directory" mkdir -p "$KERNEL_TARGET"
 if [ "$DRY_RUN" = false ] && [ -d "$REPO_ROOT/kernel" ]; then
   cp -r "$REPO_ROOT/kernel/"* "$KERNEL_TARGET/"
@@ -169,7 +176,7 @@ fi
 # Step 3: Update workflow catalog
 echo ""
 echo "📑 Step 3: Update workflow catalog..."
-WF_TARGET="$WS_ROOT/Resources/ai-agents/workflows"
+WF_TARGET="$WS_ROOT/$P_RESOURCES/ai-agents/workflows"
 CATALOG_SRC="$REPO_ROOT/templates/common/agents/workflows"
 
 run_or_preview "Create workflow catalog directory" mkdir -p "$WF_TARGET"
@@ -269,17 +276,17 @@ else
   echo "  ✓ .para/ already exists"
 fi
 
-# Step 8: Create Resources/ai-agents/rules/ & skills/
+# Step 8: Create $P_RESOURCES/ai-agents/rules/ & skills/
 echo ""
 echo "📏 Step 8: Create governed library snapshots..."
 LIB_SRC="$REPO_ROOT/templates/common/agents"
 
 for lib in rules skills; do
-  SNAPSHOT_DIR="$WS_ROOT/Resources/ai-agents/$lib"
+  SNAPSHOT_DIR="$WS_ROOT/$P_RESOURCES/ai-agents/$lib"
   ACTIVE_DIR="$WS_ROOT/.agents/$lib"
   SRC_DIR="$LIB_SRC/$lib"
 
-  run_or_preview "Create Resources/ai-agents/$lib/" mkdir -p "$SNAPSHOT_DIR"
+  run_or_preview "Create $P_RESOURCES/ai-agents/$lib/" mkdir -p "$SNAPSHOT_DIR"
   run_or_preview "Create .agents/$lib/" mkdir -p "$ACTIVE_DIR"
 
   if [ "$DRY_RUN" = false ] && [ -d "$SRC_DIR" ]; then
@@ -298,7 +305,7 @@ echo ""
 echo "📑 Step 9: Sync catalog.yml files..."
 for lib in workflows rules skills; do
   CATALOG_SRC_FILE="$LIB_SRC/$lib/catalog.yml"
-  CATALOG_DEST="$WS_ROOT/Resources/ai-agents/$lib/catalog.yml"
+  CATALOG_DEST="$WS_ROOT/$P_RESOURCES/ai-agents/$lib/catalog.yml"
   if [ -f "$CATALOG_SRC_FILE" ]; then
     run_or_preview "Copy $lib/catalog.yml" cp "$CATALOG_SRC_FILE" "$CATALOG_DEST"
   fi
@@ -388,7 +395,7 @@ elif [ -d "$WS_ROOT/.agents" ]; then
 fi
 
 # 12b: All project directories
-for project_dir in "$WS_ROOT"/Projects/*/; do
+for project_dir in "$WS_ROOT/$P_PROJECTS"/*/; do
   [ -d "$project_dir" ] || continue
   project_name="$(basename "$project_dir")"
 
@@ -424,7 +431,7 @@ MIGRATION_RAN=true
 # Step 13: Rename knowledge.md → para-knowledge.md (Governance Pentad)
 echo "📂 Step 13: Rename knowledge.md → para-knowledge.md (Governance Pentad)..."
 
-for target_dir in "$WS_ROOT/.agents/workflows" "$WS_ROOT/Resources/ai-agents/workflows"; do
+for target_dir in "$WS_ROOT/.agents/workflows" "$WS_ROOT/$P_RESOURCES/ai-agents/workflows"; do
   old_file="$target_dir/knowledge.md"
   new_file="$target_dir/para-knowledge.md"
   if [ -f "$old_file" ] && [ ! -f "$new_file" ]; then

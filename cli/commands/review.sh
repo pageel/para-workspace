@@ -5,6 +5,14 @@
 
 set -e
 
+# === Load Libraries ===
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+LIB_DIR="$SCRIPT_DIR/../lib"
+
+if [ -f "$LIB_DIR/fs.sh" ]; then
+  source "$LIB_DIR/fs.sh"
+fi
+
 WS_ROOT="${WORKSPACE_ROOT:-$(realpath "../../..")}"
 export WORKSPACE_ROOT="$WS_ROOT"
 
@@ -12,11 +20,12 @@ echo "🔍 Starting Workspace Review (PARA v1.4.0)..."
 echo "------------------------------------------"
 
 # 1. Projects Audit
-echo "📁 Checking Projects..."
-PROJECTS_DIR="$WS_ROOT/Projects"
+P_PROJECTS=$(get_para_dir projects)
+echo "📁 Checking $P_PROJECTS..."
+PROJECTS_DIR="$WS_ROOT/$P_PROJECTS"
 
 if [ ! -d "$PROJECTS_DIR" ]; then
-    echo "⚠️  Projects directory not found at $PROJECTS_DIR"
+    echo "⚠️  $P_PROJECTS directory not found at $PROJECTS_DIR"
 else
     for proj in "$PROJECTS_DIR"/*; do
         if [ -d "$proj" ]; then

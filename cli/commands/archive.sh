@@ -6,6 +6,14 @@
 
 set -e
 
+# === Load Libraries ===
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+LIB_DIR="$SCRIPT_DIR/../lib"
+
+if [ -f "$LIB_DIR/fs.sh" ]; then
+  source "$LIB_DIR/fs.sh"
+fi
+
 # === Cross-platform path normalization ===
 normalize_path() {
   local p="$1"
@@ -24,6 +32,14 @@ else
   exit 1
 fi
 
+export WORKSPACE_ROOT="$WS_ROOT"
+
+# Resolve pillar names
+P_PROJECTS=$(get_para_dir projects)
+P_AREAS=$(get_para_dir areas)
+P_RESOURCES=$(get_para_dir resources)
+P_ARCHIVE=$(get_para_dir archive)
+
 # === Parse arguments ===
 TARGET_PATH="${1:-}"
 FORCE=false
@@ -34,12 +50,12 @@ for arg in "$@"; do
     --help|-h)
       echo "Usage: para archive <type>/<name> [--force]"
       echo ""
-      echo "Moves the specified item to Archive/."
+      echo "Moves the specified item to $P_ARCHIVE/."
       echo ""
       echo "Examples:"
-      echo "  para archive Projects/my-old-app"
-      echo "  para archive Areas/deprecated-sop"
-      echo "  para archive Projects/done-project --force"
+      echo "  para archive $P_PROJECTS/my-old-app"
+      echo "  para archive $P_AREAS/deprecated-sop"
+      echo "  para archive $P_PROJECTS/done-project --force"
       exit 0
       ;;
   esac
@@ -59,16 +75,16 @@ NAME="$(basename "$TARGET_PATH")"
 
 # Validate type
 case "$TYPE" in
-  Projects|Areas|Resources) ;;
+  "$P_PROJECTS"|"$P_AREAS"|"$P_RESOURCES") ;;
   *)
-    echo "❌ Error: Can only archive from Projects/, Areas/, or Resources/."
+    echo "❌ Error: Can only archive from $P_PROJECTS/, $P_AREAS/, or $P_RESOURCES/."
     echo "   Got: $TYPE/$NAME"
     exit 1
     ;;
 esac
 
 SOURCE="$WS_ROOT/$TYPE/$NAME"
-DEST="$WS_ROOT/Archive/$TYPE/$NAME"
+DEST="$WS_ROOT/$P_ARCHIVE/$TYPE/$NAME"
 
 if [ ! -d "$SOURCE" ]; then
   echo "❌ Error: '$TYPE/$NAME' not found."
@@ -80,7 +96,7 @@ if [ -d "$DEST" ]; then
     echo "⚠️  Archive destination exists. Overwriting (--force)."
     rm -rf "$DEST"
   else
-    echo "❌ Error: '$TYPE/$NAME' already exists in Archive."
+    echo "❌ Error: '$TYPE/$NAME' already exists in $P_ARCHIVE."
     echo "   Use --force to overwrite."
     exit 1
   fi
@@ -93,7 +109,7 @@ if [ -d "$SOURCE/.beads" ]; then
     echo ""
     echo "⚠️  Graduation Review Reminder!"
     echo "   This project has $BEADS_COUNT bead file(s) in .beads/"
-    echo "   Consider extracting valuable knowledge to Areas/ or Resources/"
+    echo "   Consider extracting valuable knowledge to $P_AREAS/ or $P_RESOURCES/"
     echo "   before archiving."
     echo ""
     if [ "$FORCE" != true ]; then
@@ -114,7 +130,7 @@ mv "$SOURCE" "$DEST"
 # Add archived date marker
 echo "archived: $(date +%Y-%m-%d)" >> "$DEST/.archived"
 
-echo "✅ Archived: $TYPE/$NAME → Archive/$TYPE/$NAME"
+echo "✅ Archived: $TYPE/$NAME → $P_ARCHIVE/$TYPE/$NAME"
 echo ""
-echo "Note: Archive is cold storage (Invariant I6)."
+echo "Note: $P_ARCHIVE is cold storage (Invariant I6)."
 echo "      Contents should not be modified after archiving."

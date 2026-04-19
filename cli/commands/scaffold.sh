@@ -27,6 +27,11 @@ else
   exit 1
 fi
 
+export WORKSPACE_ROOT="$WS_ROOT"
+
+# Load fs.sh for get_para_dir
+source "$SCRIPT_DIR/../lib/fs.sh" 2>/dev/null || true
+
 # === Parse arguments ===
 TYPE="${1:-}"
 NAME="${2:-}"
@@ -51,7 +56,7 @@ fi
 
 case "$TYPE" in
   project)
-    TARGET="$WS_ROOT/Projects/$NAME"
+    TARGET="$WS_ROOT/$(get_para_dir projects)/$NAME"
 
     if [ -d "$TARGET" ]; then
       echo "❌ Error: Project '$NAME' already exists."
@@ -129,7 +134,7 @@ EOL
     ;;
 
   area)
-    TARGET="$WS_ROOT/Areas/$NAME"
+    TARGET="$WS_ROOT/$(get_para_dir areas)/$NAME"
 
     if [ -d "$TARGET" ]; then
       echo "❌ Error: Area '$NAME' already exists."
@@ -151,7 +156,7 @@ EOL
     ;;
 
   resource)
-    TARGET="$WS_ROOT/Resources/$NAME"
+    TARGET="$WS_ROOT/$(get_para_dir resources)/$NAME"
 
     if [ -d "$TARGET" ]; then
       echo "❌ Error: Resource '$NAME' already exists."

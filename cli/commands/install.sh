@@ -40,10 +40,10 @@ for arg in "$@"; do
       echo "Syncs kernel, workflows, rules, skills, and governance from repo to workspace."
       echo ""
       echo "What gets installed:"
-      echo "  🧠 Kernel snapshot    → Resources/ai-agents/kernel/"
-      echo "  📑 Workflows + catalog→ Resources/ai-agents/workflows/ + .agents/workflows/"
-      echo "  📏 Rules + catalog    → Resources/ai-agents/rules/ + .agents/rules/"
-      echo "  🧩 Skills + catalog   → Resources/ai-agents/skills/ + .agents/skills/"
+      echo "  🧠 Kernel snapshot    → $(get_para_dir resources)/ai-agents/kernel/"
+      echo "  📑 Workflows + catalog→ $(get_para_dir resources)/ai-agents/workflows/ + .agents/workflows/"
+      echo "  📏 Rules + catalog    → $(get_para_dir resources)/ai-agents/rules/ + .agents/rules/"
+      echo "  🧩 Skills + catalog   → $(get_para_dir resources)/ai-agents/skills/ + .agents/skills/"
       echo "  🔒 System state       → .para/ (audit.log, migrations/, backups/)"
       echo "  📦 CLI wrapper        → ./para"
       echo ""
@@ -63,6 +63,11 @@ else
   echo "❌ Error: WORKSPACE_ROOT not set."
   exit 1
 fi
+
+export WORKSPACE_ROOT="$WS_ROOT"
+
+# Load fs.sh for get_para_dir
+source "$SCRIPT_DIR/../lib/fs.sh" 2>/dev/null || true
 
 # === Rollback & error handling ===
 cleanup_on_error() {
@@ -186,7 +191,7 @@ sync_directory_recursive() {
 sync_library() {
   local lib_name="$1"    # e.g. "workflows"
   local src_dir="$2"     # e.g. "$REPO_ROOT/templates/common/agents/workflows"
-  local catalog_dest="$3" # e.g. "$WS_ROOT/Resources/ai-agents/workflows"
+  local catalog_dest="$3" # e.g. "$WS_ROOT/$(get_para_dir resources)/ai-agents/workflows"
   local active_dest="$4"  # e.g. "$WS_ROOT/.agents/workflows"
 
   mkdir -p "$catalog_dest"
@@ -206,7 +211,7 @@ sync_library() {
 
     # === Orphan cleanup (BUG-27, v1.7.0) ===
     # Remove governed files that no longer exist in repo templates.
-    # Strategy: catalog_dest (Resources/ai-agents/X/) is 100% repo-managed.
+    # Strategy: catalog_dest ($(get_para_dir resources)/ai-agents/X/) is 100% repo-managed.
     # If a file exists there but NOT in repo → it's an orphan from a previous sync.
     # Then also clean the matching file from active_dest (.agents/X/) if it exists
     # AND is not user-created.
@@ -314,7 +319,7 @@ echo "   ✓ CLI scripts executable"
 # === 2. Install kernel snapshot ===
 echo "🧠 Syncing kernel..."
 KERNEL_SRC="$REPO_ROOT/kernel"
-KERNEL_DEST="$WS_ROOT/Resources/ai-agents/kernel"
+KERNEL_DEST="$WS_ROOT/$(get_para_dir resources)/ai-agents/kernel"
 mkdir -p "$KERNEL_DEST"
 
 kernel_updated=0
@@ -330,7 +335,7 @@ if [ -d "$KERNEL_SRC" ]; then
   done < <(find "$KERNEL_SRC" -type f)
 fi
 
-echo "$KERNEL_VERSION" > "$WS_ROOT/Resources/ai-agents/VERSION"
+echo "$KERNEL_VERSION" > "$WS_ROOT/$(get_para_dir resources)/ai-agents/VERSION"
 echo "   ✓ Kernel v$KERNEL_VERSION synced ($kernel_updated/$kernel_total files updated)"
 
 # === 3. Sync governed libraries (v1.4.1) ===
@@ -339,13 +344,13 @@ LIB_SRC="$REPO_ROOT/templates/common/agents"
 echo "📑 Syncing workflows..."
 sync_library "workflows" \
   "$LIB_SRC/workflows" \
-  "$WS_ROOT/Resources/ai-agents/workflows" \
+  "$WS_ROOT/$(get_para_dir resources)/ai-agents/workflows" \
   "$WS_ROOT/.agents/workflows"
 
 echo "📏 Syncing rules..."
 sync_library "rules" \
   "$LIB_SRC/rules" \
-  "$WS_ROOT/Resources/ai-agents/rules" \
+  "$WS_ROOT/$(get_para_dir resources)/ai-agents/rules" \
   "$WS_ROOT/.agents/rules"
 
 # Sync workspace rules index (rules.md sits OUTSIDE rules/ directory)
@@ -358,7 +363,7 @@ fi
 echo "🧩 Syncing skills..."
 sync_library "skills" \
   "$LIB_SRC/skills" \
-  "$WS_ROOT/Resources/ai-agents/skills" \
+  "$WS_ROOT/$(get_para_dir resources)/ai-agents/skills" \
   "$WS_ROOT/.agents/skills"
 
 # Sync workspace skills index (skills.md sits OUTSIDE skills/ directory)
@@ -489,7 +494,7 @@ export WORKSPACE_ROOT="$WS_ROOT"
 # Find repo location from known paths
 REPO_CLI=""
 for candidate in \
-  "$WS_ROOT/Resources/repo/para-workspace/cli/para" \
+  "$WS_ROOT/$(get_para_dir resources)/repo/para-workspace/cli/para" \
   "$WS_ROOT/Projects/para-workspace/repo/cli/para" \
   "$WS_ROOT/.para-repo/cli/para" \
   "$(command -v para 2>/dev/null)"; do
@@ -502,7 +507,7 @@ done
 if [ -z "$REPO_CLI" ]; then
   echo "❌ Error: Could not find PARA CLI."
   echo "Make sure the para-workspace repo is available at:"
-  echo "  $WS_ROOT/Resources/repo/para-workspace/"
+  echo "  $WS_ROOT/$(get_para_dir resources)/repo/para-workspace/"
   exit 1
 fi
 
