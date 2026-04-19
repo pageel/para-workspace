@@ -29,9 +29,9 @@ run_suite() {
     local dir="$1" label="$2"
     echo -n "  $label... "
     if [[ -d "$workspace/$dir" ]]; then
-      echo "PASS"; ((PASS++))
+      echo "PASS"; ((PASS += 1))
     else
-      echo "FAIL — missing $dir"; ((FAIL++))
+      echo "FAIL — missing $dir"; ((FAIL += 1))
     fi
   }
 
@@ -39,9 +39,9 @@ run_suite() {
     local file="$1" label="$2"
     echo -n "  $label... "
     if [[ -f "$workspace/$file" ]]; then
-      echo "PASS"; ((PASS++))
+      echo "PASS"; ((PASS += 1))
     else
-      echo "FAIL — missing $file"; ((FAIL++))
+      echo "FAIL — missing $file"; ((FAIL += 1))
     fi
   }
 
@@ -49,9 +49,9 @@ run_suite() {
     local expected="$1"
     echo -n "  .para-workspace.yml has layout: $expected... "
     if grep -q "layout:.*\"$expected\"" "$workspace/.para-workspace.yml" 2>/dev/null; then
-      echo "PASS"; ((PASS++))
+      echo "PASS"; ((PASS += 1))
     else
-      echo "FAIL — layout field missing or wrong value"; ((FAIL++))
+      echo "FAIL — layout field missing or wrong value"; ((FAIL += 1))
     fi
   }
 
@@ -157,9 +157,9 @@ echo "=== Suite: Invalid layout (must fail) ==="
 echo -n "  para init --layout=invalid exits non-zero... "
 if ! bash "$REPO_ROOT/cli/para" init --layout=invalid \
      --path="/tmp/para-test-invalid" > /dev/null 2>&1; then
-  echo "PASS"; ((TOTAL_PASS++))
+  echo "PASS"; ((TOTAL_PASS += 1))
 else
-  echo "FAIL — should have rejected invalid layout"; ((TOTAL_FAIL++))
+  echo "FAIL — should have rejected invalid layout"; ((TOTAL_FAIL += 1))
 fi
 
 # ─── cleanup ────────────────────────────────────────────────────────────────
