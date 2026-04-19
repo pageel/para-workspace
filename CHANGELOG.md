@@ -3,7 +3,31 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
-## [1.7.15] - 2026-04-17
+## [Unreleased — RFC-0004 proposed, targets v2.0.0] - 2026-04-19
+
+Workspace Layout Modes & Resources/repo Rename.
+
+- **Added**: Three workspace layout modes, selectable at `para init --layout=<mode>`:
+  - `standard` — `Projects/` `Areas/` `Resources/` `Archive/` (default, unchanged)
+  - `numeric` — `1_Projects/` `2_Areas/` `3_Resources/` `4_Archive/`
+  - `numeric-wide` — `10_PROJECTS/` `20_AREAS/` `30_RESOURCES/` `40_ARCHIVE/`
+  `_inbox/` is excluded from layout modes (its `_` prefix already sorts correctly in all schemes).
+- **Added**: `get_para_dir <key>` helper in `cli/lib/fs.sh` — single source of truth for resolving canonical pillar keys (`projects`, `areas`, `resources`, `archive`) to their layout-specific filesystem names.
+- **Added**: `layout` field in `.para-workspace.yml` (schema: enum `standard | numeric | numeric-wide`, default `standard`).
+- **Added**: `rfcs/0004-workspace-layout-modes.md` — full RFC proposing I1 invariant relaxation (MAJOR bump required).
+- **Added**: `kernel/examples/workspace-standard.yml`, `workspace-numeric.yml`, `workspace-numeric-wide.yml` — schema compliance vectors.
+- **Changed**: `kernel/invariants.md` I1 — the four PARA top-level directories must exist but their resolved names are now determined by the workspace `layout` setting rather than hardcoded PascalCase.
+- **Changed**: `kernel/heuristics.md` H1 — naming table updated to show all three layout modes.
+- **Changed**: `kernel/schema/workspace.schema.json` — `layout` property added.
+- **Changed**: All CLI commands (`init`, `status`, `scaffold`, `archive`, `migrate`, `install`, `plan`, `review`, `verify`) — now use `get_para_dir` for all path resolution; no hardcoded PARA pillar names remain.
+- **Changed**: `docs/reference/cli.md` — `--layout` flag documented with full table.
+- **Changed**: All profile `preset.yaml` files and `README.md` files — `Resources/references/` renamed to `Resources/repo/` (cleaner, no opaque middle layer).
+- **Changed**: All agent workflow `.md` files, locale docs, and rules — same `references/` → `repo/` rename throughout.
+- **Fixed**: `init.sh` ordering bug — `.para-workspace.yml` is now written before directory creation so `get_para_dir` has a config to read during the fallback `mkdir` calls.
+- **Fixed**: `tests/cli/test-init.sh` — `((i++))` replaced with `((i += 1))` to avoid non-zero exit under `set -e` when counter starts at zero.
+- **Tests**: `tests/cli/test-init.sh` fully rewritten — 4 suites covering `standard`, `numeric`, `numeric-wide`, and invalid layout rejection (48 assertions, all passing).
+
+
 
 Harness Skill, Plan Status Gate & Roadmap Prefix Convention.
 
