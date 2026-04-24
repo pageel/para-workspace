@@ -1,6 +1,6 @@
-# PARA Workspace v1.7.x Architecture Standards
+# PARA Workspace v1.8.x Architecture Standards
 
-The v1.7.x generation builds on v1.6.x "Central Gate" with the **Knowledge System** — persistent cross-session memory for AI agents via Knowledge Items (KIs). It also refines ecosystem coordination, governed library catalogs, and token optimization patterns.
+The v1.8.x generation builds on v1.7.x with the **Dynamic Tool System** — extensible plugin architecture for language-agnostic agentic tools (e.g., `para-graph`). It also includes the Knowledge System, ecosystem coordination, governed library catalogs, and token optimization patterns.
 
 ## 1. Core Structural Integrity: Pillar Purity
 
@@ -134,8 +134,9 @@ ELSE (local):
 │   ├── brainstorm/   # Sidecar data for /brainstorm workflow (v1.7.12)
 │   ├── write/        # Sidecar data for /write workflow (v1.7.14)
 │   ├── harness/      # Guard catalog & auto-scan protocol (v1.7.15)
+│   ├── spec/         # Spec-driven development templates (v1.7.16)
 │   └── page-map/     # Website visual structure management (v1.7.6)
-└── workflows/        # 26 core workflow files
+└── workflows/        # 27 core workflow files
 ```
 
 ### Project Level (CONDITIONAL — gated by `agent.rules` / `agent.skills`)
@@ -187,8 +188,9 @@ Located at `Areas/Workspace/SYNC.md`, tracks cross-project notifications:
 
 ## 9. CLI Architecture
 
-- **Universal Wrapper:** Root `./para` bash script → cross-platform command executor
-- **Commands:** `para init`, `para update`, `para install`, `para status`, `para archive`, `para cleanup`
+- **Universal Wrapper:** Root `./para` bash script → cross-platform command executor with wildcard fallback (v1.8.0)
+- **Core Commands:** `para init`, `para update`, `para install`, `para status`, `para archive`, `para cleanup`
+- **Tool Commands (v1.8.0):** `para install-tool <name>`, `para remove-tool <name>`, `para list-tools`
 - **Internal Library (`cli/lib/`):**
   - `logger.sh` — unified logging
   - `validator.sh` — semver + schema validation
@@ -196,6 +198,7 @@ Located at `Areas/Workspace/SYNC.md`, tracks cross-project notifications:
   - `fs.sh` — safe file operations (`archive_file` helper)
 - **Smart Archive (H9):** Never `rm` directly — use `archive_file` to move to `.para/archive/`
 - **Git-hash change detection (v1.6.4+):** `commits=0` in audit log = no-op optimization
+- **Wildcard Fallback (v1.8.0):** CLI router checks `cli/commands/<cmd>.sh` for unknown commands → enables dynamic tool wrappers
 
 ## 10. Governed Library Catalogs
 
@@ -207,7 +210,7 @@ Workflows, Rules, and Skills managed via `catalog.yml`:
 - **Validation:** CLI validates `kernel_min`/`kernel_max` before syncing; incompatible items skipped with warning
 - **Required fields:** id, name, kernel_min, entrypoint, description
 
-## 11. Workflow Library (24 core workflows)
+## 11. Workflow Library (27 core workflows)
 
 ### Core PARA Workflows
 | Workflow | Purpose |
@@ -215,6 +218,7 @@ Workflows, Rules, and Skills managed via `catalog.yml`:
 | `/open` | Start session with full context from previous sessions |
 | `/end` | Log session progress and close working day |
 | `/plan` | Create implementation plan with phases and timeline |
+| `/spec` | Write structured specification before coding (v1.7.16) |
 | `/backlog` | Manage project features and bugs |
 | `/brainstorm` | Brainstorm context, issues, and solutions |
 | `/push` | Fast commit and push to GitHub |
@@ -258,10 +262,11 @@ Skills are folders of instructions that extend agent capabilities:
 | Brainstorm Templates | /brainstorm Step 4 (saving output) (v1.7.12) | Sidecar data: Decision and Research document templates (Extract Paradigm) |
 | Write Templates | /write workflow (ebook, paper, tutorial, blog, social, email) (v1.7.14) | Sidecar data: Content type templates and writing rules |
 | Harness Guards | Creating plans, writing workflow steps, generating phased artifacts (v1.7.15) | Sidecar data: Guard catalog (6 types) and auto-scan protocol for context-aware safety guards |
+| Spec Templates | /spec workflow, specification writing, assumption surfacing (v1.7.16) | Sidecar data: Spec templates, boundary definitions, quality checklists |
 
 Skills promoted from rules: standalone, English-first, constraints + templates merged.
 
-Total: **9 skills** (4 standalone + 5 sidecar).
+Total: **10 skills** (4 standalone + 6 sidecar).
 
 ### Sidecar Skill Pattern (v1.7.6.3)
 
@@ -314,6 +319,40 @@ skills/[name]/
 | 1.7.13 | Fix | VERSIONS.yml migration: centralized version tracking, version field deprecated in catalogs, preferences.date_format in naming/config, anti-bulk-overwrite convention |
 | 1.7.14 | Feature | Content Authoring Ecosystem: /write workflow + sidecar skill (ebook, paper, tutorial, blog, social), /logs session telemetry (Fast Glance + Structured Audit), BUG-32 fix (para-workflow add source metadata) |
 | 1.7.15 | Feature | Harness Skill (guard catalog + auto-scan protocol), Plan Status Gate (Draft/Active lifecycle), roadmap prefix convention, email template for /write, guard taxonomy expanded to 6 types |
+| 1.7.16 | Feature | C7 Plan Status sovereignty rule, /spec workflow + spec sidecar skill, Proactive Guard Scan for CHECKPOINT items, Commit Consolidation Policy, Dual-Format guard convention |
+| 1.8.0 | Feature | Dynamic Tool System: `install-tool`/`remove-tool`/`list-tools` CLI commands, Tool Registry (`registry/tools.yml`), auto-generated wrapper with Dev/Prod fallback, wildcard CLI router, `para-graph` as first tool plugin PoC |
+
+## 16. Dynamic Tool System (v1.8.0)
+
+Extensible plugin architecture for language-agnostic agentic tools.
+
+### Architecture
+
+```
+repo/
+├── registry/
+│   ├── tools.yml             # Central tool registry (name, version, runtime, repo)
+│   └── tool.schema.json      # JSON Schema for registry entries
+├── cli/
+│   ├── commands/
+│   │   ├── install-tool.sh   # Download tarball → extract → generate wrapper
+│   │   ├── remove-tool.sh    # Clean uninstall
+│   │   └── list-tools.sh     # List installed tools
+│   └── templates/
+│       └── tool-wrapper.sh.tmpl  # Template for auto-generated CLI wrappers
+
+workspace/
+└── .para/tools/              # Installed tool tarballs (isolated, not in repo)
+```
+
+### Key Concepts
+
+- **Zero Global Dependencies:** Tools install locally to `.para/tools/` — workspace-scoped isolation
+- **Dev/Prod Fallback:** Wrapper scripts check if tool source exists in workspace (Dev mode via `Projects/<tool>/repo/`). If not, falls back to extracted tarball (Prod mode)
+- **Auto-Generated Wrappers:** `install-tool` generates `cli/commands/<alias>.sh` from `tool-wrapper.sh.tmpl`, enabling `./para <alias>` invocation
+- **Wildcard CLI Router (v1.8.0):** Unknown CLI commands are routed to `cli/commands/<cmd>.sh` if the file exists — enables dynamic tool discovery without hardcoded `case` entries
+- **Registry-Driven:** `registry/tools.yml` is the single source of truth for available tools. Schema validated by `tool.schema.json`
+- **Sync Pipeline:** `para install` auto-syncs `registry/` and `cli/templates/` to workspace
 
 ## 15. Knowledge System (v1.7.0+)
 
