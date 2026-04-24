@@ -59,7 +59,7 @@ skills:
   para-skill:  "1.0.0"
   plan:        "1.7.16"   # dual-format guards, checkpoint items, commit consolidation
   docs:        "1.7.15"   # strategy reference roadmap prefix
-  brainstorm:  "1.0.0"
+  brainstorm:  "1.7.16"   # FEAT-83: decision template linear text upgrade
   write:       "1.7.16"   # social template added
   harness:     "1.7.16"   # dual-format convention, checkpoint type, commit consolidation
   spec:        "1.7.16"   # NEW: spec-driven-development skill

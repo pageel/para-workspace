@@ -7,7 +7,41 @@
 
 [1-2 sentences describing the core problem or question]
 
-## Options
+## Options & Detailed Analysis
+
+### Option 1: [Name]
+
+**Concept:** [What this option does, 2-3 sentences]
+
+**Pros:**
+- [Advantage 1]
+- [Advantage 2]
+
+**Cons / Risks:**
+- [Risk 1]
+- [Risk 2]
+
+**Deep Dive:** [Optional — technical detail, edge cases, implementation notes if the option is complex enough to warrant deeper analysis]
+
+---
+
+### Option 2: [Name]
+
+**Concept:** [What this option does, 2-3 sentences]
+
+**Pros:**
+- [Advantage 1]
+- [Advantage 2]
+
+**Cons / Risks:**
+- [Risk 1]
+- [Risk 2]
+
+**Deep Dive:** [Optional]
+
+---
+
+## Summary Comparison
 
 | # | Option | Key Trade-off | Score |
 |---|---|---|---|
