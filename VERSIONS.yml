@@ -13,7 +13,7 @@ workspace: "1.7.15"
 workflows:
   backlog:         "1.3.1"
   open:            "1.7.13.2" # updated: file link constraint
-  end:             "1.7.1"
+  end:             "1.7.16"   # FEAT-71: remove auto-create KI suggestion
   install:         "1.0.0"
   new-project:     "1.1.0"
   verify:          "1.0.0"
@@ -35,7 +35,7 @@ workflows:
   brainstorm:      "1.7.12"
   para-knowledge:  "1.4.0"
   para-skill:      "1.0.1"
-  write:           "1.7.14"   # new: content authoring workflow
+  write:           "1.7.16"   # FEAT-79: style guide, social template
   logs:            "1.7.15"   # FEAT-78: command granularity + KI token budget
 
 rules:
@@ -59,5 +59,5 @@ skills:
   plan:        "1.7.16"   # dual-format guards, checkpoint items, commit consolidation
   docs:        "1.7.15"   # strategy reference roadmap prefix
   brainstorm:  "1.0.0"
-  write:       "1.7.15"   # email template added
+  write:       "1.7.16"   # social template added
   harness:     "1.7.16"   # dual-format convention, checkpoint type, commit consolidation

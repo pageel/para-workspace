@@ -3,6 +3,19 @@
 > For social media posts across platforms: Facebook Fanpage, Facebook Group, Threads, X (Twitter).
 > Target length: varies by platform (see below).
 
+## ⚠️ Style Guide Integration (FEAT-79)
+
+> **Before writing any social content**, Agent **MUST** check for user-authored Style Guides in `writings/templates/`:
+>
+> ```bash
+> ls writings/templates/style-social-*.md 2>/dev/null
+> ```
+>
+> If found:
+> 1. Load the Style Guide matching the target platform (e.g., `style-social-facebook-group.md`).
+> 2. Prioritize **§1 Style Characteristics** and reference **§3 Historical Raw Examples** to learn the user's actual tone and phrasing.
+> 3. Default templates below are fallback ONLY — used when NO Style Guide exists.
+
 ## Platform Specifications
 
 | Platform          | Max Length   | Tone              | Media        | Hashtags  |
@@ -51,6 +64,7 @@
 - Prioritize engagement over reach — ask genuine questions.
 - No hard selling. Share knowledge, ask opinions.
 - Keep under 1000 chars for best engagement.
+- **If Style Guide exists (`style-social-facebook-group.md`):** Prioritize user's structure and tone from the Style Guide over this default template.
 
 ---
 

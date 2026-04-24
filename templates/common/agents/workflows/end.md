@@ -242,13 +242,7 @@ After reporting phase status:
    This session touched topics related to KI "[title]" (last updated [date]).
    Update this KI? (Y/N/Later)
    ```
-4. **IF new insight** (no matching KI):
-   ```
-   💡 SESSION KNOWLEDGE
-   New insight detected: [topic]
-   Create KI? Run `/para-knowledge [topic]` (Y/N)
-   ```
-5. **IF no trigger** → Skip silently.
+4. **IF no trigger** → Skip silently.
 
 ### 5. Update Master Index
 

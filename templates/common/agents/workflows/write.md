@@ -1,5 +1,5 @@
 ---
-description: Write deep-dive content (ebook, paper, guide) with structured templates and quality gates
+description: Write deep-dive content (ebook, paper, email, guide) with structured templates and quality gates
 source: catalog
 ---
 
@@ -18,6 +18,7 @@ Write structured, deep-dive content for a PARA project. Supports multiple conten
 | Tutorial | `tutorial` | Step-by-step instructional walkthrough (~100-300 lines)             |
 | Blog     | `blog`     | Blog article — informative, engaging, SEO-friendly (~80-300 lines) |
 | Social  | `social` | Social media posts: Facebook, Threads, X (platform-adapted)        |
+| Email   | `email`  | Professional email: outreach, proposal, follow-up (~20-80 lines)   |
 
 > **Default:** If user does not specify type, use `ebook`.
 
@@ -76,8 +77,10 @@ Projects/[project-name]/writings/
 │   └── tutorial-[topic-slug].md
 ├── blogs/                            ← Blog files
 │   └── blog-[topic-slug].md
-└── social/                           ← Social media content
-    └── social-[topic-slug].md
+├── social/                           ← Social media content
+│   └── social-[topic-slug].md
+└── emails/                           ← Email drafts
+    └── email-[topic-slug].md
 ```
 
 ---
@@ -105,7 +108,7 @@ Check `project.md` for `agent.rules` / `agent.skills` — if true, re-read proje
 
 Clarify with the user:
 - **Topic:** What is the subject of the deep-dive?
-- **Type:** `ebook`, `paper`, `tutorial`, `blog`, or `social`? (default: `ebook`)
+- **Type:** `ebook`, `paper`, `tutorial`, `blog`, `social`, or `email`? (default: `ebook`)
 - **Style:** `formal`, `conversational`, `tutorial`, or `storytelling`? (default: `formal`)
 - **Depth:** `overview`, `standard`, `deep-dive`, or `exhaustive`? (default: `standard`)
 - **Tools:** Does the user want web search, MCP, or image generation? (default: `none`)
