@@ -298,3 +298,16 @@ items:
   - governance
   - co-author
   - catalog
+- id: spec
+  name: Specification Writer
+  kernel_min: 1.7.16
+  kernel_max: 1.x
+  entrypoint: spec.md
+  description: Write structured specifications before coding. Surfaces assumptions,
+    defines boundaries, validation gates. Sidecar Skill for templates.
+  tags:
+  - spec
+  - planning
+  - governance
+  - sidecar
+  - quality

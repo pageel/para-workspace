@@ -37,6 +37,7 @@ workflows:
   para-skill:      "1.0.1"
   write:           "1.7.16"   # FEAT-79: style guide, social template
   logs:            "1.7.15"   # FEAT-78: command granularity + KI token budget
+  spec:            "1.7.16"   # NEW: specification writer workflow
 
 rules:
   agent-behavior:          "1.7.16"   # C7 file guards, proactive guard scan
@@ -61,3 +62,4 @@ skills:
   brainstorm:  "1.0.0"
   write:       "1.7.16"   # social template added
   harness:     "1.7.16"   # dual-format convention, checkpoint type, commit consolidation
+  spec:        "1.7.16"   # NEW: spec-driven-development skill

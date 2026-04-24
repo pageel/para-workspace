@@ -112,3 +112,16 @@ items:
   - templates
   - token-optimization
   - content
+- id: spec
+  name: Spec Templates
+  kernel_min: 1.7.16
+  kernel_max: 1.x
+  entrypoint: spec/SKILL.md
+  description: Governance skill for /spec workflow — spec templates, assumption surfacing
+    rules, boundary definitions, and quality checklists.
+  tags:
+  - spec
+  - sidecar
+  - templates
+  - governance
+  - quality

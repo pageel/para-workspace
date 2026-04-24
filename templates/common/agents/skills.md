@@ -15,3 +15,4 @@
 | Docs Templates | /docs new Step 6 (generating docs), need Architecture/CLI/Deployment/Changelog/Strategy template | skills/docs/SKILL.md |
 | Brainstorm Templates | /brainstorm Step 4 (saving structured output), need Decision or Research template | skills/brainstorm/SKILL.md |
 | Harness Guards | Creating plans, writing workflow steps, generating artifacts with phases/progression | skills/harness/SKILL.md |
+| Spec Templates | /spec workflow, writing specifications, surfacing assumptions, defining scope/boundaries, formalizing requirements before coding | skills/spec/SKILL.md |
