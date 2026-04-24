@@ -107,13 +107,9 @@ git push origin main
 [ ] 1.1a [Specific task — e.g. EN file]
 [ ] 1.1b [Specific task — e.g. VI file]
 [ ] 1.2 [Task]
-[ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only.
-<!-- ⚠️ HARNESS GUARD (VCS — Commit #N/M Local): Agent MUST re-read rules/vcs.md. Local commit — KHÔNG push. -->
-> ⛔ **GUARD:** Commit #N/M — Local only. KHÔNG push.
+[ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
 [ ] 1.N Git commit Phase 1.
-[ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Xác nhận scope.
-<!-- ⚠️ HARNESS GUARD (VCS — Push Remote): 🛑 STOP HERE. Agent MUST hỏi User xác nhận TRƯỚC khi push. -->
-> ⛔ **GUARD:** Agent MUST hỏi User xác nhận TRƯỚC khi push.
+[ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Agent MUST ask User for confirmation BEFORE pushing.
 [ ] 1.N+1 Git push origin main.
 
 ---
@@ -143,13 +139,7 @@ git push origin main
 
 [ ] All Task List items from Phase 0 → Phase N are [x] (including git commit + push).
 [ ] [Project-specific checks: build pass, docs updated, governance rules...]
-<!-- ⚠️ HARNESS GUARD (Status Transition → Done): 🛑 STOP HERE.
-     Agent MUST NOT change Status to "✅ Done" or clear active_plan without explicit user approval.
-     Agent presents the completed Walkthrough checklist → User verifies → User approves transition.
-     Only AFTER user says "done" or equivalent → Agent sets Status = ✅ Done and clears active_plan. -->
-
-> ⛔ **GUARD:** Agent MUST present Walkthrough → User approves → THEN change status.
-
+[ ] ⛔ CHECKPOINT (C7 Status Transition): Agent MUST NOT change Status to "✅ Done" or clear `active_plan` without explicit user approval. Agent presents the completed Walkthrough checklist → User verifies → User approves transition. Only AFTER user confirms → Agent sets Status and clears `active_plan`.
 [ ] User approved Done transition.
 [ ] Clear `active_plan` in `project.md`.
 
