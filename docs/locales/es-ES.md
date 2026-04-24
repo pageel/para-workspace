@@ -7,7 +7,7 @@
 **El Framework de Espacio de Trabajo para Humanos y Agentes IA**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.15-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.16-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -243,7 +243,7 @@ Una vez que se estandaricen nuevos workflows, correcciones en kernel el comando 
 
 ## 🗺️ Hoja de Ruta
 
-Versión actual: **1.7.15** (Harness Skill, Plan Status Gate & Roadmap Prefix Convention).
+Versión actual: **1.7.16** (Harness Skill, Plan Status Gate & Roadmap Prefix Convention).
 Próximos lanzamientos vislumbrados: **v1.8.0** (Sistemas por Departamento) y **v1.9.0** (Fronteras Comunitarias & Confianza).
 
 ---
@@ -256,4 +256,4 @@ Consulte el documento [CONTRIBUTING.md](../../CONTRIBUTING.md) para los lineamie
 
 Construido con ❤️ por **Pageel**. Estandarizando el futuro de los PKMs para Agentes.
 
-_Versión: 1.7.15_
+_Versión: 1.7.16_

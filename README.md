@@ -7,7 +7,7 @@
 **The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.15-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.16-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -689,4 +689,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.7.15_
+_Version: 1.7.16_

@@ -7,7 +7,7 @@
 **Workspace Framework cho Con người & AI Agent**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.15-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.16-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -395,7 +395,7 @@ Skills là các module kiến thức tái sử dụng, được load theo yêu c
 | **[Docs Templates](../skills/docs.md)** | Template Architecture, CLI, Strategy (Sidecar, v1.7.8) |
 | **[Brainstorm Templates](../skills/brainstorm.md)** | Template Decision & Research (Sidecar, v1.7.12) |
 | **[Write Templates](../skills/write.md)** | Template các định dạng bài viết và quy tắc văn phong (Sidecar, v1.7.14) |
-| **[Harness Guards](../skills/harness.md)** | Catalog guard và giao thức tự động quét để sinh cảnh báo an toàn theo ngữ cảnh (Sidecar, v1.7.15) |
+| **[Harness Guards](../skills/harness.md)** | Catalog guard và giao thức tự động quét để sinh cảnh báo an toàn theo ngữ cảnh (Sidecar, v1.7.16) |
 
 ---
 
@@ -674,7 +674,7 @@ Nếu workspace của bạn quá cũ (v1.3.x) hoặc đã bị bạn chỉnh s�
 - [x] **Backlog Governance & Extract Paradigm** _(phát hành v1.7.11-1.7.12)_
 - [x] **VERSIONS.yml Migration & Anti-Token Decay** _(phát hành v1.7.13)_
 - [x] **Content Authoring Ecosystem & Session Telemetry** _(phát hành v1.7.14)_
-- [x] **Harness Skill, Plan Status Gate & Roadmap Prefix Convention** _(phát hành v1.7.15)_
+- [x] **Harness Skill, Plan Status Gate & Roadmap Prefix Convention** _(phát hành v1.7.16)_
 - [ ] Department System _(v1.8.0 — lên kế hoạch)_
 - [ ] Community & Trust Boundary _(v1.9.0 — lên kế hoạch)_
 
@@ -692,4 +692,4 @@ Xem [CONTRIBUTING.md](../../CONTRIBUTING.md) để biết hướng dẫn. Điể
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.7.15_
+_Phiên bản: 1.7.16_

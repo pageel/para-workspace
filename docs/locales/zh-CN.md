@@ -7,7 +7,7 @@
 **人类与 AI Agent 的工作空间框架**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.15-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.7.16-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -225,7 +225,7 @@ para migrate [--from] [--to]    # 工作空间迁移
 | **[Docs Templates](../skills/docs.md)** | 架构、CLI、战略模板 (Sidecar, v1.7.8) |
 | **[Brainstorm Templates](../skills/brainstorm.md)** | 决策与研究模板 (Sidecar, v1.7.12) |
 | **[Write Templates](../skills/write.md)** | 内容格式和写作规则模板 (Sidecar, v1.7.14) |
-| **[Harness Guards](../skills/harness.md)** | Guard 目录和自动扫描协议，用于生成上下文感知的安全警告 (Sidecar, v1.7.15) |
+| **[Harness Guards](../skills/harness.md)** | Guard 目录和自动扫描协议，用于生成上下文感知的安全警告 (Sidecar, v1.7.16) |
 
 ---
 
@@ -266,7 +266,7 @@ PARA Workspace 采用 **渐进式披露 (Progressive Disclosure)** 架构，仅�
 
 ## 🗺️ 路线图
 
-当前版本为 **1.7.15** (Harness Skill, Plan Status Gate & Roadmap Prefix Convention)。
+当前版本为 **1.7.16** (Harness Skill, Plan Status Gate & Roadmap Prefix Convention)。
 未来规划包含 **v1.8.0** (Department 系统) 及 **v1.9.0** (社区与信任边界)。
 
 ---
@@ -279,4 +279,4 @@ PARA Workspace 采用 **渐进式披露 (Progressive Disclosure)** 架构，仅�
 
 用 ❤️ 构建，由 **Pageel** 出品。标准化 Agent PKM 的未来。
 
-_版本: 1.7.15_
+_版本: 1.7.16_

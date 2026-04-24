@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.7.16] - 2026-04-24
+
+Harness Guard Enforcement Overhaul — Dual-Format guards, Checkpoint items, Spec workflow.
+
+- **Added**: C7 rule (`hybrid-3-file-integrity.md`) — Plan Status Transition is USER-ONLY. Prevents agent from changing plan Status or clearing `active_plan` without explicit user approval (BUG-33).
+- **Added**: Proactive Guard Scan (`agent-behavior.md` §4) — Agent MUST scan Phase section for `MANDATORY`, `CHECKPOINT`, and `HARNESS GUARD` patterns before executing task items.
+- **Added**: File Guards for `artifacts/plans/*.md` (Status field) and `project.md` (active_plan field) — linked to C7.
+- **Added**: `CHECKPOINT` guard type (`guard-catalog.md`) — visible inline task items that break momentum bias before git/status operations.
+- **Added**: Dual-Format Convention (`guard-catalog.md`) — every guard exists as both HTML comment and visible `> ⛔` blockquote.
+- **Added**: Commit Consolidation Policy Convention — rules for when commit merging is allowed.
+- **Added**: `/spec` workflow and `spec-driven-development` Sidecar Skill — write structured specifications before coding (FEAT-82).
+- **Changed**: `detail-plan.md` template — Dual-Format visible blockquotes, CHECKPOINT task items, Commit Consolidation Policy section.
+- **Changed**: `decision.md` template — upgraded from Summary-only to Linear Text format with per-option Concept/Pros/Cons/Deep Dive analysis (FEAT-83).
+- **Fixed**: `/end` workflow §4.7 — removed auto-suggest "Create KI?" for new insights; retained update-existing-KI flow (FEAT-71).
+
 ## [1.7.15] - 2026-04-17
 
 Harness Skill, Plan Status Gate & Roadmap Prefix Convention.
