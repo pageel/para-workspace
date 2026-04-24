@@ -28,7 +28,7 @@
 | [📥 Cài đặt](#-cài-đặt) | Yêu cầu, thiết lập, profiles |
 | [🧠 Kernel](#-kernel-nhân-hệ-thống) | Invariants, heuristics, hợp đồng |
 | [🛠️ CLI](#️-tham-chiếu-cli) | Tất cả lệnh CLI |
-| [📑 Workflow Catalog](#-catalog-workflow) | 26 governed workflows |
+| [📑 Workflow Catalog](#-catalog-workflow) | 27 governed workflows |
 | [🛡️ Rule Catalog](#️-rule-catalog) | 11 governance rules |
 | [🧩 Skill Catalog](#-catalog-kỹ-năng-skills) | 9 reusable skills |
 | [🧩 Task Management](#-task-management-hybrid-3-file-model) | Hybrid 3-File model |
@@ -352,6 +352,7 @@ para config [key] [value]     # Quản lý thiết lập trong tệp .para-works
 | **[`/push`](../workflows/push.md)** | Commit và push nhanh lên GitHub |
 | **[`/release`](../workflows/release.md)** | Kiểm tra chất lượng trước release |
 | **[`/retro`](../workflows/retro.md)** | Retrospective project trước khi archive |
+| **[`/spec`](../workflows/spec.md)** | Viết tài liệu đặc tả cấu trúc (có ranh giới và giả định) trước khi code |
 | **[`/update`](../workflows/update.md)** | Cập nhật workspace an toàn với agent hỗ trợ |
 | **[`/verify`](../workflows/verify.md)** | Xác minh hoàn thành task bằng walkthroughs |
 | **[`/para-knowledge`](../workflows/para-knowledge.md)** | Quản lý Knowledge Items — dashboard, tạo, kiểm tra, lưu trữ |

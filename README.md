@@ -28,7 +28,7 @@
 | [📥 Installation](#-installation) | Prerequisites, setup, profiles, troubleshooting |
 | [🧠 The Kernel](#-the-kernel) | Invariants, heuristics, contracts |
 | [🛠️ CLI Reference](#️-cli-reference) | All CLI commands |
-| [📑 Workflow Catalog](#-workflow-catalog) | 26 governed workflows |
+| [📑 Workflow Catalog](#-workflow-catalog) | 27 governed workflows |
 | [🛡️ Rule Catalog](#️-rule-catalog) | 11 governance rules |
 | [🧩 Skill Catalog](#-skill-catalog) | 9 reusable skills |
 | [🧩 Task Management](#-task-management-hybrid-3-file-model) | Hybrid 3-File model |
@@ -349,6 +349,7 @@ para config [key] [value]       # Manage workspace settings
 | **[`/push`](./docs/workflows/push.md)**                   | Fast commit and push to GitHub                             |
 | **[`/release`](./docs/workflows/release.md)**             | Pre-release quality gate                                   |
 | **[`/retro`](./docs/workflows/retro.md)**                 | Project retrospective before archiving                     |
+| **[`/spec`](./docs/workflows/spec.md)**                   | Write structured specifications before coding              |
 | **[`/update`](./docs/workflows/update.md)**               | Agent-guided safe workspace update with error recovery     |
 | **[`/verify`](./docs/workflows/verify.md)**               | Verify task completion with walkthroughs                   |
 | **[`/para-knowledge`](./docs/workflows/para-knowledge.md)** | Manage Knowledge Items — dashboard, create, audit, archive |

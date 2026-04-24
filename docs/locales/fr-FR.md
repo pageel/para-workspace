@@ -28,7 +28,7 @@
 | [📥 Installation](#-installation) | Prérequis, configuration, profils, dépannage |
 | [🧠 Le Noyau](#-le-noyau) | Invariants, heuristiques, contrats |
 | [🛠️ Référence CLI](#-référence-cli) | Toutes les commandes CLI |
-| [📑 Catalogue des Workflows](#-catalogue-des-workflows) | 26 flux de travail (workflows) régis |
+| [📑 Catalogue des Workflows](#-catalogue-des-workflows) | 27 flux de travail (workflows) régis |
 | [🛡️ Catalogue des Règles](#-catalogue-des-règles) | 11 règles de gouvernance |
 | [🧩 Catalogue des Compétences](#-catalogue-des-compétences) | 9 compétences (skills) réutilisables |
 | [🧩 Gestion des Tâches](#-gestion-des-tâches-modèle-hybride-à-3-fichiers) | Modèle hybride à 3 fichiers |
@@ -204,7 +204,7 @@ para migrate [--from] [--to]    # Utilitaire de migration
 ## 📑 Catalogue (Workflows, Règles et Compétences)
 
 Le système intègre :
-- **26 Workflows :** Des gestionnaires de tâches (`/backlog`), des scénarios d'ouverture (`/open`), des audits (`/para-audit`), des systèmes de connaissances (`/para-knowledge`), jusqu'à la création de contenu (`/write`) et la télémétrie (`/logs`).
+- **27 Workflows :** Des gestionnaires de tâches (`/backlog`), création de spécifications (`/spec`), des scénarios d'ouverture (`/open`), des audits (`/para-audit`), des systèmes de connaissances (`/para-knowledge`), jusqu'à la création de contenu (`/write`) et la télémétrie (`/logs`).
 - **11 Règles de Gouvernance :** Protègent le versionnement, les bonnes pratiques Git (VCS) ou évitent les mutations risquées.
 - **9 Compétences (Skills) :** Facilitent la compréhension des composants statiques (`PARA Kit`), des diagrammes, de l'architecture des pages web (`Page Map`), des modèles de rédaction (`Write Templates`), et des catalogues de gardes de sécurité (`Harness Guards`).
 

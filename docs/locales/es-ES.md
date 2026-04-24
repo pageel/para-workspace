@@ -28,7 +28,7 @@
 | [📥 Instalación](#-instalación) | Requisitos previos, configuración, perfiles, solución de problemas |
 | [🧠 El Kernel](#-el-kernel) | Invariantes, reglas heurísticas, contratos |
 | [🛠️ Referencia de CLI](#-referencia-cli) | Todos los comandos de CLI |
-| [📑 Catálogo de Workflows](#-catálogo-de-workflows) | 26 flujos de trabajo (workflows) gobernados |
+| [📑 Catálogo de Workflows](#-catálogo-de-workflows) | 27 flujos de trabajo (workflows) gobernados |
 | [🛡️ Catálogo de Reglas](#-catálogo-de-reglas) | 11 reglas de gobernanza |
 | [🧩 Catálogo de Skills](#-catálogo-de-skills) | 9 habilidades (skills) reutilizables |
 | [🧩 Gestión de Tareas](#-gestión-de-tareas-modelo-híbrido-de-3-archivos) | Modelo híbrido de 3 archivos |
@@ -204,7 +204,7 @@ para migrate [--from] [--to]    # Utilidad de migración
 ## 📑 Catálogo de Workflows, Reglas y Skills
 
 El sistema incluye:
-- **26 Workflows:** Desde gestores de tareas (`/backlog`), flujos de apertura (`/open`), auditorías (`/para-audit`), sistemas de conocimiento cruzado (`/para-knowledge`), hasta generación de contenido (`/write`) y telemetría (`/logs`).
+- **27 Workflows:** Desde gestores de tareas (`/backlog`), creación de especificaciones (`/spec`), flujos de apertura (`/open`), auditorías (`/para-audit`), sistemas de conocimiento cruzado (`/para-knowledge`), hasta generación de contenido (`/write`) y telemetría (`/logs`).
 - **11 Reglas de Gobernabilidad:** Defienden el versionado, las buenas prácticas de Git (VCS) o evitan mutaciones riesgosas. Todas optimizadas bajo un Índice Disparador.
 - **9 Skills Base:** Facilitan el entendimiento de componentes estáticos como `PARA Kit`, diagramas visuales, mapas de página (`Page Map`), plantillas de redacción de contenidos (`Write Templates`), y catálogos de guardias de seguridad (`Harness Guards`).
 
