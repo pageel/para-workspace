@@ -19,4 +19,13 @@
 # See: registry/README.md for contributor guide
 #
 # ─── Registered Tools ───────────────────────────────────
-# (No tools registered yet. Use Phase 2 to add para-graph.)
+
+graph:
+  name: para-graph
+  repo: pageel/para-graph
+  runtime: node
+  min_runtime_version: "18.0.0"
+  entry: dist/cli.js
+  latest: "0.7.0"
+  tarball_pattern: "https://github.com/pageel/para-graph/releases/download/v{{VERSION}}/para-graph-v{{VERSION}}.tar.gz"
+  description: "Hybrid Code-Knowledge Graph for PARA Workspace"
