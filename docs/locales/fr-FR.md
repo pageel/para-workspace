@@ -7,7 +7,7 @@
 **Le Framework d'Espace de Travail pour Humains et Agents IA**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.16-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.0-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -31,6 +31,7 @@
 | [📑 Catalogue des Workflows](#-catalogue-des-workflows) | 27 flux de travail (workflows) régis |
 | [🛡️ Catalogue des Règles](#-catalogue-des-règles) | 11 règles de gouvernance |
 | [🧩 Catalogue des Compétences](#-catalogue-des-compétences) | 9 compétences (skills) réutilisables |
+| [🔌 Système d'Outils](#-système-doutils-v180) | Installer des plugins d'agents externes |
 | [🧩 Gestion des Tâches](#-gestion-des-tâches-modèle-hybride-à-3-fichiers) | Modèle hybride à 3 fichiers |
 | [🔄 Mise à jour](#-mise-à-jour-des-versions) | Mise à jour automatique + nouvelle installation |
 | [🗺️ Feuille de Route](#-feuille-de-route) | Historique des versions + fonctionnalités prévues |
@@ -197,6 +198,11 @@ para migrate [--from] [--to]    # Utilitaire de migration
 # Commandes IA
 @[/para-workflow] list          # Gérer les workflows
 @[/para-rule] list              # Gérer les règles
+
+# Gestion des Outils (v1.8.0)
+para install-tool <name>        # Installer un plugin depuis le registre
+para remove-tool <name>         # Supprimer le plugin installé
+para list-tools                 # Lister les plugins installés
 ```
 
 ---
@@ -235,6 +241,35 @@ Introduit l'écosystème "Knowledge Items (KIs)" pour s'intégrer nativement ave
 
 ---
 
+## 🔌 Système d'Outils (v1.8.0)
+
+PARA Workspace prend en charge un **Système d'Outils Dynamique** extensible qui vous permet d'installer des plugins externes indépendants du langage (comme `para-graph`) directement dans votre espace de travail.
+
+Les outils sont gérés via un registre central (`registry/tools.yml`) et sont installés sous forme d'archives tarball autonomes.
+
+### Comment ça marche
+1. **Zéro Dépendance Globale**: Les outils sont installés localement dans `.para/tools/` pour être isolés.
+2. **Support Multi-Runtime**: Le CLI génère automatiquement des scripts d'enveloppe (par ex. `repo/cli/commands/graph.sh`) capables d'invoquer Node, Python ou des exécutables binaires.
+3. **Mécanisme de Secours Dev/Prod**: Si le code source d'un outil existe dans l'espace de travail (Mode Dev), l'enveloppe y achemine l'exécution. Sinon, elle se replie sur l'archive tarball extraite (Mode Prod).
+
+### Utilisation
+
+```bash
+# Installer le plugin para-graph (analyse de code structurel et serveur MCP)
+./para install-tool para-graph
+
+# Lister les outils installés
+./para list-tools
+
+# Exécuter l'outil installé
+./para graph --help
+
+# Supprimer l'outil
+./para remove-tool para-graph
+```
+
+---
+
 ## 🔄 Mise à jour des Versions
 
 La fonctionnalité `./para update` permet d'obtenir en continu les toutes dernières améliorations structurelles, en archivant les dossiers modifiés obsolètes dans une zone sécurisée, réduisant les conflits et offrant une restauration transparente.
@@ -243,8 +278,8 @@ La fonctionnalité `./para update` permet d'obtenir en continu les toutes derni�
 
 ## 🗺️ Feuille de Route
 
-Version actuelle : **1.7.16** (Harness Skill, Plan Status Gate & Roadmap Prefix Convention).
-Mises à jour prévues : **v1.8.0** (Départements système) et **v1.9.0** (Limites communautaires).
+Version actuelle : **1.8.0** (Dynamic Tool System & para-graph integration).
+Mises à jour prévues : **v1.9.0** (Départements système) et **v1.10.0** (Limites communautaires).
 
 ---
 
@@ -256,4 +291,4 @@ Rendez-vous sur [CONTRIBUTING.md](../../CONTRIBUTING.md) pour découvrir les pri
 
 Conçu avec ❤️ par **Pageel**. Standardisant l'avenir de la méthode PKM Agent.
 
-_Version: 1.7.16_
+_Version: 1.8.0_

@@ -7,7 +7,7 @@
 **The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.16-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.0-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -31,6 +31,7 @@
 | [📑 Workflow Catalog](#-workflow-catalog) | 27 governed workflows |
 | [🛡️ Rule Catalog](#️-rule-catalog) | 11 governance rules |
 | [🧩 Skill Catalog](#-skill-catalog) | 9 reusable skills |
+| [🔌 Tool System](#-tool-system-v180) | Install external agentic plugins |
 | [🧩 Task Management](#-task-management-hybrid-3-file-model) | Hybrid 3-File model |
 | [🔄 Upgrading](#-upgrading-versions) | Auto update + clean slate |
 | [🗺️ Roadmap](#️-roadmap) | Version history + planned features |
@@ -315,6 +316,11 @@ para migrate [--from] [--to]    # Workspace migration
 
 # Configuration
 para config [key] [value]       # Manage workspace settings
+
+# Tool Management (v1.8.0)
+para install-tool <name>        # Install a plugin from registry
+para remove-tool <name>         # Remove installed plugin
+para list-tools                 # List installed plugins
 
 # Agent Capabilities
 @[/para-workflow] list          # Manage workflows
@@ -610,6 +616,35 @@ KI operations are governed by **7 rules (KR1–KR7)** and validated against **H1
 
 ---
 
+## 🔌 Tool System (v1.8.0)
+
+PARA Workspace supports an extensible **Dynamic Tool System** that allows you to install external, language-agnostic plugins (like `para-graph`) directly into your workspace.
+
+Tools are managed via a central registry (`registry/tools.yml`) and are installed as standalone tarballs.
+
+### How it works
+1. **Zero Global Dependencies**: Tools are installed locally into `.para/tools/` for isolation.
+2. **Multi-Runtime Support**: The CLI auto-generates wrapper scripts (e.g. `repo/cli/commands/graph.sh`) that know how to invoke Node, Python, or binary executables.
+3. **Dev/Prod Fallback**: If a tool's source code exists inside the workspace (Dev mode), the wrapper routes execution there. Otherwise, it falls back to the extracted tarball (Prod mode).
+
+### Usage
+
+```bash
+# Install the para-graph plugin (structural code analysis & MCP server)
+./para install-tool para-graph
+
+# List installed tools
+./para list-tools
+
+# Run the installed tool
+./para graph --help
+
+# Remove tool
+./para remove-tool para-graph
+```
+
+---
+
 ## 🔄 Upgrading Versions
 
 > 📖 **Note:** For a detailed breakdown of all features, fixes, and updates in each version, please read our [CHANGELOG](./CHANGELOG.md).
@@ -673,8 +708,10 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] **VERSIONS.yml Migration & Anti-Token Decay** _(shipped in v1.7.13)_
 - [x] **Content Authoring Ecosystem & Session Telemetry** _(shipped in v1.7.14)_
 - [x] **Harness Skill, Plan Status Gate & Roadmap Prefix Convention** _(shipped in v1.7.15)_
-- [ ] Department System _(v1.8.0 — planned)_
-- [ ] Community & Trust Boundary _(v1.9.0 — planned)_
+- [x] **Spec Workflow, Dual-Format Guards & CLI Fixes** _(shipped in v1.7.16)_
+- [x] **Dynamic Tool System & para-graph integration** _(shipped in v1.8.0)_
+- [ ] Department System _(v1.9.0 — planned)_
+- [ ] Community & Trust Boundary _(v1.10.0 — planned)_
 
 ---
 
@@ -690,4 +727,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.7.16_
+_Version: 1.8.0_

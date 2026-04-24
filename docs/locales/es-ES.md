@@ -7,7 +7,7 @@
 **El Framework de Espacio de Trabajo para Humanos y Agentes IA**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.16-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.0-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -31,6 +31,7 @@
 | [📑 Catálogo de Workflows](#-catálogo-de-workflows) | 27 flujos de trabajo (workflows) gobernados |
 | [🛡️ Catálogo de Reglas](#-catálogo-de-reglas) | 11 reglas de gobernanza |
 | [🧩 Catálogo de Skills](#-catálogo-de-skills) | 9 habilidades (skills) reutilizables |
+| [🔌 Sistema de Herramientas](#-sistema-de-herramientas-v180) | Instalar complementos agentic externos |
 | [🧩 Gestión de Tareas](#-gestión-de-tareas-modelo-híbrido-de-3-archivos) | Modelo híbrido de 3 archivos |
 | [🔄 Actualización](#-actualizando-versiones) | Actualización automática + instalación limpia |
 | [🗺️ Hoja de Ruta](#-hoja-de-ruta) | Historial de versiones + próximas características |
@@ -197,6 +198,11 @@ para migrate [--from] [--to]    # Utilidad de migración
 # Agentes
 @[/para-workflow] list          # Administra workflows
 @[/para-rule] list              # Administra reglas
+
+# Gestión de Herramientas (v1.8.0)
+para install-tool <name>        # Instalar un complemento desde el registro
+para remove-tool <name>         # Eliminar complemento instalado
+para list-tools                 # Listar complementos instalados
 ```
 
 ---
@@ -235,6 +241,35 @@ Introduce un ecosistema de “Knowledge Items (KIs)” diseñado para integrarse
 
 ---
 
+## 🔌 Sistema de Herramientas (v1.8.0)
+
+PARA Workspace admite un **Sistema de Herramientas Dinámico** extensible que le permite instalar complementos externos independientes del lenguaje (como `para-graph`) directamente en su espacio de trabajo.
+
+Las herramientas se gestionan a través de un registro central (`registry/tools.yml`) y se instalan como tarballs independientes.
+
+### Cómo funciona
+1. **Cero Dependencias Globales**: Las herramientas se instalan localmente en `.para/tools/` para su aislamiento.
+2. **Soporte Multi-Runtime**: La CLI autogenera scripts envolventes (por ejemplo, `repo/cli/commands/graph.sh`) que saben cómo invocar ejecutables de Node, Python o binarios.
+3. **Mecanismo Fallback Dev/Prod**: Si el código fuente de una herramienta existe dentro del espacio de trabajo (Modo Dev), el script enruta la ejecución allí. De lo contrario, utiliza el tarball extraído (Modo Prod).
+
+### Uso
+
+```bash
+# Instalar el complemento para-graph (análisis de código estructural y servidor MCP)
+./para install-tool para-graph
+
+# Listar herramientas instaladas
+./para list-tools
+
+# Ejecutar la herramienta instalada
+./para graph --help
+
+# Eliminar herramienta
+./para remove-tool para-graph
+```
+
+---
+
 ## 🔄 Actualizando Versiones
 
 Una vez que se estandaricen nuevos workflows, correcciones en kernel el comando `./para update` arrastrará todos los cambios necesarios usando Git. Tareas obsoletas se arrastrarán a una zona pasiva, y las bibliotecas serán sincronizadas atómicamente mitigando cualquier error fatal.
@@ -243,8 +278,8 @@ Una vez que se estandaricen nuevos workflows, correcciones en kernel el comando 
 
 ## 🗺️ Hoja de Ruta
 
-Versión actual: **1.7.16** (Harness Skill, Plan Status Gate & Roadmap Prefix Convention).
-Próximos lanzamientos vislumbrados: **v1.8.0** (Sistemas por Departamento) y **v1.9.0** (Fronteras Comunitarias & Confianza).
+Versión actual: **1.8.0** (Dynamic Tool System & para-graph integration).
+Próximos lanzamientos vislumbrados: **v1.9.0** (Sistemas por Departamento) y **v1.10.0** (Fronteras Comunitarias & Confianza).
 
 ---
 
@@ -256,4 +291,4 @@ Consulte el documento [CONTRIBUTING.md](../../CONTRIBUTING.md) para los lineamie
 
 Construido con ❤️ por **Pageel**. Estandarizando el futuro de los PKMs para Agentes.
 
-_Versión: 1.7.16_
+_Versión: 1.8.0_

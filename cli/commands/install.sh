@@ -368,6 +368,43 @@ if [ -f "$LIB_SRC/skills.md" ]; then
   fi
 fi
 
+# === 3.6. Sync Tool System assets (v1.8.0) ===
+# Sync cli/templates/ and registry/ to workspace Resources reference
+echo "🔧 Syncing tool system assets..."
+TOOL_TMPL_SRC="$REPO_ROOT/cli/templates"
+TOOL_REG_SRC="$REPO_ROOT/registry"
+
+# Sync templates (tool-wrapper.sh.tmpl etc.)
+tool_asset_count=0
+if [ -d "$TOOL_TMPL_SRC" ]; then
+  for tmpl_file in "$TOOL_TMPL_SRC"/*; do
+    [ -f "$tmpl_file" ] || continue
+    fname="$(basename "$tmpl_file")"
+    # Sync to Resources reference (read-only catalog)
+    if [ -d "$WS_ROOT/Resources/references/para-workspace" ]; then
+      sync_file "$tmpl_file" "$WS_ROOT/Resources/references/para-workspace/cli/templates/$fname" || true
+    fi
+    tool_asset_count=$((tool_asset_count + 1))
+  done
+fi
+
+# Sync registry (tools.yml, tool.schema.json, README.md)
+if [ -d "$TOOL_REG_SRC" ]; then
+  for reg_file in "$TOOL_REG_SRC"/*; do
+    [ -f "$reg_file" ] || continue
+    fname="$(basename "$reg_file")"
+    if [ -d "$WS_ROOT/Resources/references/para-workspace" ]; then
+      sync_file "$reg_file" "$WS_ROOT/Resources/references/para-workspace/registry/$fname" || true
+    fi
+    tool_asset_count=$((tool_asset_count + 1))
+  done
+fi
+
+# Initialize .para/tools/ directory if it doesn't exist
+mkdir -p "$WS_ROOT/.para/tools"
+
+echo "   ✓ $tool_asset_count tool assets synced"
+
 # === 3.5. System KI Defaults (v1.7.1, FEAT-60) ===
 # Ship default system KIs from repo/templates/knowledge/ to KI Store.
 # Only installs if KI doesn't already exist (skip existing = safe).
