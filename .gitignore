@@ -37,3 +37,8 @@ _inbox/
 
 # Workspace metadata (workspace-only)
 .para-workspace.yml
+
+# Prevent accidental execution from creating ghost runtime dirs in repo
+.agents/
+.para/
+Resources/

@@ -1,0 +1,22 @@
+# PARA Workspace — Tool Registry
+# Central registry of official tool plugins compatible with PARA Workspace.
+#
+# Format:
+#   <short-name>:
+#     name: <full-name>         # e.g., "para-graph"
+#     repo: <github-owner/repo> # e.g., "pageel/para-graph"
+#     runtime: <node|python|binary>
+#     min_runtime_version: <semver>
+#     entry: <relative-path>    # Entry point within tarball, e.g., "dist/cli.js"
+#     latest: <semver>          # Latest known version
+#     tarball_pattern: <url-template>
+#       # Use {{VERSION}} placeholder for version interpolation
+#       # Example: "https://github.com/pageel/para-graph/releases/download/v{{VERSION}}/para-graph-v{{VERSION}}.tar.gz"
+#     description: <string>
+#
+# Managed by: repo maintainer + ./para update (syncs from upstream)
+# Validated by: registry/tool.schema.json
+# See: registry/README.md for contributor guide
+#
+# ─── Registered Tools ───────────────────────────────────
+# (No tools registered yet. Use Phase 2 to add para-graph.)

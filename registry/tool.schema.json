@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PARA Tool Manifest",
+  "description": "Validates tool.manifest.yml files for PARA Workspace tool plugins.",
+  "type": "object",
+  "required": ["name", "version", "runtime", "entry", "description"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Full tool name (e.g., 'para-graph').",
+      "pattern": "^para-[a-z][a-z0-9-]*$"
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version of the tool.",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9.]+)?$"
+    },
+    "runtime": {
+      "type": "string",
+      "description": "Required runtime environment.",
+      "enum": ["node", "python", "binary"]
+    },
+    "min_runtime_version": {
+      "type": "string",
+      "description": "Minimum required version of the runtime.",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "entry": {
+      "type": "string",
+      "description": "Entry point relative to tarball root (e.g., 'dist/cli.js')."
+    },
+    "description": {
+      "type": "string",
+      "description": "Short human-readable description of the tool.",
+      "maxLength": 200
+    },
+    "repo": {
+      "type": "string",
+      "description": "Full URL to the tool's GitHub repository.",
+      "pattern": "^https://github\\.com/"
+    }
+  }
+}
