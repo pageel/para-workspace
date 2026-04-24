@@ -69,13 +69,26 @@ Side-effects requiring rules/skills re-read:
 
 When editing these files **directly** (outside of a workflow), agent **MUST** re-read the corresponding rule first:
 
-| File pattern | MUST re-read before editing |
-| :-- | :-- |
+| File pattern              | MUST re-read before editing     |
+| :------------------------ | :------------------------------ |
 | `artifacts/tasks/done.md` | `hybrid-3-file-integrity.md` C2 |
-| `artifacts/tasks/*.md` | `hybrid-3-file-integrity.md` |
-| `.agents/rules/*.md` | `governance.md` |
-| `kernel/`, `.para/` | `governance.md` |
+| `artifacts/tasks/*.md`    | `hybrid-3-file-integrity.md`    |
+| `artifacts/plans/*.md` (Status field) | `hybrid-3-file-integrity.md` C7 |
+| `project.md` (active_plan field) | `hybrid-3-file-integrity.md` C7 |
+| `.agents/rules/*.md`      | `governance.md`                 |
+| `kernel/`, `.para/`       | `governance.md`                 |
 
 > **Why:** Workflows enforce rules via Step 0 Pre-flight, but direct file edits bypass that guard. This table ensures rule compliance even without a workflow.
 >
 > **Extensible:** Project-specific rules MAY define additional file guards in their own rule files (e.g., `maintenance.md` may guard `CHANGELOG.md` and `VERSION`).
+
+#### Proactive Guard Scan (v1.7.16)
+
+BEFORE executing any task item in a plan Phase, Agent MUST:
+
+1. Read the Phase section header for `MANDATORY` and `HARNESS GUARD` HTML comments
+2. Read the corresponding visible `> ⛔` blockquotes
+3. Scan the Task List for `⛔ CHECKPOINT:` items — execute checkpoint action BEFORE proceeding to the next task
+4. **IF guard condition is not met → STOP and resolve before continuing**
+
+> Principle: Guards are **momentum breakers** — they exist to prevent Agent from auto-piloting through critical operations.

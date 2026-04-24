@@ -6,7 +6,7 @@
 #   Only update entries for items that ACTUALLY changed.
 #
 # See: naming.md §6 (date format), versioning.md §5 (version tracking)
-# Updated: 2026-04-17
+# Updated: 2026-04-24
 
 workspace: "1.7.15"
 
@@ -39,7 +39,7 @@ workflows:
   logs:            "1.7.15"   # FEAT-78: command granularity + KI token budget
 
 rules:
-  agent-behavior:          "1.1.0"
+  agent-behavior:          "1.7.16"   # C7 file guards, proactive guard scan
   governance:              "1.0.0"
   artifact-standard:       "1.0.0"
   context-rules:           "1.1.0"
@@ -48,7 +48,7 @@ rules:
   para-discipline:         "1.0.0"
   vcs:                     "1.7.13.2" # updated: SafeToAutoRun gate
   versioning:              "1.7.13"   # updated: VERSIONS.yml reference
-  hybrid-3-file-integrity: "2.0.0"
+  hybrid-3-file-integrity: "1.7.16"   # C7: plan status transition is USER-ONLY
   knowledge:               "1.1.0"
 
 skills:
@@ -56,8 +56,8 @@ skills:
   formatting:  "1.1.0"
   page-map:    "1.0.0"
   para-skill:  "1.0.0"
-  plan:        "1.7.15"   # detail-plan template refactor, status gate
+  plan:        "1.7.16"   # dual-format guards, checkpoint items, commit consolidation
   docs:        "1.7.15"   # strategy reference roadmap prefix
   brainstorm:  "1.0.0"
   write:       "1.7.15"   # email template added
-  harness:     "1.7.15"   # new: guard catalog + auto-scan protocol
+  harness:     "1.7.16"   # dual-format convention, checkpoint type, commit consolidation

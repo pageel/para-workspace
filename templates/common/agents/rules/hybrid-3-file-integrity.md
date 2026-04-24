@@ -88,6 +88,14 @@ Protected files SHOULD include an inline HTML guard comment. Agent MUST read and
 - When creating task files, agent SHOULD include the appropriate guard header
 - Agent MUST NOT remove or modify existing guard headers
 
+### C7: Plan Status Transition is USER-ONLY
+
+- Agent MUST NOT change the `Status` field in any plan file (`artifacts/plans/*.md`)
+- Agent MUST NOT clear or modify `active_plan` in `project.md`
+- Agent MAY **suggest** a status transition (e.g., "Phase 1-4 complete, shall I mark as Done?")
+- Agent MUST **wait for explicit user confirmation** before making the change
+- Violation of C7 is a **sovereignty violation** — the user owns plan lifecycle decisions
+
 ## Examples
 
 ### Allowed

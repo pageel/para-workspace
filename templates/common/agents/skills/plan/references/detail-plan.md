@@ -19,7 +19,11 @@
      - 📝 Draft:   Plan is being written/reviewed. No file modifications allowed.
      - 🔨 Active:  User has approved the plan. Execution permitted.
      - ✅ Done:    All phases completed. Ready for archive to plans/done/.
-     Transition from Draft → Active requires explicit user approval. -->
+     Transition from Draft → Active requires explicit user approval.
+     Transition from Active → Done requires Walkthrough completion + explicit user approval. -->
+
+> ⛔ **STATUS GATE:** Agent MUST NOT execute Phase tasks while Status = "📝 Draft".
+> Lifecycle: 📝 Draft → 🔨 Active → ✅ Done. Transition requires explicit user approval.
 
 ---
 
@@ -47,6 +51,8 @@
 
 <!-- ⚠️ MANDATORY: Agent MUST read project.md and reload .agents/rules.md + .agents/skills.md BEFORE executing any tasks here -->
 
+> ⛔ **MANDATORY:** Re-read `project.md`, `.agents/rules.md`, `.agents/skills.md` BEFORE executing.
+
 #### Implementation Plan
 
 [Technical blueprint — specific file paths, line numbers, commands.
@@ -73,6 +79,9 @@ Example: step 1.1 in Plan produces task 1.1a (EN) and 1.1b (VI).]
 ### Phase 1. [Core Feature]
 
 <!-- ⚠️ MANDATORY: Agent MUST reload .agents/rules.md + .agents/skills.md BEFORE modifying files or executing git commands -->
+
+> ⛔ **MANDATORY:** Re-read `.agents/rules.md` + `.agents/skills.md` BEFORE modifying files.
+
 <!-- ⚠️ HARNESS GUARD (Phase 1 Risk): [Derived from Risks & Mitigations table. Leave empty if no risk mapped to this Phase.] -->
 
 #### Implementation Plan
@@ -82,11 +91,15 @@ Example: step 1.1 in Plan produces task 1.1a (EN) and 1.1b (VI).]
 1.1 **[Step name]** — [Detail: file path, line number, operation, source reference if applicable.]
 1.2 **[Step name]** — [...]
 
-1.N **Git checkpoint Phase 1**
+1.N **Git checkpoint Phase 1 — Commit**
 ```bash
 git add [scope]
 git commit -m "[conventional commit message]"
-git push
+```
+
+1.N+1 **Git push** (only at last Phase or when remote sync is needed)
+```bash
+git push origin main
 ```
 
 #### Task List
@@ -94,7 +107,14 @@ git push
 [ ] 1.1a [Specific task — e.g. EN file]
 [ ] 1.1b [Specific task — e.g. VI file]
 [ ] 1.2 [Task]
-[ ] 1.N Git commit + push Phase 1 successful.
+[ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only.
+<!-- ⚠️ HARNESS GUARD (VCS — Commit #N/M Local): Agent MUST re-read rules/vcs.md. Local commit — KHÔNG push. -->
+> ⛔ **GUARD:** Commit #N/M — Local only. KHÔNG push.
+[ ] 1.N Git commit Phase 1.
+[ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Xác nhận scope.
+<!-- ⚠️ HARNESS GUARD (VCS — Push Remote): 🛑 STOP HERE. Agent MUST hỏi User xác nhận TRƯỚC khi push. -->
+> ⛔ **GUARD:** Agent MUST hỏi User xác nhận TRƯỚC khi push.
+[ ] 1.N+1 Git push origin main.
 
 ---
 
@@ -121,12 +141,27 @@ git push
 > Final verification checklist — only tick when ALL Phase Task Lists are complete.
 > Equivalent to the Walkthrough artifact in Antigravity Planning mode.
 
-[ ] All Task List items from Phase 0 → Phase N are [x].
-[ ] All Git commit + push commands executed.
+[ ] All Task List items from Phase 0 → Phase N are [x] (including git commit + push).
 [ ] [Project-specific checks: build pass, docs updated, governance rules...]
+<!-- ⚠️ HARNESS GUARD (Status Transition → Done): 🛑 STOP HERE.
+     Agent MUST NOT change Status to "✅ Done" or clear active_plan without explicit user approval.
+     Agent presents the completed Walkthrough checklist → User verifies → User approves transition.
+     Only AFTER user says "done" or equivalent → Agent sets Status = ✅ Done and clears active_plan. -->
+
+> ⛔ **GUARD:** Agent MUST present Walkthrough → User approves → THEN change status.
+
+[ ] User approved Done transition.
 [ ] Clear `active_plan` in `project.md`.
 
-> 🛑 **STOP HERE:** Agent MUST explicitly ask the User to verify BEFORE executing the final git push in the last Phase.
+### Git Operation Summary
+
+> Total plan: [N] git commits (local) + [M] git push (remote).
+> Guards are inserted inline within Task Lists — agent encounters HARNESS GUARD immediately before each git operation.
+
+| # | Operation | Phase | Scope | Guard |
+|:--|:--|:--|:--|:--|
+| 1 | `git commit` | 1.N | 🟢 Local | HARNESS GUARD (VCS — Commit #1/N) |
+| N | `git push` | [last].N+1 | 🔴 Remote | HARNESS GUARD (VCS — Push Remote) 🛑 |
 
 ### Risks & Mitigations
 
@@ -137,6 +172,13 @@ git push
 | Risk | Mitigation | Harness (related Phase) |
 |:--|:--|:--|
 | [Risk description] | [Mitigation strategy] | [Phase N guard] |
+
+### Commit Consolidation Policy
+
+| Cho phép gộp? | Điều kiện |
+| :-- | :-- |
+| ⛔ Không | Mỗi FEAT/BUG có commit riêng |
+| ⛔ Không bao giờ | Push — LUÔN tách riêng |
 
 ### Review & Audit Tracking
 
