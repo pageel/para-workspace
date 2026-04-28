@@ -1,9 +1,10 @@
 #!/bin/bash
 # PARA Workspace — Install Tool Plugin
-# Usage: ./para install-tool <name> [--version=X.Y.Z] [--update]
+# Usage: ./para install-tool <name> [--version=X.Y.Z] [--update] [--agents] [--no-agents]
 #
 # Downloads and installs a tool plugin from the PARA Tool Registry.
 # Generates a wrapper script for dynamic CLI routing.
+# Detects and optionally installs bundled AI intelligence (workflows, skills, rules).
 
 set -e
 
@@ -23,11 +24,14 @@ if [ -z "$WORKSPACE_ROOT" ]; then
 fi
 
 TOOLS_DIR="$WORKSPACE_ROOT/.para/tools"
+AGENTS_DIR="$WORKSPACE_ROOT/.agents"
 
 # === Parse arguments ===
 TOOL_INPUT=""
 TOOL_VERSION=""
 UPDATE_MODE=false
+SKIP_AGENTS=false
+AGENTS_ONLY=false
 
 for arg in "$@"; do
   case "$arg" in
@@ -37,17 +41,27 @@ for arg in "$@"; do
     --update)
       UPDATE_MODE=true
       ;;
+    --no-agents)
+      SKIP_AGENTS=true
+      ;;
+    --agents)
+      AGENTS_ONLY=true
+      ;;
     --help|-h)
-      echo "Usage: para install-tool <name> [--version=X.Y.Z] [--update]"
+      echo "Usage: para install-tool <name> [--version=X.Y.Z] [--update] [--agents] [--no-agents]"
       echo ""
       echo "  <name>           Tool name (e.g., 'para-graph' or 'graph')"
       echo "  --version=X.Y.Z  Install specific version (default: latest)"
       echo "  --update         Remove existing installation before installing"
+      echo "  --agents         Install only AI intelligence (tool must be already installed)"
+      echo "  --no-agents      Skip AI intelligence prompt during install"
       echo ""
       echo "Examples:"
       echo "  para install-tool para-graph"
       echo "  para install-tool graph --version=0.7.0"
       echo "  para install-tool para-graph --update"
+      echo "  para install-tool para-graph --agents"
+      echo "  para install-tool para-graph --no-agents"
       exit 0
       ;;
     -*)
@@ -139,9 +153,193 @@ if [ -z "$TOOL_VERSION" ]; then
   exit 1
 fi
 
+# === AI Intelligence Functions ===
+# Arrays to store parsed agent items
+AGENT_SOURCES=()
+AGENT_TARGETS=()
+AGENT_VERSIONS=()
+AGENT_TYPES=()
+
+# State machine parser: reads agents: block from tool.manifest.yml line-by-line
+parse_manifest_agents() {
+  AGENT_SOURCES=()
+  AGENT_TARGETS=()
+  AGENT_VERSIONS=()
+  AGENT_TYPES=()
+
+  local manifest="$MANIFEST_FILE"
+  if [ ! -f "$manifest" ]; then
+    return
+  fi
+
+  # Find agents: block start line
+  local start_line
+  start_line=$(grep -n "^agents:" "$manifest" 2>/dev/null | head -1 | cut -d: -f1)
+  if [ -z "$start_line" ]; then
+    return
+  fi
+
+  local current_type=""
+  local item_source="" item_target="" item_version=""
+  local tmp_file
+  tmp_file=$(mktemp)
+
+  # Read from agents: line to end, stop at next top-level key
+  tail -n +"$start_line" "$manifest" | {
+    # Skip the "agents:" line itself
+    read -r _header_line
+
+    while IFS= read -r line; do
+      # Stop at next top-level key (non-indented, non-empty)
+      case "$line" in
+        [a-z]*) break ;;
+        "") continue ;;
+      esac
+
+      # Detect type section: "  workflows:", "  skills:", "  rules:"
+      case "$line" in
+        "  workflows:"*) current_type="workflows"; continue ;;
+        "  skills:"*)    current_type="skills"; continue ;;
+        "  rules:"*)     current_type="rules"; continue ;;
+      esac
+
+      # Detect item start: "    - source:"
+      if echo "$line" | grep -q "^    - source:"; then
+        item_source=$(echo "$line" | sed 's/.*source: *//; s/^ *"//; s/" *$//')
+        continue
+      fi
+
+      # Read target within an item
+      if echo "$line" | grep -q "^      target:"; then
+        item_target=$(echo "$line" | sed 's/.*target: *//; s/^ *"//; s/" *$//')
+        continue
+      fi
+
+      # Read version — completes the item
+      if echo "$line" | grep -q "^      version:"; then
+        item_version=$(echo "$line" | sed 's/.*version: *//; s/^ *"//; s/" *$//')
+        echo "${current_type}|${item_source}|${item_target}|${item_version}" >> "$tmp_file"
+        item_source="" item_target="" item_version=""
+        continue
+      fi
+    done
+  }
+
+  # Read parsed items into arrays
+  if [ -s "$tmp_file" ]; then
+    while IFS='|' read -r atype asource atarget aversion; do
+      AGENT_TYPES+=("$atype")
+      AGENT_SOURCES+=("$asource")
+      AGENT_TARGETS+=("$atarget")
+      AGENT_VERSIONS+=("$aversion")
+    done < "$tmp_file"
+  fi
+  rm -f "$tmp_file"
+}
+
+# Compare manifest version with installed version
+compare_agent_version() {
+  local agent_type="$1"
+  local agent_target="$2"
+  local manifest_version="$3"
+
+  local existing_path=""
+  case "$agent_type" in
+    workflows) existing_path="$AGENTS_DIR/workflows/$agent_target" ;;
+    skills)    existing_path="$AGENTS_DIR/skills/$agent_target" ;;
+    rules)     existing_path="$AGENTS_DIR/rules/$agent_target" ;;
+  esac
+
+  if [ ! -e "$existing_path" ]; then
+    echo "NEW"
+    return
+  fi
+
+  echo "INSTALLED"
+}
+
+# Display summary of available AI intelligence
+display_agents_summary() {
+  echo ""
+  echo "  🧠 AI Intelligence available:"
+  local i=0
+  while [ $i -lt ${#AGENT_SOURCES[@]} ]; do
+    local atype="${AGENT_TYPES[$i]}"
+    local atarget="${AGENT_TARGETS[$i]}"
+    local aversion="${AGENT_VERSIONS[$i]}"
+    local status
+    status=$(compare_agent_version "$atype" "$atarget" "$aversion")
+
+    local label=""
+    case "$atype" in
+      workflows) label="Workflow" ;;
+      skills)    label="Skill   " ;;
+      rules)     label="Rule    " ;;
+    esac
+
+    echo "    $label: $atarget (v$aversion) — $status"
+    i=$((i + 1))
+  done
+  echo ""
+}
+
+# Copy agent files from tool install dir to .agents/
+install_agents() {
+  local i=0
+  while [ $i -lt ${#AGENT_SOURCES[@]} ]; do
+    local atype="${AGENT_TYPES[$i]}"
+    local asource="${AGENT_SOURCES[$i]}"
+    local atarget="${AGENT_TARGETS[$i]}"
+    local src_path="$TOOL_INSTALL_DIR/$asource"
+    local dst_dir="$AGENTS_DIR/$atype"
+    local dst_path="$dst_dir/$atarget"
+
+    mkdir -p "$dst_dir"
+
+    if [ -d "$src_path" ]; then
+      # Directory copy (skills) — remove existing first for clean update
+      if [ -d "$dst_path" ]; then
+        rm -rf "$dst_path"
+      fi
+      cp -r "$src_path" "$dst_path"
+    elif [ -f "$src_path" ]; then
+      # File copy (workflows, rules)
+      cp "$src_path" "$dst_path"
+    else
+      echo "  ⚠️  Source not found: $src_path (skipping)"
+    fi
+
+    i=$((i + 1))
+  done
+}
+
 # === Handle --update ===
 TOOL_INSTALL_DIR="$TOOLS_DIR/$TOOL_NAME"
 WRAPPER_SCRIPT="$COMMANDS_DIR/$TOOL_NAME.sh"
+MANIFEST_FILE="$TOOL_INSTALL_DIR/tool.manifest.yml"
+
+# === Handle --agents (standalone mode) ===
+if [ "$AGENTS_ONLY" = true ]; then
+  if [ ! -d "$TOOL_INSTALL_DIR" ]; then
+    echo "❌ Error: Tool '$PARA_TOOL_NAME' is not installed. Install it first."
+    exit 1
+  fi
+  if [ ! -f "$MANIFEST_FILE" ]; then
+    echo "❌ Error: tool.manifest.yml not found in $TOOL_INSTALL_DIR"
+    exit 1
+  fi
+  echo "🧠 Installing AI intelligence for $PARA_TOOL_NAME..."
+  parse_manifest_agents
+  if [ ${#AGENT_SOURCES[@]} -eq 0 ]; then
+    echo "ℹ️  No AI intelligence bundled with this tool."
+    exit 0
+  fi
+  display_agents_summary
+  install_agents
+  echo ""
+  echo "✅ AI intelligence installed."
+  exit 0
+fi
 
 if [ -d "$TOOL_INSTALL_DIR" ] && [ "$UPDATE_MODE" = false ]; then
   echo "⚠️  Tool '$PARA_TOOL_NAME' is already installed at: $TOOL_INSTALL_DIR"
@@ -257,3 +455,20 @@ echo "  Runtime:      $TOOL_RUNTIME (>= $TOOL_MIN_VERSION)"
 echo ""
 echo "Usage:"
 echo "  ./para $TOOL_NAME <subcommand>"
+
+# === AI Intelligence prompt (after successful install) ===
+if [ "$SKIP_AGENTS" != true ]; then
+  parse_manifest_agents
+  if [ ${#AGENT_SOURCES[@]} -gt 0 ]; then
+    display_agents_summary
+    printf "  Install AI intelligence? (y/n): "
+    read -r INSTALL_AGENTS_ANSWER
+    if [ "$INSTALL_AGENTS_ANSWER" = "y" ] || [ "$INSTALL_AGENTS_ANSWER" = "Y" ]; then
+      install_agents
+      echo ""
+      echo "  ✅ AI intelligence installed."
+    else
+      echo "  ⏭️  Skipped. Run './para install-tool $PARA_TOOL_NAME --agents' later."
+    fi
+  fi
+fi
