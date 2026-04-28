@@ -74,7 +74,7 @@ check_manifest_mcp() {
 # Scan Dev paths
 for project_dir in "$WORKSPACE_ROOT"/Projects/para-*/repo; do
   if [ -f "$project_dir/tool.manifest.yml" ]; then
-    local_name=$(basename "$(dirname "$(dirname "$project_dir")")")
+    local_name=$(basename "$(dirname "$project_dir")")
     check_manifest_mcp "$project_dir/tool.manifest.yml" "$local_name" "dev"
   fi
 done
@@ -84,7 +84,7 @@ for tool_dir in "$TOOLS_DIR"/*/; do
   if [ -f "$tool_dir/tool.manifest.yml" ]; then
     local_name="para-$(basename "$tool_dir")"
     # Skip if already found in Dev
-    local already_found=false
+    already_found=false
     for existing in "${MCP_TOOLS[@]}"; do
       if [ "$existing" = "$local_name" ]; then
         already_found=true
