@@ -7,7 +7,7 @@
 **The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.0-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.1-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -643,6 +643,26 @@ Tools are managed via a central registry (`registry/tools.yml`) and are installe
 ./para remove-tool para-graph
 ```
 
+### Tool Intelligence Installer (v1.8.1)
+
+Tools can bundle AI intelligence (workflows, skills, rules) directly in their `tool.manifest.yml`:
+
+```yaml
+agents:
+  workflows:
+    - source: templates/agents/workflows/para-graph.md
+      target: para-graph.md
+      version: "1.8.0"
+  skills:
+    - source: templates/agents/skills/graph-enrichment/
+      target: graph-enrichment/
+      version: "1.0.0"
+```
+
+When you run `./para install-tool <name>`, the CLI will automatically parse this manifest and prompt you to install the bundled intelligence. 
+You can use `--agents` to install only the agents, or `--no-agents` to skip the prompt.
+`remove-tool` will also offer to clean up any bundled agents it installed.
+
 ---
 
 ## 🔄 Upgrading Versions
@@ -710,6 +730,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] **Harness Skill, Plan Status Gate & Roadmap Prefix Convention** _(shipped in v1.7.15)_
 - [x] **Spec Workflow, Dual-Format Guards & CLI Fixes** _(shipped in v1.7.16)_
 - [x] **Dynamic Tool System & para-graph integration** _(shipped in v1.8.0)_
+- [x] **Tool Intelligence Installer & manifest-declared AI intelligence** _(shipped in v1.8.1)_
 - [ ] Department System _(v1.9.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.10.0 — planned)_
 
@@ -727,4 +748,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.8.0_
+_Version: 1.8.1_

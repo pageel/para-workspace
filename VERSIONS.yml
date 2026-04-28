@@ -57,7 +57,7 @@ skills:
   formatting:  "1.1.0"
   page-map:    "1.0.0"
   para-skill:  "1.0.0"
-  plan:        "1.7.16"   # dual-format guards, checkpoint items, commit consolidation
+  plan:        "1.8.1"   # execution ownership icons, graph-first conditional step
   docs:        "1.7.15"   # strategy reference roadmap prefix
   brainstorm:  "1.7.16"   # FEAT-83: decision template linear text upgrade
   write:       "1.7.16"   # social template added

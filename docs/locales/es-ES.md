@@ -7,7 +7,7 @@
 **El Framework de Espacio de Trabajo para Humanos y Agentes IA**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.0-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.1-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -268,6 +268,26 @@ Las herramientas se gestionan a través de un registro central (`registry/tools.
 ./para remove-tool para-graph
 ```
 
+### Instalador de Inteligencia de Herramientas (Tool Intelligence Installer, v1.8.1)
+
+Las herramientas pueden agrupar inteligencia de IA (workflows, skills, rules) directamente en su `tool.manifest.yml`:
+
+```yaml
+agents:
+  workflows:
+    - source: templates/agents/workflows/para-graph.md
+      target: para-graph.md
+      version: "1.8.0"
+  skills:
+    - source: templates/agents/skills/graph-enrichment/
+      target: graph-enrichment/
+      version: "1.0.0"
+```
+
+Cuando ejecuta `./para install-tool <name>`, la CLI analizará automáticamente este manifiesto y le indicará que instale la inteligencia incluida.
+Puede usar `--agents` para instalar solo los agentes o `--no-agents` para omitir el mensaje.
+`remove-tool` también le ofrecerá limpiar cualquier agente incluido que haya instalado.
+
 ---
 
 ## 🔄 Actualizando Versiones
@@ -278,7 +298,7 @@ Una vez que se estandaricen nuevos workflows, correcciones en kernel el comando 
 
 ## 🗺️ Hoja de Ruta
 
-Versión actual: **1.8.0** (Dynamic Tool System & para-graph integration).
+Versión actual: **1.8.1** (Tool Intelligence Installer).
 Próximos lanzamientos vislumbrados: **v1.9.0** (Sistemas por Departamento) y **v1.10.0** (Fronteras Comunitarias & Confianza).
 
 ---
@@ -291,4 +311,4 @@ Consulte el documento [CONTRIBUTING.md](../../CONTRIBUTING.md) para los lineamie
 
 Construido con ❤️ por **Pageel**. Estandarizando el futuro de los PKMs para Agentes.
 
-_Versión: 1.8.0_
+_Versión: 1.8.1_

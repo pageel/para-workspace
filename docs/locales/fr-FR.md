@@ -7,7 +7,7 @@
 **Le Framework d'Espace de Travail pour Humains et Agents IA**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.0-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.1-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -268,6 +268,26 @@ Les outils sont gérés via un registre central (`registry/tools.yml`) et sont i
 ./para remove-tool para-graph
 ```
 
+### Installateur d'Intelligence d'Outils (Tool Intelligence Installer, v1.8.1)
+
+Les outils peuvent regrouper l'intelligence IA (workflows, skills, rules) directement dans leur `tool.manifest.yml`:
+
+```yaml
+agents:
+  workflows:
+    - source: templates/agents/workflows/para-graph.md
+      target: para-graph.md
+      version: "1.8.0"
+  skills:
+    - source: templates/agents/skills/graph-enrichment/
+      target: graph-enrichment/
+      version: "1.0.0"
+```
+
+Lorsque vous exécutez `./para install-tool <name>`, le CLI analysera automatiquement ce manifeste et vous invitera à installer l'intelligence intégrée.
+Vous pouvez utiliser `--agents` pour installer uniquement les agents, ou `--no-agents` pour ignorer l'invite.
+`remove-tool` vous proposera également de nettoyer tout agent intégré qu'il a installé.
+
 ---
 
 ## 🔄 Mise à jour des Versions
@@ -278,7 +298,7 @@ La fonctionnalité `./para update` permet d'obtenir en continu les toutes derni�
 
 ## 🗺️ Feuille de Route
 
-Version actuelle : **1.8.0** (Dynamic Tool System & para-graph integration).
+Version actuelle : **1.8.1** (Tool Intelligence Installer).
 Mises à jour prévues : **v1.9.0** (Départements système) et **v1.10.0** (Limites communautaires).
 
 ---
@@ -291,4 +311,4 @@ Rendez-vous sur [CONTRIBUTING.md](../../CONTRIBUTING.md) pour découvrir les pri
 
 Conçu avec ❤️ par **Pageel**. Standardisant l'avenir de la méthode PKM Agent.
 
-_Version: 1.8.0_
+_Version: 1.8.1_

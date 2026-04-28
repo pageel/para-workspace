@@ -6,7 +6,7 @@
 > **Lifecycle:** Active → archived to `plans/done/` when completed.
 > **Role:** IS `active_plan` in `project.md`.
 
-```markdown
+````markdown
 # [Plan Title]: [project-name]
 
 > **Version:** 1.0 | **Created:** YYYY-MM-DD
@@ -31,10 +31,10 @@
 
 > Brainstorm, research, predecessor plans.
 
-| # | File | Role |
-| :-- | :-- | :-- |
-| B1 | [brainstorm-file](path) | [Description] |
-| R1 | [research-file](path) | [Description] |
+| #   | File                    | Role          |
+| :-- | :---------------------- | :------------ |
+| B1  | [brainstorm-file](path) | [Description] |
+| R1  | [research-file](path)   | [Description] |
 
 ## Architecture Overview & Execution Logic
 
@@ -58,10 +58,16 @@
 [Technical blueprint — specific file paths, line numbers, commands.
 User reviews this artifact before Agent takes action.
 Number steps as `X.Y` (X = Phase, Y = step).
-Each step should specify: target file, exact operation, source reference if applicable.]
+Each step should specify: target file, exact operation, source reference if applicable.
+Prefix each step with an Execution Ownership icon (see legend below).]
 
-0.1 **[Step 1 name]** — [Detail: file path, line number, operation]
-0.2 **[Step 2 name]** — [Detail: ...]
+0.1 🤖 **[Step 1 name]** — [Detail: file path, line number, operation]
+0.2 🤖 **[Step 2 name]** — [Detail: ...]
+
+> 🔍 **Graph-First (conditional):** If project has `.beads/graph/metadata.json`, add a step:
+> `0.N 🤖 **Graph context gathering** — graph_context_bundle + graph_query for target files.`
+> This provides callers/callees/imports context BEFORE writing new code.
+> See `rules/graph-first-policy.md` for triggers and constraints.
 
 > ⚠️ Phase 0 does not produce a Git commit. Setup only.
 
@@ -69,10 +75,11 @@ Each step should specify: target file, exact operation, source reference if appl
 
 [Progress tracking checklist — Agent ticks items when completed.
 1:N relationship with Implementation Plan — one plan step may spawn multiple tasks.
-Example: step 1.1 in Plan produces task 1.1a (EN) and 1.1b (VI).]
+Example: step 1.1 in Plan produces task 1.1a (EN) and 1.1b (VI).
+Carry the Execution Ownership icon from the Implementation Plan.]
 
-[ ] 0.1 [Task description]
-[ ] 0.2 [Task description]
+[ ] 0.1 🤖 [Task description]
+[ ] 0.2 🤖 [Task description]
 
 ---
 
@@ -88,29 +95,39 @@ Example: step 1.1 in Plan produces task 1.1a (EN) and 1.1b (VI).]
 
 [Goal in 1-2 sentences.]
 
-1.1 **[Step name]** — [Detail: file path, line number, operation, source reference if applicable.]
-1.2 **[Step name]** — [...]
+1.1 🤖 **[Step name]** — [Detail: file path, line number, operation, source reference if applicable.]
+1.2 👤 **[Step name]** — [Detail: destructive/external operation, Agent proposes → User approves.]
 
-1.N **Git checkpoint Phase 1 — Commit**
+1.N 👤 **Git checkpoint Phase 1 — Commit**
+
 ```bash
 git add [scope]
 git commit -m "[conventional commit message]"
 ```
+````
 
-1.N+1 **Git push** (only at last Phase or when remote sync is needed)
+1.N+1 👤 **Git push** (only at last Phase or when remote sync is needed)
+
 ```bash
 git push origin main
 ```
 
+> **Execution Ownership Legend:**
+> 🤖 = Agent auto-run (`SafeToAutoRun: true`) — safe, read-only, or non-destructive operations
+> 👤 = User approval required (`SafeToAutoRun: false`) — destructive, external, or state-mutating operations
+>
+> **Heuristic:** Default to 👤 for: git ops, npm install/prune, file deletion, external API calls (gh, curl), deploy commands.
+> Default to 🤖 for: build, test, lint, grep, view_file, dry-run verification.
+
 #### Task List
 
-[ ] 1.1a [Specific task — e.g. EN file]
-[ ] 1.1b [Specific task — e.g. VI file]
-[ ] 1.2 [Task]
+[ ] 1.1 🤖 [Specific task — e.g. EN file]
+[ ] 1.1b 🤖 [Specific task — e.g. VI file]
+[ ] 1.2 👤 [Task requiring user approval]
 [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
-[ ] 1.N Git commit Phase 1.
+[ ] 1.N 👤 Git commit Phase 1.
 [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Agent MUST ask User for confirmation BEFORE pushing.
-[ ] 1.N+1 Git push origin main.
+[ ] 1.N+1 👤 Git push origin main.
 
 ---
 
@@ -122,12 +139,13 @@ git push origin main
 
 ## Backlog → Phase Mapping
 
-| Backlog Item | Priority | Phase |
-|:--|:--|:--|
-| [Item ID] | 🔴 High | Phase 1 |
+| Backlog Item | Priority | Phase   |
+| :----------- | :------- | :------ |
+| [Item ID]    | 🔴 High  | Phase 1 |
 
 > 💡 **[Optional] Complex & Meta-Project Add-ons:**
 > If this plan is for an **Architecture Refactor** or a **Meta-Project (like PARA Workspace)**, insert:
+>
 > - **Execution Order**: Explicit dependency chain of tasks.
 > - **Impact Analysis**: Blast radius across systems/workflows.
 > - **Version Decision**: Justification for version bump level.
@@ -148,10 +166,10 @@ git push origin main
 > Total plan: [N] git commits (local) + [M] git push (remote).
 > Guards are inserted inline within Task Lists — agent encounters HARNESS GUARD immediately before each git operation.
 
-| # | Operation | Phase | Scope | Guard |
-|:--|:--|:--|:--|:--|
-| 1 | `git commit` | 1.N | 🟢 Local | HARNESS GUARD (VCS — Commit #1/N) |
-| N | `git push` | [last].N+1 | 🔴 Remote | HARNESS GUARD (VCS — Push Remote) 🛑 |
+| #   | Operation    | Phase      | Scope     | Guard                                |
+| :-- | :----------- | :--------- | :-------- | :----------------------------------- |
+| 1   | `git commit` | 1.N        | 🟢 Local  | HARNESS GUARD (VCS — Commit #1/N)    |
+| N   | `git push`   | [last].N+1 | 🔴 Remote | HARNESS GUARD (VCS — Push Remote) 🛑 |
 
 ### Risks & Mitigations
 
@@ -159,30 +177,33 @@ git push origin main
 > When a new risk is discovered during execution → add it here → update the
 > `<!-- ⚠️ MANDATORY -->` guard of the related Phase accordingly.
 
-| Risk | Mitigation | Harness (related Phase) |
-|:--|:--|:--|
-| [Risk description] | [Mitigation strategy] | [Phase N guard] |
+| Risk               | Mitigation            | Harness (related Phase) |
+| :----------------- | :-------------------- | :---------------------- |
+| [Risk description] | [Mitigation strategy] | [Phase N guard]         |
 
 ### Commit Consolidation Policy
 
-| Cho phép gộp? | Điều kiện |
-| :-- | :-- |
-| ⛔ Không | Mỗi FEAT/BUG có commit riêng |
-| ⛔ Không bao giờ | Push — LUÔN tách riêng |
+| Cho phép gộp?    | Điều kiện                    |
+| :--------------- | :--------------------------- |
+| ⛔ Không         | Mỗi FEAT/BUG có commit riêng |
+| ⛔ Không bao giờ | Push — LUÔN tách riêng       |
 
 ### Review & Audit Tracking
 
 > Counter table to assess plan health. Update after each working session.
 
-| Criteria | Count | Last reviewed |
-|:--|:--|:--|
-| Logic review (Phase sequence, Task coverage) | 0 | — |
-| Security review (context guards, published-only) | 0 | — |
-| Checklist review (completeness, no missing files) | 0 | — |
-| Build/Test pass | 0 | — |
+| Criteria                                          | Count | Last reviewed |
+| :------------------------------------------------ | :---- | :------------ |
+| Logic review (Phase sequence, Task coverage)      | 0     | —             |
+| Security review (context guards, published-only)  | 0     | —             |
+| Checklist review (completeness, no missing files) | 0     | —             |
+| Build/Test pass                                   | 0     | —             |
 
 ### Suggested Next Steps
 
 1. **Activate Plan:** Set `active_plan` in `project.md`.
 2. [Project-specific next step...]
+
+```
+
 ```

@@ -321,6 +321,7 @@ skills/[name]/
 | 1.7.15 | Feature | Harness Skill (guard catalog + auto-scan protocol), Plan Status Gate (Draft/Active lifecycle), roadmap prefix convention, email template for /write, guard taxonomy expanded to 6 types |
 | 1.7.16 | Feature | C7 Plan Status sovereignty rule, /spec workflow + spec sidecar skill, Proactive Guard Scan for CHECKPOINT items, Commit Consolidation Policy, Dual-Format guard convention |
 | 1.8.0 | Feature | Dynamic Tool System: `install-tool`/`remove-tool`/`list-tools` CLI commands, Tool Registry (`registry/tools.yml`), auto-generated wrapper with Dev/Prod fallback, wildcard CLI router, `para-graph` as first tool plugin PoC |
+| 1.8.1 | Feature | Tool Intelligence Installer: manifest-declared AI intelligence (`agents:` block in `tool.manifest.yml`), `install-tool --agents`/`--no-agents` flags, `remove-tool` agents cleanup, `tool.schema.json` extended with agents property |
 
 ## 16. Dynamic Tool System (v1.8.0)
 
@@ -353,6 +354,38 @@ workspace/
 - **Wildcard CLI Router (v1.8.0):** Unknown CLI commands are routed to `cli/commands/<cmd>.sh` if the file exists — enables dynamic tool discovery without hardcoded `case` entries
 - **Registry-Driven:** `registry/tools.yml` is the single source of truth for available tools. Schema validated by `tool.schema.json`
 - **Sync Pipeline:** `para install` auto-syncs `registry/` and `cli/templates/` to workspace
+
+### Tool Intelligence Installer (v1.8.1)
+
+Tools can bundle AI intelligence (workflows, skills, rules) via the `agents:` block in `tool.manifest.yml`:
+
+```yaml
+agents:
+  workflows:
+    - source: templates/agents/workflows/tool-workflow.md
+      target: tool-workflow.md
+      version: "1.0.0"
+  skills:
+    - source: templates/agents/skills/tool-skill/
+      target: tool-skill/
+      version: "1.0.0"
+  rules:
+    - source: templates/agents/rules/tool-rule.md
+      target: tool-rule.md
+      version: "1.0.0"
+```
+
+**Installer flow:**
+1. `install-tool` parses `agents:` block via state-machine (bash-only, no `yq`)
+2. Displays summary: item name, version, status (NEW/INSTALLED)
+3. Prompts user: "Install AI intelligence? (y/n)"
+4. Copies files to `.agents/{workflows,skills,rules}/`
+
+**CLI Flags:**
+- `--agents` — Install only AI intelligence (tool must be already installed)
+- `--no-agents` — Skip AI intelligence prompt during install
+
+**Removal:** `remove-tool` detects installed agents from manifest and offers cleanup.
 
 ## 15. Knowledge System (v1.7.0+)
 

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.8.1] - 2026-04-28
+
+Tool Intelligence Installer.
+
+- **Added**: `install-tool` `--agents` and `--no-agents` flags for selective intelligence installation.
+- **Added**: `remove-tool` agents cleanup, detecting and offering removal of bundled intelligence.
+- **Added**: `tool.schema.json` extended with `agents` property for schema validation.
+- **Added**: Tool Intelligence Installer parses `agents:` block via state-machine (bash-only, no `yq`).
+- **Changed**: System KI template `para_workspace_architecture_standards` updated with `para_version` 1.8.1, Tool Intelligence Installer section, and metadata concepts.
+- **Changed**: Detail Plan template updated with Execution Ownership icons and Graph-First conditional step.
+
+## [1.8.0] - 2026-04-26
+
+Dynamic Tool System & para-graph integration.
+
+- **Added**: `install-tool`, `remove-tool`, and `list-tools` commands.
+- **Added**: Plugin ecosystem support with language-agnostic wrappers.
+- **Added**: Zero Global Dependencies architecture with `.para/tools/` isolation.
+
 ## [1.7.16] - 2026-04-24
 
 Harness Guard Enforcement Overhaul — Dual-Format guards, Checkpoint items, Spec workflow.

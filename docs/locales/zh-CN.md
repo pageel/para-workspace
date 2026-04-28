@@ -7,7 +7,7 @@
 **人类与 AI Agent 的工作空间框架**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.0-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.1-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -291,6 +291,26 @@ PARA Workspace 支持可扩展的 **动态工具系统**，允许您将与语言
 ./para remove-tool para-graph
 ```
 
+### 工具智能安装器 (Tool Intelligence Installer, v1.8.1)
+
+工具可以直接在其 `tool.manifest.yml` 中打包 AI 智能（工作流、技能、规则）：
+
+```yaml
+agents:
+  workflows:
+    - source: templates/agents/workflows/para-graph.md
+      target: para-graph.md
+      version: "1.8.0"
+  skills:
+    - source: templates/agents/skills/graph-enrichment/
+      target: graph-enrichment/
+      version: "1.0.0"
+```
+
+当您运行 `./para install-tool <name>` 时，CLI 会自动解析此清单并提示您安装捆绑的智能组件。
+您可以使用 `--agents` 仅安装 Agent，或使用 `--no-agents` 跳过提示。
+`remove-tool` 也将主动提示以清理它安装的任何捆绑 Agent 组件。
+
 ---
 
 ## 🔄 升级版本
@@ -301,7 +321,7 @@ PARA Workspace 支持可扩展的 **动态工具系统**，允许您将与语言
 
 ## 🗺️ 路线图
 
-当前版本为 **1.8.0** (Dynamic Tool System & para-graph integration)。
+当前版本为 **1.8.1** (Tool Intelligence Installer)。
 未来规划包含 **v1.9.0** (Department 系统) 及 **v1.10.0** (社区与信任边界)。
 
 ---
@@ -314,4 +334,4 @@ PARA Workspace 支持可扩展的 **动态工具系统**，允许您将与语言
 
 用 ❤️ 构建，由 **Pageel** 出品。标准化 Agent PKM 的未来。
 
-_版本: 1.8.0_
+_版本: 1.8.1_
