@@ -1,0 +1,232 @@
+#!/usr/bin/env bash
+# test-mcp-config.sh — Unit tests for cli/lib/mcp-config.sh
+# Usage: bash tests/cli/test-mcp-config.sh
+
+set -euo pipefail
+
+echo "=== MCP Config Library Tests ==="
+echo ""
+
+PASS=0
+FAIL=0
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+TEST_TMP=$(mktemp -d)
+
+# Cleanup on exit
+trap 'rm -rf "$TEST_TMP"' EXIT
+
+# Set WORKSPACE_ROOT for test context
+export WORKSPACE_ROOT="$TEST_TMP/workspace"
+mkdir -p "$WORKSPACE_ROOT/Projects/para-graph/repo/dist"
+mkdir -p "$WORKSPACE_ROOT/.para/tools/graph/dist"
+
+# Create fake entry points
+echo "// fake" > "$WORKSPACE_ROOT/Projects/para-graph/repo/dist/cli.js"
+echo "// fake" > "$WORKSPACE_ROOT/.para/tools/graph/dist/cli.js"
+
+# Source the library
+source "$REPO_ROOT/cli/lib/mcp-config.sh"
+
+assert_eq() {
+  local label="$1"
+  local expected="$2"
+  local actual="$3"
+  echo -n "  $label... "
+  if [ "$expected" = "$actual" ]; then
+    echo "PASS"
+    PASS=$((PASS+1))
+  else
+    echo "FAIL"
+    echo "    Expected: $expected"
+    echo "    Actual:   $actual"
+    FAIL=$((FAIL+1))
+  fi
+}
+
+assert_contains() {
+  local label="$1"
+  local needle="$2"
+  local haystack="$3"
+  echo -n "  $label... "
+  if echo "$haystack" | grep -q "$needle"; then
+    echo "PASS"
+    PASS=$((PASS+1))
+  else
+    echo "FAIL — '$needle' not found in output"
+    FAIL=$((FAIL+1))
+  fi
+}
+
+assert_file_exists() {
+  local label="$1"
+  local path="$2"
+  echo -n "  $label... "
+  if [ -f "$path" ]; then
+    echo "PASS"
+    PASS=$((PASS+1))
+  else
+    echo "FAIL — file not found: $path"
+    FAIL=$((FAIL+1))
+  fi
+}
+
+assert_valid_json() {
+  local label="$1"
+  local path="$2"
+  echo -n "  $label... "
+  if jq empty "$path" 2>/dev/null; then
+    echo "PASS"
+    PASS=$((PASS+1))
+  else
+    echo "FAIL — invalid JSON: $path"
+    FAIL=$((FAIL+1))
+  fi
+}
+
+# ============================================================
+echo "--- resolve_ide_config_path ---"
+
+result=$(resolve_ide_config_path "antigravity")
+assert_contains "Antigravity path contains mcp_config.json" "mcp_config.json" "$result"
+
+result=$(resolve_ide_config_path "cursor")
+assert_contains "Cursor path contains mcp.json" "mcp.json" "$result"
+
+result=$(resolve_ide_config_path "claude")
+assert_contains "Claude path contains claude_desktop_config.json" "claude_desktop_config.json" "$result"
+
+# Test invalid IDE
+echo -n "  Unknown IDE returns error... "
+if resolve_ide_config_path "vscode" 2>/dev/null; then
+  echo "FAIL — should have failed"
+  FAIL=$((FAIL+1))
+else
+  echo "PASS"
+  PASS=$((PASS+1))
+fi
+
+# ============================================================
+echo ""
+echo "--- generate_mcp_snippet ---"
+
+snippet=$(generate_mcp_snippet "para-graph" "node" "/path/to/cli.js" "serve" "/workspace")
+assert_contains "Snippet contains server name" "para-graph" "$snippet"
+assert_contains "Snippet contains command node" '"command": "node"' "$snippet"
+assert_contains "Snippet contains entry path" "/path/to/cli.js" "$snippet"
+assert_contains "Snippet contains serve arg" '"serve"' "$snippet"
+
+# Verify it's valid JSON
+echo "$snippet" > "$TEST_TMP/snippet.json"
+assert_valid_json "Snippet is valid JSON" "$TEST_TMP/snippet.json"
+
+# Test missing arguments
+echo -n "  Missing args returns error... "
+if generate_mcp_snippet "" "" "" 2>/dev/null; then
+  echo "FAIL — should have failed"
+  FAIL=$((FAIL+1))
+else
+  echo "PASS"
+  PASS=$((PASS+1))
+fi
+
+# ============================================================
+echo ""
+echo "--- merge_mcp_config (jq required) ---"
+
+if command -v jq &> /dev/null; then
+  # Test 1: New file creation
+  CONFIG_PATH="$TEST_TMP/new_config.json"
+  snippet=$(generate_mcp_snippet "test-server" "node" "/test/cli.js" "serve" "/ws")
+  merge_mcp_config "$CONFIG_PATH" "test-server" "$snippet"
+  assert_file_exists "Config file created" "$CONFIG_PATH"
+  assert_valid_json "Config is valid JSON" "$CONFIG_PATH"
+
+  # Verify content
+  server_cmd=$(jq -r '.mcpServers."test-server".command' "$CONFIG_PATH")
+  assert_eq "Server command is node" "node" "$server_cmd"
+
+  # Test 2: Merge into existing config
+  CONFIG_PATH_2="$TEST_TMP/existing_config.json"
+  echo '{ "mcpServers": { "other-server": { "command": "python", "args": ["serve"] } } }' > "$CONFIG_PATH_2"
+  snippet2=$(generate_mcp_snippet "new-server" "node" "/new/cli.js" "serve" "/ws")
+  merge_mcp_config "$CONFIG_PATH_2" "new-server" "$snippet2"
+  assert_valid_json "Merged config is valid JSON" "$CONFIG_PATH_2"
+
+  # Verify both servers exist
+  other_cmd=$(jq -r '.mcpServers."other-server".command' "$CONFIG_PATH_2")
+  assert_eq "Existing server preserved" "python" "$other_cmd"
+  new_cmd=$(jq -r '.mcpServers."new-server".command' "$CONFIG_PATH_2")
+  assert_eq "New server added" "node" "$new_cmd"
+
+  # Test 3: Invalid JSON file
+  echo -n "  Invalid JSON file returns error... "
+  echo "not json" > "$TEST_TMP/invalid.json"
+  if merge_mcp_config "$TEST_TMP/invalid.json" "test" "$snippet" 2>/dev/null; then
+    echo "FAIL — should have failed"
+    FAIL=$((FAIL+1))
+  else
+    echo "PASS"
+    PASS=$((PASS+1))
+  fi
+else
+  echo "  ⏭️  Skipping merge tests — jq not installed"
+fi
+
+# ============================================================
+echo ""
+echo "--- backup_config ---"
+
+BACKUP_TEST="$TEST_TMP/backup_test.json"
+echo '{"test": true}' > "$BACKUP_TEST"
+backup_config "$BACKUP_TEST"
+BACKUP_COUNT=$(ls "$TEST_TMP"/backup_test.json.bak.* 2>/dev/null | wc -l)
+echo -n "  Backup file created... "
+if [ "$BACKUP_COUNT" -ge 1 ]; then
+  echo "PASS"
+  PASS=$((PASS+1))
+else
+  echo "FAIL — no backup found"
+  FAIL=$((FAIL+1))
+fi
+
+# Test backup of non-existent file (should succeed silently)
+echo -n "  Non-existent file backup succeeds... "
+if backup_config "$TEST_TMP/nonexistent.json" 2>/dev/null; then
+  echo "PASS"
+  PASS=$((PASS+1))
+else
+  echo "FAIL — should succeed"
+  FAIL=$((FAIL+1))
+fi
+
+# ============================================================
+echo ""
+echo "--- resolve_tool_entry_path (2-Tier) ---"
+
+# Tier 1: Dev path preferred
+result=$(resolve_tool_entry_path "graph" "dist/cli.js")
+assert_contains "Tier 1 Dev path returned" "Projects/para-graph/repo/dist/cli.js" "$result"
+
+# Remove Dev path, verify Tier 2 fallback
+rm "$WORKSPACE_ROOT/Projects/para-graph/repo/dist/cli.js"
+result=$(resolve_tool_entry_path "graph" "dist/cli.js")
+assert_contains "Tier 2 Prod path fallback" ".para/tools/graph/dist/cli.js" "$result"
+
+# Both missing
+rm "$WORKSPACE_ROOT/.para/tools/graph/dist/cli.js"
+echo -n "  Both paths missing returns error... "
+if resolve_tool_entry_path "graph" "dist/cli.js" 2>/dev/null; then
+  echo "FAIL — should have failed"
+  FAIL=$((FAIL+1))
+else
+  echo "PASS"
+  PASS=$((PASS+1))
+fi
+
+# ============================================================
+echo ""
+echo "=== Results: $PASS passed, $FAIL failed ==="
+if [ "$FAIL" -gt 0 ]; then
+  exit 1
+fi

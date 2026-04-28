@@ -81,6 +81,33 @@
           }
         }
       }
+    },
+    "mcp": {
+      "type": "object",
+      "description": "MCP Server configuration bundled with the tool. Parsed by mcp-setup command.",
+      "required": ["server_name", "transport", "serve_args"],
+      "properties": {
+        "server_name": {
+          "type": "string",
+          "description": "MCP server name used as key in IDE config (e.g., 'para-graph').",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "transport": {
+          "type": "string",
+          "description": "Transport protocol for MCP communication.",
+          "enum": ["stdio"]
+        },
+        "serve_args": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Arguments appended after entry point. Supports ${WORKSPACE_ROOT} placeholder."
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the MCP server capabilities.",
+          "maxLength": 200
+        }
+      }
     }
   }
 }
