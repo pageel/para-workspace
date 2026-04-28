@@ -138,13 +138,13 @@ merge_mcp_config() {
     return 1
   fi
 
-  # Create config file with base structure if it doesn't exist
-  if [ ! -f "$config_path" ]; then
+  # Create config file with base structure if it doesn't exist or is empty (0 bytes)
+  if [ ! -f "$config_path" ] || [ ! -s "$config_path" ]; then
     local config_dir
     config_dir=$(dirname "$config_path")
     mkdir -p "$config_dir"
     echo '{ "mcpServers": {} }' > "$config_path"
-    log_info "Created new config file: $config_path"
+    log_info "Created new/reset empty config file: $config_path"
   fi
 
   # Validate existing config is valid JSON
