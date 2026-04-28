@@ -39,6 +39,48 @@
       "type": "string",
       "description": "Full URL to the tool's GitHub repository.",
       "pattern": "^https://github\\.com/"
+    },
+    "agents": {
+      "type": "object",
+      "description": "Bundled AI intelligence (workflows, skills, rules) distributed with the tool.",
+      "properties": {
+        "workflows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["source", "target", "version"],
+            "properties": {
+              "source": { "type": "string", "description": "Path relative to tool root." },
+              "target": { "type": "string", "description": "Filename in .agents/workflows/." },
+              "version": { "type": "string", "description": "Semantic version of this workflow." }
+            }
+          }
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["source", "target", "version"],
+            "properties": {
+              "source": { "type": "string", "description": "Directory path relative to tool root." },
+              "target": { "type": "string", "description": "Directory name in .agents/skills/." },
+              "version": { "type": "string", "description": "Semantic version of this skill." }
+            }
+          }
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["source", "target", "version"],
+            "properties": {
+              "source": { "type": "string", "description": "Path relative to tool root." },
+              "target": { "type": "string", "description": "Filename in .agents/rules/." },
+              "version": { "type": "string", "description": "Semantic version of this rule." }
+            }
+          }
+        }
+      }
     }
   }
 }
