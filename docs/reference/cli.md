@@ -77,6 +77,56 @@ para config [key] [value]
 para config list
 ```
 
+## Tool & MCP Management
+
+### `install-tool`
+
+Install a PARA tool plugin from the registry or local DEV path. Will prompt to install bundled AI intelligence (workflows, rules, skills) and configure IDE MCP settings if applicable.
+
+```bash
+para install-tool <name> [--version=X.Y.Z] [--update] [--agents] [--no-agents] [--no-mcp]
+```
+
+### `remove-tool`
+
+Remove an installed tool and clean up its wrapper script. Will prompt to remove associated AI intelligence and IDE MCP config.
+
+```bash
+para remove-tool <name> [--force]
+```
+
+### `list-tools`
+
+List installed tools with their versions, wrapper paths, and target paths.
+
+```bash
+para list-tools [--json]
+```
+
+### `mcp-setup`
+
+Configure MCP server for an IDE based on the `mcp:` block in `tool.manifest.yml`. Supports auto-detection of IDEs (Antigravity, Claude, Cursor) and atomic JSON merging.
+
+```bash
+para mcp-setup <name> [--ide=<ide>] [--print-only]
+```
+
+### `mcp-list`
+
+List tools capable of acting as an MCP server.
+
+```bash
+para mcp-list [--json]
+```
+
+### `mcp-remove`
+
+Remove an MCP server from an IDE config.
+
+```bash
+para mcp-remove <name> [--ide=<ide>]
+```
+
 ## Contract
 
 All commands follow these rules:

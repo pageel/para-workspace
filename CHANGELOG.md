@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.8.2] - 2026-04-28
+
+MCP Auto-Setup System (Option 5: Manifest-Declared MCP Config).
+
+- **Added**: `mcp-setup` command — configures MCP server for IDE based on `mcp:` block in `tool.manifest.yml`. Supports Antigravity, Claude, Cursor.
+- **Added**: `mcp-list` command — discovers tools with MCP capabilities across Dev and Prod paths.
+- **Added**: `mcp-remove` command — cleanly removes an MCP server from IDE configuration.
+- **Added**: `cli/lib/mcp-config.sh` — shared library for JSON atomic merging via `jq` with gracefull fallback to printed snippet.
+- **Added**: `install-tool --no-mcp` flag to selectively bypass auto-setup.
+- **Changed**: `install-tool` now automatically detects and invokes `mcp-setup` post-installation.
+- **Changed**: System KI `para_workspace_architecture_standards` updated with `mcp auto-setup` concepts and references.
+- **Changed**: `para-graph` tool plugin updated with `mcp:` block in its manifest for auto-discovery.
+
 ## [1.8.1] - 2026-04-28
 
 Tool Intelligence Installer.

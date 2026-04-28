@@ -8,7 +8,7 @@
 # See: naming.md §6 (date format), versioning.md §5 (version tracking)
 # Updated: 2026-04-24
 
-workspace: "1.8.0"
+workspace: "1.8.2"
 
 workflows:
   backlog:         "1.3.1"
@@ -65,15 +65,21 @@ skills:
   spec:        "1.7.16"   # NEW: spec-driven-development skill
 
 cli:
-  para:            "1.8.0"   # Dynamic Tool System, wildcard routing, Workspace Root fix
-  install-tool:    "1.8.0"   # NEW: install tool plugins from registry
+  para:            "1.8.2"   # MCP Management commands, help text
+  install-tool:    "1.8.2"   # MCP detect block, --no-mcp flag
   remove-tool:     "1.8.0"   # NEW: remove installed tools
   list-tools:      "1.8.0"   # NEW: list installed tools
   install:         "1.8.0"   # Add tool system asset sync (section 3.6)
+  mcp-setup:       "1.8.2"   # NEW: manifest-declared MCP auto-config
+  mcp-list:        "1.8.2"   # NEW: list MCP-capable tools
+  mcp-remove:      "1.8.2"   # NEW: remove IDE MCP config
 
 templates:
   tool-wrapper:    "1.8.0"   # NEW: auto-generated wrapper for tool plugins
 
 registry:
   tools:           "1.8.0"   # NEW: tool registry (para-graph first entry)
-  tool-schema:     "1.8.0"   # NEW: JSON Schema for tool.manifest.yml
+  tool-schema:     "1.8.2"   # mcp: property support
+
+knowledge:
+  para_workspace_architecture_standards: "1.8.2" # added mcp auto-setup features
