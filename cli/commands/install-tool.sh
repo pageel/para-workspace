@@ -31,6 +31,7 @@ TOOL_INPUT=""
 TOOL_VERSION=""
 UPDATE_MODE=false
 SKIP_AGENTS=false
+SKIP_MCP=false
 AGENTS_ONLY=false
 
 for arg in "$@"; do
@@ -44,17 +45,21 @@ for arg in "$@"; do
     --no-agents)
       SKIP_AGENTS=true
       ;;
+    --no-mcp)
+      SKIP_MCP=true
+      ;;
     --agents)
       AGENTS_ONLY=true
       ;;
     --help|-h)
-      echo "Usage: para install-tool <name> [--version=X.Y.Z] [--update] [--agents] [--no-agents]"
+      echo "Usage: para install-tool <name> [--version=X.Y.Z] [--update] [--agents] [--no-agents] [--no-mcp]"
       echo ""
       echo "  <name>           Tool name (e.g., 'para-graph' or 'graph')"
       echo "  --version=X.Y.Z  Install specific version (default: latest)"
       echo "  --update         Remove existing installation before installing"
       echo "  --agents         Install only AI intelligence (tool must be already installed)"
       echo "  --no-agents      Skip AI intelligence prompt during install"
+      echo "  --no-mcp         Skip MCP server configuration prompt"
       echo ""
       echo "Examples:"
       echo "  para install-tool para-graph"
@@ -469,6 +474,24 @@ if [ "$SKIP_AGENTS" != true ]; then
       echo "  ✅ AI intelligence installed."
     else
       echo "  ⏭️  Skipped. Run './para install-tool $PARA_TOOL_NAME --agents' later."
+    fi
+  fi
+fi
+
+# === MCP Server prompt (after agents) ===
+if [ "$SKIP_MCP" != true ]; then
+  if grep -q "^mcp:" "$MANIFEST_FILE" 2>/dev/null; then
+    MCP_SERVER_NAME=$(sed -n '/^mcp:/,/^[a-z]/p' "$MANIFEST_FILE" | grep '  server_name:' | head -1 | sed 's/.*server_name: *//; s/^ *"//; s/" *$//')
+    if [ -n "$MCP_SERVER_NAME" ]; then
+      echo ""
+      printf "  \xF0\x9F\x94\x8C MCP Server available: %s\n" "$MCP_SERVER_NAME"
+      printf "     Configure now? (y/n): "
+      read -r MCP_ANSWER
+      if [ "$MCP_ANSWER" = "y" ] || [ "$MCP_ANSWER" = "Y" ]; then
+        "$COMMANDS_DIR/mcp-setup.sh" "$TOOL_NAME"
+      else
+        echo "  ⏭️  Skipped. Run './para mcp-setup $PARA_TOOL_NAME' later."
+      fi
     fi
   fi
 fi

@@ -107,6 +107,16 @@ case "$1" in
   list-tools)
     shift; "$COMMANDS_DIR/list-tools.sh" "$@"
     ;;
+  # ━━━ MCP Management ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  mcp-setup)
+    shift; "$COMMANDS_DIR/mcp-setup.sh" "$@"
+    ;;
+  mcp-list)
+    shift; "$COMMANDS_DIR/mcp-list.sh" "$@"
+    ;;
+  mcp-remove)
+    shift; "$COMMANDS_DIR/mcp-remove.sh" "$@"
+    ;;
   version|-v|--version)
     echo "PARA Workspace v$VERSION"
     ;;
@@ -145,6 +155,13 @@ case "$1" in
     echo "  install-tool <name> [--version=X]  Install a PARA tool plugin"
     echo "  remove-tool <name> [--force]       Remove an installed tool"
     echo "  list-tools [--json]                List installed tools"
+    echo ""
+    echo "━━━ MCP Management ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "  mcp-setup <name> [--ide=X]         Configure MCP server for an IDE"
+    echo "       --print-only                  Print JSON config without writing"
+    echo "  mcp-list [--json]                  List MCP-capable tools"
+    echo "  mcp-remove <name> [--ide=X]        Remove MCP server from IDE config"
     echo ""
     echo "━━━ Dev Commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
