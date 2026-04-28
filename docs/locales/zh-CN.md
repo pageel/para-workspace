@@ -275,6 +275,12 @@ PARA Workspace 支持可扩展的 **动态工具系统**，允许您将与语言
 2. **多运行时支持**：CLI 自动生成包装脚本（例如 `repo/cli/commands/graph.sh`），它们知道如何调用 Node、Python 或二进制可执行文件。
 3. **Dev/Prod 降级机制**：如果工作空间中存在工具的源代码（Dev 模式），包装器会将执行路由到那里。否则，它会降级到提取的压缩包（Prod 模式）。
 
+### 可用工具
+
+| 工具 | 版本 | 描述 |
+| :--- | :--- | :--- |
+| **[`para-graph`](https://github.com/pageel/para-graph)** | `v0.8.0` | PARA Workspace 的混合代码知识图谱 |
+
 ### 用法
 
 ```bash

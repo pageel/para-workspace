@@ -252,6 +252,12 @@ Las herramientas se gestionan a través de un registro central (`registry/tools.
 2. **Soporte Multi-Runtime**: La CLI autogenera scripts envolventes (por ejemplo, `repo/cli/commands/graph.sh`) que saben cómo invocar ejecutables de Node, Python o binarios.
 3. **Mecanismo Fallback Dev/Prod**: Si el código fuente de una herramienta existe dentro del espacio de trabajo (Modo Dev), el script enruta la ejecución allí. De lo contrario, utiliza el tarball extraído (Modo Prod).
 
+### Herramientas Disponibles
+
+| Herramienta | Versión | Descripción |
+| :--- | :--- | :--- |
+| **[`para-graph`](https://github.com/pageel/para-graph)** | `v0.8.0` | Grafo de Conocimiento de Código Híbrido para PARA Workspace |
+
 ### Uso
 
 ```bash

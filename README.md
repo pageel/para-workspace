@@ -627,6 +627,12 @@ Tools are managed via a central registry (`registry/tools.yml`) and are installe
 2. **Multi-Runtime Support**: The CLI auto-generates wrapper scripts (e.g. `repo/cli/commands/graph.sh`) that know how to invoke Node, Python, or binary executables.
 3. **Dev/Prod Fallback**: If a tool's source code exists inside the workspace (Dev mode), the wrapper routes execution there. Otherwise, it falls back to the extracted tarball (Prod mode).
 
+### Available Tools
+
+| Tool | Version | Description |
+| :--- | :--- | :--- |
+| **[`para-graph`](https://github.com/pageel/para-graph)** | `v0.8.0` | Hybrid Code-Knowledge Graph for PARA Workspace |
+
 ### Usage
 
 ```bash

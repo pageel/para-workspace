@@ -252,6 +252,12 @@ Les outils sont gérés via un registre central (`registry/tools.yml`) et sont i
 2. **Support Multi-Runtime**: Le CLI génère automatiquement des scripts d'enveloppe (par ex. `repo/cli/commands/graph.sh`) capables d'invoquer Node, Python ou des exécutables binaires.
 3. **Mécanisme de Secours Dev/Prod**: Si le code source d'un outil existe dans l'espace de travail (Mode Dev), l'enveloppe y achemine l'exécution. Sinon, elle se replie sur l'archive tarball extraite (Mode Prod).
 
+### Outils Disponibles
+
+| Outil | Version | Description |
+| :--- | :--- | :--- |
+| **[`para-graph`](https://github.com/pageel/para-graph)** | `v0.8.0` | Graphe de Connaissances de Code Hybride pour PARA Workspace |
+
 ### Utilisation
 
 ```bash

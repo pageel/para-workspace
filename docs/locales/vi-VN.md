@@ -630,6 +630,12 @@ Các công cụ được quản lý qua một registry trung tâm (`registry/too
 2. **Hỗ trợ Đa môi trường (Multi-Runtime)**: CLI tự động tạo wrapper scripts (vd: `repo/cli/commands/graph.sh`) để điều hướng gọi Node, Python, hoặc file thực thi nhị phân.
 3. **Dev/Prod Fallback**: Nếu mã nguồn công cụ nằm sẵn trong workspace (chế độ Dev), wrapper sẽ ưu tiên chạy nó. Nếu không, fallback về tarball đã giải nén (chế độ Prod).
 
+### Công cụ khả dụng
+
+| Công cụ | Phiên bản | Mô tả |
+| :--- | :--- | :--- |
+| **[`para-graph`](https://github.com/pageel/para-graph)** | `v0.8.0` | Đồ thị Tri thức Code lai ghép (Hybrid Code-Knowledge Graph) cho PARA Workspace |
+
 ### Cách sử dụng
 
 ```bash
