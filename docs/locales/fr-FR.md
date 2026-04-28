@@ -7,7 +7,7 @@
 **Le Framework d'Espace de Travail pour Humains et Agents IA**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.1-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.2-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -256,7 +256,7 @@ Les outils sont gérés via un registre central (`registry/tools.yml`) et sont i
 
 | Outil | Version | Description |
 | :--- | :--- | :--- |
-| **[`para-graph`](https://github.com/pageel/para-graph)** | `v0.8.0` | Graphe de Connaissances de Code Hybride pour PARA Workspace |
+| **[`para-graph`](https://github.com/pageel/para-graph)** | Graphe de Connaissances de Code Hybride pour PARA Workspace |
 
 ### Utilisation
 
@@ -304,7 +304,7 @@ La fonctionnalité `./para update` permet d'obtenir en continu les toutes derni�
 
 ## 🗺️ Feuille de Route
 
-Version actuelle : **1.8.1** (Tool Intelligence Installer).
+Version actuelle : **1.8.2** (MCP Auto-Setup).
 Mises à jour prévues : **v1.9.0** (Départements système) et **v1.10.0** (Limites communautaires).
 
 ---
@@ -317,4 +317,4 @@ Rendez-vous sur [CONTRIBUTING.md](../../CONTRIBUTING.md) pour découvrir les pri
 
 Conçu avec ❤️ par **Pageel**. Standardisant l'avenir de la méthode PKM Agent.
 
-_Version: 1.8.1_
+_Version: 1.8.2_

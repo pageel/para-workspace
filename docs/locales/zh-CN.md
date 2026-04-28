@@ -7,7 +7,7 @@
 **人类与 AI Agent 的工作空间框架**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.1-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.2-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -279,7 +279,7 @@ PARA Workspace 支持可扩展的 **动态工具系统**，允许您将与语言
 
 | 工具 | 版本 | 描述 |
 | :--- | :--- | :--- |
-| **[`para-graph`](https://github.com/pageel/para-graph)** | `v0.8.0` | PARA Workspace 的混合代码知识图谱 |
+| **[`para-graph`](https://github.com/pageel/para-graph)** | PARA Workspace 的混合代码知识图谱 |
 
 ### 用法
 
@@ -327,7 +327,7 @@ agents:
 
 ## 🗺️ 路线图
 
-当前版本为 **1.8.1** (Tool Intelligence Installer)。
+当前版本为 **1.8.2** (MCP Auto-Setup)。
 未来规划包含 **v1.9.0** (Department 系统) 及 **v1.10.0** (社区与信任边界)。
 
 ---
@@ -340,4 +340,4 @@ agents:
 
 用 ❤️ 构建，由 **Pageel** 出品。标准化 Agent PKM 的未来。
 
-_版本: 1.8.1_
+_版本: 1.8.2_

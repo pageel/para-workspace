@@ -7,7 +7,7 @@
 **The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.1-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.2-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -322,6 +322,11 @@ para install-tool <name>        # Install a plugin from registry
 para remove-tool <name>         # Remove installed plugin
 para list-tools                 # List installed plugins
 
+# MCP Server Management (v1.8.2)
+para mcp-setup <tool>           # Auto-configure MCP in IDE
+para mcp-list                   # List MCP-capable tools
+para mcp-remove <tool>          # Remove MCP config from IDE
+
 # Agent Capabilities
 @[/para-workflow] list          # Manage workflows
 @[/para-rule] list              # Manage rules
@@ -629,9 +634,11 @@ Tools are managed via a central registry (`registry/tools.yml`) and are installe
 
 ### Available Tools
 
-| Tool | Version | Description |
-| :--- | :--- | :--- |
-| **[`para-graph`](https://github.com/pageel/para-graph)** | `v0.8.0` | Hybrid Code-Knowledge Graph for PARA Workspace |
+| Tool | Description |
+| :--- | :--- |
+| **[`para-graph`](https://github.com/pageel/para-graph)** | Hybrid Code-Knowledge Graph for PARA Workspace |
+
+> 💡 Version is resolved dynamically from `registry/tools.yml` — always installs the latest registered release.
 
 ### Usage
 
@@ -668,6 +675,34 @@ agents:
 When you run `./para install-tool <name>`, the CLI will automatically parse this manifest and prompt you to install the bundled intelligence. 
 You can use `--agents` to install only the agents, or `--no-agents` to skip the prompt.
 `remove-tool` will also offer to clean up any bundled agents it installed.
+
+### MCP Auto-Setup (v1.8.2)
+
+Tools can declare an MCP server in their manifest via the `mcp:` block. PARA Workspace provides three CLI commands to manage MCP configurations across IDEs:
+
+```bash
+# Auto-configure MCP server for a tool in your IDE
+./para mcp-setup <tool-name>
+
+# Print the JSON snippet without modifying IDE config
+./para mcp-setup <tool-name> --print-only
+
+# List all tools with MCP servers available
+./para mcp-list
+
+# Remove an MCP server entry from IDE config
+./para mcp-remove <tool-name>
+```
+
+**Supported IDEs:**
+
+| IDE | Config Path |
+| :--- | :--- |
+| Google Antigravity | `~/.gemini/antigravity/mcp_config.json` |
+| Claude Desktop | `~/.config/claude/claude_desktop_config.json` (Linux) |
+| Cursor | `~/.cursor/mcp.json` |
+
+> The setup uses **2-Tier path resolution** (Dev path → Prod path) to point to the correct entry, and `jq`-based atomic JSON merge with automatic backup.
 
 ---
 
@@ -737,6 +772,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] **Spec Workflow, Dual-Format Guards & CLI Fixes** _(shipped in v1.7.16)_
 - [x] **Dynamic Tool System & para-graph integration** _(shipped in v1.8.0)_
 - [x] **Tool Intelligence Installer & manifest-declared AI intelligence** _(shipped in v1.8.1)_
+- [x] **MCP Auto-Setup — `mcp-setup`, `mcp-list`, `mcp-remove` CLI commands** _(shipped in v1.8.2)_
 - [ ] Department System _(v1.9.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.10.0 — planned)_
 
@@ -754,4 +790,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.8.1_
+_Version: 1.8.2_

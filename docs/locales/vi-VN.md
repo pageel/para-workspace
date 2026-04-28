@@ -7,7 +7,7 @@
 **Workspace Framework cho Con người & AI Agent**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.1-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.2-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -634,7 +634,7 @@ Các công cụ được quản lý qua một registry trung tâm (`registry/too
 
 | Công cụ | Phiên bản | Mô tả |
 | :--- | :--- | :--- |
-| **[`para-graph`](https://github.com/pageel/para-graph)** | `v0.8.0` | Đồ thị Tri thức Code lai ghép (Hybrid Code-Knowledge Graph) cho PARA Workspace |
+| **[`para-graph`](https://github.com/pageel/para-graph)** | Đồ thị Tri thức Code lai ghép (Hybrid Code-Knowledge Graph) cho PARA Workspace |
 
 ### Cách sử dụng
 
@@ -757,4 +757,4 @@ Xem [CONTRIBUTING.md](../../CONTRIBUTING.md) để biết hướng dẫn. Điể
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.8.1_
+_Phiên bản: 1.8.2_
