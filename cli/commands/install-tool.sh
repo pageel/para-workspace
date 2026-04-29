@@ -151,6 +151,26 @@ TOOL_DESCRIPTION="$(parse_registry_field "description")"
 # Use latest if no version specified
 if [ -z "$TOOL_VERSION" ]; then
   TOOL_VERSION="$TOOL_LATEST"
+
+  # === Remote version check (R9: stale registry mitigation) ===
+  # When no explicit --version, check GitHub API for actual latest release.
+  # This prevents stale local registry from installing outdated versions.
+  if [ -n "$TOOL_REPO" ]; then
+    REMOTE_LATEST=""
+    REMOTE_LATEST=$(curl -sf --max-time 5 \
+      "https://api.github.com/repos/${TOOL_REPO}/releases/latest" 2>/dev/null \
+      | grep '"tag_name"' \
+      | head -1 \
+      | sed 's/.*"tag_name": *"v\{0,1\}//; s/".*//' ) || true
+
+    if [ -n "$REMOTE_LATEST" ] && [ "$REMOTE_LATEST" != "$TOOL_VERSION" ]; then
+      echo "⚠ Registry says v${TOOL_VERSION}, but GitHub latest is v${REMOTE_LATEST}."
+      echo "  Using remote version v${REMOTE_LATEST}."
+      echo "  💡 Run './para update' to sync your local registry."
+      echo ""
+      TOOL_VERSION="$REMOTE_LATEST"
+    fi
+  fi
 fi
 
 if [ -z "$TOOL_VERSION" ]; then
