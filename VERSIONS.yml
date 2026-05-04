@@ -57,7 +57,7 @@ skills:
   formatting:  "1.1.0"
   page-map:    "1.0.0"
   para-skill:  "1.0.0"
-  plan:        "1.8.3"   # graph router §3.3.1 reference, detail-plan-docs.md
+  plan:        "1.8.3.1" # hotfix: translate Model Hint to English
   docs:        "1.8.3"   # graph router §3.3.2 Graph-Awareness
   brainstorm:  "1.8.3"   # graph router §3.3.3 Graph-Awareness
   write:       "1.7.16"   # social template added

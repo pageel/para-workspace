@@ -96,7 +96,7 @@ Projects/[project-name]/docs/
 
 > ⛔ **MANDATORY:** Re-read `.agents/rules.md` + `.agents/skills.md` BEFORE writing docs.
 
-> 💡 **Model Hint:** Phase này chủ yếu là documentation — user có thể chuyển sang model nhẹ hơn để tiết kiệm chi phí.
+> 💡 **Model Hint:** This phase is primarily documentation — consider switching to a lighter model to save costs.
 
 <!-- ⚠️ HARNESS GUARD (Phase N Risk): [Derived from Risks & Mitigations table. Leave empty if no risk mapped to this Phase.] -->
 

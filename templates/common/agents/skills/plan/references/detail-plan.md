@@ -135,7 +135,7 @@ git push origin main
 [Repeat structure: MANDATORY + HARNESS GUARD + Implementation Plan + Task List + Git checkpoint]
 
 > 💡 **Model Hint (conditional):** If this phase is `Difficulty: 🟢 Low` (documentation, formatting, changelog),
-> add this hint: _"User có thể chuyển sang model nhẹ hơn (🟢 Gemini Flash, Claude Haiku) để tiết kiệm chi phí."_
+> add this hint: _"Consider switching to a lighter model (🟢 Gemini Flash, Claude Haiku) to save costs."_
 
 > **Difficulty Rating Legend:**
 > 🟢 Low = Documentation, formatting, config changes, version bumps — minimal reasoning needed

@@ -99,7 +99,7 @@ Each Phase header MUST include a difficulty tag to help users choose the appropr
 1. **Final phase after `git push`** SHOULD be `🟢 Low` — reserved for low-thinking tasks (docs, readme, changelog) so user can switch to a cheaper model.
 2. Phase with `Difficulty: 🟢 Low` MUST include a Model Hint blockquote:
    ```
-   > 💡 **Model Hint:** Phase này chủ yếu là documentation — user có thể chuyển sang model nhẹ hơn để tiết kiệm chi phí.
+   > 💡 **Model Hint:** This phase is primarily documentation — consider switching to a lighter model to save costs.
    ```
 3. Agent SHOULD assess difficulty based on the **most complex task** in the phase (not the average).
 
