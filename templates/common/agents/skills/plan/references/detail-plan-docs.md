@@ -160,10 +160,33 @@ N.2 🤖 **[doc-filename].md** — Load context for `[Component.tsx]` → write 
 | :------------------------------------------------ | :---- | :------------ |
 | Content accuracy (docs match source code)         | 0     | —             |
 | Completeness (all features documented)            | 0     | —             |
+| Project governance compliance (see below)         | 0     | —             |
+
+#### Project Governance Checklist
+
+> ⛔ **MANDATORY — Auto-generated at plan creation time.**
+> Agent MUST scan project `.agents/rules.md` and `.agents/skills.md` indices
+> and generate checklist items for each triggered rule/skill.
+> This section is EMPTY if the project has no `agent.rules` / `agent.skills`.
+>
+> **Template — replace with actual items from project indices:**
+
+```markdown
+IF project has agent.rules: true OR agent.skills: true:
+
+  Scan project .agents/rules.md → for each rule with matching trigger:
+    [ ] [rule-name]: [key requirement] (e.g., "docs-standard.md: all docs include graph_nodes frontmatter")
+
+  Scan project .agents/skills.md → for each skill with matching trigger:
+    [ ] [skill-name]: [key requirement] (e.g., "para-graph: run inject after docs generation")
+
+ELSE:
+  (No project-specific governance — standard checklist only)
+```
 
 ### Suggested Next Steps
 
-1. **Activate Plan** → bắt đầu Phase 0.
-2. Sau khi hoàn thành → chạy `/docs publish` nếu muốn ship docs sang `repo/docs/`.
-3. Chạy `/docs review` để kiểm tra chất lượng tổng thể.
+1. **Activate Plan** → start Phase 0.
+2. After completion → run `/docs publish` to ship docs to `repo/docs/`.
+3. Run `/docs review` for overall quality check.
 ````

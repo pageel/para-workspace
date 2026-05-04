@@ -190,10 +190,10 @@ git push origin main
 
 ### Commit Consolidation Policy
 
-| Cho phép gộp?    | Điều kiện                    |
-| :--------------- | :--------------------------- |
-| ⛔ Không         | Mỗi FEAT/BUG có commit riêng |
-| ⛔ Không bao giờ | Push — LUÔN tách riêng       |
+| Squash allowed?  | Condition                              |
+| :--------------- | :------------------------------------- |
+| ⛔ No            | Each FEAT/BUG gets its own commit      |
+| ⛔ Never         | Push — ALWAYS separate from commits    |
 
 ### Review & Audit Tracking
 
@@ -205,6 +205,32 @@ git push origin main
 | Security review (context guards, published-only)  | 0     | —             |
 | Checklist review (completeness, no missing files) | 0     | —             |
 | Build/Test pass                                   | 0     | —             |
+| Project governance compliance (see below)         | 0     | —             |
+
+#### Project Governance Checklist
+
+> ⛔ **MANDATORY — Auto-generated at plan creation time.**
+> Agent MUST scan project `.agents/rules.md` and `.agents/skills.md` indices
+> and generate checklist items for each triggered rule/skill.
+> This section is EMPTY if the project has no `agent.rules` / `agent.skills`.
+>
+> **Template — replace with actual items from project indices:**
+
+```markdown
+IF project has agent.rules: true OR agent.skills: true:
+
+  Scan project .agents/rules.md → for each rule with matching trigger:
+    [ ] [rule-name]: [key requirement from rule] (e.g., "maintenance.md: version sync across package.json + tool.manifest.yml")
+
+  Scan project .agents/skills.md → for each skill with matching trigger:
+    [ ] [skill-name]: [key requirement from skill] (e.g., "release: tarball includes dist/ + templates/ + tool.manifest.yml + package.json")
+
+ELSE:
+  (No project-specific governance — standard checklist only)
+```
+
+> **Why this matters:** Session v0.8.5 missed `tool.manifest.yml` version bump and `--version` flag
+> because Review & Audit had no project-specific checks. This section prevents that class of error.
 
 ### Suggested Next Steps
 

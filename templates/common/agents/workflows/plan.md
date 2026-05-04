@@ -5,7 +5,7 @@ source: catalog
 
 # /plan [project-name] [action]
 
-> **Workspace Version:** 1.7.10 (Cognitive Bypass Fix)
+> **Workspace Version:** 1.7.11 (Tier-2 Proactive Trigger)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final plan document MUST be translated to this language.**
 
 Create, review, or update a phased implementation plan for a PARA project.
@@ -36,12 +36,16 @@ Generate a comprehensive implementation plan based on the project contract, back
 ```bash
 # Tier-1 Index Force Load (Anti-Cognitive-Bypass v1.7.10)
 echo ""
-echo "> ⚠️ Proactive Trigger Scan: .agents/rules.md & .agents/skills.md"
+echo "> ⚠️ Proactive Trigger Scan: Workspace Indices"
 cat .agents/rules.md 2>/dev/null | head -n 30
 cat .agents/skills.md 2>/dev/null | head -n 30
-```
 
-3. Check `project.md` (loaded in Step 1) for `agent.rules` / `agent.skills` — if true, re-read project indices too
+# Tier-2 Index Force Load (Project-specific rules/skills)
+echo ""
+echo "> ⚠️ Proactive Trigger Scan: Project Indices"
+cat Projects/[project-name]/.agents/rules.md 2>/dev/null | head -n 30
+cat Projects/[project-name]/.agents/skills.md 2>/dev/null | head -n 30
+```
 
 #### 1. Read Project Contract
 
