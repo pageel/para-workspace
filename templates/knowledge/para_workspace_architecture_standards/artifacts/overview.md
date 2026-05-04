@@ -135,6 +135,7 @@ ELSE (local):
 │   ├── write/        # Sidecar data for /write workflow (v1.7.14)
 │   ├── harness/      # Guard catalog & auto-scan protocol (v1.7.15)
 │   ├── spec/         # Spec-driven development templates (v1.7.16)
+│   ├── para-graph/   # Centralized Graph Intelligence Router (v2.0.0, installed via install-tool)
 │   └── page-map/     # Website visual structure management (v1.7.6)
 └── workflows/        # 27 core workflow files
 ```
@@ -266,7 +267,7 @@ Skills are folders of instructions that extend agent capabilities:
 
 Skills promoted from rules: standalone, English-first, constraints + templates merged.
 
-Total: **10 skills** (4 standalone + 6 sidecar).
+Total: **11 skills** (4 standalone + 6 sidecar + 1 tool-bundled).
 
 ### Sidecar Skill Pattern (v1.7.6.3)
 
@@ -280,6 +281,19 @@ skills/[name]/
 ```
 
 **Why:** Reduces token waste (workflow doesn't load data it may not need), prevents directory pollution in `workflows/`, and enables independent versioning of data vs logic.
+
+### Graph-Awareness via Centralized Router (v1.8.3)
+
+Sidecar skills (`plan`, `docs`, `brainstorm`, `spec`) reference the centralized `para-graph` skill §3 Workflow Integration Router instead of embedding inline graph logic:
+
+| Skill | Reference | Description |
+| :-- | :-- | :-- |
+| plan | `para-graph §3.3.1` | Graph Intelligence context for Phase 0 |
+| docs | `para-graph §3.3.2` | Graph-enhanced doc generation pipeline |
+| brainstorm | `para-graph §3.3.3` | Codebase awareness for brainstorming |
+| spec | `para-graph §3.3.4` | Graph context before writing specs |
+
+**Conditional loading:** If project has `.beads/graph/` → load para-graph skill. If not → skip (source-only mode per `§3.4`).
 
 ## 13. Token Optimization Patterns
 
@@ -322,6 +336,8 @@ skills/[name]/
 | 1.7.16 | Feature | C7 Plan Status sovereignty rule, /spec workflow + spec sidecar skill, Proactive Guard Scan for CHECKPOINT items, Commit Consolidation Policy, Dual-Format guard convention |
 | 1.8.0 | Feature | Dynamic Tool System: `install-tool`/`remove-tool`/`list-tools` CLI commands, Tool Registry (`registry/tools.yml`), auto-generated wrapper with Dev/Prod fallback, wildcard CLI router, `para-graph` as first tool plugin PoC |
 | 1.8.1 | Feature | Tool Intelligence Installer: manifest-declared AI intelligence (`agents:` block in `tool.manifest.yml`), `install-tool --agents`/`--no-agents` flags, `remove-tool` agents cleanup, `tool.schema.json` extended with agents property |
+| 1.8.2 | Feature | MCP Auto-Setup: `mcp:` block in `tool.manifest.yml`, `mcp-setup`/`mcp-list`/`mcp-remove` CLI commands, IDE config path matrix (Antigravity/Claude/Cursor), `jq`-based JSON merge with print fallback, `install-tool --no-mcp` flag, shared `mcp-config.sh` library |
+| 1.8.3 | Sync | Graph Router Sync: sidecar skills (`plan`, `docs`, `brainstorm`, `spec`) reference centralized `para-graph §3.3.x` instead of inline graph logic, `detail-plan-docs.md` template, `para-graph` trigger in `skills.md`, `registry/tools.yml` bumped to v0.8.4 |
 
 ## 16. Dynamic Tool System (v1.8.0)
 
