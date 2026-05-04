@@ -16,3 +16,4 @@
 | Brainstorm Templates | /brainstorm Step 4 (saving structured output), need Decision or Research template | skills/brainstorm/SKILL.md |
 | Harness Guards | Creating plans, writing workflow steps, generating artifacts with phases/progression | skills/harness/SKILL.md |
 | Spec Templates | /spec workflow, writing specifications, surfacing assumptions, defining scope/boundaries, formalizing requirements before coding | skills/spec/SKILL.md |
+| para-graph | Working with code graphs, semantic enrichment, or executing workflows requiring codebase awareness (/plan, /docs, /brainstorm, /spec) | skills/para-graph/SKILL.md |

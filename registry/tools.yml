@@ -26,6 +26,6 @@ graph:
   runtime: node
   min_runtime_version: "18.0.0"
   entry: dist/cli.js
-  latest: "0.8.2"
+  latest: "0.8.3"
   tarball_pattern: "https://github.com/pageel/para-graph/releases/download/v{{VERSION}}/para-graph-v{{VERSION}}.tar.gz"
   description: "Hybrid Code-Knowledge Graph for PARA Workspace"

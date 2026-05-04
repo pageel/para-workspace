@@ -128,6 +128,12 @@ Projects/[project-name]/artifacts/specs/
 | `/verify` | Downstream — verify implementation against spec criteria |
 | `/docs` | Parallel — architecture docs feed spec context |
 
+### Graph-Awareness
+
+> 🔍 If project has `.beads/graph/`, read `para-graph §3.3.4` before writing specs.
+> Graph provides prior-art discovery (existing implementations, patterns, boundaries).
+> If no graph → proceed with source-only spec writing.
+
 ## 4. Quality Gate — Self-Check
 
 Before presenting a spec for user review (Gate 1), Agent MUST self-check:

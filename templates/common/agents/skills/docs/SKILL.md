@@ -29,3 +29,11 @@ source: catalog
 | `references/strategy.md` | Strategy creation (Step 3.5) | Vision, decisions, roadmap alignment |
 
 > **Convention:** Data files live in `references/` (not `templates/`).
+
+## Graph-Awareness
+
+When generating documentation that covers code architecture or features:
+
+> 🔍 If project has `.beads/graph/`, read `para-graph §3.3.2` for the graph-enhanced
+> documentation pipeline (build → enrich → context bundle per doc).
+> If no graph → proceed with source-only doc writing.

@@ -37,3 +37,11 @@ When Step 4 triggers Research extraction:
 2. **Research file is a NEW document** — created via COPY + TRANSFORM from brainstorm content.
 3. **User consent is MANDATORY** — Agent must ask before creating File 2.
 4. **Threshold:** ≥ 500 lines OR ≥ 5 refinement rounds.
+
+## Graph-Awareness
+
+When brainstorming about code architecture or implementation:
+
+> 🔍 If project has `.beads/graph/`, read `para-graph §3.3.3` for codebase
+> understanding pipeline (query structure → context bundle → informed discussion).
+> If no graph → proceed with source-only brainstorming.

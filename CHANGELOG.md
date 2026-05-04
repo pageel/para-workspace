@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.8.3] - 2026-05-04
+
+Graph Router Sync — Sidecar skills updated for para-graph v0.8.4 Centralized Router.
+
+- **Changed**: `plan`, `docs`, `brainstorm`, `spec` sidecar skills now reference centralized `para-graph §3.3.x` instead of inline graph logic.
+- **Added**: `plan/references/detail-plan-docs.md` template with `§3.3.2` pipeline for graph-enhanced doc generation.
+- **Added**: `para-graph` trigger entry in `skills.md` index for on-demand loading.
+- **Changed**: `registry/tools.yml` updated `para-graph` to v0.8.4.
+
 ## [1.8.2] - 2026-04-28
 
 MCP Auto-Setup System (Option 5: Manifest-Declared MCP Config).

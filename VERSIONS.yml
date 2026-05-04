@@ -8,7 +8,7 @@
 # See: naming.md §6 (date format), versioning.md §5 (version tracking)
 # Updated: 2026-04-24
 
-workspace: "1.8.2"
+workspace: "1.8.3"
 
 workflows:
   backlog:         "1.3.1"
@@ -57,12 +57,12 @@ skills:
   formatting:  "1.1.0"
   page-map:    "1.0.0"
   para-skill:  "1.0.0"
-  plan:        "1.8.1"   # execution ownership icons, graph-first conditional step
-  docs:        "1.7.15"   # strategy reference roadmap prefix
-  brainstorm:  "1.7.16"   # FEAT-83: decision template linear text upgrade
+  plan:        "1.8.3"   # graph router §3.3.1 reference, detail-plan-docs.md
+  docs:        "1.8.3"   # graph router §3.3.2 Graph-Awareness
+  brainstorm:  "1.8.3"   # graph router §3.3.3 Graph-Awareness
   write:       "1.7.16"   # social template added
   harness:     "1.7.16"   # dual-format convention, checkpoint type, commit consolidation
-  spec:        "1.7.16"   # NEW: spec-driven-development skill
+  spec:        "1.8.3"   # graph router §3.3.4 Graph-Awareness
 
 cli:
   para:            "1.8.2"   # MCP Management commands, help text

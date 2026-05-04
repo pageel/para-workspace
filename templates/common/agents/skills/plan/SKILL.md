@@ -14,7 +14,7 @@ source: catalog
 
 ## When to Load
 
-- `/plan create` → Step 9 (Write Plan File): load `references/detail-plan.md` or `references/roadmap.md`
+- `/plan create` → Step 9 (Write Plan File): load the appropriate template from `references/`
 - `/plan review` → NOT needed (no templates)
 - `/plan update` → NOT needed (no templates)
 
@@ -22,15 +22,48 @@ source: catalog
 
 | File | When | Purpose |
 |:--|:--|:--|
-| `references/detail-plan.md` | Step 9 — Plan Type = Detail Plan | Document structure for implementation plans |
+| `references/detail-plan.md` | Step 9 — Plan Type = Detail Plan (code changes) | Document structure for implementation plans |
+| `references/detail-plan-docs.md` | Step 9 — Plan Type = Detail Plan (docs-only) | Document structure for documentation plans (no git, graph-first) |
 | `references/roadmap.md` | Step 9 — Plan Type = Roadmap | Document structure for multi-phase roadmaps |
 
 > **Convention:** Data files live in `references/` (not `templates/`).
 > This follows the Sidecar Skill convention formalized in v1.7.6.3.
 
+### Template Selection Logic
+
+> Agent MUST select the correct template based on plan scope:
+
+```text
+IF plan type = Roadmap
+  → load references/roadmap.md
+ELIF plan scope is documentation-only
+     (target files are in docs/, no code changes, no repo/ modifications)
+  → load references/detail-plan-docs.md
+ELSE
+  → load references/detail-plan.md
+```
+
 ## Template Adaptation Rules
 
-When generating a plan from `detail-plan.md`, Agent MUST read `project.md` first and adapt:
+When generating a plan, Agent MUST load context in this order:
+
+### Pre-requisite: Project Governance Loading
+
+> ⛔ **MANDATORY — Before writing ANY plan content:**
+> Agent MUST check `project.md` for `agent.rules` and `agent.skills` fields.
+> - IF `agent.rules: true` → read project `.agents/rules.md` index → load ALL triggered rules
+> - IF `agent.skills: true` → read project `.agents/skills.md` index → load ALL triggered skills
+>
+> This step ensures the plan respects project-specific governance:
+> - Maintenance rules (git scope, template-first flow, release process)
+> - Review checklists (plan review §7, ecosystem integration)
+> - Naming conventions, documentation flow, quality standards
+>
+> **Failure to load project rules/skills → plan WILL miss critical steps.**
+
+### Adaptation Table
+
+After loading project governance, read `project.md` and adapt the chosen template:
 
 | Condition | Action |
 |:--|:--|
@@ -40,11 +73,35 @@ When generating a plan from `detail-plan.md`, Agent MUST read `project.md` first
 | Project has no build tool | Omit `Build/Test pass` from Audit Tracking |
 | Project is not bilingual | Omit 1:N EN/VI task expansion pattern |
 | Project has `agent.rules: true` | Keep `<!-- ⚠️ MANDATORY -->` guards in every Phase |
-| Plan scope is documentation-only | Risks table may reference `docs-authoring` rules as harness |
+| Plan scope is documentation-only | Use `detail-plan-docs.md` template (no git, graph-first enrichment pipeline) |
+| Project has `.beads/graph/` | Read `para-graph §3.3.1` to generate Phase 0 Graph Intelligence context. |
+| Project distributes templates (tool.manifest.yml) | Apply Template-First flow: edit `repo/templates/` BEFORE workspace copies |
+| Project has release process | Include release Phase (build + tarball + gh release) per project rules |
 | Risks & Mitigations table has entries | Add `<!-- ⚠️ HARNESS GUARD (Phase N Risk): ... -->` comment to each mapped Phase |
 
 > **Principle:** Template = clean skeleton. Adaptation = Skill responsibility.
 > **Status lifecycle:** 📝 Draft → 🔨 Active → ✅ Done. Transition from Draft → Active requires explicit user approval at `/plan create` Step 10 or `/plan update`.
+
+### Difficulty Rating & Model Switching (v0.8.2+)
+
+Each Phase header MUST include a difficulty tag to help users choose the appropriate AI model per phase:
+
+**Format:** `### Phase N. [Name] ⚙️ \`Difficulty: [🟢 Low | 🟡 Medium | 🔴 High]\``
+
+| Rating | Scope | Recommended Model |
+|:--|:--|:--|
+| 🟢 Low | Documentation, formatting, config, version bumps, changelog | Cheaper models (Gemini Flash, Claude Haiku) |
+| 🟡 Medium | Code changes with clear patterns, refactoring, test writing | Standard models (Gemini Pro, Claude Sonnet) |
+| 🔴 High | Architecture design, complex algorithms, security-critical code | Thinking models (Claude Opus, Gemini Pro Deep Think) |
+
+**Convention rules:**
+
+1. **Final phase after `git push`** SHOULD be `🟢 Low` — reserved for low-thinking tasks (docs, readme, changelog) so user can switch to a cheaper model.
+2. Phase with `Difficulty: 🟢 Low` MUST include a Model Hint blockquote:
+   ```
+   > 💡 **Model Hint:** Phase này chủ yếu là documentation — user có thể chuyển sang model nhẹ hơn để tiết kiệm chi phí.
+   ```
+3. Agent SHOULD assess difficulty based on the **most complex task** in the phase (not the average).
 
 ## Output Checklist
 

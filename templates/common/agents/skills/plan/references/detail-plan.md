@@ -47,7 +47,7 @@
 
 ## Implementation Phases
 
-### Phase 0. Setup & Infrastructure
+### Phase 0. Setup & Infrastructure ⚙️ `Difficulty: 🟢 Low`
 
 <!-- ⚠️ MANDATORY: Agent MUST read project.md and reload .agents/rules.md + .agents/skills.md BEFORE executing any tasks here -->
 
@@ -64,10 +64,9 @@ Prefix each step with an Execution Ownership icon (see legend below).]
 0.1 🤖 **[Step 1 name]** — [Detail: file path, line number, operation]
 0.2 🤖 **[Step 2 name]** — [Detail: ...]
 
-> 🔍 **Graph-First (conditional):** If project has `.beads/graph/metadata.json`, add a step:
-> `0.N 🤖 **Graph context gathering** — graph_context_bundle + graph_query for target files.`
-> This provides callers/callees/imports context BEFORE writing new code.
-> See `rules/graph-first-policy.md` for triggers and constraints.
+> 🔍 **Graph-First (conditional):** If project has `.beads/graph/metadata.json`:
+> Read `para-graph §3.3.1` and add graph context gathering step to Phase 0.
+> If no graph → skip, use source-only mode per `para-graph §3.4`.
 
 > ⚠️ Phase 0 does not produce a Git commit. Setup only.
 
@@ -83,7 +82,7 @@ Carry the Execution Ownership icon from the Implementation Plan.]
 
 ---
 
-### Phase 1. [Core Feature]
+### Phase 1. [Core Feature] ⚙️ `Difficulty: [🟢 Low | 🟡 Medium | 🔴 High]`
 
 <!-- ⚠️ MANDATORY: Agent MUST reload .agents/rules.md + .agents/skills.md BEFORE modifying files or executing git commands -->
 
@@ -131,9 +130,17 @@ git push origin main
 
 ---
 
-### Phase 2. [Next Feature]
+### Phase 2. [Next Feature] ⚙️ `Difficulty: [🟢 Low | 🟡 Medium | 🔴 High]`
 
 [Repeat structure: MANDATORY + HARNESS GUARD + Implementation Plan + Task List + Git checkpoint]
+
+> 💡 **Model Hint (conditional):** If this phase is `Difficulty: 🟢 Low` (documentation, formatting, changelog),
+> add this hint: _"User có thể chuyển sang model nhẹ hơn (🟢 Gemini Flash, Claude Haiku) để tiết kiệm chi phí."_
+
+> **Difficulty Rating Legend:**
+> 🟢 Low = Documentation, formatting, config changes, version bumps — minimal reasoning needed
+> 🟡 Medium = Code changes with clear patterns, refactoring, test writing — moderate reasoning
+> 🔴 High = Architecture design, complex algorithms, security-critical code — deep reasoning required
 
 ---
 
