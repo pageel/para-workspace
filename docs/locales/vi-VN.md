@@ -757,4 +757,4 @@ Xem [CONTRIBUTING.md](../../CONTRIBUTING.md) để biết hướng dẫn. Điể
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.8.2_
+_Phiên bản: 1.8.4_

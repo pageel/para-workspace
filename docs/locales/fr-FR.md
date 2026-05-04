@@ -317,4 +317,4 @@ Rendez-vous sur [CONTRIBUTING.md](../../CONTRIBUTING.md) pour découvrir les pri
 
 Conçu avec ❤️ par **Pageel**. Standardisant l'avenir de la méthode PKM Agent.
 
-_Version: 1.8.2_
+_Version: 1.8.4_
