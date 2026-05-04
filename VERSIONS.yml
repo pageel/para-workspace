@@ -8,7 +8,7 @@
 # See: naming.md §6 (date format), versioning.md §5 (version tracking)
 # Updated: 2026-04-24
 
-workspace: "1.8.3"
+workspace: "1.8.4"
 
 workflows:
   backlog:         "1.3.1"

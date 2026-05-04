@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.8.4] - 2026-05-04
+
+Plan Template Governance Checklist + Para-Graph v0.8.5 Registry Sync.
+
+- **Added**: `#### Project Governance Checklist` in plan templates — Agent auto-generates review items from project rules/skills indices at plan creation time.
+- **Changed**: `/plan` workflow v1.7.11 — Tier-2 Proactive Trigger in Step 0 forces project-specific index loading.
+- **Changed**: Plan templates — English-First fix for Commit Consolidation Policy and Suggested Next Steps.
+- **Changed**: `registry/tools.yml` — `para-graph` latest bumped to `0.8.5` (Universal Para-Injector + `--version` flag).
+
 ## [1.8.3] - 2026-05-04
 
 Graph Router Sync — Sidecar skills updated for para-graph v0.8.4 Centralized Router.
