@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.8.5] - 2026-05-05
+
+Hybrid Hook Architecture — Decoupled Tool Lifecycle.
+
+- **Added**: `--sync` flag for `install-tool` — fetch latest intelligence from GitHub without tarball download.
+- **Added**: Hook detection (`install-hooks.sh`) — tools ship `pre_install()`/`post_install()` hooks for decoupled lifecycle management.
+- **Added**: `semver_gte()` — POSIX-compatible semver comparison utility for version guards.
+- **Changed**: `tool.schema.json` — additive fields `shipped_in` and `min_engine_version` for Engine-Aligned Versioning.
+
 ## [1.8.4] - 2026-05-04
 
 Plan Template Governance Checklist + Para-Graph v0.8.5 Registry Sync.
