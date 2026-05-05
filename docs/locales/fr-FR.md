@@ -7,7 +7,7 @@
 **Le Framework d'Espace de Travail pour Humains et Agents IA**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.4-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.5-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -317,4 +317,4 @@ Rendez-vous sur [CONTRIBUTING.md](../../CONTRIBUTING.md) pour découvrir les pri
 
 Conçu avec ❤️ par **Pageel**. Standardisant l'avenir de la méthode PKM Agent.
 
-_Version: 1.8.4_
+_Version: 1.8.5_

@@ -11,6 +11,9 @@ Hybrid Hook Architecture — Decoupled Tool Lifecycle.
 - **Added**: Hook detection (`install-hooks.sh`) — tools ship `pre_install()`/`post_install()` hooks for decoupled lifecycle management.
 - **Added**: `semver_gte()` — POSIX-compatible semver comparison utility for version guards.
 - **Changed**: `tool.schema.json` — additive fields `shipped_in` and `min_engine_version` for Engine-Aligned Versioning.
+- **Fixed**: BUG-34 — `update.sh` consumer mode uses `git fetch + reset --hard` instead of `git pull` to avoid Windows NTFS file lock. Graceful fallback if reset fails.
+- **Changed**: `update.sh` Windows detection — POSIX `case` statement replaces `[[ ]]`.
+- **Changed**: `registry/tools.yml` — `para-graph` latest bumped to `0.8.6`.
 
 ## [1.8.4] - 2026-05-04
 

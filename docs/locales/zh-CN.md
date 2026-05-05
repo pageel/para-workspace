@@ -7,7 +7,7 @@
 **人类与 AI Agent 的工作空间框架**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.4-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.5-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -340,4 +340,4 @@ agents:
 
 用 ❤️ 构建，由 **Pageel** 出品。标准化 Agent PKM 的未来。
 
-_版本: 1.8.4_
+_版本: 1.8.5_
