@@ -278,7 +278,7 @@ fetch_templates_from_git() {
     # Handle nested directories (e.g., skills/para-graph/) — check for type: dir entries
     grep '"type": *"dir"' "$subdir_listing" >/dev/null 2>&1 && {
       # Extract dir names
-      grep -B5 '"type": *"dir"' "$subdir_listing" | grep '"name"' | sed 's/.*"name": *"//; s/".*//' | while IFS= read -r dirname; do
+      awk -F'"' '/"name":/ {name=$4} /"type": *"dir"/ {print name}' "$subdir_listing" | while IFS= read -r dirname; do
         local nested_url="${subdir_url}/${dirname}"
         local nested_listing="$tmp_dir/listing_${subdir}_${dirname}.json"
 
