@@ -66,7 +66,7 @@ skills:
 
 cli:
   para:            "1.8.2"   # MCP Management commands, help text
-  install-tool:    "1.8.2"   # MCP detect block, --no-mcp flag
+  install-tool:    "1.8.5"   # hook detection + --sync flag + semver_gte
   remove-tool:     "1.8.0"   # NEW: remove installed tools
   list-tools:      "1.8.0"   # NEW: list installed tools
   install:         "1.8.0"   # Add tool system asset sync (section 3.6)
@@ -79,7 +79,7 @@ templates:
 
 registry:
   tools:           "1.8.0"   # NEW: tool registry (para-graph first entry)
-  tool-schema:     "1.8.2"   # mcp: property support
+  tool-schema:     "1.8.5"   # shipped_in + min_engine_version (additive)
 
 knowledge:
   para_workspace_architecture_standards: "1.8.2" # added mcp auto-setup features

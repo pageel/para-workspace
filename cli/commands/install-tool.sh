@@ -1,10 +1,11 @@
 #!/bin/bash
 # PARA Workspace — Install Tool Plugin
-# Usage: ./para install-tool <name> [--version=X.Y.Z] [--update] [--agents] [--no-agents]
+# Usage: ./para install-tool <name> [--version=X.Y.Z] [--update] [--agents] [--sync] [--no-agents]
 #
 # Downloads and installs a tool plugin from the PARA Tool Registry.
 # Generates a wrapper script for dynamic CLI routing.
 # Detects and optionally installs bundled AI intelligence (workflows, skills, rules).
+# Supports tool hooks (install-hooks.sh) for decoupled tool lifecycle management.
 
 set -e
 
@@ -33,6 +34,7 @@ UPDATE_MODE=false
 SKIP_AGENTS=false
 SKIP_MCP=false
 AGENTS_ONLY=false
+SYNC_MODE=false
 
 for arg in "$@"; do
   case "$arg" in
@@ -51,13 +53,17 @@ for arg in "$@"; do
     --agents)
       AGENTS_ONLY=true
       ;;
+    --sync)
+      SYNC_MODE=true
+      ;;
     --help|-h)
-      echo "Usage: para install-tool <name> [--version=X.Y.Z] [--update] [--agents] [--no-agents] [--no-mcp]"
+      echo "Usage: para install-tool <name> [--version=X.Y.Z] [--update] [--agents] [--sync] [--no-agents] [--no-mcp]"
       echo ""
       echo "  <name>           Tool name (e.g., 'para-graph' or 'graph')"
       echo "  --version=X.Y.Z  Install specific version (default: latest)"
       echo "  --update         Remove existing installation before installing"
       echo "  --agents         Install only AI intelligence (tool must be already installed)"
+      echo "  --sync           Fetch latest intelligence from GitHub (no tarball download)"
       echo "  --no-agents      Skip AI intelligence prompt during install"
       echo "  --no-mcp         Skip MCP server configuration prompt"
       echo ""
@@ -66,6 +72,7 @@ for arg in "$@"; do
       echo "  para install-tool graph --version=0.7.0"
       echo "  para install-tool para-graph --update"
       echo "  para install-tool para-graph --agents"
+      echo "  para install-tool para-graph --sync"
       echo "  para install-tool para-graph --no-agents"
       exit 0
       ;;
@@ -184,6 +191,114 @@ AGENT_SOURCES=()
 AGENT_TARGETS=()
 AGENT_VERSIONS=()
 AGENT_TYPES=()
+
+# === SemVer comparison (POSIX-compatible) ===
+# Returns 0 if version A >= version B, 1 otherwise
+# Usage: semver_gte "1.2.3" "1.2.0" → returns 0 (true)
+semver_gte() {
+  local a="$1" b="$2"
+  if [ "$a" = "$b" ]; then
+    return 0
+  fi
+
+  local a_major a_minor a_patch b_major b_minor b_patch
+
+  a_major=$(echo "$a" | cut -d. -f1)
+  a_minor=$(echo "$a" | cut -d. -f2)
+  a_patch=$(echo "$a" | cut -d. -f3)
+  b_major=$(echo "$b" | cut -d. -f1)
+  b_minor=$(echo "$b" | cut -d. -f2)
+  b_patch=$(echo "$b" | cut -d. -f3)
+
+  # Default missing components to 0
+  a_major=${a_major:-0}; a_minor=${a_minor:-0}; a_patch=${a_patch:-0}
+  b_major=${b_major:-0}; b_minor=${b_minor:-0}; b_patch=${b_patch:-0}
+
+  if [ "$a_major" -gt "$b_major" ] 2>/dev/null; then return 0; fi
+  if [ "$a_major" -lt "$b_major" ] 2>/dev/null; then return 1; fi
+  if [ "$a_minor" -gt "$b_minor" ] 2>/dev/null; then return 0; fi
+  if [ "$a_minor" -lt "$b_minor" ] 2>/dev/null; then return 1; fi
+  if [ "$a_patch" -ge "$b_patch" ] 2>/dev/null; then return 0; fi
+  return 1
+}
+
+# === Fetch templates from GitHub (for --sync mode) ===
+# Downloads templates/agents/ directory from GitHub repo main branch
+fetch_templates_from_git() {
+  local manifest="$1"
+  local tmp_dir="$2"
+
+  # Extract repo URL from manifest
+  local repo_url
+  repo_url=$(grep '^repo:' "$manifest" | sed 's/repo: *//; s/^ *"//; s/" *$//')
+  if [ -z "$repo_url" ]; then
+    echo "❌ Error: 'repo' field not found in manifest."
+    return 1
+  fi
+
+  # Parse owner/repo: "https://github.com/pageel/para-graph" → "pageel/para-graph"
+  local repo_slug
+  repo_slug=$(echo "$repo_url" | sed 's|.*github.com/||; s|\.git$||')
+
+  echo "  → Fetching templates from: $repo_slug (main branch)"
+
+  # Fetch templates/agents directory listing from GitHub Contents API
+  local api_url="https://api.github.com/repos/${repo_slug}/contents/templates/agents"
+  local listing_file="$tmp_dir/api_listing.json"
+
+  if ! curl -fsSL --max-time 30 "$api_url" -o "$listing_file" 2>/dev/null; then
+    echo "❌ Error: Failed to fetch template listing from GitHub API."
+    echo "   URL: $api_url"
+    return 1
+  fi
+
+  # Parse JSON listing and download each subdirectory (workflows, skills, rules)
+  local subdir
+  for subdir in workflows skills rules; do
+    local subdir_url="${api_url}/${subdir}"
+    local subdir_listing="$tmp_dir/listing_${subdir}.json"
+
+    if ! curl -fsSL --max-time 30 "$subdir_url" -o "$subdir_listing" 2>/dev/null; then
+      echo "  ⚠️  No templates/$subdir found on remote (skipping)"
+      continue
+    fi
+
+    mkdir -p "$tmp_dir/templates/agents/$subdir"
+
+    # Extract download_url entries and fetch each file
+    # Using grep+sed for POSIX compat (no jq dependency)
+    grep '"download_url"' "$subdir_listing" | sed 's/.*"download_url": *"//; s/".*//' | while IFS= read -r dl_url; do
+      if [ -n "$dl_url" ] && [ "$dl_url" != "null" ]; then
+        local fname
+        fname=$(basename "$dl_url")
+        curl -fsSL --max-time 15 "$dl_url" -o "$tmp_dir/templates/agents/$subdir/$fname" 2>/dev/null
+      fi
+    done
+
+    # Handle nested directories (e.g., skills/para-graph/) — check for type: dir entries
+    grep '"type": *"dir"' "$subdir_listing" >/dev/null 2>&1 && {
+      # Extract dir names
+      grep -B5 '"type": *"dir"' "$subdir_listing" | grep '"name"' | sed 's/.*"name": *"//; s/".*//' | while IFS= read -r dirname; do
+        local nested_url="${subdir_url}/${dirname}"
+        local nested_listing="$tmp_dir/listing_${subdir}_${dirname}.json"
+
+        if curl -fsSL --max-time 30 "$nested_url" -o "$nested_listing" 2>/dev/null; then
+          mkdir -p "$tmp_dir/templates/agents/$subdir/$dirname"
+          grep '"download_url"' "$nested_listing" | sed 's/.*"download_url": *"//; s/".*//' | while IFS= read -r nested_dl; do
+            if [ -n "$nested_dl" ] && [ "$nested_dl" != "null" ]; then
+              local nfname
+              nfname=$(basename "$nested_dl")
+              curl -fsSL --max-time 15 "$nested_dl" -o "$tmp_dir/templates/agents/$subdir/$dirname/$nfname" 2>/dev/null
+            fi
+          done
+        fi
+      done
+    }
+  done
+
+  echo "  ✅ Templates fetched successfully."
+  return 0
+}
 
 # State machine parser: reads agents: block from tool.manifest.yml line-by-line
 parse_manifest_agents() {
@@ -366,6 +481,88 @@ if [ "$AGENTS_ONLY" = true ]; then
   exit 0
 fi
 
+# === Handle --sync (fetch intelligence from GitHub without tarball) ===
+if [ "$SYNC_MODE" = true ]; then
+  if [ ! -d "$TOOL_INSTALL_DIR" ]; then
+    echo "❌ Error: Tool '$PARA_TOOL_NAME' is not installed. Install it first."
+    exit 1
+  fi
+  if [ ! -f "$MANIFEST_FILE" ]; then
+    echo "❌ Error: tool.manifest.yml not found in $TOOL_INSTALL_DIR"
+    exit 1
+  fi
+
+  echo "🔄 Syncing AI intelligence for $PARA_TOOL_NAME from GitHub..."
+
+  # Create temp directory for downloads
+  SYNC_TEMP="$(mktemp -d)"
+
+  # Fetch templates from GitHub
+  if ! fetch_templates_from_git "$MANIFEST_FILE" "$SYNC_TEMP"; then
+    echo "❌ Error: Failed to fetch templates from GitHub."
+    rm -rf "$SYNC_TEMP"
+    exit 1
+  fi
+
+  # Source hooks if available (from installed tool, not remote)
+  HOOKS_FILE="$TOOL_INSTALL_DIR/install-hooks.sh"
+  if [ -f "$HOOKS_FILE" ]; then
+    echo "  🔌 Loading tool hooks..."
+    # shellcheck source=/dev/null
+    . "$HOOKS_FILE"
+    if type pre_install >/dev/null 2>&1; then
+      if ! pre_install; then
+        echo "❌ pre_install hook failed. Aborting sync."
+        rm -rf "$SYNC_TEMP"
+        exit 1
+      fi
+    fi
+  fi
+
+  # Parse manifest and install agents using fetched templates
+  parse_manifest_agents
+  if [ ${#AGENT_SOURCES[@]} -eq 0 ]; then
+    echo "ℹ️  No AI intelligence bundled with this tool."
+    rm -rf "$SYNC_TEMP"
+    exit 0
+  fi
+
+  # Override source paths to use fetched templates
+  i=0
+  while [ $i -lt ${#AGENT_SOURCES[@]} ]; do
+    atype="${AGENT_TYPES[$i]}"
+    asource="${AGENT_SOURCES[$i]}"
+    atarget="${AGENT_TARGETS[$i]}"
+    src_path="$SYNC_TEMP/$asource"
+    dst_dir="$AGENTS_DIR/$atype"
+    dst_path="$dst_dir/$atarget"
+
+    if [ -e "$src_path" ]; then
+      mkdir -p "$dst_dir"
+      if [ -d "$src_path" ]; then
+        [ -d "$dst_path" ] && rm -rf "$dst_path"
+        cp -r "$src_path" "$dst_path"
+      elif [ -f "$src_path" ]; then
+        cp "$src_path" "$dst_path"
+      fi
+      echo "  ✅ $atype/$atarget synced."
+    else
+      echo "  ⚠️  $asource not found in fetched templates (skipping)"
+    fi
+    i=$((i + 1))
+  done
+
+  # Post-install hook
+  if [ -f "$HOOKS_FILE" ] && type post_install >/dev/null 2>&1; then
+    post_install
+  fi
+
+  rm -rf "$SYNC_TEMP"
+  echo ""
+  echo "✅ AI intelligence synced from GitHub."
+  exit 0
+fi
+
 if [ -d "$TOOL_INSTALL_DIR" ] && [ "$UPDATE_MODE" = false ]; then
   echo "⚠️  Tool '$PARA_TOOL_NAME' is already installed at: $TOOL_INSTALL_DIR"
   echo "   Use --update to reinstall."
@@ -445,6 +642,23 @@ if [ ! -f "$MANIFEST_FILE" ]; then
   exit 1
 fi
 
+# === Hook Detection (v1.8.5) ===
+# Tools may ship install-hooks.sh with pre_install/post_install functions.
+# This enables tools to control their own lifecycle without para-workspace updates.
+HOOKS_FILE="$TOOL_INSTALL_DIR/install-hooks.sh"
+if [ -f "$HOOKS_FILE" ]; then
+  echo "  🔌 Loading tool hooks..."
+  # shellcheck source=/dev/null
+  . "$HOOKS_FILE"
+  if type pre_install >/dev/null 2>&1; then
+    if ! pre_install; then
+      echo "❌ pre_install hook failed. Aborting."
+      rm -rf "$TOOL_INSTALL_DIR"
+      exit 1
+    fi
+  fi
+fi
+
 # === Generate wrapper script ===
 echo "  → Generating wrapper: cli/commands/$TOOL_NAME.sh"
 
@@ -496,6 +710,11 @@ if [ "$SKIP_AGENTS" != true ]; then
       echo "  ⏭️  Skipped. Run './para install-tool $PARA_TOOL_NAME --agents' later."
     fi
   fi
+fi
+
+# === Post-install hook (v1.8.5) ===
+if [ -f "$HOOKS_FILE" ] && type post_install >/dev/null 2>&1; then
+  post_install
 fi
 
 # === MCP Server prompt (after agents) ===

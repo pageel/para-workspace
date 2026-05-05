@@ -52,7 +52,9 @@
             "properties": {
               "source": { "type": "string", "description": "Path relative to tool root." },
               "target": { "type": "string", "description": "Filename in .agents/workflows/." },
-              "version": { "type": "string", "description": "Semantic version of this workflow." }
+              "version": { "type": "string", "description": "Semantic version of this workflow." },
+              "shipped_in": { "type": "string", "description": "Engine version when this artifact was last modified.", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+              "min_engine_version": { "type": "string", "description": "Minimum engine version required for this artifact.", "pattern": "^\\d+\\.\\d+\\.\\d+$" }
             }
           }
         },
@@ -64,7 +66,9 @@
             "properties": {
               "source": { "type": "string", "description": "Directory path relative to tool root." },
               "target": { "type": "string", "description": "Directory name in .agents/skills/." },
-              "version": { "type": "string", "description": "Semantic version of this skill." }
+              "version": { "type": "string", "description": "Semantic version of this skill." },
+              "shipped_in": { "type": "string", "description": "Engine version when this artifact was last modified.", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+              "min_engine_version": { "type": "string", "description": "Minimum engine version required for this artifact.", "pattern": "^\\d+\\.\\d+\\.\\d+$" }
             }
           }
         },
@@ -76,7 +80,9 @@
             "properties": {
               "source": { "type": "string", "description": "Path relative to tool root." },
               "target": { "type": "string", "description": "Filename in .agents/rules/." },
-              "version": { "type": "string", "description": "Semantic version of this rule." }
+              "version": { "type": "string", "description": "Semantic version of this rule." },
+              "shipped_in": { "type": "string", "description": "Engine version when this artifact was last modified.", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+              "min_engine_version": { "type": "string", "description": "Minimum engine version required for this artifact.", "pattern": "^\\d+\\.\\d+\\.\\d+$" }
             }
           }
         }
