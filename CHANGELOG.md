@@ -12,6 +12,7 @@ Hybrid Hook Architecture — Decoupled Tool Lifecycle.
 - **Added**: `semver_gte()` — POSIX-compatible semver comparison utility for version guards.
 - **Changed**: `tool.schema.json` — additive fields `shipped_in` and `min_engine_version` for Engine-Aligned Versioning.
 - **Fixed**: BUG-34 — `update.sh` consumer mode uses `git fetch + reset --hard` instead of `git pull` to avoid Windows NTFS file lock. Graceful fallback if reset fails.
+- **Fixed**: `install-tool` JSON Parsing — Fixed a bug where `--sync` failed to detect nested tool template directories due to `grep` limitations. Replaced with robust `awk` parsing for GitHub API responses.
 - **Changed**: `update.sh` Windows detection — POSIX `case` statement replaces `[[ ]]`.
 - **Changed**: `registry/tools.yml` — `para-graph` latest bumped to `0.8.6`.
 
