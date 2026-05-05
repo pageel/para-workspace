@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# PARA Workspace Update Script (v1.7.4)
+# PARA Workspace Update Script (v1.8.5)
 # Safely updates templates without overwriting user data
 # Usage: para update [--dry-run]
 
@@ -25,6 +25,17 @@ if [ -z "$WORKSPACE_ROOT" ]; then
     echo "⚠️  WORKSPACE_ROOT not set. Run via ./para update for best results."
   fi
 fi
+
+# === Detect Consumer vs Contributor mode (v1.8.5 — BUG-34 fix) ===
+# Consumer repos (Resources/references/) use fetch+reset to avoid Windows file lock.
+# Contributor repos (Projects/) keep standard git pull to preserve local work.
+is_consumer_repo() {
+  case "$REPO_ROOT" in
+    */Resources/references/*) return 0 ;;
+    */.para-repo)             return 0 ;;
+    *)                        return 1 ;;
+  esac
+}
 
 # For self-update detection
 get_hash() {
@@ -96,27 +107,58 @@ OLD_COMMIT=$(cd "$REPO_ROOT" && git rev-parse HEAD 2>/dev/null || echo "unknown"
 
 echo "📍 Current Version: $CURRENT_VER"
 
-# === ALWAYS pull latest (BUG-30 fix: dry-run must see new version) ===
+# === ALWAYS sync latest from remote ===
 echo "📥 Pulling latest changes..."
 cd "$REPO_ROOT"
 
-# On Windows, git pull might fail to update the running script.
-if git pull origin main; then
-    # Self-restart only in live mode (dry-run doesn't need restart)
-    if [ "$DRY_RUN" = false ]; then
-        NEW_SCRIPT_HASH=$(get_hash "$SCRIPT_DIR/update.sh")
-        if [ "$OLD_SCRIPT_HASH" != "$NEW_SCRIPT_HASH" ]; then
-            echo "🔄 CLI scripts updated. Restarting update process..."
-            exec bash "$SCRIPT_DIR/update.sh" "$@"
+if is_consumer_repo; then
+    # Consumer mode: fetch + reset (BUG-34 fix — avoids Windows file lock)
+    echo "📦 Consumer mode: fetch + reset..."
+    if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+        echo "⚠️  Local changes detected (will be overwritten — consumer is read-only mirror)."
+    fi
+
+    git fetch origin main
+
+    if git reset --hard origin/main; then
+        git clean -fd 2>/dev/null || true
+        echo "✅ Consumer repo synced to latest."
+        # Self-restart if update.sh changed
+        if [ "$DRY_RUN" = false ]; then
+            NEW_SCRIPT_HASH=$(get_hash "$SCRIPT_DIR/update.sh")
+            if [ "$OLD_SCRIPT_HASH" != "$NEW_SCRIPT_HASH" ]; then
+                echo "🔄 CLI scripts updated. Restarting update process..."
+                exec bash "$SCRIPT_DIR/update.sh" "$@"
+            fi
         fi
+    else
+        echo "⚠️  git reset failed (possible Windows file lock)."
+        echo "💡 Fetch succeeded — .git/ has latest code."
+        echo "   After closing this terminal, run:"
+        echo "   cd $REPO_ROOT && git reset --hard origin/main && cd - && ./para install"
+        # CONTINUE — fetch succeeded, install can still run with current code
     fi
 else
-    echo "⚠️  Git pull failed or was partial."
-    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
-        echo "💡 Windows detected: This is often caused by the script file being locked while running."
-        echo "   Please try closing all terminals and running the update again."
+    # Contributor mode: standard pull (preserves local work)
+    if git pull origin main; then
+        # Self-restart only in live mode (dry-run doesn't need restart)
+        if [ "$DRY_RUN" = false ]; then
+            NEW_SCRIPT_HASH=$(get_hash "$SCRIPT_DIR/update.sh")
+            if [ "$OLD_SCRIPT_HASH" != "$NEW_SCRIPT_HASH" ]; then
+                echo "🔄 CLI scripts updated. Restarting update process..."
+                exec bash "$SCRIPT_DIR/update.sh" "$@"
+            fi
+        fi
+    else
+        echo "⚠️  Git pull failed or was partial."
+        case "$OSTYPE" in
+            msys|cygwin)
+                echo "💡 Windows detected: script file may be locked while running."
+                echo "   Please close all terminals and run the update again."
+                ;;
+        esac
+        exit 1
     fi
-    exit 1
 fi
 
 # === Capture state AFTER pull ===
