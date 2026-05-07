@@ -5,7 +5,7 @@ source: catalog
 
 # /para-workflow [action] [name]
 
-> **Workspace Version:** 1.5.0 (Governed Libraries)
+> **Workspace Version:** 1.8.5
 
 Specialized workflow to manage, install, and standardize AI Agent workflows within a PARA Workspace.
 
@@ -15,7 +15,7 @@ Specialized workflow to manage, install, and standardize AI Agent workflows with
 | :-- | :-- |
 | `list` | Compare active workflows vs. governed catalog |
 | `add` | Create a new PARA-compliant workflow |
-| `standardize` | Upgrade an existing workflow to v1.4.1 standards |
+| `standardize` | Upgrade an existing workflow to current PARA standards |
 | `install` | Install or update a workflow from the governed catalog |
 | `validate` | Check a workflow for PARA compliance issues |
 
@@ -82,7 +82,7 @@ source: user
 
 # /[name] [args]
 
-> **Workspace Version:** 1.5.0 (Governed Libraries)
+> **Workspace Version:** {kernel_version from .para-workspace.yml}
 
 [Purpose and context]
 
@@ -101,7 +101,7 @@ source: user
 
 3. **Conventions to follow**:
    - YAML frontmatter with `description` is **required**.
-   - Version label must match current workspace version.
+   - Version label must match current workspace version (read `kernel_version` from `.para-workspace.yml`).
    - Use `[project-name]` placeholder instead of hardcoded project names.
    - Use `// turbo` annotation above steps that are safe to auto-run.
    - All paths must be **relative** from workspace root.
@@ -111,7 +111,7 @@ source: user
 
 ## 📈 Action: standardize [name]
 
-Upgrade an existing workflow to the latest PARA v1.4.1 standards.
+Upgrade an existing workflow to the latest PARA standards.
 
 ### Checklist
 
@@ -120,7 +120,7 @@ The agent will read `.agents/workflows/[name].md` and apply fixes for each item:
 | # | Check | Rule |
 | -- | -- | -- |
 | 1 | **YAML Frontmatter** | Must have `description` field |
-| 2 | **Version Label** | Must say `1.4.1` (not 1.3.6 or older) |
+| 2 | **Version Label** | Must match `kernel_version` from `.para-workspace.yml` |
 | 3 | **Language** | Instructions should be in English |
 | 4 | **Relative Paths** | No absolute paths (e.g., `/media/tienle/...`) |
 | 5 | **Project Placeholders** | Use `[project-name]` instead of hardcoded project names |
@@ -130,7 +130,7 @@ The agent will read `.agents/workflows/[name].md` and apply fixes for each item:
 
 ### Legacy Path Migration Table
 
-| Old Path (v1.3.x) | New Path (v1.4.1) |
+| Old Path (legacy) | New Path (current) |
 | -- | -- |
 | `Resources/ai-agents/workflows/` | `templates/common/agents/workflows/` (in repo) |
 | `Resources/ai-agents/rules/` | `templates/common/agents/rules/` (in repo) |
@@ -178,7 +178,7 @@ Check a workflow for PARA compliance without making changes.
 🔍 VALIDATION REPORT: [name].md
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ YAML Frontmatter      — OK
-✅ Version Label          — 1.4.1
+✅ Version Label          — {kernel_version}
 ⚠️ Legacy Path Found     — Line 42: Resources/ai-agents/workflows/
 ✅ No Absolute Paths      — OK
 ✅ Project Placeholders   — OK
