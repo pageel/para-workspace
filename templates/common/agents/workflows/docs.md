@@ -222,7 +222,7 @@ Before writing, present a plan to the user:
 
 ```
 📖 Documentation Plan: [Project Name]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📂 Project Type: [CLI Tool / Web App / Library / Website]
 📁 Location: Projects/[project-name]/docs/ (internal)
@@ -291,7 +291,7 @@ Audit existing documentation for completeness, accuracy, and freshness.
 
 ```
 📖 Docs Audit: [Project Name]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 | Document | Status | Issue |
 |:--|:--|:--|
@@ -340,7 +340,7 @@ Present the list and let the user choose:
 
 ```
 📤 Publish to repo/docs/:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Available in docs/:
   1. architecture.md (120 lines)

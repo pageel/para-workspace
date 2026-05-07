@@ -50,13 +50,13 @@ Read the file at the **catalog source** (one of these, in priority order):
 
 ```
 📦 GOVERNED CATALOG (catalog.yml):
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 | ID             | Version | Status          |
 | -------------- | ------- | --------------- |
 | open           | 1.0.0   | ✅ Installed    |
 | backlog        | 1.0.0   | ✅ Installed    |
 | para-workflow  | 1.0.0   | ⚠️ Not installed |
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 - **✅ Installed**: File exists in `.agents/workflows/`.
@@ -176,13 +176,13 @@ Check a workflow for PARA compliance without making changes.
 
 ```
 🔍 VALIDATION REPORT: [name].md
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ YAML Frontmatter      — OK
 ✅ Version Label          — 1.4.1
 ⚠️ Legacy Path Found     — Line 42: Resources/ai-agents/workflows/
 ✅ No Absolute Paths      — OK
 ✅ Project Placeholders   — OK
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Result: 1 warning(s), 0 error(s)
 💡 Run `/para-workflow standardize [name]` to fix.
 ```

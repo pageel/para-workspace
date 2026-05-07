@@ -93,7 +93,7 @@ Split KIs into two sections based on `owner` field or slug prefix:
 
 ```
 📚 KNOWLEDGE DASHBOARD
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🏛️ SYSTEM KIs (para_*) — managed by PARA v[version]
 | #  | Title               | PARA Ver | Arts | Refs  | Health |
@@ -105,13 +105,13 @@ Split KIs into two sections based on `owner` field or slug prefix:
 |:---|:--------------------|:------|:-------|:------|:-------|
 | 2  | [title]             | [sc]  | [dom]  | [N/M] | ✅/⚠️  |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📈 STATS: [N] system + [N] user = [N] KIs | [N]K total
 ⚠️ STALE: [N] KIs not updated in 30+ days
 🔴 BROKEN: [N] KIs with invalid references
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 💡 ACTIONS:
   /para-knowledge [topic]           — Create or update a user KI
@@ -196,7 +196,7 @@ Read and display the selected KI's full info:
 
 ```
 📖 KI #[N]: [Title]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📝 Summary:
 [First 200 chars of summary from metadata.json]
@@ -215,7 +215,7 @@ Read and display the selected KI's full info:
   Modified: YYYY-MM-DD
   Accessed: YYYY-MM-DD
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 💡 ACTIONS:
   U. Update this KI
@@ -528,7 +528,7 @@ done
 
 ```
 🔍 KNOWLEDGE AUDIT REPORT — YYYY-MM-DD
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📊 Overview:
   Total KIs: [N]
@@ -551,7 +551,7 @@ done
   - [KI name]: 90+ days old — review or `/para-knowledge archive [#]`
   - [Topic from recent sessions]: Consider creating new KI
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 **Save audit report persistently:**

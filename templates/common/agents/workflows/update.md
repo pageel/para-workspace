@@ -41,13 +41,13 @@ git -C Resources/references/para-workspace ls-remote --heads origin main 2>&1 | 
 
 ```
 🔍 PRE-FLIGHT CHECK
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   Current kernel  : v[X.Y.Z] (from .para-workspace.yml)
   Repo VERSION    : v[X.Y.Z]
   Git branch      : [main]
   Git status      : [clean / N files dirty]
   Network         : [✅ OK / ❌ Unreachable]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 **Decision gates:**
@@ -79,12 +79,12 @@ Run a preview so the user knows what will change:
 
 ```
 📋 DRY-RUN PREVIEW
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   New version  : v[X.Y.Z]
   Migration    : [N steps required / None needed]
   Files sync   : [N files will be updated]
   Backups      : Auto-saved to .para/backups/
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 Ask user for confirmation: **"Proceed with update? (Y/n)"**
@@ -147,13 +147,13 @@ tail -1 .para/audit.log
 
 ```
 ✅ UPDATE SUCCESSFUL
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   Previous version : v[OLD]
   New version      : v[NEW]
   Migration        : [Ran N steps / None needed]
   History log      : [latest line from history.log]
   Backups          : .para/backups/[date]/
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 💡 SUGGESTED NEXT STEPS:
 1. Run `./para status` — verify workspace health.

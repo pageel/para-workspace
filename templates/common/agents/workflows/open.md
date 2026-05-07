@@ -306,7 +306,7 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 ```
 🚀 Starting: [Project Name] | 📅 [YYYY-MM-DD]
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📋 LAST SESSION: [Date] - [Focus]
 
@@ -351,7 +351,7 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 - Knowledge: KIs are auto-injected by platform at session start.
 - Proactive: BEFORE any side-effect → scan trigger tables → load matching rules/skills.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 💡 SUGGESTED ACTIONS:
 1. [Priority 1 — from active plan current phase]

@@ -144,7 +144,7 @@ Present the complete spec to the user and WAIT.
 
 ```
 📋 SPEC DRAFT: [feature-name]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Assumptions: [N] listed — all confirmed?
 Core Areas:  6/6 covered
 Open Questions: [N]
@@ -173,7 +173,7 @@ With the validated spec, generate a technical implementation plan:
 
 ```
 📐 PLAN READY: [feature-name]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Components: [N] | Risks: [N] identified
 Order: [dependency summary]
 
@@ -225,7 +225,7 @@ Add explicit checkpoints after every 2-3 tasks:
 
 ```
 📋 TASKS READY: [feature-name]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Tasks: [N] | Checkpoints: [N]
 Estimated scope: [summary]
 
@@ -256,7 +256,7 @@ The spec file contains all four phase outputs in one document:
 
 ```
 📋 SPEC COMPLETE: [feature-name]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ Saved: artifacts/specs/spec-[YYYY-MM-DD]-[topic].md
    Status: Approved
    Tasks:  [N] defined | Checkpoints: [N]
@@ -315,14 +315,14 @@ Review an existing spec against the current state of the project.
 
 ```
 📋 SPEC REVIEW: [spec-name]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 | Section | Status |
 |:--|:--|
 | Assumptions | [N/M] still valid |
 | Tasks | [N/M] completed |
 | Success Criteria | [N/M] met |
 | Boundaries | [any violations?] |
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Recommendation: [Continue | Update spec | Spec complete]
 ```
 

@@ -44,7 +44,7 @@ Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/ba
 
 ```
 📋 BACKLOG REVIEW: [project-name]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📊 Summary:
 | Category    | Count |
@@ -62,7 +62,7 @@ Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/ba
 
 📐 Current Phase: [Phase N: Name] (from plan)
    Phase items: N total, N done, N remaining
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 4. If a plan exists, cross-reference the "Backlog → Phase Mapping" table:
@@ -113,13 +113,13 @@ Synchronize backlog with an existing implementation plan.
 
 ```
 🔄 BACKLOG ↔ PLAN SYNC: [project-name]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 | Phase   | Backlog Items | Mapped | Missing |
 | ------- | ------------- | ------ | ------- |
 | Phase 0 | 5             | 5      | 0       |
 | Phase 1 | 6             | 4      | 2 ⚠️    |
 | Phase 2 | 0             | 0      | 5 ⚠️    |
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ⚠️ Missing items (tasks in plan but not in backlog):
 - Phase 1: "Image proxy endpoint", "SEO meta tags"
@@ -157,7 +157,7 @@ Compress `✅ Done` items from backlog active tables into the `✅ Completed (Ar
 
 ```
 🧹 BACKLOG CLEAN: [project-name]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📦 Compressed: [N] items → Completed section
 📝 Details: done.md updated

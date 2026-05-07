@@ -155,7 +155,7 @@ Before writing, present a structured outline:
 
 ```
 📖 Content Plan: [Topic Title]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📂 Type: [Ebook / Paper / Guide]
 📁 Location: Projects/[project-name]/writings/[type]s/[type]-[slug].md
@@ -236,13 +236,13 @@ Audit an existing content piece for quality.
 
 ```
 🔍 REVIEW: [filename]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ Language consistency    — OK
 ✅ TOC accuracy            — OK
 ⚠️ Diagram integrity      — Line 128: misaligned ANSI boxes
 ✅ Source traceability     — OK
 ⚠️ Metaphor audit         — Line 42: "bộ mỡ thừa" (casual)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Result: 2 warning(s), 0 error(s)
 💡 Fix these issues? (y/n)
 ```

@@ -27,14 +27,14 @@ Read `.para-workspace.yml` and display a formatted overview:
 
 ```
 ⚙️ WORKSPACE CONFIGURATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Name:        [workspace-name]
 Version:     [version]
 Language:    [language]
 Date Format: [preferences.date_format] (or "YYYY-MM-DD" if not set)
 Profile:     [profile]
 Projects:    [list of registered projects]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 ### update

@@ -66,7 +66,7 @@ The Agent performs a **deliberate, systematic scan** of the entire conversation 
 ```markdown
 📊 **SESSION TELEMETRY (Structured Audit) — Scope: [All / Last / Workflow: name]**
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ### 📚 Knowledge Items ([N] total)
 | # | KI Name | Usage |
@@ -127,7 +127,7 @@ The Agent performs a **deliberate, systematic scan** of the entire conversation 
 
 > ⚠️ KI tokens are **platform-injected** at session start and invisible in the conversation transcript. They consume context window budget but are never shown in chat. Always count them to avoid underestimating total usage.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 *(Stop workflow execution after printing the report.)*

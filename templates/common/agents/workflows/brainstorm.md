@@ -134,7 +134,7 @@ Present all options and ask the user how to proceed:
 
 ```
 📋 BRAINSTORM COMPLETE: [topic]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ Decision: artifacts/para-decisions/brainstorm-[YYYY-MM-DD]-[topic].md
 📂 Research: docs/researches/[topic]-[YYYY-MM-DD].md  ← (if large)
 

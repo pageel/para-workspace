@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [Unreleased]
+
+- **Changed**: Shortened separator lines across all workflow templates (28 characters) for cleaner reporting.
+
 ## [1.8.5] - 2026-05-05
 
 Hybrid Hook Architecture — Decoupled Tool Lifecycle.

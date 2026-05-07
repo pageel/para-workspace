@@ -237,7 +237,7 @@ Display an inline report (do NOT create a separate file — this is a quick chec
 
 ```
 📋 POST-UPDATE AUDIT: v[OLD] → v[NEW]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📄 CHANGELOG: [summary of key changes]
 
@@ -259,7 +259,7 @@ Display an inline report (do NOT create a separate file — this is a quick chec
 | --------- | ------------------------- | ------------------------ |
 | project-a | rules.md ≠ disk           | Update `.agents/rules.md` |
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 💡 SUGGESTED ACTIONS:
 1. [actionable items, ask user to confirm]
 ```

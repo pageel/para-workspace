@@ -414,7 +414,7 @@ Present the plan summary and ask the user:
 
 ```
 📐 PLAN READY: [plan-name]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Status: 📝 Draft (not yet executable)
 Phases: [N] | Timeline: [N] days | Tasks: [N]
 File:   artifacts/plans/[plan-name].md
@@ -533,13 +533,13 @@ The resolved path points to the plan file to read.
 
 ```
 📋 PLAN REVIEW: [plan-name]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 | Phase | Status | Tasks | Source |
 |---|---|---|---|
 | Phase 0 | ✅ Done | 5/5 | done.md |
 | Phase 1 | 🔨 In Progress | 3/5 | backlog |
 | Phase 2 | ⏳ Pending | 0/4 | — |
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Overall: 40% complete | Deadline: YYYY-MM-DD
 ```
 
