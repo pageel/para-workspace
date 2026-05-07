@@ -251,6 +251,7 @@ Create each approved document using the appropriate template from Section "Doc T
 2. Write documentation based on **actual code**, not assumptions
 3. Include the standard header with version and date
 4. Save to `Projects/[project-name]/docs/[doc-name].md`
+5. **Git Guard**: DO NOT run `git commit` for files created in `docs/` (internal docs are not git-tracked).
 
 #### 7. Create or Update Doc Index
 
@@ -319,6 +320,7 @@ Update specific documentation to reflect current project state.
 3. Diff current doc against actual code to find discrepancies.
 4. Update the doc and bump "last reviewed" date.
 5. Log in session.
+6. **Git Guard**: DO NOT run `git commit` or `git add` for files in `docs/` (internal docs are not git-tracked).
 
 ---
 
