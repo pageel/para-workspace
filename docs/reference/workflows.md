@@ -19,11 +19,12 @@ Workflows are the **UI layer** for AI agents. They define processes that agents 
 | `/para` | Core | Master workflow — see [Para Guide](../workflows/para.md) |
 | `/open` | Session | Start session, load context — see [Open Guide](../workflows/open.md) |
 | `/end` | Session | Close session, save logs — see [End Guide](../workflows/end.md) |
-| `/plan` | Planning | Create implementation plans. Sidecar Skill templates (v1.7.8). Step 9.5 Staged Reload (v1.7.11) — see [Plan Guide](../workflows/plan.md) |
+| `/plan` | Planning | Create implementation plans with Graph Intelligence (--graph). Sidecar Skill templates. Step 9.5 Staged Reload — see [Plan Guide](../workflows/plan.md) |
 | `/backlog` | Planning | Manage product backlog. Backlog v2 §1-§5 structure (v1.7.11) — see [Backlog Guide](../workflows/backlog.md) |
-| `/brainstorm` | Planning | Collaborative ideation. Dual Output + 7 exit paths (v1.7.7). Soft Dump Pre-flight (v1.7.9.1) — see [Brainstorm Guide](../workflows/brainstorm.md) |
+| `/brainstorm` | Planning | Collaborative ideation with Graph Intelligence (--graph). Extract Paradigm + Sidecar Skill (v1.7.12) — see [Brainstorm Guide](../workflows/brainstorm.md) |
 | `/push` | Dev | Commit & push code — see [Push Guide](../workflows/push.md) |
 | `/verify` | QA | Check task completion — see [Verify Guide](../workflows/verify.md) |
+| `/qa` | QA | Systematic Red Team Q&A review loop. Sidecar Skill (v1.8.6) |
 | `/retro` | Review | Retrospective before archive — see [Retro Guide](../workflows/retro.md) |
 | `/release` | Release | Pre-release quality gate — see [Release Guide](../workflows/release.md) |
 | `/install` | Admin | Install workflow/rule — see [Install Guide](../workflows/install.md) |

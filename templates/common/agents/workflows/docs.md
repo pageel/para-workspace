@@ -3,9 +3,9 @@ description: Generate and maintain project documentation following best practice
 source: catalog
 ---
 
-# /docs [project-name] [action]
+# /docs [project-name] [action] [--graph]
 
-> **Workspace Version:** 1.7.10 (Cognitive Bypass Fix)
+> **Workspace Version:** 1.8.6 (Graph Intelligence)
 
 Generate, review, or update technical documentation for a PARA project. Docs are always created in `Projects/[project-name]/docs/` (internal). Use `publish` to promote selected docs to `repo/docs/` when ready.
 
@@ -17,6 +17,12 @@ Generate, review, or update technical documentation for a PARA project. Docs are
 | `review` | Audit existing docs for completeness and freshness |
 | `update` | Update specific doc files to reflect current state |
 | `publish` | Copy selected docs from `docs/` to `repo/docs/` for shipping |
+
+## Options
+
+| Option | Description |
+|:--|:--|
+| `--graph` | Run Graph Pipeline (Build → Query → Context Bundles) before documentation to anchor docs in real codebase architecture |
 
 ---
 
@@ -115,6 +121,17 @@ cat .agents/skills.md 2>/dev/null | head -n 30
 ```
 
 3. Check `project.md` for `agent.rules` / `agent.skills` — if true, re-read project indices too
+
+#### 0.5. Graph Context Pipeline (if --graph)
+
+// turbo
+
+If the `--graph` flag is provided, execute the graph intelligence pipeline BEFORE reading the contract:
+
+1. **Build Graph:** Run `/para-graph build [project-name]` to ensure graph data is up-to-date.
+2. **Identify Target Nodes:** Use MCP tool `graph_query` to locate architectural nodes related to the project's core modules.
+3. **Deep Context:** Use MCP tools `graph_context_bundle` and `graph_edges` on the identified nodes to gather callers, callees, dependencies, and structural relationships.
+4. **Inject Context:** Keep this graph intelligence in memory to ground the documentation in the actual codebase structure, preventing hallucinations and ensuring accuracy.
 
 #### 1. Read Project Contract
 

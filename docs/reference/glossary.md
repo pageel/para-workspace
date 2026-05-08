@@ -217,6 +217,15 @@
 - **Impact if changed:** 1 skill template. Low.
 - **Related:** `staged_reload`, `soft_dump`, `sidecar_skill`
 
+## qa_workflow
+
+- **Definition:** Systematic Red Team Q&A review loop (`/qa`) that stress-tests artifacts before execution.
+- **Where defined:** `workflows/qa.md` and `skills/qa/SKILL.md` (Sidecar Skill v1.8.6).
+- **Where used:**
+  - Before activating plans or executing complex brainstorming output.
+- **Impact if changed:** Low. Standalone review tool.
+- **Related:** `sidecar_skill`, `plan`, `brainstorm`
+
 ---
 
 ## Impact Summary
@@ -241,3 +250,4 @@
 | `cognitive_bypass` | — | research | 🟢 Descriptive |
 | `staged_reload` | 1 | convention | 🟢 Low |
 | `phase_preflight` | 1 template | convention | 🟢 Low |
+| `qa_workflow` | 1 | convention | 🟢 Low |

@@ -39,8 +39,8 @@ Use as many tiers as your project needs:
 ## End-to-End Flow
 
 ```text
-/brainstorm  ──▶  /docs new     ──▶  /plan create  ──▶  /open & /end
-(ideation)        (strategy/)         (roadmap/plan)     (context + sync)
+/brainstorm  ──▶  /docs new     ──▶  /plan create  ──▶  /qa (review)  ──▶  /open & /end
+(ideation)        (strategy/)         (roadmap/plan)     (QA/audit)         (context + sync)
 ```
 
 ### Step-by-Step
@@ -49,9 +49,10 @@ Use as many tiers as your project needs:
 2. **Create Strategy** (`/docs new`) — Step 3.5 detects `docs/strategy/` or suggests creation.
 3. **Create Roadmap** (`/plan create`) — Step 2.8 asks: Roadmap or Detail Plan? Choose 🗺️ Roadmap.
 4. **Create Detail Plan** (`/plan create`) — Step 2.8 detects existing roadmap → suggests next phase. Step 2.9 loads strategy + roadmap context.
-5. **Daily Dev** (`/open`) — Loads strategy summary (~30 tokens), roadmap overview (~40 tokens), pending brainstorms (~20 tokens). Cascade warning (D10) if strategy is newer than roadmap.
-6. **End Session** (`/end`) — Step 3.2 detects strategy/roadmap changes → SYNC entries. Step 3.3 suggests next steps for new brainstorms. Step 4.5 auto-updates roadmap phase status.
-7. **Plan Complete** (`/plan review`) — Archives detail plan, updates roadmap phase → ✅ Done, suggests creating next phase's detail plan.
+5. **Review Plan** (`/qa`) — Optional: run `/qa plan --graph` before activation to stress-test logic.
+6. **Daily Dev** (`/open`) — Loads strategy summary (~30 tokens), roadmap overview (~40 tokens), pending brainstorms (~20 tokens). Cascade warning (D10) if strategy is newer than roadmap.
+7. **End Session** (`/end`) — Step 3.2 detects strategy/roadmap changes → SYNC entries. Step 3.3 suggests next steps for new brainstorms. Step 4.5 auto-updates roadmap phase status.
+8. **Plan Complete** (`/plan review`) — Archives detail plan, updates roadmap phase → ✅ Done, suggests creating next phase's detail plan.
 
 ---
 

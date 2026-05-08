@@ -47,10 +47,14 @@ ELSE
 
 When generating a plan, Agent MUST load context in this order:
 
-### Pre-requisite: Project Governance Loading
+### Pre-requisite: Project Governance & Roadmap Loading
 
 > ⛔ **MANDATORY — Before writing ANY plan content:**
-> Agent MUST check `project.md` for `agent.rules` and `agent.skills` fields.
+>
+> 1. **Roadmap Sync:** Agent MUST check `project.md` for the `roadmap` field.
+>    - IF `roadmap` exists → Agent MUST read the roadmap file BEFORE drafting the plan to determine the correct Phase name, target Version number, and Dependency flow. Failure to read the roadmap leads to hallucinated versions and incorrect phase tracking.
+>
+> 2. **Governance Sync:** Agent MUST check `project.md` for `agent.rules` and `agent.skills` fields.
 > - IF `agent.rules: true` → read project `.agents/rules.md` index → load ALL triggered rules
 > - IF `agent.skills: true` → read project `.agents/skills.md` index → load ALL triggered skills
 >

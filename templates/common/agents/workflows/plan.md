@@ -3,9 +3,9 @@ description: Create an implementation plan for a project with architecture, phas
 source: catalog
 ---
 
-# /plan [project-name] [action]
+# /plan [project-name] [action] [--graph] [--project]
 
-> **Workspace Version:** 1.7.11 (Tier-2 Proactive Trigger)
+> **Workspace Version:** 1.8.6 (Graph Intelligence + Project Context)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final plan document MUST be translated to this language.**
 
 Create, review, or update a phased implementation plan for a PARA project.
@@ -17,6 +17,16 @@ Create, review, or update a phased implementation plan for a PARA project.
 | `create` | Create a new implementation plan (default if omitted) |
 | `review` | Review and summarize an existing plan |
 | `update` | Update phases or status in an existing plan |
+| `dev` | Start or continue executing the active plan |
+| `end` | Complete and archive the active plan |
+
+## Options
+
+| Option | Description |
+|:--|:--|
+| `--graph` | Run Graph Pipeline (Build → God Nodes → Enrich) before planning to maximize architectural context |
+| `--project` | Default for `create`. Load project-level `.agents/rules/` and `.agents/skills/` context before planning to ensure governance-aware plan generation |
+| `--phase` | Default for `dev`. Strictly execute the plan phase by phase, verifying task completion before moving to the next phase |
 
 ---
 
@@ -47,6 +57,17 @@ cat Projects/[project-name]/.agents/rules.md 2>/dev/null | head -n 30
 cat Projects/[project-name]/.agents/skills.md 2>/dev/null | head -n 30
 ```
 
+#### 0.5. Graph Context Pipeline (if --graph)
+
+// turbo
+
+If the `--graph` flag is provided, execute the deep graph intelligence pipeline BEFORE reading the contract:
+
+1. **Build Graph:** Run `/para-graph build [project-name]` to ensure graph data is up-to-date.
+2. **Identify God Nodes:** Use MCP tool `graph_god_nodes(projectName, unenrichedOnly: true)` to find the most connected, poorly documented nodes.
+3. **Deep Enrichment:** For the top 3-5 God nodes, read their source code (`view_file`) and use `graph_enrich` to document their semantic meaning, complexity, and domain concepts.
+4. **Inject Context:** Keep these enriched God nodes in memory as the architectural backbone for Step 5 (Design Architecture).
+
 #### 1. Read Project Contract
 
 // turbo
@@ -58,6 +79,35 @@ Read `Projects/[project-name]/project.md` to extract:
 - **Definition of Done** (from `dod` list)
 - **Dependencies** (from body section)
 - **Key Decisions** (from body section)
+
+#### 1.5. Load Project Context (default for create, or if --project)
+
+// turbo
+
+> 🛡️ **Rationale:** Project-specific rules and skills impose hard constraints on plan design.
+> Loading them early (before architecture/phase design) prevents creating plans that
+> violate project governance or miss available tooling.
+
+From Step 1, check `project.md` for `agent` map:
+
+1. **IF `agent.rules: true`** (or legacy `has_rules: true`):
+   - Read `Projects/[project-name]/.agents/rules.md` (project rules index, ~5-10 lines)
+   - For each triggered rule matching the plan scope → read the full rule file
+   - Store as **hard constraints** for Phase definition (Step 6) and Risk section (Step 9)
+   - Example: `maintenance.md` trigger “Editing repo/” → plan MUST include docs sync tasks
+
+2. **IF `agent.skills: true`**:
+   - Read `Projects/[project-name]/.agents/skills.md` (project skills index, ~5-10 lines)
+   - Check if any skill trigger matches the plan scope
+   - If relevant skills found → note in plan as **available tooling** (e.g., Harness Guards)
+
+3. **Store results** as constraints that flow into:
+   - Step 5 (Design Architecture) — respect existing patterns
+   - Step 6 (Define Phases) — include governance tasks per rule requirements
+   - Step 9 (Risk & Mitigations) — flag missing guards
+
+> **Convention:** This step replaces the previous Phase D (Rules Constraints) in Step 2.7.
+> By loading project context immediately after the contract, plan design is governance-aware from the start.
 
 #### 2. Read Backlog
 
@@ -144,36 +194,14 @@ From Phase A, if architecture docs exist:
 
 > **Convention:** This step ensures `/plan` builds on existing project knowledge rather than re-designing from scratch. It bridges `docs/` (captures decisions) with `/plan` (applies them).
 
-**Phase D: Rules Constraints** (Two-Tier)
+**Phase D: Rules Constraints** (Promoted to Step 1.5)
 
-**D1: Workspace Rules** (ALWAYS read)
-
-Read `.agents/rules.md` (workspace-level rules index, ~20 lines):
-
-- Extract **trigger conditions** that may affect plan design.
-- Store as constraints for Phase definition (Step 6) and Risk section (Step 9).
-- Example: `hybrid-3-file-integrity.md` trigger "ad-hoc requests" → plan must account for Hot Lane logging.
-
-**D2: Project Rules** (read IF `agent.rules: true` or `has_rules: true` in project.md)
-
-From Step 1, check project.md:
-- `agent.rules: true` (v1.6.2+) OR `has_rules: true` (legacy, backward compat)
-
-If either is true:
-
-- Read `Projects/[project-name]/.agents/rules.md` (project rules index, ~5-10 lines).
-- Extract **trigger conditions** that may affect plan design.
-- Store as constraints for Phase definition (Step 6) and Risk section (Step 9).
-- Example: `dogfooding-policy.md` trigger "Editing repo/" → plan must include sync tasks when modifying repo templates.
-
-**D3: Project Skills** (read IF `agent.skills: true` in project.md, v1.6.2+)
-
-From Step 1, if `project.md` has `agent.skills: true`:
-
-- Read `Projects/[project-name]/.agents/skills.md` (project skills index, ~5-10 lines).
-- Check if any skill trigger matches the plan scope.
-- If relevant skills found → note in plan as available tooling.
-
+> **v1.8.6:** Project rules and skills loading has been promoted to **Step 1.5** (Load Project Context).
+> This ensures governance constraints are available BEFORE architecture design, not buried deep in the knowledge scan.
+>
+> **D1 (Workspace Rules)** is still handled by Step 0 (Pre-flight).
+> **D2 (Project Rules)** and **D3 (Project Skills)** are now handled by Step 1.5.
+>
 > **Rule:** Both workspace and project rules/skills can impose constraints on plan phases. Always check before designing.
 
 **Phase E: Knowledge Items** (platform-injected — no file I/O)
@@ -592,6 +620,10 @@ Modify an existing plan (add phases, update status, revise timeline).
 
 ### Steps
 
+#### 0.5. Graph Context Pipeline (if --graph)
+
+If the `--graph` flag is provided, execute the same Graph Pipeline (Build → God Nodes → Enrich) as defined in the `create` action to refresh architectural context before modifying the plan.
+
 1. Read `active_plan` from `project.md` to locate the plan file.
 2. Ask user what to update:
    - Add/remove/reorder phases
@@ -600,6 +632,34 @@ Modify an existing plan (add phases, update status, revise timeline).
    - Add new code reuse discoveries
 3. Apply changes and increment the plan version (e.g., `1.0` → `1.1`).
 4. Log the update in the current session.
+
+---
+
+## 🚀 Action: dev
+
+Start or continue executing the active plan in the project.
+
+### Steps
+
+1. **Locate Active Plan:** Read `project.md` to find `active_plan` or look for a file with `Status: 🔨 Active` in `artifacts/plans/`.
+2. **Phase Execution:** If `--phase` flag is present (which is default for this action), execute the plan strictly phase by phase.
+3. **Task Verification:** The Agent MUST check the completion of each task within the current phase. It CANNOT move to the next phase unless all tasks in the current phase are marked as completed `[x]`, OR the user explicitly grants permission to skip the remaining tasks.
+4. **Execution:** Proceed with performing the coding or related operations defined in the current pending tasks.
+
+---
+
+## 🏁 Action: end
+
+Finalize the active plan by performing a strict completion audit, syncing backlogs, and archiving.
+
+### Steps
+
+1. **Phase Completion Check:** Verify that all tasks across all phases of the plan are marked as completed `[x]`.
+2. **Walkthrough Checklist Check:** Ensure all items in the Walkthrough Completion Gate are checked off.
+3. **Backlog Sync & Clean:** Confirm that `/backlog sync` and `/backlog clean` have been performed to update the operational authority (`backlog.md`) and hot lane (`sprint-current.md`).
+4. **User Approval (Status Done):** Present the completion status to the user and ask for explicit approval to set the plan Status to `✅ Done`.
+5. **Clear Active Plan:** Ask the user for explicit approval to clear the `active_plan` field in `project.md`.
+6. **Archive:** Only AFTER the user approves both the Done status and the `active_plan` clearance, transition the plan to `✅ Done` (and optionally move to `done/`), finalizing the process.
 
 ---
 

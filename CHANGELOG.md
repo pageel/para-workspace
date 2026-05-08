@@ -7,6 +7,18 @@ Detailed version changelogs are maintained internally in project docs.
 
 - **Changed**: Shortened separator lines across all workflow templates (28 characters) for cleaner reporting.
 
+## [1.8.6] - 2026-05-08
+
+QA Governance Workflow & Sidecar Skill Integration.
+
+- **Added**: `/qa` workflow for Systematic Red Team Q&A loop.
+- **Added**: `qa/SKILL.md` sidecar data with Red Team personas.
+- **Added**: `--graph` flag for `/docs` workflow — Graph Intelligence pipeline before documentation generation.
+- **Added**: `--project` flag for `/plan` workflow — default for `create`, loads project-level rules/skills context before planning.
+- **Changed**: `/brainstorm` and `/plan` workflows updated with Graph Intelligence (`--graph`).
+- **Changed**: `/plan` Step 1.5 — project rules/skills loading promoted from Step 2.7D to first-class concern.
+- **Changed**: System KI Templates and documentation updated to reflect `/qa` workflow.
+
 ## [1.8.5] - 2026-05-05
 
 Hybrid Hook Architecture — Decoupled Tool Lifecycle.

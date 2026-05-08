@@ -7,7 +7,7 @@
 **The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.5-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.6-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -773,6 +773,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] **Dynamic Tool System & para-graph integration** _(shipped in v1.8.0)_
 - [x] **Tool Intelligence Installer & manifest-declared AI intelligence** _(shipped in v1.8.1)_
 - [x] **MCP Auto-Setup — `mcp-setup`, `mcp-list`, `mcp-remove` CLI commands** _(shipped in v1.8.2)_
+- [x] **QA Governance Workflow & Sidecar Skill Integration** _(shipped in v1.8.6)_
 - [ ] Department System _(v1.9.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.10.0 — planned)_
 
@@ -790,4 +791,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.8.5_
+_Version: 1.8.6_

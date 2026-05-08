@@ -125,3 +125,15 @@ items:
   - templates
   - governance
   - quality
+- id: qa
+  name: QA Review Templates
+  kernel_min: 1.8.5
+  kernel_max: 1.x
+  entrypoint: qa/SKILL.md
+  description: "Sidecar data for /qa workflow — Red Team personas..."
+  tags:
+  - qa
+  - sidecar
+  - red-team
+  - review
+  - quality

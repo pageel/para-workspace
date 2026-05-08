@@ -45,6 +45,9 @@ Sidecar Skill = Data router (templates, references, loaded on demand)
 │       ├── options.md
 │       ├── writing-rules.md
 │       └── quality-checklist.md
+├── qa/                      # Sidecar for /qa (v1.8.6)
+│   ├── SKILL.md
+│   └── domains/             # 5 Red Team personas
 ├── formatting/              # Standalone skill
 │   └── SKILL.md
 ├── para-kit/                # Standalone skill
@@ -90,6 +93,13 @@ Sidecar Skill = Data router (templates, references, loaded on demand)
 - Quality checklist (`quality-checklist.md`) — loaded by `/write review` action
 - Options reference (`options.md`) — loaded when user provides `--style`, `--depth`, `--tools`
 
+### `/qa` Sidecar (v1.8.6)
+
+- 5 Red Team personas: Architect, Security, QA Lead, Governance, Delivery Manager
+- Dimension seed patterns for checking logic, completeness, safety
+- Formal QA Report template
+- Workflow delegates to skill for generating complex probing questions
+
 ---
 
 ## Standalone Skills vs Sidecar Skills
@@ -98,7 +108,7 @@ Sidecar Skill = Data router (templates, references, loaded on demand)
 |:--|:--|:--|
 | **Purpose** | Provides independent expertise (formatting, schema reference) | Provides data templates for a specific workflow |
 | **Trigger** | Agent needs knowledge (e.g. "draw a table") | Specific workflow step needs a template |
-| **Examples** | `para-kit`, `formatting`, `para-skill` | `plan`, `docs`, `write`, `brainstorm` |
+| **Examples** | `para-kit`, `formatting`, `para-skill` | `plan`, `docs`, `write`, `brainstorm`, `qa` |
 | **Has `references/`?** | Not required | Always |
 | **Workflow relationship** | N/A — multiple workflows can use | 1:1 with parent workflow |
 
@@ -132,4 +142,4 @@ All skills (standalone + sidecar) must be registered in two places:
 
 ---
 
-_Last updated: 2026-04-13 (v1.7.14: write sidecar skill)_
+_Last updated: 2026-05-08 (v1.8.6: qa sidecar skill)_

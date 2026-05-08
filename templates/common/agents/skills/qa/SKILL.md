@@ -1,0 +1,197 @@
+---
+name: QA Review Templates
+description: Sidecar data for /qa workflow — Red Team personas, dimension checklists, and QA report templates loaded just-in-time.
+source: catalog
+---
+
+# QA Review Skills
+
+> **Architecture:** Sidecar Skill
+> **Parent Workflow:** `/qa`
+
+This skill provides the data structures, templates, and complex persona definitions required by the `/qa` workflow. By keeping this out of the main workflow file, we maintain a lean execution loop while ensuring high-quality, standardized Q&A outputs.
+
+## When to Load
+
+| File | When | Purpose |
+|:--|:--|:--|
+| This file (§1) | Step 10 — Save Report | QA Report template structure |
+| This file (§2) | Step 2 — Generate Questions | Persona question banks (inspiration) |
+| This file (§3) | Step 2 — Generate Questions | Dimension seed patterns (per tag) |
+| `stacks/[name].md` | Step 0 — Pre-flight | Stack-specific QA gotchas & Skill Router |
+
+## 1. QA Report Template
+
+When the user asks to save a Q&A report (Step 9 of the workflow), the Agent MUST format the file according to this structure and save it to `Projects/[project]/artifacts/qa/qa-[date]-[mode]-[target]-[seq].md`.
+
+> **Language Guard:** The Agent MUST translate all headers, table columns, and labels in this template (e.g., "Executive Summary", "Verdict", "Action Items") into the user's preferred language defined in `.para-workspace.yml` (e.g., Vietnamese), while keeping the markdown structure and logic tags (`[LOGIC]`, `[SEC]`) intact.
+
+```markdown
+# 🛡️ QA Review Report: [Target Artifact Name]
+
+> **Target:** `[Path to artifact]`
+> **Target Version:** `[Last Modified Timestamp or Git Hash]`
+> **Workflow Mode:** `/qa [plan/spec/artifact/audit]`
+> **Dimensions:** `[LOGIC, SEC, FEAS, COMP, CONS, DEP, GOV, OSS]`
+> **Verdict:** `[✅ Ready | ⚠️ Action Required | 🔴 Blocked]`
+
+## 1. Executive Summary
+
+| Category | Count |
+| :--- | :--- |
+| **Total Questions Raised** | 0 |
+| **✅ Resolved/OK** | 0 |
+| **⚠️ Minor Issues** | 0 |
+| **🔴 Critical Blockers** | 0 |
+
+## 2. Red Team Findings
+
+*(Group findings by Phase or Section. Use the Personas to label the questions).*
+
+### 📌 [Phase/Section Name]
+
+#### 🏗️ Principal Architect
+**Q [LOGIC]:** [Question]
+**A:** [Answer/Resolution]
+**Verdict:** [✅/⚠️/🔴]
+
+#### 🤖 AI Security Expert
+**Q [SEC]:** [Question]
+**A:** [Answer/Resolution]
+**Verdict:** [✅/⚠️/🔴]
+
+#### 💼 Project Tech Lead
+**Q [GOV]:** [Question]
+**A:** [Answer/Resolution]
+**Verdict:** [✅/⚠️/🔴]
+
+## 3. Action Items & Fixes Applied
+
+- [ ] (Fixed) Changed API payload to include proper validation in Phase 2.
+- [ ] (Pending) Update timeline for Phase 3 integration testing.
+```
+
+## 2. Persona Question Banks
+
+> Agents use these as **inspiration** when generating questions per Step 2.
+> Adapt to actual content — never copy verbatim.
+
+### 🏗️ Principal Architect (`[LOGIC]`, `[DEP]`)
+
+- Does this architecture introduce a single point of failure?
+- Is there a circular dependency between these modules?
+- What happens if the upstream service is offline?
+- Does this scale to 10x the current data load?
+- "Phase N task X.Y requires [output], but which prior task produces it?"
+- "If task X.Y fails, does the plan have a fallback or does it block everything?"
+- "The dependency flow shows A → B → C, but task C.1 references A directly — is B actually needed?"
+
+### 🛡️ Security Auditor (`[SEC]`)
+
+- Are credentials or tokens being logged or stored in plaintext?
+- Is this bash command vulnerable to injection?
+- Do we have proper validation for user-supplied input here?
+- Are we bypassing standard CORS/CSRF protections?
+- "Task X.Y runs `git push` — is there a HARNESS GUARD on the line above?"
+- "This step auto-runs a command — could it have destructive side-effects?"
+- "Are any secrets, API keys, or credentials referenced in this artifact?"
+
+### 🤖 AI Security & Boundary Expert (`[SEC]`, `[LOGIC]`)
+
+- Can a malicious file (e.g., Markdown) trigger prompt injection?
+- Are we granting the LLM too much autonomy (e.g., auto-commit without review)?
+- Could the graph extraction leak sensitive environment variables to the LLM context?
+
+### 🌍 Open Source Maintainer (`[OSS]`, `[CONS]`)
+
+- Are there hardcoded absolute paths (e.g., `/Users/name/...`)?
+- Does this implementation violate our 'Clean Room Design' policy?
+- Is this documentation compliant with our English-First global standard?
+- Is the license header required for this new file?
+
+### ⏱️ Delivery Manager (`[FEAS]`, `[COMP]`)
+
+- Is this time estimate realistic given the team's capacity?
+- Are we missing prerequisite setup steps before execution?
+- Is this feature strictly necessary, or is it scope creep?
+- "Task X.Y assumes `[tool]` is installed — has this been verified?"
+- "This step uses `npx [package]` — but the code hasn't been published yet. Should it use local build?"
+
+### 🔍 QA/Test Lead (`[CONS]`)
+
+- How exactly do we verify this step is successful?
+- What is the expected behavior if the input is `null` or `undefined`?
+- Phase X says one thing, but Phase Y contradicts it — which is correct?
+- "Phase heading says 'Commit #2/2' but Git Operation Summary shows 3 commits — which is correct?"
+- "Version is '0.9.0' in Goal but '0.8.6' in the code snippet — mismatch?"
+- "Task numbering jumps from 3.4 to 3.6 — is 3.5 missing or was it renumbered?"
+
+### 💼 Project Tech Lead (`[GOV]`, `[COMP]`)
+
+> **Context requirement:** This persona's questions are only meaningful AFTER loading
+> the project's full governance context (rules, skills, release process) in Pre-flight Step 5.
+
+- "The project has maintenance rule M[N] requiring version sync across N files — does the plan list ALL locations?"
+- "Project type is OSS with tarball release — does the plan include a Release phase per M6?"
+- "Maintenance rule M1 restricts `git add` to `repo/` only — are all git commands scoped correctly?"
+- "The project Governance Checklist has N items — does it cover ALL triggered rules from `.agents/rules.md`?"
+- "This project uses Template-First editing (M5) — does the plan edit `repo/templates/` before workspace copies?"
+- "Walkthrough is missing the project's release verification (`gh release view`) — should it be added?"
+- "The plan bumps version but has no tarball/release step — is this a version bump orphan?"
+- "The project has a build+test rule (M4) — does every Phase include build verification before commit?"
+- "Project distributes AI Intelligence via `tool.manifest.yml` — are `shipped_in` and template versions updated?"
+- "The `install-hooks.sh` pre/post lifecycle hooks — are they affected by this plan's changes?"
+
+## 3. Dimension Seed Patterns
+
+> Quick-reference seed patterns per dimension tag. Agent uses these alongside
+> the Persona Question Banks (§2) when generating questions at Step 2.
+
+### [LOGIC] Logic & Sequencing
+
+- "Phase N task X.Y requires [output], but which prior task produces it?"
+- "If task X.Y fails, does the plan have a fallback or does it block everything?"
+
+### [SEC] Security & Safety
+
+- "Task X.Y runs `git push` — is there a HARNESS GUARD on the line above?"
+- "This step auto-runs a command — could it have destructive side-effects?"
+
+### [FEAS] Feasibility
+
+- "Task X.Y assumes `[tool]` is installed — has this been verified?"
+- "The time estimate is [N days] for [scope] — is this realistic given [complexity]?"
+
+### [COMP] Completeness
+
+- "The Walkthrough has N items but Phase 3 added [feature] — is it covered?"
+- "Risk table lists N risks but Phase N has no HARNESS GUARD — should one be added?"
+- "git add lists files A, B but task also modifies file C — is C missing?"
+
+### [CONS] Consistency
+
+- "Version is '0.9.0' in Goal but '0.8.6' in the code snippet — mismatch?"
+- "Task numbering jumps from 3.4 to 3.6 — is 3.5 missing or was it renumbered?"
+
+### [DEP] Dependencies
+
+- "Phase N uses `graphology` npm package — is it listed in package.json?"
+- "This function calls `detectGodNodes()` which is defined in Phase 3 — but we're in Phase 2?"
+
+### [GOV] Project Governance
+
+- "The project has maintenance rule M3 requiring version sync across N files — does the plan list ALL locations?"
+- "Project type is OSS with tarball release — does the plan include a Release phase per M6?"
+- "Maintenance rule M1 restricts `git add` to `repo/` only — are all git commands scoped correctly?"
+- "The plan bumps version but has no tarball/release step — is this a version bump orphan?"
+- "The project Governance Checklist has N items — does it cover ALL triggered rules?"
+
+## 4. Deep Review Aspects (Dual-Pass)
+
+> When the user triggers a `deep` review in Step 3, the Agent shifts focus from surface architecture to raw source code analysis.
+
+- **`[DEEP-LOGIC]` Line-by-line Execution**: Analyze algorithm details, off-by-one errors, infinite loops, and unhandled null/undefined edge cases.
+- **`[DEEP-SEC]` Source Vulnerability**: Hunt for SQL/NoSQL injections, XSS, hardcoded secrets, and missing input validation.
+- **`[DEEP-PERF]` Performance & Leaks**: Identify O(N^2) bottlenecks, memory leaks, uncleaned event listeners, and hanging async/await promises.
+- **`[DEEP-INT]` Cross-file Integration**: Match Data Types, JSON Payloads, and API Contracts between completely separate files (e.g., Frontend Component vs Backend Interface).
+- **`[DEEP-CLEAN]` Refactoring**: Evaluate Code Smells, DRY violations, SOLID principles, and propose project-appropriate Design Patterns.

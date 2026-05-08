@@ -164,6 +164,7 @@ git push origin main
 
 [ ] All Task List items from Phase 0 → Phase N are [x] (including git commit + push).
 [ ] [Project-specific checks: build pass, docs updated, governance rules...]
+[ ] ⛔ CHECKPOINT (Walkthrough Completion): Agent MUST verify all above Walkthrough items are ticked [x] BEFORE proposing Status transition.
 [ ] ⛔ CHECKPOINT (C7 Status Transition): Agent MUST NOT change Status to "✅ Done" or clear `active_plan` without explicit user approval. Agent presents the completed Walkthrough checklist → User verifies → User approves transition. Only AFTER user confirms → Agent sets Status and clears `active_plan`.
 [ ] User approved Done transition.
 [ ] Clear `active_plan` in `project.md`.

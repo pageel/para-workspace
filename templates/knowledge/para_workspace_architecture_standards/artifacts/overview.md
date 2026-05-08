@@ -135,9 +135,10 @@ ELSE (local):
 │   ├── write/        # Sidecar data for /write workflow (v1.7.14)
 │   ├── harness/      # Guard catalog & auto-scan protocol (v1.7.15)
 │   ├── spec/         # Spec-driven development templates (v1.7.16)
+│   ├── qa/           # Sidecar data for /qa workflow (v1.8.6)
 │   ├── para-graph/   # Centralized Graph Intelligence Router (v2.0.0, installed via install-tool)
 │   └── page-map/     # Website visual structure management (v1.7.6)
-└── workflows/        # 27 core workflow files
+└── workflows/        # 28 core workflow files
 ```
 
 ### Project Level (CONDITIONAL — gated by `agent.rules` / `agent.skills`)
@@ -211,19 +212,20 @@ Workflows, Rules, and Skills managed via `catalog.yml`:
 - **Validation:** CLI validates `kernel_min`/`kernel_max` before syncing; incompatible items skipped with warning
 - **Required fields:** id, name, kernel_min, entrypoint, description
 
-## 11. Workflow Library (27 core workflows)
+## 11. Workflow Library (28 core workflows)
 
 ### Core PARA Workflows
 | Workflow | Purpose |
 | :-- | :-- |
 | `/open` | Start session with full context from previous sessions |
 | `/end` | Log session progress and close working day |
-| `/plan` | Create implementation plan with phases and timeline |
+| `/plan` | Create implementation plan with phases and timeline (`--graph`, `--project`) |
 | `/spec` | Write structured specification before coding (v1.7.16) |
 | `/backlog` | Manage project features and bugs |
 | `/brainstorm` | Brainstorm context, issues, and solutions |
 | `/push` | Fast commit and push to GitHub |
 | `/verify` | Verify task completion using walkthroughs |
+| `/qa` | Systematic Red Team Q&A review |
 | `/release` | Pre-release quality gate |
 | `/retro` | Project retrospective before archiving |
 
@@ -243,7 +245,7 @@ Workflows, Rules, and Skills managed via `catalog.yml`:
 | `/backup` | Backup workspace config files |
 | `/para-knowledge` | Manage Knowledge Items — dashboard, create, update, audit, archive |
 | `/para-skill` | Co-Author engine to create, validate, and test AI Agent skills (v1.7.6) |
-| `/docs` | Generate and maintain project documentation |
+| `/docs` | Generate and maintain project documentation (`--graph`) |
 | `/learn` | Package lessons and knowledge into Areas/Learning |
 
 > **Note:** Users may add domain-specific workflows to their workspace. The count above reflects only core workflows shipped via `catalog.yml`.
@@ -267,7 +269,7 @@ Skills are folders of instructions that extend agent capabilities:
 
 Skills promoted from rules: standalone, English-first, constraints + templates merged.
 
-Total: **11 skills** (4 standalone + 6 sidecar + 1 tool-bundled).
+Total: **12 skills** (4 standalone + 7 sidecar + 1 tool-bundled).
 
 ### Sidecar Skill Pattern (v1.7.6.3)
 
@@ -338,6 +340,7 @@ Sidecar skills (`plan`, `docs`, `brainstorm`, `spec`) reference the centralized 
 | 1.8.1 | Feature | Tool Intelligence Installer: manifest-declared AI intelligence (`agents:` block in `tool.manifest.yml`), `install-tool --agents`/`--no-agents` flags, `remove-tool` agents cleanup, `tool.schema.json` extended with agents property |
 | 1.8.2 | Feature | MCP Auto-Setup: `mcp:` block in `tool.manifest.yml`, `mcp-setup`/`mcp-list`/`mcp-remove` CLI commands, IDE config path matrix (Antigravity/Claude/Cursor), `jq`-based JSON merge with print fallback, `install-tool --no-mcp` flag, shared `mcp-config.sh` library |
 | 1.8.3 | Sync | Graph Router Sync: sidecar skills (`plan`, `docs`, `brainstorm`, `spec`) reference centralized `para-graph §3.3.x` instead of inline graph logic, `detail-plan-docs.md` template, `para-graph` trigger in `skills.md`, `registry/tools.yml` bumped to v0.8.4 |
+| 1.8.6 | Feature | QA Governance Workflow (`/qa`) with Red Team personas and Sidecar skill, integrated Graph Intelligence (`--graph`) in brainstorm/plan/docs workflows, `/plan` `--project` flag (default for create) promoting project context loading to Step 1.5, Docs Impact Scan |
 
 ## 16. Dynamic Tool System (v1.8.0)
 

@@ -184,8 +184,8 @@ items:
   kernel_min: 1.7.0
   kernel_max: 1.x
   entrypoint: plan.md
-  description: 'Cognitive Bypass Fix: Soft Dump payload in Step 0 (v1.7.10). Sidecar
-    Skill templates.'
+  description: 'Graph Intelligence (--graph), project context (--project default for
+    create), dev/end actions. Sidecar Skill templates.'
   tags:
   - planning
   - architecture
@@ -216,8 +216,8 @@ items:
   kernel_min: 1.7.8
   kernel_max: 1.x
   entrypoint: docs.md
-  description: 'Cognitive Bypass Fix: Soft Dump payload in Step 0 (v1.7.10). Sidecar
-    Skill templates.'
+  description: 'Graph Intelligence (--graph). Cognitive Bypass Fix: Soft Dump payload
+    in Step 0 (v1.7.10). Sidecar Skill templates.'
   tags:
   - documentation
   - docs
@@ -239,8 +239,7 @@ items:
   kernel_min: 1.7.0
   kernel_max: 1.x
   entrypoint: brainstorm.md
-  description: Extract Paradigm + Sidecar Skill (v1.7.12). Consent gate, 500-line
-    threshold, MUST NOT skip Step 3.
+  description: 'Graph Intelligence (--graph). Extract Paradigm + Sidecar Skill (v1.7.12).'
   tags:
   - brainstorm
   - ideation
@@ -309,5 +308,17 @@ items:
   - spec
   - planning
   - governance
+  - sidecar
+  - quality
+- id: qa
+  name: QA Review
+  kernel_min: 1.8.5
+  kernel_max: 1.x
+  entrypoint: qa.md
+  description: "Systematic Red Team Q&A review loop..."
+  tags:
+  - qa
+  - review
+  - red-team
   - sidecar
   - quality

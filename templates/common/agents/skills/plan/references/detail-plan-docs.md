@@ -138,7 +138,8 @@ N.2 🤖 **[doc-filename].md** — Load context for `[Component.tsx]` → write 
 - [ ] All docs are linked in `docs/README.md` index.
 - [ ] Content verified against source code (Zero-hallucination check).
 - [ ] Graph enrichment data preserved — if graph was used (nodes have `semantic` field).
-- [ ] ⛔ CHECKPOINT (C7 Status Transition): Agent MUST NOT change Status to "✅ Done" without explicit user approval.
+- [ ] ⛔ CHECKPOINT (Walkthrough Completion): Agent MUST verify all above Walkthrough items are ticked [x] BEFORE proposing Status transition.
+- [ ] ⛔ CHECKPOINT (C7 Status Transition): Agent MUST NOT change Status to "✅ Done" without explicit user approval. Agent presents the completed Walkthrough checklist → User verifies → User approves transition. Only AFTER user confirms → Agent sets Status and clears `active_plan`.
 - [ ] User approved Done transition.
 - [ ] Clear `active_plan` in `project.md`.
 

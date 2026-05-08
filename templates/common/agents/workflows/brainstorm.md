@@ -3,15 +3,32 @@ description: Brainstorm context, issues, and solutions before formal planning
 source: catalog
 ---
 
-# /brainstorm [project-name] [topic]
+# /brainstorm [project-name] [topic] [--graph]
 
-> **Workspace Version:** 1.7.12 (Extract Paradigm + Sidecar Skill)
+> **Workspace Version:** 1.8.5 (Graph Intelligence)
 
 Collaborative troubleshooting and ideation for a project. Use this workflow to explore problem spaces, evaluate potential solutions, and clarify thinking before committing to a formal implementation plan (`/plan`).
+
+## Options
+
+| Option | Description |
+|:--|:--|
+| `--graph` | Run Graph Pipeline (Build → Query → Bundles) to anchor brainstorm in real codebase architecture |
 
 ## Steps
 
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `language` (e.g., `vi` for Vietnamese). **All output and the final report MUST be translated to this language.**
+
+### 0.5. Graph Context Pipeline (if --graph)
+
+// turbo
+
+If the `--graph` flag is provided, execute the graph intelligence pipeline BEFORE gathering other context:
+
+1. **Build Graph:** Run `/para-graph build [project-name]` to ensure graph data is up-to-date.
+2. **Identify Target Nodes:** Use MCP tool `graph_query` to locate architectural nodes related to the `[topic]`.
+3. **Deep Context:** Use MCP tools `graph_context_bundle` and `graph_edges` on the identified nodes to gather callers, callees, dependencies, and assess blast radius.
+4. **Inject Context:** Keep this graph intelligence in memory to ground the brainstorm in the actual codebase structure, preventing hallucinations.
 
 ### 1. Context Gathering
 

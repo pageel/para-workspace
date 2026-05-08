@@ -7,7 +7,7 @@
 **Workspace Framework cho Con người & AI Agent**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.5-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.6-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -740,6 +740,8 @@ Nếu workspace của bạn quá cũ (v1.3.x) hoặc đã bị bạn chỉnh s�
 - [x] **Spec Workflow, Dual-Format Guards & CLI Fixes** _(phát hành v1.7.16)_
 - [x] **Dynamic Tool System & tích hợp para-graph** _(phát hành v1.8.0)_
 - [x] **Tool Intelligence Installer & trí tuệ AI khai báo qua manifest** _(phát hành v1.8.1)_
+- [x] **MCP Auto-Setup — lệnh CLI `mcp-setup`, `mcp-list`, `mcp-remove`** _(phát hành v1.8.2)_
+- [x] **QA Governance Workflow & Tích hợp Sidecar Skill** _(phát hành v1.8.6)_
 - [ ] Department System _(v1.9.0 — lên kế hoạch)_
 - [ ] Community & Trust Boundary _(v1.10.0 — lên kế hoạch)_
 
@@ -757,4 +759,4 @@ Xem [CONTRIBUTING.md](../../CONTRIBUTING.md) để biết hướng dẫn. Điể
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.8.5_
+_Phiên bản: 1.8.6_
