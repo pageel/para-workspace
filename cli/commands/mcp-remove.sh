@@ -125,21 +125,36 @@ if [ ! -f "$CONFIG_PATH" ]; then
   exit 0
 fi
 
-# Check if jq is available
-if ! command -v jq &> /dev/null; then
-  echo "⚠️  jq is not installed — cannot auto-remove."
+# Check if Node is available
+if ! command -v node &> /dev/null; then
+  echo "⚠️  Node.js is not installed — cannot auto-remove."
   echo ""
   echo "   Please manually remove the '$SERVER_NAME' entry from:"
   echo "   $CONFIG_PATH"
   exit 1
 fi
 
-# Check if server exists in config
-if ! jq -e ".mcpServers.\"$SERVER_NAME\"" "$CONFIG_PATH" &>/dev/null; then
-  echo "⚠️  Server '$SERVER_NAME' not found in config."
-  echo "   File: $CONFIG_PATH"
-  exit 0
-fi
+# Use node to check and remove the server from config
+REMOVE_SCRIPT=$(cat << 'EOF'
+const fs = require('fs');
+const configPath = process.argv[1];
+const serverName = process.argv[2];
+
+try {
+  let config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  if (!config.mcpServers || !config.mcpServers[serverName]) {
+    console.log("NOT_FOUND");
+    process.exit(0);
+  }
+  
+  delete config.mcpServers[serverName];
+  fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
+  console.log("REMOVED");
+} catch (e) {
+  console.log("ERROR");
+}
+EOF
+)
 
 # Confirm removal
 echo ""
@@ -156,20 +171,19 @@ fi
 # Backup before removal
 backup_config "$CONFIG_PATH"
 
-# Remove using jq — atomic write
-tmp_file=$(mktemp)
-if jq "del(.mcpServers.\"$SERVER_NAME\")" "$CONFIG_PATH" > "$tmp_file" 2>/dev/null; then
-  if jq empty "$tmp_file" 2>/dev/null; then
-    mv "$tmp_file" "$CONFIG_PATH"
-    echo ""
-    echo "✅ Removed '$SERVER_NAME' from $IDE_TARGET config."
-  else
-    echo "❌ Error: Result is invalid JSON — aborting."
-    rm -f "$tmp_file"
-    exit 1
-  fi
+result=$(node -e "$REMOVE_SCRIPT" "$CONFIG_PATH" "$SERVER_NAME")
+
+if [ "$result" = "NOT_FOUND" ]; then
+  echo "⚠️  Server '$SERVER_NAME' not found in config."
+  echo "   File: $CONFIG_PATH"
+  exit 0
+elif [ "$result" = "ERROR" ]; then
+  echo "❌ Error: Invalid JSON or operation failed — aborting."
+  exit 1
+elif [ "$result" = "REMOVED" ]; then
+  echo ""
+  echo "✅ Removed '$SERVER_NAME' from $IDE_TARGET config."
 else
-  echo "❌ Error: jq removal failed."
-  rm -f "$tmp_file"
+  echo "❌ Error: Unknown node removal failed."
   exit 1
 fi

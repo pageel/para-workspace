@@ -112,7 +112,7 @@ EOF
 
 # merge_mcp_config — Merges an MCP server entry into an IDE config file.
 # Usage: merge_mcp_config "config_path" "server_name" "snippet_json"
-# Requires: jq for merge. Falls back to printing instructions if jq is absent.
+# Uses Node.js for merge (cross-platform, fallback to print if missing).
 # Returns: 0 on success, 1 on error
 merge_mcp_config() {
   local config_path="$1"
@@ -124,9 +124,9 @@ merge_mcp_config() {
     return 1
   fi
 
-  # Check if jq is available
-  if ! command -v jq &> /dev/null; then
-    log_warn "jq is not installed — cannot auto-merge config."
+  # Check if Node is available
+  if ! command -v node &> /dev/null; then
+    log_warn "Node.js is not installed — cannot auto-merge config."
     echo ""
     echo "  📋 Please add the following to your config file manually:"
     echo "     File: $config_path"
@@ -147,17 +147,41 @@ merge_mcp_config() {
     log_info "Created new/reset empty config file: $config_path"
   fi
 
-  # Validate existing config is valid JSON
-  if ! jq empty "$config_path" 2>/dev/null; then
-    log_error "Config file is not valid JSON: $config_path"
+  local merge_script
+  merge_script=$(cat << 'EOF'
+const fs = require('fs');
+const configPath = process.argv[1];
+const serverName = process.argv[2];
+const snippetStr = process.argv[3];
+
+try {
+  let config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  if (!config.mcpServers) config.mcpServers = {};
+  
+  const snippet = JSON.parse(snippetStr);
+  const serverConfig = snippet[serverName];
+  
+  if (config.mcpServers[serverName]) {
+    console.log("EXISTS");
+    process.exit(0);
+  }
+  
+  config.mcpServers[serverName] = serverConfig;
+  fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
+  console.log("MERGED");
+} catch (e) {
+  console.log("ERROR");
+}
+EOF
+)
+
+  local result
+  result=$(node -e "$merge_script" "$config_path" "$server_name" "$snippet_json")
+
+  if [ "$result" = "ERROR" ]; then
+    log_error "Config file is not valid JSON or merge failed: $config_path"
     return 1
-  fi
-
-  # Check if server already exists
-  local existing
-  existing=$(jq -r ".mcpServers.\"$server_name\" // empty" "$config_path" 2>/dev/null)
-
-  if [ -n "$existing" ]; then
+  elif [ "$result" = "EXISTS" ]; then
     log_warn "Server '$server_name' already exists in config."
     printf "     Overwrite? (y/n): "
     read -r overwrite_answer
@@ -165,30 +189,15 @@ merge_mcp_config() {
       log_info "Skipped — existing config preserved."
       return 0
     fi
-  fi
-
-  # Merge using jq — atomic write via temp file
-  local tmp_file
-  tmp_file=$(mktemp)
-
-  if jq --argjson entry "$snippet_json" \
-     '.mcpServers[$key] = $entry[$key]' \
-     --arg key "$server_name" \
-     "$config_path" > "$tmp_file" 2>/dev/null; then
-
-    # Validate merged result
-    if jq empty "$tmp_file" 2>/dev/null; then
-      mv "$tmp_file" "$config_path"
-      log_info "MCP server '$server_name' configured in: $config_path"
-      return 0
-    else
-      log_error "Merged config is invalid JSON — aborting."
-      rm -f "$tmp_file"
-      return 1
-    fi
+    
+    node -e "const fs=require('fs'); let c=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); c.mcpServers[process.argv[2]] = JSON.parse(process.argv[3])[process.argv[2]]; fs.writeFileSync(process.argv[1], JSON.stringify(c, null, 2), 'utf8');" "$config_path" "$server_name" "$snippet_json"
+    log_info "MCP server '$server_name' configured in: $config_path"
+    return 0
+  elif [ "$result" = "MERGED" ]; then
+    log_info "MCP server '$server_name' configured in: $config_path"
+    return 0
   else
-    log_error "jq merge failed."
-    rm -f "$tmp_file"
+    log_error "Unknown error during Node.js merge."
     return 1
   fi
 }
