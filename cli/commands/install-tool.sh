@@ -35,6 +35,7 @@ SKIP_AGENTS=false
 SKIP_MCP=false
 AGENTS_ONLY=false
 SYNC_MODE=false
+LATEST_MODE=false
 
 for arg in "$@"; do
   case "$arg" in
@@ -56,11 +57,18 @@ for arg in "$@"; do
     --sync)
       SYNC_MODE=true
       ;;
+    --latest)
+      LATEST_MODE=true
+      TOOL_VERSION=""
+      ;;
     --help|-h)
-      echo "Usage: para install-tool <name> [--version=X.Y.Z] [--update] [--agents] [--sync] [--no-agents] [--no-mcp]"
+      echo "Usage: para install-tool <name> [--version=X.Y.Z] [--latest] [--update] [--agents] [--sync] [--no-agents] [--no-mcp]"
       echo ""
       echo "  <name>           Tool name (e.g., 'para-graph' or 'graph')"
-      echo "  --version=X.Y.Z  Install specific version (default: latest)"
+      echo ""
+      echo "Options:"
+      echo "  --version=X.Y.Z  Install specific version"
+      echo "  --latest         Force install latest version from GitHub (fails if API unreachable)"
       echo "  --update         Remove existing installation before installing"
       echo "  --agents         Install only AI intelligence (tool must be already installed)"
       echo "  --sync           Fetch latest intelligence from GitHub (no tarball download)"
@@ -163,6 +171,7 @@ if [ -z "$TOOL_VERSION" ]; then
   # When no explicit --version, check GitHub API for actual latest release.
   # This prevents stale local registry from installing outdated versions.
   if [ -n "$TOOL_REPO" ]; then
+    echo "  🔍 Checking latest version from GitHub..."
     REMOTE_LATEST=""
     REMOTE_LATEST=$(curl -sf --max-time 5 \
       "https://api.github.com/repos/${TOOL_REPO}/releases/latest" 2>/dev/null \
@@ -170,12 +179,25 @@ if [ -z "$TOOL_VERSION" ]; then
       | head -1 \
       | sed 's/.*"tag_name": *"v\{0,1\}//; s/".*//' ) || true
 
-    if [ -n "$REMOTE_LATEST" ] && [ "$REMOTE_LATEST" != "$TOOL_VERSION" ]; then
-      echo "⚠ Registry says v${TOOL_VERSION}, but GitHub latest is v${REMOTE_LATEST}."
-      echo "  Using remote version v${REMOTE_LATEST}."
-      echo "  💡 Run './para update' to sync your local registry."
-      echo ""
-      TOOL_VERSION="$REMOTE_LATEST"
+    if [ -n "$REMOTE_LATEST" ]; then
+      if [ "$REMOTE_LATEST" != "$TOOL_VERSION" ]; then
+        echo "  ⚠  Registry says v${TOOL_VERSION}, but GitHub latest is v${REMOTE_LATEST}."
+        echo "     Using remote version v${REMOTE_LATEST}."
+        echo "     💡 Run './para update' to sync your local registry."
+        echo ""
+        TOOL_VERSION="$REMOTE_LATEST"
+      else
+        echo "  ✅ Registry is up to date (v${TOOL_VERSION})."
+      fi
+    else
+      if [ "$LATEST_MODE" = true ]; then
+        echo "  ❌ Error: --latest flag used, but could not verify latest version from GitHub (API timeout or rate-limited)."
+        exit 1
+      else
+        echo "  ⚠️  Could not verify latest version from GitHub (API timeout or rate-limited)."
+        echo "     Falling back to registry version v${TOOL_VERSION}. Use --version=X.Y.Z to override."
+        echo ""
+      fi
     fi
   fi
 fi
