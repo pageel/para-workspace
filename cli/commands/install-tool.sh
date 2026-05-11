@@ -42,6 +42,9 @@ for arg in "$@"; do
     --version=*)
       TOOL_VERSION="${arg#--version=}"
       ;;
+    --local=*)
+      LOCAL_TARBALL="${arg#--local=}"
+      ;;
     --update)
       UPDATE_MODE=true
       ;;
@@ -62,12 +65,13 @@ for arg in "$@"; do
       TOOL_VERSION=""
       ;;
     --help|-h)
-      echo "Usage: para install-tool <name> [--version=X.Y.Z] [--latest] [--update] [--agents] [--sync] [--no-agents] [--no-mcp]"
+      echo "Usage: para install-tool <name> [--version=X.Y.Z] [--local=PATH] [--latest] [--update] [--agents] [--sync] [--no-agents] [--no-mcp]"
       echo ""
       echo "  <name>           Tool name (e.g., 'para-graph' or 'graph')"
       echo ""
       echo "Options:"
       echo "  --version=X.Y.Z  Install specific version"
+      echo "  --local=PATH     Install from a local tarball file"
       echo "  --latest         Force install latest version from GitHub (fails if API unreachable)"
       echo "  --update         Remove existing installation before installing"
       echo "  --agents         Install only AI intelligence (tool must be already installed)"
@@ -78,6 +82,7 @@ for arg in "$@"; do
       echo "Examples:"
       echo "  para install-tool para-graph"
       echo "  para install-tool graph --version=0.7.0"
+      echo "  para install-tool para-graph --local=./test.tar.gz"
       echo "  para install-tool para-graph --update"
       echo "  para install-tool para-graph --agents"
       echo "  para install-tool para-graph --sync"
@@ -614,32 +619,51 @@ check_runtime_warning() {
 }
 
 # === Download tarball (R8: check exit code + file existence) ===
-echo "📦 Installing $PARA_TOOL_NAME v$TOOL_VERSION..."
-echo ""
-
-# Interpolate version into tarball URL
-TARBALL_URL="$(echo "$TOOL_TARBALL_PATTERN" | sed "s/{{VERSION}}/$TOOL_VERSION/g")"
-
-echo "  → Downloading from: $TARBALL_URL"
-
-# Create temp directory for download
 TEMP_DIR="$(mktemp -d)"
-TARBALL_FILE="$TEMP_DIR/${PARA_TOOL_NAME}-v${TOOL_VERSION}.tar.gz"
 
-# Download (R8: explicit error check)
-if ! curl -fSL "$TARBALL_URL" -o "$TARBALL_FILE" 2>/dev/null; then
-  echo "❌ Error: Failed to download tarball."
-  echo "   URL: $TARBALL_URL"
-  echo "   Check that the release exists and you have network access."
-  rm -rf "$TEMP_DIR"
-  exit 1
-fi
+if [ -n "$LOCAL_TARBALL" ]; then
+  echo "📦 Installing $PARA_TOOL_NAME from local tarball: $LOCAL_TARBALL..."
+  echo ""
+  
+  if [ ! -s "$LOCAL_TARBALL" ]; then
+    echo "❌ Error: Local tarball not found or empty: $LOCAL_TARBALL"
+    rm -rf "$TEMP_DIR"
+    exit 1
+  fi
+  
+  TARBALL_FILE="$LOCAL_TARBALL"
+  
+  # For local installs, we might not have a TOOL_VERSION if --version wasn't provided
+  if [ -z "$TOOL_VERSION" ]; then
+    # Default to 0.0.0-local to satisfy later version checks
+    TOOL_VERSION="0.0.0-local"
+  fi
+else
+  echo "📦 Installing $PARA_TOOL_NAME v$TOOL_VERSION..."
+  echo ""
 
-# Verify file exists and is not empty (R8)
-if [ ! -s "$TARBALL_FILE" ]; then
-  echo "❌ Error: Downloaded file is empty or missing."
-  rm -rf "$TEMP_DIR"
-  exit 1
+  # Interpolate version into tarball URL
+  TARBALL_URL="$(echo "$TOOL_TARBALL_PATTERN" | sed "s/{{VERSION}}/$TOOL_VERSION/g")"
+
+  echo "  → Downloading from: $TARBALL_URL"
+
+  TARBALL_FILE="$TEMP_DIR/${PARA_TOOL_NAME}-v${TOOL_VERSION}.tar.gz"
+
+  # Download (R8: explicit error check)
+  if ! curl -fSL "$TARBALL_URL" -o "$TARBALL_FILE" 2>/dev/null; then
+    echo "❌ Error: Failed to download tarball."
+    echo "   URL: $TARBALL_URL"
+    echo "   Check that the release exists and you have network access."
+    rm -rf "$TEMP_DIR"
+    exit 1
+  fi
+
+  # Verify file exists and is not empty (R8)
+  if [ ! -s "$TARBALL_FILE" ]; then
+    echo "❌ Error: Downloaded file is empty or missing."
+    rm -rf "$TEMP_DIR"
+    exit 1
+  fi
 fi
 
 # === Extract ===
