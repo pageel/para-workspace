@@ -73,6 +73,13 @@ Generate 3-5 distinct perspectives, solutions, or root causes related to the top
 - **Pros:** Why it might work.
 - **Cons/Risks:** Potential drawbacks or technical challenges.
 
+> 🔍 **Graph-Assisted Ideation (if `--graph`):** During exploration, Agent SHOULD
+> actively use MCP tools to validate or challenge ideas against the real codebase:
+> - `graph_query` — Find nodes related to proposed changes
+> - `graph_impact_analysis` — Assess blast radius of each option
+> - `graph_context_bundle` — Pull callers/callees to check feasibility
+> - `graph_edges` — Verify dependency assumptions
+
 ### 3. Refinement & Evaluation
 
 > ⚠️ **MUST NOT skip this step.** Agent MUST present the options to the user and
@@ -86,28 +93,47 @@ Collaborate with the user to evaluate the options:
 - Drill down into the technical, architectural, or operational details of the most promising approach.
 - _Wait for user confirmation that refinement is complete before saving._
 
+> 🔍 **Graph-Assisted Refinement (if `--graph`):** When drilling into a specific
+> option, Agent SHOULD use `graph_context_bundle` on the target node to pull
+> source code and verify the proposed change is architecturally sound.
+
 ### 4. Save Structured Output
 
 // turbo
 
 > 🧩 **Sidecar Skill:** Load document templates from `.agents/skills/brainstorm/`.
 > Read `SKILL.md` for the Router Table, then load the template file needed:
-> - **Decision template** → `references/templates/decision.md`
-> - **Research template** → `references/templates/research.md`
+> - **Open brainstorm** → `references/templates/brainstorm.md`
+> - **Finalized decision** → `references/templates/decision.md`
+> - **Research extraction** → `references/templates/research.md`
 
-> **Naming convention:** `{type}-{YYYY-MM-DD}-{topic-slug}.md`
-> - `type`: `brainstorm` or `decision`
-> - Date ALWAYS right after type prefix
-> - `topic-slug`: kebab-case, ≤5 words
+> ⚠️ **Status Check:** Agent MUST determine or ask the user:
+> - **Open**: An ongoing exploration — findings will accumulate over time.
+> - **Decided**: A final choice is made — the brainstorm is concluded.
+
+#### Path A — Open Brainstorm (living document)
+
+```bash
+mkdir -p Projects/[project-name]/artifacts/brainstorms
+```
+
+- **Filename:** `brainstorm-[topic-slug].md` (prefix yes, date NO — living document)
+- **Template:** `brainstorm.md` from Sidecar Skill
+- **Append rule:** If a file with the same topic already exists, Agent MUST append a new `### YYYY-MM-DD` entry to the Running Log section instead of creating a new file. Agent SHOULD also update the Synthesis section.
+
+Save to `Projects/[project-name]/artifacts/brainstorms/brainstorm-[topic-slug].md`.
+
+#### Path B — Finalized Decision (frozen document)
 
 ```bash
 mkdir -p Projects/[project-name]/artifacts/para-decisions
 ```
 
-#### File 1 — Decision (always saved)
+- **Filename:** `brainstorm-[YYYY-MM-DD]-[topic-slug].md` (WITH date — backward compatible)
+- **Template:** `decision.md` from Sidecar Skill
+- **Cross-ref:** If this decision evolved from an Open brainstorm, add the brainstorm path in the header.
 
-Save to `Projects/[project-name]/artifacts/para-decisions/brainstorm-[YYYY-MM-DD]-[topic].md`
-using the **Decision template** from the Sidecar Skill.
+Save to `Projects/[project-name]/artifacts/para-decisions/brainstorm-[YYYY-MM-DD]-[topic].md`.
 
 #### File 2 — Research (Extract Paradigm — user consent required)
 
@@ -163,8 +189,9 @@ Present all options and ask the user how to proceed:
   E. 🎓 Extract to /learn — Reusable lesson for other projects
   F. 📚 Extract to /para-knowledge — Persistent KI (if KI system exists)
   G. 📄 Extract to docs/researches — Standalone research document
+  H. 🔴 Stress-test with /qa — Red Team review before committing
 
-❓ Which option? (A/B/C/D/E/F/G)
+❓ Which option? (A/B/C/D/E/F/G/H)
 ```
 
 **Option A: Save to Seeds**
@@ -230,10 +257,17 @@ mkdir -p Projects/[project-name]/docs/researches
 
 > **When to use:** The brainstorm produced valuable analysis data (benchmarks, comparisons, prototypes) worth preserving separately, but didn't trigger the Extract threshold in Step 4.
 
+**Option H: Stress-test with /qa**
+
+Suggest: `/qa [project-name] [topic]`
+
+Run the QA Red Team workflow to stress-test the brainstorm findings before committing to a plan or implementation. Particularly valuable when the brainstorm involves architectural decisions or security-sensitive changes.
+
 ## Related
 
 - `/plan` — Formalize decisions into actionable implementation phases
 - `/backlog` — Create tasks directly if brainstorming yields simple actions
+- `/qa` — Stress-test brainstorm findings before committing
 - `/docs` — Save analysis as project documentation
 - `/learn` — Extract reusable knowledge for other projects
 - `/retro` — Reflect on past issues to inform new brainstorming

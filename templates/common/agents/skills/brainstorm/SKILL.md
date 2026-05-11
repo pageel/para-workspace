@@ -1,6 +1,6 @@
 ---
 name: Brainstorm Templates
-description: Sidecar data for /brainstorm workflow — Decision and Research document templates loaded just-in-time.
+description: Sidecar data for /brainstorm workflow — Brainstorm (open), Decision (finalized), and Research document templates loaded just-in-time.
 source: catalog
 ---
 
@@ -14,7 +14,8 @@ source: catalog
 
 ## When to Load
 
-- `/brainstorm` → Step 4 (Save Structured Output): load `references/templates/decision.md` (always)
+- `/brainstorm` → Step 4 (Open brainstorm): load `references/templates/brainstorm.md`
+- `/brainstorm` → Step 4 (Finalized decision): load `references/templates/decision.md`
 - `/brainstorm` → Step 4 (Research extraction): load `references/templates/research.md` (if user consents)
 - Steps 1-3 → NOT needed (no templates)
 - Step 5 → NOT needed (no templates)
@@ -23,11 +24,32 @@ source: catalog
 
 | File | When | Purpose |
 |:--|:--|:--|
-| `references/templates/decision.md` | Step 4 — File 1 (always) | Document structure for brainstorm decisions |
+| `references/templates/brainstorm.md` | Step 4 — Open exploration | Living document for ongoing research, appendable across sessions |
+| `references/templates/decision.md` | Step 4 — Finalized decision | Frozen document for concluded brainstorms with chosen option |
 | `references/templates/research.md` | Step 4 — File 2 (user consent) | Document structure for extracted research |
 
 > **Convention:** Data files live in `references/` (not `templates/` at skill root).
 > This follows the Sidecar Skill convention formalized in v1.7.6.3.
+
+## Naming Conventions
+
+| Type | Directory | Filename Pattern | Has Date Prefix |
+|:--|:--|:--|:--|
+| Open Brainstorm | `artifacts/brainstorms/` | `brainstorm-[topic-slug].md` | ❌ No date — living document |
+| Decision | `artifacts/para-decisions/` | `brainstorm-[YYYY-MM-DD]-[topic-slug].md` | ✅ Yes — point-in-time snapshot |
+
+## Lifecycle
+
+```
+brainstorms/brainstorm-[topic].md (Open, append across sessions)
+        │
+        ▼  When user finalizes a decision
+para-decisions/brainstorm-YYYY-MM-DD-[topic].md (Frozen, cross-refs brainstorm)
+```
+
+- Agent MAY append new entries to an Open brainstorm without creating a new file.
+- When promoting to Decision, Agent MUST create a NEW file in `para-decisions/` — NOT move the brainstorm.
+- The brainstorm file STAYS in `brainstorms/` as historical record.
 
 ## Extract Paradigm (v1.7.12)
 

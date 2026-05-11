@@ -162,6 +162,20 @@ Read the latest session log for context on previous work.
 
 3. **IF not found** → Skip
 
+### 3.6. Graph Memory Injection (Compact Memory)
+
+// turbo
+
+> ⚗️ **Token budget:** ~150 tokens max. Only loads summary.
+
+Check if Compact Memory exists:
+```bash
+test -f "Projects/[project-name]/.beads/graph/memory-slices.jsonl" || test -f "Projects/[project-name]/repo/.beads/graph/memory-slices.jsonl"
+```
+
+- **If exists** → Read the MCP resource `memory_summary` (or read the generated summary file) to inject core architectural decisions and rules into the session context.
+- **If not exists** → Skip silently. No memory overhead.
+
 ### 4. Read task context — Token Optimized
 
 //turbo
@@ -339,6 +353,9 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 📝 BACKLOG SUMMARY:
 - High: [N] | Medium: [N] | Low: [N]
 - Top items: [list 2-3 items from current phase]
+
+🧠 GRAPH MEMORY: [Available / None]
+   [If Available, insert 2-3 bullet points of critical architectural decisions injected from memory_summary]
 
 🔥 HOT LANE:
 - [Pending quick tasks from sprint-current.md]

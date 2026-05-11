@@ -679,6 +679,14 @@ fi
 # Cleanup temp
 rm -rf "$TEMP_DIR"
 
+# === Handle npm pack structure (package/ prefix) ===
+if [ ! -f "$TOOL_INSTALL_DIR/tool.manifest.yml" ] && [ -f "$TOOL_INSTALL_DIR/package/tool.manifest.yml" ]; then
+  # Move all files (including hidden) up one level
+  mv "$TOOL_INSTALL_DIR/package/"* "$TOOL_INSTALL_DIR/"
+  mv "$TOOL_INSTALL_DIR/package/".* "$TOOL_INSTALL_DIR/" 2>/dev/null || true
+  rm -rf "$TOOL_INSTALL_DIR/package"
+fi
+
 # === Validate manifest ===
 MANIFEST_FILE="$TOOL_INSTALL_DIR/tool.manifest.yml"
 if [ ! -f "$MANIFEST_FILE" ]; then

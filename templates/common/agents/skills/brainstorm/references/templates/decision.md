@@ -1,6 +1,7 @@
 # Brainstorm: [Topic]
 
 > **Date:** YYYY-MM-DD | **Project:** [project-name]
+> **Brainstorm:** `brainstorms/[topic].md` ← (if evolved from open brainstorm)
 > **Research:** `docs/researches/[topic]-[YYYY-MM-DD].md` ← (only if Research extracted)
 
 ## Problem

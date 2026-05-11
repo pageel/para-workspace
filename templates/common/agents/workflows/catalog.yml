@@ -155,7 +155,7 @@ items:
   kernel_min: 1.7.0
   kernel_max: 1.x
   entrypoint: learn.md
-  description: KI suggestion (Step 4.5). Capture lessons into Areas/Learning (v1.7.1).
+  description: KI suggestion (Step 4.5). Capture lessons into Areas/Learning/Lessons (v1.8.6).
   tags:
   - learning
   - knowledge

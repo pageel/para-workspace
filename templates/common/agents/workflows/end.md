@@ -244,6 +244,23 @@ After reporting phase status:
    ```
 4. **IF no trigger** → Skip silently.
 
+### 4.8. Graph Memory Consolidation (Compact Memory)
+
+> **Gate:** Only trigger if the project has `.beads/graph/metadata.json` (meaning para-graph is active).
+
+1. Check if Graph is available:
+```bash
+test -f "Projects/[project-name]/.beads/graph/metadata.json" || test -f "Projects/[project-name]/repo/.beads/graph/metadata.json"
+```
+
+2. **IF exists AND session made architectural or structural code changes:**
+   ```
+   🧠 GRAPH MEMORY
+   This session introduced new code or decisions. It is recommended to consolidate the Compact Memory.
+   Run `/para-graph mem` before closing the session? (Y/N)
+   ```
+3. **IF no trigger** → Skip silently.
+
 ### 5. Update Master Index
 
 // turbo

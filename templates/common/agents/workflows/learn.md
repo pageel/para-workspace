@@ -5,9 +5,17 @@ source: catalog
 
 # /learn [topic-name]
 
-> **Workspace Version:** 1.5.0 (Governed Libraries)
+> **Workspace Version:** 1.8.6
 
 Capture and standardize knowledge and experience accumulated during development, stored in `Areas/Learning/`.
+
+## Usage
+
+```bash
+/learn <topic-name>   # Create a new lesson
+/learn audit          # Scan and migrate legacy lessons to the new Lessons/ directory
+```
+
 
 ## Steps
 
@@ -23,7 +31,7 @@ Summarize the lesson or experience to be stored. Determine the category:
 
 // turbo
 
-Create a `.md` file at `Areas/Learning/[topic-name].md` using this template:
+Create a `.md` file at `Areas/Learning/Lessons/[topic-name].md` using this template:
 
 ```markdown
 # [Lesson Title]
@@ -55,7 +63,7 @@ Create a `.md` file at `Areas/Learning/[topic-name].md` using this template:
 
 // turbo
 
-Add a link to the lesson in `Areas/Learning/README.md` under the appropriate category (Git, Development, Best Practices...).
+Add a link to the lesson in `Areas/Learning/Lessons/README.md` under the appropriate category (Git, Development, Best Practices...). If this is the first lesson, make sure `Areas/Learning/README.md` has a link pointing to `Lessons/README.md`.
 
 ### 4. Cross-Reference (Optional)
 
@@ -71,10 +79,24 @@ If qualified:
 
 ```
 💡 This lesson could also be a Knowledge Item for cross-session persistence.
-   Lessons live in Areas/Learning/ (project-scoped).
+   Lessons live in Areas/Learning/Lessons/ (project-scoped).
    KIs persist in the AI platform (cross-session, auto-loaded).
 
    Create KI? Run `/para-knowledge [topic]` (Y/N)
+```
+
+```
+
+### 5. Action: audit
+
+// turbo
+
+When the user runs `/learn audit`:
+
+This action scans `Areas/Learning/` for legacy files stored at the root level and migrates them into the `Lessons/` subdirectory to maintain a clean architecture separating `Lessons` and `Resources`.
+
+```bash
+bash .agents/skills/learn/scripts/audit-migrate.sh
 ```
 
 ## Related
