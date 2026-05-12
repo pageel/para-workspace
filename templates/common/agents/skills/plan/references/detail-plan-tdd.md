@@ -69,10 +69,11 @@
 0.1 🤖 **Define Test Architecture** — Verify project conventions and update the Test Strategy section above with Location and Execution Command.
 0.2 🤖 **Configure Mocks** — Set up global mocks or test environments if needed.
 
-> ⚠️ Phase 0 does not produce a Git commit. Setup only.
+
 
 #### Task List
 
+- [ ] 0.0 🤖 Graph Knowledge Preparation (if para-graph enabled)
 - [ ] 0.1 🤖 [Task description]
 - [ ] 0.2 🤖 [Task description]
 - [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x] BEFORE proceeding to Phase 1. Ask User to proceed.

@@ -85,6 +85,7 @@ Projects/[project-name]/docs/
 
 #### Task List
 
+- [ ] 0.0 🤖 Graph Knowledge Preparation (if para-graph enabled)
 - [ ] 0.1 🤖 Graph pipeline per `para-graph §3.3.2` (**skip if no `.beads/graph/`**).
 - [ ] 0.2 🤖 Update `docs/README.md` index.
 - [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x] BEFORE proceeding to Phase 1. Ask User to proceed.

@@ -64,11 +64,7 @@ Prefix each step with an Execution Ownership icon (see legend below).]
 0.1 🤖 **[Step 1 name]** — [Detail: file path, line number, operation]
 0.2 🤖 **[Step 2 name]** — [Detail: ...]
 
-> 🔍 **Graph-First (conditional):** If project has `.beads/graph/metadata.json`:
-> Read `para-graph §3.3.1` and add graph context gathering step to Phase 0.
-> If no graph → skip, use source-only mode per `para-graph §3.4`.
 
-> ⚠️ Phase 0 does not produce a Git commit. Setup only.
 
 #### Task List
 
@@ -77,6 +73,7 @@ Prefix each step with an Execution Ownership icon (see legend below).]
 Example: step 1.1 in Plan produces task 1.1a (EN) and 1.1b (VI).
 Carry the Execution Ownership icon from the Implementation Plan.]
 
+[ ] 0.0 🤖 Graph Knowledge Preparation (if para-graph enabled)
 [ ] 0.1 🤖 [Task description]
 [ ] 0.2 🤖 [Task description]
 [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x] BEFORE proceeding to Phase 1. Ask User to proceed.

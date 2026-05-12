@@ -5,7 +5,7 @@ source: catalog
 
 # /plan [project-name] [action] [--graph] [--project]
 
-> **Workspace Version:** 1.8.6 (Graph Intelligence + Project Context)
+> **Workspace Version:** 1.8.7 (Graph Intelligence + Project Context)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final plan document MUST be translated to this language.**
 
 Create, review, or update a phased implementation plan for a PARA project.
@@ -62,12 +62,19 @@ cat Projects/[project-name]/.agents/skills.md 2>/dev/null | head -n 30
 
 // turbo
 
-If the `--graph` flag is provided, execute the deep graph intelligence pipeline BEFORE reading the contract:
+If the `--graph` flag is provided, execute an INTERACTIVE Graph Preparation Phase BEFORE creating the plan:
 
 1. **Build Graph:** Run `/para-graph build [project-name]` to ensure graph data is up-to-date.
-2. **Identify God Nodes:** Use MCP tool `graph_god_nodes(projectName, unenrichedOnly: true)` to find the most connected, poorly documented nodes.
-3. **Deep Enrichment:** For the top 3-5 God nodes, read their source code (`view_file`) and use `graph_enrich` to document their semantic meaning, complexity, and domain concepts.
-4. **Inject Context:** Keep these enriched God nodes in memory as the architectural backbone for Step 5 (Design Architecture).
+2. **Identify & Analyze Nodes:** Use MCP tools (`graph_god_nodes`, `graph_query`, `graph_context_bundle`, `graph_impact_analysis`) to deeply analyze the core files and God nodes related to the feature.
+3. **Enrich:** For any unenriched God nodes found, use `graph_enrich` to document their semantic meaning.
+4. **Interactive Report & Template Suggestion:** Pause the workflow and present a Chat Report to the user containing:
+   - The impact analysis and blast radius of the proposed changes.
+   - A question asking if the user wants to analyze any other aspects/nodes before generating the plan.
+   - **Template Suggestion:** Based on the graph complexity, suggest the most appropriate plan template:
+     - `detail-plan-tdd.md`: Strongly suggest if the changes involve heavy logic, complex impact radius, or core mechanics.
+     - `detail-plan.md`: Suggest for standard UI, configuration, or simple features.
+     - `detail-plan-docs.md`: Suggest if the changes are purely documentation.
+5. **Wait for User:** ONLY AFTER the user confirms the context is sufficient and selects a template, proceed to Step 1 to generate the plan file.
 
 #### 1. Read Project Contract
 

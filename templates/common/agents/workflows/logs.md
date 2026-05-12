@@ -58,6 +58,8 @@ The Agent uses its short-term memory impression to quickly estimate the session 
 
 The Agent performs a **deliberate, systematic scan** of the entire conversation context window within the defined `scope`. Unlike Fast Glance (which relies on impression), this mode requires the Agent to explicitly enumerate every single item.
 
+> ⚠️ **Context Truncation Warning:** Conversation transcripts can be extremely long. Agent **MUST use the `view_file` tool to read** the conversation log file. DO NOT use bash `cat` to read logs, as it will flood the terminal output and cause immediate context truncation.
+
 **Process:**
 1. Scan the conversation context from start to end (or within `scope` boundary).
 2. For each category below, list **every individual item** — do not estimate, do not round.

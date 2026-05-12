@@ -52,6 +52,8 @@
 10. **Graph-First Policy:** If the project utilizes the Code-Knowledge Graph (e.g., via `para-graph`), Agent MUST:
     - Add a task in Phase 0 to run `/para-graph build` to synchronize Graph Memory.
     - Add an inline HARNESS GUARD in Execution Phases before modifying critical code: `<!-- ⚠️ HARNESS GUARD (Graph-First Policy): Agent MUST call mcp_para-graph_graph_context_bundle for node [NodeID] BEFORE modifying the code to understand its full dependencies. -->`
+11. **Graph Knowledge Preparation:** Agent MUST explicitly list "Graph Knowledge Preparation" as a required Phase 0 task in all detail plans if the project supports Graph.
+12. **TDD Strict Cycle:** If the plan uses TDD, Agent MUST enforce the "TDD Strict Cycle" using `tdd-test.sh` to record evidence before every commit.
 
 ## Dual-Format Convention (v1.7.16)
 
