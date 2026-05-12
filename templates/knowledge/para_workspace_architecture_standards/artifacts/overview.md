@@ -341,6 +341,7 @@ Sidecar skills (`plan`, `docs`, `brainstorm`, `spec`) reference the centralized 
 | 1.8.2 | Feature | MCP Auto-Setup: `mcp:` block in `tool.manifest.yml`, `mcp-setup`/`mcp-list`/`mcp-remove` CLI commands, IDE config path matrix (Antigravity/Claude/Cursor), `jq`-based JSON merge with print fallback, `install-tool --no-mcp` flag, shared `mcp-config.sh` library |
 | 1.8.3 | Sync | Graph Router Sync: sidecar skills (`plan`, `docs`, `brainstorm`, `spec`) reference centralized `para-graph §3.3.x` instead of inline graph logic, `detail-plan-docs.md` template, `para-graph` trigger in `skills.md`, `registry/tools.yml` bumped to v0.8.4 |
 | 1.8.6 | Feature | QA Governance Workflow (`/qa`) with Red Team personas and Sidecar skill, integrated Graph Intelligence (`--graph`) in brainstorm/plan/docs workflows, `/plan` `--project` flag (default for create) promoting project context loading to Step 1.5, Docs Impact Scan |
+| 1.8.7 | Governance | TDD Governance Workflow, Graph Knowledge Preparation Phase 0 added to detail-plan templates, Temporary Test Scripts Policy Section 17 added to maintenance.md, and TDD compliance telemetry logging |
 
 ## 16. Dynamic Tool System (v1.8.0)
 

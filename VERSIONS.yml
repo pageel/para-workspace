@@ -84,4 +84,4 @@ registry:
   tool-schema:     "1.8.5"   # shipped_in + min_engine_version (additive)
 
 knowledge:
-  para_workspace_architecture_standards: "1.8.5" # hook architecture, consumer/contributor mode, BUG-34
+  para_workspace_architecture_standards: "1.8.7" # TDD Governance, Graph Knowledge Phase 0, Test scripts policy
