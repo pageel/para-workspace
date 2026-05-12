@@ -169,6 +169,66 @@ if command -v jq &> /dev/null; then
     echo "PASS"
     PASS=$((PASS+1))
   fi
+  # Test 4: Atomic Write & Permission Preservation
+  echo ""
+  echo "--- Atomic Write & Permissions ---"
+  
+  ATOMIC_CONFIG="$TEST_TMP/atomic_config.json"
+  echo '{ "mcpServers": {} }' > "$ATOMIC_CONFIG"
+  chmod 600 "$ATOMIC_CONFIG"
+  
+  # Inject a mock script to simulate write failure
+  MOCK_FS="$TEST_TMP/mock_fs.js"
+  cat << 'EOF' > "$MOCK_FS"
+const fs = require('fs');
+const originalWrite = fs.writeFileSync;
+fs.writeFileSync = function(file, data, options) {
+  if (file.includes('crash_test')) {
+    // Truncate and write partial data to simulate crash during write
+    originalWrite.call(fs, file, "{ corrupted }", options);
+    throw new Error("Disk full simulation");
+  }
+  return originalWrite.call(fs, file, data, options);
+}
+EOF
+
+  # Set NODE_OPTIONS to require the mock
+  export NODE_OPTIONS="--require $MOCK_FS"
+  
+  # Run merge_mcp_config on normal file and check permissions
+  merge_mcp_config "$ATOMIC_CONFIG" "test-perm" "$snippet"
+  
+  echo -n "  File permission is preserved (600)... "
+  PERM=$(stat -c "%a" "$ATOMIC_CONFIG" 2>/dev/null || stat -f "%Lp" "$ATOMIC_CONFIG")
+  if [ "$PERM" = "600" ]; then
+    echo "PASS"
+    PASS=$((PASS+1))
+  else
+    echo "FAIL — Expected 600, got $PERM"
+    FAIL=$((FAIL+1))
+  fi
+
+  # Run on crash file and ensure original is NOT corrupted
+  CRASH_CONFIG="$TEST_TMP/crash_test_config.json"
+  echo '{ "mcpServers": { "original": { "command": "safe" } } }' > "$CRASH_CONFIG"
+  
+  echo -n "  Original file is NOT corrupted on write failure... "
+  if merge_mcp_config "$CRASH_CONFIG" "test-crash" "$snippet" 2>/dev/null; then
+    echo "FAIL — Should have returned error"
+    FAIL=$((FAIL+1))
+  else
+    # Check if original content is still valid JSON and has original content
+    if jq -e '.mcpServers.original.command == "safe"' "$CRASH_CONFIG" >/dev/null 2>&1; then
+      echo "PASS"
+      PASS=$((PASS+1))
+    else
+      echo "FAIL — File was corrupted/truncated!"
+      FAIL=$((FAIL+1))
+    fi
+  fi
+  
+  unset NODE_OPTIONS
+
 else
   echo "  ⏭️  Skipping merge tests — jq not installed"
 fi

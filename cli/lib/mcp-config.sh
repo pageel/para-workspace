@@ -167,7 +167,13 @@ try {
   }
   
   config.mcpServers[serverName] = serverConfig;
-  fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
+  
+  const tmpPath = configPath + '.tmp';
+  const stat = fs.statSync(configPath);
+  fs.writeFileSync(tmpPath, JSON.stringify(config, null, 2), 'utf8');
+  fs.chmodSync(tmpPath, stat.mode);
+  fs.renameSync(tmpPath, configPath);
+  
   console.log("MERGED");
 } catch (e) {
   console.log("ERROR");
@@ -190,7 +196,30 @@ EOF
       return 0
     fi
     
-    node -e "const fs=require('fs'); let c=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); c.mcpServers[process.argv[2]] = JSON.parse(process.argv[3])[process.argv[2]]; fs.writeFileSync(process.argv[1], JSON.stringify(c, null, 2), 'utf8');" "$config_path" "$server_name" "$snippet_json"
+    local overwrite_result
+    overwrite_result=$(node -e "
+const fs = require('fs');
+const configPath = process.argv[1];
+const serverName = process.argv[2];
+const snippetStr = process.argv[3];
+try {
+  let c = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  c.mcpServers[serverName] = JSON.parse(snippetStr)[serverName];
+  const tmpPath = configPath + '.tmp';
+  const stat = fs.statSync(configPath);
+  fs.writeFileSync(tmpPath, JSON.stringify(c, null, 2), 'utf8');
+  fs.chmodSync(tmpPath, stat.mode);
+  fs.renameSync(tmpPath, configPath);
+  console.log('SUCCESS');
+} catch(e) {
+  console.log('ERROR');
+}
+" "$config_path" "$server_name" "$snippet_json")
+
+    if [ "$overwrite_result" = "ERROR" ]; then
+      log_error "Failed to overwrite config file: $config_path"
+      return 1
+    fi
     log_info "MCP server '$server_name' configured in: $config_path"
     return 0
   elif [ "$result" = "MERGED" ]; then

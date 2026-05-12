@@ -148,7 +148,11 @@ try {
   }
   
   delete config.mcpServers[serverName];
-  fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
+  const tmpPath = configPath + '.tmp';
+  const stat = fs.statSync(configPath);
+  fs.writeFileSync(tmpPath, JSON.stringify(config, null, 2), 'utf8');
+  fs.chmodSync(tmpPath, stat.mode);
+  fs.renameSync(tmpPath, configPath);
   console.log("REMOVED");
 } catch (e) {
   console.log("ERROR");
