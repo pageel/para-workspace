@@ -7,6 +7,16 @@ Detailed version changelogs are maintained internally in project docs.
 
 - **Changed**: Shortened separator lines across all workflow templates (28 characters) for cleaner reporting.
 
+## [1.8.7] - 2026-05-12
+
+TDD Governance Workflow.
+
+- **Added**: "Graph Knowledge Preparation" phase 0 to all detail-plan templates.
+- **Changed**: Standardized all skill directory names to `kebab-case`.
+- **Added**: TDD compliance telemetry logging in workspace release pipeline.
+- **Changed**: Enforced mandatory `view_file` for log audits.
+- **Added**: Section 17 "Temporary Test Scripts Policy" added to `maintenance.md`.
+
 ## [1.8.6] - 2026-05-08
 
 QA Governance Workflow & Sidecar Skill Integration.
