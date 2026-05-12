@@ -244,22 +244,36 @@ After reporting phase status:
    ```
 4. **IF no trigger** → Skip silently.
 
-### 4.8. Graph Memory Consolidation (Compact Memory)
+### 4.8. Graph Memory Push (CONDITIONAL)
 
-> **Gate:** Only trigger if the project has `.beads/graph/metadata.json` (meaning para-graph is active).
+> **Gate:** Only trigger if project has `.beads/graph/` directory (graph is built).
+> **Purpose:** Persist session decisions and key events into the project's Graph Memory
+> for cross-session retrieval via `memory_search`.
 
-1. Check if Graph is available:
-```bash
-test -f "Projects/[project-name]/.beads/graph/metadata.json" || test -f "Projects/[project-name]/repo/.beads/graph/metadata.json"
-```
-
-2. **IF exists AND session made architectural or structural code changes:**
+1. Check if `.beads/graph/` exists for the active project:
+   ```bash
+   test -d "Projects/[project-name]/.beads/graph" && echo "✅ Graph Memory available" || echo "⏭️ No graph — skip memory push"
    ```
-   🧠 GRAPH MEMORY
-   This session introduced new code or decisions. It is recommended to consolidate the Compact Memory.
-   Run `/para-graph mem` before closing the session? (Y/N)
+
+2. **IF graph exists** → Compose a session summary event and push via MCP:
+   - **kind:** `session-summary`
+   - **content:** Brief summary of what was accomplished (from Step 2 session log)
+   - **sessionId:** `YYYY-MM-DD-end`
+   - **metadata:** `{ "tasks_done": N, "files_changed": [...key files...] }`
+
+   Agent calls `memory_push(projectName, kind, content, sessionId, metadata)`.
+
+3. **IF significant decisions were made** (architecture changes, new patterns, critical bugs found):
+   Push additional events with `kind: architecture-decision` or `kind: bugfix`.
+
+4. **Suggest memory curation:**
    ```
-3. **IF no trigger** → Skip silently.
+   🧠 Graph Memory: [N] events pushed.
+      Run `/para-graph mem [project-name]` to consolidate? (y/n)
+   ```
+   If user agrees → Agent runs the `/para-graph mem` action.
+
+5. **IF no graph** → Skip silently.
 
 ### 5. Update Master Index
 

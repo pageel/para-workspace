@@ -10,7 +10,7 @@
 | STATUS GATE | `<!-- ⚠️ STATUS GATE: ... -->` | Plan file header (after frontmatter) | Block Phase execution while plan Status is `📝 Draft` |
 | MANDATORY | `<!-- ⚠️ MANDATORY: ... -->` | First line after Phase heading | Force Agent to reload rules/skills indices before any side-effect |
 | HARNESS GUARD | `<!-- ⚠️ HARNESS GUARD (Risk): ... -->` | After MANDATORY, before Implementation Plan | Warn about specific risk mapped from Risks & Mitigations table |
-| CHECKPOINT | `⛔ CHECKPOINT: [action]` | Inside Task List, before git/status tasks | Break momentum bias — force Agent to execute checkpoint action before continuing |
+| CHECKPOINT | `⛔ CHECKPOINT: [action]` | Inside Task List, before git/status tasks | Break momentum bias — force Agent to execute checkpoint action before continuing. For phase transitions, MUST explicitly demand checking all previous tasks (e.g., "Agent MUST verify ALL tasks in Phase N are checked [x] BEFORE proceeding"). |
 | FILE GUARD | `<!-- ⚠️ [TYPE] — [constraint] -->` | After file title or YAML frontmatter | Protect file integrity (APPEND-ONLY, HOT LANE, READ-ONLY, etc.) |
 | WORKFLOW GATE | `<!-- ⚠️ WORKFLOW GATE: ... -->` | Before a critical workflow step | Prevent Agent from skipping an important step |
 | CONTEXT RECOVERY | `<!-- ⚠️ CONTEXT RECOVERY: ... -->` | End of long artifacts (>500 lines) | Remind Agent to reload context if attention has decayed |
@@ -46,8 +46,8 @@
    - Commit: `<!-- ⚠️ HARNESS GUARD (VCS — Commit #N/M [Scope]): Agent MUST re-read rules/vcs.md. [Local/Remote] commit. -->`
    - Push: `<!-- ⚠️ HARNESS GUARD (VCS — Push Remote): 🛑 STOP HERE. Agent MUST ask User confirmation. -->`
 7. `git commit` and `git push` MUST be **separate task items** — never combined into one task. This ensures each operation has its own guard and can be individually approved.
-8. **Status transition guard:** Walkthrough section MUST include a HARNESS GUARD before `Clear active_plan` task. Agent MUST NOT change plan Status to `✅ Done` or clear `active_plan` without explicit user approval. Format:
-   - `<!-- ⚠️ HARNESS GUARD (Status Transition → Done): 🛑 STOP HERE. Agent MUST NOT change Status without user approval. -->`
+8. **Status transition guard:** Walkthrough section MUST enforce that all tasks are completed BEFORE proposing completion. Agent MUST NOT propose or change plan Status to `✅ Done` or clear `active_plan` without explicit user approval after Walkthrough is fully checked. Format:
+   - `<!-- ⚠️ HARNESS GUARD (Status Transition → Done): 🛑 STOP HERE. Walkthrough MUST be completed BEFORE proposing Done. Agent MUST NOT change Status without user approval. -->`
 9. **Walkthrough cleanup:** After running verification commands that generate output files (e.g., `build`, `cli run`), Agent MUST delete the generated artifacts and verify `.gitignore` covers all output patterns. Untracked generated files MUST NOT remain in the repo after Walkthrough.
 10. **Graph-First Policy:** If the project utilizes the Code-Knowledge Graph (e.g., via `para-graph`), Agent MUST:
     - Add a task in Phase 0 to run `/para-graph build` to synchronize Graph Memory.

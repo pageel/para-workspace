@@ -130,7 +130,23 @@ The Agent performs a **deliberate, systematic scan** of the entire conversation 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-*(Stop workflow execution after printing the report.)*
+**Conditional Extensions (Sidecar Skill):**
+
+After printing the base report, Agent MUST check for plan-specific audit needs:
+
+```text
+IF session has active_plan AND plan uses TDD methodology
+  (markers: "Methodology: Strict TDD", 🔴 RED / 🟢 GREEN in task list):
+  → Load `.agents/skills/logs/references/tdd-compliance.md`
+  → Append TDD Compliance Audit section to the report
+  → Cross-reference conversation log + git history for evidence
+ELSE:
+  → Skip (no extension needed)
+```
+
+> 💡 See `.agents/skills/logs/SKILL.md` for available extensions and detection logic.
+
+*(Stop workflow execution after printing the report + any extensions.)*
 
 ## Design Notes
 

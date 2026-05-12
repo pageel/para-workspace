@@ -171,6 +171,27 @@ using the **Research template** from the Sidecar Skill.
 
 **If user declines (n):** Skip. Save Decision only.
 
+### 4.5. Graph Memory Push (CONDITIONAL)
+
+> **Gate:** Only trigger if (1) project has `.beads/graph/` directory AND (2) brainstorm is **Decided** (Path B).
+> Open brainstorms (Path A) are NOT pushed — they are still evolving.
+
+1. Check graph availability:
+   ```bash
+   test -d "Projects/[project-name]/.beads/graph" && echo "✅ Graph Memory available" || echo "⏭️ No graph — skip memory push"
+   ```
+
+2. **IF graph exists AND decision finalized:**
+   Push the decision summary via MCP `memory_push`:
+   - **kind:** `brainstorm-decision`
+   - **content:** Decision title + chosen approach + key rationale (from the Decision section)
+   - **sessionId:** `YYYY-MM-DD-brainstorm-[topic]`
+   - **metadata:** `{ "topic": "[topic]", "decision_file": "artifacts/para-decisions/brainstorm-[date]-[topic].md", "options_considered": N }`
+
+   Agent calls `memory_push(projectName, kind, content, sessionId, metadata)`.
+
+3. **IF no graph OR open brainstorm** → Skip silently.
+
 ### 5. Choose Next Action
 
 Present all options and ask the user how to proceed:
@@ -182,16 +203,22 @@ Present all options and ask the user how to proceed:
 📂 Research: docs/researches/[topic]-[YYYY-MM-DD].md  ← (if large)
 
 💡 NEXT STEPS:
-  A. 🌱 Save to Seeds — Incubate further in .beads/seeds.md
-  B. 📐 Proceed to /plan — Formalize into implementation plan
-  C. 📥 Add to /backlog — Create simple tasks directly
-  D. 📝 Save as project doc — Keep as reference in docs/
-  E. 🎓 Extract to /learn — Reusable lesson for other projects
-  F. 📚 Extract to /para-knowledge — Persistent KI (if KI system exists)
-  G. 📄 Extract to docs/researches — Standalone research document
-  H. 🔴 Stress-test with /qa — Red Team review before committing
 
-❓ Which option? (A/B/C/D/E/F/G/H)
+  A. 🌱 Save to Seeds — Incubate further in .beads/seeds.md
+
+  B. 📐 Proceed to /plan — Formalize into implementation plan
+
+  C. 📥 Add to /backlog — Create simple tasks directly
+
+  D. 📝 Save as project doc — Keep as reference in docs/
+
+  E. 🎓 Extract to /learn — Reusable lesson for other projects
+
+  F. 📄 Extract to docs/researches — Standalone research document
+
+  G. 🔴 Stress-test with /qa — Red Team review before committing
+
+❓ Which option? (A/B/C/D/E/F/G)
 ```
 
 **Option A: Save to Seeds**
@@ -231,18 +258,7 @@ Suggest: `/learn [project-name]`
 
 Extract the reusable insight (not the project-specific details) into `Areas/Learning/`.
 
-**Option F: Extract as Knowledge Item**
-
-> KI system is a standard workspace component (v1.7.0+).
-
-Suggest: `/para-knowledge [topic]`
-
-Extract the insight as a persistent Knowledge Item (cross-session, cross-project).
-
-> **System KI hint:** If the insight relates to PARA Workspace architecture,
-> governance, or cross-project patterns, suggest `/para-knowledge system [topic]` instead.
-
-**Option G: Extract as Research Document**
+**Option F: Extract as Research Document**
 
 // turbo
 
@@ -257,7 +273,7 @@ mkdir -p Projects/[project-name]/docs/researches
 
 > **When to use:** The brainstorm produced valuable analysis data (benchmarks, comparisons, prototypes) worth preserving separately, but didn't trigger the Extract threshold in Step 4.
 
-**Option H: Stress-test with /qa**
+**Option G: Stress-test with /qa**
 
 Suggest: `/qa [project-name] [topic]`
 

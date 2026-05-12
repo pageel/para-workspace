@@ -87,6 +87,7 @@ Projects/[project-name]/docs/
 
 - [ ] 0.1 🤖 Graph pipeline per `para-graph §3.3.2` (**skip if no `.beads/graph/`**).
 - [ ] 0.2 🤖 Update `docs/README.md` index.
+- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x] BEFORE proceeding to Phase 1. Ask User to proceed.
 
 ---
 
@@ -127,6 +128,7 @@ N.2 🤖 **[doc-filename].md** — Load context for `[Component.tsx]` → write 
 
 - [ ] N.1 🤖 Tạo `[doc-filename].md`.
 - [ ] N.2 🤖 Tạo `[doc-filename].md`.
+- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase N are checked [x] BEFORE proceeding to the next Phase. Ask User to proceed.
 
 ---
 

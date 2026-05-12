@@ -27,6 +27,7 @@ Create, review, or update a phased implementation plan for a PARA project.
 | `--graph` | Run Graph Pipeline (Build → God Nodes → Enrich) before planning to maximize architectural context |
 | `--project` | Default for `create`. Load project-level `.agents/rules/` and `.agents/skills/` context before planning to ensure governance-aware plan generation |
 | `--phase` | Default for `dev`. Strictly execute the plan phase by phase, verifying task completion before moving to the next phase |
+| `--tdd` | Force strict Test-Driven Development mode. Agent MUST use `detail-plan-tdd.md` template for creation and load `.agents/skills/tdd/SKILL.md` during execution |
 
 ---
 
@@ -91,15 +92,15 @@ Read `Projects/[project-name]/project.md` to extract:
 From Step 1, check `project.md` for `agent` map:
 
 1. **IF `agent.rules: true`** (or legacy `has_rules: true`):
-   - Read `Projects/[project-name]/.agents/rules.md` (project rules index, ~5-10 lines)
-   - For each triggered rule matching the plan scope → read the full rule file
-   - Store as **hard constraints** for Phase definition (Step 6) and Risk section (Step 9)
-   - Example: `maintenance.md` trigger “Editing repo/” → plan MUST include docs sync tasks
+   - Read `Projects/[project-name]/.agents/rules.md` (project rules index, ~5-10 lines).
+   - **MANDATORY DETAIL READ:** For each triggered rule matching the plan scope, the Agent MUST explicitly use the `view_file` tool to read the full content of the rule file (e.g., `.agents/rules/maintenance.md`). Do NOT guess or hallucinate the rule content based on the filename.
+   - Store as **hard constraints** for Phase definition (Step 6) and Risk section (Step 9).
+   - Example: If `maintenance.md` specifies "Tarball release requires tool.manifest.yml version bump", the plan MUST explicitly include a task to update `tool.manifest.yml`.
 
 2. **IF `agent.skills: true`**:
-   - Read `Projects/[project-name]/.agents/skills.md` (project skills index, ~5-10 lines)
-   - Check if any skill trigger matches the plan scope
-   - If relevant skills found → note in plan as **available tooling** (e.g., Harness Guards)
+   - Read `Projects/[project-name]/.agents/skills.md` (project skills index, ~5-10 lines).
+   - **MANDATORY DETAIL READ:** If any skill trigger matches the plan scope, the Agent MUST explicitly use `view_file` to read the full `SKILL.md` content before proceeding.
+   - If relevant skills are found and read → note them in the plan as **available tooling** (e.g., Harness Guards).
 
 3. **Store results** as constraints that flow into:
    - Step 5 (Design Architecture) — respect existing patterns
@@ -642,9 +643,10 @@ Start or continue executing the active plan in the project.
 ### Steps
 
 1. **Locate Active Plan:** Read `project.md` to find `active_plan` or look for a file with `Status: 🔨 Active` in `artifacts/plans/`.
-2. **Phase Execution:** If `--phase` flag is present (which is default for this action), execute the plan strictly phase by phase.
-3. **Task Verification:** The Agent MUST check the completion of each task within the current phase. It CANNOT move to the next phase unless all tasks in the current phase are marked as completed `[x]`, OR the user explicitly grants permission to skip the remaining tasks.
-4. **Execution:** Proceed with performing the coding or related operations defined in the current pending tasks.
+2. **Load Plan Methodology Skills:** Scan the loaded plan file. Check the `Methodology` or `Required Skill` blockquotes. If the plan specifies a specific methodology (e.g., Strict TDD), or if a flag like `--tdd` is passed, the Agent MUST load the corresponding `.agents/skills/[skill-name]/SKILL.md` into context before executing any code.
+3. **Phase Execution:** If `--phase` flag is present (which is default for this action), execute the plan strictly phase by phase.
+4. **Task Verification & Checkpoints:** The Agent MUST read and obey inline `⛔ CHECKPOINT` guards. When transitioning phases, the Agent CANNOT move to the next phase unless ALL tasks in the current phase are actually marked as completed `[x]`, OR the user explicitly grants permission to skip the remaining tasks. Do not auto-assume tasks are done.
+5. **Execution:** Proceed with performing the coding or related operations defined in the current pending tasks.
 
 ---
 
