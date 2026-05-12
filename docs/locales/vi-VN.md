@@ -30,7 +30,7 @@
 | [🛠️ CLI](#️-tham-chiếu-cli) | Tất cả lệnh CLI |
 | [📑 Workflow Catalog](#-catalog-workflow) | 27 governed workflows |
 | [🛡️ Rule Catalog](#️-rule-catalog) | 11 governance rules |
-| [🧩 Skill Catalog](#-catalog-kỹ-năng-skills) | 9 reusable skills |
+| [🧩 Skill Catalog](#-catalog-kỹ-năng-skills) | 13 reusable skills |
 | [🔌 Hệ thống Công cụ](#-hệ-thống-công-cụ-v180) | Cài đặt plugin AI agentic ngoài |
 | [🧩 Task Management](#-task-management-hybrid-3-file-model) | Hybrid 3-File model |
 | [🔄 Nâng cấp](#-nâng-cấp-phiên-bản-upgrading) | Auto update + clean slate |
@@ -403,6 +403,10 @@ Skills là các module kiến thức tái sử dụng, được load theo yêu c
 | **[Brainstorm Templates](../skills/brainstorm.md)** | Template Decision & Research (Sidecar, v1.7.12) |
 | **[Write Templates](../skills/write.md)** | Template các định dạng bài viết và quy tắc văn phong (Sidecar, v1.7.14) |
 | **[Harness Guards](../skills/harness.md)** | Catalog guard và giao thức tự động quét để sinh cảnh báo an toàn theo ngữ cảnh (Sidecar, v1.7.16) |
+| **[Spec Templates](../skills/spec.md)** | Template viết Spec, kiểm soát ranh giới và checklist chất lượng (Sidecar, v1.7.16) |
+| **[QA Review Templates](../skills/qa.md)** | Các persona đóng vai Red Team, tiêu chí kiểm tra và template báo cáo QA (Sidecar, v1.8.6) |
+| **[TDD Guidelines](../skills/tdd.md)** | Quy định nghiêm ngặt về Test-Driven Development, vòng lặp Red-Green-Refactor (v1.8.7) |
+| **[Logs Audit Extensions](../skills/logs.md)** | Các template kiểm toán tuân thủ cho báo cáo TDD/Spec (Sidecar, v1.8.7) |
 
 ---
 

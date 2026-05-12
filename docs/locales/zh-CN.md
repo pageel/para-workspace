@@ -30,7 +30,7 @@
 | [🛠️ CLI 参考](#-cli-参考) | 所有 CLI 命令 |
 | [📑 工作流目录](#-工作流目录) | 27 个受治理的工作流 |
 | [🛡️ 规则目录](#-规则目录) | 11 条治理规则 |
-| [🧩 技能目录](#-技能目录) | 9 个可复用技能 |
+| [🧩 技能目录](#-技能目录) | 13 个可复用技能 |
 | [🔌 工具系统](#-工具系统-v180) | 安装外部 Agentic 插件 |
 | [🧩 任务管理](#-任务管理混合-3-文件模型) | 混合 3-文件模型 |
 | [🔄 升级](#-升级版本) | 自动更新 + 全新安装 |
@@ -219,7 +219,7 @@ para list-tools                 # 列出已安装的插件
 
 ## 🧩 技能目录
 
-目前包含 9 个复用技能（`PARA Kit`, `Formatting`, `Page Map`, `PARA Skill`, `Plan Templates`, `Docs Templates`, `Brainstorm Templates`, `Write Templates`, `Harness Guards`），按需加载并提供模板、模式和参考资料。
+目前包含 13 个复用技能（`PARA Kit`, `Formatting`, `Page Map`, `PARA Skill`, `Plan Templates`, `Docs Templates`, `Brainstorm Templates`, `Write Templates`, `Harness Guards`, `Spec Templates`, `QA Review Templates`, `TDD Guidelines`, `Logs Audit Extensions`），按需加载并提供模板、模式和参考资料。
 
 | 技能 | 说明 |
 | :--- | :--- |

@@ -30,7 +30,7 @@
 | [🛠️ Referencia de CLI](#-referencia-cli) | Todos los comandos de CLI |
 | [📑 Catálogo de Workflows](#-catálogo-de-workflows) | 27 flujos de trabajo (workflows) gobernados |
 | [🛡️ Catálogo de Reglas](#-catálogo-de-reglas) | 11 reglas de gobernanza |
-| [🧩 Catálogo de Skills](#-catálogo-de-skills) | 9 habilidades (skills) reutilizables |
+| [🧩 Catálogo de Skills](#-catálogo-de-skills) | 13 habilidades (skills) reutilizables |
 | [🔌 Sistema de Herramientas](#-sistema-de-herramientas-v180) | Instalar complementos agentic externos |
 | [🧩 Gestión de Tareas](#-gestión-de-tareas-modelo-híbrido-de-3-archivos) | Modelo híbrido de 3 archivos |
 | [🔄 Actualización](#-actualizando-versiones) | Actualización automática + instalación limpia |
@@ -212,7 +212,7 @@ para list-tools                 # Listar complementos instalados
 El sistema incluye:
 - **27 Workflows:** Desde gestores de tareas (`/backlog`), creación de especificaciones (`/spec`), flujos de apertura (`/open`), auditorías (`/para-audit`), sistemas de conocimiento cruzado (`/para-knowledge`), hasta generación de contenido (`/write`) y telemetría (`/logs`).
 - **11 Reglas de Gobernabilidad:** Defienden el versionado, las buenas prácticas de Git (VCS) o evitan mutaciones riesgosas. Todas optimizadas bajo un Índice Disparador.
-- **9 Skills Base:** Facilitan el entendimiento de componentes estáticos como `PARA Kit`, diagramas visuales, mapas de página (`Page Map`), plantillas de redacción de contenidos (`Write Templates`), y catálogos de guardias de seguridad (`Harness Guards`).
+- **13 Skills Base:** Facilitan el entendimiento de componentes estáticos como `PARA Kit`, diagramas visuales, mapas de página (`Page Map`), plantillas de redacción de contenidos (`Write Templates`), catálogos de guardias de seguridad (`Harness Guards`), `Spec Templates`, revisiones `QA`, guías `TDD`, y extensiones de registro (`Logs Audit`).
 
 ---
 
