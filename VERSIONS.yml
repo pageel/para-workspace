@@ -65,6 +65,8 @@ skills:
   harness:     "1.8.7"   # Enforced governance guards
   spec:        "1.8.3"   # graph router §3.3.4 Graph-Awareness
   qa:          "1.8.6"   # NEW: QA Review sidecar
+  tdd:         "1.8.7"   # NEW: TDD Guidelines
+  logs:        "1.8.7"   # NEW: Logs Audit Extensions
 
 cli:
   para:            "1.8.2"   # MCP Management commands, help text

@@ -30,7 +30,7 @@
 | [🛠️ CLI Reference](#️-cli-reference) | All CLI commands |
 | [📑 Workflow Catalog](#-workflow-catalog) | 27 governed workflows |
 | [🛡️ Rule Catalog](#️-rule-catalog) | 11 governance rules |
-| [🧩 Skill Catalog](#-skill-catalog) | 9 reusable skills |
+| [🧩 Skill Catalog](#-skill-catalog) | 13 reusable skills |
 | [🔌 Tool System](#-tool-system-v180) | Install external agentic plugins |
 | [🧩 Task Management](#-task-management-hybrid-3-file-model) | Hybrid 3-File model |
 | [🔄 Upgrading](#-upgrading-versions) | Auto update + clean slate |
@@ -405,6 +405,10 @@ Skills are reusable knowledge modules loaded on-demand via the skills trigger in
 | **[Brainstorm Templates](./docs/skills/brainstorm.md)** | Decision & Research templates (Sidecar, v1.7.12)  |
 | **[Write Templates](./docs/skills/write.md)** | Content type templates and writing rules (Sidecar, v1.7.14)  |
 | **[Harness Guards](./docs/skills/harness.md)** | Guard catalog and auto-scan protocol for context-aware safety guards (Sidecar, v1.7.15) |
+| **[Spec Templates](./docs/skills/spec.md)** | Spec templates, assumption surfacing, boundary definitions (Sidecar, v1.7.16) |
+| **[QA Review Templates](./docs/skills/qa.md)** | Red Team personas, dimension checklists, and QA report templates (Sidecar, v1.8.6) |
+| **[TDD Guidelines](./docs/skills/tdd.md)** | Strict Test-Driven Development workflow rules and anti-patterns (v1.8.7) |
+| **[Logs Audit Extensions](./docs/skills/logs.md)** | Audit templates for TDD/Spec compliance verification (Sidecar, v1.8.7) |
 
 ---
 

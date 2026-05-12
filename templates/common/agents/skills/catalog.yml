@@ -137,3 +137,25 @@ items:
   - red-team
   - review
   - quality
+- id: tdd
+  name: TDD Guidelines
+  kernel_min: 1.8.7
+  kernel_max: 1.x
+  entrypoint: tdd/SKILL.md
+  description: Strict Test-Driven Development workflow rules, anti-patterns, and the Red-Green-Refactor cycle.
+  tags:
+  - tdd
+  - testing
+  - governance
+  - rules
+- id: logs
+  name: Logs Audit Extensions
+  kernel_min: 1.8.7
+  kernel_max: 1.x
+  entrypoint: logs/SKILL.md
+  description: Sidecar data for /logs workflow — conditional audit templates loaded just-in-time when plan methodology requires specialized compliance checks.
+  tags:
+  - logs
+  - audit
+  - sidecar
+  - compliance
