@@ -73,13 +73,40 @@ If you are executing tasks from a TDD Plan (e.g., generated via `detail-plan-tdd
 
 When executing a TDD Plan, Agent MUST use the evidence logger script instead of running test commands directly. This creates an on-disk audit trail that survives conversation truncation.
 
-### Usage
+### Usage (Cwd-Agnostic Path Resolution)
+
+The script path `.agents/skills/tdd/scripts/tdd-test.sh` is relative to the **workspace root** (directory containing `.para-workspace.yml`). Since Agent typically runs commands from `Projects/<name>/repo/`, the relative path varies depending on depth.
+
+**Agent MUST resolve the script path before invocation:**
+
+1. Determine workspace root by locating `.para-workspace.yml` (usually 3 levels up from `repo/`).
+2. Construct the full path: `<workspace-root>/.agents/skills/tdd/scripts/tdd-test.sh`
+
+**Examples by Cwd:**
 
 ```bash
-# Instead of: npm test --run test/foo.test.ts
-# Use:
+# Cwd = workspace root (/)
 bash .agents/skills/tdd/scripts/tdd-test.sh npm test --run test/foo.test.ts
+
+# Cwd = Projects/<name>/repo/ (most common during plan execution)
+bash ../../../.agents/skills/tdd/scripts/tdd-test.sh npm test --run test/foo.test.ts
+
+# Cwd = Projects/<name>/ (project root)
+bash ../../.agents/skills/tdd/scripts/tdd-test.sh npm test --run test/foo.test.ts
 ```
+
+**Cross-platform notes:**
+- **Linux/macOS:** Works natively (bash + POSIX tools pre-installed).
+- **Windows:** Requires bash environment (WSL or Git Bash). Forward-slash paths work in both.
+
+> ⛔ **SCRIPT NOT FOUND GUARD:** If `tdd-test.sh` returns exit code 127 (command not found),
+> Agent MUST:
+> 1. Re-read this skill to verify the correct path
+> 2. Try resolving from workspace root (find `.agents/` directory)
+> 3. **STOP and report** if still not found — DO NOT fall back to raw test commands
+>
+> Running tests without the evidence logger is a **TDD compliance violation**
+> (Anti-Pattern: "Skipped evidence logger").
 
 The script:
 1. Runs the test command and captures output + exit code.
