@@ -20,12 +20,12 @@ Significant changes to the workspace must follow the **RFC** process:
   - **Smart Archive Rule:** Never use `rm` directly to delete user-facing PARA files during updates. MUST use `archive_file` helper → `.para/archive/[version]-orphans/`.
 - **Heuristics (H1–H10):** Soft rules — strongly recommended, flexible based on context.
   - **Ecosystem (H7 v1.6.0+):** Cross-project `@` prefix, ecosystem meta-projects
-  - **Governed Catalogs (H9):** `catalog.yml` mandatory for all libraries
+  - **Governed Catalogs (H9):** `VERSIONS.yml` and catalogs mandatory for all libraries
   - **Knowledge Items (H10 v1.7.0+):** KR1-KR7 lifecycle governance, system KI sync
 
 ## 3. Catalog System (v1.4.1+)
 
-The `catalog.yml` mechanism formalizes how workflows, rules, and skills are introduced.
+The catalog mechanism and `VERSIONS.yml` formalize how workflows, rules, and skills are introduced.
 
 ### Required Fields Per Item
 

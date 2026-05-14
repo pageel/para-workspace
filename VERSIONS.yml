@@ -32,7 +32,7 @@ workflows:
   para-audit:      "1.8.8"   # Quarantine Hook
   docs:            "1.8.6"   # Graph Intelligence (--graph)
   update:          "1.8.5"   # BUG-34: consumer fetch+reset for Windows
-  brainstorm:      "1.8.6"   # Graph Intelligence
+  brainstorm:      "1.8.8"   # FEAT: suggests plan template before creation
   para-knowledge:  "1.4.0"
   para-skill:      "1.8.8"   # Purged legacy catalog.yml version references
   write:           "1.7.16"   # FEAT-79: style guide, social template

@@ -45,7 +45,7 @@ The Kernel (`Resources/ai-agents/kernel/`) is the **"constitution"** — immutab
 | :-- | :-- | :-- |
 | H2 | Context Loading Priority | project.md → rules → artifacts → areas |
 | H7 | Cross-Project References | Ecosystem `@` prefix for cross-project plans |
-| H9 | Governed Library Catalogs | catalog.yml mandatory with kernel_min/max |
+| H9 | Governed Library Catalogs | VERSIONS.yml and catalogs mandatory |
 | H10 | Knowledge Items Governance | KR1-KR7 lifecycle rules, system KI sync |
 
 ## 3. Workspace Configuration (`.para-workspace.yml`)
@@ -204,9 +204,9 @@ Located at `Areas/Workspace/SYNC.md`, tracks cross-project notifications:
 
 ## 10. Governed Library Catalogs
 
-Workflows, Rules, and Skills managed via `catalog.yml`:
+Workflows, Rules, and Skills managed via `VERSIONS.yml` and catalogs:
 
-- **Centralized Registry:** Each category has a `catalog.yml` at its root
+- **Centralized Registry:** Each category has a catalog manifest at its root
 - **Version Tracking:** Item versions tracked centrally in `VERSIONS.yml` (repo root, v1.7.13). The `version` field in catalog items is deprecated.
 - **Snapshot Sync:** `para install` syncs read-only snapshot to `Resources/ai-agents/` and customizable version to `.agents/`
 - **Validation:** CLI validates `kernel_min`/`kernel_max` before syncing; incompatible items skipped with warning
@@ -310,7 +310,7 @@ Sidecar skills (`plan`, `docs`, `brainstorm`, `spec`) reference the centralized 
 
 | Version | Codename | Key Changes |
 | :-- | :-- | :-- |
-| 1.4.x | Governed | Smart Archive, catalog.yml, CLI library |
+| 1.4.x | Governed | Smart Archive, catalog system, CLI library |
 | 1.5.x | — | Kernel spec formalized (KERNEL.md, invariants, heuristics) |
 | 1.6.0 | — | Ecosystem projects, `type` field, `@` prefix resolution |
 | 1.6.1 | — | Brainstorm workflow improvements |
