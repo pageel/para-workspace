@@ -11,7 +11,23 @@
 
 set -o pipefail
 
-LOG_FILE="${TDD_LOG:-../.beads/tdd-evidence.log}"
+# Find project root by looking for project.md
+CURRENT_DIR="$(pwd)"
+PROJECT_ROOT=""
+while [ "$CURRENT_DIR" != "/" ]; do
+  if [ -f "$CURRENT_DIR/project.md" ]; then
+    PROJECT_ROOT="$CURRENT_DIR"
+    break
+  fi
+  CURRENT_DIR="$(dirname "$CURRENT_DIR")"
+done
+
+# Fallback to pwd if not found
+if [ -z "$PROJECT_ROOT" ]; then
+  PROJECT_ROOT="$(pwd)"
+fi
+
+LOG_FILE="${TDD_LOG:-$PROJECT_ROOT/artifacts/tests/tdd-evidence.log}"
 
 if [ $# -eq 0 ]; then
   echo "❌ Usage: tdd-test.sh <test-command...>"

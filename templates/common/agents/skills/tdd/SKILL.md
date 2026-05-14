@@ -83,12 +83,12 @@ bash .agents/skills/tdd/scripts/tdd-test.sh npm test --run test/foo.test.ts
 
 The script:
 1. Runs the test command and captures output + exit code.
-2. Appends an evidence entry (timestamp, status FAIL/PASS, command, output snippet) to `.beads/tdd-evidence.log`.
+2. Appends an evidence entry (timestamp, status FAIL/PASS, command, output snippet) to `artifacts/tests/tdd-evidence.log`.
 3. Passes through the original output and exit code to the Agent.
 
 ### TDD Gate (Step 5 in TDD Cycle)
 
-Before committing, Agent MUST read `.beads/tdd-evidence.log` and verify:
+Before committing, Agent MUST read `artifacts/tests/tdd-evidence.log` and verify:
 - A `status: FAIL` entry exists for the test file **before** the `status: PASS` entry.
 - If no FAIL is found before PASS → **STOP, do not commit**. Re-run the RED step.
 
@@ -96,11 +96,11 @@ Before committing, Agent MUST read `.beads/tdd-evidence.log` and verify:
 
 | Event | Action |
 |:--|:--|
-| Plan starts | Script creates `.beads/tdd-evidence.log` on first run |
+| Plan starts | Script creates `artifacts/tests/tdd-evidence.log` on first run |
 | During plan | Evidence entries accumulate (append-only) |
-| Plan done (Status → ✅ Done) | Agent renames to `.beads/tdd-evidence-<version>.log` (e.g., `tdd-evidence-v0.13.2.log`) |
-| Next plan starts | Fresh `.beads/tdd-evidence.log` created automatically |
-| `.gitignore` | Not needed — `.beads/` is outside `repo/` |
+| Plan done (Status → ✅ Done) | Agent renames to `artifacts/tests/tdd-evidence-<version>.log` (e.g., `tdd-evidence-v0.13.2.log`) |
+| Next plan starts | Fresh `artifacts/tests/tdd-evidence.log` created automatically |
+| `.gitignore` | `artifacts/tests/` should be ignored |
 
 ## Resource Router
 

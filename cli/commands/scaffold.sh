@@ -69,6 +69,40 @@ case "$TYPE" in
     mkdir -p "$TARGET/.beads"
     mkdir -p "$TARGET/.agents/rules"
     mkdir -p "$TARGET/.agents/workflows"
+    mkdir -p "$TARGET/repo"
+
+    # Create default gitignore for the repo
+    cat > "$TARGET/repo/.gitignore" <<EOL
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing and Output
+.test-output
+output/
+artifacts/tests/
+coverage/
+
+# Build
+dist/
+build/
+.next/
+.out/
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+EOL
 
     # Copy templates
     TMPL="$REPO_ROOT/templates/common"
