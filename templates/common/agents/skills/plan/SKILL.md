@@ -82,7 +82,7 @@ After loading project governance, read `project.md` and adapt the chosen templat
 | Project is not bilingual | Omit 1:N EN/VI task expansion pattern |
 | Project has `agent.rules: true` | Keep `<!-- ⚠️ MANDATORY -->` guards in every Phase |
 | Plan scope is documentation-only | Use `detail-plan-docs.md` template (no git, graph-first enrichment pipeline) |
-| Project has `.beads/graph/` | Read `para-graph §3.3.1` to generate Phase 0 Graph Intelligence context. |
+| Project has `.beads/graph/` | Read `para-graph §4.3.1` for Phase 0 context. Agent MUST also keep `**Graph Impact**` sections and add `Graph Update` steps in Phase N. |
 | Project distributes templates (tool.manifest.yml) | Apply Template-First flow: edit `repo/templates/` BEFORE workspace copies |
 | Project has release process | Include release Phase (build + tarball + gh release) per project rules |
 | Risks & Mitigations table has entries | Add `<!-- ⚠️ HARNESS GUARD (Phase N Risk): ... -->` comment to each mapped Phase |
