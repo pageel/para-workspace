@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # TDD Evidence Logger — Wraps test commands to create audit trail
 # Usage: bash .agents/skills/tdd/scripts/tdd-test.sh <test-command...>
-# Evidence is appended to .beads/tdd-evidence.log (outside repo, no gitignore needed)
+# Evidence is appended to artifacts/tests/tdd-evidence.log
 #
 # Example:
 #   bash .agents/skills/tdd/scripts/tdd-test.sh npm test --run test/foo.test.ts

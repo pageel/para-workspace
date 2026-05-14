@@ -1,7 +1,7 @@
 # TDD Compliance Audit Template
 
 > Loaded by `/logs --deep` when the session plan uses TDD methodology.
-> Agent MUST cross-reference `.beads/tdd-evidence.log` (primary), conversation log
+> Agent MUST cross-reference `artifacts/tests/tdd-evidence.log` (primary), conversation log
 > (secondary), and git history to verify the Red-Green-Refactor cycle.
 
 ## Audit Section: TDD Compliance
@@ -16,7 +16,7 @@ Append this section **after** the base `✅ Tasks & Progress` section in the `/l
 > compliance — prove it with evidence.
 
 **Plan methodology:** [Plan filename + TDD markers detected]
-**Evidence sources:** `.beads/tdd-evidence.log` (primary), Conversation log (fallback), Git log
+**Evidence sources:** `artifacts/tests/tdd-evidence.log` (primary), Conversation log (fallback), Git log
 
 #### Per-Task Compliance
 
@@ -53,7 +53,7 @@ Append this section **after** the base `✅ Tasks & Progress` section in the `/l
 
 Agent MUST follow this process to fill the template:
 
-1. **Check for evidence log** — read `.beads/tdd-evidence.log` in the project repo root.
+1. **Check for evidence log** — read `artifacts/tests/tdd-evidence.log` in the project repo root.
    - If exists → use as primary evidence source (timestamps prove order).
    - If missing → fall back to conversation log (`overview.txt`).
 2. **Identify all TDD tasks** from the plan (look for `🔴 RED` / `🟢 GREEN` markers).

@@ -106,5 +106,5 @@ Before committing, Agent MUST read `artifacts/tests/tdd-evidence.log` and verify
 
 | Resource | Relative Path | Description |
 |:--|:--|:--|
-| TDD Evidence Logger | `scripts/tdd-test.sh` | Bash wrapper that logs test FAIL/PASS to `.beads/tdd-evidence.log` for TDD Gate verification |
+| TDD Evidence Logger | `scripts/tdd-test.sh` | Bash wrapper that logs test FAIL/PASS to `artifacts/tests/tdd-evidence.log` for TDD Gate verification |
 
