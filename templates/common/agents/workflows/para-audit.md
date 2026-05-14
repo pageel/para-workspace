@@ -73,6 +73,14 @@ Generate a detailed `audit-report-YYYY-MM-DD.md` in `Areas/Workspace/audits/` su
 - **Library Status:** Outdated or untracked rules/workflows.
 - **Remediation Plan:** Next steps to fix the issues, potentially using `/para-rule standardize` or manual cleanup.
 
+### 6. Quarantine Test Evidence
+
+// turbo
+
+```bash
+if [[ -f "project.md" ]] && [[ -d "artifacts/tests" ]]; then mkdir -p artifacts/tests/tmp && find artifacts/tests -mindepth 1 -maxdepth 1 ! -name tmp -exec mv {} artifacts/tests/tmp/ 2>/dev/null \; && for f in artifacts/tests/tmp/*; do [[ "$f" != *.bak ]] && mv "$f" "$f.bak" 2>/dev/null; done; fi
+```
+
 ---
 
 ## 🔄 Action: update
@@ -265,6 +273,14 @@ Display an inline report (do NOT create a separate file — this is a quick chec
 ```
 
 If there are auto-fixable items (e.g., adding missing fields with clear defaults), ask the user if they want to apply fixes automatically.
+
+### 7. Quarantine Test Evidence
+
+// turbo
+
+```bash
+if [[ -f "project.md" ]] && [[ -d "artifacts/tests" ]]; then mkdir -p artifacts/tests/tmp && find artifacts/tests -mindepth 1 -maxdepth 1 ! -name tmp -exec mv {} artifacts/tests/tmp/ 2>/dev/null \; && for f in artifacts/tests/tmp/*; do [[ "$f" != *.bak ]] && mv "$f" "$f.bak" 2>/dev/null; done; fi
+```
 
 ---
 

@@ -665,10 +665,20 @@ Finalize the active plan by performing a strict completion audit, syncing backlo
 
 1. **Phase Completion Check:** Verify that all tasks across all phases of the plan are marked as completed `[x]`.
 2. **Walkthrough Checklist Check:** Ensure all items in the Walkthrough Completion Gate are checked off.
-3. **Backlog Sync & Clean:** Confirm that `/backlog sync` and `/backlog clean` have been performed to update the operational authority (`backlog.md`) and hot lane (`sprint-current.md`).
-4. **User Approval (Status Done):** Present the completion status to the user and ask for explicit approval to set the plan Status to `✅ Done`.
-5. **Clear Active Plan:** Ask the user for explicit approval to clear the `active_plan` field in `project.md`.
-6. **Archive:** Only AFTER the user approves both the Done status and the `active_plan` clearance, transition the plan to `✅ Done` (and optionally move to `done/`), finalizing the process.
+3. **Backlog Sync & Clean (MANDATORY):** The Agent MUST proactively execute the logic of `/backlog sync` and `/backlog clean` to update the operational authority BEFORE archiving:
+   - Append the completed plan and its tasks to `artifacts/tasks/done.md`.
+   - Update `artifacts/tasks/backlog.md`: Compress the plan into the `✅ Completed (Archived)` section, remove any mapped Active/Bug IDs from the upper tables, and update the Summary counts.
+4. **User Approval:** Present the completion status and ask for explicit approval to transition the plan to `✅ Done` and clear `active_plan` in `project.md`.
+5. **Archive (Post-Approval):** AFTER user approval, the Agent MUST:
+   a. Change plan `Status` to `✅ Done`.
+   b. Move the plan file to `artifacts/plans/done/`.
+   c. Remove the `active_plan` field from `project.md`.
+   d. Suggest reviewing and updating the project's (or meta-project's) roadmap (if one exists) to reflect the newly completed plan.
+6. **Quarantine Test Evidence:**
+   // turbo
+   ```bash
+   if [[ -f "project.md" ]] && [[ -d "artifacts/tests" ]]; then mkdir -p artifacts/tests/tmp && find artifacts/tests -mindepth 1 -maxdepth 1 ! -name tmp -exec mv {} artifacts/tests/tmp/ 2>/dev/null \; && for f in artifacts/tests/tmp/*; do [[ "$f" != *.bak ]] && mv "$f" "$f.bak" 2>/dev/null; done; fi
+   ```
 
 ---
 

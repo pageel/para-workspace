@@ -275,6 +275,16 @@ After reporting phase status:
 
 5. **IF no graph** → Skip silently.
 
+### 4.9. Quarantine Cleanup
+
+// turbo
+
+> **Purpose:** Automatically isolate test evidence logs and artifacts generated during the session to avoid accumulating garbage.
+
+```bash
+if [[ -f "project.md" ]] && [[ -d "artifacts/tests" ]]; then mkdir -p artifacts/tests/tmp && find artifacts/tests -mindepth 1 -maxdepth 1 ! -name tmp -exec mv {} artifacts/tests/tmp/ 2>/dev/null \; && for f in artifacts/tests/tmp/*; do [[ "$f" != *.bak ]] && mv "$f" "$f.bak" 2>/dev/null; done; fi
+```
+
 ### 5. Update Master Index
 
 // turbo
