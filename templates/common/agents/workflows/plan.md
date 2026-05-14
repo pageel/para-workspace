@@ -679,6 +679,8 @@ Finalize the active plan by performing a strict completion audit, syncing backlo
    ```bash
    if [[ -f "project.md" ]] && [[ -d "artifacts/tests" ]]; then mkdir -p artifacts/tests/tmp; for f in artifacts/tests/*; do if [[ -e "$f" && "$f" != "artifacts/tests/tmp" ]]; then mv "$f" "artifacts/tests/tmp/$(basename "$f").bak" 2>/dev/null || true; fi; done; fi
    ```
+7. **Graph Build & Enrichment (if applicable):**
+   If the project uses `para-graph`, execute `/para-graph build [project-name]` to update the structural Code-Knowledge Graph with the new features. After rebuilding, use the MCP tool `graph_enrich` to add semantic summaries and domain concepts for the newly created or modified nodes related to the plan.
 
 ---
 
