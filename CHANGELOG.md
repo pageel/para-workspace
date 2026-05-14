@@ -7,6 +7,16 @@ Detailed version changelogs are maintained internally in project docs.
 
 - **Changed**: Shortened separator lines across all workflow templates (28 characters) for cleaner reporting.
 
+## [1.8.8] - 2026-05-14
+
+TDD Governance Hygiene & QA Red Team Upgrade.
+
+- **Added**: `--gate` flag in `tdd-test.sh` for automated RED/GREEN cycle verification without manual log reading.
+- **Added**: Automated Quarantine Hook in `/plan`, `/para-audit`, and `/end` workflows to move test artifacts to `artifacts/tests/tmp/*.bak`, preventing sandbox trash buildup.
+- **Changed**: TDD Evidence Sandbox moved from `.beads/tdd-evidence.log` to `artifacts/tests/tdd-evidence.log`.
+- **Changed**: QA Skill updated to force Red Team personas (Architect/Tech Lead) to suggest `@[/brainstorm]` for `🔴 Critical` bugs.
+- **Changed**: `detail-plan.md` and `qa.md` templates upgraded with Graph Context (`Graph Impact`) for better Phase-Loop precision.
+
 ## [1.8.7] - 2026-05-12
 
 TDD Governance Workflow.
