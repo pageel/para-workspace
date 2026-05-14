@@ -237,7 +237,11 @@ Append a summary reference to `.beads/seeds.md`:
 
 Suggest: `/plan [project-name]`
 
-The `/plan` workflow will automatically discover the brainstorm output.
+> ⚠️ **Template Selection Rule:** The Agent MUST evaluate the scope of the brainstorm and explicitly propose the suitable plan template to the user:
+> - If the brainstorm covers a high-level direction, multiple phases, or an ecosystem strategy → Propose **Roadmap Template**.
+> - If the brainstorm is for a specific feature, bug, or focused implementation → Propose **Detail Plan Template**.
+> 
+> The Agent MUST NOT blindly create the plan without first proposing the suitable template type to the user.
 
 **Option C: Add to Backlog**
 
