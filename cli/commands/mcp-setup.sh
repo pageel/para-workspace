@@ -194,6 +194,16 @@ if [ $? -ne 0 ] || [ -z "$ENTRY_PATH" ]; then
   exit 1
 fi
 
+# Windows/Git Bash compatibility for JSON output paths
+if command -v cygpath >/dev/null 2>&1; then
+  ENTRY_PATH=$(cygpath -m "$ENTRY_PATH")
+  for i in "${!MCP_SERVE_ARGS[@]}"; do
+    if [[ "${MCP_SERVE_ARGS[$i]}" == /* ]]; then
+      MCP_SERVE_ARGS[$i]=$(cygpath -m "${MCP_SERVE_ARGS[$i]}")
+    fi
+  done
+fi
+
 # === Generate config snippet ===
 SNIPPET=$(generate_mcp_snippet "$MCP_SERVER_NAME" "$RUNTIME_CMD" "$ENTRY_PATH" "${MCP_SERVE_ARGS[@]}")
 

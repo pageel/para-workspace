@@ -109,6 +109,27 @@ assert_contains "Has serve arg" "serve" "$output"
 
 # ============================================================
 echo ""
+echo "--- mcp-setup handles Windows cygpath ---"
+
+# Temporarily mock cygpath for this test only
+mkdir -p "$TEST_TMP/cygbin"
+cat > "$TEST_TMP/cygbin/cygpath" << 'EOF'
+#!/bin/sh
+if [ "$1" = "-m" ]; then
+  echo "$2" | sed 's|^/|C:/|'
+else
+  echo "$2"
+fi
+EOF
+chmod +x "$TEST_TMP/cygbin/cygpath"
+
+# Run with fake cygpath in PATH
+output=$(PATH="$TEST_TMP/cygbin:$PATH" "$REPO_ROOT/cli/commands/mcp-setup.sh" "mock-tool" --print-only 2>&1) || true
+assert_contains "Uses cygpath for entry_path" "C:/" "$output"
+assert_contains "Uses cygpath for serve_args" "C:/" "$output"
+
+# ============================================================
+echo ""
 echo "--- mcp-setup --print-only with para- prefix ---"
 
 output=$("$REPO_ROOT/cli/commands/mcp-setup.sh" "para-mock-tool" --print-only 2>&1) || true
