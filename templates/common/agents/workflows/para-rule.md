@@ -37,7 +37,7 @@ ls -1 .agents/rules/*.md 2>/dev/null | xargs -I{} basename {} .md | sort
 echo ""
 ```
 
-**Step 2.** Read `catalog.yml` from the governed catalog source (priority order):
+**Step 2.** Read `catalog.yml` from the governed catalog source (priority order) and `VERSIONS.yml` for versions:
 
 1. `Projects/para-workspace/repo/templates/common/agents/rules/catalog.yml`
 2. `Resources/references/para-workspace/templates/common/agents/rules/catalog.yml`
@@ -45,7 +45,7 @@ echo ""
 **Step 3.** Display comparison report:
 
 ```
-📦 GOVERNED CATALOG (rules/catalog.yml):
+📦 GOVERNED CATALOG (rules/catalog.yml + VERSIONS.yml):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 | ID             | Version | Status          |
 | -------------- | ------- | --------------- |

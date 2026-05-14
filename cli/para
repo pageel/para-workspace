@@ -2,7 +2,7 @@
 
 # PARA Workspace CLI
 # Usage: ./cli/para [command] [args...]
-# Version: 1.8.7
+# Version: 1.8.8
 # Kernel Version: 1.4
 
 set -e

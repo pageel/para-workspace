@@ -26,15 +26,15 @@ workflows:
   para:            "1.1.0"
   inbox:           "1.1.0"
   learn:           "1.7.1"
-  para-workflow:   "1.7.14"  # updated: BUG-32 fix source: user default
-  para-rule:       "1.0.0"
+  para-workflow:   "1.8.8"   # Purged legacy catalog.yml version references
+  para-rule:       "1.8.8"   # Purged legacy catalog.yml version references
   plan:            "1.8.8"   # Quarantine Hook
   para-audit:      "1.8.8"   # Quarantine Hook
   docs:            "1.8.6"   # Graph Intelligence (--graph)
   update:          "1.8.5"   # BUG-34: consumer fetch+reset for Windows
   brainstorm:      "1.8.6"   # Graph Intelligence
   para-knowledge:  "1.4.0"
-  para-skill:      "1.0.1"
+  para-skill:      "1.8.8"   # Purged legacy catalog.yml version references
   write:           "1.7.16"   # FEAT-79: style guide, social template
   logs:            "1.8.7"   # Enforced mandatory view_file for log audits
   spec:            "1.7.16"   # NEW: specification writer workflow
@@ -54,7 +54,7 @@ rules:
   knowledge:               "1.1.0"
 
 skills:
-  para-kit:    "1.1.0"
+  para-kit:    "1.8.8"   # Purged legacy catalog.yml version references
   formatting:  "1.1.0"
   page-map:    "1.0.0"
   para-skill:  "1.0.0"

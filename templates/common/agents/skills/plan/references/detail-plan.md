@@ -92,6 +92,15 @@ Carry the Execution Ownership icon from the Implementation Plan.]
 
 [Goal in 1-2 sentences.]
 
+**Files:**
+- Create: `exact/path/to/new_file.ts` (if applicable)
+- Modify: `exact/path/to/existing_file.ts` (with line ranges if known)
+
+**Graph Impact (if para-graph enabled):**
+- God Nodes affected: [List of God nodes]
+- Blast Radius: [Impact analysis/callers]
+- Enrichment: [Nodes needing semantic enrichment]
+
 1.1 🤖 **[Step name]** — [Detail: file path, line number, operation, source reference if applicable.]
 1.2 👤 **[Step name]** — [Detail: destructive/external operation, Agent proposes → User approves.]
 

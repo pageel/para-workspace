@@ -73,19 +73,62 @@ Each question is tagged with a dimension. Agent generates questions from ALL dim
    - `artifacts/specs/*.md` → `spec` mode
    - Default → `artifact` mode
 3. Read the target file fully.
-4. **Context Gathering (MANDATORY):** To ask deep, expert-level questions, you MUST NOT review the artifact in a vacuum. Before proceeding to Step 1, you MUST:
+4. **Context Gathering (MANDATORY):** To ask deep, expert-level questions, you MUST NOT review the artifact in a vacuum. Before proceeding, you MUST:
    - Read `Projects/[project]/project.md` to understand the overarching contract and dependencies.
    - Read any explicitly linked Knowledge Items (KIs) or Rules.
-   - **Graph-Context Pre-flight:** If the `--graph` flag is provided, you MUST call `mcp_para-graph_graph_impact_analysis` or `mcp_para-graph_graph_context_bundle` on the core components mentioned in the artifact to load the Sub-graph into context before generating questions.
 5. **Project Governance Loading (MANDATORY for `[GOV]` persona):** The Project Tech Lead persona requires full project context. Agent MUST:
    - Read project `.agents/rules.md` index → load ALL project rules (e.g., `maintenance.md`, `review.md`).
    - Read project `.agents/skills.md` index → load ALL project skills.
-   - Identify: project type (OSS/internal), release process (tarball/npm/none), build tool, version locations, git scope rules.
-   - Use this knowledge to generate `[GOV]` dimension questions that catch project-specific compliance gaps.
-6. **Domain-Specific Red Team Templates:** Load the expert persona templates from `.agents/skills/qa/domains/` (e.g., `security.md`, `architect.md`, `governance.md`).
-   - The Agent MUST read these domain templates and filter the specific rules applicable to the `stack` array defined in `project.md`.
-   - Apply their specialized Personas and Gotchas during Question Generation (Step 2).
-   - **Self-Improvement Loop:** If a domain template lacks deep constraints for a specific project stack, Agent MUST proactively suggest the user run `/resource add <url>` (pointing to the framework's official docs or best-practices repo) followed by `/resource study <namespace> --anti-patterns` to enrich the Red Team's knowledge base.
+   - Identify: project type (OSS/internal), release process, build tool, git scope rules.
+6. **Domain-Specific Red Team Templates:** Load the expert persona templates from `.agents/skills/qa/domains/` (if any).
+
+### Step 0.25. Graph Context Pipeline (if --graph)
+
+If the `--graph` flag is provided, execute an INTERACTIVE Graph Preparation Phase BEFORE creating the QA Strategy:
+
+1. **Build Graph:** Run the graph build command (using `run_command` in a separate turn) to ensure graph data is up-to-date. 
+   - *Note on Working Directory:* If the project has a `repo/` directory (e.g., `Projects/[project]/repo/`), the `Cwd` MUST be set to that `repo/` directory, not the project root.
+2. **Identify & Analyze Nodes:** Use MCP tools (`graph_god_nodes`, `graph_query`, `graph_context_bundle`, `graph_impact_analysis`) to deeply analyze the core files and God nodes related to the artifact.
+3. **Enrich:** For any unenriched God nodes found, use `graph_enrich` to document their semantic meaning.
+4. **Interactive Report:** Pause the workflow and present a Chat Report to the user containing the impact analysis and blast radius of the components covered in the artifact.
+5. **Wait for User:** Ask if the user wants to analyze any other aspects/nodes before generating the QA Strategy. **STOP HERE.** Proceed to Step 0.5 only after user confirms.
+
+### Step 0.5. Process Selection & Pre-QA Strategy (The QA Kickoff)
+
+> **IMPORTANT:** Do NOT generate questions yet.
+
+#### Step 0.5a. Process Selection
+
+> 🧩 **Sidecar Skill:** Load `SKILL.md` §5 (Process Selection Router) for the comparison matrix and auto-suggest heuristics.
+
+1. **Analyze artifact characteristics:** Count phases, risks, lines, and mode.
+2. **Auto-suggest a process** using the heuristics from `SKILL.md` §5.3.
+3. **Present the selection prompt:** You MUST present the menu EXACTLY as a literal code block, line-by-line, as defined in `SKILL.md` §5.4. Do not summarize or flatten the options into a single paragraph.
+
+⛔ **CHECKPOINT:** Agent MUST STOP the workflow here and wait for the user's explicit process selection. Do NOT proceed to generate questions or create the QA Strategy until the user selects a process (1-4).
+
+4. **After user selects:** Load the corresponding `references/process-*.md` template from the QA skill. This template defines the flow that governs all subsequent steps.
+
+#### Step 0.5b. QA Strategy Creation
+
+1. **Create the QA Report file immediately:** 
+   - Generate a collision-safe filename: `Projects/[project]/artifacts/qa/qa-[date]-[mode]-[target]-[seq].md`.
+   - Initialize the file with the Report Header (see `SKILL.md` §1) and a new `## 0. QA Strategy` section.
+   - Add `> **Process:** [slug]` to the Report Header to record the selected process.
+2. **Propose the Strategy:** In the `## 0. QA Strategy` section of the file, the Agent MUST write:
+   - **Focus Areas — Coverage Tracker:** Based on the artifact's nature (e.g., SQLite migration, API design), list the 3-7 most critical areas that need stress-testing. Format as a TABLE with columns `#`, `Focus Area`, `Round 1`, `Round 2`, `Status` (initially all `⏳ Pending`). This table will be updated after each round to show which questions covered which area.
+   - **Red Team Roster:** Select the 3-4 most relevant Personas from `SKILL.md` §2 (e.g., Principal Architect, Security Auditor) that will lead this specific review. Justify why they are chosen.
+   - **Process Log:** Create an empty table with columns `Round`, `Trigger`, `Scope`, `Questions`, `Critical`, `Fixed`. Agent MUST append a row after each round of Q&A completes.
+3. **Wait for Approval:** Present this strategy to the user. **STOP HERE.** Do not proceed to structure scan and question generation until the user approves the strategy or adjusts the focus areas.
+
+### Step 0.75. Tech Lead Context & Governance Pre-flight
+
+Before diving into general Red Team questions, the Agent MUST step into the role of the **Project Tech Lead** to enforce project-specific compliance:
+
+1. **Load Context:** Read the project's `.agents/rules.md` and `.agents/skills.md` indexes. Identify and read all project-specific rules (e.g., `maintenance.md`) and skills.
+2. **Generate Governance Checklist:** Create a dedicated set of crucial checklist questions based strictly on these loaded rules and skills. (e.g., "Does this plan violate the scope containment defined in `maintenance.md`?", "Are we following the architecture defined in the project skill?").
+3. **Document:** Append this checklist to the QA Report file under a new `## 0.5 Tech Lead Governance Checklist` section.
+4. **Halt for Review:** The Agent MUST stop and present this checklist to the user. **STOP HERE.** Wait for the user to confirm this checklist before moving to structure scan and general question generation.
 
 ### Step 1. Structure Scan
 
@@ -115,11 +158,12 @@ Git Operations: N commits + N pushes
 
 For each section/phase in the artifact:
 
-1. **Generate probing questions** based on the Red Team Personas. 
+1. **Phase-Specific Graph Context (if --graph AND phase-loop process):** BEFORE generating questions for the current phase, Agent MUST execute the Graph Context Pipeline (Step 0.25) scoped specifically to the nodes modified or affected by this Phase. This ensures focused impact analysis.
+2. **Generate probing questions** based ONLY on the approved Focus Areas and Red Team Roster.
    - **No Arbitrary Limits:** Generate **as many questions as necessary** to fully stress-test the section.
    - Each question MUST be tagged with a dimension (`[LOGIC]`, `[SEC]`, etc.).
-2. **Do NOT answer them yet.**
-3. **Format the output** as a Question List:
+3. **Do NOT answer them yet.**
+4. **Format the output** as a Question List and **Append** them to the `## 2. Red Team Findings` section of the QA Report file created in Step 0.5.
 
 ```
 ---
@@ -131,11 +175,11 @@ For each section/phase in the artifact:
 ...
 ```
 
-### Step 3. User Approval & Suggestions
+### Step 3. Interactive Iteration Loop
 
-1. Present the generated Question List to the user.
+1. Present the generated Question List to the user in the chat.
 2. **Agent Suggestion:** Proactively suggest 1-2 areas where deeper questions could be asked.
-3. **Ask user:** "Do you approve this question list, or do you need me to clarify/add/remove any questions before I answer them?" (translated to user's language).
+3. **Ask user:** "Do you approve this question list? You can add your own questions, ask me to re-roll, or type `deep [aspect]` to add deep source-code level questions (e.g. `deep logic`, `deep sec`)."
 4. **Deep Review (Dual-Pass) Options:** Display the following options for High-Token Models:
    ```text
    🚀 Deep Review Options: To run a deep source-level review, type:
@@ -147,7 +191,11 @@ For each section/phase in the artifact:
    - `deep clean` : Review Code Smells and propose Refactoring.
    *(Note: The Agent will ingest the full repository source code upon activation).*
    ```
-5. Wait for user approval. **STOP HERE.** Do not proceed to Phase 2 until approved or a `deep` command is issued.
+5. **Loop:** If the user adds questions or requests a `deep` aspect:
+   - Generate the new questions.
+   - Append them to the QA file.
+   - Present again.
+6. **Wait for final approval.** **STOP HERE.** Do not proceed to Phase 2 until approved.
 
 ---
 
@@ -192,7 +240,7 @@ After all sections are reviewed, perform cross-cutting checks:
 | **File scope**           | Are all modified files listed in `git add` commands?                 |
 | **Version consistency**  | Is version number the same across all mentions?                      |
 
-### Step 7. Issue Summary & Recommendations
+### Step 7. Issue Summary, Recommendations & Next Steps
 
 Compile all `⚠️ Issue` and `🔴 Critical` findings into a summary table:
 
@@ -206,15 +254,23 @@ Total Questions: NN
 ⚠️ Issues:   XX
 🔴 Critical: XX
 
-| # | Dim | Phase | Issue |
-|---|---|---|---|
-| 1 | [LOGIC] | Phase 4 | Build before test missing |
-| 2 | [SEC] | Phase 2 | No guard on git push |
-| ... | | | |
+| # | Dim | Phase | Issue | Fix |
+|---|---|---|---|---|
+| 1 | [LOGIC] | Phase 4 | Build before test missing | Task X.Y |
+| 2 | [SEC] | Phase 2 | No guard on git push | Removed |
+| ... | | | | |
 
 VERDICT: ✅ Ready for activation | ⚠️ Fix N issues first | 🔴 BLOCKED
 ---
 ```
+
+**After writing the summary, Agent MUST:**
+
+1. **Update Coverage Tracker:** Go back to `## 0. QA Strategy` and update the Focus Areas table — mark each area's Status as `✅ Covered` or `⏳ Pending` based on which questions touched it. Map each Q# to the corresponding Focus Area rows.
+2. **Update Process Log:** Append a new row to the Process Log table with the round number, trigger command, scope, question range, critical count, and fix count.
+3. **Generate Next Steps Menu:** At the bottom of the Strategy section, write a `### 🚀 Next Steps` subsection using the decision table from `SKILL.md` §1 (QA Report Template → Next Steps section).
+4. **Update Header Verdict:** Change the Report Header's `Verdict` field from `[Pending]` to the final verdict (e.g., `✅ PASSED (12/12 Questions Resolved — 2 Rounds)`).
+5. **Present the Next Steps** to the user in the chat and wait for their decision.
 
 
 ### Step 8. Fix Loop & Post-Fix Re-Audit
@@ -222,14 +278,16 @@ VERDICT: ✅ Ready for activation | ⚠️ Fix N issues first | 🔴 BLOCKED
 If issues were found:
 
 1. **Present each issue** with a proposed fix.
-2. **Ask user:** "Fix this now? (y/n/skip)"
+   - **For 🔴 Critical risks:** Agent SHOULD proactively suggest using the `@[/brainstorm]` workflow methodology to generate 3-5 distinct options (Ideation) per issue BEFORE proposing a final fix. This ensures high-risk problems are solved with architectural rigor rather than quick patches.
+2. **Ask user:** "Fix this now? (y/n/skip) or run Brainstorm for solutions?"
 3. If user approves → apply the fix immediately.
 4. **Post-Fix Full Re-Audit:** After all fixes are applied, the artifact has changed. Agent MUST re-load the updated artifact context and perform a comprehensive re-evaluation (re-running Step 6 Cross-Section Check AND verifying that the fixes did not introduce new Security/Logic/Governance violations).
-5. If new issues are found during re-audit, return to 8.1. Otherwise, proceed to Tracking Update.
+5. If new issues are found during re-audit, return to 8.1.
+6. **Halt for Tracking Confirmation:** Before updating the Plan's tracking tables, the Agent MUST STOP and present a proposal: "All issues fixed. Shall I automatically update the *Review & Audit Tracking* table and tick the *Project Governance Checklist* in the Plan to conclude this QA loop? (y/n)"
 
-### Step 9. Audit Tracking Update (Auto-Mapping)
+### Step 9. Audit Tracking Update (User Approved)
 
-**ALWAYS perform Tracking Update (even if zero issues):**
+**Only perform Tracking Update if the user approved it in Step 8.6.**
 
 Update the target artifact's **Review & Audit Tracking** table (if present) by mapping the Q&A results to the standard criteria rows:
 
@@ -242,6 +300,7 @@ Update the target artifact's **Review & Audit Tracking** table (if present) by m
    - Increment its `Count`.
    - Set `Last reviewed` to today's date.
 3. Add or update the summary row `Q&A review ([mode])` to include the total statistics (e.g., `Total: X | ✅ Y | ⚠️ Z | 🔴 W`) and increment its `Count`.
+4. **Check off Governance Checklist:** If the Tech Lead Governance pre-flight passed, tick the checkboxes `[x]` for the triggered rules in the Plan's `Project Governance Checklist` section.
 
 ### Step 10. Save Report (Optional)
 

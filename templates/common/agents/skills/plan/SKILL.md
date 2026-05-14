@@ -26,6 +26,8 @@ source: catalog
 | `references/detail-plan-docs.md` | Step 9 — Plan Type = Detail Plan (docs-only) | Document structure for documentation plans (no git, graph-first) |
 | `references/roadmap.md` | Step 9 — Plan Type = Roadmap | Document structure for multi-phase roadmaps |
 
+| `references/detail-plan-tdd.md` | Step 9 — Plan Type = Detail Plan (TDD mode) | Document structure for strict Test-Driven Development implementation |
+
 > **Convention:** Data files live in `references/` (not `templates/`).
 > This follows the Sidecar Skill convention formalized in v1.7.6.3.
 
@@ -39,6 +41,8 @@ IF plan type = Roadmap
 ELIF plan scope is documentation-only
      (target files are in docs/, no code changes, no repo/ modifications)
   → load references/detail-plan-docs.md
+ELIF user specifically requests strict TDD (Test-Driven Development)
+  → load references/detail-plan-tdd.md
 ELSE
   → load references/detail-plan.md
 ```

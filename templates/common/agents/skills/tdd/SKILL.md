@@ -98,6 +98,7 @@ Before committing, Agent MUST read `artifacts/tests/tdd-evidence.log` and verify
 |:--|:--|
 | Plan starts | Script creates `artifacts/tests/tdd-evidence.log` on first run |
 | During plan | Evidence entries accumulate (append-only) |
+| Session ends (`/end`) | Agent runs Quarantine hook to move `artifacts/tests/*` to `tmp/` and appends `.bak`. This prevents sandbox trash buildup while preserving audit trails. |
 | Plan done (Status → ✅ Done) | Agent renames to `artifacts/tests/tdd-evidence-<version>.log` (e.g., `tdd-evidence-v0.13.2.log`) |
 | Next plan starts | Fresh `artifacts/tests/tdd-evidence.log` created automatically |
 | `.gitignore` | `artifacts/tests/` should be ignored |

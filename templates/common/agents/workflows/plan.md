@@ -5,7 +5,7 @@ source: catalog
 
 # /plan [project-name] [action] [--graph] [--project]
 
-> **Workspace Version:** 1.8.7 (Graph Intelligence + Project Context)
+> **Workspace Version:** 1.8.8 (Graph Intelligence + Project Context)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final plan document MUST be translated to this language.**
 
 Create, review, or update a phased implementation plan for a PARA project.

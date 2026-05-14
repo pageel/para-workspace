@@ -45,7 +45,7 @@ echo ""
 
 **Step 2.** Read `.agents/skills.md` (trigger index) if exists.
 
-**Step 3.** Read `catalog.yml` from the governed catalog source (priority order):
+**Step 3.** Read `catalog.yml` from the governed catalog source (priority order) and `VERSIONS.yml` for versions:
 
 1. `Projects/para-workspace/repo/templates/common/agents/skills/catalog.yml`
 2. `Resources/references/para-workspace/templates/common/agents/skills/catalog.yml`
@@ -208,7 +208,7 @@ Install a skill from the governed catalog into `.agents/skills/`.
 2. **Check conflict**: If `.agents/skills/[name]/` already exists, delegate to `/install` workflow for conflict resolution (Overwrite / Merge / Rename / Cancel).
 3. **Copy**: Install the skill directory into `.agents/skills/[name]/`.
 4. **Update index**: Add or update entry in `.agents/skills.md`.
-5. **Report**: Confirm installation with version info from `catalog.yml`.
+5. **Report**: Confirm installation with version info from `VERSIONS.yml`.
 
 > **Note:** For complex merge scenarios, use `/merge` workflow directly.
 
@@ -422,7 +422,7 @@ rm -rf sandbox/evals/[name]-$(date +%Y-%m-%d)/
 ## Notes
 
 - This workflow manages the **skill library** itself. For day-to-day skill usage, the agent loads skills automatically via trigger matching.
-- The governed catalog (`catalog.yml`) is the single source of truth for officially supported skills.
+- The governed catalog (`catalog.yml`) lists officially supported skills, while `VERSIONS.yml` is the single source of truth for versions.
 - User-created skills (not in catalog) are valid but considered **untracked**.
 
 ## Related

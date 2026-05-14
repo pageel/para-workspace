@@ -111,7 +111,7 @@ All fields in YAML frontmatter:
 | H6 | VCS & Git Boundaries | Git only in repo/, not workspace root |
 | H7 | Cross-Project References | Full relative paths, prefer Resources/ |
 | H8 | Workflow Compatibility | Declare kernel_compat in catalog.yml |
-| H9 | Governed Library Catalogs | catalog.yml mandatory for workflows/rules/skills |
+| H9 | Governed Library Catalogs | VERSIONS.yml is single source of truth for versions |
 
 ## 4. Selection Strategy
 

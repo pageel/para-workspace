@@ -37,7 +37,7 @@ ls -1 .agents/workflows/*.md 2>/dev/null | xargs -I{} basename {} .md | sort
 echo ""
 ```
 
-**Step 2.** Read `catalog.yml` to get the governed library:
+**Step 2.** Read `catalog.yml` to get the governed library list, and `VERSIONS.yml` for version info:
 
 // turbo
 
@@ -49,7 +49,7 @@ Read the file at the **catalog source** (one of these, in priority order):
 **Step 3.** Display comparison report:
 
 ```
-📦 GOVERNED CATALOG (catalog.yml):
+📦 GOVERNED CATALOG (catalog.yml + VERSIONS.yml):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 | ID             | Version | Status          |
 | -------------- | ------- | --------------- |
@@ -158,7 +158,7 @@ Install a workflow from the governed catalog into `.agents/workflows/`.
 1. **Resolve source**: Find the workflow file in the catalog source directory.
 2. **Check conflict**: If `.agents/workflows/[name].md` already exists, delegate to `/install` workflow for conflict resolution (Overwrite / Merge / Rename / Cancel).
 3. **Copy**: Install the file into `.agents/workflows/[name].md`.
-4. **Report**: Confirm installation with version info from `catalog.yml`.
+4. **Report**: Confirm installation with version info from `VERSIONS.yml`.
 
 > **Note:** For complex merge scenarios, use `/merge` workflow directly.
 
@@ -192,7 +192,7 @@ Result: 1 warning(s), 0 error(s)
 ## 💡 Notes
 
 - This workflow manages the **workflow library** itself. For day-to-day workflow usage, just invoke the workflow directly (e.g., `/open`, `/end`).
-- The governed catalog (`catalog.yml`) is the single source of truth for which workflows are officially supported.
+- The governed catalog (`catalog.yml`) lists officially supported workflows, while `VERSIONS.yml` is the single source of truth for versions.
 - User-created workflows (not in catalog) are valid but considered **untracked** — they won't receive automatic updates.
 - Always backup before running `standardize` on modified workflows.
 
