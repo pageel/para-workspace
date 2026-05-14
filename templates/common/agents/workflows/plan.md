@@ -677,7 +677,7 @@ Finalize the active plan by performing a strict completion audit, syncing backlo
 6. **Quarantine Test Evidence:**
    // turbo
    ```bash
-   if [[ -f "project.md" ]] && [[ -d "artifacts/tests" ]]; then mkdir -p artifacts/tests/tmp && find artifacts/tests -mindepth 1 -maxdepth 1 ! -name tmp -exec mv {} artifacts/tests/tmp/ 2>/dev/null \; && for f in artifacts/tests/tmp/*; do [[ "$f" != *.bak ]] && mv "$f" "$f.bak" 2>/dev/null; done; fi
+   if [[ -f "project.md" ]] && [[ -d "artifacts/tests" ]]; then mkdir -p artifacts/tests/tmp; for f in artifacts/tests/*; do if [[ -e "$f" && "$f" != "artifacts/tests/tmp" ]]; then mv "$f" "artifacts/tests/tmp/$(basename "$f").bak" 2>/dev/null || true; fi; done; fi
    ```
 
 ---
