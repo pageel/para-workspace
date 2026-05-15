@@ -643,6 +643,7 @@ After archiving a completed plan (Step 6):
       ```
 3. **IF null/empty** → Skip (zero I/O)
 
+
 ---
 
 ## ✏️ Action: update
@@ -697,10 +698,25 @@ Finalize the active plan by performing a strict completion audit, syncing backlo
    b. Move the plan file to `artifacts/plans/done/`.
    c. Remove the `active_plan` field from `project.md`.
    d. Suggest reviewing and updating the project's (or meta-project's) roadmap (if one exists) to reflect the newly completed plan.
-6. **Quarantine Test Evidence:**
+6. **Quarantine Test Evidence & TDD Logs:**
    // turbo
    ```bash
-   if [[ -f "project.md" ]] && [[ -d "artifacts/tests" ]]; then mkdir -p artifacts/tests/tmp; for f in artifacts/tests/*; do if [[ -e "$f" && "$f" != "artifacts/tests/tmp" ]]; then mv "$f" "artifacts/tests/tmp/$(basename "$f").bak" 2>/dev/null || true; fi; done; fi
+   # Archive TDD evidence log (rename with plan version before quarantine)
+   # TDD Skill spec: artifacts/tests/tdd-evidence.log → tdd-evidence-<version>.log
+   PLAN_VER=$(grep -oE 'v[0-9]+\.[0-9]+[0-9.]*' "$(ls artifacts/plans/done/*-$(date +%Y-%m-%d)*.md 2>/dev/null | head -1)" 2>/dev/null | head -1)
+   if [[ -f "artifacts/tests/tdd-evidence.log" ]]; then
+     SUFFIX="${PLAN_VER:-$(date +%Y-%m-%d)}"
+     mv "artifacts/tests/tdd-evidence.log" "artifacts/tests/tdd-evidence-${SUFFIX}.log"
+     echo "📋 TDD evidence archived as tdd-evidence-${SUFFIX}.log"
+   fi
+   # Also check .beads/ (legacy location — some projects wrote here by mistake)
+   if [[ -f ".beads/tdd-evidence.log" ]]; then
+     mkdir -p artifacts/tests
+     mv ".beads/tdd-evidence.log" "artifacts/tests/tdd-evidence-${PLAN_VER:-legacy}.log"
+     echo "📋 Migrated .beads/tdd-evidence.log → artifacts/tests/"
+   fi
+   # Quarantine all test artifacts to tmp/
+   if [[ -d "artifacts/tests" ]]; then mkdir -p artifacts/tests/tmp; for f in artifacts/tests/*; do if [[ -e "$f" && "$f" != "artifacts/tests/tmp" ]]; then mv "$f" "artifacts/tests/tmp/$(basename "$f")" 2>/dev/null || true; fi; done; echo "🧹 Test artifacts quarantined"; fi
    ```
 7. **Graph Build & Enrichment (if applicable):**
    If the project uses `para-graph`, execute `/para-graph build [project-name]` to update the structural Code-Knowledge Graph with the new features. After rebuilding, use the MCP tool `graph_enrich` to add semantic summaries and domain concepts for the newly created or modified nodes related to the plan.
