@@ -1,39 +1,75 @@
-# /verify Workflow
+---
+description: Verify task completion using walkthroughs
+source: catalog
+---
 
-> **Version**: 1.5.0
+# /verify [project-name] [task-name]
 
-The `/verify` workflow confirms that a feature or task is complete by executing a structured Walkthrough artifact checklist. It runs tests, checks outputs, and records evidence.
+> **Workspace Version:** 1.5.0 (Governed Libraries)
 
-## Commands
+Verify completion of a feature or task using a Walkthrough artifact.
 
-```
-/verify [project-name] [task-name]
-```
-
-## Verification Flow
-
-```
-Locate walkthrough → Execute checklist → Compare results → Record evidence
-```
+## Steps
 
 ### 1. Locate Walkthrough
 
-Finds the relevant walkthrough in `artifacts/walkthroughs/`. If none exists, offers to create one from the task description.
+// turbo
+
+Find the relevant walkthrough file:
+
+```bash
+ls Projects/[project-name]/artifacts/walkthroughs/ 2>/dev/null || echo "No walkthroughs directory found"
+```
+
+If no walkthrough exists, offer to create one based on the task description.
 
 ### 2. Execute Verification Checklist
 
-Runs every "Verify" step defined in the walkthrough (tests, builds, file checks).
+Run every "Verify" step defined in the walkthrough. For example:
+
+```bash
+cd Projects/[project-name]/repo
+npm run test        # Run tests
+npm run build       # Verify build
+ls -la some/path    # Check file existence
+```
+
+#### 2.5. Graph-Assisted Blast Radius Check (CONDITIONAL)
+
+> **Gate:** Only trigger if project has `.beads/graph/` directory.
+
+IF graph exists, use `graph_impact_analysis` on the primary changed entity to verify all affected areas have been covered by the walkthrough:
+
+1. Identify the main function/class that was changed from the walkthrough description.
+2. Run `graph_impact_analysis(nodeId, direction: "upstream", depth: 2)` to list all callers.
+3. Cross-check: Are all upstream callers covered by test steps in the walkthrough?
+4. **IF uncovered callers found** → Flag as potential gap:
+   ```
+   ⚠️ BLAST RADIUS GAP: [caller-name] depends on changed code but is not tested in walkthrough.
+   ```
+
+IF no graph → Skip. Proceed with manual verification only.
 
 ### 3. Compare Results
 
-Matches actual output against expected output:
+Verify that actual output matches "Expected Output" in the walkthrough:
 
 - ✅ Match → Step passes
-- ❌ Mismatch → Flagged as regression
+- ❌ Mismatch → Flag as regression
 
 ### 4. Record Evidence
 
-Logs verification status in the session file and updates `backlog.md` status.
+Log the verification status in the current session file:
+
+```markdown
+## Verification: [task-name]
+
+- **Status**: ✅ Passed / ❌ Failed
+- **Steps Executed**: N/N
+- **Regressions**: None / [list]
+```
+
+Update `Projects/[project-name]/artifacts/tasks/backlog.md` status accordingly.
 
 ## Success Criteria
 
@@ -44,10 +80,6 @@ Logs verification status in the session file and updates `backlog.md` status.
 
 ## Related
 
-- [/backlog Workflow](./backlog.md) — Update task status
-- [/release Workflow](./release.md) — Pre-release quality gate
-- [Workflow Documentation](../reference/workflows.md) — Workflow catalog
-
----
-
-_Added in v1.5.0_
+- `/backlog` — Update task status
+- `/release` — Pre-release quality gate
+- `/push` — Commit and push verified changes

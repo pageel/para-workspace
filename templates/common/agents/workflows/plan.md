@@ -45,13 +45,14 @@ Generate a comprehensive implementation plan based on the project contract, back
 > cause attention decay. Force-load here to guarantee rules/skills awareness during planning.
 
 ```bash
-# Tier-1 Index Force Load (Anti-Cognitive-Bypass v1.7.10)
+# Context & Trigger Load (Anti-Cognitive-Bypass)
+echo ""
+echo "> ⚠️ Loading Project Skill: Projects/[project-name]/.agents/skills/[project-name]/SKILL.md"
+cat Projects/[project-name]/.agents/skills/[project-name]/SKILL.md 2>/dev/null || echo "No project specific skill found."
 echo ""
 echo "> ⚠️ Proactive Trigger Scan: Workspace Indices"
 cat .agents/rules.md 2>/dev/null | head -n 30
 cat .agents/skills.md 2>/dev/null | head -n 30
-
-# Tier-2 Index Force Load (Project-specific rules/skills)
 echo ""
 echo "> ⚠️ Proactive Trigger Scan: Project Indices"
 cat Projects/[project-name]/.agents/rules.md 2>/dev/null | head -n 30
@@ -65,7 +66,7 @@ cat Projects/[project-name]/.agents/skills.md 2>/dev/null | head -n 30
 If the `--graph` flag is provided, execute an INTERACTIVE Graph Preparation Phase BEFORE creating the plan:
 
 1. **Build Graph:** Run `/para-graph build [project-name]` to ensure graph data is up-to-date.
-2. **Identify & Analyze Nodes:** Use MCP tools (`graph_god_nodes`, `graph_query`, `graph_context_bundle`, `graph_impact_analysis`) to deeply analyze the core files and God nodes related to the feature.
+2. **Identify & Analyze Nodes:** Use MCP tools (`graph_god_nodes`, `graph_query`, `graph_context_bundle`, `graph_impact_analysis`, `graph_edges`) to deeply analyze the core files and God nodes related to the feature.
 3. **Enrich:** For any unenriched God nodes found, use `graph_enrich` to document their semantic meaning.
 4. **Interactive Report & Template Suggestion:** Pause the workflow and present a Chat Report to the user containing:
    - The impact analysis and blast radius of the proposed changes.
@@ -132,6 +133,8 @@ Read `Projects/[project-name]/artifacts/tasks/backlog.md` to understand:
 // turbo
 
 > ⚗️ **Token optimization:** One `ls` + conditional read. Strategy priority logic (D7).
+
+> 🔍 **Memory-Assisted Planning:** Before reading brainstorm files, Agent SHOULD use `memory_search` to find past decisions, friction points, and architectural patterns related to the plan scope. This prevents re-debating resolved issues.
 
 ```bash
 ls -t Projects/[project-name]/artifacts/para-decisions/brainstorm-*.md 2>/dev/null | head -1
@@ -545,6 +548,26 @@ Append to the current session log at `Projects/[project-name]/sessions/YYYY-MM-D
 - **Activated**: Yes/No
 - **Next**: Run `/backlog sync` to map phases (if activated)
 ```
+
+#### 11.5. Graph Memory Push (CONDITIONAL)
+
+> **Gate:** Only trigger if project has `.beads/graph/` directory.
+
+1. Check graph availability:
+   ```bash
+   test -d "Projects/[project-name]/.beads/graph" && echo "✅ Graph Memory available" || echo "⏭️ No graph — skip memory push"
+   ```
+
+2. **IF graph exists:**
+   Push the plan creation summary via MCP `memory_push`:
+   - **kind:** `plan-created`
+   - **content:** Plan name + phase count + key scope decisions
+   - **sessionId:** `YYYY-MM-DD-plan-[topic]`
+   - **metadata:** `{ "plan_file": "artifacts/plans/[plan-name].md", "phases": N, "activated": true/false }`
+
+3. **Curate memory:** After pushing, call `memory_curate(projectName)` to consolidate raw memory events into semantic slices.
+
+4. **IF no graph** → Skip silently.
 
 ---
 

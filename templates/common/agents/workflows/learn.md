@@ -69,6 +69,24 @@ Add a link to the lesson in `Areas/Learning/Lessons/README.md` under the appropr
 
 If the lesson originated from a specific project, add a reference back in the project's session log.
 
+### 4.3. Graph Memory Push (CONDITIONAL)
+
+> **Gate:** Only trigger if the lesson originated from a project with `.beads/graph/` directory.
+
+1. Check graph availability for the source project:
+   ```bash
+   test -d "Projects/[project-name]/.beads/graph" && echo "✅ Graph Memory available" || echo "⏭️ No graph — skip memory push"
+   ```
+
+2. **IF graph exists:**
+   Push the lesson via MCP `memory_push`:
+   - **kind:** `lesson-learned`
+   - **content:** Lesson title + core value summary + category
+   - **sessionId:** `YYYY-MM-DD-learn-[topic-name]`
+   - **metadata:** `{ "file": "Areas/Learning/Lessons/[topic-name].md", "category": "[Technical/Process/Domain]" }`
+
+3. **IF no graph** → Skip silently. The lesson file in Areas/Learning/ is sufficient.
+
 ### 4.5. Knowledge Item Suggestion
 
 - **High-value** (affects multiple projects or sessions)

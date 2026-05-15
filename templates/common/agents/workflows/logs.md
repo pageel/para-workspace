@@ -63,7 +63,8 @@ The Agent performs a **deliberate, systematic scan** of the entire conversation 
 **Process:**
 1. Scan the conversation context from start to end (or within `scope` boundary).
 2. For each category below, list **every individual item** — do not estimate, do not round.
-3. Format as the detailed report below.
+3. **Memory cross-reference (CONDITIONAL):** IF project has `.beads/graph/` directory, use `memory_search` with query "session" to retrieve past session telemetry patterns. Compare current session metrics against historical averages to flag anomalies (e.g., unusually high token usage, excessive tool calls, repeated friction patterns).
+4. Format as the detailed report below.
 
 ```markdown
 📊 **SESSION TELEMETRY (Structured Audit) — Scope: [All / Last / Workflow: name]**

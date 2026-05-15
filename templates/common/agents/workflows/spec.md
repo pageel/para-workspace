@@ -3,7 +3,7 @@ description: Write a structured specification before coding — surface assumpti
 source: user
 ---
 
-# /spec [project-name] [action]
+# /spec [project-name] [action] [--graph]
 
 > **Workspace Version:** 1.7.15
 
@@ -18,6 +18,12 @@ Write a structured specification before any implementation begins. The spec is t
 | `create` | Create a new spec for a feature, project, or significant change (default) |
 | `review` | Review and validate an existing spec against current state |
 | `update` | Update an existing spec when scope or decisions change |
+
+## Options
+
+| Option | Description |
+|:--|:--|
+| `--graph` | Run Graph Pipeline (Build → Query → Impact Analysis) before spec writing to anchor scope and boundaries in the real codebase |
 
 ---
 
@@ -55,19 +61,40 @@ SPECIFY ──→ PLAN ──→ TASKS ──→ IMPLEMENT
 
 > **Constraint:** Read `.para-workspace.yml` to get the user's preferred language from `language`. All output MUST be in this language.
 
+> ⚠️ **Proactive Context & Trigger Check:** BEFORE writing any spec, YOU MUST:
+> 1. Read the project's own domain skill at `Projects/[project-name]/.agents/skills/[project-name]/SKILL.md` (if it exists) to understand project-specific rules.
+> 2. Scan workspace index triggers based on the intended target of your discussion.
+
 ```bash
-# Tier-1 Index Force Load
+# Context & Trigger Load (Anti-Cognitive-Bypass)
+echo ""
+echo "> ⚠️ Loading Project Skill: Projects/[project-name]/.agents/skills/[project-name]/SKILL.md"
+cat Projects/[project-name]/.agents/skills/[project-name]/SKILL.md 2>/dev/null || echo "No project specific skill found."
 echo ""
 echo "> ⚠️ Proactive Trigger Scan: .agents/rules.md & .agents/skills.md"
 cat .agents/rules.md 2>/dev/null | head -n 30
 cat .agents/skills.md 2>/dev/null | head -n 30
 ```
 
+#### 0.5. Graph Context Pipeline (if --graph)
+
+// turbo
+
+If the `--graph` flag is provided, execute the graph intelligence pipeline BEFORE gathering context:
+
+1. **Build Graph:** Run `/para-graph build [project-name]` to ensure graph data is up-to-date.
+2. **Identify Target Nodes:** Use MCP tools `graph_query` and `graph_god_nodes` to locate architectural nodes and hot spots related to the spec topic.
+3. **Deep Context:** Use MCP tools `graph_context_bundle` and `graph_edges` on the identified nodes to gather callers, callees, dependencies, and structural relationships.
+4. **Impact Analysis:** Use `graph_impact_analysis` on relevant nodes to map upstream/downstream dependencies — essential for defining accurate scope boundaries and risk assessment.
+5. **Inject Context:** Keep this graph intelligence in memory to ground the spec in the actual codebase structure, preventing scope creep and ensuring boundary definitions are architecturally sound.
+
 #### 1. Context Gathering (Phase: SPECIFY)
 
 // turbo
 
 Read the project context to understand what we're building within:
+
+> 🔍 **Memory-Assisted Spec:** Before gathering context, Agent SHOULD use `memory_search` to find past specs, decisions, and architectural patterns related to the spec topic. This prevents re-specifying resolved constraints.
 
 ```bash
 # Project contract
@@ -290,6 +317,26 @@ Append to `Projects/[project-name]/sessions/YYYY-MM-DD.md`:
 - **Status**: Approved
 - **Next**: [chosen action from Step 10]
 ```
+
+#### 11.5. Graph Memory Push (CONDITIONAL)
+
+> **Gate:** Only trigger if project has `.beads/graph/` directory.
+
+1. Check graph availability:
+   ```bash
+   test -d "Projects/[project-name]/.beads/graph" && echo "✅ Graph Memory available" || echo "⏭️ No graph — skip memory push"
+   ```
+
+2. **IF graph exists:**
+   Push the spec creation summary via MCP `memory_push`:
+   - **kind:** `spec-created`
+   - **content:** Spec topic + key assumptions + boundary decisions
+   - **sessionId:** `YYYY-MM-DD-spec-[topic]`
+   - **metadata:** `{ "spec_file": "artifacts/specs/spec-[date]-[topic].md", "tasks": N }`
+
+3. **Curate memory:** After pushing, call `memory_curate(projectName)` to consolidate raw memory events into semantic slices.
+
+4. **IF no graph** → Skip silently.
 
 ---
 

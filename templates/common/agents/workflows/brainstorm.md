@@ -36,10 +36,15 @@ If the `--graph` flag is provided, execute the graph intelligence pipeline BEFOR
 
 First, understand the core topic and the project's current state.
 
-> ⚠️ **Proactive Trigger Check:** BEFORE brainstorming ANY solution that concerns code changes or deployment, YOU MUST scan index triggers based on the intended target of your discussion (e.g. "editing repo/").
+> ⚠️ **Proactive Context & Trigger Check:** BEFORE brainstorming ANY solution, YOU MUST:
+> 1. Read the project's own domain skill at `Projects/[project-name]/.agents/skills/[project-name]/SKILL.md` (if it exists) to understand project-specific rules.
+> 2. Scan workspace index triggers based on the intended target of your discussion (e.g. "editing repo/").
 
 ```bash
-# Tier-1 Index Force Load (Anti-Cognitive-Bypass v1.7.10)
+# Context & Trigger Load (Anti-Cognitive-Bypass)
+echo ""
+echo "> ⚠️ Loading Project Skill: Projects/[project-name]/.agents/skills/[project-name]/SKILL.md"
+cat Projects/[project-name]/.agents/skills/[project-name]/SKILL.md 2>/dev/null || echo "No project specific skill found."
 echo ""
 echo "> ⚠️ Proactive Trigger Scan: .agents/rules.md & .agents/skills.md"
 cat .agents/rules.md 2>/dev/null | head -n 30
@@ -76,9 +81,12 @@ Generate 3-5 distinct perspectives, solutions, or root causes related to the top
 > 🔍 **Graph-Assisted Ideation (if `--graph`):** During exploration, Agent SHOULD
 > actively use MCP tools to validate or challenge ideas against the real codebase:
 > - `graph_query` — Find nodes related to proposed changes
+> - `graph_god_nodes` — Identify architectural hot spots (most connected nodes) to assess risk
 > - `graph_impact_analysis` — Assess blast radius of each option
 > - `graph_context_bundle` — Pull callers/callees to check feasibility
 > - `graph_edges` — Verify dependency assumptions
+> - `memory_search` — Search past decisions, patterns, and friction points related to the topic
+> - `memory_push` — Log key insights or architectural observations discovered during ideation
 
 ### 3. Refinement & Evaluation
 
@@ -96,6 +104,8 @@ Collaborate with the user to evaluate the options:
 > 🔍 **Graph-Assisted Refinement (if `--graph`):** When drilling into a specific
 > option, Agent SHOULD use `graph_context_bundle` on the target node to pull
 > source code and verify the proposed change is architecturally sound.
+> Agent SHOULD also use `memory_search` to check for past friction or decisions
+> on similar patterns, and `memory_push` to persist the refinement rationale.
 
 ### 4. Save Structured Output
 
@@ -190,7 +200,9 @@ using the **Research template** from the Sidecar Skill.
 
    Agent calls `memory_push(projectName, kind, content, sessionId, metadata)`.
 
-3. **IF no graph OR open brainstorm** → Skip silently.
+3. **Curate memory:** After pushing, call `memory_curate(projectName)` to consolidate raw memory events into semantic slices for future sessions.
+
+4. **IF no graph OR open brainstorm** → Skip silently.
 
 ### 5. Choose Next Action
 

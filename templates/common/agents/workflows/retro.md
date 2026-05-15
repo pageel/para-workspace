@@ -17,6 +17,8 @@ Conduct a project retrospective before archiving to `Archive/`.
 
 Re-read `.agents/rules.md` to ensure rules context is loaded (guard against context truncation).
 
+> 🔍 **Memory-Assisted Retro:** IF project has `.beads/graph/` directory, use `memory_search` to retrieve all past session summaries, architecture decisions, and friction points for the project. This feeds Step 1 (Goals Assessment) and Step 2 (Learnings) with comprehensive historical context.
+
 ### 1. Review Goals & Progress
 
 // turbo
@@ -117,6 +119,26 @@ Create `Projects/[project-name]/sessions/RETROSPECTIVE.md`:
 
 - [List of files moved to Resources/]
 ```
+
+### 5.5. Graph Memory Push (CONDITIONAL)
+
+> **Gate:** Only trigger if project has `.beads/graph/` directory.
+
+1. Check graph availability:
+   ```bash
+   test -d "Projects/[project-name]/.beads/graph" && echo "✅ Graph Memory available" || echo "⏭️ No graph — skip memory push"
+   ```
+
+2. **IF graph exists:**
+   Push the retrospective summary via MCP `memory_push`:
+   - **kind:** `retro-summary`
+   - **content:** Key learnings + exported assets + goals assessment summary
+   - **sessionId:** `YYYY-MM-DD-retro-[project-name]`
+   - **metadata:** `{ "status": "[Completed/Cancelled/Paused]", "learnings": N, "assets_exported": N }`
+
+3. **Curate memory:** After pushing, call `memory_curate(projectName)` to consolidate all project memory events into final semantic slices before archival.
+
+4. **IF no graph** → Skip silently.
 
 ### 6. Archive Project
 

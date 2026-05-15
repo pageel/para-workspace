@@ -80,7 +80,8 @@ Each question is tagged with a dimension. Agent generates questions from ALL dim
    - Read project `.agents/rules.md` index → load ALL project rules (e.g., `maintenance.md`, `review.md`).
    - Read project `.agents/skills.md` index → load ALL project skills.
    - Identify: project type (OSS/internal), release process, build tool, git scope rules.
-6. **Domain-Specific Red Team Templates:** Load the expert persona templates from `.agents/skills/qa/domains/` (if any).
+6. **Memory-Assisted QA (CONDITIONAL):** IF project has `.beads/graph/` directory, use `memory_search` to find past QA findings, known issues, and recurring patterns. This prevents Red Team from re-raising resolved issues and focuses probing on genuinely new risk areas.
+7. **Domain-Specific Red Team Templates:** Load the expert persona templates from `.agents/skills/qa/domains/` (if any).
 
 ### Step 0.25. Graph Context Pipeline (if --graph)
 
@@ -328,6 +329,26 @@ If the Q&A generated ≥ 10 questions or found ≥ 3 issues:
    - If target is the active plan → use plan filename as slug
 
 3. Format: full Q&A cards + summary table + fixes applied.
+
+### Step 10.5. Graph Memory Push (CONDITIONAL)
+
+> **Gate:** Only trigger if project has `.beads/graph/` directory.
+
+1. Check graph availability:
+   ```bash
+   test -d "Projects/[project-name]/.beads/graph" && echo "✅ Graph Memory available" || echo "⏭️ No graph — skip memory push"
+   ```
+
+2. **IF graph exists:**
+   Push the QA summary via MCP `memory_push`:
+   - **kind:** `qa-review`
+   - **content:** Verdict + critical count + key findings summary
+   - **sessionId:** `YYYY-MM-DD-qa-[mode]-[target]`
+   - **metadata:** `{ "mode": "[plan/spec/artifact/audit]", "total_questions": N, "critical": N, "verdict": "[PASSED/BLOCKED]" }`
+
+3. **Curate memory:** After pushing, call `memory_curate(projectName)` to consolidate.
+
+4. **IF no graph** → Skip silently.
 
 ---
 

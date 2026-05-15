@@ -34,6 +34,22 @@ npm run build       # Verify build
 ls -la some/path    # Check file existence
 ```
 
+#### 2.5. Graph-Assisted Blast Radius Check (CONDITIONAL)
+
+> **Gate:** Only trigger if project has `.beads/graph/` directory.
+
+IF graph exists, use `graph_impact_analysis` on the primary changed entity to verify all affected areas have been covered by the walkthrough:
+
+1. Identify the main function/class that was changed from the walkthrough description.
+2. Run `graph_impact_analysis(nodeId, direction: "upstream", depth: 2)` to list all callers.
+3. Cross-check: Are all upstream callers covered by test steps in the walkthrough?
+4. **IF uncovered callers found** → Flag as potential gap:
+   ```
+   ⚠️ BLAST RADIUS GAP: [caller-name] depends on changed code but is not tested in walkthrough.
+   ```
+
+IF no graph → Skip. Proceed with manual verification only.
+
 ### 3. Compare Results
 
 Verify that actual output matches "Expected Output" in the walkthrough:

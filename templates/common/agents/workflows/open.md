@@ -173,7 +173,9 @@ Check if Compact Memory exists:
 test -f "Projects/[project-name]/.beads/graph/memory-slices.jsonl" || test -f "Projects/[project-name]/repo/.beads/graph/memory-slices.jsonl"
 ```
 
-- **If exists** → Read the MCP resource `memory_summary` (or read the generated summary file) to inject core architectural decisions and rules into the session context.
+- **If exists:**
+  1. Read the MCP resource `memory_summary` (or read the generated summary file) to inject core architectural decisions and rules into the session context.
+  2. Use `memory_search` with a broad query (project name + "architecture" or "decision") to surface the most relevant past session insights. Limit to 5 results for token efficiency.
 - **If not exists** → Skip silently. No memory overhead.
 
 ### 4. Read task context — Token Optimized

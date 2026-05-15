@@ -112,8 +112,15 @@ Analyze the project and create documentation appropriate to its type and complex
 
 > **Layer 3 defense:** Re-read indices to guard against attention decay.
 
+> ⚠️ **Proactive Context & Trigger Check:** BEFORE generating any docs, YOU MUST:
+> 1. Read the project's own domain skill at `Projects/[project-name]/.agents/skills/[project-name]/SKILL.md` (if it exists) to understand project-specific rules and conventions.
+> 2. Scan workspace index triggers based on the intended target.
+
 ```bash
-# Tier-1 Index Force Load (Anti-Cognitive-Bypass v1.7.10)
+# Context & Trigger Load (Anti-Cognitive-Bypass)
+echo ""
+echo "> ⚠️ Loading Project Skill: Projects/[project-name]/.agents/skills/[project-name]/SKILL.md"
+cat Projects/[project-name]/.agents/skills/[project-name]/SKILL.md 2>/dev/null || echo "No project specific skill found."
 echo ""
 echo "> ⚠️ Proactive Trigger Scan: .agents/rules.md & .agents/skills.md"
 cat .agents/rules.md 2>/dev/null | head -n 30
@@ -129,9 +136,10 @@ cat .agents/skills.md 2>/dev/null | head -n 30
 If the `--graph` flag is provided, execute the graph intelligence pipeline BEFORE reading the contract:
 
 1. **Build Graph:** Run `/para-graph build [project-name]` to ensure graph data is up-to-date.
-2. **Identify Target Nodes:** Use MCP tool `graph_query` to locate architectural nodes related to the project's core modules.
+2. **Identify Target Nodes:** Use MCP tools `graph_query` and `graph_god_nodes` to locate architectural nodes and hot spots related to the project's core modules.
 3. **Deep Context:** Use MCP tools `graph_context_bundle` and `graph_edges` on the identified nodes to gather callers, callees, dependencies, and structural relationships.
-4. **Inject Context:** Keep this graph intelligence in memory to ground the documentation in the actual codebase structure, preventing hallucinations and ensuring accuracy.
+4. **Impact Analysis:** Use `graph_impact_analysis` on God nodes to map upstream/downstream dependencies — essential for writing accurate architecture diagrams and component relationship docs.
+5. **Inject Context:** Keep this graph intelligence in memory to ground the documentation in the actual codebase structure, preventing hallucinations and ensuring accuracy.
 
 #### 1. Read Project Contract
 
@@ -147,6 +155,8 @@ Read `Projects/[project-name]/project.md` to extract:
 #### 2. Analyze Source Code
 
 // turbo
+
+> 🔍 **Memory-Assisted Docs:** Before analyzing source code, Agent SHOULD use `memory_search` to find past documentation decisions and architectural patterns. This ensures docs build on existing knowledge rather than re-discovering.
 
 Scan the project's source code to understand structure:
 
@@ -289,6 +299,26 @@ Append to current session log:
 - **Docs created**: [list of files]
 - **Location**: `Projects/[project-name]/docs/`
 ```
+
+#### 8.5. Graph Memory Push (CONDITIONAL)
+
+> **Gate:** Only trigger if project has `.beads/graph/` directory.
+
+1. Check graph availability:
+   ```bash
+   test -d "Projects/[project-name]/.beads/graph" && echo "✅ Graph Memory available" || echo "⏭️ No graph — skip memory push"
+   ```
+
+2. **IF graph exists:**
+   Push the docs creation summary via MCP `memory_push`:
+   - **kind:** `docs-generated`
+   - **content:** List of docs created + project type classification
+   - **sessionId:** `YYYY-MM-DD-docs-[project-name]`
+   - **metadata:** `{ "docs_created": ["architecture.md", ...], "project_type": "[type]" }`
+
+3. **Curate memory:** After pushing, call `memory_curate(projectName)` to consolidate raw memory events into semantic slices.
+
+4. **IF no graph** → Skip silently.
 
 ---
 

@@ -28,7 +28,19 @@ Summarize accomplishments and log them to the correct context (Project vs. Works
 
 // turbo
 
-Re-read `.agents/rules.md` to ensure rules context is loaded (guard against context truncation).
+> ⚠️ **Proactive Context & Trigger Check:** BEFORE closing the session, YOU MUST:
+> 1. Read the project's own domain skill at `Projects/[project-name]/.agents/skills/[project-name]/SKILL.md` (if it exists) to understand project-specific rules.
+> 2. Re-read `.agents/rules.md` to ensure rules context is loaded (guard against context truncation).
+
+```bash
+# Context & Trigger Load (Anti-Cognitive-Bypass)
+echo ""
+echo "> ⚠️ Loading Project Skill: Projects/[project-name]/.agents/skills/[project-name]/SKILL.md"
+cat Projects/[project-name]/.agents/skills/[project-name]/SKILL.md 2>/dev/null || echo "No project specific skill found."
+echo ""
+echo "> ⚠️ Proactive Trigger Scan: .agents/rules.md"
+cat .agents/rules.md 2>/dev/null | head -n 30
+```
 
 ### 1. Classify & Identify Changes
 
@@ -255,7 +267,9 @@ After reporting phase status:
    test -d "Projects/[project-name]/.beads/graph" && echo "✅ Graph Memory available" || echo "⏭️ No graph — skip memory push"
    ```
 
-2. **IF graph exists** → Compose a session summary event and push via MCP:
+2. **IF graph exists:**
+   - First, use `memory_search` to find related past session events and decisions. Cross-reference to avoid duplicating existing memory entries.
+   - Then compose a session summary event and push via MCP:
    - **kind:** `session-summary`
    - **content:** Brief summary of what was accomplished (from Step 2 session log)
    - **sessionId:** `YYYY-MM-DD-end`
@@ -266,12 +280,10 @@ After reporting phase status:
 3. **IF significant decisions were made** (architecture changes, new patterns, critical bugs found):
    Push additional events with `kind: architecture-decision` or `kind: bugfix`.
 
-4. **Suggest memory curation:**
+4. **Curate memory:** After pushing all events, automatically call `memory_curate(projectName)` to consolidate raw memory events into semantic slices for future sessions. Report:
    ```
-   🧠 Graph Memory: [N] events pushed.
-      Run `/para-graph mem [project-name]` to consolidate? (y/n)
+   🧠 Graph Memory: [N] events pushed + curated.
    ```
-   If user agrees → Agent runs the `/para-graph mem` action.
 
 5. **IF no graph** → Skip silently.
 
