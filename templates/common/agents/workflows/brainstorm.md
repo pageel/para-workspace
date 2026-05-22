@@ -38,13 +38,17 @@ First, understand the core topic and the project's current state.
 
 > ⚠️ **Proactive Context & Trigger Check:** BEFORE brainstorming ANY solution, YOU MUST:
 > 1. Read the project's own domain skill at `Projects/[project-name]/.agents/skills/[project-name]/SKILL.md` (if it exists) to understand project-specific rules.
-> 2. Scan workspace index triggers based on the intended target of your discussion (e.g. "editing repo/").
+> 2. Read the project's custom agent instructions at `Projects/[project-name]/.agents/AGENTS.md` (if it exists) to understand project-specific persona/guidelines.
+> 3. Scan workspace index triggers based on the intended target of your discussion (e.g. "editing repo/").
 
 ```bash
 # Context & Trigger Load (Anti-Cognitive-Bypass)
 echo ""
 echo "> ⚠️ Loading Project Skill: Projects/[project-name]/.agents/skills/[project-name]/SKILL.md"
 cat Projects/[project-name]/.agents/skills/[project-name]/SKILL.md 2>/dev/null || echo "No project specific skill found."
+echo ""
+echo "> ⚠️ Loading Project Agent Persona: Projects/[project-name]/.agents/AGENTS.md"
+cat Projects/[project-name]/.agents/AGENTS.md 2>/dev/null || echo "No project specific agent persona found."
 echo ""
 echo "> ⚠️ Proactive Trigger Scan: .agents/rules.md & .agents/skills.md"
 cat .agents/rules.md 2>/dev/null | head -n 30

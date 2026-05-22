@@ -122,9 +122,9 @@ ELSE (local):
 
 ```
 .agents/
-├── rules.md          # Workspace rules trigger index (12 rules)
+├── rules.md          # Workspace rules trigger index (14 rules)
 ├── rules/            # Rule files (loaded on-demand by trigger)
-├── skills.md         # Workspace skills trigger index (9 skills)
+├── skills.md         # Workspace skills trigger index (15 skills)
 ├── skills/           # Skill directories
 │   ├── formatting/   # Table/diagram formatting templates
 │   ├── para-kit/     # PARA reference card (schema, layout, governance)
@@ -136,8 +136,11 @@ ELSE (local):
 │   ├── harness/      # Guard catalog & auto-scan protocol (v1.7.15)
 │   ├── spec/         # Spec-driven development templates (v1.7.16)
 │   ├── qa/           # Sidecar data for /qa workflow (v1.8.6)
-│   ├── para-graph/   # Centralized Graph Intelligence Router (v2.0.0, installed via install-tool)
-│   └── page-map/     # Website visual structure management (v1.7.6)
+│   ├── tdd/          # Test-Driven Development guidelines (v1.8.7)
+│   ├── logs/         # Sidecar audit templates for /logs (v1.8.7)
+│   ├── html-renderer/# Modular HTML rendering engine (v1.8.9)
+│   ├── new-project/  # Sidecar data for /new-project scaffold (v1.8.10)
+│   └── para-graph/   # Centralized Graph Intelligence Router (v1.8.10)
 └── workflows/        # 28 core workflow files
 ```
 
@@ -266,10 +269,17 @@ Skills are folders of instructions that extend agent capabilities:
 | Write Templates | /write workflow (ebook, paper, tutorial, blog, social, email) (v1.7.14) | Sidecar data: Content type templates and writing rules |
 | Harness Guards | Creating plans, writing workflow steps, generating phased artifacts (v1.7.15) | Sidecar data: Guard catalog (6 types) and auto-scan protocol for context-aware safety guards |
 | Spec Templates | /spec workflow, specification writing, assumption surfacing (v1.7.16) | Sidecar data: Spec templates, boundary definitions, quality checklists |
+| QA Templates | /qa workflow, Red Team reviews, checking safety/logic/governance (v1.8.6) | Sidecar data: Red Team personas, dimension checklists, and review templates |
+| TDD Guidelines | Writing tests, refactoring, Test-Driven Development loops (v1.8.7) | Standalone TDD guidelines, anti-patterns, and compliance rules |
+| Logs Audit Extensions | /logs --deep execution with active TDD plans (v1.8.7) | Sidecar data: Specialized compliance audit templates |
+| HTML Renderer | Exporting markdown/graph to themed HTML page (v1.8.9) | Standalone modular HTML rendering engine |
+| New Project | Running /new-project, defining project architecture/design patterns (v1.8.10) | Sidecar data: Architectural presets and local rule setup |
+| para-graph | Working with code graphs, semantic memory ops, codebase router (v1.8.10) | Tool-bundled Graph Intelligence Router (MCP integration) |
 
 Skills promoted from rules: standalone, English-first, constraints + templates merged.
 
-Total: **12 skills** (4 standalone + 7 sidecar + 1 tool-bundled).
+Total: **16 skills** (5 standalone + 10 sidecar + 1 tool-bundled).
+
 
 ### Sidecar Skill Pattern (v1.7.6.3)
 
@@ -342,6 +352,9 @@ Sidecar skills (`plan`, `docs`, `brainstorm`, `spec`) reference the centralized 
 | 1.8.3 | Sync | Graph Router Sync: sidecar skills (`plan`, `docs`, `brainstorm`, `spec`) reference centralized `para-graph §3.3.x` instead of inline graph logic, `detail-plan-docs.md` template, `para-graph` trigger in `skills.md`, `registry/tools.yml` bumped to v0.8.4 |
 | 1.8.6 | Feature | QA Governance Workflow (`/qa`) with Red Team personas and Sidecar skill, integrated Graph Intelligence (`--graph`) in brainstorm/plan/docs workflows, `/plan` `--project` flag (default for create) promoting project context loading to Step 1.5, Docs Impact Scan |
 | 1.8.7 | Governance | TDD Governance Workflow, Graph Knowledge Preparation Phase 0 added to detail-plan templates, Temporary Test Scripts Policy Section 17 added to maintenance.md, and TDD compliance telemetry logging |
+| 1.8.9 | Sync | Ecosystem-wide Para-Graph MCP Integration with Project Sidecar Skill loading, Memory Ops lifecycle (search/push/curate), and consolidated context pre-flight across 11 catalog workflows |
+| 1.8.10 | Release | Release Hardening: html-renderer, new-project, and para-graph intelligence modules, new rules (agent-persona with AGENTS.md cascade, tool-routing, graph-first-policy), and anti-truncation guardrail KI |
+
 
 ## 16. Dynamic Tool System (v1.8.0)
 

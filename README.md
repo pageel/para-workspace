@@ -29,8 +29,8 @@
 | [🧠 The Kernel](#-the-kernel) | Invariants, heuristics, contracts |
 | [🛠️ CLI Reference](#️-cli-reference) | All CLI commands |
 | [📑 Workflow Catalog](#-workflow-catalog) | 27 governed workflows |
-| [🛡️ Rule Catalog](#️-rule-catalog) | 11 governance rules |
-| [🧩 Skill Catalog](#-skill-catalog) | 13 reusable skills |
+| [🛡️ Rule Catalog](#️-rule-catalog) | 14 governance rules |
+| [🧩 Skill Catalog](#-skill-catalog) | 16 reusable skills |
 | [🔌 Tool System](#-tool-system-v180) | Install external agentic plugins |
 | [🧩 Task Management](#-task-management-hybrid-3-file-model) | Hybrid 3-File model |
 | [🔄 Upgrading](#-upgrading-versions) | Auto update + clean slate |
@@ -379,14 +379,17 @@ Rules govern agent behavior, security, and compliance. Loaded on-demand via a Tw
 | **[`governance`](./docs/rules/governance.md)**                                    | Kernel invariants, scope containment, safety guardrails | 🔴 Critical  |
 | **[`vcs`](./docs/rules/vcs.md)**                                                 | Git safety: commit, branch, merge, PR, secrets          | 🔴 Critical  |
 | **[`knowledge`](./docs/rules/knowledge.md)**                                      | KI operations — write gate, approval, namespace (v1.7.0)| 🔴 Critical  |
+| **[`graph-first-policy`](./docs/rules/graph-first-policy.md)**                    | Proactive code analysis using para-graph MCP tools      | 🔴 Critical  |
 | **[`hybrid-3-file-integrity`](./docs/rules/hybrid-3-file-integrity.md)**          | 6 constraints (C1–C6) for task management               | 🟡 Important |
 | **[`agent-behavior`](./docs/rules/agent-behavior.md)**                            | Proactive Trigger Check, Context Recovery (v1.6.2)      | 🟡 Important |
 | **[`context-rules`](./docs/rules/context-rules.md)**                              | Agent Index Loading (rules + skills), Two-Tier trigger   | 🟡 Important |
 | **[`para-discipline`](./docs/rules/para-discipline.md)**                          | PARA architecture compliance, 7 rules                   | 🟡 Important |
+| **[`agent-persona`](./docs/rules/agent-persona.md)**                              | Custom conversational style and agent personality       | 🟡 Important |
 | **[`artifact-standard`](./docs/rules/artifact-standard.md)**                      | Plans, walkthroughs, persistent mirroring               | 🟢 Standard  |
 | **[`naming`](./docs/rules/naming.md)**                                            | kebab-case, PascalCase, camelCase conventions            | 🟢 Standard  |
 | **[`versioning`](./docs/rules/versioning.md)**                                    | SemVer, autonomy levels, multi-location sync            | 🟢 Standard  |
 | **[`exports-data`](./docs/rules/exports-data.md)**                                | Data export: `_inbox/`, UTF-8 BOM, naming               | 🟢 Standard  |
+| **[`tool-routing`](./docs/rules/tool-routing.md)**                                | Heuristic guide for selecting Native API, Bash, and MCP | 🟢 Standard  |
 
 ---
 
@@ -409,6 +412,9 @@ Skills are reusable knowledge modules loaded on-demand via the skills trigger in
 | **[QA Review Templates](./docs/skills/qa.md)** | Red Team personas, dimension checklists, and QA report templates (Sidecar, v1.8.6) |
 | **[TDD Guidelines](./docs/skills/tdd.md)** | Strict Test-Driven Development workflow rules and anti-patterns (v1.8.7) |
 | **[Logs Audit Extensions](./docs/skills/logs.md)** | Audit templates for TDD/Spec compliance verification (Sidecar, v1.8.7) |
+| **[HTML Renderer](./docs/skills/html-renderer.md)** | Modular HTML rendering engine for themed static docs & graph views (v1.8.9) |
+| **[New Project](./docs/skills/new-project.md)** | Sidecar skill for the /new-project workflow (Sidecar, v1.8.10) |
+| **[para-graph](./docs/skills/para-graph.md)** | Centralized Graph Intelligence Router and semantic memory curation (Sidecar, v1.8.10) |
 
 ---
 

@@ -84,33 +84,36 @@ To prevent LLMs from hallucinating past critical checklists due to context trunc
 - **Staged Drill-down:** Post-push operations require an explicit `> 🛑 **STOP HERE**` gate, forcing user UI consent.
 - **Git Auto-Run Shield:** Auto-generated `git commit` commands must set `SafeToAutoRun: false` in agents code.
 
-## 5. Rules Library (12 workspace rules)
+## 5. Rules Library (14 workspace rules)
 
 Rule                    | Trigger                              | Priority
 :-----------------------|:-------------------------------------|:--------
 Governance              | Touching kernel/, .para/, Resources/ | 🔴 High
 VCS                     | Git commit, push, merge, branch, tag | 🔴 High
 Knowledge               | Creating, updating, archiving KIs    | 🔴 High
+Graph-First Policy      | Fixing bugs, tracing, spec, plan     | 🔴 High
 Hybrid 3-File Integrity | Reading/writing artifacts/tasks/     | 🟡 Med
 Context Rules           | Loading context, starting session    | 🟡 Med
 Agent Behavior          | Communication, formatting, recovery  | 🟡 Med
 PARA Discipline         | Creating/moving files, organizing    | 🟡 Med
+Agent Persona           | Custom conversational style, persona | 🟡 Med
 Artifact Standard       | Creating/editing artifacts, plans    | 🟢 Low
 Naming                  | Creating files, directories, branches| 🟢 Low
 Versioning              | Version bumps, changelog updates     | 🟢 Low
 Exports Data            | Exporting data, sharing externally   | 🟢 Low
-Formatting Tables       | Drawing tables, diagrams, trees      | 🟢 Low
+Tool Routing            | Heuristic routing: API vs Bash vs MCP| 🟢 Low
 
-## 6. Skills Library (2 core skills, v1.6.4+)
+## 6. Skills Library (16 skills, v1.8.10+)
 
-Skills are folder-based, standalone, English-first instruction sets:
+Skills are folder-based, English-first instruction sets (either Standalone, Sidecar to workflows, or Tool-bundled):
 
-Skill      | Trigger                                    | Structure
-:----------|:-------------------------------------------|:------------------------
-PARA Kit   | PARA structure, schema, kernel governance  | SKILL.md + templates/ + examples/
-Formatting | Tables, diagrams, trees, visual markdown   | SKILL.md (self-contained)
+Category   | Core Skills
+:----------|:----------------------------------------------------------------------
+Standalone | PARA Kit, Formatting, Page Map, TDD Guidelines, HTML Renderer
+Sidecar    | PARA Skill, Plan, Docs, Brainstorm, Write, Harness, Spec, QA, Logs, New Project
+Tool-Bundled| para-graph (Centralized Graph Router)
 
-Skills were promoted from rules: standalone, English-first, constraints + templates merged. Users may add project-specific skills via their project `.agents/skills/` directory.
+Skills are loaded on demand based on the proactive trigger indexes (`rules.md` and `skills.md`). Users may also define project-specific rules and skills under `Projects/<project>/.agents/`.
 
 ## 7. Knowledge System Governance (v1.7.0+)
 
