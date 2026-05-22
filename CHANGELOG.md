@@ -9,7 +9,7 @@ Release Hardening, HTML Renderer Integration & Governance Catalog updates.
 
 - **Added**: `html-renderer` skill v1.0.0 — Modular HTML rendering engine for compiling docs, supporting full-text search (Ctrl+K), deep linking, and interactive minimalist interface.
 - **Added**: Support for default implicit output directory (`[source_folder]/.html`) in docs compiler script, simplifying command-line usage.
-- **Added**: Registered new governance rules (`agent-persona`, `tool-routing`, `graph-first-policy`) and skills (`new-project`, `para-graph`) in the governance catalog.
+- **Added**: Registered new governance rules (`agent-persona`, `tool-routing`, `graph-first-policy`) and skill (`new-project`) in the governance catalog.
 - **Added**: Custom Instructions Cascade to `agent-persona` rule, mandating agents check for and load project-specific `AGENTS.md` upon starting/resuming work.
 - **Added**: Project-specific `AGENTS.md` loader within Step 1 (Context Gathering) of the `/brainstorm` workflow.
 - **Changed**: Updated Architecture & Governance Standards KI (`para_workspace_architecture_standards`) to reflect 14 rules, 16 skills, and version history.

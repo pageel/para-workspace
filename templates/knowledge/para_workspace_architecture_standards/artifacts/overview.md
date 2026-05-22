@@ -274,11 +274,10 @@ Skills are folders of instructions that extend agent capabilities:
 | Logs Audit Extensions | /logs --deep execution with active TDD plans (v1.8.7) | Sidecar data: Specialized compliance audit templates |
 | HTML Renderer | Exporting markdown/graph to themed HTML page (v1.8.9) | Standalone modular HTML rendering engine |
 | New Project | Running /new-project, defining project architecture/design patterns (v1.8.10) | Sidecar data: Architectural presets and local rule setup |
-| para-graph | Working with code graphs, semantic memory ops, codebase router (v1.8.10) | Tool-bundled Graph Intelligence Router (MCP integration) |
 
 Skills promoted from rules: standalone, English-first, constraints + templates merged.
 
-Total: **16 skills** (5 standalone + 10 sidecar + 1 tool-bundled).
+Total: **15 skills** (5 standalone + 10 sidecar).
 
 
 ### Sidecar Skill Pattern (v1.7.6.3)

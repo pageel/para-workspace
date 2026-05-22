@@ -16,7 +16,6 @@
 | Brainstorm Templates | /brainstorm Step 4 (saving structured output), need Decision or Research template | skills/brainstorm/SKILL.md |
 | Harness Guards | Creating plans, writing workflow steps, generating artifacts with phases/progression | skills/harness/SKILL.md |
 | Spec Templates | /spec workflow, writing specifications, surfacing assumptions, defining scope/boundaries, formalizing requirements before coding | skills/spec/SKILL.md |
-| para-graph | Working with code graphs, semantic enrichment, or executing workflows requiring codebase awareness (/plan, /docs, /brainstorm, /spec) | skills/para-graph/SKILL.md |
 | QA Templates | /qa workflow Step 2 (generating questions), Step 9 (saving report), Red Team personas, [GOV] dimension | skills/qa/SKILL.md |
 | Resource Templates | /resource workflow, studying external resources, generating README-study | skills/resource/SKILL.md |
 | TDD Guidelines | Writing tests, executing code with TDD, refactoring, or prompted with "Test-Driven Development" | skills/tdd/SKILL.md |

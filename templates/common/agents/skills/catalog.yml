@@ -182,16 +182,5 @@ items:
   - standards
   - design-patterns
   - sidecar
-- id: para-graph
-  name: para-graph
-  kernel_min: 1.8.10
-  kernel_max: 1.x
-  entrypoint: para-graph/SKILL.md
-  description: Centralized Graph Intelligence Router. Provides graph enrichment and semantic memory curation workflows.
-  tags:
-  - graph
-  - mcp
-  - intelligence
-  - memory
 
 
