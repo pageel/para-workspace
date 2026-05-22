@@ -443,9 +443,21 @@ render_ki_template() {
     "$src" > "$dest"
 }
 
+# Helper to get file hash for content-aware change detection
+get_hash() {
+  if command -v sha256sum &>/dev/null; then
+    sha256sum "$1" | awk '{print $1}'
+  elif command -v shasum &>/dev/null; then
+    shasum -a 256 "$1" | awk '{print $1}'
+  else
+    stat -c %Y "$1" 2>/dev/null || date +%s
+  fi
+}
+
 if [ -d "$KI_TMPL_SRC" ]; then
   ki_installed=0
   ki_skipped=0
+  ki_upgraded=0
   ki_total=0
 
   for tmpl_dir in "$KI_TMPL_SRC"/para_*/; do
@@ -454,9 +466,7 @@ if [ -d "$KI_TMPL_SRC" ]; then
     ki_total=$((ki_total + 1))
     ki_dest="$KI_STORE/$slug"
 
-    if [ -d "$ki_dest" ]; then
-      ki_skipped=$((ki_skipped + 1))
-    else
+    if [ ! -d "$ki_dest" ]; then
       mkdir -p "$ki_dest/artifacts"
       # Copy metadata.json (with template rendering)
       if [ -f "$tmpl_dir/metadata.json" ]; then
@@ -469,11 +479,50 @@ if [ -d "$KI_TMPL_SRC" ]; then
         done
       fi
       ki_installed=$((ki_installed + 1))
+    else
+      # Upgrade existing KI if template version/content hash differs (safe merge)
+      if [ -f "$tmpl_dir/metadata.json" ] && [ -f "$ki_dest/metadata.json" ]; then
+        needs_upgrade=false
+
+        # Check 1: para_version mismatch
+        tmpl_pv=$(grep -o '"para_version": "[^"]*"' "$tmpl_dir/metadata.json" 2>/dev/null | sed 's/.*"para_version": "//;s/"$//')
+        ki_pv=$(grep -o '"para_version": "[^"]*"' "$ki_dest/metadata.json" 2>/dev/null | sed 's/.*"para_version": "//;s/"$//')
+
+        if [ -n "$tmpl_pv" ] && [ "$tmpl_pv" != "$ki_pv" ]; then
+          needs_upgrade=true
+        fi
+
+        # Check 2: content hash mismatch (catches same-version hotfixes)
+        if [ "$needs_upgrade" = false ]; then
+          rendered_tmp=$(mktemp 2>/dev/null || echo "$ki_dest/metadata.json.tmp")
+          render_ki_template "$tmpl_dir/metadata.json" "$rendered_tmp"
+          tmpl_hash=$(get_hash "$rendered_tmp")
+          ki_hash=$(get_hash "$ki_dest/metadata.json")
+          rm -f "$rendered_tmp" 2>/dev/null || true
+          if [ "$tmpl_hash" != "$ki_hash" ]; then
+            needs_upgrade=true
+          fi
+        fi
+
+        if [ "$needs_upgrade" = true ] || [ "$FORCE" = true ]; then
+          render_ki_template "$tmpl_dir/metadata.json" "$ki_dest/metadata.json"
+          if [ -d "$tmpl_dir/artifacts" ]; then
+            for art_file in "$tmpl_dir/artifacts"/*; do
+              [ -f "$art_file" ] && render_ki_template "$art_file" "$ki_dest/artifacts/$(basename "$art_file")"
+            done
+          fi
+          ki_upgraded=$((ki_upgraded + 1))
+        else
+          ki_skipped=$((ki_skipped + 1))
+        fi
+      else
+        ki_skipped=$((ki_skipped + 1))
+      fi
     fi
   done
 
   if [ "$ki_total" -gt 0 ]; then
-    echo "🧠 System KI defaults: $ki_installed installed, $ki_skipped skipped (of $ki_total templates)"
+    echo "🧠 System KI defaults: $ki_installed installed, $ki_upgraded upgraded, $ki_skipped skipped (of $ki_total templates)"
   fi
 fi
 

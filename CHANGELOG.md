@@ -15,6 +15,7 @@ Release Hardening, HTML Renderer Integration & Governance Catalog updates.
 - **Changed**: Updated Architecture & Governance Standards KI (`para_workspace_architecture_standards`) to reflect 14 rules, 16 skills, and version history.
 - **Changed**: Migrated `html-renderer` from FontAwesome to Lucide Icons under ISC license for OSS/MIT compliance.
 - **Changed**: Renamed all Notion trademark references in HTML templates and CSS class names (`notion-callout` → `clean-callout`) to prevent license and trademark concerns.
+- **Changed**: Integrated System KI upgrade sync logic directly into `install.sh` and removed redundant code from `update.sh` to ensure automatic KI updates on version bump.
 - **Changed**: Shortened separator lines across all workflow templates (28 characters) for cleaner reporting.
 
 
