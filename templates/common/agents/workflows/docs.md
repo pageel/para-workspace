@@ -3,7 +3,7 @@ description: Generate and maintain project documentation following best practice
 source: catalog
 ---
 
-# /docs [project-name] [action] [--graph] [--watch]
+# /docs [project-name] [action] [--graph] [--watch] [--render]
 
 > **Workspace Version:** 1.8.10 (Modular HTML Renderer)
 
@@ -25,6 +25,7 @@ Generate, review, update, or preview technical documentation for a PARA project.
 |:--|:--|
 | `--graph` | Run Graph Pipeline (Build → Query → Context Bundles) before documentation to anchor docs in real codebase architecture |
 | `--watch` | Automatically spin up the local watch server after the creation or update steps are completed |
+| `--render` | Compile Markdown documents to HTML and start the live-reload watch server automatically (defaults to compile + watch) |
 
 ---
 
@@ -355,11 +356,13 @@ Append to current session log:
    node .agents/skills/html-renderer/docs/scripts/render.js Projects/[project-name]/docs
    ```
 
-2. **IF `--watch` is specified:**
+2. **IF `--watch` or `--render` is specified:**
    Start the local live-reload server immediately:
    ```bash
    node .agents/skills/html-renderer/docs/scripts/render.js Projects/[project-name]/docs --watch
    ```
+
+3. **Output Link**: The agent MUST print the clickable `file://` URL of the generated `README.html` (using absolute workspace path) and guide the user on how to open it in their browser.
 
 ---
 
@@ -416,10 +419,12 @@ Update specific documentation to reflect current project state.
    node .agents/skills/html-renderer/docs/scripts/render.js Projects/[project-name]/docs
    ```
    
-   If `--watch` flag is provided, start the live-reload watch server:
+   If `--watch` or `--render` flag is provided, start the live-reload watch server:
    ```bash
    node .agents/skills/html-renderer/docs/scripts/render.js Projects/[project-name]/docs --watch
    ```
+
+   After compilation, the agent MUST print the clickable `file://` URL of the generated `README.html` (using absolute workspace path) and guide the user on how to open it.
    
 7. **Git Guard**: DO NOT run `git commit` or `git add` for files in `docs/` (internal docs are not git-tracked).
 
@@ -500,6 +505,8 @@ Start the local watch server with live reload for project documentation.
    ```bash
    node .agents/skills/html-renderer/docs/scripts/render.js Projects/[project-name]/docs --watch
    ```
+
+2. **Output Link**: The agent MUST print the clickable `file://` URL of the generated `README.html` (using absolute workspace path) and guide the user on how to open it in their browser.
 
 ---
 

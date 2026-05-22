@@ -7,6 +7,7 @@ Detailed version changelogs are maintained internally in project docs.
 
 Release Hardening, HTML Renderer Integration & Governance Catalog updates.
 
+- **Added**: `--render` flag to `/docs` workflow, supporting automatic HTML compilation and watch server startup. Outlined requirements to output absolute clickable `file://` link to README.html.
 - **Added**: `html-renderer` skill v1.0.0 — Modular HTML rendering engine for compiling docs, supporting full-text search (Ctrl+K), deep linking, and interactive minimalist interface.
 - **Added**: Support for default implicit output directory (`[source_folder]/.html`) in docs compiler script, simplifying command-line usage.
 - **Added**: Registered new governance rules (`agent-persona`, `tool-routing`, `graph-first-policy`) and skill (`new-project`) in the governance catalog.
