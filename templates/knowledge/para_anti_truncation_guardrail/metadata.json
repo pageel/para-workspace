@@ -1,0 +1,31 @@
+{
+  "title": "Anti-Truncation Guardrail & Confabulation Prevention",
+  "summary": "Systematic behavioral guardrail: Bash outputs in workflows (like /open or /plan) over 220 lines are truncated by the system. When Agent sees <truncated ...>, it MUST NOT guess or confabulate missing data. Agent MUST fall back to native tools (view_file) to read the missing context.",
+  "version": "1.0",
+  "scope": "workspace",
+  "domain": "engineering",
+  "purpose": "context",
+  "owner": "para",
+  "para_version": "1.8.10",
+  "tags": [
+    "anti-hallucination",
+    "truncation",
+    "context",
+    "validation"
+  ],
+  "references": [
+    {
+      "type": "file",
+      "value": ".agents/rules/agent-behavior.md"
+    }
+  ],
+  "relates_to": [],
+  "code_refs": [
+    "cli/commands/install.sh",
+    "cli/commands/update.sh"
+  ],
+  "concepts": [
+    "anti-truncation",
+    "context-decay"
+  ]
+}

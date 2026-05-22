@@ -1,0 +1,1888 @@
+<!DOCTYPE html>
+<html lang="/* LANGUAGE_PLACEHOLDER */">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>/* PROJECT_NAME_PLACEHOLDER */ — /* TRANSLATE:codeGraph */</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Force Graph (2D Canvas Renderer) -->
+    <script src="https://unpkg.com/force-graph"></script>
+
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #fbfbfa;
+            --text-primary: #37352f;
+            --text-secondary: #7c7b77;
+            --border-color: #efefe8;
+            --accent-color: #2383e2;
+            --accent-hover: #1263ad;
+            --code-bg: #f7f6f3;
+            --hover-color: rgba(55, 53, 47, 0.04);
+            
+            --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            --font-display: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-mono: "Fira Code", monospace;
+            
+            --sidebar-width: 320px;
+            --header-height: 56px;
+            
+            /* Node type colors */
+            --color-file: #2383e2;
+            --color-function: #2ecc71;
+            --color-class: #9b59b6;
+            --color-interface: #e67e22;
+            --color-variable: #f1c40f;
+            
+            /* Complexity colors */
+            --complexity-low: #2ecc71;
+            --complexity-medium: #f39c12;
+            --complexity-high: #e74c3c;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #191919;
+            --bg-secondary: #202020;
+            --text-primary: #e3e3e2;
+            --text-secondary: #9b9a97;
+            --border-color: #2e2e2e;
+            --accent-color: #2eaadc;
+            --accent-hover: #1b85af;
+            --code-bg: #252525;
+            --hover-color: rgba(255, 255, 255, 0.055);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Header --- */
+        header {
+            height: var(--header-height);
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 10;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-title h1 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .project-badge {
+            background-color: var(--hover-color);
+            border: 1px solid var(--border-color);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stats-summary {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 15px;
+        }
+
+        .theme-toggle-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        .header-burger-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .header-burger-btn:hover {
+            background-color: var(--hover-color);
+            color: var(--accent-color);
+        }
+
+        /* --- Main Layout --- */
+        .main-container {
+            flex: 1;
+            display: flex;
+            position: relative;
+            height: calc(100vh - var(--header-height));
+        }
+
+        /* --- Left Sidebar (Controls & Search) --- */
+        .sidebar-left {
+            width: var(--sidebar-width);
+            flex-shrink: 0;
+            border-right: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            z-index: 5;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s;
+            position: relative;
+        }
+
+        .sidebar-left.collapsed {
+            margin-left: calc(-1 * var(--sidebar-width));
+            border-right-color: transparent;
+        }
+
+        .sidebar-section {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-section h3 {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Filters & Controls */
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input-wrapper input {
+            width: 100%;
+            padding: 8px 12px 8px 32px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-family: var(--font-sans);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input-wrapper input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .search-input-wrapper svg {
+            position: absolute;
+            left: 10px;
+            color: var(--text-secondary);
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-bottom: 6px;
+            user-select: none;
+        }
+
+        .checkbox-label input {
+            cursor: pointer;
+        }
+
+        .checkbox-label .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot-file { background-color: var(--color-file); }
+        .dot-function { background-color: var(--color-function); }
+        .dot-class { background-color: var(--color-class); }
+        .dot-interface { background-color: var(--color-interface); }
+        .dot-variable { background-color: var(--color-variable); }
+
+        .slider-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slider-wrapper input {
+            flex: 1;
+            accent-color: var(--accent-color);
+            cursor: pointer;
+        }
+
+        .slider-value {
+            font-size: 0.8rem;
+            font-weight: 600;
+            width: 20px;
+            text-align: right;
+        }
+
+        /* Node List */
+        .node-list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 20px;
+        }
+
+        .node-list-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background-color 0.2s;
+            margin-bottom: 2px;
+        }
+
+        .node-list-item:hover {
+            background-color: var(--hover-color);
+        }
+
+        .node-list-item.active {
+            background-color: var(--hover-color);
+            border-left: 3px solid var(--accent-color);
+            font-weight: 600;
+        }
+
+        .node-type-icon {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .node-list-text {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .node-list-title {
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .node-list-sub {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+        }
+
+        /* --- Canvas Center --- */
+        .canvas-container {
+            flex: 1;
+            min-width: 0;
+            position: relative;
+            background-color: var(--bg-primary);
+            overflow: hidden;
+        }
+
+        #graph-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Canvas Floating Controls */
+        .canvas-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 5px;
+            display: flex;
+            gap: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            z-index: 2;
+        }
+
+        .canvas-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .canvas-btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        /* --- Right Sidebar (Details & Memory) --- */
+        .sidebar-right {
+            width: var(--sidebar-width);
+            flex-shrink: 0;
+            border-left: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            z-index: 5;
+            transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s;
+            position: relative;
+        }
+
+        .sidebar-right.collapsed {
+            margin-right: calc(-1 * var(--sidebar-width));
+            border-left-color: transparent;
+        }
+
+        /* Interactive Toggle Handles for Sidebars */
+        .sidebar-toggle-handle {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 40px;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-secondary);
+        }
+
+        .sidebar-left .sidebar-toggle-handle {
+            right: -10px;
+            border-radius: 0 6px 6px 0;
+            border-left: none;
+        }
+
+        .sidebar-right .sidebar-toggle-handle {
+            left: -10px;
+            border-radius: 6px 0 0 6px;
+            border-right: none;
+        }
+
+        .sidebar-toggle-handle:hover {
+            background-color: var(--hover-color);
+            color: var(--accent-color);
+            width: 22px;
+        }
+
+        .sidebar-toggle-handle i {
+            width: 12px;
+            height: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Tabs */
+        .tab-headers {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+        }
+
+        .tab-btn {
+            flex: 1;
+            border: none;
+            background: none;
+            padding: 12px;
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-align: center;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+            background-color: var(--bg-primary);
+        }
+
+        .tab-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: var(--bg-primary);
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Detail view styling */
+        .detail-placeholder {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 50px;
+            font-size: 0.85rem;
+        }
+
+        .detail-placeholder svg {
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+
+        .detail-header {
+            margin-bottom: 20px;
+        }
+
+        .detail-title {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 700;
+            word-break: break-all;
+            margin-bottom: 6px;
+        }
+
+        .detail-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .detail-badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .badge-file { background-color: rgba(35, 131, 226, 0.1); color: var(--color-file); }
+        .badge-function { background-color: rgba(46, 204, 113, 0.1); color: var(--color-function); }
+        .badge-class { background-color: rgba(155, 89, 182, 0.1); color: var(--color-class); }
+        .badge-interface { background-color: rgba(230, 126, 34, 0.1); color: var(--color-interface); }
+        .badge-variable { background-color: rgba(241, 196, 15, 0.1); color: var(--color-variable); }
+
+        .complexity-badge {
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        .complexity-low { background-color: rgba(46, 204, 113, 0.15); color: var(--complexity-low); }
+        .complexity-medium { background-color: rgba(243, 156, 18, 0.15); color: var(--complexity-medium); }
+        .complexity-high { background-color: rgba(231, 76, 60, 0.15); color: var(--complexity-high); }
+
+        .risk-badge {
+            font-weight: 600;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            text-transform: uppercase;
+        }
+        .risk-low { background-color: rgba(46, 204, 113, 0.15); color: #2ecc71; }
+        .risk-medium { background-color: rgba(243, 156, 18, 0.15); color: #f1c40f; }
+        .risk-high { background-color: rgba(231, 76, 60, 0.15); color: #e74c3c; }
+
+        .impact-section {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border-color);
+        }
+        .impact-section h5 {
+            font-size: 0.75rem;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .impact-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            max-height: 120px;
+            overflow-y: auto;
+            padding: 2px 0;
+        }
+        .impact-node-link {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background-color: var(--bg-hover);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            transition: all 0.2s ease;
+        }
+        .impact-node-link:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background-color: rgba(35, 131, 226, 0.05);
+        }
+
+        .detail-card {
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 0.8rem;
+        }
+
+        .detail-card h4 {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .editor-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .editor-link:hover {
+            color: var(--accent-hover);
+        }
+
+        .code-signature {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            white-space: pre-wrap;
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag-item {
+            background-color: var(--hover-color);
+            border: 1px solid var(--border-color);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        /* Memory timeline */
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+            border-left: 1px solid var(--border-color);
+            margin-left: 10px;
+            margin-top: 10px;
+        }
+
+        .timeline-event {
+            position: relative;
+            margin-bottom: 25px;
+            font-size: 0.8rem;
+        }
+
+        .timeline-event:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-icon {
+            position: absolute;
+            left: -29px;
+            top: 2px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .timeline-event.active .timeline-icon {
+            color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .timeline-time {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .timeline-title {
+            font-family: var(--font-display);
+            font-weight: 600;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .timeline-title:hover {
+            color: var(--accent-color);
+        }
+
+        .timeline-desc {
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .timeline-badge {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 1px 4px;
+            border-radius: 3px;
+            background-color: var(--hover-color);
+            border: 1px solid var(--border-color);
+            margin-left: 5px;
+            display: inline-block;
+        }
+
+        /* --- Toast Notification --- */
+        .toast {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-color);
+            padding: 12px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 100;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-title">
+            <button class="header-burger-btn" id="burger-left" onclick="toggleSidebar('left')" title="Toggle Left Sidebar" style="margin-right: 5px;">
+                <i data-lucide="menu" style="width: 16px; height: 16px;"></i>
+            </button>
+            <i data-lucide="network" style="color: var(--accent-color);"></i>
+            <h1>/* TRANSLATE:codeGraph */</h1>
+            <span class="project-badge">/* PROJECT_NAME_PLACEHOLDER */</span>
+        </div>
+        <div class="header-controls">
+            <div class="stats-summary">
+                <span>/* TRANSLATE:nodesLabel */: <strong id="stats-nodes">0</strong></span>
+                <span>/* TRANSLATE:edgesLabel */: <strong id="stats-edges">0</strong></span>
+                <span>/* TRANSLATE:enrichedLabel */: <strong id="stats-enriched">0</strong></span>
+            </div>
+            <button class="theme-toggle-btn" id="theme-toggle" title="/* TRANSLATE:themeBtn */">
+                <i data-lucide="sun"></i>
+            </button>
+            <button class="header-burger-btn" id="burger-right" onclick="toggleSidebar('right')" title="Toggle Right Sidebar" style="margin-left: 5px;">
+                <i data-lucide="sidebar" style="width: 16px; height: 16px;"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Left Sidebar (Controls) -->
+        <div class="sidebar-left">
+            <div class="sidebar-toggle-handle" onclick="toggleSidebar('left')" title="Toggle Left Sidebar">
+                <i data-lucide="chevron-left"></i>
+            </div>
+            <div class="sidebar-section">
+                <h3><i data-lucide="search" style="width: 14px; height: 14px;"></i> /* TRANSLATE:searchNodes */</h3>
+                <div class="control-group">
+                    <div class="search-input-wrapper">
+                        <i data-lucide="search" style="width: 14px; height: 14px;"></i>
+                        <input type="text" id="node-search" placeholder="/* TRANSLATE:searchPlaceholder */">
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3><i data-lucide="filter" style="width: 14px; height: 14px;"></i> /* TRANSLATE:filterTypes */</h3>
+                <div class="control-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="filter-file" checked>
+                        <span class="dot dot-file"></span> /* TRANSLATE:files */
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="filter-function" checked>
+                        <span class="dot dot-function"></span> /* TRANSLATE:functions */
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="filter-class" checked>
+                        <span class="dot dot-class"></span> /* TRANSLATE:classes */
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="filter-interface" checked>
+                        <span class="dot dot-interface"></span> /* TRANSLATE:interfaces */
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="filter-variable" checked>
+                        <span class="dot dot-variable"></span> /* TRANSLATE:variables */
+                    </label>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3><i data-lucide="sliders" style="width: 14px; height: 14px;"></i> /* TRANSLATE:connections */</h3>
+                <div class="control-group">
+                    <span class="control-label">/* TRANSLATE:minDegree */</span>
+                    <div class="slider-wrapper">
+                        <input type="range" id="degree-slider" min="0" max="20" value="0">
+                        <span class="slider-value" id="degree-val">0</span>
+                    </div>
+                </div>
+                <div class="control-group" style="margin-top: 15px;">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="filter-high-confidence">
+                        <span>/* TRANSLATE:highConfidence */</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Node list scroll container -->
+            <div class="node-list-container" id="node-list">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Center Canvas -->
+        <div class="canvas-container">
+            <div id="graph-canvas"></div>
+            
+            <!-- Canvas navigation float controls -->
+            <div class="canvas-controls">
+                <button class="canvas-btn" id="zoom-in" title="Zoom In"><i data-lucide="zoom-in" style="width: 16px; height: 16px;"></i></button>
+                <button class="canvas-btn" id="zoom-out" title="Zoom Out"><i data-lucide="zoom-out" style="width: 16px; height: 16px;"></i></button>
+                <button class="canvas-btn" id="zoom-fit" title="Fit to Screen"><i data-lucide="maximize" style="width: 16px; height: 16px;"></i></button>
+                <button class="canvas-btn" id="reset-graph" title="Reset Force Graph"><i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i></button>
+            </div>
+        </div>
+
+        <!-- Right Sidebar (Detail panel) -->
+        <div class="sidebar-right">
+            <div class="sidebar-toggle-handle" onclick="toggleSidebar('right')" title="Toggle Right Sidebar">
+                <i data-lucide="chevron-right"></i>
+            </div>
+            <div class="tab-headers">
+                <button class="tab-btn active" id="tab-details" onclick="switchTab('details')">/* TRANSLATE:details */</button>
+                <button class="tab-btn" id="tab-memory" onclick="switchTab('memory')">/* TRANSLATE:memory */</button>
+            </div>
+            
+            <div class="tab-content">
+                <!-- Details Tab -->
+                <div class="tab-pane active" id="pane-details">
+                    <div id="node-details-empty" class="detail-placeholder" style="text-align: left; padding: 15px 10px;">
+                        <div style="text-align: center; margin-bottom: 12px; opacity: 0.8;">
+                            <i data-lucide="mouse-pointer-click" style="width: 32px; height: 32px; margin: 0 auto; color: var(--accent-color); animation: pulse 2s infinite;"></i>
+                        </div>
+                        <p style="text-align: center; margin-bottom: 15px; font-weight: 500; font-size: 0.85rem; color: var(--text-primary);">
+                            /* TRANSLATE:detailsEmpty */
+                        </p>
+                        <div style="border-top: 1px dashed var(--border-color); padding-top: 15px; font-size: 0.75rem;">
+                            <h5 style="margin-bottom: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary);">
+                                /* TRANSLATE:featuresGuideTitle */
+                            </h5>
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                <li style="margin-bottom: 10px; display: flex; gap: 8px; align-items: flex-start;">
+                                    <i data-lucide="target" style="width: 14px; height: 14px; color: #3b82f6; flex-shrink: 0; margin-top: 2px;"></i>
+                                    <div>
+                                        <strong>/* TRANSLATE:featuresGuide1Title */</strong>
+                                        <div style="color: var(--text-secondary); margin-top: 2px;">/* TRANSLATE:featuresGuide1Desc */</div>
+                                    </div>
+                                </li>
+                                <li style="margin-bottom: 10px; display: flex; gap: 8px; align-items: flex-start;">
+                                    <i data-lucide="git-branch" style="width: 14px; height: 14px; color: #ef4444; flex-shrink: 0; margin-top: 2px;"></i>
+                                    <div>
+                                        <strong>/* TRANSLATE:featuresGuide2Title */</strong>
+                                        <div style="color: var(--text-secondary); margin-top: 2px;">/* TRANSLATE:featuresGuide2Desc */</div>
+                                    </div>
+                                </li>
+                                <li style="margin-bottom: 10px; display: flex; gap: 8px; align-items: flex-start;">
+                                    <i data-lucide="sparkles" style="width: 14px; height: 14px; color: #f59e0b; flex-shrink: 0; margin-top: 2px;"></i>
+                                    <div>
+                                        <strong>/* TRANSLATE:featuresGuide3Title */</strong>
+                                        <div style="color: var(--text-secondary); margin-top: 2px;">/* TRANSLATE:featuresGuide3Desc */</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="node-details-content" style="display: none;">
+                        <div class="detail-header">
+                            <h2 class="detail-title" id="node-name">normalize_path</h2>
+                            <div class="detail-subtitle">
+                                <span class="detail-badge" id="node-badge">function</span>
+                                <span class="complexity-badge" id="node-complexity">low</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-card">
+                            <h4><i data-lucide="file-code" style="width: 12px; height: 12px;"></i> /* TRANSLATE:codeLocation */</h4>
+                            <div style="margin-bottom: 8px;" id="node-location-file">cli/commands/archive.sh</div>
+                            <div style="margin-bottom: 12px; color: var(--text-secondary);" id="node-location-lines">Lines 10 - 15</div>
+                            <a href="#" class="editor-link" id="node-editor-link">
+                                <i data-lucide="external-link" style="width: 12px; height: 12px;"></i> /* TRANSLATE:openVscode */
+                            </a>
+                        </div>
+
+                        <div class="detail-card" id="card-signature">
+                            <h4><i data-lucide="code" style="width: 12px; height: 12px;"></i> /* TRANSLATE:signature */</h4>
+                            <pre class="code-signature" id="node-signature">normalize_path() {</pre>
+                        </div>
+
+                        <div class="detail-card" id="card-summary">
+                            <h4><i data-lucide="align-left" style="width: 12px; height: 12px;"></i> /* TRANSLATE:aiSummary */</h4>
+                            <div style="line-height: 1.5;" id="node-summary">Validates paths.</div>
+                        </div>
+
+                        <div class="detail-card" id="card-concepts">
+                            <h4><i data-lucide="tag" style="width: 12px; height: 12px;"></i> /* TRANSLATE:domainConcepts */</h4>
+                            <div class="tag-list" id="node-concepts">
+                                <span class="tag-item">runtime validation</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-card" id="card-impact">
+                            <h4><i data-lucide="zap" style="width: 12px; height: 12px;"></i> /* TRANSLATE:impactAnalysis */</h4>
+                            <div style="margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                                <span>/* TRANSLATE:changeRisk */:</span>
+                                <span class="risk-badge risk-low" id="impact-risk-badge">/* TRANSLATE:riskLow */</span>
+                            </div>
+                            
+                            <!-- Upstream Impact -->
+                            <div class="impact-section">
+                                <h5><i data-lucide="arrow-up-right" style="width: 10px; height: 10px; color: #ef4444;"></i> /* TRANSLATE:upstreamImpact */ (<span id="count-upstream">0</span>)</h5>
+                                <div class="impact-list" id="list-upstream">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Downstream Impact -->
+                            <div class="impact-section">
+                                <h5><i data-lucide="arrow-down-left" style="width: 10px; height: 10px; color: #3b82f6;"></i> /* TRANSLATE:downstreamImpact */ (<span id="count-downstream">0</span>)</h5>
+                                <div class="impact-list" id="list-downstream">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Memory Tab -->
+                <div class="tab-pane" id="pane-memory">
+                    <div id="memory-empty" class="detail-placeholder">
+                        <i data-lucide="history" style="width: 32px; height: 32px; display: block; margin: 0 auto 10px;"></i>
+                        /* TRANSLATE:memoryEmpty */
+                    </div>
+                    <div id="memory-content" style="display: none;">
+                        <h3 style="font-family: var(--font-display); font-size: 0.95rem; margin-bottom: 15px;">/* TRANSLATE:sessionLogTimeline */</h3>
+                        <div class="timeline" id="memory-timeline">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast-notify">
+        <i data-lucide="copy" style="color: var(--accent-color); width: 16px; height: 16px;"></i>
+        <span id="toast-text">Success!</span>
+    </div>
+
+    <script>
+        // --- Static Data Placeholders ---
+        const METADATA = null || /* DATA_METADATA_JSON_START */ { version: "1.0", nodeCount: 0, edgeCount: 0, enrichedCount: 0 } /* DATA_METADATA_JSON_END */;
+        const GRAPH_DATA = null || /* DATA_GRAPH_JSON_START */ { nodes: [], links: [] } /* DATA_GRAPH_JSON_END */;
+        const MEMORY_EVENTS = null || /* DATA_MEMORY_EVENTS_JSON_START */ [] /* DATA_MEMORY_EVENTS_JSON_END */;
+        const MEMORY_SLICES = null || /* DATA_MEMORY_SLICES_JSON_START */ [] /* DATA_MEMORY_SLICES_JSON_END */;
+        const PROJECT_ROOT = "/* PROJECT_ROOT_PLACEHOLDER */";
+
+        // Global Application State
+        let theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        let selectedNode = null;
+        let highlightedNodes = new Set();
+        let highlightedLinks = new Set();
+        let Graph = null;
+        
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTheme(theme);
+            initStats();
+            initFilters();
+            initNodeList();
+            initMemoryTimeline();
+            initForceGraph();
+            setupWindowListeners();
+        });
+
+        // Theme Handling
+        function applyTheme(newTheme) {
+            theme = newTheme;
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            
+            const btn = document.getElementById('theme-toggle');
+            if (theme === 'dark') {
+                btn.innerHTML = '<i data-lucide="moon"></i>';
+            } else {
+                btn.innerHTML = '<i data-lucide="sun"></i>';
+            }
+            lucide.createIcons({attrs: {"style": "width: 16px; height: 16px;"}});
+            
+            // Re-render Graph if initialized to adapt color parameters
+            if (Graph) {
+                updateGraphColors();
+            }
+        }
+
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            applyTheme(theme === 'light' ? 'dark' : 'light');
+        });
+
+        // Toggle Right Sidebar Tabs
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            document.getElementById(`pane-${tabName}`).classList.add('active');
+        }
+
+        // Sidebar Toggle Engine
+        window.toggleSidebar = function(side) {
+            const sidebar = document.querySelector(`.sidebar-${side}`);
+            if (!sidebar) return;
+            
+            const isCollapsed = sidebar.classList.toggle('collapsed');
+            
+            // Update handle icon
+            const icon = sidebar.querySelector('.sidebar-toggle-handle i');
+            if (icon) {
+                if (side === 'left') {
+                    icon.setAttribute('data-lucide', isCollapsed ? 'chevron-right' : 'chevron-left');
+                } else {
+                    icon.setAttribute('data-lucide', isCollapsed ? 'chevron-left' : 'chevron-right');
+                }
+                lucide.createIcons({attrs: {"style": "width: 12px; height: 12px;"}});
+            }
+            
+            // Force redraw canvas
+            if (Graph) {
+                setTimeout(() => {
+                    Graph.width(document.getElementById('graph-canvas').clientWidth);
+                    Graph.height(document.getElementById('graph-canvas').clientHeight);
+                }, 310);
+            }
+        }
+
+        // Stats Initialization
+        function initStats() {
+            document.getElementById('stats-nodes').textContent = GRAPH_DATA.nodes.length;
+            document.getElementById('stats-edges').textContent = GRAPH_DATA.links.length;
+            
+            const enrichedCount = GRAPH_DATA.nodes.filter(n => n.semantic && n.semantic.summary).length;
+            document.getElementById('stats-enriched').textContent = enrichedCount;
+        }
+
+        // Filter Controls
+        function initFilters() {
+            // Search Input
+            document.getElementById('node-search').addEventListener('input', (e) => {
+                updateFilters();
+            });
+
+            // Type Checkboxes
+            ['file', 'function', 'class', 'interface', 'variable'].forEach(type => {
+                document.getElementById(`filter-${type}`).addEventListener('change', updateFilters);
+            });
+
+            // Minimum Degree Slider
+            const slider = document.getElementById('degree-slider');
+            const sliderVal = document.getElementById('degree-val');
+            
+            // Find max degree in dataset
+            const degrees = {};
+            GRAPH_DATA.nodes.forEach(n => degrees[n.id] = 0);
+            GRAPH_DATA.links.forEach(l => {
+                const source = typeof l.source === 'object' ? l.source.id : l.source;
+                const target = typeof l.target === 'object' ? l.target.id : l.target;
+                if (degrees[source] !== undefined) degrees[source]++;
+                if (degrees[target] !== undefined) degrees[target]++;
+            });
+            const maxDegree = Math.max(0, ...Object.values(degrees));
+            slider.max = Math.max(5, maxDegree);
+            
+            slider.addEventListener('input', (e) => {
+                sliderVal.textContent = e.target.value;
+                updateFilters();
+            });
+
+            // Confidence check
+            document.getElementById('filter-high-confidence').addEventListener('change', updateFilters);
+        }
+
+        // Filter and update Graph
+        function updateFilters() {
+            const searchQuery = document.getElementById('node-search').value.toLowerCase();
+            const showTypes = {
+                file: document.getElementById('filter-file').checked,
+                function: document.getElementById('filter-function').checked,
+                class: document.getElementById('filter-class').checked,
+                interface: document.getElementById('filter-interface').checked,
+                variable: document.getElementById('filter-variable').checked
+            };
+            const minDegree = parseInt(document.getElementById('degree-slider').value);
+            const highConfidenceOnly = document.getElementById('filter-high-confidence').checked;
+
+            // Recalculate degrees for filtered links
+            const nodeDegree = {};
+            GRAPH_DATA.nodes.forEach(n => nodeDegree[n.id] = 0);
+            
+            const activeLinks = GRAPH_DATA.links.filter(l => {
+                const source = typeof l.source === 'object' ? l.source.id : l.source;
+                const target = typeof l.target === 'object' ? l.target.id : l.target;
+                
+                if (highConfidenceOnly && l.confidence === 'AMBIGUOUS') {
+                    return false;
+                }
+                return true;
+            });
+
+            activeLinks.forEach(l => {
+                const source = typeof l.source === 'object' ? l.source.id : l.source;
+                const target = typeof l.target === 'object' ? l.target.id : l.target;
+                if (nodeDegree[source] !== undefined) nodeDegree[source]++;
+                if (nodeDegree[target] !== undefined) nodeDegree[target]++;
+            });
+
+            // Filter nodes
+            const filteredNodes = GRAPH_DATA.nodes.filter(n => {
+                // Smart semantic match
+                let matchesSearch = n.name.toLowerCase().includes(searchQuery);
+                if (!matchesSearch && searchQuery.length > 0) {
+                    const inFilePath = n.filePath && n.filePath.toLowerCase().includes(searchQuery);
+                    const inSignature = n.signature && n.signature.toLowerCase().includes(searchQuery);
+                    
+                    let inSummary = false;
+                    let inConcepts = false;
+                    
+                    if (n.semantic) {
+                        inSummary = n.semantic.summary && n.semantic.summary.toLowerCase().includes(searchQuery);
+                        inConcepts = n.semantic.domainConcepts && n.semantic.domainConcepts.some(c => c.toLowerCase().includes(searchQuery));
+                    }
+                    
+                    matchesSearch = inFilePath || inSignature || inSummary || inConcepts;
+                }
+                const matchesType = showTypes[n.type];
+                const matchesDegree = nodeDegree[n.id] >= minDegree;
+                return matchesSearch && matchesType && matchesDegree;
+            });
+
+            const filteredNodeIds = new Set(filteredNodes.map(n => n.id));
+
+            // Filter links to only connect visible nodes
+            const filteredLinks = activeLinks.filter(l => {
+                const source = typeof l.source === 'object' ? l.source.id : l.source;
+                const target = typeof l.target === 'object' ? l.target.id : l.target;
+                return filteredNodeIds.has(source) && filteredNodeIds.has(target);
+            });
+
+            // Update Force Graph
+            Graph.graphData({
+                nodes: filteredNodes,
+                links: filteredLinks
+            });
+
+            // Update Left Sidebar list
+            renderNodeList(filteredNodes);
+        }
+
+        // Render Sidebar List
+        function renderNodeList(nodesList) {
+            const container = document.getElementById('node-list');
+            container.innerHTML = '';
+            
+            // Sort by name
+            const sortedNodes = [...nodesList].sort((a, b) => a.name.localeCompare(b.name));
+
+            sortedNodes.forEach(node => {
+                const item = document.createElement('div');
+                item.className = 'node-list-item';
+                item.dataset.nodeId = node.id;
+                if (selectedNode && selectedNode.id === node.id) {
+                    item.classList.add('active');
+                }
+                
+                let iconName = 'file';
+                let iconColor = 'var(--color-file)';
+                if (node.type === 'function') { iconName = 'code'; iconColor = 'var(--color-function)'; }
+                else if (node.type === 'class') { iconName = 'box'; iconColor = 'var(--color-class)'; }
+                else if (node.type === 'interface') { iconName = 'layout'; iconColor = 'var(--color-interface)'; }
+                else if (node.type === 'variable') { iconName = 'hash'; iconColor = 'var(--color-variable)'; }
+
+                const fileSub = node.filePath ? `<span class="node-list-sub">${node.filePath}</span>` : '';
+                item.innerHTML = `
+                    <i data-lucide="${iconName}" class="node-type-icon" style="color: ${iconColor};"></i>
+                    <div class="node-list-text">
+                        <span class="node-list-title">${node.name}</span>
+                        ${fileSub}
+                    </div>
+                `;
+                
+                item.addEventListener('click', () => {
+                    selectNode(node);
+                    // Focus camera on node
+                    Graph.centerAt(node.x, node.y, 1000);
+                    Graph.zoom(3, 1000);
+                });
+                
+                container.appendChild(item);
+            });
+            lucide.createIcons({attrs: {"style": "width: 14px; height: 14px;"}});
+        }
+
+        function initNodeList() {
+            renderNodeList(GRAPH_DATA.nodes);
+        }
+
+        // Memory Timeline
+        function initMemoryTimeline() {
+            if (MEMORY_EVENTS.length === 0) {
+                document.getElementById('memory-empty').style.display = 'block';
+                document.getElementById('memory-content').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('memory-empty').style.display = 'none';
+            document.getElementById('memory-content').style.display = 'block';
+
+            const container = document.getElementById('memory-timeline');
+            container.innerHTML = '';
+
+            // Sort events chronologically (newest first)
+            const sortedEvents = [...MEMORY_EVENTS].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            sortedEvents.forEach(evt => {
+                const item = document.createElement('div');
+                item.className = 'timeline-event';
+                
+                let icon = 'calendar';
+                if (evt.kind === 'architecture-decision' || evt.kind === 'brainstorm-decision') icon = 'shield';
+                else if (evt.kind === 'task-state-snapshot') icon = 'check-circle';
+
+                const formattedTime = new Date(evt.timestamp).toLocaleString();
+
+                item.innerHTML = `
+                    <div class="timeline-icon">
+                        <i data-lucide="${icon}" style="width: 10px; height: 10px;"></i>
+                    </div>
+                    <div class="timeline-time">${formattedTime}</div>
+                    <div class="timeline-title">${evt.kind}<span class="timeline-badge">${evt.sessionId || 'event'}</span></div>
+                    <div class="timeline-desc">${evt.content}</div>
+                `;
+
+                // Add search logic if decision references a file
+                if (evt.metadata && evt.metadata.decision_file) {
+                    const titleEl = item.querySelector('.timeline-title');
+                    titleEl.addEventListener('click', () => {
+                        showToast(`Ref file: ${evt.metadata.decision_file}`);
+                    });
+                }
+                
+                container.appendChild(item);
+            });
+            lucide.createIcons({attrs: {"style": "width: 10px; height: 10px;"}});
+        }
+
+        // Upstream & Downstream change impact analysis algorithm (Ripple Effect)
+        function analyzeImpact(node) {
+            const upstreamNodes = new Map(); // id -> depth
+            const downstreamNodes = new Map(); // id -> depth
+            const upstreamLinks = new Set();
+            const downstreamLinks = new Set();
+
+            if (!node) return { upstreamNodes, downstreamNodes, upstreamLinks, downstreamLinks };
+
+            // Build adjacency list for traversal speed
+            const incoming = {};
+            const outgoing = {};
+
+            GRAPH_DATA.nodes.forEach(n => {
+                incoming[n.id] = [];
+                outgoing[n.id] = [];
+            });
+
+            GRAPH_DATA.links.forEach(l => {
+                const sId = typeof l.source === 'object' ? l.source.id : l.source;
+                const tId = typeof l.target === 'object' ? l.target.id : l.target;
+                
+                if (!incoming[tId]) incoming[tId] = [];
+                if (!outgoing[sId]) outgoing[sId] = [];
+                
+                incoming[tId].push({ id: sId, link: l });
+                outgoing[sId].push({ id: tId, link: l });
+            });
+
+            // BFS for Upstream (Affected Components)
+            let queue = [{ id: node.id, depth: 0 }];
+            const visitedUpstream = new Set([node.id]);
+
+            while (queue.length > 0) {
+                const current = queue.shift();
+                if (current.id !== node.id) {
+                    upstreamNodes.set(current.id, current.depth);
+                }
+
+                const parents = incoming[current.id] || [];
+                parents.forEach(p => {
+                    if (!visitedUpstream.has(p.id)) {
+                        visitedUpstream.add(p.id);
+                        upstreamLinks.add(p.link);
+                        queue.push({ id: p.id, depth: current.depth + 1 });
+                    } else {
+                        upstreamLinks.add(p.link);
+                    }
+                });
+            }
+
+            // BFS for Downstream (Dependencies)
+            queue = [{ id: node.id, depth: 0 }];
+            const visitedDownstream = new Set([node.id]);
+
+            while (queue.length > 0) {
+                const current = queue.shift();
+                if (current.id !== node.id) {
+                    downstreamNodes.set(current.id, current.depth);
+                }
+
+                const children = outgoing[current.id] || [];
+                children.forEach(c => {
+                    if (!visitedDownstream.has(c.id)) {
+                        visitedDownstream.add(c.id);
+                        downstreamLinks.add(c.link);
+                        queue.push({ id: c.id, depth: current.depth + 1 });
+                    } else {
+                        downstreamLinks.add(c.link);
+                    }
+                });
+            }
+
+            return { upstreamNodes, downstreamNodes, upstreamLinks, downstreamLinks };
+        }
+
+        // Focus & Zoom Camera on a specific node
+        function focusOnNode(nodeId) {
+            const node = GRAPH_DATA.nodes.find(n => n.id === nodeId);
+            if (node) {
+                selectNode(node);
+                Graph.centerAt(node.x, node.y, 800);
+                Graph.zoom(2.2, 800);
+            }
+        }
+
+        // Node Selection & Sidebar detail panel
+        function selectNode(node) {
+            selectedNode = node;
+            
+            // Auto expand right sidebar when a node is selected if it was collapsed
+            const rightSidebar = document.querySelector('.sidebar-right');
+            if (rightSidebar && rightSidebar.classList.contains('collapsed')) {
+                toggleSidebar('right');
+            }
+            
+            // Highlight node in list sidebar
+            document.querySelectorAll('.node-list-item').forEach(el => el.classList.remove('active'));
+            const activeItem = document.querySelector(`.node-list-item[data-node-id="${node.id}"]`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+                activeItem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+
+            // Fill Detail Sidebar
+            document.getElementById('node-details-empty').style.display = 'none';
+            const detailsContent = document.getElementById('node-details-content');
+            detailsContent.style.display = 'block';
+
+            // Basic Info
+            document.getElementById('node-name').textContent = node.name;
+            const badge = document.getElementById('node-badge');
+            badge.textContent = node.type;
+            badge.className = `detail-badge badge-${node.type}`;
+            
+            // Location
+            document.getElementById('node-location-file').textContent = node.filePath || 'Workspace relative path';
+            document.getElementById('node-location-lines').textContent = (node.startLine && node.endLine) ? `Lines ${node.startLine} - ${node.endLine}` : 'Lines undefined';
+            
+            // Signature
+            const sigCard = document.getElementById('card-signature');
+            if (node.signature) {
+                sigCard.style.display = 'block';
+                document.getElementById('node-signature').textContent = node.signature;
+            } else {
+                sigCard.style.display = 'none';
+            }
+
+            // Semantic AI details
+            const summaryCard = document.getElementById('card-summary');
+            const conceptsCard = document.getElementById('card-concepts');
+            const compBadge = document.getElementById('node-complexity');
+
+            if (node.semantic) {
+                if (node.semantic.summary) {
+                    summaryCard.style.display = 'block';
+                    document.getElementById('node-summary').textContent = node.semantic.summary;
+                } else {
+                    summaryCard.style.display = 'none';
+                }
+
+                if (node.semantic.complexity) {
+                    compBadge.style.display = 'inline-block';
+                    compBadge.textContent = `${node.semantic.complexity}`;
+                    compBadge.className = `complexity-badge complexity-${node.semantic.complexity}`;
+                } else {
+                    compBadge.style.display = 'none';
+                }
+
+                if (node.semantic.domainConcepts && node.semantic.domainConcepts.length > 0) {
+                    conceptsCard.style.display = 'block';
+                    const list = document.getElementById('node-concepts');
+                    list.innerHTML = '';
+                    node.semantic.domainConcepts.forEach(c => {
+                        const tag = document.createElement('span');
+                        tag.className = 'tag-item';
+                        tag.textContent = c;
+                        list.appendChild(tag);
+                    });
+                } else {
+                    conceptsCard.style.display = 'none';
+                }
+            } else {
+                summaryCard.style.display = 'none';
+                conceptsCard.style.display = 'none';
+                compBadge.style.display = 'none';
+            }
+
+            // VSCode Link
+            const vscodeLink = document.getElementById('node-editor-link');
+            if (node.filePath) {
+                const absPath = `${PROJECT_ROOT}/${node.filePath}`;
+                const startLine = node.startLine || 1;
+                vscodeLink.href = `vscode://file${absPath}:${startLine}`;
+                vscodeLink.style.display = 'inline-flex';
+            } else {
+                vscodeLink.style.display = 'none';
+            }
+            
+            // Trigger Graph Highlights (deep = true to run BFS Change Impact analysis)
+            highlightNodeRelatives(node, true);
+
+            // Populate Change Impact Card UI
+            const countUpEl = document.getElementById('count-upstream');
+            const countDownEl = document.getElementById('count-downstream');
+            const listUpEl = document.getElementById('list-upstream');
+            const listDownEl = document.getElementById('list-downstream');
+            const riskBadge = document.getElementById('impact-risk-badge');
+
+            if (window.currentImpact) {
+                const countUp = window.currentImpact.upstreamNodes.size;
+                const countDown = window.currentImpact.downstreamNodes.size;
+
+                countUpEl.textContent = countUp;
+                countDownEl.textContent = countDown;
+
+                // Risk level assessment
+                let riskClass = 'risk-low';
+                let riskLabel = '/* TRANSLATE:riskLow */';
+                if (countUp > 8) {
+                    riskClass = 'risk-high';
+                    riskLabel = '/* TRANSLATE:riskHigh */';
+                } else if (countUp > 3) {
+                    riskClass = 'risk-medium';
+                    riskLabel = '/* TRANSLATE:riskMedium */';
+                }
+                riskBadge.className = `risk-badge ${riskClass}`;
+                riskBadge.textContent = riskLabel;
+
+                // Upstream list rendering
+                listUpEl.innerHTML = '';
+                if (countUp === 0) {
+                    listUpEl.innerHTML = `<span style="color: var(--text-secondary); font-size: 0.7rem;">/* TRANSLATE:noImpact */</span>`;
+                } else {
+                    window.currentImpact.upstreamNodes.forEach((depth, id) => {
+                        const targetNode = GRAPH_DATA.nodes.find(n => n.id === id);
+                        if (targetNode) {
+                            const btn = document.createElement('button');
+                            btn.className = 'impact-node-link';
+                            btn.innerHTML = `<i data-lucide="corner-left-up" style="width: 8px; height: 8px;"></i> ${targetNode.name} (/* TRANSLATE:impactDepth */ ${depth})`;
+                            btn.onclick = () => focusOnNode(id);
+                            listUpEl.appendChild(btn);
+                        }
+                    });
+                }
+
+                // Downstream list rendering
+                listDownEl.innerHTML = '';
+                if (countDown === 0) {
+                    listDownEl.innerHTML = `<span style="color: var(--text-secondary); font-size: 0.7rem;">/* TRANSLATE:noImpact */</span>`;
+                } else {
+                    window.currentImpact.downstreamNodes.forEach((depth, id) => {
+                        const targetNode = GRAPH_DATA.nodes.find(n => n.id === id);
+                        if (targetNode) {
+                            const btn = document.createElement('button');
+                            btn.className = 'impact-node-link';
+                            btn.innerHTML = `<i data-lucide="corner-right-down" style="width: 8px; height: 8px;"></i> ${targetNode.name} (/* TRANSLATE:impactDepth */ ${depth})`;
+                            btn.onclick = () => focusOnNode(id);
+                            listDownEl.appendChild(btn);
+                        }
+                    });
+                }
+                lucide.createIcons();
+            }
+
+            switchTab('details');
+        }
+
+        // Highlight relationships dynamically. Supports hover (direct only) or select (BFS deep)
+        function highlightNodeRelatives(node, deep = false) {
+            highlightedNodes.clear();
+            highlightedLinks.clear();
+            window.currentImpact = null;
+            
+            if (node) {
+                highlightedNodes.add(node.id);
+                
+                if (deep) {
+                    const impact = analyzeImpact(node);
+                    window.currentImpact = impact;
+                    
+                    impact.upstreamNodes.forEach((depth, id) => highlightedNodes.add(id));
+                    impact.downstreamNodes.forEach((depth, id) => highlightedNodes.add(id));
+                    
+                    impact.upstreamLinks.forEach(l => highlightedLinks.add(l));
+                    impact.downstreamLinks.forEach(l => highlightedLinks.add(l));
+                } else {
+                    // Immediate links only (performance optimization for hover)
+                    GRAPH_DATA.links.forEach(l => {
+                        const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
+                        const targetId = typeof l.target === 'object' ? l.target.id : l.target;
+                        
+                        if (sourceId === node.id) {
+                            highlightedNodes.add(targetId);
+                            highlightedLinks.add(l);
+                        } else if (targetId === node.id) {
+                            highlightedNodes.add(sourceId);
+                            highlightedLinks.add(l);
+                        }
+                    });
+                }
+            }
+            
+            // Trigger graph redraw
+            Graph.nodeColor(Graph.nodeColor())
+                 .linkWidth(Graph.linkWidth())
+                 .linkColor(Graph.linkColor());
+        }
+
+        // Force Graph Initialization
+        function initForceGraph() {
+            const canvasEl = document.getElementById('graph-canvas');
+            
+            Graph = ForceGraph()(canvasEl)
+                .graphData(GRAPH_DATA)
+                .nodeId('id')
+                .nodeVal(node => {
+                    // God nodes have higher value (larger radius)
+                    const degrees = GRAPH_DATA.links.filter(l => l.source === node.id || l.target === node.id).length;
+                    return Math.max(3, degrees);
+                })
+                .nodeLabel(node => `${node.name} (${node.type})`)
+                .onNodeClick(node => {
+                    selectNode(node);
+                })
+                .onNodeHover(node => {
+                    // Temporarily highlight node relatives on hover if no node is selected
+                    if (!selectedNode) {
+                        highlightNodeRelatives(node);
+                        document.body.style.cursor = node ? 'pointer' : null;
+                    }
+                })
+                .onLinkHover(link => {
+                    if (!selectedNode) {
+                        highlightedNodes.clear();
+                        highlightedLinks.clear();
+                        if (link) {
+                            highlightedLinks.add(link);
+                            highlightedNodes.add(link.source.id);
+                            highlightedNodes.add(link.target.id);
+                        }
+                        Graph.nodeColor(Graph.nodeColor());
+                    }
+                })
+                .linkDirectionalParticles(link => {
+                    if (window.currentImpact) {
+                        if (window.currentImpact.upstreamLinks.has(link) || window.currentImpact.downstreamLinks.has(link)) {
+                            return 4;
+                        }
+                    }
+                    return highlightedLinks.has(link) ? 2 : 0;
+                })
+                .linkDirectionalParticleWidth(link => {
+                    if (window.currentImpact) {
+                        if (window.currentImpact.upstreamLinks.has(link) || window.currentImpact.downstreamLinks.has(link)) {
+                            return 3;
+                        }
+                    }
+                    return highlightedLinks.has(link) ? 2 : 1;
+                })
+                .linkDirectionalParticleSpeed(link => {
+                    if (window.currentImpact) {
+                        if (window.currentImpact.upstreamLinks.has(link) || window.currentImpact.downstreamLinks.has(link)) {
+                            return 0.015; // fast moving particles to show flow
+                        }
+                    }
+                    return highlightedLinks.has(link) ? 0.008 : 0.003;
+                })
+                .onBackgroundClick(() => {
+                    // Reset selection
+                    selectedNode = null;
+                    highlightedNodes.clear();
+                    highlightedLinks.clear();
+                    window.currentImpact = null;
+                    document.getElementById('node-details-empty').style.display = 'block';
+                    document.getElementById('node-details-content').style.display = 'none';
+                    document.querySelectorAll('.node-list-item').forEach(el => el.classList.remove('active'));
+                    Graph.nodeColor(Graph.nodeColor())
+                         .linkWidth(Graph.linkWidth())
+                         .linkColor(Graph.linkColor());
+                });
+
+            updateGraphColors();
+            updateFilters();
+        }
+
+        // Helper to resolve CSS variable to color value (since canvas cannot interpret var(...) directly)
+        function resolveColor(colorStr) {
+            if (colorStr.startsWith('var(')) {
+                const varName = colorStr.substring(4, colorStr.length - 1).trim();
+                return getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || '#888888';
+            }
+            return colorStr;
+        }
+
+        // Helper to get Node Theme Color
+        function getNodeColorVal(node) {
+            const isDark = theme === 'dark';
+            if (highlightedNodes.size > 0 && !highlightedNodes.has(node.id)) {
+                return isDark ? '#202020' : '#f0f0f0'; // Dimmed state
+            }
+            if (selectedNode && node.id === selectedNode.id) {
+                return resolveColor('var(--accent-color)'); // Highlight selected node
+            }
+            if (window.currentImpact) {
+                if (window.currentImpact.upstreamNodes.has(node.id)) {
+                    return '#ef4444'; // Red for upstream (affected)
+                }
+                if (window.currentImpact.downstreamNodes.has(node.id)) {
+                    return '#3b82f6'; // Blue for downstream (dependencies)
+                }
+            }
+            
+            // Map types
+            if (node.type === 'file') return resolveColor('var(--color-file)');
+            if (node.type === 'function') return resolveColor('var(--color-function)');
+            if (node.type === 'class') return resolveColor('var(--color-class)');
+            if (node.type === 'interface') return resolveColor('var(--color-interface)');
+            return resolveColor('var(--color-variable)');
+        }
+
+        // Update colors based on current Theme
+        function updateGraphColors() {
+            const isDark = theme === 'dark';
+            const nodeTextColor = isDark ? '#e3e3e2' : '#37352f';
+            
+            Graph.nodeColor(getNodeColorVal)
+                .linkColor(link => {
+                    if (highlightedLinks.size > 0 && !highlightedLinks.has(link)) {
+                        return isDark ? 'rgba(30,30,30,0.05)' : 'rgba(240,240,240,0.05)';
+                    }
+                    if (window.currentImpact) {
+                        if (window.currentImpact.upstreamLinks.has(link)) {
+                            return 'rgba(239, 68, 68, 0.7)'; // Red path for upstream impact
+                        }
+                        if (window.currentImpact.downstreamLinks.has(link)) {
+                            return 'rgba(59, 130, 246, 0.7)'; // Blue path for downstream impact
+                        }
+                    }
+                    if (link.relation === 'IMPORTS_FROM') {
+                        return isDark ? 'rgba(46, 204, 113, 0.4)' : 'rgba(46, 204, 113, 0.4)';
+                    }
+                    return isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(55, 53, 47, 0.1)';
+                })
+                .linkWidth(link => {
+                    if (window.currentImpact) {
+                        if (window.currentImpact.upstreamLinks.has(link) || window.currentImpact.downstreamLinks.has(link)) {
+                            return 3;
+                        }
+                    }
+                    return highlightedLinks.has(link) ? 2 : 0.75;
+                })
+                .nodeCanvasObject((node, ctx, globalScale) => {
+                    const label = node.name;
+                    const degree = GRAPH_DATA.links.filter(l => l.source.id === node.id || l.target.id === node.id).length;
+                    const size = Math.max(4, Math.sqrt(degree) * 2);
+                    
+                    // Node Circle
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, size, 0, 2 * Math.PI, false);
+                    ctx.fillStyle = getNodeColorVal(node);
+                    
+                    ctx.fill();
+                    
+                    // Outer border
+                    if (selectedNode && node.id === selectedNode.id) {
+                        ctx.strokeStyle = '#ffffff';
+                        ctx.lineWidth = 2.5;
+                        ctx.stroke();
+                    } else if (highlightedNodes.has(node.id)) {
+                        if (window.currentImpact) {
+                            if (window.currentImpact.upstreamNodes.has(node.id)) {
+                                ctx.strokeStyle = '#ef4444';
+                            } else if (window.currentImpact.downstreamNodes.has(node.id)) {
+                                ctx.strokeStyle = '#3b82f6';
+                            } else {
+                                ctx.strokeStyle = isDark ? '#ffffff' : '#000000';
+                            }
+                        } else {
+                            ctx.strokeStyle = isDark ? '#ffffff' : '#000000';
+                        }
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+                    } else {
+                        ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)';
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+
+                    // Text labels at medium/high zoom level
+                    if (globalScale > 1.2 || highlightedNodes.has(node.id)) {
+                        const fontSize = 10 / globalScale;
+                        ctx.font = `${fontSize}px var(--font-sans)`;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'top';
+                        ctx.fillStyle = nodeTextColor;
+                        
+                        // Slightly fade text of dimmed nodes
+                        if (highlightedNodes.size > 0 && !highlightedNodes.has(node.id)) {
+                            ctx.fillStyle = isDark ? '#333333' : '#cccccc';
+                        } else if (selectedNode && node.id === selectedNode.id) {
+                            ctx.fillStyle = 'var(--accent-color)';
+                            ctx.font = `bold ${fontSize}px var(--font-sans)`;
+                        }
+                        
+                        ctx.fillText(label, node.x, node.y + size + 2);
+                    }
+                });
+        }
+
+        // Float navigation control hooks
+        function setupWindowListeners() {
+            document.getElementById('zoom-in').addEventListener('click', () => {
+                Graph.zoom(Graph.zoom() * 1.3, 300);
+            });
+
+            document.getElementById('zoom-out').addEventListener('click', () => {
+                Graph.zoom(Graph.zoom() / 1.3, 300);
+            });
+
+            document.getElementById('zoom-fit').addEventListener('click', () => {
+                Graph.zoomToFit(400);
+            });
+
+            document.getElementById('reset-graph').addEventListener('click', () => {
+                Graph.cooldownTime(0);
+                Graph.graphData(GRAPH_DATA);
+                updateFilters();
+                showToast("Force-directed layout recalculated.");
+            });
+
+            // Responsive resizing
+            window.addEventListener('resize', () => {
+                const container = document.getElementById('graph-canvas');
+                Graph.width(container.clientWidth);
+                Graph.height(container.clientHeight);
+            });
+        }
+
+        // Toast Message Utility
+        function showToast(message) {
+            const toast = document.getElementById('toast-notify');
+            document.getElementById('toast-text').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Check latest build timestamp on server for live hot-reload
+        let lastBuildTime = null;
+        async function startHotReload() {
+            setInterval(async () => {
+                try {
+                    const response = await fetch('/reload-status', { 
+                        cache: 'no-store'
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (lastBuildTime === null) {
+                            lastBuildTime = data.lastBuild;
+                        } else if (data.lastBuild !== lastBuildTime) {
+                            window.location.reload();
+                        }
+                    }
+                } catch (e) {
+                    try {
+                        const response = await fetch(window.location.href, { cache: 'no-store' });
+                        if (response.ok) {
+                            const text = await response.text();
+                            if (window.lastTextLength === undefined) {
+                                window.lastTextLength = text.length;
+                            } else if (text.length !== window.lastTextLength) {
+                                window.location.reload();
+                            }
+                        }
+                    } catch (err) {}
+                }
+            }, 1500);
+        }
+
+        if (window.location.protocol.startsWith('http')) {
+            startHotReload();
+        }
+    </script>
+</body>
+</html>

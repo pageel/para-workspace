@@ -3,9 +3,24 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
-## [Unreleased]
+## [1.8.10] - 2026-05-22
 
+Release Hardening, HTML Renderer Integration & Governance Catalog updates.
+
+- **Added**: `html-renderer` skill v1.0.0 — Modular HTML rendering engine for compiling docs, supporting full-text search (Ctrl+K), deep linking, and interactive minimalist interface.
+- **Added**: Support for default implicit output directory (`[source_folder]/.html`) in docs compiler script, simplifying command-line usage.
+- **Added**: Registered new governance rules (`agent-persona`, `tool-routing`, `graph-first-policy`) and skills (`new-project`, `para-graph`) in the governance catalog.
+- **Changed**: Migrated `html-renderer` from FontAwesome to Lucide Icons under ISC license for OSS/MIT compliance.
+- **Changed**: Renamed all Notion trademark references in HTML templates and CSS class names (`notion-callout` → `clean-callout`) to prevent license and trademark concerns.
 - **Changed**: Shortened separator lines across all workflow templates (28 characters) for cleaner reporting.
+
+## [1.8.9] - 2026-05-18
+
+Ecosystem-wide Para-Graph MCP Integration & Memory Operations.
+
+- **Added**: Ecosystem-wide Para-Graph MCP Integration with Project Sidecar Skill loading.
+- **Added**: Memory Operations lifecycle (search/push/curate) and consolidated context pre-flight across 11 catalog workflows (brainstorm, plan, spec, docs, end, open, qa, retro, verify, logs, learn).
+
 
 ## [1.8.8] - 2026-05-14
 

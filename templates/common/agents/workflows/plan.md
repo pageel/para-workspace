@@ -28,6 +28,7 @@ Create, review, or update a phased implementation plan for a PARA project.
 | `--project` | Default for `create`. Load project-level `.agents/rules/` and `.agents/skills/` context before planning to ensure governance-aware plan generation |
 | `--phase` | Default for `dev`. Strictly execute the plan phase by phase, verifying task completion before moving to the next phase |
 | `--tdd` | Force strict Test-Driven Development mode. Agent MUST use `detail-plan-tdd.md` template for creation and load `.agents/skills/tdd/SKILL.md` during execution |
+| `--hardened` | Hardened Plan mode. Agent uses `detail-plan-hardened.md` template, runs mandatory Post-Draft Audit Gate (logic, security, governance), classifies tasks for selective TDD injection, and presents audit results before activation |
 
 ---
 
@@ -75,7 +76,7 @@ If the `--graph` flag is provided, execute an INTERACTIVE Graph Preparation Phas
      - `detail-plan-tdd.md`: Strongly suggest if the changes involve heavy logic, complex impact radius, or core mechanics.
      - `detail-plan.md`: Suggest for standard UI, configuration, or simple features.
      - `detail-plan-docs.md`: Suggest if the changes are purely documentation.
-5. **Wait for User:** ONLY AFTER the user confirms the context is sufficient and selects a template, proceed to Step 1 to generate the plan file.
+5. ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here. ONLY AFTER the user confirms the context is sufficient and explicitly selects a template, Agent may proceed to Step 1 to generate the plan file. Do NOT auto-generate the plan without user consent.
 
 #### 1. Read Project Contract
 
@@ -249,12 +250,15 @@ From platform-injected KI summaries, cross-reference with plan scope:
 
 1. 🗺️ Roadmap — Phases + timeline overview (multi-version/feature index)
 2. 📋 Detail Plan — Tasks + implementation details (1 version/feature)
+3. 📋 Detail Plan (Hardened) — Detail Plan + Mandatory Audit + Selective TDD
 
 Context:
   📄 Strategy: [exists: N files / none]
   🗺️ Roadmap: [exists: X phases, Y done / none]
   📋 Detail Plans: [N active, M archived]
 ```
+
+> ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here and ask the user which plan type to create. Do NOT guess or proceed to generating the plan until the user responds.
 
 **If roadmap exists → smart suggest:**
 
@@ -447,14 +451,64 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 4. **D. Run Plan Review Protocols:** Explicitly analyze checklist dependencies from governance files (e.g. `maintenance.md`).
 5. **E. Re-read Plan References:** Re-read the brainstorm files loaded in Step 2.5 to ensure the plan structure doesn't contradict past brainstorm decisions.
 
+#### 9.6. Propose Draft Plan
+
+**Protocol:**
+1. **Present:** Agent presents the draft plan summary of the newly created plan to the User for review (including phases, timeline, and newly created/modified target files). At this point, the `Post-Draft Audit Gate` checklist in the file remains empty (`⬜` and `PENDING`).
+2. **Propose Preliminary Approval:** Ask the User for initial layout approval.
+   ```
+   📐 DRAFT PLAN READY: [plan-name]
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Status: 📝 Draft (Unaudited)
+   Phases: [N] | Tasks: [N] | File: [path]
+
+   ❓ Do you approve the preliminary layout of this draft plan so I can run the Review Audit?
+      Y → Preliminary approval granted, run Review Audit (Step 9.7)
+      N → Refine the draft based on feedback
+   ```
+3. **Response:** Only proceed to Step 9.7 if User confirms (Y). If the User provides feedback, modify the draft plan and present again.
+
+#### 9.7. Post-Draft Audit Gate
+
+**Purpose:** Force a comprehensive quality audit of the preliminary approved draft plan before activation.
+
+**Protocol:**
+
+1. **RELOAD:** Reload ALL project rules + skills (full scan):
+   ```bash
+   # Full project governance reload
+   cat Projects/[project-name]/.agents/rules.md 2>/dev/null
+   cat Projects/[project-name]/.agents/skills.md 2>/dev/null
+   # Read EVERY rule and skill file listed (not just triggered)
+   ```
+   Focus areas: `maintenance.md`, release checklists, version sync rules.
+
+2. **AUDIT:** Perform an independent quality review of the plan across 5 dimensions:
+   - **Logic:** Phase sequence makes sense? No circular dependencies?
+   - **Security:** Security controls in place? No hardcoded or leaked tokens?
+   - **Governance:** Project maintenance rules satisfied? Version sync points covered?
+   - **Completeness:** All target files to be created/modified are accounted for?
+   - **Risk Coverage:** High risks mapped to corresponding Harness Guards?
+
+3. **CLASSIFY & INJECT (TDD):** Classify each task in the plan:
+   - 🧪 **TDD:** Complex logic changes, algorithms, API endpoints. Inject Red-Green-Refactor cycles and load `.agents/skills/tdd/SKILL.md`.
+   - 📝 **Standard:** UI tweaks, documentation, version bumps, changelog. Keep standard task format.
+
+4. **UPDATE FILE:** Write the audit results directly to the plan file. If the template used does not contain the audit section (e.g. standard `detail-plan.md` or `roadmap.md`), the Agent MUST append the `## Post-Draft Audit Gate` section and the `## TDD Task Classification` table at the bottom of the plan file.
+   - Update checklist statuses in the `## Post-Draft Audit Gate` table from `⬜` to `✅ Passed`.
+   - Update the `## TDD Task Classification` table.
+   - Set `Audit Result` from `PENDING` to `PASSED` and increment the review counter by 1.
+
+5. **Report:** Present the detailed audit report to the User and proceed to Step 10 for activation.
+
 #### 10. Ask to Activate Plan
 
 Present the plan summary and ask the user:
 
 ```
-📐 PLAN READY: [plan-name]
+📐 AUDITED PLAN READY: [plan-name]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Status: 📝 Draft (not yet executable)
+Status: 📝 Draft (Audited & Verified)
 Phases: [N] | Timeline: [N] days | Tasks: [N]
 File:   artifacts/plans/[plan-name].md
 

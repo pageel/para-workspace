@@ -1,0 +1,2583 @@
+<!DOCTYPE html>
+<html lang="/* WORKSPACE_LANG */">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>/* TRANSLATE:title */</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+    
+    <!-- Third-Party Licenses:
+         - Google Fonts (Inter, Outfit, Roboto): SIL Open Font License 1.1 / Apache 2.0
+         - Lucide Icons (lucide.dev): ISC License (MIT compatible)
+         - Marked.js (markedjs.github.io): MIT License
+         - Mermaid.js (mermaid.js.org): MIT License
+    -->
+    <!-- Google Fonts: Outfit, Inter, Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Mermaid.js for diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    
+    <!-- Lucide Icons (ISC/MIT) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            /* Minimalist Light Theme colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #fbfbfa; /* Light sidebar color */
+            --text-primary: #37352f;  /* Core text color */
+            --text-secondary: #7c7b77; /* Muted text */
+            --border-color: #efefe8;   /* Border color */
+            --accent-color: #2383e2;   /* Blue link color */
+            --accent-hover: #1263ad;
+            --sidebar-width: 280px;
+            --right-sidebar-width: 240px;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji";
+            --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
+            --code-bg: #f7f6f3;        /* Inline code/block bg */
+            --header-height: 56px;     /* Fixed unified header height */
+        }
+
+        [data-theme="dark"] {
+            /* Minimalist Dark Theme colors */
+            --bg-primary: #191919;
+            --bg-secondary: #202020;
+            --text-primary: #e3e3e2;
+            --text-secondary: #9b9a97;
+            --border-color: #2e2e2e;
+            --accent-color: #2eaadc;
+            --accent-hover: #1b85af;
+            --code-bg: #252525;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            user-select: auto;
+        }
+
+        /* Left Sidebar: Doc Tree Navigation */
+        aside.left-sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            flex-shrink: 0;
+            transition: width 0.2s ease, border-right-color 0.2s ease;
+        }
+
+        aside.left-sidebar.collapsed {
+            width: 0 !important;
+            border-right-color: transparent;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            height: var(--header-height);
+            padding: 0 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header i {
+            font-size: 18px;
+            color: var(--accent-color);
+        }
+
+        .sidebar-header h1 {
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+
+        .sidebar-menu {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 14px 10px;
+            white-space: nowrap;
+        }
+
+        .menu-title {
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            padding-left: 8px;
+        }
+
+        /* Folder Tree Styling (Clean) */
+        .tree-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tree-item {
+            margin-bottom: 1px;
+        }
+
+        .tree-folder {
+            margin-bottom: 2px;
+        }
+
+        .folder-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 8px;
+            border-radius: 5px;
+            color: var(--text-primary);
+            font-size: 13.5px;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .folder-toggle:hover {
+            background-color: rgba(55, 53, 47, 0.04);
+        }
+        [data-theme="dark"] .folder-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.055);
+        }
+
+        .folder-toggle .chevron-icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 10px;
+            height: 10px;
+        }
+
+        .folder-toggle .chevron-icon-container svg {
+            width: 10px;
+            height: 10px;
+            color: var(--text-secondary);
+        }
+
+        .folder-toggle svg.lucide-folder {
+            color: #f59e0b; /* Warm folder yellow */
+            fill: #f59e0b;
+            fill-opacity: 0.15;
+            width: 14px;
+            height: 14px;
+        }
+
+        .menu-link svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+        .folder-content {
+            list-style: none;
+            padding-left: 12px;
+            margin-left: 12px;
+            margin-top: 1px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 8px;
+            border-radius: 5px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 400;
+            cursor: pointer;
+            word-break: break-all;
+        }
+
+        .menu-link:hover, .menu-link.active {
+            background-color: rgba(55, 53, 47, 0.04);
+            color: var(--text-primary);
+        }
+        [data-theme="dark"] .menu-link:hover, [data-theme="dark"] .menu-link.active {
+            background-color: rgba(255, 255, 255, 0.055);
+        }
+
+        .menu-link.active {
+            font-weight: 600;
+            background-color: rgba(55, 53, 47, 0.06) !important;
+        }
+        [data-theme="dark"] .menu-link.active {
+            background-color: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        /* Resizable Divider Bars */
+        .resizer {
+            width: 4px;
+            background-color: transparent;
+            cursor: col-resize;
+            position: relative;
+            z-index: 100;
+            flex-shrink: 0;
+            height: 100%;
+        }
+
+        .resizer:hover, .resizer.resizing {
+            background-color: var(--accent-color);
+        }
+
+        .resizer.collapsed {
+            display: none !important;
+        }
+
+        /* Right Sidebar: Table of Contents & Info */
+        aside.right-sidebar {
+            width: var(--right-sidebar-width);
+            background-color: transparent;
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            flex-shrink: 0;
+            transition: width 0.2s ease, border-left-color 0.2s ease;
+        }
+
+        aside.right-sidebar.collapsed {
+            width: 0 !important;
+            border-left-color: transparent;
+            overflow: hidden;
+        }
+
+        .right-header {
+            height: var(--header-height);
+            padding: 0 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .right-sidebar-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .right-sidebar-info {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .right-sidebar-info .doc-title {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.4;
+            color: var(--text-primary);
+            word-break: break-word;
+        }
+
+        .right-sidebar-info .doc-source-link {
+            font-size: 10.5px;
+            color: var(--text-secondary);
+            font-family: monospace;
+            background-color: var(--code-bg);
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            word-break: break-all;
+            line-height: 1.35;
+        }
+
+        .right-sidebar-info .doc-source-link:hover {
+            color: var(--accent-color);
+        }
+
+        aside.right-sidebar .menu-list {
+            list-style: none;
+        }
+
+        aside.right-sidebar .menu-link {
+            padding: 3px 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            border-radius: 3px;
+        }
+
+        aside.right-sidebar .menu-link:hover {
+            color: var(--text-primary);
+            background-color: transparent;
+        }
+
+        @media (max-width: 1200px) {
+            aside.right-sidebar {
+                display: none !important;
+            }
+            #right-resizer {
+                display: none !important;
+            }
+        }
+
+        /* Main Content Layout */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-primary);
+        }
+
+        header {
+            background-color: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            height: var(--header-height);
+            flex-shrink: 0;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 24px;
+            min-width: 0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        /* Header Control Panel (Standardized size) */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .customizer-select {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            padding: 6px 10px;
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            height: 32px;
+        }
+
+        .customizer-select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .btn-action {
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 32px;
+        }
+
+        .btn-action i {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .btn-action:hover {
+            background-color: rgba(55, 53, 47, 0.04);
+            border-color: var(--border-color);
+        }
+        [data-theme="dark"] .btn-action:hover {
+            background-color: rgba(255, 255, 255, 0.055);
+        }
+
+        .btn-action:hover i {
+            color: var(--text-primary);
+        }
+
+        .content-wrapper {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .markdown-body {
+            width: 100%;
+            max-width: 720px; /* Customizable dynamically */
+            line-height: 1.65;
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+
+        .markdown-body > *:first-child {
+            margin-top: 0 !important;
+        }
+
+        .markdown-body > *:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        /* Typography Presets */
+        .font-preset-inter, .font-preset-inter h1, .font-preset-inter h2, .font-preset-inter h3 { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important; }
+        .font-preset-outfit, .font-preset-outfit h1, .font-preset-outfit h2, .font-preset-outfit h3 { font-family: 'Outfit', sans-serif !important; }
+        .font-preset-roboto, .font-preset-roboto h1, .font-preset-roboto h2, .font-preset-roboto h3 { font-family: 'Roboto', sans-serif !important; }
+        .font-preset-georgia, .font-preset-georgia h1, .font-preset-georgia h2, .font-preset-georgia h3 { font-family: 'Georgia', serif !important; }
+
+        /* Minimalist Heading Styles */
+        .markdown-body h1 {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-top: 40px;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            position: relative;
+        }
+
+        .markdown-body h2 {
+            font-size: 1.55em;
+            font-weight: 600;
+            margin-top: 28px;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+            position: relative;
+        }
+
+        .markdown-body h3 {
+            font-size: 1.25em;
+            font-weight: 600;
+            margin-top: 22px;
+            margin-bottom: 4px;
+            position: relative;
+        }
+
+        /* Agent Chat Anchor Trigger */
+        .agent-edit-anchor {
+            position: absolute;
+            left: -32px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.15s;
+            cursor: pointer;
+            color: var(--text-secondary);
+            border-radius: 4px;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+        }
+
+        .markdown-body h1:hover .agent-edit-anchor,
+        .markdown-body h2:hover .agent-edit-anchor,
+        .markdown-body h3:hover .agent-edit-anchor {
+            opacity: 1;
+        }
+
+        .agent-edit-anchor:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+            color: var(--text-primary);
+        }
+        [data-theme="dark"] .agent-edit-anchor:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .markdown-body p {
+            margin-bottom: 12px;
+        }
+
+        /* Minimalist Callout Box Styles */
+        .clean-callout {
+            display: flex;
+            gap: 14px;
+            padding: 16px 18px;
+            border-radius: 4px;
+            margin-bottom: 18px;
+            font-size: 14.5px;
+            align-items: flex-start;
+        }
+
+        .clean-callout .callout-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .clean-callout .callout-content {
+            flex-grow: 1;
+        }
+
+        /* Pastel Callout themes */
+        .clean-callout.alert-note { background-color: #ebf5fe; color: #1e3a8a; }
+        [data-theme="dark"] .clean-callout.alert-note { background-color: rgba(35, 131, 226, 0.15); color: #93c5fd; }
+        
+        .clean-callout.alert-tip { background-color: #eefdf5; color: #064e3b; }
+        [data-theme="dark"] .clean-callout.alert-tip { background-color: rgba(46, 170, 220, 0.15); color: #a7f3d0; }
+        
+        .clean-callout.alert-important { background-color: #f5f3ff; color: #4c1d95; }
+        [data-theme="dark"] .clean-callout.alert-important { background-color: rgba(139, 92, 246, 0.15); color: #c084fc; }
+        
+        .clean-callout.alert-warning { background-color: #fffbeb; color: #78350f; }
+        [data-theme="dark"] .clean-callout.alert-warning { background-color: rgba(245, 158, 11, 0.15); color: #fde047; }
+        
+        .clean-callout.alert-caution { background-color: #fef2f2; color: #7f1d1d; }
+        [data-theme="dark"] .clean-callout.alert-caution { background-color: rgba(239, 68, 68, 0.15); color: #fca5a5; }
+
+        /* Clean Code Block Styles */
+        .markdown-body pre {
+            background-color: var(--code-bg);
+            padding: 16px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin-bottom: 16px;
+            border: none;
+        }
+
+        .markdown-body code {
+            font-family: monospace;
+            background-color: var(--code-bg);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            color: #eb5757;
+        }
+        [data-theme="dark"] .markdown-body code {
+            color: #ff7373;
+        }
+
+        .markdown-body pre code {
+            padding: 0;
+            background: none;
+            font-size: 0.85em;
+            color: inherit;
+        }
+
+        .markdown-body ul, .markdown-body ol {
+            margin-bottom: 16px;
+            padding-left: 20px;
+        }
+
+        .markdown-body li {
+            margin-bottom: 6px;
+        }
+
+        /* Minimalist Table Styles (Clean vertical layout) */
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 14.5px;
+        }
+
+        .markdown-body th, .markdown-body td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .markdown-body th {
+            color: var(--text-secondary);
+            font-weight: 500;
+            background-color: transparent;
+        }
+
+        /* Minimalist Modal Popup Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-body textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 14px;
+            resize: none;
+        }
+
+        .modal-body textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-submit {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Inline Selection Feedback Popup & Toast */
+        #inline-feedback-popup {
+            display: none;
+            position: absolute;
+            z-index: 1000;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            padding: 6px 10px;
+            align-items: center;
+            gap: 6px;
+            animation: popup-fade-in 0.15s ease-out;
+        }
+
+        #inline-feedback-popup input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: var(--font-sans);
+            font-size: 13px;
+            color: var(--text-primary);
+            width: 250px;
+        }
+
+        #inline-feedback-popup button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-size: 12px;
+            padding: 6px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: background 0.15s, color 0.15s;
+            font-family: var(--font-sans);
+        }
+
+        #inline-feedback-popup button:hover {
+            background-color: var(--hover-color);
+            color: var(--accent-color);
+        }
+
+        #inline-feedback-popup #inline-feedback-copy-btn {
+            color: var(--accent-color);
+        }
+
+        #toast-notification {
+            display: none;
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 10001;
+            background-color: #2e7d32;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 500;
+            align-items: center;
+            gap: 8px;
+            animation: toast-fade-in 0.2s ease;
+        }
+
+        @keyframes popup-fade-in {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes toast-fade-in {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Copy Code block button styling */
+        pre {
+            position: relative;
+        }
+        .copy-code-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            color: #a0aec0;
+            padding: 4px 6px;
+            font-size: 11px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.15s, background 0.15s, color 0.15s;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        pre:hover .copy-code-btn {
+            opacity: 1;
+        }
+        .copy-code-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+        .copy-code-btn.copied {
+            background: #2e7d32;
+            color: #fff;
+            border-color: #388e3c;
+        }
+
+        /* Breadcrumbs navigation styling */
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            font-family: var(--font-sans);
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .breadcrumbs .folder {
+            color: var(--text-secondary);
+        }
+        .breadcrumbs .separator {
+            color: var(--border-color);
+            font-size: 9px;
+            display: flex;
+            align-items: center;
+        }
+        .breadcrumbs .current {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Sidebar search and filter container */
+        .sidebar-search-container {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+        /* Search dropdown styles */
+        /* Search Modal Styles */
+        .search-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 80px 20px;
+        }
+        .search-modal-container {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            max-height: 80vh;
+            animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.97) translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .search-modal-header {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            gap: 12px;
+            background: var(--bg-primary);
+        }
+        .search-modal-header i.search-modal-icon {
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+        .search-modal-header input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 15.5px;
+            color: var(--text-primary);
+            font-weight: 500;
+            padding: 4px 0;
+        }
+        .search-modal-header input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+        .search-modal-close-btn {
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 16px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.15s, color 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .search-modal-close-btn:hover {
+            background: var(--hover-color);
+            color: var(--text-primary);
+        }
+        .search-modal-results {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            background: var(--bg-primary);
+            max-height: 450px;
+        }
+        .search-modal-results::-webkit-scrollbar {
+            width: 8px;
+        }
+        .search-modal-results::-webkit-scrollbar-thumb {
+            background-color: var(--border-color);
+            border-radius: 4px;
+        }
+        .search-modal-placeholder {
+            padding: 48px 24px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13.5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        .search-modal-placeholder i {
+            font-size: 24px;
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+        .search-modal-item {
+            display: flex;
+            flex-direction: column;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            text-decoration: none;
+            transition: all 0.15s ease;
+            border-left: 4px solid transparent;
+            background: transparent;
+            cursor: pointer;
+        }
+        .search-modal-item:last-child {
+            margin-bottom: 0;
+        }
+        .search-modal-item:hover, .search-modal-item.selected {
+            background: var(--hover-color);
+            border-left-color: var(--accent-color);
+            text-decoration: none;
+        }
+        .search-modal-item-title {
+            font-size: 14.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .search-modal-item-title i {
+            font-size: 12px;
+            color: var(--accent-color);
+        }
+        .search-modal-item-path {
+            font-size: 11px;
+            color: var(--accent-color);
+            font-family: var(--font-mono, monospace);
+            font-weight: 500;
+            margin-top: 2px;
+            opacity: 0.9;
+        }
+        .search-modal-item-snippet {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-top: 6px;
+        }
+        .search-modal-item-snippet mark {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--text-primary);
+            padding: 0 3px;
+            border-radius: 3px;
+            font-weight: 600;
+            border-bottom: 1.5px solid rgba(245, 158, 11, 0.5);
+        }
+        .search-modal-item.selected .search-modal-item-title {
+            color: var(--accent-color);
+        }
+        .search-modal-item.selected .search-modal-item-snippet {
+            color: var(--text-primary);
+        }
+        .search-modal-no-results {
+            padding: 48px 24px;
+            text-align: center;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+        }
+        .search-modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            border-top: 1px solid var(--border-color);
+            background: var(--hover-color);
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        .search-modal-tips {
+            display: flex;
+            gap: 16px;
+        }
+        .search-modal-tips span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .search-modal-tips kbd {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 1px 5px;
+            font-size: 10px;
+            font-family: inherit;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+        }
+        
+        /* Top bar Header search trigger button */
+        .search-trigger-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            font-weight: 500;
+            font-size: 13px;
+            background: var(--hover-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            height: 32px;
+            box-sizing: border-box;
+        }
+        .search-trigger-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--accent-color);
+            background: var(--bg-primary);
+        }
+        .search-trigger-btn kbd {
+            font-family: var(--font-sans);
+            font-size: 9px;
+            padding: 1px 4px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            background: var(--bg-secondary);
+            opacity: 0.8;
+            margin-left: 4px;
+        }
+        .sidebar-search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--hover-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 10px;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            cursor: pointer;
+        }
+        .sidebar-search-box input {
+            cursor: pointer;
+        }
+        .sidebar-search-box:focus-within {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px var(--focus-ring);
+        }
+        .sidebar-search-box i {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-right: 8px;
+        }
+        .sidebar-search-box input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: var(--font-sans);
+            font-size: 12.5px;
+            color: var(--text-primary);
+            width: 100%;
+            padding: 0;
+        }
+        .search-shortcut {
+            font-family: var(--font-sans);
+            font-size: 9px;
+            color: var(--text-secondary);
+            background: var(--border-color);
+            padding: 2px 5px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            margin-left: 6px;
+            pointer-events: none;
+            white-space: nowrap;
+            opacity: 0.8;
+            font-weight: 500;
+        }
+
+        .docs-footer {
+            margin-top: 40px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11.5px;
+            color: var(--text-secondary);
+            opacity: 0.75;
+            transition: opacity 0.2s;
+        }
+
+        .docs-footer:hover {
+            opacity: 1;
+        }
+
+        .docs-footer span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer-divider {
+            color: var(--border-color);
+        }
+
+        .footer-spacer {
+            height: 80px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Search Modal Overlay -->
+    <div id="search-modal" class="search-modal-overlay" style="display: none;">
+        <div class="search-modal-container">
+            <div class="search-modal-header">
+                <i data-lucide="search" class="search-modal-icon"></i>
+                <input type="text" id="modal-search-input" placeholder="/* TRANSLATE:searchPlaceholder */... (↑↓ to select, Esc to close)" autocomplete="off">
+                <div class="search-modal-close-btn" id="search-modal-close-btn">
+                    <i data-lucide="x"></i>
+                </div>
+            </div>
+            <div id="modal-search-results" class="search-modal-results">
+                <div class="search-modal-placeholder">
+                    <i data-lucide="search"></i>
+                    <span>Nhập từ khoá để tìm kiếm trong tiêu đề và nội dung tài liệu...</span>
+                </div>
+            </div>
+            <div class="search-modal-footer">
+                <div class="search-modal-tips">
+                    <span><kbd>↑↓</kbd> Di chuyển</span>
+                    <span><kbd>Enter</kbd> Chọn</span>
+                    <span><kbd>Esc</kbd> Đóng</span>
+                </div>
+                <div class="search-modal-meta">
+                    PARA Search Engine
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Left Sidebar: Doc Tree Navigation -->
+    <aside class="left-sidebar" id="left-sidebar">
+        <div class="sidebar-header">
+            <i data-lucide="book-marked"></i>
+            <h1>/* TRANSLATE:title */</h1>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-title">/* TRANSLATE:treeTitle */</div>
+            <ul class="tree-list" id="docs-list">
+                <!-- DOCS_LIST_PLACEHOLDER -->
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Draggable Divider for Left Sidebar -->
+    <div class="resizer" id="left-resizer"></div>
+
+    <!-- Main Content Area -->
+    <main>
+        <header>
+            <div class="header-top">
+                <div class="header-left">
+                    <button class="btn-action" id="burger-btn" onclick="toggleSidebar()" title="Toggle Sidebar">
+                        <i data-lucide="menu" style="color: var(--text-primary);"></i>
+                    </button>
+                    <a href="/* README_RELATIVE_URL */" class="btn-action" id="readme-home-btn" title="/* TRANSLATE:readmeHomeTitle */" style="text-decoration: none;">
+                        <i data-lucide="home"></i>
+                    </a>
+                    <button class="search-trigger-btn" id="header-search-trigger" title="Tìm kiếm tài liệu (Ctrl+K)">
+                        <i data-lucide="search"></i>
+                        <span>/* TRANSLATE:searchBtnLabel */</span>
+                        <kbd>Ctrl K</kbd>
+                    </button>
+                </div>
+                <div class="header-actions">
+                    <!-- Typography adjustments -->
+                    <select class="customizer-select" id="font-select" onchange="changeFont(this.value)">
+                        <option value="inter">/* TRANSLATE:fontSelectInter */</option>
+                        <option value="outfit">/* TRANSLATE:fontSelectOutfit */</option>
+                        <option value="roboto">/* TRANSLATE:fontSelectRoboto */</option>
+                        <option value="georgia">/* TRANSLATE:fontSelectGeorgia */</option>
+                    </select>
+
+                    <button class="btn-action" onclick="changeFontSize(-1)"><i data-lucide="minus"></i></button>
+                    <span id="font-size-indicator" style="font-size: 12.5px; font-weight: 600; width: 34px; text-align: center;">16px</span>
+                    <button class="btn-action" onclick="changeFontSize(1)"><i data-lucide="plus"></i></button>
+
+                    <span style="border-left: 1px solid var(--border-color); height: 20px; margin: 0 2px;"></span>
+                    
+                    <!-- Page margins width control -->
+                    <button class="btn-action" onclick="changePageWidth(-50)"><i data-lucide="minimize-2"></i></button>
+                    <span id="width-indicator" style="font-size: 12.5px; font-weight: 600; width: 38px; text-align: center;">720px</span>
+                    <button class="btn-action" onclick="changePageWidth(50)"><i data-lucide="maximize-2"></i></button>
+
+                    <button class="btn-action" onclick="toggleTheme()"><i data-lucide="contrast"></i> /* TRANSLATE:themeBtn */</button>
+                    <button class="btn-action" onclick="toggleRightSidebar()" title="/* TRANSLATE:tocToggleTitle */"><i data-lucide="list"></i></button>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <div id="content-container" style="width: 100%; max-width: 720px; display: flex; flex-direction: column; margin: 0 auto;">
+                <div class="breadcrumbs" id="breadcrumbs-container"></div>
+                <article class="markdown-body font-preset-inter" id="content" style="width: 100%; max-width: 100%;">
+                    <!-- Markdown parsed structure will be injected here -->
+                </article>
+                <footer class="docs-footer">
+                    <span><i data-lucide="clock"></i> /* TRANSLATE:footerRendered */ /* RENDER_TIME */</span>
+                    <span class="footer-divider">|</span>
+                    <span><i data-lucide="network"></i> Kernel v/* KERNEL_VERSION */</span>
+                </footer>
+                <div class="footer-spacer"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Draggable Divider for Right Sidebar -->
+    <div class="resizer" id="right-resizer"></div>
+
+    <!-- Right Sidebar: Table of Contents & Info -->
+    <aside class="right-sidebar" id="right-sidebar">
+        <!-- Unified Header Height Container for Right Sidebar Title -->
+        <div class="right-header">
+            /* TRANSLATE:tocTitle */
+        </div>
+        
+        <div class="right-sidebar-content">
+            <!-- Title & Source here for better layout spacing -->
+            <div class="right-sidebar-info">
+                <div class="doc-title" id="current-doc-name">/* CURRENT_DOC_NAME */</div>
+                <a class="doc-source-link" id="current-doc-source" href="file:///* SOURCE_MD_ABS_PATH *" onclick="openFolderInSystem(event, '/* SOURCE_MD_ABS_PATH */')" title="/* TRANSLATE:sourceTitle */">
+                    <i data-lucide="folder-open"></i> /* SOURCE_MD_PATH */
+                </a>
+            </div>
+            
+            <ul class="menu-list" id="toc-list" style="font-size: 13px;">
+                <!-- Dynamically extracted from Markdown headers -->
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Modal Popup for Agent Edit Comments -->
+    <div class="modal" id="agent-feedback-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>/* TRANSLATE:modalTitle */</h3>
+                <button class="modal-close" onclick="closeFeedbackModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;" id="feedback-context">/* TRANSLATE:modalTarget */ Document Body</p>
+                <textarea id="feedback-text" placeholder="/* TRANSLATE:modalPlaceholder */"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-action" onclick="closeFeedbackModal()">/* TRANSLATE:modalCancel */</button>
+                <button class="btn-submit" onclick="submitFeedback()">/* TRANSLATE:modalSubmit */</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inline Feedback Tooltip Popup -->
+    <div id="inline-feedback-popup">
+        <!-- Mode 1: Action Menu (Comment or Copy Text) -->
+        <div id="inline-action-menu" style="display: flex; gap: 4px; align-items: center;">
+            <button onclick="switchToInlineComment(event)" title="/* TRANSLATE:chatBtn */" style="display: flex; align-items: center; gap: 4px;">
+                <i data-lucide="message-square" style="color: var(--accent-color);"></i> /* TRANSLATE:inlineCommentBtn */
+            </button>
+            <span style="border-left: 1px solid var(--border-color); height: 16px; margin: 0 4px;"></span>
+            <button onclick="copyRawSelectionText(event)" title="Copy text" style="display: flex; align-items: center; gap: 4px;">
+                <i data-lucide="copy"></i> /* TRANSLATE:inlineCopyBtn */
+            </button>
+        </div>
+        <!-- Mode 2: Comment Input Form -->
+        <div id="inline-comment-form" style="display: none; align-items: center; gap: 6px; width: 100%;">
+            <input type="text" id="inline-feedback-input" placeholder="/* TRANSLATE:inlinePlaceholder */">
+            <button id="inline-feedback-copy-btn" onclick="submitInlineFeedback()" title="/* TRANSLATE:modalSubmit */">
+                <i data-lucide="copy"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast-notification">
+        <i data-lucide="check-circle"></i> <span id="toast-message">Copied!</span>
+    </div>
+
+    <!-- Search Index JS Data Source -->
+    <script src="/* SEARCH_INDEX_RELATIVE_URL */" defer></script>
+
+    <script>
+        // Embed parsed Markdown content variables statically
+        const embeddedMarkdown = `/* MARKDOWN_CONTENT_PLACEHOLDER */`;
+        const currentDocFile = `/* SOURCE_MD_PATH */`;
+        const currentDocAbsPath = `/* SOURCE_MD_ABS_PATH */`;
+
+        // Initialize Mermaid diagrams
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'default',
+            securityLevel: 'loose'
+        });
+
+        // Toggle themes
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            mermaid.initialize({ theme: 'dark' });
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            mermaid.initialize({ theme: 'light' });
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            location.reload(); 
+        }
+
+        // Apply customized Font and Width settings
+        let currentFontSize = parseInt(localStorage.getItem('doc-font-size')) || 16;
+        let currentFontFamily = localStorage.getItem('doc-font-family') || 'inter';
+        let currentPageWidth = localStorage.getItem('doc-page-width') || '720px';
+
+        function applyTypography() {
+            const container = document.getElementById('content-container');
+            const content = document.getElementById('content');
+            content.className = 'markdown-body';
+            
+            // Map preset names to font family values for global root style updates
+            const fontMap = {
+                'inter': '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+                'outfit': "'Outfit', sans-serif",
+                'roboto': "'Roboto', sans-serif",
+                'georgia': "'Georgia', serif"
+            };
+            const fontValue = fontMap[currentFontFamily] || fontMap['inter'];
+            document.documentElement.style.setProperty('--font-sans', fontValue);
+
+            // Remove existing font presets from body to prevent conflicts
+            document.body.className = document.body.className
+                .replace(/\bfont-preset-\S+/g, '')
+                .trim();
+            document.body.classList.add('font-preset-' + currentFontFamily);
+            
+            content.style.fontSize = currentFontSize + 'px';
+            
+            // Apply page width constraints and map to uniform padding (top/bottom/left/right)
+            const wrapper = document.querySelector('.content-wrapper');
+            let paddingVal = '24px';
+            if (currentPageWidth === 'Full') {
+                if (container) container.style.maxWidth = '100%';
+                paddingVal = '12px'; // minimal padding for full screen
+            } else {
+                if (container) container.style.maxWidth = currentPageWidth;
+                const widthNum = parseInt(currentPageWidth);
+                
+                // Map width setting to uniform padding (600px -> thick padding, 1000px -> thin padding)
+                if (widthNum <= 600) {
+                    paddingVal = '48px';
+                } else if (widthNum <= 720) {
+                    paddingVal = '36px';
+                } else if (widthNum <= 800) {
+                    paddingVal = '28px';
+                } else if (widthNum <= 900) {
+                    paddingVal = '20px';
+                } else {
+                    paddingVal = '12px';
+                }
+            }
+            if (wrapper) {
+                wrapper.style.padding = paddingVal;
+            }
+            
+            document.getElementById('font-select').value = currentFontFamily;
+            document.getElementById('font-size-indicator').textContent = currentFontSize + 'px';
+            document.getElementById('width-indicator').textContent = currentPageWidth;
+        }
+
+        // Apply dynamic font styling
+        function changeFont(fontName) {
+            currentFontFamily = fontName;
+            localStorage.setItem('doc-font-family', fontName);
+            applyTypography();
+        }
+
+        function changeFontSize(direction) {
+            currentFontSize = Math.max(12, Math.min(24, currentFontSize + direction * 1));
+            localStorage.setItem('doc-font-size', currentFontSize);
+            applyTypography();
+        }
+
+        // Handle page width increment/decrement
+        function changePageWidth(delta) {
+            if (currentPageWidth === 'Full') {
+                if (delta < 0) {
+                    currentPageWidth = '1000px';
+                }
+            } else {
+                let currentVal = parseInt(currentPageWidth);
+                let newVal = currentVal + delta;
+                if (newVal >= 600 && newVal <= 1000) {
+                    currentPageWidth = newVal + 'px';
+                } else if (newVal > 1000) {
+                    currentPageWidth = 'Full';
+                }
+            }
+            localStorage.setItem('doc-page-width', currentPageWidth);
+            applyTypography();
+        }
+
+        // Get parent directory of a file path
+        function getParentDirectory(filePath) {
+            const parts = filePath.split('/');
+            parts.pop();
+            return parts.join('/');
+        }
+
+        // Resolve absolute path from relative link against base absolute file path
+        function resolveAbsolutePath(relativeHref, baseAbsPath) {
+            const baseParts = baseAbsPath.split('/');
+            baseParts.pop(); // remove current file name to get dir
+            
+            const relParts = relativeHref.split('/');
+            for (const part of relParts) {
+                if (part === '.' || part === '') {
+                    continue;
+                } else if (part === '..') {
+                    baseParts.pop();
+                } else {
+                    baseParts.push(part);
+                }
+            }
+            return baseParts.join('/');
+        }
+
+        // Trigger OS default viewer open request
+        async function executeOpenSystem(targetPath) {
+            try {
+                const response = await fetch('http://localhost:3000/api/open-file', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ file: targetPath })
+                });
+                if (!response.ok) {
+                    window.location.href = 'file://' + targetPath;
+                }
+            } catch (err) {
+                window.location.href = 'file://' + targetPath;
+            }
+        }
+
+        // Event handler for current-doc-source (opens parent folder)
+        async function openFolderInSystem(event, filePath) {
+            event.preventDefault();
+            const parentDir = getParentDirectory(filePath);
+            await executeOpenSystem(parentDir);
+        }
+
+        // Event handler to open markdown files
+        async function openFileInSystem(filePath) {
+            await executeOpenSystem(filePath);
+        }
+
+        // Sidebar Tree collapse transitions
+        document.querySelectorAll('.folder-toggle').forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                const content = toggle.nextElementSibling;
+                const isOpening = content.style.display === 'none';
+                content.style.display = isOpening ? 'block' : 'none';
+                
+                const container = toggle.querySelector('.chevron-icon-container');
+                if (container) {
+                    container.innerHTML = `<i data-lucide="${isOpening ? 'chevron-down' : 'chevron-right'}"></i>`;
+                    lucide.createIcons();
+                }
+                e.stopPropagation();
+            });
+        });
+
+        // --- Draggable Sidebars Realization ---
+        const leftSidebar = document.getElementById('left-sidebar');
+        const rightSidebar = document.getElementById('right-sidebar');
+        const leftResizer = document.getElementById('left-resizer');
+        const rightResizer = document.getElementById('right-resizer');
+
+        // Apply saved sidebar widths
+        const savedLeftWidth = localStorage.getItem('sidebar-left-width');
+        if (savedLeftWidth) {
+            document.documentElement.style.setProperty('--sidebar-width', savedLeftWidth + 'px');
+        }
+        const savedRightWidth = localStorage.getItem('sidebar-right-width');
+        if (savedRightWidth) {
+            document.documentElement.style.setProperty('--right-sidebar-width', savedRightWidth + 'px');
+            rightSidebar.style.width = savedRightWidth + 'px';
+        }
+
+        // Toggle Left Sidebar (Burger click)
+        if (localStorage.getItem('sidebar-left-collapsed') === 'true') {
+            leftSidebar.classList.add('collapsed');
+            leftResizer.classList.add('collapsed');
+        }
+
+        function toggleSidebar() {
+            leftSidebar.classList.toggle('collapsed');
+            leftResizer.classList.toggle('collapsed');
+            localStorage.setItem('sidebar-left-collapsed', leftSidebar.classList.contains('collapsed'));
+        }
+
+        // Toggle Right Sidebar (TOC click)
+        if (localStorage.getItem('sidebar-right-collapsed') === 'true') {
+            rightSidebar.classList.add('collapsed');
+            rightResizer.classList.add('collapsed');
+        }
+
+        function toggleRightSidebar() {
+            rightSidebar.classList.toggle('collapsed');
+            rightResizer.classList.toggle('collapsed');
+            localStorage.setItem('sidebar-right-collapsed', rightSidebar.classList.contains('collapsed'));
+        }
+
+        // Left Sidebar Dragging
+        leftResizer.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            leftResizer.classList.add('resizing');
+            document.addEventListener('mousemove', resizeLeft);
+            document.addEventListener('mouseup', stopResizeLeft);
+        });
+
+        function resizeLeft(e) {
+            let width = e.clientX;
+            if (width >= 180 && width <= 450) {
+                document.documentElement.style.setProperty('--sidebar-width', width + 'px');
+            }
+        }
+
+        function stopResizeLeft() {
+            leftResizer.classList.remove('resizing');
+            document.removeEventListener('mousemove', resizeLeft);
+            document.removeEventListener('mouseup', stopResizeLeft);
+            
+            const currentWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width'));
+            localStorage.setItem('sidebar-left-width', currentWidth);
+        }
+
+        // Right Sidebar Dragging
+        rightResizer.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            rightResizer.classList.add('resizing');
+            document.addEventListener('mousemove', resizeRight);
+            document.addEventListener('mouseup', stopResizeRight);
+        });
+
+        function resizeRight(e) {
+            let width = window.innerWidth - e.clientX;
+            if (width >= 150 && width <= 400) {
+                document.documentElement.style.setProperty('--right-sidebar-width', width + 'px');
+                rightSidebar.style.width = width + 'px';
+            }
+        }
+
+        function stopResizeRight() {
+            rightResizer.classList.remove('resizing');
+            document.removeEventListener('mousemove', resizeRight);
+            document.removeEventListener('mouseup', stopResizeRight);
+            
+            const currentWidth = parseInt(getComputedStyle(rightSidebar).width);
+            localStorage.setItem('sidebar-right-width', currentWidth);
+        }
+
+        // Submit comment feedback to local Watcher Server API and copy prompt to Clipboard
+        let feedbackContextSection = 'Document Body';
+        let feedbackSelectedText = '';
+
+        function openFeedbackModal(sectionName) {
+            feedbackContextSection = sectionName;
+            // Capture active text selection before modal steals focus
+            feedbackSelectedText = window.getSelection().toString().trim();
+            
+            document.getElementById('feedback-context').textContent = `/* TRANSLATE:modalTarget */ ${sectionName}`;
+            document.getElementById('feedback-text').value = '';
+            document.getElementById('agent-feedback-modal').style.display = 'flex';
+        }
+
+        function closeFeedbackModal() {
+            document.getElementById('agent-feedback-modal').style.display = 'none';
+        }
+
+        // Helper to find exact lines of selection text in raw Markdown
+        function getSelectedLines(selectedText) {
+            if (!selectedText) return null;
+            
+            // Normalize text: lowercase, remove basic markdown syntax, emojis and collapse whitespace
+            function normalizeText(text) {
+                if (!text) return '';
+                return text
+                    .toLowerCase()
+                    .replace(/[\*\_\`\#\[\]\(\)\-\+\>\!]/g, ' ')
+                    .replace(/[\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD00-\uDFFF]/g, '')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+
+            const normalizedQuery = normalizeText(selectedText);
+            if (!normalizedQuery) return null;
+
+            const lines = embeddedMarkdown.split('\n');
+            const normalizedLines = lines.map(line => normalizeText(line));
+            
+            // Case 1: Simple single-line match
+            for (let i = 0; i < normalizedLines.length; i++) {
+                if (normalizedLines[i] && normalizedLines[i].includes(normalizedQuery)) {
+                    return `L${i + 1}`;
+                }
+            }
+            
+            // Case 2: Multi-line match by matching first and last words of selection
+            const queryWords = normalizedQuery.split(' ');
+            if (queryWords.length >= 2) {
+                const firstWords = queryWords.slice(0, Math.min(4, queryWords.length)).join(' ');
+                const lastWords = queryWords.slice(Math.max(0, queryWords.length - 4)).join(' ');
+                
+                let startLineIdx = -1;
+                let endLineIdx = -1;
+                
+                for (let i = 0; i < normalizedLines.length; i++) {
+                    if (normalizedLines[i] && normalizedLines[i].includes(firstWords)) {
+                        startLineIdx = i;
+                        break;
+                    }
+                }
+                
+                if (startLineIdx !== -1) {
+                    for (let i = startLineIdx; i < normalizedLines.length; i++) {
+                        if (normalizedLines[i] && normalizedLines[i].includes(lastWords)) {
+                            endLineIdx = i;
+                            break;
+                        }
+                    }
+                }
+                
+                if (startLineIdx !== -1 && endLineIdx !== -1) {
+                    const startLine = startLineIdx + 1;
+                    const endLine = endLineIdx + 1;
+                    return startLine === endLine ? `L${startLine}` : `L${startLine}-L${endLine}`;
+                }
+            }
+            
+            // Case 3: Fallback direct index match
+            let index = embeddedMarkdown.indexOf(selectedText);
+            if (index === -1) {
+                const prefix = selectedText.substring(0, Math.min(30, selectedText.length));
+                index = embeddedMarkdown.indexOf(prefix);
+            }
+            
+            if (index !== -1) {
+                const textBefore = embeddedMarkdown.substring(0, index);
+                const startLine = textBefore.split('\n').length;
+                const linesCount = selectedText.split('\n').length;
+                const endLine = startLine + linesCount - 1;
+                
+                return startLine === endLine ? `L${startLine}` : `L${startLine}-L${endLine}`;
+            }
+            return null;
+        }
+
+        // Fallback helper to find start line of the clicked heading section
+        function getSectionLine(sectionTitle) {
+            if (!sectionTitle || sectionTitle === 'Document Body') return null;
+            
+            const lines = embeddedMarkdown.split('\n');
+            const cleanTitle = sectionTitle.trim().toLowerCase();
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (line.startsWith('#')) {
+                    const cleanHeader = line.replace(/^#+\s+/, '').trim().toLowerCase();
+                    if (cleanHeader === cleanTitle || cleanHeader.includes(cleanTitle) || cleanTitle.includes(cleanHeader)) {
+                        return `L${i + 1}`;
+                    }
+                }
+            }
+            return null;
+        }
+
+        async function submitFeedback() {
+            const comment = document.getElementById('feedback-text').value.trim();
+            if (!comment) return;
+
+            const feedbackData = {
+                file: currentDocFile,
+                section: feedbackContextSection,
+                comment: comment,
+                timestamp: new Date().toISOString()
+            };
+
+            let sentToServer = false;
+            try {
+                const response = await fetch('http://localhost:3000/api/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(feedbackData)
+                });
+                if (response.ok) sentToServer = true;
+            } catch (e) {}
+
+            // Determine line numbers from source Markdown
+            let lineSuffix = '';
+            const selectedLines = getSelectedLines(feedbackSelectedText);
+            if (selectedLines) {
+                lineSuffix = `:${selectedLines}`;
+            } else {
+                const sectionLine = getSectionLine(feedbackContextSection);
+                if (sectionLine) {
+                    lineSuffix = `:${sectionLine}`;
+                }
+            }
+
+            // Copied structured prompt templates for Agent
+            const lang = document.documentElement.getAttribute('lang') || 'en';
+            const promptText = lang === 'vi'
+                ? `hãy sửa phần "${feedbackContextSection}": "${comment}"`
+                : `please edit section "${feedbackContextSection}": "${comment}"`;
+            const formattedPrompt = `@[${currentDocAbsPath}${lineSuffix}] ${promptText}`;
+
+            try {
+                await navigator.clipboard.writeText(formattedPrompt);
+                let message = '/* TRANSLATE:alertCopySuccess */';
+                if (sentToServer) {
+                    message += '/* TRANSLATE:alertServerSuccess */';
+                }
+                message += '/* TRANSLATE:alertInstructions */';
+                alert(message);
+            } catch (err) {
+                alert(`/* TRANSLATE:modalSubmit */: "${comment}"\n(/* TRANSLATE:alertManualCopy */)`);
+            }
+
+            closeFeedbackModal();
+        }
+
+        // Notion Callout conversion
+        const calloutTranslations = {
+            note: '/* TRANSLATE:calloutNote */',
+            tip: '/* TRANSLATE:calloutTip */',
+            important: '/* TRANSLATE:calloutImportant */',
+            warning: '/* TRANSLATE:calloutWarning */',
+            caution: '/* TRANSLATE:calloutCaution */'
+        };
+
+        function parseAlertsToCallouts(html) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            
+            const blockquotes = tempDiv.querySelectorAll('blockquote');
+            blockquotes.forEach(bq => {
+                const text = bq.textContent.trim();
+                let type = '';
+                let icon = '';
+                let titleText = '';
+                let label = '';
+                
+                if (text.startsWith('[!NOTE]')) {
+                    type = 'alert-note';
+                    icon = '<i data-lucide="info"></i>';
+                    titleText = '[!NOTE]';
+                    label = calloutTranslations.note;
+                } else if (text.startsWith('[!TIP]')) {
+                    type = 'alert-tip';
+                    icon = '<i data-lucide="lightbulb"></i>';
+                    titleText = '[!TIP]';
+                    label = calloutTranslations.tip;
+                } else if (text.startsWith('[!IMPORTANT]')) {
+                    type = 'alert-important';
+                    icon = '<i data-lucide="alert-circle"></i>';
+                    titleText = '[!IMPORTANT]';
+                    label = calloutTranslations.important;
+                } else if (text.startsWith('[!WARNING]')) {
+                    type = 'alert-warning';
+                    icon = '<i data-lucide="alert-triangle"></i>';
+                    titleText = '[!WARNING]';
+                    label = calloutTranslations.warning;
+                } else if (text.startsWith('[!CAUTION]')) {
+                    type = 'alert-caution';
+                    icon = '<i data-lucide="shield-alert"></i>';
+                    titleText = '[!CAUTION]';
+                    label = calloutTranslations.caution;
+                }
+                
+                if (type) {
+                    const calloutDiv = document.createElement('div');
+                    calloutDiv.className = `clean-callout ${type}`;
+                    
+                    const iconDiv = document.createElement('div');
+                    iconDiv.className = 'callout-icon';
+                    iconDiv.innerHTML = icon;
+                    
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'callout-content';
+                    contentDiv.innerHTML = bq.innerHTML.replace(titleText, `<strong>${label}</strong>`);
+                    
+                    calloutDiv.appendChild(iconDiv);
+                    calloutDiv.appendChild(contentDiv);
+                    bq.replaceWith(calloutDiv);
+                }
+            });
+            return tempDiv.innerHTML;
+        }
+
+        function generateTOC() {
+            const content = document.getElementById('content');
+            const tocList = document.getElementById('toc-list');
+            tocList.innerHTML = '';
+            
+            const headings = content.querySelectorAll('h1, h2, h3');
+            headings.forEach((heading, idx) => {
+                const id = 'heading-' + idx;
+                heading.id = id;
+                
+                const item = document.createElement('li');
+                item.className = 'menu-item';
+                
+                const link = document.createElement('a');
+                link.className = 'menu-link';
+                link.style.paddingLeft = (heading.tagName === 'H1' ? '4px' : heading.tagName === 'H2' ? '14px' : '24px');
+                link.innerHTML = `<i data-lucide="chevron-right" style="width: 8px; height: 8px;"></i> ` + heading.textContent;
+                link.href = '#' + id;
+                
+                item.appendChild(link);
+                tocList.appendChild(item);
+            });
+        }
+
+        async function renderMarkdown() {
+            try {
+                let html = marked.parse(embeddedMarkdown);
+                html = parseAlertsToCallouts(html);
+                
+                const contentDiv = document.getElementById('content');
+                contentDiv.innerHTML = html;
+                
+                // Convert relative Markdown links to point to their compiled HTML files
+                contentDiv.querySelectorAll('a').forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href) {
+                        const isRelative = !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('/') && !href.startsWith('#');
+                        if (isRelative) {
+                            const hashParts = href.split('#');
+                            const queryParts = hashParts[0].split('?');
+                            let pathPart = queryParts[0];
+                            
+                            if (pathPart.endsWith('.md')) {
+                                pathPart = pathPart.substring(0, pathPart.length - 3) + '.html';
+                                queryParts[0] = pathPart;
+                                hashParts[0] = queryParts.join('?');
+                                const newHref = hashParts.join('#');
+                                link.setAttribute('href', newHref);
+                            }
+                        }
+                    }
+                });
+
+                const headings = contentDiv.querySelectorAll('h1, h2, h3');
+                headings.forEach(heading => {
+                    const anchor = document.createElement('a');
+                    anchor.className = 'agent-edit-anchor';
+                    anchor.title = '/* TRANSLATE:chatBtn */';
+                    anchor.innerHTML = '<i data-lucide="message-square"></i>';
+                    anchor.onclick = () => openFeedbackModal(heading.textContent);
+                    heading.prepend(anchor);
+                });
+                
+                const codeBlocks = contentDiv.querySelectorAll('pre code.language-mermaid');
+                for (let i = 0; i < codeBlocks.length; i++) {
+                    const codeBlock = codeBlocks[i];
+                    const preBlock = codeBlock.parentElement;
+                    const code = codeBlock.textContent;
+                    
+                    const div = document.createElement('div');
+                    div.className = 'mermaid';
+                    div.id = 'mermaid-chart-' + i;
+                    div.textContent = code;
+                    
+                    preBlock.replaceWith(div);
+                }
+                
+                if (contentDiv.querySelectorAll('.mermaid').length > 0) {
+                    await mermaid.run();
+                }
+                
+                generateTOC();
+                applyTypography();
+                setupCodeBlockCopyButtons();
+                lucide.createIcons();
+            } catch (err) {
+                document.getElementById('content').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #ef4444;">
+                        <i data-lucide="x-circle" style="width: 48px; height: 48px; margin-bottom: 16px; margin-left: auto; margin-right: auto;"></i>
+                        <h3>/* TRANSLATE:alertError */</h3>
+                        <p style="margin-top: 8px;">${err.message}</p>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+        }
+
+        // Check latest build timestamp on server for live hot-reload
+        let lastBuildTime = null;
+        async function startHotReload() {
+            setInterval(async () => {
+                try {
+                    const response = await fetch('http://localhost:3000/reload-status', { 
+                        cache: 'no-store'
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (lastBuildTime === null) {
+                            lastBuildTime = data.lastBuild;
+                        } else if (data.lastBuild !== lastBuildTime) {
+                            window.location.reload();
+                        }
+                    }
+                } catch (e) {
+                    try {
+                        const response = await fetch(window.location.href, { cache: 'no-store' });
+                        if (response.ok) {
+                            const text = await response.text();
+                            if (window.lastTextLength === undefined) {
+                                window.lastTextLength = text.length;
+                            } else if (text.length !== window.lastTextLength) {
+                                window.location.reload();
+                            }
+                        }
+                    } catch (err) {}
+                }
+            }, 1500);
+        }
+
+        // Toast notification utility
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast-notification');
+            const msgEl = document.getElementById('toast-message');
+            if (!toast || !msgEl) return;
+            msgEl.textContent = message;
+            toast.style.backgroundColor = isError ? '#c62828' : '#2e7d32';
+            toast.style.display = 'flex';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2500);
+        }
+
+        // --- Inline Feedback Selection Logic & Medium-Style Popup ---
+        const inlinePopup = document.getElementById('inline-feedback-popup');
+        const inlineInput = document.getElementById('inline-feedback-input');
+        let inlineSelectedText = '';
+        let inlineTargetSection = 'Document Body';
+
+        // Listen for mouseup inside content wrapper to trigger inline popup
+        const contentWrapper = document.querySelector('.content-wrapper');
+        if (contentWrapper) {
+            contentWrapper.addEventListener('mouseup', function(e) {
+                // Delay slightly to allow selection to register
+                setTimeout(() => {
+                    const selection = window.getSelection();
+                    const selectedText = selection.toString().trim();
+                    
+                    if (selectedText && selectedText.length > 0) {
+                        // Check if selection is inside markdown body
+                        let parent = selection.anchorNode.parentNode;
+                        let isInsideContent = false;
+                        while (parent) {
+                            if (parent.id === 'content') {
+                                isInsideContent = true;
+                                break;
+                            }
+                            parent = parent.parentNode;
+                        }
+                        
+                        if (isInsideContent) {
+                            inlineSelectedText = selectedText;
+                            
+                            // Find current section heading context
+                            inlineTargetSection = findCurrentSectionForNode(selection.anchorNode);
+                            
+                            // Reset popup to Action Menu Mode
+                            document.getElementById('inline-action-menu').style.display = 'flex';
+                            document.getElementById('inline-comment-form').style.display = 'none';
+                            
+                            // Calculate position right above the selection
+                            const range = selection.getRangeAt(0);
+                            const rect = range.getBoundingClientRect();
+                            
+                            // Set popup position (absolute coordinate within page)
+                            const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
+                            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                            
+                            // Width of Action Menu is roughly 200px, center it
+                            inlinePopup.style.left = (rect.left + scrollX + (rect.width / 2) - 100) + 'px';
+                            inlinePopup.style.top = (rect.top + scrollY - 44) + 'px'; // 44px above
+                            inlinePopup.style.display = 'flex';
+                            
+                            e.stopPropagation();
+                            return;
+                        }
+                    }
+                    
+                    // Hide popup if selection is empty and we didn't click inside popup
+                    if (!e.target.closest('#inline-feedback-popup')) {
+                        hideInlinePopup();
+                    }
+                }, 50);
+            });
+        }
+
+        // Switch to inline comment input mode
+        function switchToInlineComment(e) {
+            if (e) e.stopPropagation();
+            document.getElementById('inline-action-menu').style.display = 'none';
+            document.getElementById('inline-comment-form').style.display = 'flex';
+            if (inlineInput) {
+                inlineInput.focus();
+                inlineInput.select();
+                
+                // Reposition a bit wider since input box is 250px + button 30px
+                const currentLeft = parseInt(inlinePopup.style.left || '0', 10);
+                inlinePopup.style.left = (currentLeft - 40) + 'px'; // Shift left to center the wider input
+            }
+        }
+
+        // Copy raw selected text directly to clipboard
+        async function copyRawSelectionText(e) {
+            if (e) e.stopPropagation();
+            if (!inlineSelectedText) return;
+            try {
+                await navigator.clipboard.writeText(inlineSelectedText);
+                showToast('/* TRANSLATE:inlineCopyBtn */ ✓');
+            } catch (err) {
+                showToast('Failed to copy text', true);
+            }
+            hideInlinePopup();
+            window.getSelection().removeAllRanges();
+        }
+
+        // Hide inline popup helper
+        function hideInlinePopup() {
+            if (inlinePopup) {
+                inlinePopup.style.display = 'none';
+            }
+            if (inlineInput) {
+                inlineInput.value = '';
+            }
+            document.getElementById('inline-action-menu').style.display = 'flex';
+            document.getElementById('inline-comment-form').style.display = 'none';
+            inlineSelectedText = '';
+        }
+
+        // Find nearest heading context for a DOM node
+        function findCurrentSectionForNode(node) {
+            let parent = node;
+            while (parent && parent.id !== 'content') {
+                // Look for previous siblings of parents
+                let sibling = parent.previousSibling;
+                while (sibling) {
+                    if (sibling.nodeType === 1 && /^H[1-6]$/i.test(sibling.tagName)) {
+                        return sibling.textContent.trim();
+                    }
+                    sibling = sibling.previousSibling;
+                }
+                parent = parent.parentNode;
+            }
+            return 'Document Body';
+        }
+
+        // Watch for enter key or escape key
+        if (inlineInput) {
+            inlineInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    submitInlineFeedback();
+                    e.preventDefault();
+                } else if (e.key === 'Escape') {
+                    hideInlinePopup();
+                    window.getSelection().removeAllRanges();
+                }
+            });
+        }
+
+        // Submit inline selection feedback
+        async function submitInlineFeedback() {
+            const comment = inlineInput.value.trim();
+            if (!comment) return;
+
+            const feedbackData = {
+                file: currentDocFile,
+                section: inlineTargetSection,
+                comment: comment,
+                timestamp: new Date().toISOString()
+            };
+
+            // Send to watch server in background
+            let sentToServer = false;
+            try {
+                const response = await fetch('http://localhost:3000/api/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(feedbackData)
+                });
+                if (response.ok) sentToServer = true;
+            } catch (e) {}
+
+            // Determine line numbers from source Markdown
+            let lineSuffix = '';
+            const selectedLines = getSelectedLines(inlineSelectedText);
+            if (selectedLines) {
+                lineSuffix = `:${selectedLines}`;
+            } else {
+                const sectionLine = getSectionLine(inlineTargetSection);
+                if (sectionLine) {
+                    lineSuffix = `:${sectionLine}`;
+                }
+            }
+
+            // Copy formatting
+            const lang = document.documentElement.getAttribute('lang') || 'en';
+            const promptText = lang === 'vi'
+                ? `hãy sửa phần "${inlineTargetSection}": "${comment}"`
+                : `please edit section "${inlineTargetSection}": "${comment}"`;
+            const formattedPrompt = `@[${currentDocAbsPath}${lineSuffix}] ${promptText}`;
+
+            try {
+                await navigator.clipboard.writeText(formattedPrompt);
+                let message = '/* TRANSLATE:inlineCopySuccess */';
+                if (sentToServer) {
+                    message += ' (Watcher server active)';
+                }
+                showToast(message);
+            } catch (err) {
+                showToast('/* TRANSLATE:alertError */', true);
+            }
+
+            hideInlinePopup();
+            window.getSelection().removeAllRanges(); // Clear selection highlight
+        }
+
+        // --- Copy Code Button Setup ---
+        function setupCodeBlockCopyButtons() {
+            const preElements = document.querySelectorAll('pre');
+            preElements.forEach(pre => {
+                if (pre.querySelector('.copy-code-btn')) return; // Avoid duplicate buttons
+                
+                const btn = document.createElement('button');
+                btn.className = 'copy-code-btn';
+                btn.innerHTML = '<i data-lucide="copy"></i>';
+                btn.title = 'Copy code';
+                
+                btn.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    const code = pre.querySelector('code');
+                    const textToCopy = code ? code.innerText : pre.innerText;
+                    
+                    try {
+                        await navigator.clipboard.writeText(textToCopy);
+                        btn.innerHTML = '<i data-lucide="check"></i>';
+                        btn.classList.add('copied');
+                        showToast('Code copied!');
+                        lucide.createIcons();
+                        
+                        setTimeout(() => {
+                            btn.innerHTML = '<i data-lucide="copy"></i>';
+                            btn.classList.remove('copied');
+                            lucide.createIcons();
+                        }, 2000);
+                    } catch (err) {
+                        showToast('Failed to copy code', true);
+                    }
+                });
+                pre.appendChild(btn);
+            });
+            lucide.createIcons();
+        }
+
+        // --- Breadcrumbs Setup ---
+        function renderBreadcrumbs() {
+            const container = document.getElementById('breadcrumbs-container');
+            if (!container) return;
+            
+            const parts = currentDocFile.split('/');
+            let html = '<span class="folder" style="font-size: 11px;"><i data-lucide="folder-open"></i></span><span class="separator"><i data-lucide="chevron-right"></i></span>';
+            
+            for (let i = 0; i < parts.length; i++) {
+                const part = parts[i];
+                if (!part) continue;
+                
+                const isLast = (i === parts.length - 1);
+                const cleanName = part.endsWith('.md') ? part.substring(0, part.length - 3) : part;
+                
+                if (isLast) {
+                    html += `<span class="current">${cleanName}</span>`;
+                } else {
+                    html += `<span class="folder">${cleanName}</span><span class="separator"><i data-lucide="chevron-right"></i></span>`;
+                }
+            }
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        // --- Global search modal setup with full-text index ---
+        const searchIndexUrl = '/* SEARCH_INDEX_RELATIVE_URL */';
+        let searchIndexData = null;
+
+        function removeAccents(str) {
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D");
+        }
+
+        async function loadSearchIndex() {
+            if (window.searchIndexData) {
+                searchIndexData = window.searchIndexData;
+                return;
+            }
+            try {
+                const response = await fetch(searchIndexUrl);
+                if (response.ok) {
+                    const text = await response.text();
+                    if (text.startsWith('window.searchIndexData')) {
+                        const jsonStr = text.substring(text.indexOf('=') + 1).trim().replace(/;$/, '');
+                        searchIndexData = JSON.parse(jsonStr);
+                    } else {
+                        searchIndexData = JSON.parse(text);
+                    }
+                }
+            } catch (e) {
+                console.warn('Search index load failed, falling back to offline mode.', e);
+            }
+        }
+
+        function setupSidebarSearch() {
+            const headerTrigger = document.getElementById('header-search-trigger');
+            
+            const modal = document.getElementById('search-modal');
+            const modalInput = document.getElementById('modal-search-input');
+            const modalResults = document.getElementById('modal-search-results');
+            const closeBtn = document.getElementById('search-modal-close-btn');
+            
+            if (!modal || !modalInput || !modalResults || !headerTrigger) return;
+            
+            let selectedIndex = -1;
+            let currentResults = [];
+
+            function openSearchModal() {
+                modal.style.display = 'flex';
+                modalInput.value = '';
+                modalResults.innerHTML = `
+                    <div class="search-modal-placeholder">
+                        <i data-lucide="search"></i>
+                        <span>Nhập từ khoá để tìm kiếm trong tiêu đề và nội dung tài liệu...</span>
+                    </div>
+                `;
+                lucide.createIcons();
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => {
+                    modalInput.focus();
+                }, 50);
+                
+                if (!searchIndexData) {
+                    loadSearchIndex();
+                }
+            }
+
+            function closeSearchModal() {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+                selectedIndex = -1;
+                currentResults = [];
+            }
+
+            // Open modal on trigger events
+            headerTrigger.addEventListener('click', openSearchModal);
+
+            // Close modal on click close or overlay background click
+            closeBtn.addEventListener('click', closeSearchModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeSearchModal();
+                }
+            });
+
+            // Global keyboard listener
+            document.addEventListener('keydown', function(e) {
+                const activeEl = document.activeElement;
+                const isTyping = activeEl && (
+                    activeEl.tagName === 'INPUT' || 
+                    activeEl.tagName === 'TEXTAREA' || 
+                    activeEl.isContentEditable
+                );
+                
+                // Esc to close modal if open
+                if (e.key === 'Escape' && modal.style.display === 'flex') {
+                    closeSearchModal();
+                    e.preventDefault();
+                    return;
+                }
+
+                if (isTyping) return;
+                
+                // Ctrl + K or / to open modal
+                if ((e.ctrlKey && e.key.toLowerCase() === 'k') || e.key === '/') {
+                    e.preventDefault();
+                    openSearchModal();
+                }
+            });
+
+            function getSnippet(content, query) {
+                const contentLower = content.toLowerCase();
+                const queryLower = query.toLowerCase();
+                
+                let idx = contentLower.indexOf(queryLower);
+                let matchLength = query.length;
+                
+                if (idx === -1) {
+                    const contentNoAccent = removeAccents(contentLower);
+                    const queryNoAccent = removeAccents(queryLower);
+                    idx = contentNoAccent.indexOf(queryNoAccent);
+                }
+                
+                if (idx === -1) {
+                    const tokens = removeAccents(queryLower).split(/\s+/).filter(t => t.length > 0);
+                    const contentNoAccent = removeAccents(contentLower);
+                    for (let t of tokens) {
+                        const tIdx = contentNoAccent.indexOf(t);
+                        if (tIdx !== -1) {
+                            idx = tIdx;
+                            matchLength = t.length;
+                            break;
+                        }
+                    }
+                }
+                
+                if (idx === -1) {
+                    return content.substring(0, 120) + (content.length > 120 ? '...' : '');
+                }
+                
+                const start = Math.max(0, idx - 60);
+                const end = Math.min(content.length, idx + matchLength + 100);
+                let snippet = content.substring(start, end);
+                if (start > 0) snippet = '...' + snippet;
+                if (end < content.length) snippet = snippet + '...';
+                
+                // Escape HTML
+                snippet = snippet.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                
+                // Bold matching tokens
+                const tokens = query.toLowerCase().split(/\s+/).filter(t => t.length > 0);
+                tokens.forEach(t => {
+                    const safeToken = t.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+                    try {
+                        const reg = new RegExp(`(${safeToken})`, 'gi');
+                        snippet = snippet.replace(reg, '<mark>$1</mark>');
+                    } catch (err) {}
+                });
+                
+                return snippet;
+            }
+
+            modalInput.addEventListener('input', function(e) {
+                const val = e.target.value.toLowerCase().trim();
+                
+                if (!val) {
+                    modalResults.innerHTML = `
+                        <div class="search-modal-placeholder">
+                            <i data-lucide="search"></i>
+                            <span>Nhập từ khoá để tìm kiếm trong tiêu đề và nội dung tài liệu...</span>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    currentResults = [];
+                    selectedIndex = -1;
+                    return;
+                }
+
+                // Map relative paths to matching DOM href URLs
+                const pathMap = {};
+                document.querySelectorAll('#docs-list a[data-docpath]').forEach(a => {
+                    pathMap[a.getAttribute('data-docpath').toLowerCase()] = a.getAttribute('href');
+                });
+
+                // Filter & Rank search items using Token-Scoring
+                const valClean = removeAccents(val);
+                const tokens = valClean.split(/\s+/).filter(t => t.length > 0);
+
+                currentResults = [];
+                const activeData = searchIndexData || window.searchIndexData || null;
+                if (activeData && tokens.length > 0) {
+                    activeData.forEach(doc => {
+                        const titleClean = removeAccents(doc.title.toLowerCase());
+                        const contentClean = removeAccents(doc.content.toLowerCase());
+                        
+                        let score = 0;
+                        let matchesAllTokens = true;
+                        
+                        tokens.forEach(token => {
+                            const inTitle = titleClean.includes(token);
+                            const inContent = contentClean.includes(token);
+                            
+                            if (!inTitle && !inContent) {
+                                matchesAllTokens = false;
+                            } else {
+                                if (inTitle) score += 30; // Tiêu đề khớp có trọng số cao
+                                if (inContent) {
+                                    const occurrences = contentClean.split(token).length - 1;
+                                    score += occurrences * 2;
+                                }
+                            }
+                        });
+                        
+                        // Điểm thưởng cộng thêm khi khớp cả cụm liền mạch
+                        if (doc.title.toLowerCase().includes(val)) score += 100;
+                        else if (titleClean.includes(valClean)) score += 70;
+                        
+                        if (doc.content.toLowerCase().includes(val)) score += 50;
+                        else if (contentClean.includes(valClean)) score += 30;
+                        
+                        if (matchesAllTokens && score > 0) {
+                            const href = pathMap[doc.path.toLowerCase()] || doc.path;
+                            currentResults.push({
+                                title: doc.title,
+                                path: doc.path,
+                                href: href,
+                                content: doc.content,
+                                score: score
+                            });
+                        }
+                    });
+                }
+
+                // Sort results by score (descending)
+                currentResults.sort((a, b) => b.score - a.score);
+
+                // Limit results to 15 items
+                const displayResults = currentResults.slice(0, 15);
+                selectedIndex = -1;
+
+                if (displayResults.length === 0) {
+                    modalResults.innerHTML = '<div class="search-modal-no-results">Không tìm thấy tài liệu phù hợp</div>';
+                } else {
+                    let html = '';
+                    displayResults.forEach((res, index) => {
+                        const snippet = getSnippet(res.content, val);
+                        html += `
+                        <a href="${res.href}" class="search-modal-item" data-index="${index}">
+                            <div class="search-modal-item-title"><i data-lucide="file-text"></i> ${res.title}</div>
+                            <div class="search-modal-item-path">${res.path}</div>
+                            <div class="search-modal-item-snippet">${snippet}</div>
+                        </a>`;
+                    });
+                    modalResults.innerHTML = html;
+                    lucide.createIcons();
+                }
+            });
+
+            // Keyboard navigation inside search modal
+            modalInput.addEventListener('keydown', function(e) {
+                const items = modalResults.querySelectorAll('.search-modal-item');
+                if (items.length === 0) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedIndex = (selectedIndex + 1) % items.length;
+                    highlightItem(items);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+                    highlightItem(items);
+                } else if (e.key === 'Enter') {
+                    if (selectedIndex >= 0 && selectedIndex < items.length) {
+                        e.preventDefault();
+                        items[selectedIndex].click();
+                    }
+                } else if (e.key === 'Escape') {
+                    closeSearchModal();
+                }
+            });
+
+            function highlightItem(items) {
+                items.forEach((item, idx) => {
+                    if (idx === selectedIndex) {
+                        item.classList.add('selected');
+                        item.scrollIntoView({ block: 'nearest' });
+                    } else {
+                        item.classList.remove('selected');
+                    }
+                });
+            }
+        }
+
+        renderMarkdown();
+        renderBreadcrumbs();
+        setupSidebarSearch();
+        startHotReload();
+
+        // Hide README Home button if we are already viewing the root README
+        const isRootReadme = (currentDocFile.toLowerCase() === 'readme.md');
+        if (isRootReadme) {
+            const homeBtn = document.getElementById('readme-home-btn');
+            if (homeBtn) homeBtn.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

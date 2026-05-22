@@ -95,6 +95,7 @@ If the `--graph` flag is provided, execute the graph intelligence pipeline BEFOR
 Read the project context to understand what we're building within:
 
 > 🔍 **Memory-Assisted Spec:** Before gathering context, Agent SHOULD use `memory_search` to find past specs, decisions, and architectural patterns related to the spec topic. This prevents re-specifying resolved constraints.
+> 🧠 **Brainstorm Inheritance:** If a brainstorm file related to the topic exists (checked via `ls` below), the Agent MUST load and inherit its decisions, using them to pre-populate Rationale and Architecture sections.
 
 ```bash
 # Project contract
@@ -131,6 +132,7 @@ ASSUMPTIONS I'M MAKING:
 - Pull assumptions from `project.md` context (tech stack, dependencies)
 - Identify implicit requirements the user hasn't stated
 - Flag any ambiguous requirement with a concrete default
+- **Brainstorm Trigger:** If the user rejects core assumptions or demands complex architecture clarification, the Agent SHOULD propose switching to the `/brainstorm` workflow to explore alternatives.
 - WAIT for user confirmation before proceeding
 
 #### 3. Write Spec Document
@@ -180,6 +182,7 @@ Open Questions: [N]
    A → Approve and proceed to Plan phase
    R → Request changes (tell me what to fix)
    Q → Answer open questions first
+   B → Run /brainstorm on open questions/ambiguous areas
 ```
 
 Agent MUST NOT proceed until user explicitly approves (A).
@@ -207,6 +210,7 @@ Order: [dependency summary]
 ❓ Review the plan above.
    A → Approve and proceed to Task breakdown
    R → Request changes
+   B → Run /brainstorm on architecture options (evaluate pros/cons)
 ```
 
 #### 7. Task Breakdown (Phase: TASKS)

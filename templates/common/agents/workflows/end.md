@@ -125,6 +125,32 @@ If yes, **append one row** to `Areas/Workspace/SYNC.md` under the `## Pending` t
 
 > **Ecosystem skip (v1.6.0+):** If project `type: ecosystem`, skip git-related suggestions (no repo to commit). Focus on plan progress and backlog updates only.
 
+### 3.6. Task State Snapshot (Graph Memory)
+
+// turbo
+
+> **Gate:** Only trigger if project has `.beads/graph/` directory.
+> **Purpose:** Push structured JSON snapshot of current tasks to avoid bash truncation in `/open`.
+
+1. **IF graph exists:**
+   - Compile line counts for verification using `wc` and `grep`:
+     ```bash
+     wc -l Projects/[project-name]/artifacts/tasks/sprint-current.md 2>/dev/null
+     grep -c "ToDo\|In Progress" Projects/[project-name]/artifacts/tasks/backlog.md 2>/dev/null
+     ```
+   - Compose snapshot from current `backlog.md` and `sprint-current.md`:
+   - **kind:** `task-state-snapshot`
+   - **content:** "Backlog: [X] active ([H] High, [M] Med, [L] Low). Hot Lane: [Y] pending."
+   - **sessionId:** `YYYY-MM-DD-end-tasks`
+   - **metadata:** 
+     ```json
+     {
+       "sprint_current_lines": [count],
+       "backlog_active_lines": [count]
+     }
+     ```
+   - Agent calls `memory_push(projectName, kind, content, sessionId, metadata)`.
+
 ### 3.2. Strategy/Roadmap Change Detection
 
 // turbo

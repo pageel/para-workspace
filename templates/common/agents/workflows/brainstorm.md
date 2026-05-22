@@ -230,7 +230,9 @@ Present all options and ask the user how to proceed:
 
   G. 🔴 Stress-test with /qa — Red Team review before committing
 
-❓ Which option? (A/B/C/D/E/F/G)
+  H. 📝 Proceed to /spec — Write structured specification before coding
+
+❓ Which option? (A/B/C/D/E/F/G/H)
 ```
 
 **Option A: Save to Seeds**
@@ -247,13 +249,9 @@ Append a summary reference to `.beads/seeds.md`:
 
 **Option B: Proceed to Plan**
 
-Suggest: `/plan [project-name]`
+Suggest: `/plan [project-name] create`
 
-> ⚠️ **Template Selection Rule:** The Agent MUST evaluate the scope of the brainstorm and explicitly propose the suitable plan template to the user:
-> - If the brainstorm covers a high-level direction, multiple phases, or an ecosystem strategy → Propose **Roadmap Template**.
-> - If the brainstorm is for a specific feature, bug, or focused implementation → Propose **Detail Plan Template**.
-> 
-> The Agent MUST NOT blindly create the plan without first proposing the suitable template type to the user.
+> ⚠️ **Workflow Transition Rule:** The Agent MUST NOT begin creating or structuring the plan here. The Agent MUST cleanly close the `/brainstorm` workflow and wait for the user to trigger `/plan`. The `/plan` workflow has its own strict context-loading and template-selection checkpoints (Step 0 to 2.8) that MUST NOT be bypassed or combined.
 
 **Option C: Add to Backlog**
 
@@ -295,8 +293,15 @@ Suggest: `/qa [project-name] [topic]`
 
 Run the QA Red Team workflow to stress-test the brainstorm findings before committing to a plan or implementation. Particularly valuable when the brainstorm involves architectural decisions or security-sensitive changes.
 
+**Option H: Proceed to Spec**
+
+Suggest: `/spec [project-name] create`
+
+> ⚠️ **Workflow Transition Rule:** The Agent MUST NOT begin creating the spec here. The Agent MUST cleanly close the `/brainstorm` workflow and wait for the user to trigger `/spec`. The `/spec` workflow will automatically detect and inherit the brainstorm context to pre-populate assumptions and boundaries.
+
 ## Related
 
+- `/spec` — Write structured specification before coding (downstream)
 - `/plan` — Formalize decisions into actionable implementation phases
 - `/backlog` — Create tasks directly if brainstorming yields simple actions
 - `/qa` — Stress-test brainstorm findings before committing

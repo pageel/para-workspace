@@ -473,7 +473,10 @@ install_agents() {
       # File copy (workflows, rules)
       cp "$src_path" "$dst_path"
     else
-      echo "  ⚠️  Source not found: $src_path (skipping)"
+      # Suppress warning if tool uses decoupled distribution via hooks
+      if [ ! -f "$TOOL_INSTALL_DIR/install-hooks.sh" ]; then
+        echo "  ⚠️  Source not found: $src_path (skipping)"
+      fi
     fi
 
     i=$((i + 1))
@@ -758,8 +761,10 @@ if [ "$SKIP_AGENTS" != true ]; then
     read -r INSTALL_AGENTS_ANSWER
     if [ "$INSTALL_AGENTS_ANSWER" = "y" ] || [ "$INSTALL_AGENTS_ANSWER" = "Y" ]; then
       install_agents
-      echo ""
-      echo "  ✅ AI intelligence installed."
+      if [ ! -f "$HOOKS_FILE" ]; then
+        echo ""
+        echo "  ✅ AI intelligence installed locally."
+      fi
     else
       echo "  ⏭️  Skipped. Run './para install-tool $PARA_TOOL_NAME --agents' later."
     fi

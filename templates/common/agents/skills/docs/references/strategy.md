@@ -7,6 +7,8 @@
 ```markdown
 # [Project/Domain Name] — Strategy
 
+<!-- ⚠️ SOURCE-VERIFIED — Cross-referenced with [list source files] on YYYY-MM-DD -->
+
 > **Version**: 1.0 | **Last reviewed**: YYYY-MM-DD
 
 ## Vision

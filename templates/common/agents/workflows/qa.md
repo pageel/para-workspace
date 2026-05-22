@@ -159,8 +159,9 @@ Git Operations: N commits + N pushes
 
 For each section/phase in the artifact:
 
-1. **Phase-Specific Graph Context (if --graph AND phase-loop process):** BEFORE generating questions for the current phase, Agent MUST execute the Graph Context Pipeline (Step 0.25) scoped specifically to the nodes modified or affected by this Phase. This ensures focused impact analysis.
-2. **Generate probing questions** based ONLY on the approved Focus Areas and Red Team Roster.
+1. **Context Recovery & Rule Check (MANDATORY):** Before generating questions for the current phase or section, Agent MUST actively re-read the project rules index (`.agents/rules.md`) and load any relevant rule files (e.g., `maintenance.md`) to verify if any specific checklists, caveats, or constraints apply to the current Phase's specific actions.
+2. **Phase-Specific Graph Context (if --graph AND phase-loop process):** Agent MUST execute the Graph Context Pipeline (Step 0.25) scoped specifically to the nodes modified or affected by this Phase. This ensures focused impact analysis.
+3. **Generate probing questions** based ONLY on the approved Focus Areas, Red Team Roster, and the actively recovered Rules context.
    - **No Arbitrary Limits:** Generate **as many questions as necessary** to fully stress-test the section.
    - Each question MUST be tagged with a dimension (`[LOGIC]`, `[SEC]`, etc.).
 3. **Do NOT answer them yet.**
@@ -329,6 +330,7 @@ If the Q&A generated ≥ 10 questions or found ≥ 3 issues:
    - If target is the active plan → use plan filename as slug
 
 3. Format: full Q&A cards + summary table + fixes applied.
+4. **Link to Artifact:** Ngay sau khi lưu file QA, Agent BẮT BUỘC phải chèn một dòng `> **QA Report:** [qa-report-name.md](path/to/qa-report.md)` vào ngay bên dưới header/frontmatter của file mục tiêu (target artifact) để tạo bằng chứng Audit (Audit Trail).
 
 ### Step 10.5. Graph Memory Push (CONDITIONAL)
 

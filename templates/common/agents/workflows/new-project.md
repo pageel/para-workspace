@@ -153,6 +153,53 @@ Record the kickoff in `Projects/[project-name]/sessions/YYYY-MM-DD.md`:
 - **Next Steps**: [first priority]
 ```
 
+### 6. Choose Next Action
+
+Present options and ask the user how to proceed:
+
+```
+🎉 PROJECT CREATED: [project-name]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Structure scaffolded
+✅ project.md configured
+✅ Task files initialized
+✅ First session logged
+
+💡 WHAT'S NEXT?
+
+  A. 🧠 /brainstorm — Explore the problem space first
+     → Best when: requirements are vague, multiple approaches possible
+
+  B. 📝 /spec — Write a structured specification
+     → Best when: requirements are clear but need formal boundaries
+
+  C. 📐 /plan — Jump straight to implementation planning
+     → Best when: scope is well-defined and ready to execute
+
+  D. 📥 /backlog — Add tasks directly to backlog
+     → Best when: you already have a clear task list
+
+  E. 🔍 Just explore — Open the project later with /open
+     → Best when: you want to set up and come back another day
+
+❓ Which option? (A/B/C/D/E)
+```
+
+> 💡 **Recommendation heuristic:** If the user provided a vague or broad goal in Step 2
+> (e.g., "build a SaaS app"), Agent SHOULD recommend option A (brainstorm).
+> If the goal is specific and actionable (e.g., "create a CLI tool for X"),
+> Agent SHOULD recommend option B (spec) or C (plan).
+
+**Option A:** Suggest: `/brainstorm [project-name] [goal-topic]`
+**Option B:** Suggest: `/spec [project-name] create`
+**Option C:** Suggest: `/plan [project-name] create`
+**Option D:** Suggest: `/backlog [project-name]`
+**Option E:** No action. User can return later with `/open [project-name]`.
+
+> ⚠️ **Workflow Transition Rule:** The Agent MUST cleanly close `/new-project` before
+> starting the next workflow. Each downstream workflow has its own context-loading
+> and pre-flight checks that MUST NOT be bypassed.
+
 ## Output Checklist
 
 - [ ] Project folder structure created
@@ -163,11 +210,13 @@ Record the kickoff in `Projects/[project-name]/sessions/YYYY-MM-DD.md`:
 - [ ] `done.md` created with guard header
 - [ ] `sprint-current.md` created with guard header
 - [ ] First session logged
+- [ ] Next action suggested to user ← v1.8.10+
 
 ## Related
 
-- `/open` — Start session with context loading
-- `/brainstorm` — Explore ideas before planning
+- `/brainstorm` — Explore ideas before planning (upstream)
+- `/spec` — Write structured specification before coding (upstream)
 - `/plan` — Create implementation plan for the project
+- `/open` — Start session with context loading
 - `/backlog` — Manage project backlog
 - `/config` — Register project in workspace config

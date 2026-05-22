@@ -28,9 +28,19 @@ Manage the product backlog stored at `Projects/[project-name]/artifacts/tasks/ba
 
 > **Layer 3 defense:** Re-read indices to guard against attention decay.
 
-1. Re-read `.agents/rules.md` (workspace rules index)
-2. Re-read `.agents/skills.md` (workspace skills index)
-3. Check `project.md` for `agent.rules` / `agent.skills` — if true, re-read project indices too
+```bash
+# Tier-1 Index Force Load (Anti-Cognitive-Bypass v1.7.10)
+echo ""
+echo "> ⚠️ Proactive Trigger Scan: Workspace Indices"
+cat .agents/rules.md 2>/dev/null | head -n 30
+cat .agents/skills.md 2>/dev/null | head -n 30
+
+# Tier-2 Index Force Load (Project-specific rules/skills)
+echo ""
+echo "> ⚠️ Proactive Trigger Scan: Project Indices"
+cat Projects/[project-name]/.agents/rules.md 2>/dev/null | head -n 30
+cat Projects/[project-name]/.agents/skills.md 2>/dev/null | head -n 30
+```
 
 ---
 

@@ -36,6 +36,13 @@
 | B1  | [brainstorm-file](path) | [Description] |
 | R1  | [research-file](path)   | [Description] |
 
+## Brainstorm Sync & Heritage
+
+> **Pre-requisite:** Before drafting this plan, Agent MUST read the related brainstorm decision file listed in B1.
+>
+> **Target Files & Blast Radius:** (Inherited from `decision.md` §2)
+> **Testing Strategy & Mocking:** (Inherited from `decision.md` §4)
+
 ## Architecture Overview & Execution Logic
 
 [Component diagram + Tech stack table]
@@ -86,6 +93,8 @@ Carry the Execution Ownership icon from the Implementation Plan.]
 
 > ⛔ **MANDATORY:** Re-read `.agents/rules.md` + `.agents/skills.md` BEFORE modifying files.
 
+> 🧪 **Testing Requirement:** If this Phase involves writing or executing tests, Agent MUST explicitly load and apply `.agents/skills/tdd/SKILL.md` (TDD Governance) before running test commands.
+
 <!-- ⚠️ HARNESS GUARD (Phase 1 Risk): [Derived from Risks & Mitigations table. Leave empty if no risk mapped to this Phase.] -->
 
 #### Implementation Plan
@@ -104,6 +113,7 @@ Carry the Execution Ownership icon from the Implementation Plan.]
 1.1 🤖 **[Step name]** — [Detail: file path, line number, operation, source reference if applicable.]
 1.2 👤 **[Step name]** — [Detail: destructive/external operation, Agent proposes → User approves.]
 
+1.N-1 🤖 **Pre-commit Gate** — Run project's linter/compiler (e.g., `npm run lint`, `tsc`, `cargo check`) and resolve any type/lint problems before commit.
 1.N 👤 **Git checkpoint Phase 1 — Commit**
 
 ```bash
@@ -131,6 +141,7 @@ git push origin main
 [ ] 1.1b 🤖 [Specific task — e.g. VI file]
 [ ] 1.2 👤 [Task requiring user approval]
 [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
+[ ] 1.N-1 🤖 **Pre-commit Gate:** Run project's linter/compiler/tests (e.g., `npm run lint`, `npm test`) and resolve any problems. (If running tests, MUST use TDD skill).
 [ ] 1.N 👤 Git commit Phase 1.
 [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 1 are checked [x] BEFORE proceeding to the next Phase. Ask User to proceed.
 [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Agent MUST ask User for confirmation BEFORE pushing.

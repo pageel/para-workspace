@@ -21,15 +21,19 @@
 ├──────────────────────────────────────────────┤
 │ 3. Phase Loop START (Phase 0 → Phase N)      │
 │    ┌────────────────────────────────────┐     │
-│    │ 3a. Graph Context (if --graph)     │     │
+│    │ 3a. Context Recovery & Rule Check  │     │
+│    │     → Re-read project `.agents/rules.md` │
+│    │     → Load triggered rules (e.g.,  │     │
+│    │        maintenance) for this phase │     │
+│    │ 3b. Graph Context (if --graph)     │     │
 │    │     → Query nodes & impact for     │     │
 │    │        this specific Phase ONLY    │     │
-│    │ 3b. Scan Phase N                   │     │
+│    │ 3c. Scan Phase N                   │     │
 │    │     → Generate questions for       │     │
 │    │        Phase N ONLY                │     │
-│    │ 3c. Answer Phase N questions       │     │
-│    │ 3d. Fix Phase N issues             │     │
-│    │ 3d. Phase N Verdict                │     │
+│    │ 3d. Answer Phase N questions       │     │
+│    │ 3e. Fix Phase N issues             │     │
+│    │ 3f. Phase N Verdict                │     │
 │    │     ✅ Pass → Next Phase           │     │
 │    │     🔴 Block → Fix before next     │     │
 │    │                                    │     │
@@ -69,6 +73,7 @@
 |:--|:--|:--|
 | Kickoff | Agent | Propose Strategy + Phase order |
 | Governance Audit | Agent (💼 Tech Lead) | Check project rules & skills compliance |
+| Phase Recovery | Agent | Re-read rules/skills index and load relevant files before generating questions |
 | Phase Graph | Agent | If --graph: Context bundle & impact for this Phase |
 | Phase Scan | Agent | Generate questions for current Phase |
 | Phase Answer | Agent | Self-answer + phase verdict |

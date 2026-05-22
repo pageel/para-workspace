@@ -174,36 +174,42 @@ test -f "Projects/[project-name]/.beads/graph/memory-slices.jsonl" || test -f "P
 ```
 
 - **If exists:**
-  1. Read the MCP resource `memory_summary` (or read the generated summary file) to inject core architectural decisions and rules into the session context.
+  1. Read the MCP resource `memory_summary` (or read the generated `memory-log.md` file from `.beads/graph/` or fallback to `memory_summary.md` at root) to inject core architectural decisions and rules into the session context.
   2. Use `memory_search` with a broad query (project name + "architecture" or "decision") to surface the most relevant past session insights. Limit to 5 results for token efficiency.
 - **If not exists** → Skip silently. No memory overhead.
 
-### 4. Read task context — Token Optimized
+### 4. Read task context — Memory-First (Anti-Truncation)
+
+> ⚠️ **Anti-Truncation Architecture:** Read task state from Graph Memory first to avoid bash output truncation. Fallback to file reading only if memory is stale or missing.
+
+**Step 4a: Memory Search (MCP)**
+1. Call MCP tool `memory_search(projectName, "task-state-snapshot", limit=1)`.
+2. **IF snapshot found:** Use `content` and `metadata` for the report. Proceed to Step 4b for verification.
+3. **IF NOT found:** Proceed to Step 4c (Fallback File Read).
+
+**Step 4b: Lightweight Verification (Bash)**
 
 //turbo
 
-> ⚠️ **Token optimization:** Read backlog summary (~10 lines) + hot lane. NEVER read full backlog.
-
-**Step 4a: Backlog Summary** (ALWAYS read)
-
+If memory snapshot was found, verify it hasn't become stale:
 ```bash
-grep -A 10 "Summary" Projects/[project-name]/artifacts/tasks/backlog.md
+wc -l Projects/[project-name]/artifacts/tasks/sprint-current.md 2>/dev/null
+grep -c "ToDo\|In Progress" Projects/[project-name]/artifacts/tasks/backlog.md 2>/dev/null
 ```
+- Compare actual line counts vs `metadata.sprint_current_lines` and `metadata.backlog_active_lines` from the snapshot.
+- **IF mismatch (delta > 3):** Discard memory, proceed to Step 4c.
+- **IF match:** Skip Step 4c.
 
-Also extract top active items:
+**Step 4c: Fallback File Read (Legacy)**
 
+//turbo
+
+Only if memory was missing or stale:
 ```bash
-grep -E "ToDo|In Progress" Projects/[project-name]/artifacts/tasks/backlog.md | head -5
+grep -A 10 "Summary" Projects/[project-name]/artifacts/tasks/backlog.md 2>/dev/null
+grep -E "ToDo|In Progress" Projects/[project-name]/artifacts/tasks/backlog.md 2>/dev/null | head -5
+cat Projects/[project-name]/artifacts/tasks/sprint-current.md 2>/dev/null || echo "🔥 Hot Lane: empty (no file)"
 ```
-
-**Step 4b: Hot Lane** (read IF EXISTS, graceful skip)
-
-Check if `Projects/[project-name]/artifacts/tasks/sprint-current.md` exists:
-
-- **If exists** → Read entire file (small, ~50-100 tokens). Note any pending `[ ]` items.
-- **If not exists** → Skip. Report: `🔥 Hot Lane: empty (no file)`
-
-> **Rule:** `hybrid-3-file-integrity.md` C1 — sprint-current.md is the Hot Lane for quick tasks.
 
 ### 5. Read implementation plan — summary only (if active)
 
@@ -357,7 +363,7 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 - Top items: [list 2-3 items from current phase]
 
 🧠 GRAPH MEMORY: [Available / None]
-   [If Available, insert 2-3 bullet points of critical architectural decisions injected from memory_summary]
+   [If Available, insert 2-3 bullet points of critical architectural decisions injected from memory-log.md (or memory_summary.md fallback)]
 
 🔥 HOT LANE:
 - [Pending quick tasks from sprint-current.md]

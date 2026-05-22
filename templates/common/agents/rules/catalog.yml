@@ -113,3 +113,34 @@ items:
   - safety
   - ki
   - system-ki
+- id: agent-persona
+  name: Agent Persona
+  kernel_min: 1.8.10
+  kernel_max: 1.x
+  entrypoint: agent-persona.md
+  description: Custom conversational style and agent personality.
+  tags:
+  - persona
+  - communication
+  - tone
+- id: graph-first-policy
+  name: Graph-First Policy
+  kernel_min: 1.8.10
+  kernel_max: 1.x
+  entrypoint: graph-first-policy.md
+  description: Proactive code analysis using para-graph MCP tools before file edits.
+  tags:
+  - graph
+  - investigation
+  - code-analysis
+- id: tool-routing
+  name: Tool Routing
+  kernel_min: 1.8.10
+  kernel_max: 1.x
+  entrypoint: tool-routing.md
+  description: Heuristic guide for selecting Native API, Bash commands, and MCP tools.
+  tags:
+  - tools
+  - routing
+  - heuristics
+

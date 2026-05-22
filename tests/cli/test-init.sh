@@ -19,10 +19,10 @@ check_dir() {
   echo -n "  $label... "
   if [[ -d "$WORKSPACE/$dir" ]]; then
     echo "PASS"
-    ((PASS++))
+    PASS=$((PASS + 1))
   else
     echo "FAIL — missing $dir"
-    ((FAIL++))
+    FAIL=$((FAIL + 1))
   fi
 }
 
@@ -32,10 +32,10 @@ check_file() {
   echo -n "  $label... "
   if [[ -f "$WORKSPACE/$file" ]]; then
     echo "PASS"
-    ((PASS++))
+    PASS=$((PASS + 1))
   else
     echo "FAIL — missing $file"
-    ((FAIL++))
+    FAIL=$((FAIL + 1))
   fi
 }
 

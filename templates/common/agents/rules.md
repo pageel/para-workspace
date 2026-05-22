@@ -19,3 +19,7 @@
 | Versioning | Version bumps, changelog updates, releases | rules/versioning.md | 🟢 |
 | Exports Data | Exporting data, sharing files externally | rules/exports-data.md | 🟢 |
 | Knowledge | Creating, updating, deleting Knowledge Items (KI operations) | rules/knowledge.md | 🔴 |
+| Agent Persona | Custom conversational style and agent personality | rules/agent-persona.md | 🟡 |
+| Graph-First Policy | "fix bug", "trace flow", "analyze code", "understand architecture", `/plan` design, `/brainstorm`, `/spec` — requires `.beads/graph/` | rules/graph-first-policy.md | 🔴 |
+| Tool Routing | Choosing between native API tools, bash commands, and MCP tools — specificity wins heuristic | rules/tool-routing.md | 🟢 |
+

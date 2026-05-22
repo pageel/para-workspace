@@ -39,10 +39,13 @@
 
 [Component diagram + Tech stack table]
 
-**Test Strategy:**
+**Test Strategy & Rules:**
 - **Framework:** [e.g., Vitest, Jest]
-- **Test Location:** [e.g., Colocation (`src/*.test.ts`) OR Separate Directory (`test/*.test.ts`)]
-- **Execution Command:** [e.g., `npm run test` — Agent MUST NOT use watch mode]
+- **Test Location:** [Where should test files be saved? (e.g., `tests/`, `__tests__/`, next to source files)]
+- **Test Runner / Command:** [How to run the tests? (e.g., `npm run test`, `npx vitest run path/to/file`)]
+- **Testing Rules & Naming:** [Any specific rules for naming test files or blocks? (e.g., `*.test.ts`, `describe` blocks structure)]
+- **Cleanup Policy:** [Should mock files or temporary test data be cleaned up after testing?]
+- **Required Skills:** [Agent MUST load `.agents/skills/tdd/SKILL.md` before executing TDD tasks]
 [Describe testing layers: Unit, Integration, E2E. Mention testing frameworks used.]
 
 **Execution Logic Map:**
@@ -125,6 +128,7 @@
   - [ ] Log shows 🔴 FAIL (Logic error, not syntax)
   - [ ] Log shows 🟢 PASS (Green state)
   - [ ] (If missing FAIL) 🛑 Revert code, rewrite RED test.
+- [ ] 5.5 🤖 **Pre-commit Gate:** Run project's linter/compiler (e.g., `npm run lint`) and resolve any type/lint problems.
 - [ ] 6. 👤 **Commit**
   ```bash
   git add exact/path/to/feature.test.ts exact/path/to/feature.ts
@@ -152,6 +156,7 @@
   - [ ] Log shows 🔴 FAIL (Logic error, not syntax)
   - [ ] Log shows 🟢 PASS (Green state)
   - [ ] (If missing FAIL) 🛑 Revert code, rewrite RED test.
+- [ ] 5.5 🤖 **Pre-commit Gate:** Run project's linter/compiler (e.g., `npm run lint`) and resolve any type/lint problems.
 - [ ] 6. 👤 **Commit** (`tdd(scope): [Behavior]`)
 - [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 1 are checked [x] BEFORE proceeding to the next Phase. Ask User to proceed.
 

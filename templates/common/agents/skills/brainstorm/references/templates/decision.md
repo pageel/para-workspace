@@ -58,6 +58,31 @@
 1. ...
 2. ...
 
+## 🔍 Technical Impact & Blast Radius
+
+- **Target Files:**
+  - Create: `exact/path/to/new_file.ts`
+  - Modify: `exact/path/to/existing_file.ts`
+- **Graph Impact (if para-graph enabled):**
+  - God Nodes affected: `node_id`
+  - Blast Radius assessment: (callers, downstream impact)
+- **Database Schema Changes:** (Migrations, new fields, index changes, backward compatibility check)
+- **Complexity Rating:** [🟢 Low | 🟡 Medium | 🔴 High]
+
+## ⚠️ Risks & Mitigations Matrix
+
+| # | Identified Risk | Severity | Mitigation Strategy | Plan Mapped Phase |
+|---|-----------------|----------|---------------------|-------------------|
+| 1 | [e.g., Data loss during migration] | [High]   | [Take local backup via git before db push] | Phase 0/1         |
+
+## 🧪 Test Strategy & TDD Recommendations
+
+- **Testing Methodology:** [Unit Testing | Integration Testing | End-to-End Testing]
+- **TDD Task Classification Proposal:**
+  - `🧪 TDD` (Logic, algorithms, migrations): [Task names]
+  - `📝 Standard` (Configs, UI views, docs): [Task names]
+- **Mocking Strategy:** (APIs, third-party libraries needing mock)
+
 ## Next Steps
 
 1. ...

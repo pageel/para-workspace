@@ -1,0 +1,65 @@
+/**
+ * PARA Workspace — Shared HTML Renderer Theme
+ * 
+ * Source of truth for design tokens shared across all renderer types.
+ * This file is NOT loaded at runtime — each template embeds CSS inline
+ * for offline file:// compatibility.
+ * 
+ * When creating a new renderer template, copy these variables into your
+ * template's <style> block to ensure visual consistency.
+ * 
+ * @version 1.0.0
+ */
+
+/* ============================================
+   Light Theme (Default)
+   ============================================ */
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #fbfbfa;       /* Notion sidebar color */
+    --text-primary: #37352f;       /* Notion core text color */
+    --text-secondary: #7c7b77;     /* Notion muted text */
+    --border-color: #efefe8;       /* Notion border color */
+    --accent-color: #2383e2;       /* Notion blue link color */
+    --accent-hover: #1263ad;
+    --code-bg: #f7f6f3;            /* Notion inline code/block bg */
+    --hover-color: rgba(55, 53, 47, 0.04);
+
+    /* Typography */
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji";
+    --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
+
+    /* Layout */
+    --header-height: 56px;
+}
+
+/* ============================================
+   Dark Theme
+   ============================================ */
+[data-theme="dark"] {
+    --bg-primary: #191919;
+    --bg-secondary: #202020;
+    --text-primary: #e3e3e2;
+    --text-secondary: #9b9a97;
+    --border-color: #2e2e2e;
+    --accent-color: #2eaadc;
+    --accent-hover: #1b85af;
+    --code-bg: #252525;
+    --hover-color: rgba(255, 255, 255, 0.055);
+}
+
+/* ============================================
+   Shared CDN Dependencies
+   ============================================
+   
+   All renderers should include these in <head>:
+   
+   <!-- Google Fonts -->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&family=Georgia&display=swap" rel="stylesheet">
+   
+   <!-- Lucide Icons -->
+   <script src="https://unpkg.com/lucide@latest"></script>
+   
+   ============================================ */

@@ -159,3 +159,39 @@ items:
   - audit
   - sidecar
   - compliance
+- id: html-renderer
+  name: HTML Renderer
+  kernel_min: 1.8.9
+  kernel_max: 1.x
+  entrypoint: html-renderer/SKILL.md
+  description: Modular HTML rendering engine for PARA Workspace. Converts Markdown docs, code graphs, and standalone files to themed HTML pages.
+  tags:
+  - html
+  - renderer
+  - docs
+  - graph
+  - markdown
+- id: new-project
+  name: New Project
+  kernel_min: 1.8.10
+  kernel_max: 1.x
+  entrypoint: new-project/SKILL.md
+  description: Sidecar skill for the /new-project workflow. Defines architectural guidelines, design patterns, and local project-specific rule setup.
+  tags:
+  - scaffold
+  - standards
+  - design-patterns
+  - sidecar
+- id: para-graph
+  name: para-graph
+  kernel_min: 1.8.10
+  kernel_max: 1.x
+  entrypoint: para-graph/SKILL.md
+  description: Centralized Graph Intelligence Router. Provides graph enrichment and semantic memory curation workflows.
+  tags:
+  - graph
+  - mcp
+  - intelligence
+  - memory
+
+

@@ -3,11 +3,11 @@ description: Generate and maintain project documentation following best practice
 source: catalog
 ---
 
-# /docs [project-name] [action] [--graph]
+# /docs [project-name] [action] [--graph] [--watch]
 
-> **Workspace Version:** 1.8.6 (Graph Intelligence)
+> **Workspace Version:** 1.8.10 (Modular HTML Renderer)
 
-Generate, review, or update technical documentation for a PARA project. Docs are always created in `Projects/[project-name]/docs/` (internal). Use `publish` to promote selected docs to `repo/docs/` when ready.
+Generate, review, update, or preview technical documentation for a PARA project. Docs are always created in `Projects/[project-name]/docs/` (internal). Use `publish` to promote selected docs to `repo/docs/` when ready.
 
 ## Actions
 
@@ -17,12 +17,14 @@ Generate, review, or update technical documentation for a PARA project. Docs are
 | `review` | Audit existing docs for completeness and freshness |
 | `update` | Update specific doc files to reflect current state |
 | `publish` | Copy selected docs from `docs/` to `repo/docs/` for shipping |
+| `watch` | Launch local live-reload server to preview documentation inside browser |
 
 ## Options
 
 | Option | Description |
 |:--|:--|
 | `--graph` | Run Graph Pipeline (Build → Query → Context Bundles) before documentation to anchor docs in real codebase architecture |
+| `--watch` | Automatically spin up the local watch server after the creation or update steps are completed |
 
 ---
 
@@ -36,6 +38,7 @@ Generate, review, or update technical documentation for a PARA project. Docs are
 4. **Progressive depth.** Each doc has a clear summary at top → details below.
 5. **Versioned and dated.** Every doc carries a version header and "last reviewed" date.
 6. **Minimal overhead.** Only create docs the project actually needs based on its type and size.
+7. **Source-verified.** Every doc MUST carry a `<!-- ⚠️ SOURCE-VERIFIED -->` guard header listing the source files that were cross-referenced during writing. If a feature is declared in config but has no code usage, mark it `[Planned — Not yet implemented in source]`.
 
 ## Doc Locations
 
@@ -280,6 +283,29 @@ Create each approved document using the appropriate template from Section "Doc T
 4. Save to `Projects/[project-name]/docs/[doc-name].md`
 5. **Git Guard**: DO NOT run `git commit` for files created in `docs/` (internal docs are not git-tracked).
 
+#### 6.5. Source Verification Gate
+
+> ⛔ CHECKPOINT: Agent MUST NOT proceed to Step 7 until verification is complete.
+
+For EVERY doc created in Step 6, perform anti-hallucination verification:
+
+1. **Path Verification:** Confirm every file path referenced in the doc actually exists using `find` or `ls`.
+2. **Function Verification:** Confirm every function/class name referenced matches the actual export in source code.
+3. **Config Verification:** For each env var, binding, or config key mentioned, verify it exists in `wrangler.jsonc`, `package.json`, or `.env.example`.
+4. **State Verification:** If a config binding exists but has NO code using it, the doc MUST mark it as `[Planned — Not yet implemented in source]`.
+5. **Guard Header:** Insert `<!-- ⚠️ SOURCE-VERIFIED — Cross-referenced with [file1, file2, ...] on YYYY-MM-DD -->` after the document title.
+
+**Quick Verification Script:**
+
+```bash
+# Extract all src/ paths from the doc and verify they exist
+grep -oP 'src/[a-zA-Z0-9_./-]+' Projects/[project-name]/docs/[doc-name].md | sort -u | while read f; do
+  test -f "Projects/[project-name]/repo/$f" && echo "✅ $f" || echo "🔴 MISSING: $f"
+done
+```
+
+If any `🔴 MISSING` is found → fix the doc before proceeding.
+
 #### 7. Create or Update Doc Index
 
 // turbo
@@ -319,6 +345,21 @@ Append to current session log:
 3. **Curate memory:** After pushing, call `memory_curate(projectName)` to consolidate raw memory events into semantic slices.
 
 4. **IF no graph** → Skip silently.
+
+#### 9. HTML Compilation & Live Watch
+
+// turbo
+
+1. Compile the newly generated Markdown documents to HTML (stored in `docs/.html/`):
+   ```bash
+   node .agents/skills/html-renderer/docs/scripts/render.js Projects/[project-name]/docs
+   ```
+
+2. **IF `--watch` is specified:**
+   Start the local live-reload server immediately:
+   ```bash
+   node .agents/skills/html-renderer/docs/scripts/render.js Projects/[project-name]/docs --watch
+   ```
 
 ---
 
@@ -367,7 +408,20 @@ Update specific documentation to reflect current project state.
 3. Diff current doc against actual code to find discrepancies.
 4. Update the doc and bump "last reviewed" date.
 5. Log in session.
-6. **Git Guard**: DO NOT run `git commit` or `git add` for files in `docs/` (internal docs are not git-tracked).
+6. **HTML Compilation & Watch (Optional)**:
+   // turbo
+   
+   Compile the updated Markdown documents:
+   ```bash
+   node .agents/skills/html-renderer/docs/scripts/render.js Projects/[project-name]/docs
+   ```
+   
+   If `--watch` flag is provided, start the live-reload watch server:
+   ```bash
+   node .agents/skills/html-renderer/docs/scripts/render.js Projects/[project-name]/docs --watch
+   ```
+   
+7. **Git Guard**: DO NOT run `git commit` or `git add` for files in `docs/` (internal docs are not git-tracked).
 
 ---
 
@@ -434,6 +488,22 @@ Append to current session log:
 
 ---
 
+## 📡 Action: watch
+
+Start the local watch server with live reload for project documentation.
+
+### Steps
+
+// turbo
+
+1. Spin up the watcher to track changes in Markdown files and render them dynamically:
+   ```bash
+   node .agents/skills/html-renderer/docs/scripts/render.js Projects/[project-name]/docs --watch
+   ```
+
+---
+
+
 ## Doc Templates
 
 > 🧩 **Sidecar Skill:** Load document templates from the `docs` skill:
@@ -459,6 +529,8 @@ Append to current session log:
 - [ ] Doc plan presented and approved by user
 - [ ] Docs written from actual code (not assumptions)
 - [ ] All docs have version header and "last reviewed" date
+- [ ] **Source Verification Gate passed** (Step 6.5 — all paths, functions, configs verified)
+- [ ] **Guard header `<!-- ⚠️ SOURCE-VERIFIED -->` present** in every doc file
 - [ ] `docs/README.md` index created or updated
 - [ ] Session log updated
 

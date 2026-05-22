@@ -8,6 +8,7 @@
 # [Project Name] — Project Roadmap
 
 > **Version**: 1.0 | **Created**: YYYY-MM-DD | **Updated**: YYYY-MM-DD
+> **Template:** roadmap.md
 > **Type:** Meta-plan — each phase has its own detail plan.
 
 ---

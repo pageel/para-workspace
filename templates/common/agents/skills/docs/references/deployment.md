@@ -3,6 +3,8 @@
 ```markdown
 # [Project Name] — Deployment
 
+<!-- ⚠️ SOURCE-VERIFIED — Cross-referenced with [list source files] on YYYY-MM-DD -->
+
 > **Version**: [X.Y.Z] | **Last reviewed**: YYYY-MM-DD
 
 ## Prerequisites

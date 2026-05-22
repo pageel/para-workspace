@@ -86,6 +86,33 @@ Every spec MUST define three tiers of boundaries:
 | **Ask first** | Requires human approval | DB schema changes, adding dependencies |
 | **Never do** | Absolute prohibitions | Commit secrets, edit vendor dirs, remove failing tests |
 
+### 1.5 Spec Re-read Checkpoint (Implementation Guard)
+
+Before starting ANY implementation task derived from an approved spec, Agent MUST:
+
+1. **Locate the spec:** Find the relevant `artifacts/specs/spec-*.md` file
+2. **Re-read Success Criteria:** Use `view_file` to read the spec's success criteria section
+3. **Re-read Boundaries:** Confirm the Always/Ask First/Never rules are still in working memory
+4. **Cross-reference task:** Verify the current task maps to a specific spec requirement
+
+**Why this matters:** During long coding sessions, Agent context decays. A task that
+started aligned with the spec can drift into hallucinated requirements if the spec
+is not refreshed. This checkpoint costs ~200 tokens but prevents ~2000 tokens of
+rework from spec violations.
+
+```
+BEFORE each implementation task:
+  ┌─────────────────────────────┐
+  │ 1. view_file(spec)          │  ← Re-read success criteria
+  │ 2. Confirm task↔spec match  │  ← Verify alignment
+  │ 3. Check boundaries         │  ← Always/Ask/Never still loaded?
+  │ 4. BEGIN coding              │  ← Only after checkpoint passes
+  └─────────────────────────────┘
+```
+
+**Anti-pattern:** "I already read the spec earlier" — earlier context may be
+truncated or decayed. Re-read is cheap insurance.
+
 ## 2. Resource Router
 
 > Agent reads this table to locate data files needed by the `/spec` workflow.

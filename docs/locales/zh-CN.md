@@ -7,7 +7,7 @@
 **人类与 AI Agent 的工作空间框架**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.8-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.10-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -327,7 +327,7 @@ agents:
 
 ## 🗺️ 路线图
 
-当前版本为 **1.8.8** (TDD Governance Hygiene)。
+当前版本为 **1.8.10** (Release Hardening)。
 未来规划包含 **v1.9.0** (Department 系统) 及 **v1.10.0** (社区与信任边界)。
 
 ---
@@ -340,4 +340,4 @@ agents:
 
 用 ❤️ 构建，由 **Pageel** 出品。标准化 Agent PKM 的未来。
 
-_版本: 1.8.8_
+_版本: 1.8.10_
