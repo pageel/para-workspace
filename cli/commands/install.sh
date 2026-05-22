@@ -472,11 +472,17 @@ if [ -d "$KI_TMPL_SRC" ]; then
       if [ -f "$tmpl_dir/metadata.json" ]; then
         render_ki_template "$tmpl_dir/metadata.json" "$ki_dest/metadata.json"
       fi
-      # Copy artifacts (with template rendering)
+      # Copy artifacts recursively (with template rendering)
       if [ -d "$tmpl_dir/artifacts" ]; then
-        for art_file in "$tmpl_dir/artifacts"/*; do
-          [ -f "$art_file" ] && render_ki_template "$art_file" "$ki_dest/artifacts/$(basename "$art_file")"
-        done
+        (
+          cd "$tmpl_dir/artifacts"
+          find . -type f | while read -r rel_path; do
+            rel_path="${rel_path#./}"
+            dest_file="$ki_dest/artifacts/$rel_path"
+            mkdir -p "$(dirname "$dest_file")"
+            render_ki_template "$tmpl_dir/artifacts/$rel_path" "$dest_file"
+          done
+        )
       fi
       ki_installed=$((ki_installed + 1))
     else
@@ -507,9 +513,15 @@ if [ -d "$KI_TMPL_SRC" ]; then
         if [ "$needs_upgrade" = true ] || [ "$FORCE" = true ]; then
           render_ki_template "$tmpl_dir/metadata.json" "$ki_dest/metadata.json"
           if [ -d "$tmpl_dir/artifacts" ]; then
-            for art_file in "$tmpl_dir/artifacts"/*; do
-              [ -f "$art_file" ] && render_ki_template "$art_file" "$ki_dest/artifacts/$(basename "$art_file")"
-            done
+            (
+              cd "$tmpl_dir/artifacts"
+              find . -type f | while read -r rel_path; do
+                rel_path="${rel_path#./}"
+                dest_file="$ki_dest/artifacts/$rel_path"
+                mkdir -p "$(dirname "$dest_file")"
+                render_ki_template "$tmpl_dir/artifacts/$rel_path" "$dest_file"
+              done
+            )
           fi
           ki_upgraded=$((ki_upgraded + 1))
         else
