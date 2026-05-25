@@ -14,7 +14,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 TEST_TMP=$(mktemp -d)
 
 # Cleanup on exit
-trap 'rm -rf "$TEST_TMP"; [ -f "$TEST_TMP/tools.yml.bak" ] && mv "$TEST_TMP/tools.yml.bak" "$REPO_ROOT/registry/tools.yml"; rm -f "$REPO_ROOT/cli/commands/test-dirty-check.sh"' EXIT
+trap '[ -f "$TEST_TMP/tools.yml.bak" ] && mv "$TEST_TMP/tools.yml.bak" "$REPO_ROOT/registry/tools.yml"; rm -rf "$TEST_TMP"; rm -f "$REPO_ROOT/cli/commands/test-dirty-check.sh"' EXIT
 
 # Create a fake workspace and registry
 export WORKSPACE_ROOT="$TEST_TMP/workspace"
