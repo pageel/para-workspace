@@ -10,7 +10,7 @@ Release Patch & Synchronization (Staging, Vibecode, Scan-Sec, Resource).
 - **Added**: Taught `install-tool` dirty-check template logic to avoid bulk overwriting custom workflows/skills, prompting user for Overwrite/Keep/Dry-run/Abort.
 - **Added**: Automated test suite `tests/cli/test-install-tool-dirty-check.sh` verifying overwrite logic.
 - **Added**: Integrated 4 new workflows (`/staging`, `/vibecode`, `/scan-sec`, `/resource`) and corresponding skills into Core catalog.
-- **Changed**: Synchronized all 4 locales (vi-VN, zh-CN, fr-FR, es-ES) to reflect the new counts of **31 workflows**, **14 rules**, and **21 skills**.
+- **Changed**: Synchronized all 4 locales (vi-VN, zh-CN, fr-FR, es-ES) to reflect the new counts of **32 workflows**, **14 rules**, and **21 skills**.
 - **Fixed**: Fixed title match query and quarantine output expectations in `tests/workflows/test-quarantine.sh` to align with the actual `plan.md` template logic.
 
 ## [1.8.10] - 2026-05-22

@@ -1,6 +1,6 @@
-test-plugin:
-  repo: "pageel/para-test-plugin"
-  description: "Test plugin"
+test-dirty-check:
+  repo: "pageel/para-test-dirty-check"
+  description: "Test plugin for dirty-check"
   latest: "1.0.0"
   runtime: "node"
   min_runtime_version: "18"

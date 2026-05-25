@@ -28,7 +28,7 @@
 | [📥 Installation](#-installation) | Prérequis, configuration, profils, dépannage |
 | [🧠 Le Noyau](#-le-noyau) | Invariants, heuristiques, contrats |
 | [🛠️ Référence CLI](#-référence-cli) | Toutes les commandes CLI |
-| [📑 Catalogue des Workflows](#-catalogue-des-workflows) | 31 flux de travail (workflows) régis |
+| [📑 Catalogue des Workflows](#-catalogue-des-workflows) | 32 flux de travail (workflows) régis |
 | [🛡️ Catalogue des Règles](#-catalogue-des-règles) | 14 règles de gouvernance |
 | [🧩 Catalogue des Compétences](#-catalogue-des-compétences) | 21 compétences (skills) réutilisables |
 | [🔌 Système d'Outils](#-système-doutils-v180) | Installer des plugins d'agents externes |
@@ -210,7 +210,7 @@ para list-tools                 # Lister les plugins installés
 ## 📑 Catalogue (Workflows, Règles et Compétences)
 
 Le système intègre :
-- **31 Workflows :** Des gestionnaires de tâches (`/backlog`), création de spécifications (`/spec`), des scénarios d'ouverture (`/open`), des audits (`/para-audit`), des systèmes de connaissances (`/para-knowledge`), jusqu'à la création de contenu (`/write`), la télémétrie (`/logs`), ainsi que les workflows intégrés de staging (`/staging`), d'exécution vibecode (`/vibecode`), de sécurité (`/scan-sec`) et de ressources (`/resource`).
+- **32 Workflows :** Des gestionnaires de tâches (`/backlog`), création de spécifications (`/spec`), des scénarios d'ouverture (`/open`), des audits (`/para-audit`), des systèmes de connaissances (`/para-knowledge`), de revues QA (`/qa`), jusqu'à la création de contenu (`/write`), la télémétrie (`/logs`), ainsi que les workflows intégrés de staging (`/staging`), d'exécution vibecode (`/vibecode`), de sécurité (`/scan-sec`) et de ressources (`/resource`).
 - **14 Règles de Gouvernance :** Protègent le versionnement, les bonnes pratiques Git (VCS), la politique graph-first, la gestion des outils (tool routing) ou évitent les mutations risquées.
 - **21 Compétences (Skills) :** Facilitent la compréhension des composants statiques (`PARA Kit`), des diagrammes, de l'architecture des pages web (`Page Map`), des modèles de rédaction (`Write Templates`), des catalogues de gardes de sécurité (`Harness Guards`), `Spec Templates`, revues `QA`, lignes directrices `TDD`, extensions d'audit de journaux (`Logs Audit`), `HTML Renderer`, `New Project`, `para-graph`, `Staging Templates`, `Vibecode Execution Templates`, `Vulnerability Scanner Templates`, `Resource Study Templates` et `Sidecar Skill Governance`.
 

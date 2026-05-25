@@ -28,7 +28,7 @@
 | [📥 Cài đặt](#-cài-đặt) | Yêu cầu, thiết lập, profiles |
 | [🧠 Kernel](#-kernel-nhân-hệ-thống) | Invariants, heuristics, hợp đồng |
 | [🛠️ CLI](#️-tham-chiếu-cli) | Tất cả lệnh CLI |
-| [📑 Workflow Catalog](#-catalog-workflow) | 31 governed workflows |
+| [📑 Workflow Catalog](#-catalog-workflow) | 32 governed workflows |
 | [🛡️ Rule Catalog](#️-rule-catalog) | 14 governance rules |
 | [🧩 Skill Catalog](#-catalog-kỹ-năng-skills) | 21 reusable skills |
 | [🔌 Hệ thống Công cụ](#-hệ-thống-công-cụ-v180) | Cài đặt plugin AI agentic ngoài |
@@ -356,6 +356,7 @@ para list-tools               # Liệt kê plugin đã cài
 | **[`/para-workflow`](../workflows/para-workflow.md)** | Quản lý, cài đặt, chuẩn hoá agent workflows |
 | **[`/plan`](../workflows/plan.md)** | Tạo, xem, và cập nhật kế hoạch triển khai |
 | **[`/push`](../workflows/push.md)** | Commit và push nhanh lên GitHub |
+| **[`/qa`](../workflows/qa.md)** | Vòng lặp kiểm tra chất lượng (QA) Red Team hệ thống cho các kế hoạch và tài liệu đặc tả |
 | **[`/release`](../workflows/release.md)** | Kiểm tra chất lượng trước release |
 | **[`/retro`](../workflows/retro.md)** | Retrospective project trước khi archive |
 | **[`/spec`](../workflows/spec.md)** | Viết tài liệu đặc tả cấu trúc (có ranh giới và giả định) trước khi code |

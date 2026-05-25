@@ -28,7 +28,7 @@
 | [📥 Installation](#-installation) | Prerequisites, setup, profiles, troubleshooting |
 | [🧠 The Kernel](#-the-kernel) | Invariants, heuristics, contracts |
 | [🛠️ CLI Reference](#️-cli-reference) | All CLI commands |
-| [📑 Workflow Catalog](#-workflow-catalog) | 31 governed workflows |
+| [📑 Workflow Catalog](#-workflow-catalog) | 32 governed workflows |
 | [🛡️ Rule Catalog](#️-rule-catalog) | 14 governance rules |
 | [🧩 Skill Catalog](#-skill-catalog) | 21 reusable skills |
 | [🔌 Tool System](#-tool-system-v180) | Install external agentic plugins |
@@ -358,6 +358,7 @@ para mcp-remove <tool>          # Remove MCP config from IDE
 | **[`/para-workflow`](./docs/workflows/para-workflow.md)** | Manage, install, and standardize agent workflows           |
 | **[`/plan`](./docs/workflows/plan.md)**                   | Create, review, and update implementation plans            |
 | **[`/push`](./docs/workflows/push.md)**                   | Fast commit and push to GitHub                             |
+| **[`/qa`](./docs/workflows/qa.md)**                       | Systematic Red Team Q&A review loop for plans and specs    |
 | **[`/release`](./docs/workflows/release.md)**             | Pre-release quality gate                                   |
 | **[`/retro`](./docs/workflows/retro.md)**                 | Project retrospective before archiving                     |
 | **[`/spec`](./docs/workflows/spec.md)**                   | Write structured specifications before coding              |

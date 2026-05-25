@@ -28,7 +28,7 @@
 | [📥 安装](#-安装) | 先决条件、设置、配置文件、故障排除 |
 | [🧠 内核](#-内核) | 不变原则、启发式规则、契约 |
 | [🛠️ CLI 参考](#-cli-参考) | 所有 CLI 命令 |
-| [📑 工作流目录](#-工作流目录) | 31 个受治理的工作流 |
+| [📑 工作流目录](#-工作流目录) | 32 个受治理的工作流 |
 | [🛡️ 规则目录](#-规则目录) | 14 条治理规则 |
 | [🧩 技能目录](#-技能目录) | 21 个可复用技能 |
 | [🔌 工具系统](#-工具系统-v180) | 安装外部 Agentic 插件 |
@@ -211,7 +211,7 @@ para list-tools                 # 列出已安装的插件
 
 ## 📑 工作流目录
 
-内置 31 个受治理核心工作流（例如 `/plan`, `/spec`, `/backlog`, `/open`, `/end`, `/para-knowledge`, `/para-skill`, `/write`, `/logs`, 以及新增的 `/staging`, `/vibecode`, `/scan-sec`, `/resource`）用于规范化 AI Agent 在项目内的操作流。
+内置 32 个受治理核心工作流（例如 `/plan`, `/spec`, `/backlog`, `/open`, `/end`, `/para-knowledge`, `/para-skill`, `/write`, `/logs`, `/qa`, 以及新增的 `/staging`, `/vibecode`, `/scan-sec`, `/resource`）用于规范化 AI Agent 在项目内的操作流。
 
 ## 🛡️ 规则目录
 

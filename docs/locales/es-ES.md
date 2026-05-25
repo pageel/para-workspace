@@ -28,7 +28,7 @@
 | [📥 Instalación](#-instalación) | Requisitos previos, configuración, perfiles, solución de problemas |
 | [🧠 El Kernel](#-el-kernel) | Invariantes, reglas heurísticas, contratos |
 | [🛠️ Referencia de CLI](#-referencia-cli) | Todos los comandos de CLI |
-| [📑 Catálogo de Workflows](#-catálogo-de-workflows) | 31 flujos de trabajo (workflows) gobernados |
+| [📑 Catálogo de Workflows](#-catálogo-de-workflows) | 32 flujos de trabajo (workflows) gobernados |
 | [🛡️ Catálogo de Reglas](#-catálogo-de-reglas) | 14 reglas de gobernanza |
 | [🧩 Catálogo de Skills](#-catálogo-de-skills) | 21 habilidades (skills) reutilizables |
 | [🔌 Sistema de Herramientas](#-sistema-de-herramientas-v180) | Instalar complementos agentic externos |
@@ -210,7 +210,7 @@ para list-tools                 # Listar complementos instalados
 ## 📑 Catálogo de Workflows, Reglas y Skills
 
 El sistema incluye:
-- **31 Workflows:** Desde gestores de tareas (`/backlog`), creación de especificaciones (`/spec`), flujos de apertura (`/open`), auditorías (`/para-audit`), sistemas de conocimiento cruzado (`/para-knowledge`), hasta generación de contenido (`/write`), telemetría (`/logs`), así como los workflows integrados de staging (`/staging`), ejecución vibecode (`/vibecode`), seguridad (`/scan-sec`) y recursos (`/resource`).
+- **32 Workflows:** Desde gestores de tareas (`/backlog`), creación de especificaciones (`/spec`), flujos de apertura (`/open`), auditorías (`/para-audit`), sistemas de conocimiento cruzado (`/para-knowledge`), revisiones QA (`/qa`), hasta generación de contenido (`/write`), telemetría (`/logs`), así como los workflows integrados de staging (`/staging`), ejecución vibecode (`/vibecode`), seguridad (`/scan-sec`) y recursos (`/resource`).
 - **14 Reglas de Gobernabilidad:** Defienden el versionado, las buenas prácticas de Git (VCS), la política graph-first, la gestión de herramientas (tool routing) o evitan mutaciones riesgosas. Todas optimizadas bajo un Índice Disparador.
 - **21 Skills Base:** Facilitan el entendimiento de componentes estáticos como `PARA Kit`, diagramas visuales, mapas de página (`Page Map`), plantillas de redacción de contenidos (`Write Templates`), catálogos de guardias de seguridad (`Harness Guards`), `Spec Templates`, revisiones `QA`, guías `TDD`, extensiones de registro (`Logs Audit`), `HTML Renderer`, `New Project`, `para-graph`, `Staging Templates`, `Vibecode Execution Templates`, `Vulnerability Scanner Templates`, `Resource Study Templates` y `Sidecar Skill Governance`.
 
