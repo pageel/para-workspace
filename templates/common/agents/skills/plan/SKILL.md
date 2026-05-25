@@ -25,6 +25,7 @@ source: catalog
 | `references/detail-plan.md` | Step 9 — Plan Type = Detail Plan (code changes) | Document structure for implementation plans |
 | `references/detail-plan-docs.md` | Step 9 — Plan Type = Detail Plan (docs-only) | Document structure for documentation plans (no git, graph-first) |
 | `references/roadmap.md` | Step 9 — Plan Type = Roadmap | Document structure for multi-phase roadmaps |
+| `references/session-plan.md` | Step 9 — Plan Type = Session Plan (DSP) | Document structure for dynamic lightweight session plans |
 
 | `references/detail-plan-tdd.md` | Step 9 — Plan Type = Detail Plan (TDD mode) | Document structure for strict Test-Driven Development implementation |
 | `references/detail-plan-hardened.md` | Step 9 — Plan Type = Hardened Plan | Detail Plan + Mandatory Audit Gate + Selective TDD injection |
@@ -39,6 +40,8 @@ source: catalog
 ```text
 IF plan type = Roadmap
   → load references/roadmap.md
+ELIF plan type = Session Plan (DSP)
+  → load references/session-plan.md
 ELIF plan scope is documentation-only
      (target files are in docs/, no code changes, no repo/ modifications)
   → load references/detail-plan-docs.md
@@ -80,6 +83,7 @@ After loading project governance, read `project.md` and adapt the chosen templat
 |:--|:--|
 | Plan Status is `📝 Draft` | Agent MUST NOT execute Phase tasks. Only review/edit the plan content. |
 | Plan Status is `🔨 Active` | Agent MAY execute Phase tasks following the plan sequence. |
+| Plan Type is Session Plan | Set status directly to `🔨 Active`, skip setup Phase 0, define milestones with activated options. |
 | Project has no `repo/` | Omit Git checkpoint steps and Git items in Walkthrough |
 | Project has no build tool | Omit `Build/Test pass` from Audit Tracking |
 | Project is not bilingual | Omit 1:N EN/VI task expansion pattern |

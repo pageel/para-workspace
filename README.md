@@ -7,7 +7,7 @@
 **The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.10-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.11-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -28,9 +28,9 @@
 | [📥 Installation](#-installation) | Prerequisites, setup, profiles, troubleshooting |
 | [🧠 The Kernel](#-the-kernel) | Invariants, heuristics, contracts |
 | [🛠️ CLI Reference](#️-cli-reference) | All CLI commands |
-| [📑 Workflow Catalog](#-workflow-catalog) | 27 governed workflows |
+| [📑 Workflow Catalog](#-workflow-catalog) | 31 governed workflows |
 | [🛡️ Rule Catalog](#️-rule-catalog) | 14 governance rules |
-| [🧩 Skill Catalog](#-skill-catalog) | 16 reusable skills |
+| [🧩 Skill Catalog](#-skill-catalog) | 21 reusable skills |
 | [🔌 Tool System](#-tool-system-v180) | Install external agentic plugins |
 | [🧩 Task Management](#-task-management-hybrid-3-file-model) | Hybrid 3-File model |
 | [🔄 Upgrading](#-upgrading-versions) | Auto update + clean slate |
@@ -367,6 +367,10 @@ para mcp-remove <tool>          # Remove MCP config from IDE
 | **[`/para-skill`](./docs/workflows/para-skill.md)** | Co-Author engine for creating, validating, and testing AI Agent skills |
 | **[`/write`](./docs/workflows/write.md)**                 | Write deep-dive content with structured sidecar templates  |
 | **[`/logs`](./docs/workflows/logs.md)**                   | Session telemetry diagnostics and context budget analytics |
+| **[`/staging`](./docs/workflows/staging.md)**             | Stage workspace assets into a project's repo (v1.8.11)     |
+| **[`/vibecode`](./docs/workflows/vibecode.md)**           | Manage interactive/loop execution modes for coding tasks (v1.8.11) |
+| **[`/scan-sec`](./docs/workflows/scan-sec.md)**           | Scan codebase for security vulnerabilities (v1.8.11)       |
+| **[`/resource`](./docs/workflows/resource.md)**           | Orchestrate resource import, graph generation, and pattern learning (v1.8.11) |
 
 ---
 
@@ -415,6 +419,11 @@ Skills are reusable knowledge modules loaded on-demand via the skills trigger in
 | **[HTML Renderer](./docs/skills/html-renderer.md)** | Modular HTML rendering engine for themed static docs & graph views (v1.8.9) |
 | **[New Project](./docs/skills/new-project.md)** | Sidecar skill for the /new-project workflow (Sidecar, v1.8.10) |
 | **[para-graph](./docs/skills/para-graph.md)** | Centralized Graph Intelligence Router and semantic memory curation (Sidecar, v1.8.10) |
+| **[Staging Templates](./docs/skills/staging.md)** | Sidecar data for the /staging template release (Sidecar, v1.8.11) |
+| **[Vibecode Execution Templates](./docs/skills/vibecode.md)** | Sidecar data for the /vibecode execution (Sidecar, v1.8.11) |
+| **[Vulnerability Scanner Templates](./docs/skills/scan-sec.md)** | Sidecar data for the /scan-sec scanner (Sidecar, v1.8.11) |
+| **[Resource Study Templates](./docs/skills/resource.md)** | Sidecar data for the /resource learning (Sidecar, v1.8.11) |
+| **[Sidecar Skill Governance](./docs/skills/sidecar-skill.md)** | Architectural rules and standards for sidecar skills (v1.8.11) |
 
 ---
 
@@ -787,6 +796,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] **TDD Governance Workflow** _(shipped in v1.8.7)_
 - [x] **Ecosystem-wide Para-Graph MCP Integration — Memory Ops lifecycle, Project Sidecar Skill, 43% workflow coverage** _(shipped in v1.8.9)_
 - [x] **Release Hardening, HTML Renderer Integration, Spec Rules & TDD Gate** _(shipped in v1.8.10)_
+- [x] **Release Hardening: dirty-check template override prompts in install-tool CLI, conflict diff detection, and staging/scan-sec/vibecode/resource workflows catalog integration** _(shipped in v1.8.11)_
 - [ ] Department System _(v1.9.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.10.0 — planned)_
 
@@ -804,4 +814,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.8.10_
+_Version: 1.8.11_

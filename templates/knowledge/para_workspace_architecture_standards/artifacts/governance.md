@@ -103,14 +103,14 @@ Versioning              | Version bumps, changelog updates     | 🟢 Low
 Exports Data            | Exporting data, sharing externally   | 🟢 Low
 Tool Routing            | Heuristic routing: API vs Bash vs MCP| 🟢 Low
 
-## 6. Skills Library (15 skills, v1.8.10+)
+## 6. Skills Library (20 skills, v1.8.11+)
 
 Skills are folder-based, English-first instruction sets (either Standalone or Sidecar to workflows):
 
 Category   | Core Skills
 :----------|:----------------------------------------------------------------------
-Standalone | PARA Kit, Formatting, Page Map, TDD Guidelines, HTML Renderer
-Sidecar    | PARA Skill, Plan, Docs, Brainstorm, Write, Harness, Spec, QA, Logs, New Project
+Standalone | PARA Kit, Formatting, Page Map, TDD Guidelines, HTML Renderer, Sidecar Skill Governance
+Sidecar    | PARA Skill, Plan, Docs, Brainstorm, Write, Harness, Spec, QA, Logs, New Project, Staging Templates, Vibecode Execution Templates, Vulnerability Scanner Templates, Resource Study Templates
 
 Skills are loaded on demand based on the proactive trigger indexes (`rules.md` and `skills.md`). Users may also define project-specific rules and skills under `Projects/<project>/.agents/`.
 

@@ -7,7 +7,7 @@
 **人类与 AI Agent 的工作空间框架**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.10-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.11-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -28,9 +28,9 @@
 | [📥 安装](#-安装) | 先决条件、设置、配置文件、故障排除 |
 | [🧠 内核](#-内核) | 不变原则、启发式规则、契约 |
 | [🛠️ CLI 参考](#-cli-参考) | 所有 CLI 命令 |
-| [📑 工作流目录](#-工作流目录) | 27 个受治理的工作流 |
-| [🛡️ 规则目录](#-规则目录) | 11 条治理规则 |
-| [🧩 技能目录](#-技能目录) | 13 个可复用技能 |
+| [📑 工作流目录](#-工作流目录) | 31 个受治理的工作流 |
+| [🛡️ 规则目录](#-规则目录) | 14 条治理规则 |
+| [🧩 技能目录](#-技能目录) | 21 个可复用技能 |
 | [🔌 工具系统](#-工具系统-v180) | 安装外部 Agentic 插件 |
 | [🧩 任务管理](#-任务管理混合-3-文件模型) | 混合 3-文件模型 |
 | [🔄 升级](#-升级版本) | 自动更新 + 全新安装 |
@@ -211,15 +211,15 @@ para list-tools                 # 列出已安装的插件
 
 ## 📑 工作流目录
 
-内置 27 个受治理核心工作流（如 `/plan`, `/spec`, `/backlog`, `/open`, `/end`, `/para-knowledge`, `/para-skill`, `/write`, `/logs` 等）用于规范化 AI Agent 在项目内的操作流。
+内置 31 个受治理核心工作流（例如 `/plan`, `/spec`, `/backlog`, `/open`, `/end`, `/para-knowledge`, `/para-skill`, `/write`, `/logs`, 以及新增的 `/staging`, `/vibecode`, `/scan-sec`, `/resource`）用于规范化 AI Agent 在项目内的操作流。
 
 ## 🛡️ 规则目录
 
-包含 11 条治理规则，通过双层触发索引进行按需加载以节省 Token。包括 `governance` (核心), `vcs` (Git 安全), `knowledge` (KI 操作安全), 及 `hybrid-3-file-integrity` 等。
+包含 14 条治理规则，通过双层触发索引进行按需加载以节省 Token。包括 `governance` (核心), `vcs` (Git 安全), `knowledge` (KI 操作安全), `graph-first-policy` (图谱优先), `tool-routing` (工具路由) 及 `hybrid-3-file-integrity` 等。
 
 ## 🧩 技能目录
 
-目前包含 13 个复用技能（`PARA Kit`, `Formatting`, `Page Map`, `PARA Skill`, `Plan Templates`, `Docs Templates`, `Brainstorm Templates`, `Write Templates`, `Harness Guards`, `Spec Templates`, `QA Review Templates`, `TDD Guidelines`, `Logs Audit Extensions`），按需加载并提供模板、模式和参考资料。
+目前包含 21 个复用技能，按需加载并提供模板、模式和参考资料。
 
 | 技能 | 说明 |
 | :--- | :--- |
@@ -232,6 +232,18 @@ para list-tools                 # 列出已安装的插件
 | **[Brainstorm Templates](../skills/brainstorm.md)** | 决策与研究模板 (Sidecar, v1.7.12) |
 | **[Write Templates](../skills/write.md)** | 内容格式和写作规则模板 (Sidecar, v1.7.14) |
 | **[Harness Guards](../skills/harness.md)** | Guard 目录和自动扫描协议，用于生成上下文感知的安全警告 (Sidecar, v1.7.16) |
+| **[Spec Templates](../skills/spec.md)** | 规范编写模板、假设梳理与边界定义 (Sidecar, v1.7.16) |
+| **[QA Review Templates](../skills/qa.md)** | 红队角色、审计维度清单与 QA 报告模板 (Sidecar, v1.8.6) |
+| **[TDD Guidelines](../skills/tdd.md)** | 严格测试驱动开发规范与 Red-Green-Refactor 周期 (v1.8.7) |
+| **[Logs Audit Extensions](../skills/logs.md)** | TDD/Spec 规范审计的会话日志合规分析模板 (Sidecar, v1.8.7) |
+| **[HTML Renderer](../skills/html-renderer.md)** | 静态文档和图表可视化的模块化 HTML 渲染引擎 (v1.8.9) |
+| **[New Project](../skills/new-project.md)** | 用于新建项目 /new-project 的架构设计模式与本地规则配置组件 (Sidecar, v1.8.10) |
+| **[para-graph](../skills/para-graph.md)** | 智能代码图谱路由与语义内存管理 (Sidecar, v1.8.10) |
+| **[Staging Templates](../skills/staging.md)** | 用于 /staging 模板发布的自定义路径映射模板 (Sidecar, v1.8.11) |
+| **[Vibecode Execution Templates](../skills/vibecode.md)** | 用于 /vibecode 编写的验证清单与执行模式预设 (Sidecar, v1.8.11) |
+| **[Vulnerability Scanner Templates](../skills/scan-sec.md)** | 安全漏洞扫描规则、OWASP Top 10 映射与报告模板 (Sidecar, v1.8.11) |
+| **[Resource Study Templates](../skills/resource.md)** | 用于 /resource 学习与设计模式提取的研究模板 (Sidecar, v1.8.11) |
+| **[Sidecar Skill Governance](../skills/sidecar-skill.md)** | 辅助工作流的 Sidecar Skill 编写规范与架构标准 (v1.8.11) |
 
 ---
 
@@ -327,7 +339,7 @@ agents:
 
 ## 🗺️ 路线图
 
-当前版本为 **1.8.10** (Release Hardening)。
+当前版本为 **1.8.11** (Release Hardening: install-tool CLI 的脏检查覆盖提示与冲突对比、以及 staging/scan-sec/vibecode/resource 核心工作流)。
 未来规划包含 **v1.9.0** (Department 系统) 及 **v1.10.0** (社区与信任边界)。
 
 ---
@@ -340,4 +352,4 @@ agents:
 
 用 ❤️ 构建，由 **Pageel** 出品。标准化 Agent PKM 的未来。
 
-_版本: 1.8.10_
+_版本: 1.8.11_

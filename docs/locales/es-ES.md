@@ -7,7 +7,7 @@
 **El Framework de Espacio de Trabajo para Humanos y Agentes IA**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.10-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.11-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -28,9 +28,9 @@
 | [📥 Instalación](#-instalación) | Requisitos previos, configuración, perfiles, solución de problemas |
 | [🧠 El Kernel](#-el-kernel) | Invariantes, reglas heurísticas, contratos |
 | [🛠️ Referencia de CLI](#-referencia-cli) | Todos los comandos de CLI |
-| [📑 Catálogo de Workflows](#-catálogo-de-workflows) | 27 flujos de trabajo (workflows) gobernados |
-| [🛡️ Catálogo de Reglas](#-catálogo-de-reglas) | 11 reglas de gobernanza |
-| [🧩 Catálogo de Skills](#-catálogo-de-skills) | 13 habilidades (skills) reutilizables |
+| [📑 Catálogo de Workflows](#-catálogo-de-workflows) | 31 flujos de trabajo (workflows) gobernados |
+| [🛡️ Catálogo de Reglas](#-catálogo-de-reglas) | 14 reglas de gobernanza |
+| [🧩 Catálogo de Skills](#-catálogo-de-skills) | 21 habilidades (skills) reutilizables |
 | [🔌 Sistema de Herramientas](#-sistema-de-herramientas-v180) | Instalar complementos agentic externos |
 | [🧩 Gestión de Tareas](#-gestión-de-tareas-modelo-híbrido-de-3-archivos) | Modelo híbrido de 3 archivos |
 | [🔄 Actualización](#-actualizando-versiones) | Actualización automática + instalación limpia |
@@ -210,9 +210,9 @@ para list-tools                 # Listar complementos instalados
 ## 📑 Catálogo de Workflows, Reglas y Skills
 
 El sistema incluye:
-- **27 Workflows:** Desde gestores de tareas (`/backlog`), creación de especificaciones (`/spec`), flujos de apertura (`/open`), auditorías (`/para-audit`), sistemas de conocimiento cruzado (`/para-knowledge`), hasta generación de contenido (`/write`) y telemetría (`/logs`).
-- **11 Reglas de Gobernabilidad:** Defienden el versionado, las buenas prácticas de Git (VCS) o evitan mutaciones riesgosas. Todas optimizadas bajo un Índice Disparador.
-- **13 Skills Base:** Facilitan el entendimiento de componentes estáticos como `PARA Kit`, diagramas visuales, mapas de página (`Page Map`), plantillas de redacción de contenidos (`Write Templates`), catálogos de guardias de seguridad (`Harness Guards`), `Spec Templates`, revisiones `QA`, guías `TDD`, y extensiones de registro (`Logs Audit`).
+- **31 Workflows:** Desde gestores de tareas (`/backlog`), creación de especificaciones (`/spec`), flujos de apertura (`/open`), auditorías (`/para-audit`), sistemas de conocimiento cruzado (`/para-knowledge`), hasta generación de contenido (`/write`), telemetría (`/logs`), así como los workflows integrados de staging (`/staging`), ejecución vibecode (`/vibecode`), seguridad (`/scan-sec`) y recursos (`/resource`).
+- **14 Reglas de Gobernabilidad:** Defienden el versionado, las buenas prácticas de Git (VCS), la política graph-first, la gestión de herramientas (tool routing) o evitan mutaciones riesgosas. Todas optimizadas bajo un Índice Disparador.
+- **21 Skills Base:** Facilitan el entendimiento de componentes estáticos como `PARA Kit`, diagramas visuales, mapas de página (`Page Map`), plantillas de redacción de contenidos (`Write Templates`), catálogos de guardias de seguridad (`Harness Guards`), `Spec Templates`, revisiones `QA`, guías `TDD`, extensiones de registro (`Logs Audit`), `HTML Renderer`, `New Project`, `para-graph`, `Staging Templates`, `Vibecode Execution Templates`, `Vulnerability Scanner Templates`, `Resource Study Templates` y `Sidecar Skill Governance`.
 
 ---
 
@@ -304,7 +304,7 @@ Una vez que se estandaricen nuevos workflows, correcciones en kernel el comando 
 
 ## 🗺️ Hoja de Ruta
 
-Versión actual: **1.8.10** (Release Hardening).
+Versión actual: **1.8.11** (Release Hardening: dirty-check y diff de plantillas para install-tool, integración de los workflows de staging/scan-sec/vibecode/resource).
 Próximos lanzamientos vislumbrados: **v1.9.0** (Sistemas por Departamento) y **v1.10.0** (Fronteras Comunitarias & Confianza).
 
 ---
@@ -317,4 +317,4 @@ Consulte el documento [CONTRIBUTING.md](../../CONTRIBUTING.md) para los lineamie
 
 Construido con ❤️ por **Pageel**. Estandarizando el futuro de los PKMs para Agentes.
 
-_Versión: 1.8.10_
+_Versión: 1.8.11_

@@ -251,6 +251,7 @@ From platform-injected KI summaries, cross-reference with plan scope:
 1. 🗺️ Roadmap — Phases + timeline overview (multi-version/feature index)
 2. 📋 Detail Plan — Tasks + implementation details (1 version/feature)
 3. 📋 Detail Plan (Hardened) — Detail Plan + Mandatory Audit + Selective TDD
+4. ⚡ Session Plan (DSP) — Dynamic lightweight session plan for fast coding (vibecode) with auto-commits
 
 Context:
   📄 Strategy: [exists: N files / none]
@@ -425,6 +426,7 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 - **Detail Plan (Versioned):** `v[ver]-[YYYY-MM-DD]-[topic].md` (e.g., `v1.7.11-2026-04-09-optimization.md`)
 - **Detail Plan (Wildcard/R&D):** `v[X.X.X]-[YYYY-MM-DD]-[topic].md` (e.g., `v1.x.x-2026-04-09-version-bumper.md`)
 - **Roadmap:** `roadmap-[topic].md` (e.g., `roadmap-core.md`)
+- **Session Plan (DSP):** `v[ver]-[YYYY-MM-DD]-session-[topic].md` (e.g., `v1.x.x-2026-05-23-session-refactor-auth.md`)
 
 **Plan document structure:**
 
@@ -434,8 +436,8 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 >
 > Use the template as the document structure. Fill in each section with data gathered from Steps 1-8.
 
-> ⚠️ **Status Gate:** New plans MUST be created with `Status: 📝 Draft`.
-> Agent MUST NOT execute any Phase tasks nor modify project files while Status is Draft.
+> ⚠️ **Status Gate:** New plans MUST be created with `Status: 📝 Draft` (Except Session Plans, which are created directly with `Status: 🔨 Active`).
+> Agent MUST NOT execute any Phase tasks nor modify project files while Status is Draft (except for active Session Plans).
 > Status transitions to `🔨 Active` ONLY at Step 10 after explicit user approval.
 
 #### 9.5. Pre-Checklist Context Reload (Staged Drill-down)

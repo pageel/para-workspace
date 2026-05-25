@@ -182,5 +182,56 @@ items:
   - standards
   - design-patterns
   - sidecar
+- id: scan-sec
+  name: Vulnerability Scanner Templates
+  kernel_min: 1.8.11
+  kernel_max: 1.x
+  entrypoint: scan-sec/SKILL.md
+  description: Sidecar data for /scan-sec workflow — vulnerability scanning rules, OWASP Top 10 mappings, and report templates.
+  tags:
+  - scan-sec
+  - security
+  - sidecar
+- id: staging
+  name: Staging Templates
+  kernel_min: 1.8.11
+  kernel_max: 1.x
+  entrypoint: staging/SKILL.md
+  description: Sidecar data for /staging workflow — custom path mapping configurations for releasing templates.
+  tags:
+  - staging
+  - release
+  - sidecar
+- id: vibecode
+  name: Vibecode Execution Templates
+  kernel_min: 1.8.11
+  kernel_max: 1.x
+  entrypoint: vibecode/SKILL.md
+  description: Sidecar data for /vibecode workflow — verification checklists and execution mode presets.
+  tags:
+  - vibecode
+  - execution
+  - sidecar
+- id: sidecar-skill
+  name: Sidecar Skill Governance
+  kernel_min: 1.8.11
+  kernel_max: 1.x
+  entrypoint: sidecar-skill/SKILL.md
+  description: Architectural rules and standards for creating Sidecar Skills to support Workflows.
+  tags:
+  - governance
+  - standards
+  - sidecar
+- id: resource
+  name: Resource Study Templates
+  kernel_min: 1.8.11
+  kernel_max: 1.x
+  entrypoint: resource/SKILL.md
+  description: Sidecar data for /resource workflow — study templates for learning patterns from imported resources.
+  tags:
+  - resource
+  - learning
+  - templates
+  - sidecar
 
 

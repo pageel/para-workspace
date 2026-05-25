@@ -124,7 +124,7 @@ ELSE (local):
 .agents/
 ├── rules.md          # Workspace rules trigger index (14 rules)
 ├── rules/            # Rule files (loaded on-demand by trigger)
-├── skills.md         # Workspace skills trigger index (15 skills)
+├── skills.md         # Workspace skills trigger index (19 core skills)
 ├── skills/           # Skill directories
 │   ├── formatting/   # Table/diagram formatting templates
 │   ├── para-kit/     # PARA reference card (schema, layout, governance)
@@ -140,8 +140,12 @@ ELSE (local):
 │   ├── logs/         # Sidecar audit templates for /logs (v1.8.7)
 │   ├── html-renderer/# Modular HTML rendering engine (v1.8.9)
 │   ├── new-project/  # Sidecar data for /new-project scaffold (v1.8.10)
-│   └── para-graph/   # Centralized Graph Intelligence Router (v1.8.10)
-└── workflows/        # 28 core workflow files
+│   ├── staging/      # Sidecar data for /staging template release (v1.8.11)
+│   ├── vibecode/     # Sidecar data for /vibecode execution (v1.8.11)
+│   ├── scan-sec/     # Sidecar data for /scan-sec scanner (v1.8.11)
+│   ├── resource/     # Sidecar data for /resource learning (v1.8.11)
+│   └── sidecar-skill/# Sidecar Skill Governance standards (v1.8.11)
+└── workflows/        # 32 core workflow files
 ```
 
 ### Project Level (CONDITIONAL — gated by `agent.rules` / `agent.skills`)
@@ -215,7 +219,7 @@ Workflows, Rules, and Skills managed via `VERSIONS.yml` and catalogs:
 - **Validation:** CLI validates `kernel_min`/`kernel_max` before syncing; incompatible items skipped with warning
 - **Required fields:** id, name, kernel_min, entrypoint, description
 
-## 11. Workflow Library (28 core workflows)
+## 11. Workflow Library (32 core workflows)
 
 ### Core PARA Workflows
 | Workflow | Purpose |
@@ -231,6 +235,8 @@ Workflows, Rules, and Skills managed via `VERSIONS.yml` and catalogs:
 | `/qa` | Systematic Red Team Q&A review |
 | `/release` | Pre-release quality gate |
 | `/retro` | Project retrospective before archiving |
+| `/vibecode` | Manage interactive/loop execution modes for coding tasks (v1.8.11) |
+| `/scan-sec` | Scan codebase for security vulnerabilities (v1.8.11) |
 
 ### Workspace Management
 | Workflow | Purpose |
@@ -250,6 +256,8 @@ Workflows, Rules, and Skills managed via `VERSIONS.yml` and catalogs:
 | `/para-skill` | Co-Author engine to create, validate, and test AI Agent skills (v1.7.6) |
 | `/docs` | Generate and maintain project documentation (`--graph`) |
 | `/learn` | Package lessons and knowledge into Areas/Learning |
+| `/staging` | Stage workspace assets into a project's repo (v1.8.11) |
+| `/resource` | Orchestrate resource import, graph generation, and pattern learning (v1.8.11) |
 
 > **Note:** Users may add domain-specific workflows to their workspace. The count above reflects only core workflows shipped via `catalog.yml`.
 
@@ -274,10 +282,15 @@ Skills are folders of instructions that extend agent capabilities:
 | Logs Audit Extensions | /logs --deep execution with active TDD plans (v1.8.7) | Sidecar data: Specialized compliance audit templates |
 | HTML Renderer | Exporting markdown/graph to themed HTML page (v1.8.9) | Standalone modular HTML rendering engine |
 | New Project | Running /new-project, defining project architecture/design patterns (v1.8.10) | Sidecar data: Architectural presets and local rule setup |
+| Staging Templates | /staging workflow execution, copying templates to repository (v1.8.11) | Sidecar data: Path mappings for template deployment |
+| Vibecode Execution Templates | /vibecode workflow, managing interactive execution modes (v1.8.11) | Sidecar data: Verification checklists and run reports |
+| Vulnerability Scanner Templates | /scan-sec workflow, reviewing code security patterns (v1.8.11) | Sidecar data: Scanner checklists and bilingual report templates |
+| Resource Study Templates | /resource workflow, importing and analyzing code patterns (v1.8.11) | Sidecar data: Custom study guides and learning structures |
+| Sidecar Skill Governance | Creating and organizing sidecar skill folders (v1.8.11) | Standalone skill: Architecture, rule structures, and trigger indexes |
 
 Skills promoted from rules: standalone, English-first, constraints + templates merged.
 
-Total: **15 skills** (5 standalone + 10 sidecar).
+Total: **20 skills** (6 standalone + 14 sidecar).
 
 
 ### Sidecar Skill Pattern (v1.7.6.3)
@@ -353,6 +366,7 @@ Sidecar skills (`plan`, `docs`, `brainstorm`, `spec`) reference the centralized 
 | 1.8.7 | Governance | TDD Governance Workflow, Graph Knowledge Preparation Phase 0 added to detail-plan templates, Temporary Test Scripts Policy Section 17 added to maintenance.md, and TDD compliance telemetry logging |
 | 1.8.9 | Sync | Ecosystem-wide Para-Graph MCP Integration with Project Sidecar Skill loading, Memory Ops lifecycle (search/push/curate), and consolidated context pre-flight across 11 catalog workflows |
 | 1.8.10 | Release | Release Hardening: html-renderer, new-project, and para-graph intelligence modules, new rules (agent-persona with AGENTS.md cascade, tool-routing, graph-first-policy), and anti-truncation guardrail KI |
+| 1.8.11 | Release | Release Hardening: dirty-check template override prompts in install-tool CLI, conflict diff detection, and staging/scan-sec/vibecode/resource workflows catalog integration |
 
 
 ## 16. Dynamic Tool System (v1.8.0)

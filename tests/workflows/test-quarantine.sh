@@ -13,7 +13,7 @@ cd "$TEST_TMP/Projects/mock-project"
 
 echo "--- Simulating Quarantine Hook ---"
 # Extract the hook from plan.md
-HOOK_CMD=$(grep -A 3 "Quarantine Test Evidence:" "$WORKSPACE_ROOT/Projects/para-workspace/repo/templates/common/agents/workflows/plan.md" | grep "if \[\[" | sed 's/^ *//')
+HOOK_CMD=$(grep -A 25 "Quarantine Test Evidence" "$WORKSPACE_ROOT/Projects/para-workspace/repo/templates/common/agents/workflows/plan.md" | grep "if \[\[ -d" | sed 's/^ *//')
 
 if [ -z "$HOOK_CMD" ]; then
   echo "  Failed to extract hook from plan.md"
@@ -30,10 +30,10 @@ else
   exit 1
 fi
 
-if [ -f "artifacts/tests/tmp/tdd-evidence.log.bak" ]; then
-  echo "  File quarantined and renamed to .bak... PASS"
+if [ -f "artifacts/tests/tmp/tdd-evidence.log" ]; then
+  echo "  File quarantined... PASS"
 else
-  echo "  File quarantined and renamed to .bak... FAIL"
+  echo "  File quarantined... FAIL"
   exit 1
 fi
 

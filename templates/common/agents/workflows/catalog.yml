@@ -322,3 +322,43 @@ items:
   - red-team
   - sidecar
   - quality
+- id: staging
+  name: Staging Manager
+  kernel_min: 1.8.7
+  kernel_max: 1.x
+  entrypoint: staging.md
+  description: Stage workspace artifacts (workflows, skills, rules) into a project's repo/templates.
+  tags:
+  - staging
+  - release
+  - lifecycle
+- id: vibecode
+  name: Execution Mode Controller
+  kernel_min: 1.8.8
+  kernel_max: 1.x
+  entrypoint: vibecode.md
+  description: Execution controller for AI Agent coding — loop, auto, and review modes.
+  tags:
+  - execution
+  - coding
+  - interactive
+- id: scan-sec
+  name: Vulnerability Scanner
+  kernel_min: 1.8.11
+  kernel_max: 1.x
+  entrypoint: scan-sec.md
+  description: Scan code for security vulnerabilities. Support graph context and Mermaid outputs.
+  tags:
+  - security
+  - audit
+  - scanner
+- id: resource
+  name: Resource Study Manager
+  kernel_min: 1.8.11
+  kernel_max: 1.x
+  entrypoint: resource.md
+  description: Orchestrate resource import, graph generation, and pattern learning.
+  tags:
+  - resource
+  - learning
+  - pattern

@@ -15,6 +15,7 @@ Fast commit and push changes to GitHub with verification.
 /push [project-name]                    # Default: Build & Test before push
 /push [project-name] --quick            # Quick push: Skip build/test
 /push [project-name] "feat: new thing"  # With explicit commit message
+/push [project-name] --scan             # Load project rules/skills, scan code, build & test, then push
 ```
 
 ## Options
@@ -23,6 +24,7 @@ Fast commit and push changes to GitHub with verification.
 | :-- | :-- |
 | `--quick` | Skip `npm run build` (Only use for small text changes) |
 | `--test` | (Default) Run `npm run build` before commit to verify code |
+| `--scan` | Scan project rules, skills, and AGENTS.md, audit code changes for OSS English and other compliance issues before committing |
 
 ## Steps
 
@@ -57,6 +59,23 @@ git ls-files | grep -E '\.(env|pem|key|sqlite|db)$|id_rsa|credentials|secrets|\.
 
 - Missing ignore file → Create template (see `.agents/rules/vcs.md`)
 - Sensitive files found → STOP and warn user
+
+### 2.5. Rule, Skill, & AGENTS.md Scan (If `--scan` flag is provided)
+
+If the `--scan` flag is provided, the Agent MUST load the project context and scan the code changes for compliance issues based on project-specific rules:
+
+**Step A. Load Project Context:**
+- Locate and read the project rules index `.agents/rules.md` (or `.agents/rules/` directory) and `.agents/skills.md` (or `.agents/skills/` directory).
+- Locate and read the project `.agents/AGENTS.md` (if it exists) to understand specific guidelines (e.g. English-First source code rules, security requirements, and custom check commands).
+
+**Step B. Audit Code Changes:**
+- Run any pre-push or compliance check scripts configured in the project (such as `npm run lint`, custom check scripts in `.agents/`, or regex checks described in the project's `AGENTS.md`).
+- Analyze added/modified code lines against project rules (e.g. language/encoding constraints, forbidden libraries).
+
+If any compliance violations are detected:
+- Report the specific violations to the user.
+- **Prompt the user:** "Violations detected. Do you want to fix them first, or override and proceed with the push?"
+- Do NOT commit or push unless the user explicitly confirms to override, or the violations are corrected.
 
 ### 3. (Optional) Build & Test
 

@@ -26,6 +26,7 @@ fi
 
 TOOLS_DIR="$WORKSPACE_ROOT/.para/tools"
 AGENTS_DIR="$WORKSPACE_ROOT/.agents"
+OLD_INSTALL_DIR_BACKUP=""
 
 # === Parse arguments ===
 TOOL_INPUT=""
@@ -450,28 +451,121 @@ display_agents_summary() {
   echo ""
 }
 
+# Helper: safe copy a single agent file with dirty-check & prompt
+copy_agent_file_safe() {
+  local src="$1"
+  local dst="$2"
+  local atype="$3"
+  local atarget="$4"
+  local rel_src="$5"
+
+  # If target doesn't exist, copy it directly
+  if [ ! -e "$dst" ]; then
+    mkdir -p "$(dirname "$dst")"
+    cp "$src" "$dst"
+    echo "  ✅ $atype/$atarget installed."
+    return 0
+  fi
+
+  # If target is directory, warn
+  if [ -d "$dst" ]; then
+    echo "  ⚠️  Warning: Target $dst is a directory, cannot overwrite with file $src"
+    return 1
+  fi
+
+  # If identical, skip silently
+  if cmp -s "$src" "$dst"; then
+    return 0
+  fi
+
+  # If there is a backup of the old template, check if workspace matches it
+  local old_src=""
+  if [ -n "$OLD_INSTALL_DIR_BACKUP" ]; then
+    old_src="$OLD_INSTALL_DIR_BACKUP/$rel_src"
+  fi
+
+  if [ -n "$old_src" ] && [ -f "$old_src" ] && cmp -s "$old_src" "$dst"; then
+    # Unmodified by user -> auto-overwrite
+    cp "$src" "$dst"
+    echo "  ✅ $atype/$atarget updated."
+    return 0
+  fi
+
+  # Workspace file has been customized! Prompt user.
+  echo ""
+  echo "  ⚠️  Template conflict: $atype/$atarget has been modified locally."
+  echo "     Local file:   $dst"
+  echo "     New template: $src"
+  
+  if command -v diff &>/dev/null; then
+    echo "  --- Preview of differences (Local vs New Template) ---"
+    diff -u "$dst" "$src" | head -n 20 || true
+    echo "  -------------------------------------------------------"
+  fi
+
+  local answer=""
+  if [ -t 0 ]; then
+    printf "     Overwrite with the new template? (y/N): "
+    read -r answer || true
+  else
+    if read -t 0 2>/dev/null; then
+      read -r answer || true
+    else
+      # Non-interactive default is "n" to preserve customizations (safe default)
+      echo "     Non-interactive environment detected. Preserving local customizations."
+      answer="n"
+    fi
+  fi
+
+  if [ "$answer" = "y" ] || [ "$answer" = "Y" ]; then
+    cp "$src" "$dst"
+    echo "  ✅ $atype/$atarget overwritten."
+  else
+    echo "  ⏭️  $atype/$atarget skipped (local customizations preserved)."
+  fi
+}
+
+# Helper: safe copy a directory of templates recursively
+copy_agents_recursive() {
+  local src_dir="$1"
+  local dst_dir="$2"
+  local atype="$3"
+  local atarget="$4"
+  local rel_src_dir="$5"
+  local rel_file src_file dst_file rel_src_file
+
+  mkdir -p "$dst_dir"
+
+  # Find all files in src_dir relative to src_dir
+  (
+    cd "$src_dir" && find . -type f
+  ) | while read -r rel_file; do
+    rel_file="${rel_file#./}"
+    src_file="$src_dir/$rel_file"
+    dst_file="$dst_dir/$rel_file"
+    rel_src_file="$rel_src_dir/$rel_file"
+    copy_agent_file_safe "$src_file" "$dst_file" "$atype" "$atarget/$rel_file" "$rel_src_file"
+  done
+}
+
 # Copy agent files from tool install dir to .agents/
 install_agents() {
+  local src_base="${1:-$TOOL_INSTALL_DIR}"
   local i=0
   while [ $i -lt ${#AGENT_SOURCES[@]} ]; do
     local atype="${AGENT_TYPES[$i]}"
     local asource="${AGENT_SOURCES[$i]}"
     local atarget="${AGENT_TARGETS[$i]}"
-    local src_path="$TOOL_INSTALL_DIR/$asource"
+    local src_path="$src_base/$asource"
     local dst_dir="$AGENTS_DIR/$atype"
     local dst_path="$dst_dir/$atarget"
 
-    mkdir -p "$dst_dir"
-
     if [ -d "$src_path" ]; then
-      # Directory copy (skills) — remove existing first for clean update
-      if [ -d "$dst_path" ]; then
-        rm -rf "$dst_path"
-      fi
-      cp -r "$src_path" "$dst_path"
+      # Directory copy (skills) — recursive safe copy
+      copy_agents_recursive "$src_path" "$dst_path" "$atype" "$atarget" "$asource"
     elif [ -f "$src_path" ]; then
       # File copy (workflows, rules)
-      cp "$src_path" "$dst_path"
+      copy_agent_file_safe "$src_path" "$dst_path" "$atype" "$atarget" "$asource"
     else
       # Suppress warning if tool uses decoupled distribution via hooks
       if [ ! -f "$TOOL_INSTALL_DIR/install-hooks.sh" ]; then
@@ -558,29 +652,7 @@ if [ "$SYNC_MODE" = true ]; then
   fi
 
   # Override source paths to use fetched templates
-  i=0
-  while [ $i -lt ${#AGENT_SOURCES[@]} ]; do
-    atype="${AGENT_TYPES[$i]}"
-    asource="${AGENT_SOURCES[$i]}"
-    atarget="${AGENT_TARGETS[$i]}"
-    src_path="$SYNC_TEMP/$asource"
-    dst_dir="$AGENTS_DIR/$atype"
-    dst_path="$dst_dir/$atarget"
-
-    if [ -e "$src_path" ]; then
-      mkdir -p "$dst_dir"
-      if [ -d "$src_path" ]; then
-        [ -d "$dst_path" ] && rm -rf "$dst_path"
-        cp -r "$src_path" "$dst_path"
-      elif [ -f "$src_path" ]; then
-        cp "$src_path" "$dst_path"
-      fi
-      echo "  ✅ $atype/$atarget synced."
-    else
-      echo "  ⚠️  $asource not found in fetched templates (skipping)"
-    fi
-    i=$((i + 1))
-  done
+  install_agents "$SYNC_TEMP"
 
   # Post-install hook
   if [ -f "$HOOKS_FILE" ] && type post_install >/dev/null 2>&1; then
@@ -600,6 +672,10 @@ if [ -d "$TOOL_INSTALL_DIR" ] && [ "$UPDATE_MODE" = false ]; then
 fi
 
 if [ "$UPDATE_MODE" = true ] && [ -d "$TOOL_INSTALL_DIR" ]; then
+  echo "🔄 Backing up existing installation for dirty check..."
+  OLD_INSTALL_DIR_BACKUP="$(mktemp -d)"
+  cp -r "$TOOL_INSTALL_DIR/"* "$OLD_INSTALL_DIR_BACKUP/" 2>/dev/null || true
+  trap 'rm -rf "$OLD_INSTALL_DIR_BACKUP"' EXIT
   echo "🔄 Removing existing installation..."
   rm -rf "$TOOL_INSTALL_DIR"
 fi
