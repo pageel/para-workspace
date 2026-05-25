@@ -283,7 +283,15 @@ sync_library() {
     fi
   fi
 
-  echo "   ✓ $count $lib_name synced ($updated updated)"
+  if [ "$lib_name" = "skills" ]; then
+    local skill_count=0
+    if [ -d "$src_dir" ]; then
+      skill_count=$(find "$src_dir" -maxdepth 1 -mindepth 1 -type d 2>/dev/null | wc -l)
+    fi
+    echo "   ✓ $skill_count skills ($count files) synced ($updated updated)"
+  else
+    echo "   ✓ $count $lib_name synced ($updated updated)"
+  fi
 }
 
 KERNEL_VERSION="$(cat "$REPO_ROOT/VERSION" 2>/dev/null || echo "1.4.1")"
