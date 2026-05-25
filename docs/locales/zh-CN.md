@@ -350,6 +350,30 @@ agents:
 
 ---
 
+## 📄 许可证与参考引用
+
+本科学/工程项目在 MIT 许可证下授权。
+
+`/scan-sec` 安全审计模块（在 [scan-sec SKILL.md](../../templates/common/agents/skills/scan-sec/SKILL.md) 下管理）基于并参考了以下两个项目：
+- [vbsec 仓库](https://github.com/tanviet12/vbsec)（核心执行架构）。
+- [OWASP Top 10 项目](https://owasp.org/www-project-top-ten/)（安全标准与漏洞分类）。
+
+### 第三方依赖库与工具
+
+#### 核心 CLI 实用工具
+- [jq](https://jqlang.github.io/jq/)（JSON 命令行解析器，配置更新所需）。
+- [Git](https://git-scm.com/)（版本控制和工作区更新所需）。
+- [Node.js](https://nodejs.org/)（代码图谱分析和 HTML 文档渲染器的运行环境）。
+
+#### 前端 CDN 依赖库（用于 HTML 页面渲染）
+- [marked](https://github.com/markedjs/marked)（Markdown 解析器）。
+- [mermaid](https://github.com/mermaid-js/mermaid)（流程图与图表引擎）。
+- [force-graph](https://github.com/vasturiano/force-graph)（用于代码图谱可视化的 2D 力导向图引擎）。
+- [lucide](https://github.com/lucide-icons/lucide)（UI 图标库）。
+- [Google Fonts](https://fonts.google.com/)（Inter, Outfit, Roboto, Fira Code 字体排版）。
+
+---
+
 用 ❤️ 构建，由 **Pageel** 出品。标准化 Agent PKM 的未来。
 
 _版本: 1.8.11_

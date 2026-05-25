@@ -779,6 +779,30 @@ Xem [CONTRIBUTING.md](../../CONTRIBUTING.md) để biết hướng dẫn. Điể
 
 ---
 
+## 📄 Bản quyền & Tham chiếu
+
+Dự án này được cấp phép theo Giấy phép MIT.
+
+Phân hệ quét và rà soát bảo mật `/scan-sec` (được quản lý theo quy định tại [scan-sec SKILL.md](../../templates/common/agents/skills/scan-sec/SKILL.md)) được xây dựng dựa trên và tham khảo từ 2 nguồn:
+- [Repository vbsec](https://github.com/tanviet12/vbsec) (kiến trúc thực thi cốt lõi).
+- [Dự án OWASP Top 10](https://owasp.org/www-project-top-ten/) (các tiêu chuẩn và phân loại bảo mật).
+
+### Thư viện & Công cụ bên thứ ba
+
+#### Công cụ CLI cốt lõi
+- [jq](https://jqlang.github.io/jq/) (Bộ xử lý cấu trúc JSON dòng lệnh, dùng cho cập nhật cấu hình).
+- [Git](https://git-scm.com/) (Yêu cầu cho quản lý phiên bản và cập nhật workspace).
+- [Node.js](https://nodejs.org/) (Môi trường thực thi cho phân tích đồ thị code và trình kết xuất tài liệu HTML).
+
+#### Thư viện CDN Frontend (dùng trong kết xuất HTML)
+- [marked](https://github.com/markedjs/marked) (Trình biên dịch Markdown).
+- [mermaid](https://github.com/mermaid-js/mermaid) (Công cụ vẽ sơ đồ/đồ thị).
+- [force-graph](https://github.com/vasturiano/force-graph) (Công cụ kết xuất đồ thị lực 2D cho trực quan hóa đồ thị code).
+- [lucide](https://github.com/lucide-icons/lucide) (Thư viện icon giao diện).
+- [Google Fonts](https://fonts.google.com/) (Phông chữ Inter, Outfit, Roboto, Fira Code).
+
+---
+
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
 _Phiên bản: 1.8.11_

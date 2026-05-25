@@ -813,6 +813,30 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key points:
 
 ---
 
+## 📄 License & References
+
+This project is licensed under the MIT License.
+
+The `/scan-sec` security audit module (governed under [scan-sec SKILL.md](./templates/common/agents/skills/scan-sec/SKILL.md)) is built upon and references:
+- The [vbsec repository](https://github.com/tanviet12/vbsec) (core execution architecture).
+- The [OWASP Top 10 project](https://owasp.org/www-project-top-ten/) (security standards and classifications).
+
+### Third-Party Dependencies
+
+#### Core CLI Utilities
+- [jq](https://jqlang.github.io/jq/) (JSON CLI parser, required for configuration updates).
+- [Git](https://git-scm.com/) (Required for version control and workspace updates).
+- [Node.js](https://nodejs.org/) (Runtime for graph analysis and HTML document renderers).
+
+#### Frontend CDN Libraries (used in HTML rendering)
+- [marked](https://github.com/markedjs/marked) (Markdown parser).
+- [mermaid](https://github.com/mermaid-js/mermaid) (Flowchart/diagram engine).
+- [force-graph](https://github.com/vasturiano/force-graph) (2D force-directed graph engine for code graph visualization).
+- [lucide](https://github.com/lucide-icons/lucide) (UI icons).
+- [Google Fonts](https://fonts.google.com/) (Inter, Outfit, Roboto, Fira Code typography).
+
+---
+
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
 _Version: 1.8.11_

@@ -195,7 +195,7 @@ const hash = await argon2.hash(password)
 
 ---
 
-🤖 {footer_generated_by} [vbsec]({footer_repo})
+🤖 {footer_generated_by} [OWASP Top 10:2021]({footer_repo})
 
 📄 **{msg_report_saved}:** `vbsec-reports/scan-2026-05-13-143022.md`
 
@@ -263,7 +263,7 @@ const hash = await argon2.hash(password)
 
 ---
 
-🤖 {footer_generated_by} [vbsec]({footer_repo})
+🤖 {footer_generated_by} [OWASP Top 10:2021]({footer_repo})
 
 > {footer_disclaimer}
 
@@ -396,7 +396,7 @@ Mọi report đều có disclaimer `{footer_disclaimer}` — vbsec là tool tham
 ## Ví dụ output đầy đủ — tiếng Việt
 
 ```markdown
-# Báo cáo quét bảo mật vbsec
+# Báo cáo quét bảo mật mã nguồn
 
 **Phạm vi:** Thay đổi chưa commit
 **Số file:** 12 (8 .ts, 4 .py)
@@ -453,7 +453,7 @@ Sửa các lỗi NGHIÊM TRỌNG trước. Sau đó re-scan để xác nhận.
 
 ---
 
-🤖 Báo cáo tạo bởi [vbsec](https://github.com/tanviet12/vbsec)
+🤖 Báo cáo tạo bởi [OWASP Top 10:2021](https://owasp.org/www-project-top-ten/)
 
 > Báo cáo này tham khảo — không thay thế cho audit bảo mật chuyên nghiệp.
 
@@ -481,7 +481,7 @@ Sửa các lỗi NGHIÊM TRỌNG trước. Sau đó re-scan để xác nhận.
 ## Ví dụ ngắn — tiếng Anh (cùng repo, cùng findings)
 
 ```markdown
-# vbsec Security Scan Report
+# Security Scan Report
 
 **Scope:** Uncommitted changes
 **Files:** 12 (8 .ts, 4 .py)

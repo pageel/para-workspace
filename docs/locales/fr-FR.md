@@ -315,6 +315,30 @@ Rendez-vous sur [CONTRIBUTING.md](../../CONTRIBUTING.md) pour découvrir les pri
 
 ---
 
+## 📄 Licence & Références
+
+Ce projet est sous licence MIT.
+
+Le module d'audit de sécurité `/scan-sec` (géré sous [scan-sec SKILL.md](../../templates/common/agents/skills/scan-sec/SKILL.md)) est basé sur et fait référence à :
+- Le [dépôt vbsec](https://github.com/tanviet12/vbsec) (architecture d'exécution principale).
+- Le [projet OWASP Top 10](https://owasp.org/www-project-top-ten/) (normes de sécurité et classifications des vulnérabilités).
+
+### Dépendances Tierces
+
+#### Utilitaires CLI Principaux
+- [jq](https://jqlang.github.io/jq/) (Processeur JSON en ligne de commande, requis pour les mises à jour de configuration).
+- [Git](https://git-scm.com/) (Requis pour le contrôle de version et les mises à jour de l'espace de travail).
+- [Node.js](https://nodejs.org/) (Environnement d'exécution pour l'analyse de graphes et les moteurs de rendu de documents HTML).
+
+#### Bibliothèques CDN Frontend (utilisées pour le rendu HTML)
+- [marked](https://github.com/markedjs/marked) (Analyseur Markdown).
+- [mermaid](https://github.com/mermaid-js/mermaid) (Moteur de diagrammes et organigrammes).
+- [force-graph](https://github.com/vasturiano/force-graph) (Moteur de graphe dirigé par force 2D pour la visualisation des graphes de code).
+- [lucide](https://github.com/lucide-icons/lucide) (Bibliothèque d'icônes d'interface utilisateur).
+- [Google Fonts](https://fonts.google.com/) (Typographies Inter, Outfit, Roboto, Fira Code).
+
+---
+
 Conçu avec ❤️ par **Pageel**. Standardisant l'avenir de la méthode PKM Agent.
 
 _Version: 1.8.11_
