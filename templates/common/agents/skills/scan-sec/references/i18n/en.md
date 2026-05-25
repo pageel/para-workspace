@@ -167,5 +167,5 @@ Key→text mapping for report output when `lang=en`. SKILL.md and workflows must
 |---|---|
 | `msg_report_saved` | Report saved to |
 | `msg_gitignore_warning_title` | Recommendation |
-| `msg_gitignore_warning_text` | The `vbsec-reports/` directory is not listed in `.gitignore`. To avoid committing scan reports to Git, add `vbsec-reports/` to `.gitignore`. |
-| `msg_reports_dir_created` | Created `vbsec-reports/` directory for persisted reports |
+| `msg_gitignore_warning_text` | The `reports/security/` directory is not listed in `.gitignore`. To avoid committing scan reports to Git, add `reports/security/` to `.gitignore`. |
+| `msg_reports_dir_created` | Created `reports/security/` directory for persisted reports |

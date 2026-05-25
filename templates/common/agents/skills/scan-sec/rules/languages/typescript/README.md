@@ -1,10 +1,10 @@
 # TypeScript/JavaScript Specialization
 
-These rule files override generic rules when vbsec detects primary language as `typescript`.
+These rule files override generic rules when scan-sec detects primary language as `typescript`.
 
 ## Language detection scope
 
-vbsec treats these as `typescript`:
+Scan-sec treats these as `typescript`:
 - `.ts`, `.tsx` (TypeScript)
 - `.js`, `.jsx`, `.mjs`, `.cjs` (JavaScript)
 
@@ -59,10 +59,10 @@ These generic rules from `rules/generic/` apply to TS without specialization bec
 
 To improve a TypeScript override:
 1. Test on a real TS repo (e.g., clone OWASP Juice Shop)
-2. Run `/vbs-scan-security all`
-3. Check both: did vbsec catch real issues? Did it flag any false positives?
+2. Run `/scan-sec all`
+3. Check both: did scan-sec catch real issues? Did it flag any false positives?
 4. Update the appropriate file in this folder with new patterns or refined reasoning
 
 To add a new TS-specific rule (rule id not in 21 canonical):
 - DON'T add a new id. Map your new patterns into one of the 21 canonical rules.
-- If truly novel class, open an issue: github.com/tanviet12/vbsec/issues
+- If truly novel class, open an issue in the scan-sec ecosystem.

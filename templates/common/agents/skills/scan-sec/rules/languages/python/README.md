@@ -1,10 +1,10 @@
 # Python Specialization
 
-These rule files override generic rules when vbsec detects primary language as `python`.
+These rule files override generic rules when scan-sec detects primary language as `python`.
 
 ## Language detection scope
 
-vbsec treats these as `python`:
+Scan-sec treats these as `python`:
 - `.py` (Python source)
 - `.pyw` (Python script for Windows)
 
@@ -38,7 +38,7 @@ vbsec treats these as `python`:
 
 ### Templates
 - **Jinja2** (Template injection RCE)
-- **Django templates** (auto-escape mặc định, vẫn check `{% autoescape off %}`)
+- **Django templates** (auto-escape by default, checked for `{% autoescape off %}`)
 
 ## Generic rules that apply as-is (no Python-specific override needed)
 
@@ -56,11 +56,11 @@ vbsec treats these as `python`:
 
 To improve a Python override:
 1. Test on a real Python repo (Django, Flask, or FastAPI vibe app)
-2. Run `/vbs-scan-security all` on the repo
-3. Verify: did vbsec catch real issues? Did it flag any false positives?
+2. Run `/scan-sec all` on the repo
+3. Verify: did scan-sec catch real issues? Did it flag any false positives?
 4. Update the relevant file with new patterns or refined reasoning
 
 To add Python ML/data-science specific patterns (notebook secrets, model `pickle`, `os.environ` in Jupyter cells):
 - Add a new section to relevant rule (e.g., `08-insecure-deserialization.md` for model pickle)
 - DON'T add a new rule id — map to existing 21 canonical IDs
-- If truly novel class, open an issue: github.com/tanviet12/vbsec/issues
+- If truly novel class, open an issue in the scan-sec ecosystem.

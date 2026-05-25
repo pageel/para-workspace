@@ -1,69 +1,69 @@
 # Language Detection
 
-Cách detect ngôn ngữ code chính trong repo để chọn rule overlay.
+How the primary codebase language is detected in the repository to load the corresponding rules overlay.
 
 ## Algorithm
 
-1. **Lọc trước:** Bỏ các path không phải code:
+1. **Pre-filtering:** Exclude paths that do not contain original source code:
    ```
    node_modules/, vendor/, dist/, build/, .next/, .nuxt/, target/, .venv/, __pycache__/, .git/,
    *.min.js, *.bundle.js, *.lock, *.lock.json, package-lock.json
    ```
 
-2. **Count theo extension:**
+2. **Count by file extension:**
 
-   | Lang code | Extensions tính vào | Ghi chú |
+   | Language | Extensions Included | Notes |
    |---|---|---|
    | `go` | `.go` | |
    | `php` | `.php`, `.phtml` | |
-   | `python` | `.py`, `.pyw` | bỏ `__init__.py` rỗng |
-   | `typescript` | `.ts`, `.tsx`, `.js`, `.jsx`, `.mjs`, `.cjs` | gộp cả JS vào — vibe coders thường mix; patterns runtime giống nhau |
+   | `python` | `.py`, `.pyw` | Excludes empty `__init__.py` files |
+   | `typescript` | `.ts`, `.tsx`, `.js`, `.jsx`, `.mjs`, `.cjs` | Groups JavaScript as well, since runtime patterns and libraries overlap |
    | `ruby` | `.rb` | |
    | `java` | `.java` | |
    | `rust` | `.rs` | |
-   | `dotnet` | `.cs`, `.csproj`, `.sln` | ASP.NET Core / EF Core; marker phụ: `global.json`, `appsettings.json` |
+   | `dotnet` | `.cs`, `.csproj`, `.sln` | ASP.NET Core / EF Core; supplemental markers: `global.json`, `appsettings.json` |
    | `kotlin` | `.kt`, `.kts` | |
 
-3. **Primary language** = lang nào có **≥30% tổng file code** trong scope.
+3. **Primary Language Resolution:** A language is considered primary if it represents **≥30% of the total code files** within the scan scope.
 
-4. **Multi-language detection:** Nếu có ≥2 lang vượt 30% mỗi cái, treat repo là multi-lang. Apply overlay của TẤT CẢ lang đạt ngưỡng.
+4. **Multi-language Detection:** If two or more languages exceed the 30% threshold, the repository is classified as multi-language. Apply overlays for ALL languages that meet this criteria.
 
-   Ví dụ phổ biến:
-   - Backend Go + Frontend Vue/React → `go` + `typescript`
-   - Laravel app → `php` (frontend Blade không tính)
-   - Django + React → `python` + `typescript`
+   Common examples:
+   - Go backend + Vue/React frontend → `go` + `typescript`
+   - Laravel application → `php` (Blade templates are not counted towards frontends)
+   - Django backend + React frontend → `python` + `typescript`
 
-5. **Nếu không lang nào ≥30%:** Repo "polyglot" — chỉ dùng generic rules. Note trong header report: `"polyglot — using generic rules only"`.
+5. **Polyglot Fallback:** If no single language meets the ≥30% threshold, the repository is marked as "polyglot" and runs generic rules only. Note in the report header: `"polyglot — using generic rules only"`.
 
-6. **Overlay availability:**
-   - Có `rules/languages/<lang>/` → load overlay
-   - Không có → ghi `header_no_specialized` vào report header
+6. **Overlay Availability Verification:**
+   - If `rules/languages/<lang>/` exists → Load overlay.
+   - If not → Use generic rules and report generic usage in the report metadata.
 
-## Phase chuyên sâu
+## Specialization Coverage
 
-| Lang | Status | Files trong `rules/languages/<lang>/` |
+| Language | Version Status | Included Overlays in `rules/languages/<lang>/` |
 |---|---|---|
-| `go` | ✅ v0.1 | GORM SQLi, command injection (exec.Command), slog secret leak, Colly SSRF |
-| `php` | ✅ v0.1 | mysqli vs PDO, `$_GET/$_POST` direct, `eval`/`include` variable, Laravel CSRF, `unserialize` |
-| `typescript` | ✅ v0.2 | Sequelize/Prisma/TypeORM/Mongoose SQLi+NoSQLi, React/Vue/Angular XSS, Express/NestJS/Next.js mass-assignment/SSRF/CSRF/CORS, js-yaml deserialize, child_process injection, JWT none/algorithm-confusion |
-| `python` | ✅ v0.4 | SQLAlchemy text() + Django .raw/.extra, pickle/yaml.load (RCE), subprocess shell=True, Flask Werkzeug debugger RCE, Django DEBUG/FastAPI debug, Django ModelForm/Flask `**request.json`/FastAPI Pydantic mass-assignment, PyJWT algorithms allowlist, flask-cors/django-cors-headers/FastAPI CORSMiddleware, Django CSRF middleware |
-| `dotnet` | ✅ v0.6 | ASP.NET Core / Minimal API model binding, EF Core raw SQL, Newtonsoft TypeNameHandling / legacy formatter deserialization, Process.Start command injection |
-| Khác | Phase v0.7+ | Ruby, Java, Rust theo nhu cầu cộng đồng |
+| `go` | ✅ v0.1 | GORM SQLi, command injection (`exec.Command`), slog secret exposure, Colly SSRF |
+| `php` | ✅ v0.1 | mysqli/PDO parameterization, `$_GET/$_POST` sinks, dynamic `eval`/`include`, Laravel CSRF, `unserialize` magic methods |
+| `typescript` | ✅ v0.2 | Sequelize/Prisma/TypeORM/Mongoose SQLi+NoSQLi, React/Vue/Angular XSS, Express/NestJS/Next.js mass-assignment/SSRF/CSRF/CORS, js-yaml deserialization, child_process injection, JWT none algorithm & verification |
+| `python` | ✅ v0.4 | SQLAlchemy `text()` & Django `.raw()`/`.extra()` SQLi, pickle/yaml.load RCE, subprocess shell execution, Flask Werkzeug debugger exposure, Django/FastAPI debug flags, model mass-assignment, PyJWT algorithms validation, CORS wildcards, Django CSRF |
+| `dotnet` | ✅ v0.6 | ASP.NET Core model binding, EF Core raw SQL, Newtonsoft TypeNameHandling / legacy formatter deserialization, Process.Start command injection |
+| Other | Phase v0.7+ | Ruby, Java, Rust depending on ecosystem usage |
 
-## Frontend framework detection (sub-classification)
+## Frontend Framework Sub-Classification
 
-Khi primary = `javascript` hoặc `typescript`, detect thêm framework để chỉnh sửa rule reasoning:
+When the primary language is `javascript` or `typescript`, the framework is sub-classified via package file checks to fine-tune security reasoning:
 
-| Framework | Marker file | Ảnh hưởng đến rule |
+| Framework | Marker File / Dependency | Influence on Security Rules |
 |---|---|---|
-| React | `package.json` có `"react"` | XSS: `dangerouslySetInnerHTML` mới là nguy hiểm (JSX auto-escape mặc định) |
-| Vue | `package.json` có `"vue"` | XSS: `v-html` mới là nguy hiểm (mustache auto-escape) |
-| Next.js | `next.config.*` | SSRF: kiểm tra `getServerSideProps`, `getStaticProps` |
-| Express | `package.json` có `"express"` | CORS: middleware config; CSRF: `csurf` |
-| Fastify | `package.json` có `"fastify"` | Tương tự Express |
-| NestJS | `package.json` có `"@nestjs/core"` | Decorators (`@Body()`, `@Query()`) — Mass Assignment via DTO whitelist |
+| React | `package.json` contains `"react"` | XSS: Focus on `dangerouslySetInnerHTML` (JSX auto-escapes by default) |
+| Vue | `package.json` contains `"vue"` | XSS: Focus on `v-html` (Mustache expressions auto-escape) |
+| Next.js | `next.config.*` or dependencies | SSRF: Analyze `getServerSideProps` and `getStaticProps` |
+| Express | `package.json` contains `"express"` | CORS/CSRF: Review express cors/csurf configuration |
+| Fastify | `package.json` contains `"fastify"` | CORS/CSRF: Analyze fastify equivalents |
+| NestJS | `package.json` contains `"@nestjs/core"` | Mass Assignment: Check for NestJS DTO validation decorators (`@Body()`, `@Query()`) |
 
-Framework markers chỉ là gợi ý — vẫn áp dụng generic rules cho mọi case. Markers chỉ dùng để **giảm false positive** (vd: không flag XSS cho mustache trong Vue vì auto-escape).
+Framework markers are indicators to reduce false positives (e.g. not flagging Mustache templates as XSS in Vue). Generic patterns still apply.
 
 ## Pseudocode
 
@@ -95,11 +95,11 @@ def detect_primary_language(files):
     }
 ```
 
-LLM agent dùng Grep/Glob để count files (không cần chạy Python literal). Output dùng để fill `header_primary_lang` trong report.
+The LLM agent uses glob pattern matching and metadata reasoning to resolve primary languages rather than running python execution blocks directly.
 
-## Edge cases
+## Edge Cases
 
-- **Monorepo** (vd: `apps/web` Next.js + `apps/api` Go): detect theo scope hiện tại. Nếu scope chỉ touch 1 sub-folder → detect theo sub-folder.
-- **Generated files** (vd: `.pb.go`, `*_pb2.py`): vẫn count nhưng note trong report nếu chiếm >50%.
-- **Test files**: count bình thường. Rule generic vẫn áp dụng (test code lộ secret cũng nguy hiểm).
-- **Config files** (`.yaml`, `.json`, `.toml`, `Dockerfile`): KHÔNG count vào language stats nhưng vẫn scan bằng rules cụ thể (HARDCODED-SECRET, VERBOSE-ERROR-DEBUG-MODE applies cho config).
+- **Monorepos** (e.g. `apps/web` Next.js + `apps/api` Go): Language detection matches the current target scope. If scanning a sub-folder, detect language settings within that sub-folder only.
+- **Generated Code** (e.g. `.pb.go`, `*_pb2.py`): Counted in metrics but noted in reports if generated files represent >50% of the volume.
+- **Test Files**: Counted in statistics. Generic rules apply (exposed secrets in test files remain a concern).
+- **Configuration Files** (`.yaml`, `.json`, `.toml`, `Dockerfile`): Excluded from language statistics but parsed for specific rules (e.g., exposed secrets, debug settings).

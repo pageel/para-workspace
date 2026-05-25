@@ -1,6 +1,6 @@
 # Language Specialization Rules
 
-This folder contains **language-specific overrides** for the 21 generic rules in `rules/generic/`. When vbsec detects the primary language of a target repo, the corresponding language folder is consulted; any rule with a matching `id` in frontmatter REPLACES the generic version for that scan.
+This folder contains **language-specific overrides** for the 21 generic rules in `rules/generic/`. When scan-sec detects the primary language of a target repo, the corresponding language folder is consulted; any rule with a matching `id` in frontmatter REPLACES the generic version for that scan.
 
 ## Override mechanism
 
@@ -25,7 +25,7 @@ rules/
     │   ├── 17-verbose-error-debug-mode.md
     │   └── 21-command-injection.md
     ├── typescript/
-    │   ├── 02-sql-injection.md        (applies_to: typescript — gộp cả .js .ts)
+    │   ├── 02-sql-injection.md        (applies_to: typescript — groups both .js .ts)
     │   ├── 03-xss.md
     │   ├── 07-mass-assignment.md
     │   ├── 08-insecure-deserialization.md
@@ -62,7 +62,7 @@ See `references/language-detection.md` for the detection heuristic. In short:
 
 - Count files by extension (`.go`, `.php`, `.py`, `.js`, `.ts`, ...) under the target path
 - Primary language = highest count (with minimum threshold, e.g. ≥ 5 files)
-- For mixed repos (vd: Laravel + Vue), detection picks the **backend** language (server-side risk dominates)
+- For mixed repos (e.g., Laravel + Vue), detection picks the **backend** language (server-side risk dominates)
 - Multi-language detection is possible: agent can run both `php` and `js` rule sets and merge
 
 ## Supported languages
@@ -79,11 +79,11 @@ See `references/language-detection.md` for the detection heuristic. In short:
 
 ## Why specialize?
 
-Generic rules describe **intent and reasoning** — they work cross-language. But search patterns, library names, idioms differ greatly:
+Generic rules describe **intent and reasoning** — they work cross-language. But search patterns, library names, and idioms differ greatly:
 
 - "SQL injection" in Python = `cursor.execute(f"...")`; in Go = `db.Raw(fmt.Sprintf(...))`; in PHP = `mysqli_query("$_GET[id]")`
-- "Verbose error" in Go = `gin.DebugMode`; in PHP = `APP_DEBUG=true` + Ignition page (CRITICAL because leaks APP_KEY)
-- "Command injection" in Go is rarer (args usually passed separately); in PHP it's common (shell_exec ubiquitous); in .NET it usually appears through `Process.Start` and `cmd.exe /c` / PowerShell wrappers.
+- "Verbose error" in Go = `gin.DebugMode`; in PHP = `APP_DEBUG=true` + Ignition page (CRITICAL because it leaks APP_KEY)
+- "Command injection" in Go is rarer (args usually passed separately); in PHP it is common (shell_exec ubiquitous); in .NET it usually appears through `Process.Start` and `cmd.exe /c` / PowerShell wrappers.
 
 Severity also shifts: PHP `VERBOSE-ERROR-DEBUG-MODE` is CRITICAL (Ignition leaks secrets + has past RCE CVE), while Go is HIGH (gin debug leaks routes/stack but no secret leak).
 
@@ -96,7 +96,7 @@ Language overrides give **better patterns + examples**, NOT a shortcut around th
 3. **Trace** input back through call chain to its source (L1 request, L2 DB, L3 config, L4 constant)
 4. **Verify** sanitization context (parameterized query, whitelist, escape, allowlist)
 
-Pattern match alone produces false positives (vd: `fmt.Sprintf` in Go is fine if not in a SQL sink) and false negatives (vd: input passed through a helper function still reaches the sink).
+Pattern match alone produces false positives (e.g., `fmt.Sprintf` in Go is fine if not in a SQL sink) and false negatives (e.g., input passed through a helper function still reaches the sink).
 
 ## Contributing — add an override
 
@@ -110,8 +110,8 @@ For an existing language (Go or PHP):
    - **Search patterns**: replace fully with `<lang>`-specific regex (no JS examples in Go file)
    - **Examples**: ALL code blocks in target language
    - **Fix recommendation**: idiomatic `<lang>` fix
-5. Keep **Cách reasoning** L1–L4 structure
-6. Test: run `/vbs-scan-security` against a `<lang>` repo with the vulnerability — confirm the rule fires with the right reasoning
+5. Keep **Reasoning** L1–L4 structure
+6. Test: run `/scan-sec` against a `<lang>` repo with the vulnerability — confirm the rule fires with the right reasoning
 
 ## Contributing — add a NEW language
 
@@ -132,12 +132,12 @@ To support Python / Ruby / Rust / etc.:
 
 ## Future: rule composition
 
-Currently override is binary (full replace). Future direction: allow language file to ONLY override specific sections (vd: only `Search patterns`) while inheriting `Intent` from generic. Not implemented yet — keep override files self-contained.
+Currently override is binary (full replace). Future direction: allow language file to ONLY override specific sections (e.g. only `Search patterns`) while inheriting `Intent` from generic. Not implemented yet — keep override files self-contained.
 
 ## Quality bar
 
 - Each rule file: 80–200 lines (focused, not bloated)
-- Vietnamese prose, English technical terms (consistent with generic rules)
+- English prose and English technical terms (consistent with generic rules)
 - At least 3 CRITICAL/HIGH examples + 2 NOT-critical (safe) examples
 - Cross-references to other relevant rules
 - Fix recommendations are actionable (specific function/config, not "use safe practices")

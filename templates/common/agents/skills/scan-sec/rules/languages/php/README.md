@@ -1,10 +1,10 @@
 # PHP Specialization
 
-These rule files override generic rules when vbsec detects the primary language as PHP.
+These rule files override generic rules when scan-sec detects the primary language as PHP.
 
 ## How override works
 
-When vbsec scans a repo and detects primary language `php`, for each rule id present in BOTH `rules/generic/<id>.md` AND `rules/languages/php/<id>.md`, the language-specific version REPLACES the generic. Generic rules without a language override apply as-is.
+When scan-sec scans a repo and detects primary language `php`, for each rule id present in BOTH `rules/generic/<id>.md` AND `rules/languages/php/<id>.md`, the language-specific version REPLACES the generic. Generic rules without a language override apply as-is.
 
 Override matching is by frontmatter `id`, not filename — but convention is to use the same numeric prefix as the generic counterpart.
 
@@ -20,14 +20,14 @@ Override matching is by frontmatter `id`, not filename — but convention is to 
 
 ## Reasoning still applies
 
-Language overrides do NOT skip the L1–L4 data flow analysis. Họ cung cấp pattern và example chính xác hơn cho PHP idiom, nhưng LLM agent vẫn phải:
+Language overrides do NOT skip the L1–L4 data flow analysis. They provide MORE PRECISE patterns and examples for PHP idioms, but the LLM agent must still:
 
-1. **Grep** với pattern PHP-specific (superglobals, Eloquent, wpdb)
-2. **Read** function chứa sink đầy đủ
+1. **Grep** with PHP-specific patterns (superglobals, Eloquent, wpdb)
+2. **Read** the function containing the sink fully
 3. **Trace** L1 (`$_GET`/`Request::input`) → L2 (DB meta) → L3 (env) → L4 (constant)
 4. **Verify** sanitization (`prepare`, `escapeshellarg`, nonce, `allowed_classes`)
 
-Đặc biệt PHP có nhiều "magic" (autoload, magic method, type juggling) làm pattern match thuần kém hiệu quả — cần reasoning thực sự.
+PHP has many magic features (autoload, magic methods, type juggling) that make naive pattern matching ineffective — true security reasoning is required.
 
 ## Frameworks covered
 
@@ -35,11 +35,11 @@ Language overrides do NOT skip the L1–L4 data flow analysis. Họ cung cấp p
 - Laravel (≥ 8.x)
 - Symfony (≥ 5.x)
 - WordPress (core + plugin patterns)
-- CodeIgniter (mention trong examples)
+- CodeIgniter (mentioned in examples)
 
 ## PHP-specific note
 
-PHP có **nhiều CVE classic** liên quan đến deserialize và debug mode (CVE-2021-3129 Ignition RCE, PHPMailer CVE-2016-10033, Drupalgeddon, vv) — agent nên cross-check `composer.lock` / dependency version cùng lúc với pattern scan.
+PHP has **many classic CVEs** related to deserialization and debug modes (e.g., CVE-2021-3129 Ignition RCE, PHPMailer CVE-2016-10033, Drupalgeddon). The agent should cross-check dependency versions in `composer.lock` alongside pattern scans.
 
 ## Contributing
 
@@ -47,6 +47,6 @@ To add a new PHP-specific override:
 
 1. Pick a rule id from `rules/generic/`
 2. Copy generic frontmatter, change `applies_to: php`
-3. Replace pattern + example bằng PHP idiom
+3. Replace patterns and examples with PHP idioms
 4. Keep Intent + L1–L4 reasoning approach
-5. Test bằng `/vbs-scan-security` trên PHP repo có vulnerability đó
+5. Test by running `/scan-sec` on a PHP repo containing that vulnerability

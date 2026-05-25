@@ -1,10 +1,10 @@
 # Go Specialization
 
-These rule files override generic rules when vbsec detects the primary language as Go.
+These rule files override generic rules when scan-sec detects the primary language as Go.
 
 ## How override works
 
-When vbsec scans a repo and detects primary language `go`, for each rule id present in BOTH `rules/generic/<id>.md` AND `rules/languages/go/<id>.md`, the language-specific version REPLACES the generic. Generic rules without a language override apply as-is.
+When scan-sec scans a repo and detects primary language `go`, for each rule id present in BOTH `rules/generic/<id>.md` AND `rules/languages/go/<id>.md`, the language-specific version REPLACES the generic. Generic rules without a language override apply as-is.
 
 Override matching is by frontmatter `id`, not filename — but convention is to use the same numeric prefix as the generic counterpart for human navigation.
 
@@ -20,14 +20,14 @@ Override matching is by frontmatter `id`, not filename — but convention is to 
 
 ## Reasoning still applies
 
-Language overrides do NOT skip the L1–L4 data flow analysis. They give MORE PRECISE patterns and examples cho Go idioms (GORM, gin, fiber, echo, chi, gorilla/mux, net/http stdlib), nhưng LLM agent vẫn phải:
+Language overrides do NOT skip the L1–L4 data flow analysis. They provide MORE PRECISE patterns and examples for Go idioms (GORM, gin, fiber, echo, chi, gorilla/mux, net/http stdlib), but the LLM agent must still:
 
-1. **Grep** với pattern Go-specific
-2. **Read** handler đầy đủ
+1. **Grep** with Go-specific patterns
+2. **Read** handlers fully
 3. **Trace** L1 (request) → L2 (DB) → L3 (config) → L4 (constant)
 4. **Verify** sanitization context (placeholder, whitelist, `http.MaxBytesReader`, custom `DialContext`)
 
-Pattern match thuần KHÔNG đủ — Go có nhiều idiom (goroutine, channel, interface) làm data flow phức tạp.
+Naive pattern matching is NOT enough — Go has many idioms (goroutines, channels, interfaces) that make data flow complex.
 
 ## Frameworks covered
 
@@ -47,6 +47,6 @@ To add a new Go-specific override:
 
 1. Pick a rule id from `rules/generic/`
 2. Copy generic file's frontmatter, change `applies_to: go`
-3. Replace search patterns + examples với Go-specific idiom
+3. Replace search patterns + examples with Go-specific idioms
 4. Keep Intent + L1–L4 reasoning approach
-5. Test bằng cách chạy `/vbs-scan-security` trên Go repo có vulnerability đó
+5. Test by running `/scan-sec` on a Go repo containing that vulnerability

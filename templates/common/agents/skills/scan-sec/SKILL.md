@@ -44,7 +44,7 @@ Examples:
 ```
 scan security uncommitted lang=en
 /scan-sec project app-tinycrm
-audit security resource vbsec lang=vi
+audit security resource para-workspace lang=vi
 ```
 
 
@@ -60,6 +60,7 @@ audit security resource vbsec lang=vi
 2. **Use appropriate tools** — Antigravity has built-in file/grep tools (read, grep, search). Do not call raw shell grep/find when native tools are available.
 3. **Read complete context** — When finding a pattern, read the surrounding function to understand if it is a real vulnerability.
 4. **Data flow trust levels** — A string formatting query is only dangerous if the interpolated data is **L1 (untrusted)**.
+5. **No Auto-Remediation (Strict Guardrail)** — The Agent **MUST NOT** modify, edit, or refactor any codebase file to fix vulnerabilities during or after the scan without explicit user request. The scanner is strictly a diagnostic tool. Remediation is user-led.
 
 ### Data Flow Classification (L1–L4)
 
@@ -221,6 +222,12 @@ Then print 1-2 summary lines to stdout:
 ```
 
 All headers, labels, and verdicts must come from the i18n file loaded in Step 1.
+
+**Next Steps & Actionable Workflows:**
+- If the scan fails (`Verdict: FAIL` or `WARN` due to findings), the Agent **MUST** actively suggest that the user initiate a follow-up workflow:
+  - `/brainstorm`: To discuss design trade-offs and structural changes.
+  - `/plan create`: To design a security mitigation plan.
+  - `/vibecode`: To fix and verify vulnerabilities in sandbox mode.
 
 ---
 

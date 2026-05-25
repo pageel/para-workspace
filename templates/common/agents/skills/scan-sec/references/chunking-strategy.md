@@ -1,17 +1,17 @@
 # Chunking Strategy
 
-Cách chia file thành chunks cho LARGE mode (sub-agent delegation). Mỗi chunk được 1 sub-agent quét song song.
+How files are divided into chunks for LARGE mode (sub-agent delegation). Each chunk is scanned by a sub-agent sequentially or in parallel.
 
-## Mục tiêu
+## Goals
 
-- Sub-agent có **scope rõ ràng**: 1 chunk = 1 phần logic của repo (không phải 1 file lẻ)
-- Mỗi chunk có **đủ context** để reasoning (không bị cắt mid-function)
-- **Cân bằng tải**: chunks tương đương kích cỡ
-- **Không quá nhiều chunks**: target 3-10 chunks (sub-agent overhead cao, đừng có 50 chunk 2 file mỗi cái)
+- **Clear Scope**: One chunk = one logical part of the repository (not just single files).
+- **Adequate Context**: Each chunk contains enough context for reasoning (avoid cutting mid-function).
+- **Load Balancing**: Maintain roughly similar sizes across chunks.
+- **Avoid Excess Chunks**: Target 3-10 chunks (sub-agent overhead is high; avoid dozens of tiny chunks).
 
-## Strategy mặc định: Top-level folder
+## Default Strategy: Top-Level Folders
 
-Chia theo **top-level folder** dưới git root, mỗi folder = 1 chunk.
+Group files by their **top-level folder** under the git root, where each folder represents one chunk.
 
 ```
 my-repo/
@@ -21,31 +21,31 @@ my-repo/
 └── scripts/       ← chunk 4
 ```
 
-File ở root (vd: `package.json`, `Dockerfile`, `.env.example`) → 1 chunk riêng tên `root`.
+Files at the root level (e.g.: `package.json`, `Dockerfile`, `.env.example`) are grouped into a dedicated chunk named `root`.
 
-## Rules để cân bằng
+## Balancing Rules
 
-1. **Chunk có >50 file** → split thành chunk nhỏ hơn theo sub-folder
+1. **Chunks with >50 files** → Split into smaller chunks by sub-folders:
    ```
-   api/  (120 files) → split:
-     ├── api/handlers/  ← chunk
+   api/ (120 files) → split:
+     ├── api/handlers/   ← chunk
      ├── api/middleware/ ← chunk
      └── api/services/   ← chunk
    ```
 
-2. **Folder có <5 file** → merge vào chunk khác cùng tính chất
+2. **Folders with <5 files** → Merge with another similar chunk:
    ```
    utils/ (3 files) + helpers/ (4 files) → 1 chunk "utils+helpers"
    ```
 
-3. **Detected primary language ≠ folder language** → ưu tiên giữ chunk theo lang để sub-agent có thể apply đúng overlay
-   - Vd: `frontend/` toàn `.ts`, `backend/` toàn `.go` → 2 chunk, mỗi cái có lang riêng
+3. **Detected Primary Language ≠ Folder Language** → Prioritize language grouping so sub-agents can apply the correct language-specific rules overlay:
+   - Example: `frontend/` contains `.ts`, `backend/` contains `.go` → 2 chunks, each with its own language profile.
 
-4. **Test files**: gộp `__tests__/`, `*_test.go`, `*.spec.ts` vào CHUNK CHA của code chúng test. Lý do: rule áp dụng cho test code khác với prod code (vd: HARDCODED-SECRET trong test với fixture data thường không phải critical).
+4. **Test files**: Group `__tests__/`, `*_test.go`, `*.spec.ts` into the parent chunk of the code they test. Rationale: security rules apply differently to test code (e.g. hardcoded credentials in test fixtures are usually not critical).
 
-## Strategy thay thế: Theo extension cluster
+## Alternative Strategy: Extension Clustering
 
-Khi repo không có cấu trúc folder rõ (flat repo, mix mọi thứ ở root), chia theo extension cluster:
+When a repository lacks a structured folder hierarchy (flat repo where files are mixed at the root), group by extension clusters:
 
 ```
 flat-repo/
@@ -55,16 +55,16 @@ flat-repo/
 ├── Dockerfile, .env*     ← chunk "config"
 ```
 
-## Strategy theo file count
+## Strategy by File Count
 
-| Tổng files | Số chunks target | Files/chunk |
+| Total Files | Target Chunks | Files/Chunk |
 |---|---|---|
 | 30-60 | 3-5 | ~10-15 |
 | 60-150 | 5-8 | ~15-25 |
 | 150-300 | 8-12 | ~20-30 |
 | >300 | 12-15 | ~25-30 |
 
-KHÔNG quá 15 chunks. Sub-agent spawn overhead + main-agent aggregate context = chậm hơn nếu split nhỏ.
+Max limit: 15 chunks. Beyond this, sub-agent startup overhead and main-agent aggregation context sizes degrade performance.
 
 ## Pseudocode
 
@@ -108,11 +108,11 @@ def chunk_files(files, max_files_per_chunk=30, target_chunks_max=15):
     return final
 ```
 
-LLM agent dùng Glob + lý luận để chia, không cần chạy Python literal.
+The LLM agent uses reasoning to perform the chunking based on these rules; direct Python execution is not required.
 
-## Output format cho main orchestrator
+## Orchestration Output Format
 
-Sau khi chunk, main agent có list dạng:
+Once chunked, the main agent maintains a listing structure:
 
 ```
 [
@@ -123,14 +123,14 @@ Sau khi chunk, main agent có list dạng:
 ]
 ```
 
-Mỗi chunk được TodoWrite tạo 1 task. Sub-agent nhận chunk + prompt template (xem [`sub-agent-prompts.md`](sub-agent-prompts.md)).
+Each chunk is processed as a separate task. Sub-agents receive their files along with the prompt template (see [`sub-agent-prompts.md`](sub-agent-prompts.md)).
 
-## Edge cases
+## Edge Cases
 
-| Scenario | Cách xử lý |
+| Scenario | Handling Strategy |
 |---|---|
-| Repo có submodule | Skip submodule (không scan). Note trong report. |
-| Generated code chiếm 80% chunk | Split: chunk "generated" (low priority) + chunk source. Có thể skip "generated" nếu user confirm. |
-| Monorepo với 50+ apps | Chunk theo app (ưu tiên top-level `apps/<name>`), không split deeper. |
-| 1 file >5000 dòng | Để nguyên 1 chunk (đừng split 1 file). Note "large file, đọc kỹ". |
-| Repo siêu nhỏ (10 files) | Không LARGE mode — fallback SMALL. SKILL.md đã guard điều này. |
+| Git submodules in repo | Skip submodules (do not scan). Note in final report. |
+| Generated code occupies 80% of chunk | Split: chunk "generated" (low priority) + chunk source. Skip "generated" if confirmed by user. |
+| Monorepo with 50+ apps | Chunk by app (prioritizing top-level `apps/<name>`); avoid splitting deeper. |
+| Single file > 5000 lines | Keep as a single chunk (do not split a single file). Mark as "large file, review carefully". |
+| Tiny repository (e.g. <30 files) | Do not trigger LARGE mode; fallback to SMALL mode. |

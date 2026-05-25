@@ -1,41 +1,41 @@
 # LARGE Review Workflow — Sequential (Codex/Antigravity)
 
-Sequential chunking workflow cho repo lớn (>20 main-lang files HOẶC >30 total HOẶC >14 ngày). Khác với Claude Code variant (spawn parallel sub-agents), variant này xử lý **từng chunk tuần tự** trong cùng main agent context.
+Sequential chunking workflow for large repositories (>20 main-lang files OR >30 total OR >14 days). Unlike the Claude Code variant (which spawns parallel sub-agents), this variant processes **each chunk sequentially** within the same main agent context.
 
-> Được gọi từ [`../SKILL.md`](../SKILL.md) Step 3 khi routing quyết định LARGE mode.
+> Invoked from [`../SKILL.md`](../SKILL.md) Step 3 when routing decides LARGE mode.
 
-## Tại sao sequential?
+## Why sequential?
 
-Codex CLI và Antigravity (tại thời điểm này) chưa có cơ chế cho skill spawn parallel sub-agents. Để giữ output IDENTICAL với Claude Code variant, ta chia file thành chunks (giống Claude) nhưng xử lý lần lượt. Trade-off: chậm hơn ~3× nhưng kết quả y nguyên.
+Codex CLI and Antigravity (at this time) do not have a mechanism for a skill to spawn parallel sub-agents. To keep the output IDENTICAL to the Claude Code variant, we split the files into chunks (similar to Claude) but process them sequentially. Trade-off: ~3× slower but identical results.
 
-## Inputs (đã có sẵn từ SKILL.md context)
+## Inputs (already available from SKILL.md context)
 
 - `$SCOPE`, `$LANG`, `$FILES`, `$PRIMARY_LANG`, `$OVERLAY_AVAILABLE`, i18n strings — same as SMALL mode
 
 ## Steps
 
-### Step L1 — Load rule files (1 lần duy nhất)
+### Step L1 — Load rule files (Once only)
 
-Đọc tất cả rule files vào context **1 lần ở đầu workflow** để tránh re-read mỗi chunk:
+Read all rule files into context **once at the start of the workflow** to avoid re-reading for each chunk:
 
 1. Generic rules: `rules/generic/01-*.md` … `rules/generic/21-*.md` (21 files)
-2. Language overlay (nếu `$OVERLAY_AVAILABLE`): `rules/languages/$PRIMARY_LANG/*.md`
+2. Language overlay (if `$OVERLAY_AVAILABLE`): `rules/languages/$PRIMARY_LANG/*.md`
 
-Ghi nhớ rule IDs nào đã được override bởi overlay.
+Remember which rule IDs are overridden by the overlay.
 
 ### Step L2 — Setup workspace
 
 ```bash
-mkdir -p .vbsec-tmp
+mkdir -p .tmp
 ```
 
-Đảm bảo `.vbsec-tmp/` trong `.gitignore` (warn user nếu không, nhưng vẫn proceed).
+Ensure `.tmp/` is in `.gitignore` (warn user if not, but still proceed).
 
 ### Step L3 — Chunk files
 
-Đọc [`../references/chunking-strategy.md`](../references/chunking-strategy.md) và apply algorithm.
+Read [`../references/chunking-strategy.md`](../references/chunking-strategy.md) and apply the algorithm.
 
-Output: list `chunks` với format:
+Output: list `chunks` with format:
 ```
 chunks = [
   {"name": "api/handlers", "slug": "api-handlers", "files": [...], "count": 12},
@@ -44,55 +44,55 @@ chunks = [
 ]
 ```
 
-`slug` = `name` với `/` thay bằng `-`.
+`slug` = `name` with `/` replaced by `-`.
 
 ### Step L4 — Process chunks SEQUENTIALLY
 
-For mỗi `chunk` trong `chunks` (theo thứ tự, không parallel):
+For each `chunk` in `chunks` (in order, not parallel):
 
-1. **Resume check:** nếu `.vbsec-tmp/findings-<slug>.md` đã tồn tại và non-empty → skip chunk này (đã scan ở session trước). Đọc lại file vào memory.
+1. **Resume check:** if `.tmp/findings-<slug>.md` already exists and is non-empty → skip this chunk (already scanned in a previous session). Read the file back into memory.
 
-2. **Print progress** ra stdout: `[chunk N/total] Scanning <chunk.name> (<count> files)...`
+2. **Print progress** to stdout: `[chunk N/total] Scanning <chunk.name> (<count> files)...`
 
-3. **Apply rules cho files trong chunk:**
-   - Cho mỗi file trong `chunk.files`:
-     - Skip nếu binary/generated/>5000 dòng (xem [`small-review.md`](small-review.md#step-s2--apply-rules-per-file) Step S2.1)
-     - Cho mỗi rule trong (generic + overlay):
-       - Dùng grep tool để tìm patterns
-       - Dùng read tool để xem full function/context
-       - Apply L1-L4 data flow analysis (xem [`../references/data-flow-classification.md`](../references/data-flow-classification.md))
-       - Quyết định: vulnerability thật hay false positive?
+3. **Apply rules to files in the chunk:**
+   - For each file in `chunk.files`:
+     - Skip if binary/generated/>5000 lines (see [`small-review.md`](small-review.md#step-s2--apply-rules-per-file) Step S2.1)
+     - For each rule in (generic + overlay):
+       - Use grep tool to find patterns
+       - Use read tool to view full function/context
+       - Apply L1-L4 data flow analysis (see [`../references/data-flow-classification.md`](../references/data-flow-classification.md))
+       - Decide: real vulnerability or false positive?
    - Collect findings: `(file, line, rule_id, severity, issue, fix, context)`
 
-4. **Rule ID discipline (BẮT BUỘC):**
-   - **Chỉ dùng 21 canonical rule IDs**. KHÔNG tự bịa rule mới.
-   - 1 dòng code dính 2 rule → tạo **2 finding riêng biệt**, mỗi cái 1 `rule_id`.
+4. **Rule ID discipline (MANDATORY):**
+   - **Only use the 21 canonical rule IDs**. DO NOT invent new rules.
+   - 1 line of code triggering 2 rules → create **2 separate findings**, each with 1 `rule_id`.
 
-5. **Write chunk findings** vào `.vbsec-tmp/findings-<slug>.md`:
-   - Format markdown (cùng schema với sub-agent output của Claude variant)
-   - Sections: `## FINDINGS`, `## PASSED`, `## NOT_MAPPED` (nếu có)
-   - File path tuyệt đối từ repo root
+5. **Write chunk findings** to `.tmp/findings-<slug>.md`:
+   - Markdown format (same schema as the Claude variant sub-agent output)
+   - Sections: `## FINDINGS`, `## PASSED`, `## NOT_MAPPED` (if any)
+   - Absolute file path from repo root
 
 6. **Print confirmation:** `[chunk N/total] ✓ <count_findings> findings`
 
-7. **Tiếp tục chunk tiếp theo** (không spawn, không await — vì đã sequential).
+7. **Continue to the next chunk** (no spawn, no await — since it is sequential).
 
 ### Step L5 — Aggregate findings
 
-Đọc tất cả `.vbsec-tmp/findings-*.md`:
+Read all `.tmp/findings-*.md`:
 
-1. **Parse** mỗi file thành list findings (file/line/rule_id/severity/issue/fix/context)
-2. **Validate rule_ids**: mọi finding phải có `rule_id` trong 21 canonical IDs.
-3. **Dedup**: key = `(file, line, rule_id)`. Giữ entry có severity cao nhất. Nếu tie, giữ entry có `context` dài hơn.
-   - **Lưu ý:** dedup key có `rule_id` → 1 vị trí (file:line) dính 2 rule khác nhau (vd IDOR + RACE) sẽ là 2 entry riêng, KHÔNG dedup.
-4. **Collect NOT_MAPPED**: nếu có, note ở cuối main report (giúp roadmap future rules).
-5. **Collect PASSED**: union các rule_id xuất hiện trong `## PASSED` section của tất cả chunks. Một rule chỉ vào PASSED list nếu **không** xuất hiện trong findings của bất kỳ chunk nào.
+1. **Parse** each file into a list of findings (file/line/rule_id/severity/issue/fix/context)
+2. **Validate rule_ids**: every finding must have a `rule_id` within the 21 canonical IDs.
+3. **Dedup**: key = `(file, line, rule_id)`. Keep the entry with the highest severity. If tied, keep the entry with the longer `context`.
+   - **Note:** dedup key contains `rule_id` → a single location (file:line) triggering 2 different rules (e.g., IDOR + RACE) will remain 2 entries, DO NOT dedup.
+4. **Collect NOT_MAPPED**: if any, note at the end of the main report (helps roadmap future rules).
+5. **Collect PASSED**: union of rule_ids appearing in the `## PASSED` section of all chunks. A rule only enters the PASSED list if it does **not** appear in findings of any chunk.
 6. **Cross-chunk rules**:
-   - **SLOPSQUATTING**: collect tất cả import statement từ chunks, dedup, kiểm tra package có hợp lệ.
-   - **OUTDATED-DEPENDENCY**: đọc file dependency lock (`package-lock.json`, `go.sum`, `composer.lock`) ở root.
-   - **CSRF middleware global**: nếu phát hiện middleware global ở 1 chunk, downgrade các CSRF finding ở chunk khác.
+   - **SLOPSQUATTING**: collect all import statements from chunks, dedup, verify if the packages are valid.
+   - **OUTDATED-DEPENDENCY**: read dependency lock file (`package-lock.json`, `go.sum`, `composer.lock`) at the root.
+   - **CSRF middleware global**: if a global middleware is detected in 1 chunk, downgrade CSRF findings in other chunks.
 
-7. **Counts sanity check** (BẮT BUỘC trước khi render):
+7. **Counts sanity check** (MANDATORY before rendering):
    ```
    total = len(findings)
    assert total == count_by_severity('CRITICAL') + count_by_severity('HIGH') + count_by_severity('MEDIUM') + count_by_severity('LOW')
@@ -100,43 +100,43 @@ For mỗi `chunk` trong `chunks` (theo thứ tự, không parallel):
 
 ### Step L6 — Translate (if lang=vi)
 
-Nếu `$LANG = "vi"`:
+If `$LANG = "vi"`:
 
-Với mỗi finding:
-- `issue` (EN) → translate sang vi, giữ technical terms tiếng Anh (function name, library, code snippet)
-- `fix` (EN) → ưu tiên dùng phrase template từ `i18n/vi.md`
+For each finding:
+- `issue` (EN) → translate to vi, keeping English technical terms (function name, library, code snippet)
+- `fix` (EN) → prefer using phrase templates from `i18n/vi.md`
 
-Section headers, verdict labels — lấy từ i18n key đã load.
+Section headers, verdict labels — retrieved from loaded i18n keys.
 
 ### Step L7 — Render report
 
-Theo template trong [`../references/output-format.md`](../references/output-format.md).
+According to the template in [`../references/output-format.md`](../references/output-format.md).
 
-**Verbose level theo severity:**
-- CRITICAL → overview table + full verbose block (Mô tả ngắn + Tại sao nguy hiểm + Attack scenario + Code before/after + Đọc thêm)
-- HIGH → overview table + medium block (Mô tả + Tác động + Code fix + Đọc thêm)
+**Verbose level by severity:**
+- CRITICAL → overview table + full verbose block (Short description + Why dangerous + Attack scenario + Code before/after + Read more)
+- HIGH → overview table + medium block (Description + Impact + Code fix + Read more)
 - MEDIUM → compact table only
 - LOW → compact table only
 
 **Generate verbose content (non-tech friendly):**
 
-Findings từ chunks là compact (file, line, rule_id, severity, issue, fix, context). Khi render, paraphrase từ rule file content (đã Read ở Step L1):
-- `why_dangerous` → từ section "Intent" + "Examples CRITICAL" của rule
-- `attack_scenario` → kịch bản thực tế dựa trên rule's pattern + chunk's `context`
-- `code_before` → từ chunk's `context` (đã có snippet thực)
-- `code_after` → từ section "Fix recommendation" của rule, adapt cho code thực tế
+Findings from chunks are compact (file, line, rule_id, severity, issue, fix, context). When rendering, paraphrase from rule file content (Read in Step L1):
+- `why_dangerous` → from "Intent" + "Examples CRITICAL" sections of the rule
+- `attack_scenario` → real scenario based on rule's pattern + chunk's `context`
+- `code_before` → from chunk's `context` (already contains the actual snippet)
+- `code_after` → from the "Fix recommendation" section of the rule, adapted for actual code
 
-Khi translate sang `$LANG=vi`: dịch text, giữ code English. Khi `lang=en`: dùng EN canonical.
+When translating to `$LANG=vi`: translate text, keep code in English. When `lang=en`: use EN canonical.
 
 ### Step L8 — Save report to file
 
-1. Render full report (theo Step L7 logic)
-2. **Save** dùng write/create-file tool của Antigravity:
-   - Path: `vbsec-reports/scan-<TIMESTAMP>.md` (đã prepare ở SKILL.md Step 0)
-   - Nội dung IDENTICAL với stdout
-3. **Print stdout** sau report:
+1. Render full report (according to Step L7 logic)
+2. **Save** using Antigravity's write/create-file tool:
+   - Path: `reports/security/scan-<TIMESTAMP>.md` (prepared in SKILL.md Step 0)
+   - Content IDENTICAL to stdout
+3. **Print stdout** after report:
    ```
-   📄 {msg_report_saved}: vbsec-reports/scan-2026-05-13-143022.md
+   📄 {msg_report_saved}: reports/security/scan-2026-05-13-143022.md
    ```
 4. **If gitignore warning needed:**
    ```
@@ -154,19 +154,19 @@ Khi translate sang `$LANG=vi`: dịch text, giữ code English. Khi `lang=en`: d
 ### Step L10 — Cleanup
 
 ```bash
-rm -rf .vbsec-tmp    # cleanup temp files (luôn xóa)
-# KHÔNG xóa vbsec-reports/ — đó là persisted output cho user
+rm -rf .tmp    # cleanup temp files (always delete)
+# DO NOT delete reports/security/ — that is persisted output for the user
 ```
 
 ## Resume protocol
 
-Nếu user re-run skill khi `.vbsec-tmp/` còn từ session trước:
+If the user re-runs the skill while `.tmp/` remains from a previous session:
 
-1. Đọc `.vbsec-tmp/` — chunks nào đã có `findings-*.md` non-empty thì coi như đã scan
-2. Chỉ process chunks chưa có findings file (Step L4 đã có resume check ở mục 1)
-3. Aggregate như bình thường (Step L5)
+1. Read `.tmp/` — chunks that already have non-empty `findings-*.md` are considered scanned
+2. Only process chunks that do not have a findings file yet (Step L4 already has resume check in item 1)
+3. Aggregate as normal (Step L5)
 
-Nếu user muốn re-scan từ đầu: dùng arg `--fresh` → xóa `.vbsec-tmp/` trước khi bắt đầu.
+If the user wants to re-scan from scratch: use the `--fresh` argument → delete `.tmp/` before starting.
 
 ## Performance target
 
@@ -176,18 +176,18 @@ Nếu user muốn re-scan từ đầu: dùng arg `--fresh` → xóa `.vbsec-tmp/
 | 10 | ~10-15 min |
 | 15 | ~15-25 min |
 
-So sánh: Claude variant parallel ~2-10 min cho cùng workload. Sequential variant chậm hơn ~3× nhưng output identical.
+Comparison: Claude variant parallel is ~2-10 min for the same workload. Sequential variant is ~3× slower but identical output.
 
-Main agent context: ~50-100K tokens (đủ cho repo trung bình; nếu repo cực lớn → có thể cần chia thành 2 lần invoke).
+Main agent context: ~50-100K tokens (enough for average repos; if the repo is extremely large → might need to be split into 2 invokes).
 
 ## Edge cases
 
 | Scenario | Handling |
 |---|---|
-| Chunk có 1 file rất lớn (>5000 dòng) | Đọc bằng grep trước → read targeted sections |
-| 2 chunks cùng tìm thấy lỗi trong file giống nhau (file ở biên) | Dedup ở Step L5 |
-| Generated code chiếm cả 1 chunk | Flag tự "this chunk is mostly generated, low priority". Giảm severity các finding trong chunk này 1 cấp. |
-| Repo 500+ file → 15 chunk, mỗi chunk 30+ file | OK nhưng chậm (~20-30 min). Cân nhắc gợi ý user dùng Claude Code variant cho repo cỡ này. |
-| User Ctrl+C giữa chừng | `.vbsec-tmp/` giữ lại. Re-run → resume từ chunk dở dang. |
-| Không có git (repo chưa init) | Lỗi sớm ở SKILL.md Step 0 — không vào đây. |
-| Context của agent gần đầy giữa chừng | Save partial findings vào `.vbsec-tmp/` rồi báo user re-invoke skill để continue. |
+| Chunk has 1 very large file (>5000 lines) | Read using grep first → read targeted sections |
+| 2 chunks find the same issue in the same file (border file) | Dedup in Step L5 |
+| Generated code occupies an entire chunk | Self-flag "this chunk is mostly generated, low priority". Downgrade severity of findings in this chunk by 1 level. |
+| Repo with 500+ files → 15 chunks, each with 30+ files | OK but slow (~20-30 min). Suggest user to use Claude Code variant for repos of this size. |
+| User Ctrl+C mid-run | `.tmp/` is kept. Re-run → resume from unfinished chunk. |
+| No git (repo not initialized) | Early exit in SKILL.md Step 0 — does not enter here. |
+| Agent context nearly full mid-run | Save partial findings to `.tmp/` then notify user to re-invoke skill to continue. |

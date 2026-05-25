@@ -8,32 +8,32 @@ applies_to: all
 
 ## Intent
 
-Dependency cũ có **CVE đã công bố** → exploit code có sẵn trên GitHub, hacker chỉ việc copy-paste. Vibe coder cài package từ tutorial 2 năm trước, không bao giờ update → mang theo cả tá lỗ hổng (log4shell, prototype pollution, RCE, SSRF...).
+Outdated dependencies with **known public CVEs** represent a major attack vector, as exploit code is often readily available on GitHub. AI-assisted developers frequently copy dependencies from older tutorials without updating them, introducing vulnerabilities like Log4Shell, prototype pollution, RCE, or SSRF into the application.
 
-vbsec chạy **offline** (không fetch CVE DB), nên rule này:
-1. Flag một số package + version **well-known vulnerable** (static list dưới)
-2. Khuyến nghị user tự chạy `npm audit` / `pip-audit` / `govulncheck` / `composer audit`
+Since `scan-sec` runs **offline** (without fetching external CVE databases at runtime):
+1. It flags a **small static list** of well-known vulnerable packages and versions (defined below).
+2. It advises the user to run dedicated audit tools such as `npm audit`, `pip-audit`, `govulncheck`, or `composer audit` to obtain a comprehensive scan.
 
-## Khi nào HIGH
+## When to Flag HIGH
 
-- Package nằm trong static list dưới với version vulnerable
-- `package-lock.json` / `requirements.txt` / `go.sum` / `composer.lock` show version cụ thể có CVE
-- Lockfile cũ > 12 tháng không update (signal có nhiều CVE chưa patch)
+- A package in the static list below is found with a vulnerable version in lockfiles.
+- `package-lock.json`, `requirements.txt`, `go.sum`, or `composer.lock` references specific versions with known CVEs.
+- The lockfile was last updated >12 months ago (strong signal of outdated dependencies).
 
-## Khi nào MEDIUM (giảm cấp)
+## When to Flag MEDIUM
 
-- Package outdated nhưng chưa có CVE biết đến
-- Dev dependency (chỉ chạy lúc build, không production)
-- Version bracket cho phép latest (`^1.2.3`) nhưng chưa run `npm install`
+- The package is outdated but has no known critical CVEs.
+- It is a dev dependency (only executed during build, not in production).
+- Version ranges allow updating (`^1.2.3`), but lockfile has not been resolved yet.
 
-## Cách reasoning (KHÔNG pattern-match thuần)
+## Reasoning Strategy (DO NOT perform naive pattern-matching)
 
-1. **Đọc lockfile**: `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `requirements.txt`, `Pipfile.lock`, `poetry.lock`, `go.sum`, `composer.lock`, `Gemfile.lock`
-2. **Check static list** dưới đây — đây là **subset nhỏ** của CVE nổi tiếng, KHÔNG đầy đủ
-3. **Đếm tuổi lockfile**: `git log -1 --format=%ai <lockfile>` — quá 12 tháng → warn
-4. **Khuyến nghị user**: chạy audit tool thật để có dữ liệu đầy đủ
+1. **Scan lockfiles**: `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `requirements.txt`, `Pipfile.lock`, `poetry.lock`, `go.sum`, `composer.lock`, `Gemfile.lock`.
+2. **Compare with the static list** below (note: this is a subset, not a complete database).
+3. **Verify lockfile age**: Check the last commit date via git commands if available, or warn if outdated.
+4. **Recommend tool output**: Direct the user to run official package audit tools.
 
-## Static vulnerable list (subset — well-known CVEs)
+## Static Vulnerable List (Representative Subset)
 
 ### JavaScript / npm
 
@@ -92,18 +92,18 @@ vbsec chạy **offline** (không fetch CVE DB), nên rule này:
 | `rack` (Ruby) | `< 2.2.6.4` | `2.2.6.4` | CVE-2023-27530 (DoS) |
 | `nokogiri` | `< 1.13.10` | `1.13.10` | multiple |
 
-## Search patterns
+## Search Patterns
 
 ### Lockfiles
 
 ```
 # Node.js
-"version":\s*"([\d.]+)"     # trong package-lock.json
-# Check "name" + version
+"version":\s*"([\d.]+)"     # in package-lock.json
+# Match package name alongside version
 
 # Python
-^([a-zA-Z0-9_\-]+)==(.+)$   # trong requirements.txt
-^([a-zA-Z0-9_\-]+)\s*=\s*"([^"]+)"  # trong Pipfile
+^([a-zA-Z0-9_\-]+)==(.+)$   # in requirements.txt
+^([a-zA-Z0-9_\-]+)\s*=\s*"([^"]+)"  # in Pipfile
 
 # Go
 go\.mod / go.sum
@@ -127,7 +127,7 @@ go\.mod / go.sum
 
 ```
 # requirements.txt
-django==3.2.5           # nhiều CVE chưa patch
+django==3.2.5           # multiple unpatched CVEs
 pillow==8.0.0           # buffer overflow CVEs
 requests==2.25.1        # CVE-2023-32681
 pyyaml==5.3             # CVE-2020-14343
@@ -157,9 +157,9 @@ django==4.2.11
 requests==2.31.0
 ```
 
-## Fix recommendation
+## Fix Recommendation
 
-1. **Chạy audit tool — ƯU TIÊN trước mọi việc:**
+1. **Run official audit tools (Highest Priority):**
    ```bash
    # Node
    npm audit fix
@@ -183,19 +183,19 @@ requests==2.31.0
    # Java
    mvn org.owasp:dependency-check-maven:check
    ```
-2. **Update** package có CVE → version đã fix:
+2. **Update** packages to patched versions:
    ```bash
    npm update lodash@^4.17.21
    pip install --upgrade requests
    ```
-3. **Dependabot / Renovate**: bật auto-PR khi có security update.
-4. **SBOM** (Software Bill of Materials): generate với `syft`, `cyclonedx-bom` để track dependency.
-5. **Pin version đầy đủ** trong lockfile, commit lockfile.
-6. **Loại bỏ dependency không cần**: mỗi package thêm = attack surface thêm.
-7. **Re-audit định kỳ** (weekly trong CI).
+3. **Enable Automated Dependency Scanning**: Configure Dependabot or Renovate.
+4. **Generate SBOM** (Software Bill of Materials) using `syft` or `cyclonedx-bom`.
+5. **Commit Lockfiles** to lock resolved dependencies.
+6. **Minimize unused dependencies** to decrease the attack surface.
+7. **Schedule audits weekly** in the CI pipeline.
 
-## Cross-references
+## Cross-References
 
-- **Lưu ý**: list trên KHÔNG đầy đủ — chỉ là well-known CVE. Phải chạy audit tool để có data thật.
-- Cross-check với `01-hardcoded-secret`: package cũ có thể leak qua telemetry
-- Cross-check với `17-verbose-error-debug-mode`: error stack reveal version → CVE lookup dễ
+- This list is **not exhaustive** — it only tracks well-known CVEs. Running official audit tools is required.
+- Cross-check with `01-hardcoded-secret` (outdated packages might leak data via telemetry).
+- Cross-check with `17-verbose-error-debug-mode` (verbose stacks leak versions which makes matching known CVEs easy).

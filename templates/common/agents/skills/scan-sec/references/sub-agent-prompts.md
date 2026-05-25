@@ -1,19 +1,19 @@
 # Sub-Agent Prompts (LARGE mode)
 
-Templates cho prompt khi main orchestrator delegate quét 1 chunk cho sub-agent. Sub-agent loại `general-purpose` (built-in Claude Code) — KHÔNG yêu cầu custom agent.
+Templates for the prompt sent when the main orchestrator delegates scanning of a chunk to a sub-agent. The sub-agent is a `general-purpose` agent (built-in browser or terminal agent interface) — no custom agent definition is required.
 
-## Nguyên tắc
+## Principles
 
-1. **Sub-agent KHÔNG có lang context** — Luôn yêu cầu sub-agent output **canonical English + rule ID**. Main agent sẽ translate sang `$LANG` ở step aggregate.
-2. **Sub-agent KHÔNG load rule files** — Main agent embed nội dung rule (hoặc list rule ID) trực tiếp vào prompt. Sub-agent không có quyền truy cập file system bằng path tương đối từ skill, embed thẳng để tránh ambiguity.
-3. **Prompt phải self-contained** — Sub-agent không thấy conversation hiện tại. Mọi context cần phải nằm trong prompt.
-4. **Output file path cố định** — Sub-agent ghi findings ra `.vbsec-tmp/findings-<chunk-name-slug>.md`. Main agent đọc lại để aggregate.
+1. **Sub-agent has no output language context** — Always instruct the sub-agent to output **canonical English + rule ID**. The main agent translates this to the target `$LANG` during the aggregation step.
+2. **Sub-agent does not load rule files** — The main agent embeds the rule contents (or rule ID details) directly in the prompt. Since the sub-agent lacks direct skill relative path resolution, embedding preventing path ambiguity.
+3. **Prompt must be self-contained** — The sub-agent cannot view the active chat conversation. All required context must be injected.
+4. **Fixed output file paths** — Sub-agents write findings to `.tmp/findings-<chunk-name-slug>.md`. The main agent reads these files to aggregate results.
 
-## Template prompt chính
+## Main Prompt Template
 
 ```
-You are a security scanner agent for the vbsec skill (github.com/tanviet12/vbsec).
-Your job: scan a chunk of files for the 21 vbsec security rules and report findings.
+You are a security scanner agent for the scan-sec skill (github.com/pageel/para-workspace).
+Your job: scan a chunk of files for the 21 security rules and report findings.
 
 # Context
 - Repository: {repo_path}
@@ -66,7 +66,7 @@ DO NOT flag a pattern blindly. A `fmt.Sprintf` around SQL is fine if the value i
 
 # Output format
 
-Write findings to: `.vbsec-tmp/findings-{chunk_slug}.md`
+Write findings to: `.tmp/findings-{chunk_slug}.md`
 
 Use EN canonical (do not translate). Format:
 
@@ -180,42 +180,43 @@ For CRITICAL and HIGH findings, the main agent uses your `context` to generate v
 - **A marker comment** showing which line is the trigger (e.g., `// <-- line 42, the dangerous line`)
 - **Optional: 1 short note** in the comment if there's a specific attacker payload (e.g., `// attacker sends id=1' OR '1'='1 → bypasses auth`)
 
-Do NOT write the full Vietnamese/English verbose blocks yourself — main agent handles that during aggregation. Just provide rich enough `context` for paraphrasing.
+Do NOT write the full verbose blocks yourself — main agent handles that during aggregation. Just provide rich enough `context` for paraphrasing.
 
 # When done
 
-Reply with the single line: `FINDINGS_WRITTEN: .vbsec-tmp/findings-{chunk_slug}.md`
+Reply with the single line: `FINDINGS_WRITTEN: .tmp/findings-{chunk_slug}.md`
 ```
 
-## Template gọi sub-agent
+## Sub-Agent Invocation Template
 
-Main agent dùng tool `Agent` (subagent_type: `general-purpose`) với prompt trên. Mỗi chunk = 1 lần spawn. Có thể spawn song song nhiều chunks trong 1 message (multiple Agent tool calls).
+The main agent calls the `browser_subagent` or a child agent executor with the prompt above. Each chunk is processed in a separate invocation.
 
 ```
-Agent({
-  subagent_type: "general-purpose",
-  description: "vbsec scan chunk: api/handlers",
-  prompt: <template ở trên, đã fill placeholders>
+browser_subagent({
+  TaskName: "Scan Chunk: api/handlers",
+  TaskSummary: "Scanning subset of codebase files for security vulnerabilities",
+  RecordingName: "scan_chunk_api_handlers",
+  Task: <filled prompt template above>
 })
 ```
 
-## Aggregate workflow (main agent)
+## Aggregation Workflow (Main Agent)
 
-Sau khi tất cả sub-agents return:
+After all sub-agents return:
 
-1. Đọc tất cả `.vbsec-tmp/findings-*.md`
-2. **Dedup**: cùng `file:line:rule_id` → giữ severity cao nhất
-3. **Cross-reference**: 1 finding có liên quan đến finding khác không? (vd: HARDCODED-SECRET in .env + EXPOSED-CONFIG cùng vị trí)
-4. **Translate**: Nếu `lang=vi`, dịch `issue` và `fix` sang tiếng Việt theo phrase template trong i18n file
-5. **Render report** theo `output-format.md`
-6. **Cleanup**: `rm -rf .vbsec-tmp/` sau khi done
+1. Read all `.tmp/findings-*.md` files.
+2. **De-duplicate**: If the same `file:line:rule_id` is found, keep the entry with the highest severity.
+3. **Cross-reference**: Analyze whether findings relate to one another (e.g., `HARDCODED-SECRET` in `.env` coupled with `VERBOSE-ERROR-DEBUG-MODE`).
+4. **Translate**: If `lang=vi`, translate the `issue` and `fix` fields to Vietnamese using the phrase templates in the i18n file.
+5. **Render Report** according to the rules defined in `output-format.md`.
+6. **Cleanup**: Execute a `rm -rf` on `.tmp/` post-scan.
 
-## Edge cases
+## Edge Cases
 
-| Scenario | Handling |
+| Scenario | Handling Strategy |
 |---|---|
-| Sub-agent timeout / crash | Re-spawn cho chunk đó. Nếu fail 2 lần → note "chunk X failed to scan" trong report, tiếp tục với chunks khác. |
-| Sub-agent output sai format | Try parse with tolerance. Nếu không parse được → re-spawn với prompt nhấn mạnh format. |
-| Cùng finding xuất hiện 2 chunk (file ở biên) | Dedup. Đây là lý do phải có dedup step. |
-| Quá nhiều findings (>500) | OK, vẫn render. Main report có note "scan này phát hiện nhiều issue — recommend ưu tiên CRITICAL trước, HIGH sau, MEDIUM/LOW làm batch". |
-| Tất cả chunks PASS | Render report PASS bình thường, có note "0 findings across N chunks". |
+| Sub-agent timeout / crash | Re-invoke for that chunk. If it fails twice, add a note "chunk X failed to scan" in the final report and proceed with other chunks. |
+| Sub-agent output malformed | Attempt to parse with tolerance. If parsing fails, re-invoke with a prompt emphasizing format constraints. |
+| Same finding appears in multiple chunks | De-duplicate. |
+| Too many findings (>500) | Render report as normal. Add a warning note: "This scan detected a very high number of issues — recommend prioritizing CRITICAL first, then HIGH." |
+| All chunks pass | Render a normal PASS report noting "0 findings across N chunks". |

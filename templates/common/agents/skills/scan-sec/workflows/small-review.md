@@ -1,23 +1,23 @@
 # SMALL Review Workflow
 
-Inline scan workflow cho repo nhỏ-vừa (≤20 main-lang files VÀ ≤30 total VÀ ≤14 ngày). Main agent tự chạy hết, không spawn sub-agent.
+Inline scan workflow for small-to-medium repositories (≤20 main-lang files AND ≤30 total AND ≤14 days). Main agent executes all steps, no sub-agents are spawned.
 
-> Được gọi từ [`../SKILL.md`](../SKILL.md) Step 3 khi routing quyết định SMALL mode. Trước khi đọc file này, SKILL.md đã làm: parse args, gather files, detect lang, load i18n.
+> Invoked from [`../SKILL.md`](../SKILL.md) Step 3 when routing decides SMALL mode. Before reading this file, SKILL.md has done: parse args, gather files, detect lang, load i18n.
 
-## Inputs (đã có sẵn từ SKILL.md context)
+## Inputs (already available from SKILL.md context)
 
 - `$SCOPE` — scope label
-- `$LANG` — output lang (`vi` hoặc `en`)
-- `$FILES` — list file đã filter (loại vendored)
-- `$PRIMARY_LANG` — kết quả detect language
-- `$OVERLAY_AVAILABLE` — có rule chuyên sâu không
-- i18n strings đã load (từ `references/i18n/<lang>.md`)
+- `$LANG` — output lang (`vi` or `en`)
+- `$FILES` — list of filtered files (excluding vendored ones)
+- `$PRIMARY_LANG` — detected language result
+- `$OVERLAY_AVAILABLE` — whether specialized rules are available
+- Loaded i18n strings (from `references/i18n/<lang>.md`)
 
 ## Steps
 
 ### Step S1 — Load applicable rules
 
-1. **Generic rules (luôn load):**
+1. **Generic rules (always load):**
    ```
    skill/rules/generic/01-hardcoded-secret.md
    skill/rules/generic/02-sql-injection.md
@@ -25,54 +25,54 @@ Inline scan workflow cho repo nhỏ-vừa (≤20 main-lang files VÀ ≤30 total
    skill/rules/generic/21-command-injection.md
    ```
 
-   Đọc TẤT CẢ 21 file bằng Read tool.
+   Read ALL 21 files using the Read tool.
 
-2. **Specialized overlay (nếu `$OVERLAY_AVAILABLE`):**
+2. **Specialized overlay (if `$OVERLAY_AVAILABLE`):**
    ```
    skill/rules/languages/<primary_lang>/*.md
    ```
 
-   Với mỗi file overlay có cùng `id` với rule generic, **rule chuyên sâu thay thế hoàn toàn** rule generic cho lang đó. Ghi nhớ id nào đã override.
+   For each overlay file with the same `id` as a generic rule, the **specialized rule completely replaces** the generic rule for that language. Remember which IDs have overridden.
 
 ### Step S2 — Apply rules per file
 
-Cho mỗi file trong `$FILES`:
+For each file in `$FILES`:
 
-1. **Skip nếu không applicable**:
-   - File binary (image, font, archive) → skip
-   - File generated (vd: `*.pb.go`, `*_pb2.py`, `dist/*`) → skip với note
-   - File >5000 dòng → đọc nhưng có thể dùng search-then-read pattern (Grep tìm pattern, Read context xung quanh)
+1. **Skip if not applicable**:
+   - Binary file (image, font, archive) → skip
+   - Generated file (e.g.: `*.pb.go`, `*_pb2.py`, `dist/*`) → skip with note
+   - File >5000 lines → read but use search-then-read pattern (Grep for pattern, Read surrounding context)
 
-2. **Với mỗi rule applicable**:
-   - Đọc `Search patterns` của rule (chỉ là gợi ý, không chạy literal)
-   - Dùng **Grep tool** để tìm patterns trong file
-   - Với mỗi match, **Read tool** để xem full function/context
-   - Áp dụng **L1-L4 data flow analysis** (xem [`../references/data-flow-classification.md`](../references/data-flow-classification.md))
-   - Quyết định: vulnerability thật hay false positive?
+2. **For each applicable rule**:
+   - Read `Search patterns` of the rule (only as suggestion, do not run literal)
+   - Use **Grep tool** to find patterns in the file
+   - For each match, use **Read tool** to view the full function/context
+   - Apply **L1-L4 data flow analysis** (see [`../references/data-flow-classification.md`](../references/data-flow-classification.md))
+   - Decide: real vulnerability or false positive?
 
-3. **Ghi nhận finding** vào memory với fields:
+3. **Record findings** in memory with fields:
    - `file`, `line`, `rule_id`, `severity` (≤ `severity_max` của rule), `issue`, `fix`, `context`
 
-**Rule ID discipline (BẮT BUỘC):**
-- **Chỉ dùng 21 canonical rule IDs** đã list ở [SKILL.md Step 4](../SKILL.md#step-4--apply-rules). KHÔNG tự bịa rule mới (`INSECURE-COOKIE`, `AUTH-BYPASS`, `WEAK-CRYPTO`, `DATA-IN-URL`, `OAUTH-MISCONFIG`, `SUPPLY-CHAIN`, `INFO-DISCLOSURE`, `DATA-AT-REST`...).
-- Nếu phát hiện 1 issue mà không có rule khớp 100%, MAP về rule canonical gần nhất (xem mapping table trong [`../references/sub-agent-prompts.md`](../references/sub-agent-prompts.md#rule-id-discipline-critical--read-carefully)) và note lý do trong `issue`.
-- 1 dòng code dính 2 rule (vd IDOR + RACE) → tạo **2 finding riêng biệt**, mỗi cái 1 `rule_id`. Không gom comma-separated.
+**Rule ID discipline (MANDATORY):**
+- **Only use the 21 canonical rule IDs** listed in [SKILL.md Step 4](../SKILL.md#step-4--apply-rules). DO NOT invent new rule IDs (`INSECURE-COOKIE`, `AUTH-BYPASS`, `WEAK-CRYPTO`, `DATA-IN-URL`, `OAUTH-MISCONFIG`, `SUPPLY-CHAIN`, `INFO-DISCLOSURE`, `DATA-AT-REST`...).
+- If you detect an issue that does not match any rule 100%, MAP to the closest canonical rule (see the mapping table in [`../references/sub-agent-prompts.md`](../references/sub-agent-prompts.md#rule-id-discipline-critical--read-carefully)) and note the reason in the `issue` field.
+- 1 line of code triggering 2 rules (e.g., IDOR + RACE) → create **2 separate findings**, each with 1 `rule_id`. Do not use comma-separated values.
 
 ### Step S3 — Cross-rule checks
 
-Một số rule cần đối chiếu cross-file:
+Some rules need cross-file checking:
 
-- **SLOPSQUATTING**: thu thập tất cả import statement → kiểm tra package name có phải hợp lệ (npm/PyPI/Packagist). Trong môi trường offline, dùng heuristics: tên có lookalike chars (l/I, 0/O), suffix `-js`/`-py` lạ, hoặc tên typo phổ biến (vd `requets` thay vì `requests`).
-- **OUTDATED-DEPENDENCY**: đọc `package.json` / `requirements.txt` / `go.mod` / `composer.json` / `Gemfile.lock` → check version có trong list known-vulnerable (rule sẽ có danh sách static, không fetch internet).
-- **IDOR + BROKEN-ACCESS-CONTROL**: cần đọc cả route definition + handler để verify có authz check.
-- **MASS-ASSIGNMENT**: cần đọc model definition + endpoint handler.
-- **CSRF**: kiểm tra middleware config global (Express `csurf`, Laravel `VerifyCsrfToken`...) trước khi flag từng endpoint.
+- **SLOPSQUATTING**: collect all import statements → check if package names are valid (npm/PyPI/Packagist). In an offline environment, use heuristics: names with lookalike characters (l/I, 0/O), unusual suffixes (e.g. `-js`/`-py`), or common typos (e.g., `requets` instead of `requests`).
+- **OUTDATED-DEPENDENCY**: read `package.json` / `requirements.txt` / `go.mod` / `composer.json` / `Gemfile.lock` → check if versions exist in the list of known-vulnerabilities (rule will have a static list, no internet fetch).
+- **IDOR + BROKEN-ACCESS-CONTROL**: need to read both route definitions and handlers to verify authz checks.
+- **MASS-ASSIGNMENT**: need to read both model definitions and endpoint handlers.
+- **CSRF**: check global middleware configurations (Express `csurf`, Laravel `VerifyCsrfToken`...) before flagging individual endpoints.
 
 ### Step S4 — Build PASSED list
 
-Với mỗi rule applicable đã check và **không phát hiện vấn đề**, add vào PASSED list với 1 dòng giải thích đã check gì.
+For each applicable rule checked that **does not detect issues**, add to the PASSED list with a 1-line explanation of what was checked.
 
-Rule **không applicable** (vd: PHP rules trong repo thuần Node) → không đưa vào PASSED list, không hiện.
+Rules that are **not applicable** (e.g., PHP rules in a pure Node repo) → do not include in the PASSED list.
 
 ### Step S5 — Determine verdict
 
@@ -82,17 +82,17 @@ Rule **không applicable** (vd: PHP rules trong repo thuần Node) → không đ
 | 0 CRITICAL, ≥1 HIGH | WARN |
 | 0 CRITICAL, 0 HIGH | PASS |
 
-MEDIUM/LOW không ảnh hưởng verdict cuối nhưng vẫn render.
+MEDIUM/LOW do not affect the final verdict but are still rendered.
 
 ### Step S6 — Render report (v0.3+ verbose)
 
-Theo template trong [`../references/output-format.md`](../references/output-format.md). Dùng i18n strings từ `$LANG` file.
+According to the template in [`../references/output-format.md`](../references/output-format.md). Use i18n strings from the `$LANG` file.
 
 **Render order:**
 1. Header
 2. Verdict + description
-3. CRITICAL section: **overview table + verbose blocks per finding** (Mô tả ngắn + Tại sao nguy hiểm + Attack scenario + Code before/after + Đọc thêm)
-4. HIGH section: **overview table + medium blocks per finding** (Mô tả + Tác động + Code fix + Đọc thêm)
+3. CRITICAL section: **overview table + verbose blocks per finding** (Short description + Why dangerous + Attack scenario + Code before/after + Read more)
+4. HIGH section: **overview table + medium blocks per finding** (Description + Impact + Code fix + Read more)
 5. MEDIUM section (compact table, 1 row/finding)
 6. LOW section (compact table, 1 row/finding)
 7. PASSED section
@@ -101,58 +101,58 @@ Theo template trong [`../references/output-format.md`](../references/output-form
 10. Footer
 11. JSON summary (canonical EN, fenced ```json)
 
-**Per-finding data cần thu thập** (để render verbose):
+**Per-finding data to collect** (to render verbose):
 
-Khi đang scan, với mỗi finding, ngoài `file`, `line`, `rule_id`, `severity`, `issue`, `fix`, agent cần thu thập:
-- `short_desc` (1 dòng cho overview table)
-- Nếu CRITICAL: `why_dangerous` (1 đoạn), `attack_scenario` (steps numbered), `code_before` (snippet code thật từ file), `code_after` (snippet đã sửa)
-- Nếu HIGH: `impact` (1 đoạn), `fix_code` (snippet với before→after comment)
-- Nếu MEDIUM/LOW: chỉ `short_desc`
+When scanning, for each finding, besides `file`, `line`, `rule_id`, `severity`, `issue`, `fix`, the agent needs to collect:
+- `short_desc` (1 line for the overview table)
+- If CRITICAL: `why_dangerous` (1 paragraph), `attack_scenario` (numbered steps), `code_before` (actual code snippet from file), `code_after` (fixed snippet)
+- If HIGH: `impact` (1 paragraph), `fix_code` (snippet with before→after comments)
+- If MEDIUM/LOW: only `short_desc`
 
-Nguồn cho `why_dangerous` + `attack_scenario`: nội dung rule file (section "Intent" + "Search patterns" giải thích). Agent paraphrase cho non-tech user, KHÔNG copy nguyên block từ rule.
+Source for `why_dangerous` + `attack_scenario`: rule file content (see "Intent" + "Search patterns" sections). The agent paraphrases for non-tech users, DO NOT copy raw blocks from rules.
 
 ### Step S7 — Output + Save (v0.3+)
 
-1. **Print toàn bộ report ra stdout** (Claude Code hiển thị cho user)
-2. **Save same content to file** dùng Write tool:
-   - Path: `vbsec-reports/scan-<TIMESTAMP>.md` (đã prepare ở SKILL.md Step 0)
-   - Nội dung IDENTICAL với stdout
-3. **Print save notification** ra stdout (sau report, trước JSON):
+1. **Print full report to stdout** (displayed to the user by Claude Code)
+2. **Save same content to file** using Write tool:
+   - Path: `reports/security/scan-<TIMESTAMP>.md` (prepared in SKILL.md Step 0)
+   - Content IDENTICAL to stdout
+3. **Print save notification** to stdout (after report, before JSON):
    ```
-   📄 {msg_report_saved}: vbsec-reports/scan-2026-05-13-143022.md
+   📄 {msg_report_saved}: reports/security/scan-2026-05-13-143022.md
    ```
 4. **If gitignore warning needed** (check from SKILL.md Step 0):
    ```
    ⚠️ {msg_gitignore_warning_title}: {msg_gitignore_warning_text}
    ```
 
-LƯU Ý: i18n key `msg_report_saved` và `msg_gitignore_warning_*` đã có trong `references/i18n/{vi,en}.md`.
+NOTE: i18n keys `msg_report_saved` and `msg_gitignore_warning_*` are already defined in `references/i18n/{vi,en}.md`.
 
-## Tips để giảm context burn
+## Tips to reduce context burn
 
-- **Đọc rule files 1 lần**, giữ trong context xuyên suốt
-- **Không read file 2 lần** trong cùng scan — nếu đã đọc 1 file vì rule X, dùng lại context khi check rule Y
-- **Grep trước, Read sau**: tìm hot spots bằng Grep (rẻ), chỉ Read khi cần verify
-- **Skip aggressive**: file đã đọc và không có pattern khả nghi → mark "scanned" và move on
-- **Batch tools**: Grep 1 lần cho nhiều patterns nếu tool hỗ trợ (vd: regex alternation)
+- **Read rule files once**, keep them in context throughout
+- **Do not read a file twice** during the same scan — if you already read a file for rule X, reuse the context when checking rule Y
+- **Grep first, Read after**: find hot spots using Grep (cheap), only Read when verification is needed
+- **Skip aggressively**: if a file is read and has no suspicious patterns → mark as "scanned" and move on
+- **Batch tools**: Grep once for multiple patterns if the tool supports it (e.g. regex alternation)
 
 ## Performance target
 
-Repo SMALL điển hình (10-30 files):
+Typical SMALL repo (10-30 files):
 - Tool calls: 30-80 (Grep + Read combined)
-- Time: 30-60 giây
+- Time: 30-60 seconds
 - Context burn: ~30-50K tokens
 
-Nếu vượt 100 tool calls hoặc 80K tokens → review có nên switch sang LARGE mode hay không (main agent có thể tự re-route).
+If tool calls exceed 100 or context exceeds 80K tokens → consider switching to LARGE mode (main agent can re-route automatically).
 
 ## Quick verification
 
-Sau khi render report, double-check:
-- [ ] Mọi finding có file path + line number cụ thể
-- [ ] CRITICAL severity dùng đúng cho L1 → dangerous sink, no sanitization
-- [ ] JSON summary cuối có đầy đủ fields theo schema
-- [ ] PASSED list có ít nhất các rule applicable đã check (không bỏ sót)
-- [ ] Không có chuỗi tiếng Việt/Anh hardcoded — đã dùng i18n key
-- [ ] **Mọi `rule_id` trong findings nằm trong 21 canonical IDs** (không có bịa)
+After rendering the report, double-check:
+- [ ] Every finding has a specific file path + line number
+- [ ] CRITICAL severity is used correctly for L1 → dangerous sink, no sanitization
+- [ ] JSON summary at the end contains all fields according to schema
+- [ ] PASSED list contains at least the applicable rules checked (no omissions)
+- [ ] No hardcoded English/Vietnamese strings — used i18n keys
+- [ ] **Every `rule_id` in findings is in the 21 canonical IDs** (no invented rules)
 - [ ] **Counts sanity check**: `len(findings)` == `summary.critical + high + medium + low`
-- [ ] Nếu render `top_rules_by_count`: tổng count == `len(findings)` (không double-count)
+- [ ] If rendering `top_rules_by_count`: total count == `len(findings)` (no double-counting)

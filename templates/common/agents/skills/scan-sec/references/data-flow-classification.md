@@ -1,32 +1,32 @@
 # Data Flow Classification — Trust Levels L1-L4
 
-Phân loại nguồn dữ liệu để quyết định 1 pattern code có thực sự là vulnerability hay không. **Đây là phương pháp luận cốt lõi của vbsec** — phân biệt giữa pattern-match thuần và phân tích bảo mật thực thụ.
+Data source classification to determine whether a code pattern is actually a vulnerability. **This is the core methodology of scan-sec** — distinguishing between naive pattern-matching and true security analysis.
 
-## Bốn mức tin cậy
+## Four Trust Levels
 
-| Level | Tên | Tin cậy | Mô tả |
+| Level | Name | Trust | Description |
 |---|---|---|---|
-| **L1** | User-controlled input | **KHÔNG TIN** | Bất cứ thứ gì user (kể cả attacker) có thể gửi vào |
-| **L2** | Database / persistent storage | Bán tin | Giá trị từ DB — có thể gốc gác từ L1 user input đã lưu trước đó |
-| **L3** | Internal code / config | Tin | Hardcoded strings, config keys (đã verify), computed value từ trust source |
-| **L4** | System / runtime | Tin | Env vars, file path nội bộ, framework constants |
+| **L1** | User-controlled input | **UNTRUSTED** | Anything the user (including an attacker) can send to the application |
+| **L2** | Database / persistent storage | Semi-trusted | Values from DB — could originate from L1 user input saved previously |
+| **L3** | Internal code / config | Trusted | Hardcoded strings, verified configuration keys, computed values from trusted sources |
+| **L4** | System / runtime | Trusted | Env vars, internal file paths, framework constants |
 
-## L1 — Untrusted sources (LUÔN coi là attacker-controlled)
+## L1 — Untrusted sources (ALWAYS treat as attacker-controlled)
 
 ### Web frameworks
 - **Express/Node**: `req.body`, `req.query`, `req.params`, `req.headers`, `req.cookies`, `req.files`
-- **Next.js**: `req.body` trong API routes, `searchParams`/`params` trong app router, `context.params/query` trong `getServerSideProps`
+- **Next.js**: `req.body` in API routes, `searchParams`/`params` in app router, `context.params/query` in `getServerSideProps`
 - **Fastify**: `request.body`, `request.query`, `request.params`, `request.headers`
-- **NestJS**: parameters decorated với `@Body()`, `@Query()`, `@Param()`, `@Headers()`
-- **Express middleware**: `req.user` SAU khi auth (đã verify) là L3; TRƯỚC auth vẫn là L1
+- **NestJS**: parameters decorated with `@Body()`, `@Query()`, `@Param()`, `@Headers()`
+- **Express middleware**: `req.user` AFTER authentication (verified) is L3; BEFORE auth is still L1
 - **Flask**: `request.form`, `request.args`, `request.json`, `request.cookies`, `request.headers`, `request.files`
 - **Django**: `request.GET`, `request.POST`, `request.FILES`, `request.COOKIES`, `request.META['HTTP_*']`
-- **FastAPI**: function parameters bound qua Pydantic from request body (BEFORE validation chạy là L1; AFTER Pydantic validate là L2-ish — vẫn cần escape trong sink)
+- **FastAPI**: function parameters bound via Pydantic from request body (BEFORE validation runs is L1; AFTER Pydantic validation is L2-ish — still needs escaping in sink)
 - **Go net/http**: `r.URL.Query()`, `r.FormValue`, `r.PostFormValue`, `r.Header`, `r.Body`, `mux.Vars(r)`
 - **Go Gin**: `c.Query`, `c.PostForm`, `c.Param`, `c.GetHeader`, `c.ShouldBind*`
 - **Go Echo**: `c.QueryParam`, `c.FormValue`, `c.Param`, `c.Request().Header.Get`
 - **Go Fiber**: `c.Query`, `c.Body`, `c.Params`, `c.Get` (header), `c.FormFile`
-- **PHP**: `$_GET`, `$_POST`, `$_REQUEST`, `$_COOKIE`, `$_FILES`, `$_SERVER` (headers như `HTTP_*`, `REQUEST_URI`), `php://input`, `file_get_contents("php://input")`
+- **PHP**: `$_GET`, `$_POST`, `$_REQUEST`, `$_COOKIE`, `$_FILES`, `$_SERVER` (headers like `HTTP_*`, `REQUEST_URI`), `php://input`, `file_get_contents("php://input")`
 - **Laravel**: `$request->input()`, `$request->all()`, `$request->query()`, `$request->json()`, `Input::get()`, route bindings BEFORE validation
 - **Ruby/Rails**: `params[...]`, `request.body`, `request.headers`, `cookies[...]`
 - **Spring (Java)**: `@RequestParam`, `@RequestBody`, `@PathVariable`, `@RequestHeader`, `@CookieValue`
@@ -35,149 +35,149 @@ Phân loại nguồn dữ liệu để quyết định 1 pattern code có thực
 ### Bot/messaging
 - Telegram bot: `update.Message.Text`, `message.text`, `message.caption`, callback data
 - Discord/Slack bot: message content, slash command args, button payloads
-- Webhook payloads: bất kỳ field nào từ external service nhưng attacker có thể spoof (nếu signature verify failed/missing → vẫn L1)
+- Webhook payloads: any field from external service that an attacker can spoof (if signature verification failed/missing → still L1)
 
 ### File system / streams
-- Stdin (đọc từ pipe trong CLI tool)
-- Uploaded file content (kể cả filename — `req.file.originalname`)
-- File path do user nhập (qua `?path=...` query param)
+- Stdin (read from pipe in CLI tool)
+- Uploaded file content (including filename — `req.file.originalname`)
+- File path entered by user (via `?path=...` query param)
 
 ### Network
-- DNS responses (có thể bị poison)
-- External HTTP API responses **mà user control URL** (qua SSRF)
+- DNS responses (could be poisoned)
+- External HTTP API responses **where user controls the URL** (via SSRF)
 
 ## L2 — Database / persistent storage
 
-Dữ liệu từ DB, Redis, S3... LUÔN có thể chứa L1 đã lưu trước đó. Treat như semi-trust:
+Data from DB, Redis, S3... CAN ALWAYS contain previously stored L1 inputs. Treat as semi-trusted:
 
-- **Safe to use trong query** (parameterized) — DB engine xử lý đúng kể cả khi value chứa SQL syntax
-- **NOT safe to interpolate vào HTML** — Stored XSS xảy ra khi L2 chứa `<script>` được render thẳng
-- **NOT safe trong `exec`/shell** — nếu L2 chứa shell metacharacters → command injection
-- **NOT safe khi build URL** — nếu L2 chứa redirect target → open redirect / SSRF
+- **Safe to use in query** (parameterized) — DB engine processes placeholders correctly even if the value contains SQL syntax.
+- **NOT safe to interpolate into HTML** — Stored XSS occurs when L2 containing `<script>` is rendered directly.
+- **NOT safe in `exec`/shell** — if L2 contains shell metacharacters → command injection.
+- **NOT safe when building URLs** — if L2 contains redirect targets → open redirect / SSRF.
 
-**Quy tắc:** L2 dùng trong cùng class sink với nguồn gốc của nó là OK (DB→DB query). L2 sang class khác (DB→HTML/shell/URL) thì treat như L1.
+**Rule:** Using L2 in the same sink class as its origin is OK (DB→DB query). Moving L2 to a different class (DB→HTML/shell/URL) means treating it as L1.
 
 ## L3 — Internal code
 
-Tin tưởng được:
+Trusted:
 
-- Hardcoded strings, regex patterns, SQL fragments không có placeholder
-- Computed values từ L3/L4 sources (vd: `sessionKey := fmt.Sprintf("user:%s", userID)` — nếu `userID` là L3 hoặc đã verified từ JWT là L3)
-- Application config sau khi đã load và validate
-- Internal IDs do app tự sinh (UUID v4, sequence từ DB)
+- Hardcoded strings, regex patterns, SQL fragments without placeholders.
+- Computed values from L3/L4 sources (e.g.: `sessionKey := fmt.Sprintf("user:%s", userID)` — if `userID` is L3 or verified from JWT as L3).
+- Application configuration after it has been loaded and validated.
+- Internal IDs generated by the app (UUID v4, sequence from DB).
 
-**Cẩn thận:** Nếu L3 ghép với L1 và toàn bộ ghép vào sink, bộ ghép trở thành L1.
+**Caution:** If L3 is concatenated with L1 and the whole thing is passed to a sink, the result becomes L1.
 
 ## L4 — System / runtime
 
-Tin tưởng tuyệt đối:
+Absolutely trusted:
 
-- Environment variables (loaded at startup)
-- File paths cố định trong code
-- Framework/library constants
-- Build-time variables
+- Environment variables (loaded at startup).
+- File paths fixed in code.
+- Framework/library constants.
+- Build-time variables.
 
-**Lưu ý:** Env var **không** được log/print ra response → đó là cách lộ secret (HARDCODED-SECRET rule check).
+**Note:** Env vars **must not** be logged/printed to responses → this leaks secrets (checked by the HARDCODED-SECRET rule).
 
 ---
 
-## Phân tích data flow (workflow cho LLM agent)
+## Data Flow Analysis (Workflow for LLM Agent)
 
-Khi gặp 1 pattern code khả nghi (vd: `db.query` có string concatenation), làm theo bước:
+When encountering a suspicious code pattern (e.g.: `db.query` with string concatenation), follow these steps:
 
 ```
 1. IDENTIFY SINK
-   └─ Đây là sink loại gì? SQL? HTML? Shell? URL? File path?
+   └─ What type of sink is this? SQL? HTML? Shell? URL? File path?
 
 2. IDENTIFY DATA INPUT
-   └─ Value nào ghép vào sink? Biến tên gì?
+   └─ What value is concatenated into the sink? What is the variable name?
 
-3. TRACE BACKWARD (read full function, có thể đi qua nhiều file)
-   └─ Biến đó assign từ đâu?
-       ├─ Trực tiếp từ req.X / $_GET / params → L1
-       ├─ Từ DB query result → L2
-       ├─ Từ hardcoded string → L3
-       ├─ Từ os.Getenv → L4
-       └─ Từ kết hợp: dùng level cao nhất (KHÔNG TIN > tin)
+3. TRACE BACKWARD (read full function, trace across multiple files if needed)
+   └─ Where is the variable assigned?
+       ├─ Directly from req.X / $_GET / params → L1
+       ├─ From DB query result → L2
+       ├─ From hardcoded string → L3
+       ├─ From os.Getenv → L4
+       └─ From combination: use the highest level (UNTRUSTED > trusted)
 
 4. CHECK SANITIZATION ON PATH
-   └─ Giữa source và sink có:
+   └─ Between source and sink, is there:
        ├─ Parameterization? (db.query(..., [val]) — placeholder)
        ├─ Escape/encode? (HTML escape, URL encode, JSON.stringify)
-       ├─ Whitelist validate? (regex match, enum check)
-       └─ Type cast? (parseInt — loại bỏ non-numeric)
+       ├─ Whitelist validation? (regex match, enum check)
+       └─ Type cast? (parseInt — removes non-numeric)
 
 5. VERDICT
-   ├─ L1 → sink không có sanitization → FLAG (CRITICAL/HIGH tùy rule)
-   ├─ L1 → sink có sanitization phù hợp → SAFE, không flag
-   ├─ L2/L3/L4 → sink → tùy class sink (xem quy tắc L2)
-   └─ Không rõ → đọc thêm context, nếu vẫn không rõ thì flag với severity giảm 1 cấp + note "uncertain"
+   ├─ L1 → sink without sanitization → FLAG (CRITICAL/HIGH depending on rule)
+   ├─ L1 → sink with appropriate sanitization → SAFE, do not flag
+   ├─ L2/L3/L4 → sink → depends on sink class (see L2 rules)
+   └─ Uncertain → read more context, if still unclear flag with severity reduced by 1 level + note "uncertain"
 ```
 
-## Ví dụ ứng dụng
+## Examples
 
-### Ví dụ 1: SQL Injection — flag CRITICAL
+### Example 1: SQL Injection — flag CRITICAL
 
 ```python
 @app.route("/user/<id>")
-def get_user(id):              # id từ URL → L1
-    sql = f"SELECT * FROM users WHERE id = {id}"  # L1 ghép vào SQL string
-    return db.execute(sql)     # sink = SQL, không parameterize
+def get_user(id):              # id from URL → L1
+    sql = f"SELECT * FROM users WHERE id = {id}"  # L1 concatenated into SQL string
+    return db.execute(sql)     # sink = SQL, not parameterized
 ```
 
-**Verdict:** L1 → SQL sink, không sanitization → **CRITICAL** SQL-INJECTION.
+**Verdict:** L1 → SQL sink, no sanitization → **CRITICAL** SQL-INJECTION.
 
-### Ví dụ 2: Sprintf safe — không flag
+### Example 2: Sprintf safe — do not flag
 
 ```go
-func GetSession(userID string) {  // userID đã từ JWT verified upstream → L3
+func GetSession(userID string) {  // userID verified upstream from JWT → L3
     key := fmt.Sprintf("session:%s", userID)
     db.Where("key = ?", key).First(&session)  // parameterized
 }
 ```
 
-**Verdict:** L3 + parameterized → SAFE. Không flag dù có `fmt.Sprintf` quanh SQL liên quan.
+**Verdict:** L3 + parameterized → SAFE. Do not flag despite `fmt.Sprintf` around SQL.
 
-### Ví dụ 3: Stored XSS — flag HIGH
+### Example 3: Stored XSS — flag HIGH
 
 ```jsx
 function Comment({ id }) {
-  const data = useFetch(`/api/comments/${id}`)  // data từ DB → L2
-  return <div dangerouslySetInnerHTML={{__html: data.body}} />  // L2 vào HTML sink
+  const data = useFetch(`/api/comments/${id}`)  // data from DB → L2
+  return <div dangerouslySetInnerHTML={{__html: data.body}} />  // L2 into HTML sink
 }
 ```
 
-**Verdict:** L2 dùng cross-class (DB→HTML). Nếu `body` có thể chứa user input (rất khả năng) → **HIGH** stored XSS.
+**Verdict:** L2 used cross-class (DB→HTML). If `body` can contain user input (very likely) → **HIGH** stored XSS.
 
-### Ví dụ 4: Command Injection — flag CRITICAL
+### Example 4: Command Injection — flag CRITICAL
 
 ```javascript
 app.get('/ping', (req, res) => {
-  const host = req.query.host    // L1
-  exec(`ping -c 1 ${host}`, ...)  // L1 vào shell sink
+  const host = req.query.host    # L1
+  exec(`ping -c 1 ${host}`, ...)  # L1 into shell sink
 })
 ```
 
 **Verdict:** L1 → shell sink → **CRITICAL** COMMAND-INJECTION.
 
-### Ví dụ 5: Trust boundary có sanitization — không flag
+### Example 5: Trust boundary with validation — do not flag
 
 ```python
 @app.post("/user")
-def create_user(user: UserCreate):  # UserCreate là Pydantic schema
-    # user.email đã được Pydantic validate qua EmailStr → format ok
-    # nhưng nội dung vẫn từ L1 → khi insert DB, vẫn cần parameterized
+def create_user(user: UserCreate):  # UserCreate is Pydantic schema
+    # user.email validated via Pydantic EmailStr → format is ok
+    # but content still originates from L1 → when inserting into DB, parameterization is still needed
     db.execute("INSERT INTO users (email) VALUES (:email)", {"email": user.email})
 ```
 
-**Verdict:** L1 → SQL sink CÓ parameterization → SAFE.
+**Verdict:** L1 → SQL sink WITH parameterization → SAFE.
 
 ---
 
-## Quy tắc rút gọn
+## Summary Rules
 
-> **Một dòng code có pattern nguy hiểm + L1 input + không sanitization phù hợp = vulnerability thực sự.**
+> **A line of code with a dangerous pattern + L1 input + no appropriate sanitization = actual vulnerability.**
 >
-> **Một dòng code có pattern nguy hiểm + chỉ L3/L4 = không phải vulnerability.**
+> **A line of code with a dangerous pattern + only L3/L4 = not a vulnerability.**
 
-Đây là lý do tại sao vbsec phải READ context, không chỉ grep. Pattern-match thuần sẽ vừa miss thật vừa fp ầm ầm.
+This is why scan-sec must READ context, not just grep. Naive pattern-matching causes both false negatives and high false positives.
