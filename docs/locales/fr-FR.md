@@ -7,7 +7,7 @@
 **Le Framework d'Espace de Travail pour Humains et Agents IA**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.11-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.12-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -304,7 +304,7 @@ La fonctionnalité `./para update` permet d'obtenir en continu les toutes derni�
 
 ## 🗺️ Feuille de Route
 
-Version actuelle : **1.8.11** (Release Hardening: dirty-check et diff de templates pour install-tool, intégration des workflows de staging/scan-sec/vibecode/resource).
+Version actuelle : **1.8.12** (Support de migration de configuration pour Antigravity IDE 2.x/v1.x et durcissement TDD).
 Mises à jour prévues : **v1.9.0** (Départements système) et **v1.10.0** (Limites communautaires).
 
 ---
@@ -341,4 +341,4 @@ Le module d'audit de sécurité `/scan-sec` (géré sous [scan-sec SKILL.md](../
 
 Conçu avec ❤️ par **Pageel**. Standardisant l'avenir de la méthode PKM Agent.
 
-_Version: 1.8.11_
+_Version: 1.8.12_

@@ -367,6 +367,7 @@ Sidecar skills (`plan`, `docs`, `brainstorm`, `spec`) reference the centralized 
 | 1.8.9 | Sync | Ecosystem-wide Para-Graph MCP Integration with Project Sidecar Skill loading, Memory Ops lifecycle (search/push/curate), and consolidated context pre-flight across 11 catalog workflows |
 | 1.8.10 | Release | Release Hardening: html-renderer, new-project, and para-graph intelligence modules, new rules (agent-persona with AGENTS.md cascade, tool-routing, graph-first-policy), and anti-truncation guardrail KI |
 | 1.8.11 | Release | Release Hardening: dirty-check template override prompts in install-tool CLI, conflict diff detection, and staging/scan-sec/vibecode/resource workflows catalog integration |
+| 1.8.12 | Release | Config Migration: support multi-path config resolution, smart IDE detection, and TDD-hardened setup iteration with smart filtering for Antigravity IDE 2.x & v1.x |
 
 
 ## 16. Dynamic Tool System (v1.8.0)

@@ -8,7 +8,7 @@
 # See: naming.md §6 (date format), versioning.md §5 (version tracking)
 # Updated: 2026-05-22
 
-workspace: "1.8.11"
+workspace: "1.8.12"
 
 workflows:
   backlog:         "1.8.10"  # updated: graph router integration
@@ -88,7 +88,7 @@ cli:
   remove-tool:     "1.8.0"   # NEW: remove installed tools
   list-tools:      "1.8.0"   # NEW: list installed tools
   install:         "1.8.0"   # Add tool system asset sync (section 3.6)
-  mcp-setup:       "1.8.2"   # NEW: manifest-declared MCP auto-config
+  mcp-setup:       "1.8.12"  # updated: multi-path writing and smart filtering
   mcp-list:        "1.8.2"   # NEW: list MCP-capable tools
   mcp-remove:      "1.8.2"   # NEW: remove IDE MCP config
 
@@ -100,6 +100,6 @@ registry:
   tool-schema:     "1.8.5"   # shipped_in + min_engine_version (additive)
 
 knowledge:
-  para_workspace_architecture_standards: "1.8.11" # updated: Release sync, scan-sec, safe-copy
+  para_workspace_architecture_standards: "1.8.12" # updated: MCP config migration & TDD
   para_anti_truncation_guardrail: "1.8.10" # NEW: Anti-truncation mechanism and safety guardrails
 

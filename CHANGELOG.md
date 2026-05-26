@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.8.12] - 2026-05-26
+
+MCP Config Migration for Antigravity IDE 2.x & TDD Hardening.
+
+- **Added**: Resolve multiple config paths for `antigravity` (space-separated paths for both IDE 2.x and v1.x) in `cli/lib/mcp-config.sh`.
+- **Added**: Smart detection of installed IDEs in `detect_installed_ides` by checking actual IDE App Data folder existence.
+- **Added**: Multi-write support in `cli/commands/mcp-setup.sh` by iterating over `CONFIG_PATHS` to merge and backup configs independently.
+- **Added**: Smart filtering in `mcp-setup.sh` to only write config files if their corresponding App Data folders exist, preventing dirty directory generation.
+- **Added**: Strict TDD unit tests in `tests/cli/test-mcp-config.sh` verifying path resolution, detection, and smart filtering behaviors.
+- **Changed**: Synced version to 1.8.12 in `cli/para`, `project.md`, `README.md`, and all 4 language locales (vi-VN, es-ES, fr-FR, zh-CN).
+- **Changed**: Updated System KI templates (`para_workspace_architecture_standards`) metadata and history to version 1.8.12.
+
 ## [1.8.11] - 2026-05-25
 
 Release Patch & Synchronization (Staging, Vibecode, Scan-Sec, Resource).
