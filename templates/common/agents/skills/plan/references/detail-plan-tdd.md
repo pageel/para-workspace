@@ -256,7 +256,8 @@ ELSE:
 
 ## Suggested Next Steps
 
-1. **Activate Plan:** Set `active_plan` in `project.md` and set Status to `🔨 Active`.
-2. **Execute Plan:** Run `/plan [project-name] dev` or `/vibecode loop` to begin execution.
+- **Option A (Activate & Execute):** Run `/plan [project-name] dev` (or `/plan dev`) to begin automatic execution of the phases.
+- **Option B (Sandbox Run):** Run `/vibecode loop` to execute tasks in a sandboxed/interactive loop.
+- **Option C (Stress-test Plan):** Run `/qa [project-name] plan` (or `/qa plan`) to trigger a Red Team Q&A review before execution.
 
 ````

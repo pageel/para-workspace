@@ -18,6 +18,8 @@ trap 'rm -rf "$TEST_TMP"' EXIT
 
 # Setup mock workspace
 export WORKSPACE_ROOT="$TEST_TMP/workspace"
+mkdir -p "$WORKSPACE_ROOT"
+cp "$(cd "$REPO_ROOT/../../.." && pwd)/.para-workspace.yml" "$WORKSPACE_ROOT/" 2>/dev/null || true
 mkdir -p "$WORKSPACE_ROOT/.para/tools/mock-tool/dist"
 mkdir -p "$WORKSPACE_ROOT/Projects/para-mock-tool/repo/dist"
 
@@ -103,7 +105,8 @@ echo "--- mcp-setup --print-only ---"
 output=$("$REPO_ROOT/cli/commands/mcp-setup.sh" "mock-tool" --print-only 2>&1) || true
 assert_contains "Shows server name" "para-mock-tool" "$output"
 assert_contains "Shows transport" "stdio" "$output"
-assert_contains "Shows JSON snippet" '"command": "node"' "$output"
+assert_contains "Shows JSON snippet" '"command":' "$output"
+assert_contains "Shows JSON command value" 'node"' "$output"
 assert_contains "Has entry path" "dist/cli.js" "$output"
 assert_contains "Has serve arg" "serve" "$output"
 
@@ -127,6 +130,7 @@ chmod +x "$TEST_TMP/cygbin/cygpath"
 output=$(PATH="$TEST_TMP/cygbin:$PATH" "$REPO_ROOT/cli/commands/mcp-setup.sh" "mock-tool" --print-only 2>&1) || true
 assert_contains "Uses cygpath for entry_path" "C:/" "$output"
 assert_contains "Uses cygpath for serve_args" "C:/" "$output"
+assert_contains "Command uses cygpath" '"command": "C:/' "$output"
 
 # ============================================================
 echo ""

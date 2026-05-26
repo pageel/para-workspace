@@ -204,6 +204,14 @@ fi
 # Windows/Git Bash compatibility for JSON output paths
 if command -v cygpath >/dev/null 2>&1; then
   ENTRY_PATH=$(cygpath -m "$ENTRY_PATH")
+  # Convert RUNTIME_CMD if it's an absolute POSIX path (BUG-37)
+  if [[ "$RUNTIME_CMD" == /* ]]; then
+    RUNTIME_CMD=$(cygpath -m "$RUNTIME_CMD")
+    # Defensive: append .exe if the exact path doesn't exist but .exe does
+    if [ ! -f "$RUNTIME_CMD" ] && [ -f "${RUNTIME_CMD}.exe" ]; then
+      RUNTIME_CMD="${RUNTIME_CMD}.exe"
+    fi
+  fi
   for i in "${!MCP_SERVE_ARGS[@]}"; do
     if [[ "${MCP_SERVE_ARGS[$i]}" == /* ]]; then
       MCP_SERVE_ARGS[$i]=$(cygpath -m "${MCP_SERVE_ARGS[$i]}")

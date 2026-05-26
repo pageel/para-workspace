@@ -5,7 +5,7 @@ source: catalog
 
 # /plan [project-name] [action] [--graph] [--project]
 
-> **Workspace Version:** 1.8.8 (Graph Intelligence + Project Context)
+> **Workspace Version:** 1.8.14 (BUG-37: Windows MCP path fix & Auto-activation)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final plan document MUST be translated to this language.**
 
 Create, review, or update a phased implementation plan for a PARA project.
@@ -421,6 +421,7 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 - **Detail Plan (Versioned):** `v[ver]-[YYYY-MM-DD]-[topic].md` (e.g., `v1.7.11-2026-04-09-optimization.md`)
 - **Detail Plan (Wildcard/R&D):** `v[X.X.X]-[YYYY-MM-DD]-[topic].md` (e.g., `v1.x.x-2026-04-09-version-bumper.md`)
 - **Roadmap:** `roadmap-[topic].md` (e.g., `roadmap-core.md`)
+- **Session Plan (DSP):** `v[ver]-[YYYY-MM-DD]-session-[topic].md` (e.g., `v1.x.x-2026-05-23-session-refactor-auth.md`)
 
 **Plan document structure:**
 
@@ -430,8 +431,8 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 >
 > Use the template as the document structure. Fill in each section with data gathered from Steps 1-8.
 
-> ⚠️ **Status Gate:** New plans MUST be created with `Status: 📝 Draft`.
-> Agent MUST NOT execute any Phase tasks nor modify project files while Status is Draft.
+> ⚠️ **Status Gate:** New plans MUST be created with `Status: 📝 Draft` (Except Session Plans, which are created directly with `Status: 🔨 Active`).
+> Agent MUST NOT execute any Phase tasks nor modify project files while Status is Draft (except for active Session Plans).
 > Status transitions to `🔨 Active` ONLY at Step 10 after explicit user approval.
 
 #### 9.5. Pre-Checklist Context Reload (Staged Drill-down)
@@ -447,62 +448,87 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 4. **D. Run Plan Review Protocols:** Explicitly analyze checklist dependencies from governance files (e.g. `maintenance.md`).
 5. **E. Re-read Plan References:** Re-read the brainstorm files loaded in Step 2.5 to ensure the plan structure doesn't contradict past brainstorm decisions.
 
-#### 10. Ask to Activate Plan
+#### 9.6. Propose Draft Plan
 
-Present the plan summary and ask the user:
+Protocol:
+1. **Present:** Agent presents the draft plan summary of the newly created plan to the User for review (including phases, timeline, and newly created/modified target files). At this point, the `Post-Draft Audit Gate` checklist in the file remains empty (`⬜` and `PENDING`).
+2. **Propose Preliminary Approval:** Ask the User for initial layout approval.
+   ```
+   📐 DRAFT PLAN READY: [plan-name]
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Status: 📝 Draft (Unaudited)
+   Phases: [N] | Tasks: [N] | File: [path]
+
+   ❓ Do you approve the preliminary layout of this draft plan so I can run the Review Audit?
+      Y → Preliminary approval granted, run Review Audit (Step 9.7)
+      N → Refine the draft based on feedback
+   ```
+3. **Response:** Only proceed to Step 9.7 if User confirms (Y). If the User provides feedback, modify the draft plan and present again.
+
+#### 9.7. Post-Draft Audit Gate
+
+**Purpose:** Force a comprehensive quality audit of the preliminary approved draft plan before activation.
+
+**Protocol:**
+
+1. **RELOAD:** Reload ALL project rules + skills (full scan):
+   ```bash
+   # Full project governance reload
+   cat Projects/[project-name]/.agents/rules.md 2>/dev/null
+   cat Projects/[project-name]/.agents/skills.md 2>/dev/null
+   # Read EVERY rule and skill file listed (not just triggered)
+   ```
+   Focus areas: `maintenance.md`, release checklists, version sync rules.
+
+2. **AUDIT:** Perform an independent quality review of the plan across 5 dimensions:
+   - **Logic:** Phase sequence makes sense? No circular dependencies?
+   - **Security:** Security controls in place? No hardcoded or leaked tokens?
+   - **Governance:** Project maintenance rules satisfied? Version sync points covered?
+   - **Completeness:** All target files to be created/modified are accounted for?
+   - **Risk Coverage:** High risks mapped to corresponding Harness Guards?
+
+3. **CLASSIFY & INJECT (TDD):** Classify each task in the plan:
+   - 🧪 **TDD:** Complex logic changes, algorithms, API endpoints. Inject Red-Green-Refactor cycles and load `.agents/skills/tdd/SKILL.md`.
+   - 📝 **Standard:** UI tweaks, documentation, version bumps, changelog. Keep standard task format.
+
+4. **UPDATE FILE:** Write the audit results directly to the plan file. If the template used does not contain the audit section (e.g. standard `detail-plan.md` or `roadmap.md`), the Agent MUST append the `## Post-Draft Audit Gate` section and the `## TDD Task Classification` table at the bottom of the plan file.
+   - Update checklist statuses in the `## Post-Draft Audit Gate` table from `⬜` to `✅ Passed`.
+   - Update the `## TDD Task Classification` table.
+   - Set `Audit Result` from `PENDING` to `PASSED` and increment the review counter by 1.
+
+5. **Report:** Present the detailed audit report to the User and proceed to Step 10 for activation.
+
+#### 10. Complete Plan Creation
+
+Present the plan creation summary and next step options to the User:
 
 ```
-📐 PLAN READY: [plan-name]
+📐 AUDITED PLAN READY: [plan-name]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Status: 📝 Draft (not yet executable)
+Status: 📝 Draft (Audited & Verified)
 Phases: [N] | Timeline: [N] days | Tasks: [N]
 File:   artifacts/plans/[plan-name].md
 
-❓ Activate this plan now?
-   Y → Change Status to 🔨 Active + set active_plan + run /backlog sync
-   N → Keep as 📝 Draft — activate later with /plan update
+Next Steps:
+  A. /plan [project-name] dev   → Activate plan & start execution (auto-sets active_plan)
+  B. /vibecode loop             → Sandbox/interactive execution loop
+  C. /qa [project-name] plan    → Stress-test plan with Red Team Q&A review
 ```
 
-**If user confirms (Y):**
+> **Note:** `/plan dev` automatically handles activation (sets Status to `🔨 Active`,
+> sets `active_plan` in `project.md`, and runs `/backlog sync`). There is no separate
+> activation step — the user simply runs dev when ready.
 
-// turbo
-
-1. Update plan `Status` from `📝 Draft` → `🔨 Active` in the plan file header.
-2. Set `active_plan` in `project.md` frontmatter:
-
-```yaml
-active_plan: "plans/[plan-name].md"
-```
-
-**Cross-project plan activation (v1.6.0+):**
+**Cross-project plan storage (v1.6.0+):**
 
 If building a plan for a satellite project AND the plan is stored in the
-ecosystem meta-project, ask:
+ecosystem meta-project, note in the summary:
 
 ```
-📐 This plan is in the ecosystem meta-project @{ecosystem}.
-   Set active_plan: "@{ecosystem}/plans/[plan-name].md"?
-   Y → Cross-project reference (recommended for shared plans)
-   N → Copy plan to local artifacts/ instead
+📐 This plan is stored in the ecosystem meta-project @{ecosystem}.
+   When /plan dev runs, active_plan will be set as:
+   active_plan: "@{ecosystem}/plans/[plan-name].md"
 ```
-
-If user confirms cross-project:
-```yaml
-active_plan: "@{ecosystem}/plans/[plan-name].md"
-```
-
-2. Immediately suggest `/backlog sync`:
-
-```
-⚠️  Plan activated. Run `/backlog sync` to map plan phases to backlog items.
-    This enables `/plan review` and `/retro` to track progress by Phase.
-```
-
-> **Why:** Without `/backlog sync`, `/plan review` cannot measure progress by Phase. This step is MANDATORY per RFC-0002 C4.
-
-**If user declines (N):**
-
-Skip activation. Plan is saved but not active. User can activate later via `/plan update`.
 
 > Path is relative to `artifacts/`. Remove `active_plan` field when the plan is completed or archived.
 

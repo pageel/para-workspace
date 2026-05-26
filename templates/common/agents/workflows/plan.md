@@ -503,9 +503,9 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 
 5. **Report:** Present the detailed audit report to the User and proceed to Step 10 for activation.
 
-#### 10. Ask to Activate Plan
+#### 10. Complete Plan Creation
 
-Present the plan summary and ask the user:
+Present the plan creation summary and next step options to the User:
 
 ```
 📐 AUDITED PLAN READY: [plan-name]
@@ -514,51 +514,26 @@ Status: 📝 Draft (Audited & Verified)
 Phases: [N] | Timeline: [N] days | Tasks: [N]
 File:   artifacts/plans/[plan-name].md
 
-❓ Activate this plan now?
-   Y → Change Status to 🔨 Active + set active_plan + run /backlog sync
-   N → Keep as 📝 Draft — activate later with /plan update
+Next Steps:
+  A. /plan [project-name] dev   → Activate plan & start execution (auto-sets active_plan)
+  B. /vibecode loop             → Sandbox/interactive execution loop
+  C. /qa [project-name] plan    → Stress-test plan with Red Team Q&A review
 ```
 
-**If user confirms (Y):**
+> **Note:** `/plan dev` automatically handles activation (sets Status to `🔨 Active`,
+> sets `active_plan` in `project.md`, and runs `/backlog sync`). There is no separate
+> activation step — the user simply runs dev when ready.
 
-// turbo
-
-1. Update plan `Status` from `📝 Draft` → `🔨 Active` in the plan file header.
-2. Set `active_plan` in `project.md` frontmatter:
-
-```yaml
-active_plan: "plans/[plan-name].md"
-```
-
-**Cross-project plan activation (v1.6.0+):**
+**Cross-project plan storage (v1.6.0+):**
 
 If building a plan for a satellite project AND the plan is stored in the
-ecosystem meta-project, ask:
+ecosystem meta-project, note in the summary:
 
 ```
-📐 This plan is in the ecosystem meta-project @{ecosystem}.
-   Set active_plan: "@{ecosystem}/plans/[plan-name].md"?
-   Y → Cross-project reference (recommended for shared plans)
-   N → Copy plan to local artifacts/ instead
+📐 This plan is stored in the ecosystem meta-project @{ecosystem}.
+   When /plan dev runs, active_plan will be set as:
+   active_plan: "@{ecosystem}/plans/[plan-name].md"
 ```
-
-If user confirms cross-project:
-```yaml
-active_plan: "@{ecosystem}/plans/[plan-name].md"
-```
-
-2. Immediately suggest `/backlog sync`:
-
-```
-⚠️  Plan activated. Run `/backlog sync` to map plan phases to backlog items.
-    This enables `/plan review` and `/retro` to track progress by Phase.
-```
-
-> **Why:** Without `/backlog sync`, `/plan review` cannot measure progress by Phase. This step is MANDATORY per RFC-0002 C4.
-
-**If user declines (N):**
-
-Skip activation. Plan is saved but not active. User can activate later via `/plan update`.
 
 > Path is relative to `artifacts/`. Remove `active_plan` field when the plan is completed or archived.
 
@@ -729,7 +704,14 @@ Start or continue executing the active plan in the project.
 
 ### Steps
 
-1. **Locate Active Plan:** Read `project.md` to find `active_plan` or look for a file with `Status: 🔨 Active` in `artifacts/plans/`.
+1. **Locate Plan:** Read `project.md` to find `active_plan` or search `artifacts/plans/` for the latest plan file.
+   - IF the found plan is a Draft (`Status: 📝 Draft`): Automatically update its Status to `🔨 Active`, set `active_plan` in `project.md` to point to it, run `/backlog sync`, and proceed with execution.
+     - **Cross-project (v1.6.0+):** If plan file is in an ecosystem meta-project (`@{ecosystem}/plans/...`), set `active_plan` as a cross-project reference:
+       ```yaml
+       active_plan: "@{ecosystem}/plans/[plan-name].md"
+       ```
+     - **Roadmap sync (v1.6.3):** After activation, check `roadmap` field in `project.md`. If set, find the matching phase row and update Status → `🔨 Active` + link to plan file (see Step 10 Roadmap auto-update in create action for details).
+   - IF the found plan is already Active (`Status: 🔨 Active`) or does not require activation: Load the plan and proceed.
 2. **Load Plan Methodology Skills:** Scan the loaded plan file. Check the `Methodology` or `Required Skill` blockquotes. If the plan specifies a specific methodology (e.g., Strict TDD), or if a flag like `--tdd` is passed, the Agent MUST load the corresponding `.agents/skills/[skill-name]/SKILL.md` into context before executing any code.
 3. **Phase Execution:** If `--phase` flag is present (which is default for this action), execute the plan strictly phase by phase.
 4. **Task Verification & Checkpoints:** The Agent MUST read and obey inline `⛔ CHECKPOINT` guards. When transitioning phases, the Agent CANNOT move to the next phase unless ALL tasks in the current phase are actually marked as completed `[x]`, OR the user explicitly grants permission to skip the remaining tasks. Do not auto-assume tasks are done.

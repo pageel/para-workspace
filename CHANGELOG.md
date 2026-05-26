@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.8.14] - 2026-05-26
+
+MCP Windows Path Conversion & Plan Auto-Activation.
+
+- **Fixed**: Convert absolute POSIX path of `RUNTIME_CMD` (Node.exe) to Windows mixed path via `cygpath -m` on Windows in `cli/commands/mcp-setup.sh`, preventing path execution errors (BUG-37).
+- **Fixed**: Integrated defensive check to append `.exe` to `RUNTIME_CMD` if the exact resolved path does not exist but the `.exe` file does.
+- **Changed**: Updated `plan` workflow template (`templates/common/agents/workflows/plan.md`) to automatically activate the plan when executing `/plan dev`, removing the manual Y/N prompt, and improved plan templates `Suggested Next Steps`.
+- **Changed**: Synced version to 1.8.14 in `cli/para`, `project.md`, `README.md`, and language locales (vi-VN, zh-CN, fr-FR, es-ES).
+- **Changed**: Updated System KI template `para_workspace_architecture_standards` metadata and version history to version 1.8.14.
+
 ## [1.8.13] - 2026-05-26
 
 Node Path Resolution for NVM/fnm/Volta & Plan Template Next Steps.

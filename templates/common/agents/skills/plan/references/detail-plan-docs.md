@@ -31,9 +31,9 @@
 > ⛔ **STATUS GATE:** Agent MUST NOT execute Phase tasks while Status = "📝 Draft".
 > Lifecycle: 📝 Draft → 🔨 Active → ✅ Done. Transition requires explicit user approval.
 
-> ℹ️ **Scope:** Tài liệu nội bộ trong `Projects/[name]/docs/` (PARA workspace).
-> Đây KHÔNG phải code trong `repo/` — không có git commit/push.
-> Khi cần ship docs ra repo, dùng `/docs publish` riêng.
+> ℹ️ **Scope:** Internal documentation in `Projects/[name]/docs/` (PARA workspace).
+> This is NOT code in `repo/` — no git commit/push.
+> When you need to ship docs to repo, use `/docs publish` separately.
 
 ---
 
@@ -66,7 +66,7 @@ Projects/[project-name]/docs/
 
 > ⛔ **MANDATORY:** Re-read `project.md`, `.agents/rules.md`, `.agents/skills.md` BEFORE executing.
 
-> 💡 **Model Hint:** Phase này chủ yếu là setup — user có thể dùng model nhẹ.
+> 💡 **Model Hint:** This phase is primarily setup — user can use a lighter model.
 
 #### Implementation Plan
 
@@ -127,8 +127,8 @@ N.2 🤖 **[doc-filename].md** — Load context for `[Component.tsx]` → write 
 
 #### Task List
 
-- [ ] N.1 🤖 Tạo `[doc-filename].md`.
-- [ ] N.2 🤖 Tạo `[doc-filename].md`.
+- [ ] N.1 🤖 Create `[doc-filename].md`.
+- [ ] N.2 🤖 Create `[doc-filename].md`.
 - [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase N are checked [x] BEFORE proceeding to the next Phase. Ask User to proceed.
 
 ---
@@ -190,8 +190,8 @@ ELSE:
 
 ### Suggested Next Steps
 
-1. **Activate Plan:** Set `active_plan` in `project.md` and set Status to `🔨 Active`.
-2. **Execute Plan:** Run `/plan [project-name] dev` to start Phase 0.
-3. After completion → run `/docs publish` to ship docs to `repo/docs/`.
-3. Run `/docs review` for overall quality check.
+- **Option A (Activate & Execute):** Run `/plan [project-name] dev` (or `/plan dev`) to begin automatic execution of the phases.
+- **Option B (Stress-test Plan):** Run `/qa [project-name] plan` (or `/qa plan`) to trigger a Red Team Q&A review before execution.
+- **Option C (Post-Run Publish):** After execution, run `/docs publish` to sync public documents to `repo/docs/`.
+- **Option D (Docs Quality Review):** Run `/docs review` for quality checks.
 ````
