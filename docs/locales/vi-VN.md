@@ -7,7 +7,7 @@
 **Workspace Framework cho Con người & AI Agent**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.12-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.13-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -765,6 +765,7 @@ Nếu workspace của bạn quá cũ (v1.3.x) hoặc đã bị bạn chỉnh s�
 - [x] **Đóng gói Phát hành, tích hợp HTML Renderer, Quy tắc Spec & TDD Gate** _(phát hành v1.8.10)_
 - [x] **Đóng gói Phát hành: logic dirty-check ghi đè template trong install-tool CLI, phát hiện khác biệt xung đột, tích hợp các workflow staging/scan-sec/vibecode/resource** _(phát hành v1.8.11)_
 - [x] **Di trú MCP Config cho Antigravity IDE 2.x & v1.x & Tích hợp TDD** _(phát hành v1.8.12)_
+- [x] **Giải quyết Node Path Resolution (NVM/fnm/Volta) & Cải tiến Rule/KI Artifact Authority** _(phát hành v1.8.13)_
 - [ ] Department System _(v1.9.0 — lên kế hoạch)_
 - [ ] Community & Trust Boundary _(v1.10.0 — lên kế hoạch)_
 
@@ -806,4 +807,4 @@ Phân hệ quét và rà soát bảo mật `/scan-sec` (được quản lý theo
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.8.12_
+_Phiên bản: 1.8.13_

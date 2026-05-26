@@ -47,7 +47,7 @@ workflows:
 rules:
   agent-behavior:          "1.7.16"   # C7 file guards, proactive guard scan
   governance:              "1.0.0"
-  artifact-standard:       "1.0.0"
+  artifact-standard:       "1.8.13"
   context-rules:           "1.1.0"
   exports-data:            "1.0.0"
   naming:                  "1.7.13"   # updated: date format convention
@@ -100,6 +100,5 @@ registry:
   tool-schema:     "1.8.5"   # shipped_in + min_engine_version (additive)
 
 knowledge:
-  para_workspace_architecture_standards: "1.8.12" # updated: MCP config migration & TDD
+  para_workspace_architecture_standards: "1.8.13" # updated: Artifact Authority & Platform Separation
   para_anti_truncation_guardrail: "1.8.10" # NEW: Anti-truncation mechanism and safety guardrails
-
