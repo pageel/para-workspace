@@ -161,12 +161,19 @@ TOOL_ENTRY=$(grep '^entry:' "$MANIFEST_FILE" | head -1 | sed 's/entry: *//; s/^ 
 # Check runtime availability
 case "$TOOL_RUNTIME" in
   node)
+    # Source node-resolver.sh to update PATH before finding node binary path (BUG-10)
+    if [ -f "$CLI_DIR/lib/node-resolver.sh" ]; then
+      source "$CLI_DIR/lib/node-resolver.sh"
+      resolve_node "$WORKSPACE_ROOT"
+    fi
+
     if ! command -v node &> /dev/null; then
       echo "⚠️  Node.js is required but not installed."
       echo "   Install Node.js first, then re-run: ./para mcp-setup $PARA_TOOL_NAME"
       exit 1
     fi
-    RUNTIME_CMD="node"
+    # Use resolved absolute path of node to prevent non-interactive path issues in IDE (BUG-10)
+    RUNTIME_CMD=$(command -v node 2>/dev/null || echo "node")
     ;;
   python)
     if command -v python3 &> /dev/null; then
