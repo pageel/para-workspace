@@ -294,6 +294,37 @@ sync_library() {
   fi
 }
 
+# === Helper: repair workspace configuration file ===
+repair_workspace_config() {
+  local config_file="$1"
+  if [ -f "$config_file" ]; then
+    # Dry-run logic support
+    if [ "$DRY_RUN" = true ]; then
+      echo "     → Would validate and repair configurations in .para-workspace.yml"
+      return 0
+    fi
+
+    # 1. Validate and repair BUG-10 Node Path Resolution config if missing
+    if grep -q "^preferences:" "$config_file"; then
+      if ! grep -q "node_path:" "$config_file"; then
+        awk '/^preferences:/ { print; print "  node_path: \"\""; next }1' "$config_file" > "${config_file}.tmp" && mv "${config_file}.tmp" "$config_file"
+        echo "   ✓ Added missing preferences.node_path under preferences"
+      fi
+    else
+      # If preferences: does not exist, append the block to the end of the file
+      cat >> "$config_file" <<EOL
+
+# Preferences (BUG-10 Node Path Resolution)
+preferences:
+  node_path: ""
+EOL
+      echo "   ✓ Appended missing preferences.node_path block to configuration"
+    fi
+
+    # Any future configuration repair steps can be added here
+  fi
+}
+
 KERNEL_VERSION="$(cat "$REPO_ROOT/VERSION" 2>/dev/null || echo "1.4.1")"
 
 echo "🚀 PARA Workspace Install (v$KERNEL_VERSION)"
@@ -563,6 +594,9 @@ else
 fi
 
 if [ -f "$WS_ROOT/.para-workspace.yml" ]; then
+  # Repair missing config keys first (BUG-10 / User support)
+  repair_workspace_config "$WS_ROOT/.para-workspace.yml"
+
   sed "s/^kernel_version:.*/kernel_version: \"$KERNEL_VERSION\"/" "$WS_ROOT/.para-workspace.yml" > "$WS_ROOT/.para-workspace.yml.tmp" && mv "$WS_ROOT/.para-workspace.yml.tmp" "$WS_ROOT/.para-workspace.yml"
   echo "   ✓ .para-workspace.yml updated to v$KERNEL_VERSION"
 fi
