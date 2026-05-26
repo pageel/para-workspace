@@ -88,7 +88,14 @@ assert_valid_json() {
 echo "--- resolve_ide_config_path ---"
 
 result=$(resolve_ide_config_path "antigravity")
-assert_contains "Antigravity path contains mcp_config.json" "mcp_config.json" "$result"
+assert_contains "Antigravity path (both) contains config/mcp_config.json" "config/mcp_config.json" "$result"
+assert_contains "Antigravity path (both) contains antigravity/mcp_config.json" "antigravity/mcp_config.json" "$result"
+
+result=$(resolve_ide_config_path "antigravity-ide")
+assert_contains "Antigravity IDE 2.x path contains config/mcp_config.json" "config/mcp_config.json" "$result"
+
+result=$(resolve_ide_config_path "antigravity-v1")
+assert_contains "Antigravity v1.x path contains antigravity/mcp_config.json" "mcp_config.json" "$result"
 
 result=$(resolve_ide_config_path "cursor")
 assert_contains "Cursor path contains mcp.json" "mcp.json" "$result"

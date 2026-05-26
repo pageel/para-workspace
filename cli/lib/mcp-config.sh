@@ -23,16 +23,22 @@ if ! command -v log_info &> /dev/null; then
 fi
 
 # === Supported IDEs ===
-MCP_SUPPORTED_IDES="antigravity claude cursor"
+MCP_SUPPORTED_IDES="antigravity antigravity-ide antigravity-v1 claude cursor"
 
 # resolve_ide_config_path — Returns the config file path for a given IDE.
 # Usage: resolve_ide_config_path "antigravity"
-# Returns: absolute path to config file (may not exist yet)
+# Returns: absolute path to config file (may not exist yet). For "antigravity", returns space-separated paths.
 resolve_ide_config_path() {
   local ide="$1"
 
   case "$ide" in
     antigravity)
+      echo "$HOME/.gemini/config/mcp_config.json $HOME/.gemini/antigravity/mcp_config.json"
+      ;;
+    antigravity-ide)
+      echo "$HOME/.gemini/config/mcp_config.json"
+      ;;
+    antigravity-v1)
       echo "$HOME/.gemini/antigravity/mcp_config.json"
       ;;
     claude)
