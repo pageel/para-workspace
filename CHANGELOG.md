@@ -11,6 +11,7 @@ Node Path Resolution for NVM/fnm/Volta & Plan Template Next Steps.
 - **Changed**: Updated `tool-wrapper.sh.tmpl` template to source the node resolver before runtime checks.
 - **Changed**: Updated plan templates (`detail-plan*.md`) to direct agents to run `/plan dev` or `/vibecode loop` at the `Suggested Next Steps` section.
 - **Changed**: Updated `workspace.schema.json`, `init.sh`, `migrate.sh` and `/update` workflow to support `preferences.node_path` configuration.
+- **Changed**: Updated `install.sh` to automatically detect the active Node directory and populate `preferences.node_path` in `.para-workspace.yml` if it is currently empty.
 - **Changed**: Bumped `registry/tools.yml` graph latest to `0.15.8`.
 - **Changed**: Updated System KI template `para_workspace_architecture_standards` to define `implementation plan` and `tasks` authority, strictly directing agents to follow workspace plan/task definitions rather than ephemeral IDE brain files.
 - **Changed**: Updated `artifact-standard` rule template with Artifact Authority & Platform Separation standards.

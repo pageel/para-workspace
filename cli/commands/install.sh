@@ -321,7 +321,46 @@ EOL
       echo "   ✓ Appended missing preferences.node_path block to configuration"
     fi
 
-    # Any future configuration repair steps can be added here
+    # 2. Auto-detect active node directory if empty and populate it
+    local current_node_path
+    current_node_path=$(awk '/^preferences:/ {flag=1; next} /^[a-zA-Z]/ {flag=0} flag && /^[[:space:]]*node_path:/ {print $2}' "$config_file" | sed "s/\"//g; s/'//g")
+    
+    if [ -z "$current_node_path" ]; then
+      local detected_node_dir=""
+      # Check if node is in current PATH
+      if command -v node >/dev/null 2>&1; then
+        detected_node_dir=$(dirname "$(command -v node)")
+      fi
+      
+      # If not found, try common managers (NVM, FNM, Volta)
+      if [ -z "$detected_node_dir" ]; then
+        local nvm_dir_path="${NVM_DIR:-$HOME/.nvm}"
+        if [ -d "$nvm_dir_path/versions/node" ]; then
+          local latest_nvm_ver
+          latest_nvm_ver=$(find "$nvm_dir_path/versions/node" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; 2>/dev/null | sort -V | tail -n 1)
+          if [ -n "$latest_nvm_ver" ] && [ -d "$nvm_dir_path/versions/node/$latest_nvm_ver/bin" ]; then
+            detected_node_dir="$nvm_dir_path/versions/node/$latest_nvm_ver/bin"
+          fi
+        fi
+      fi
+      
+      if [ -z "$detected_node_dir" ]; then
+        local fnm_bin="$HOME/.fnm/aliases/default/bin"
+        if [ -d "$fnm_bin" ]; then
+          detected_node_dir="$fnm_bin"
+        fi
+      fi
+      
+      if [ -z "$detected_node_dir" ] && [ -d "$HOME/.volta/bin" ]; then
+        detected_node_dir="$HOME/.volta/bin"
+      fi
+
+      # Update configuration with detected path
+      if [ -n "$detected_node_dir" ]; then
+        sed "s|node_path:[[:space:]]*\"\"|node_path: \"$detected_node_dir\"|g; s|node_path:[[:space:]]*''|node_path: \"$detected_node_dir\"|g" "$config_file" > "${config_file}.tmp" && mv "${config_file}.tmp" "$config_file"
+        echo "   ✓ Automatically populated preferences.node_path with detected path: $detected_node_dir"
+      fi
+    fi
   fi
 }
 
