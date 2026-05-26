@@ -264,26 +264,62 @@ if [ -z "$IDE_TARGET" ]; then
   fi
 fi
 
+# === Helper: check if IDE directory exists ===
+is_ide_directory_exists() {
+  local path="$1"
+  local ide="$2"
+  case "$ide" in
+    antigravity-ide)
+      [ -d "$HOME/.gemini/antigravity-ide" ]
+      ;;
+    antigravity-v1)
+      [ -d "$HOME/.gemini/antigravity" ]
+      ;;
+    antigravity)
+      if [[ "$path" == *"/config/"* ]]; then
+        [ -d "$HOME/.gemini/antigravity-ide" ]
+      elif [[ "$path" == *"/antigravity/"* ]]; then
+        [ -d "$HOME/.gemini/antigravity" ]
+      else
+        [ -d "$(dirname "$path")" ]
+      fi
+      ;;
+    *)
+      [ -d "$(dirname "$path")" ]
+      ;;
+  esac
+}
+
 # === Configure IDE ===
-CONFIG_PATH=$(resolve_ide_config_path "$IDE_TARGET")
+CONFIG_PATHS=$(resolve_ide_config_path "$IDE_TARGET")
 if [ $? -ne 0 ]; then
   echo "❌ Error: Unknown IDE '$IDE_TARGET'"
   exit 1
 fi
 
-echo "Target: $CONFIG_PATH"
+local_success=false
+for path in $CONFIG_PATHS; do
+  if ! is_ide_directory_exists "$path" "$IDE_TARGET"; then
+    continue
+  fi
 
-# Backup existing config
-if [ -f "$CONFIG_PATH" ]; then
-  backup_config "$CONFIG_PATH"
-fi
+  echo "Target: $path"
 
-# Merge config
-if merge_mcp_config "$CONFIG_PATH" "$MCP_SERVER_NAME" "$SNIPPET"; then
-  echo ""
-  echo "✅ MCP server '$MCP_SERVER_NAME' configured for $IDE_TARGET."
-else
-  echo ""
-  echo "⚠️  Auto-config failed. Use '--print-only' and configure manually."
+  # Backup existing config
+  if [ -f "$path" ]; then
+    backup_config "$path"
+  fi
+
+  # Merge config
+  if merge_mcp_config "$path" "$MCP_SERVER_NAME" "$SNIPPET"; then
+    echo "✅ MCP server '$MCP_SERVER_NAME' configured for $IDE_TARGET ($path)."
+    local_success=true
+  else
+    echo "⚠️  Failed to merge config into $path"
+  fi
+done
+
+if [ "$local_success" = false ]; then
+  echo "❌ Error: No valid/installed IDE config paths found to write configuration."
   exit 1
 fi
