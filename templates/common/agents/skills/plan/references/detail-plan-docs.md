@@ -190,7 +190,8 @@ ELSE:
 
 ### Suggested Next Steps
 
-1. **Activate Plan** → start Phase 0.
-2. After completion → run `/docs publish` to ship docs to `repo/docs/`.
+1. **Activate Plan:** Set `active_plan` in `project.md` and set Status to `🔨 Active`.
+2. **Execute Plan:** Run `/plan [project-name] dev` to start Phase 0.
+3. After completion → run `/docs publish` to ship docs to `repo/docs/`.
 3. Run `/docs review` for overall quality check.
 ````

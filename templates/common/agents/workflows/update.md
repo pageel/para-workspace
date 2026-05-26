@@ -5,7 +5,7 @@ source: catalog
 
 # /update
 
-> **Workspace Version:** 1.7.6 (BUG-29: Pre-pull version gate fix)
+> **Workspace Version:** 1.8.13 (BUG-10: Node path resolution integration)
 
 Safely update the PARA Workspace to the latest version with pre-flight checks, dry-run preview, and automatic error recovery.
 
@@ -141,6 +141,11 @@ tail -1 .para/migrations/history.log
 ```bash
 # Check 3: Audit log entry
 tail -1 .para/audit.log
+```
+
+```bash
+# Check 4: Preferences Node Path (BUG-10)
+grep -A 2 '^preferences:' .para-workspace.yml 2>/dev/null || echo "No preferences block"
 ```
 
 ### 6. Display report

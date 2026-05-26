@@ -8,7 +8,7 @@
 # See: naming.md §6 (date format), versioning.md §5 (version tracking)
 # Updated: 2026-05-22
 
-workspace: "1.8.12"
+workspace: "1.8.13"
 
 workflows:
   backlog:         "1.8.10"  # updated: graph router integration
@@ -31,7 +31,7 @@ workflows:
   plan:            "1.8.11"  # updated: Soft Dump + reload indices pre-flight
   para-audit:      "1.8.8"   # Quarantine Hook
   docs:            "1.8.10"  # Modular HTML Renderer + watch option
-  update:          "1.8.5"   # BUG-34: consumer fetch+reset for Windows
+  update:          "1.8.13"  # updated: preferences.node_path check
   brainstorm:      "1.8.10"  # Project Skill + memory lifecycle
   para-knowledge:  "1.4.0"
   para-skill:      "1.8.8"   # Purged legacy catalog.yml version references
@@ -96,7 +96,7 @@ templates:
   tool-wrapper:    "1.8.0"   # NEW: auto-generated wrapper for tool plugins
 
 registry:
-  tools:           "1.8.12"  # para-graph latest bumped to 0.15.7
+  tools:           "1.8.13"  # para-graph latest bumped to 0.15.8
   tool-schema:     "1.8.5"   # shipped_in + min_engine_version (additive)
 
 knowledge:

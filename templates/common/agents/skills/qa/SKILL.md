@@ -66,7 +66,7 @@ When creating the QA Report at Step 0.5 (Pre-QA Strategy), the Agent MUST format
 
 | Action | Command | Description |
 |---|---|---|
-| **Activate Plan** | Set Status → `🔨 Active` | Start coding. Plan is safe. |
+| **Activate Plan** | Set Status → `🔨 Active` | Activate plan in project.md. Suggest running '/plan dev' or '/vibecode loop' to begin execution. |
 | **Deep review** | `deep [aspect]` | Add another review round if needed. |
 | **Full audit** | `/qa audit` | Run Compliance Audit on the fixed Plan. |
 | **Close QA** | `done` | Close the QA report, no further review. |

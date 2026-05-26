@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.8.13] - 2026-05-26
+
+Node Path Resolution for NVM/fnm/Volta & Plan Template Next Steps.
+
+- **Added**: Node Path Resolution script (`cli/lib/node-resolver.sh`) to automatically resolve Node from NVM, fnm, Volta, or custom `preferences.node_path` (BUG-10).
+- **Changed**: Updated `tool-wrapper.sh.tmpl` template to source the node resolver before runtime checks.
+- **Changed**: Updated plan templates (`detail-plan*.md`) to direct agents to run `/plan dev` or `/vibecode loop` at the `Suggested Next Steps` section.
+- **Changed**: Updated `workspace.schema.json`, `init.sh`, `migrate.sh` and `/update` workflow to support `preferences.node_path` configuration.
+- **Changed**: Bumped `registry/tools.yml` graph latest to `0.15.8`.
+
 ## [1.8.12] - 2026-05-26
 
 MCP Config Migration for Antigravity IDE 2.x & TDD Hardening.

@@ -352,6 +352,12 @@ If the Q&A generated ≥ 10 questions or found ≥ 3 issues:
 
 4. **IF no graph** → Skip silently.
 
+### Step 11. Handover & Execution Guard
+
+**CRITICAL RULES:**
+1. **NO AUTO-EXECUTION:** After completing the QA review and activating the plan, the Agent **MUST NOT** perform any coding task or file modification.
+2. **HANDOVER REQUIREMENT:** The Agent **MUST** stop execution and instruct the user to run `/plan dev [project-name]` or `/vibecode loop` to begin coding. Self-triggering code implementation in the same session is a sovereignty violation.
+
 ---
 
 ## Question Templates (Per Dimension)

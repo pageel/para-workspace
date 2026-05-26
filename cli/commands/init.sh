@@ -129,6 +129,10 @@ kernel_version: "$KERNEL_VERSION"
 profile: "$PROFILE"
 language: "$LANG_PREF"
 
+# Preferences (BUG-10 Node Path Resolution)
+preferences:
+  node_path: ""
+
 # Repo source for updates
 repo:
   url: "https://github.com/pageel/para-workspace"

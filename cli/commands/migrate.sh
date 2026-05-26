@@ -448,6 +448,53 @@ else
   echo "⏭️  Skipping v1.7.4→v1.7.5 steps (FROM=$FROM_VERSION >= 1.7.5)"
 fi  # end v1.7.4 → v1.7.5 gate
 
+# ============================================================
+# Migration: v1.8.12 → v1.8.13 (Node Path Resolution Config)
+# ============================================================
+
+# Version gate: only run if upgrading from pre-1.8.13
+if ! semver_gte "$FROM_VERSION" "1.8.13" 2>/dev/null; then
+
+echo ""
+echo "━━━ v1.8.12 → v1.8.13 Migration ━━━━━━━━━━━━━━━━━"
+echo ""
+MIGRATION_RAN=true
+
+# Step 14: Add preferences.node_path to .para-workspace.yml if missing
+echo "⚙️  Step 14: Add preferences.node_path override option..."
+CONFIG_FILE="$WS_ROOT/.para-workspace.yml"
+
+if [ -f "$CONFIG_FILE" ]; then
+  if [ "$DRY_RUN" = false ]; then
+    # Check if preferences: exists
+    if grep -q "^preferences:" "$CONFIG_FILE"; then
+      # If preferences exists but node_path is missing
+      if ! grep -q "node_path:" "$CONFIG_FILE"; then
+        # Safe insert node_path under preferences
+        awk '/^preferences:/ { print; print "  node_path: \"\""; next }1' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
+        echo "     ✓ Added node_path under preferences"
+      else
+        echo "     ✓ node_path already exists under preferences"
+      fi
+    else
+      # If preferences: does not exist, append the block to the end of the file
+      cat >> "$CONFIG_FILE" <<EOL
+
+# Preferences (BUG-10 Node Path Resolution)
+preferences:
+  node_path: ""
+EOL
+      echo "     ✓ Appended preferences.node_path block to configuration"
+    fi
+  else
+    echo "     → Would ensure preferences.node_path exists in .para-workspace.yml"
+  fi
+fi
+
+else
+  echo "⏭️  Skipping v1.8.12→v1.8.13 steps (FROM=$FROM_VERSION >= 1.8.13)"
+fi  # end v1.8.12 → v1.8.13 gate
+
 # === Record migration (only if steps actually ran — v1.6.5 BUG-23 fix) ===
 if [ "$DRY_RUN" = false ] && [ "$MIGRATION_RAN" = true ] && [ -d "$WS_ROOT/.para/migrations" ]; then
   echo "$FROM_VERSION → $TO_VERSION | $(date -Iseconds 2>/dev/null || date +"%Y-%m-%dT%H:%M:%S%z")" >> "$WS_ROOT/.para/migrations/history.log"

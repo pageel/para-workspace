@@ -256,7 +256,7 @@ ELSE:
 
 ## Suggested Next Steps
 
-1. **Activate Plan:** Set `active_plan` in `project.md`.
-2. [Project-specific next step...]
+1. **Activate Plan:** Set `active_plan` in `project.md` and set Status to `🔨 Active`.
+2. **Execute Plan:** Run `/plan [project-name] dev` or `/vibecode loop` to begin execution.
 
 ````

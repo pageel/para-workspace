@@ -28,6 +28,13 @@ RUNTIME="{{RUNTIME}}"
 MIN_RUNTIME_VERSION="{{MIN_RUNTIME_VERSION}}"
 ENTRY="{{ENTRY}}"
 
+# === Node.js Path Resolution (BUG-10) ===
+if [ -f "$CLI_DIR/lib/node-resolver.sh" ]; then
+  # shellcheck source=/dev/null
+  . "$CLI_DIR/lib/node-resolver.sh"
+  resolve_node "$WORKSPACE_ROOT" 2>/dev/null || true
+fi
+
 # === Runtime check ===
 check_runtime() {
   case "$RUNTIME" in

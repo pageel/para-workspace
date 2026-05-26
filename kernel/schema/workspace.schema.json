@@ -49,6 +49,16 @@
         "rules": { "type": "string" },
         "skills": { "type": "string" }
       }
+    },
+    "preferences": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "node_path": {
+          "type": "string",
+          "description": "Custom Node.js binary directory path to prepend to PATH."
+        }
+      }
     }
   }
 }
