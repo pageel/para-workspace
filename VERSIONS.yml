@@ -96,7 +96,7 @@ templates:
   tool-wrapper:    "1.8.0"   # NEW: auto-generated wrapper for tool plugins
 
 registry:
-  tools:           "1.8.5"   # para-graph latest bumped to 0.8.6
+  tools:           "1.8.12"  # para-graph latest bumped to 0.15.7
   tool-schema:     "1.8.5"   # shipped_in + min_engine_version (additive)
 
 knowledge:
