@@ -65,15 +65,32 @@ detect_installed_ides() {
   local found_ides=""
 
   for ide in $MCP_SUPPORTED_IDES; do
-    local config_path
-    config_path=$(resolve_ide_config_path "$ide" 2>/dev/null) || continue
-
-    local config_dir
-    config_dir=$(dirname "$config_path")
-
-    if [ -d "$config_dir" ]; then
-      found_ides="$found_ides $ide"
-    fi
+    case "$ide" in
+      antigravity-ide)
+        if [ -d "$HOME/.gemini/antigravity-ide" ]; then
+          found_ides="$found_ides $ide"
+        fi
+        ;;
+      antigravity-v1)
+        if [ -d "$HOME/.gemini/antigravity" ]; then
+          found_ides="$found_ides $ide"
+        fi
+        ;;
+      antigravity)
+        if [ -d "$HOME/.gemini/antigravity-ide" ] || [ -d "$HOME/.gemini/antigravity" ]; then
+          found_ides="$found_ides $ide"
+        fi
+        ;;
+      *)
+        local config_path
+        config_path=$(resolve_ide_config_path "$ide" 2>/dev/null) || continue
+        local config_dir
+        config_dir=$(dirname "$config_path")
+        if [ -d "$config_dir" ]; then
+          found_ides="$found_ides $ide"
+        fi
+        ;;
+    esac
   done
 
   echo "$found_ides" | sed 's/^ //'

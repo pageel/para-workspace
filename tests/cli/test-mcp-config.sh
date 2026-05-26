@@ -115,6 +115,34 @@ fi
 
 # ============================================================
 echo ""
+echo "--- detect_installed_ides ---"
+
+TEST_HOME="$TEST_TMP/fake_home"
+mkdir -p "$TEST_HOME"
+ORIG_HOME="$HOME"
+export HOME="$TEST_HOME"
+
+# Test 1: No IDEs installed
+result=$(detect_installed_ides)
+assert_eq "No IDEs detected initially" "" "$result"
+
+# Test 2: Only Antigravity IDE 2.x installed
+mkdir -p "$HOME/.gemini/antigravity-ide"
+result=$(detect_installed_ides)
+assert_contains "Detects antigravity-ide when App Data 2.x exists" "antigravity-ide" "$result"
+assert_contains "Detects antigravity (both) when App Data 2.x exists" "antigravity" "$result"
+
+# Test 3: Only Antigravity v1.x installed
+rm -rf "$HOME/.gemini/antigravity-ide"
+mkdir -p "$HOME/.gemini/antigravity"
+result=$(detect_installed_ides)
+assert_contains "Detects antigravity-v1 when App Data 1.x exists" "antigravity-v1" "$result"
+assert_contains "Detects antigravity (both) when App Data 1.x exists" "antigravity" "$result"
+
+export HOME="$ORIG_HOME"
+
+# ============================================================
+echo ""
 echo "--- generate_mcp_snippet ---"
 
 snippet=$(generate_mcp_snippet "para-graph" "node" "/path/to/cli.js" "serve" "/workspace")
