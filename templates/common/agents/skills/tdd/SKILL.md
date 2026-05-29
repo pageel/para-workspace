@@ -135,6 +135,13 @@ Before committing, Agent MUST read `artifacts/tests/tdd-evidence.log` and verify
 | Resource | Relative Path | Description |
 |:--|:--|:--|
 | TDD Evidence Logger | `scripts/tdd-test.sh` | Bash wrapper that logs test FAIL/PASS to `artifacts/tests/tdd-evidence.log` for TDD Gate verification |
+| Transcript Telemetry Parser | `scripts/parse-transcript.py` | Python script to parse Antigravity session transcript locally for tool counts, commands, and mutated files |
+
+### Transcript Parser Usage
+When executing TDD Drift Verification & Cleanup or auditing session telemetry, run this script to parse conversation transcripts locally without context bloat:
+```bash
+python3 .agents/skills/tdd/scripts/parse-transcript.py [path_to_transcript_or_directory]
+```
 
 ## 7. Isolated TDD Protocol (Workspace & Repo Protection)
 
@@ -152,7 +159,7 @@ To protect the active workspace from configuration pollution (junk files) and av
 - These files MUST be ignored via `.gitignore` to prevent polluting the OSS template repository.
 
 ### C. Repo State Snapshot (Junk File Prevention)
-- **At the start of the Plan (Phase 0):** Agent MUST execute a repo state snapshot command (e.g., `git status` or a file structure log) and save it to `artifacts/tests/tmp/tdd-repo-before-[date].log`. This serves as the Ground Truth Before.
+- **At the start of the Plan (Phase 0):** Agent MUST execute a repo state snapshot command (e.g., `git status --ignored --porcelain` or a file structure log) and save it to `artifacts/tests/tdd-repo-before-[date].log`. This serves as the Ground Truth Before.
   - If multiple snapshots are taken (e.g., across multiple sub-sessions or coding iterations), append an incremental index suffix: `tdd-repo-before-[date]-[index].log` (e.g., `tdd-repo-before-2026-05-29-01.log`).
 - **At the end of the Plan (Walkthrough / Completion Gate):** Agent MUST compare the final repo state against the snapshot log. Any unexpected modified or untracked files (junk/zombie files generated during testing) MUST be cleaned up completely before proposing the plan's transition to Done.
 
@@ -161,15 +168,15 @@ To implement this protocol, a TDD-hardened plan MUST include the following tasks
 
 1. **Phase 0 (Start Snapshot):**
    ```markdown
-   - [ ] 0.X 🤖 **TDD Repo Before Snapshot** (run `git status` & `git log -n 1 --oneline` and save to `artifacts/tests/tmp/tdd-repo-before-[date].log`)
+   - [ ] 0.X 🤖 **TDD Repo Before Snapshot** (run `git status --ignored --porcelain` & `git log -n 1 --oneline` and save to `artifacts/tests/tdd-repo-before-[date].log`)
    ```
 
 2. **Phase 2 (Pre-Commit Cleanup):**
    ```markdown
-   - [ ] 2.X 🤖 **TDD Drift Verification & Cleanup** (compare current repo state with `tdd-repo-before-[date].log` to clean up temporary/junk files before commit)
+   - [ ] 2.X 🤖 **TDD Drift Verification & Cleanup** (compare current repo state with `artifacts/tests/tdd-repo-before-[date].log` to clean up temporary/junk files before commit)
    ```
 
 3. **Walkthrough (Final Post-Release Audit):**
    ```markdown
-   - [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `tdd-repo-before-[date].log` and completely clean up any junk files generated during local TDD/testing before completion.
+   - [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `artifacts/tests/tdd-repo-before-[date].log` and completely clean up any junk files generated during local TDD/testing before completion.
    ```

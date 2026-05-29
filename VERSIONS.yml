@@ -73,7 +73,7 @@ skills:
   spec:        "1.8.10"
   qa:          "1.8.10"
   tdd:         "1.8.15"  # tdd/SKILL.md update
-  logs:        "1.8.7"
+  logs:        "1.8.15"  # added parse-transcript.py script and references
   html-renderer: "1.8.15" # dashboard and portal template support
   new-project: "1.8.10"
   resource:    "1.8.11"

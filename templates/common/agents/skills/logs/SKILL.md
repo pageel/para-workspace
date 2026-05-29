@@ -34,6 +34,16 @@ ELSE:
 | Resource | Relative Path | Description |
 |:--|:--|:--|
 | TDD Compliance Template | `references/tdd-compliance.md` | Audit template for verifying Red-Green-Refactor order from conversation log and git history |
+| Transcript Parser | `scripts/parse-transcript.py` | Python script to parse Antigravity session transcript locally for tool counts, commands, and mutated files |
+
+## Usage: Transcript Parser
+
+When executing `/logs --deep` or verifying TDD/Drift compliance, the Agent can run this Python utility locally to extract structured statistics without flooding the token context window:
+
+```bash
+# Resolve and run from workspace root
+python3 .agents/skills/logs/scripts/parse-transcript.py [path_to_transcript_or_directory]
+```
 
 > **Convention:** Data files live in `references/` (not `templates/`).
 > This follows the Sidecar Skill convention formalized in v1.7.6.3.
