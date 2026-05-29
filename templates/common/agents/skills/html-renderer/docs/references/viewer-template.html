@@ -853,7 +853,7 @@
             if (a) {
                 const href = a.getAttribute('href');
                 // Intercept relative html paths, excluding absolute protocols or in-page hash links
-                if (href && !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
+                if (href && !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('file://') && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
                     e.preventDefault();
                     window.parent.postMessage({
                         type: 'navigate',

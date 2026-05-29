@@ -130,7 +130,12 @@ const translations = {
         inlineFeedbackChatWithAI: "Chat với AI",
         inlineFeedbackCopy: "Sao chép",
         inlineCommentFormPlaceholder: "Nhập phản hồi sửa code...",
-        inlineFeedbackSubmitTitle: "Sao chép prompt"
+        inlineFeedbackSubmitTitle: "Sao chép prompt",
+        calibrationTitle: "Hiệu chỉnh Chỉ số",
+        calibrationFolders: "Loại trừ thư mục tài liệu",
+        calibrationWeights: "Trọng số thành phần mã",
+        calibrationReset: "Đặt lại mặc định",
+        calibrationDesc: "Trọng số đại diện cho độ quan trọng tương đối của từng thành phần mã cá thể:<br/>• <b>Cốt lõi (Critical):</b> Các thành phần lõi ảnh hưởng lớn (God Nodes, degree >= 20).<br/>• <b>Trung bình (Medium):</b> Hàm, lớp, tệp tin tiêu chuẩn.<br/>• <b>Bổ trợ (Low):</b> Các biến và hằng số phụ trợ.<br/>Tài liệu hóa phần Cốt lõi đóng góp điểm số cao hơn."
     },
     en: {
         title: "PARA Workspace Docs",
@@ -208,7 +213,12 @@ const translations = {
         inlineFeedbackChatWithAI: "Chat with AI",
         inlineFeedbackCopy: "Copy",
         inlineCommentFormPlaceholder: "Enter code edit feedback...",
-        inlineFeedbackSubmitTitle: "Copy prompt"
+        inlineFeedbackSubmitTitle: "Copy prompt",
+        calibrationTitle: "Calibration Settings",
+        calibrationFolders: "Exclude Document Folders",
+        calibrationWeights: "Code Entity Weights",
+        calibrationReset: "Reset to Defaults",
+        calibrationDesc: "Weights represent the relative priority of each individual code entity:<br/>• <b>Critical:</b> High-impact core components (God Nodes, degree >= 20).<br/>• <b>Medium:</b> Standard functions, classes, and source files.<br/>• <b>Low:</b> Auxiliary variables and constants.<br/>Documenting Critical components contributes more to the overall health score."
     }
 };
 
@@ -312,22 +322,79 @@ function treeToHtml(node, currentSourcePath, currentTargetPath, rootDir, rootOut
     return `
     <li class="tree-folder">
         <div class="folder-toggle">
-            <span class="chevron-icon-container"><i data-lucide="chevron-down"></i></span>
+            <span class="chevron-icon-container"><i data-lucide="chevron-right"></i></span>
             <i data-lucide="folder"></i> ${node.name}
         </div>
-        <ul class="folder-content">
+        <ul class="folder-content" style="display: none;">
             ${childrenHtml}
         </ul>
     </li>`;
 }
 
 // Render a single Markdown file to HTML using the template
-function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputDir, template) {
+function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputDir, template, graphNodesMap, calculateBlastRadius) {
     try {
         const markdownContent = fs.readFileSync(sourceFile, 'utf8');
         
+        // Parse markdown content for @graph-node anchors
+        const nodeRegex = /<!--\s*@graph-node:\s*([^\s>]+)\s*-->/g;
+        const linkedNodeIds = [];
+        let match;
+        while ((match = nodeRegex.exec(markdownContent)) !== null) {
+            const nodeId = match[1];
+            if (!linkedNodeIds.includes(nodeId)) {
+                linkedNodeIds.push(nodeId);
+            }
+        }
+
+        let modifiedMarkdown = markdownContent;
+        if (linkedNodeIds.length > 0 && graphNodesMap) {
+            const projectDir = path.dirname(rootDir);
+            const docNodesTitle = workspaceLang === 'vi' ? 'Các thành phần mã được tham chiếu' : 'Referenced Code Entities';
+            const thEntity = workspaceLang === 'vi' ? 'Thành phần mã' : 'Entity';
+            const thType = workspaceLang === 'vi' ? 'Phân loại' : 'Type';
+            const thLocation = workspaceLang === 'vi' ? 'Vị trí' : 'Location';
+            const thBlast = workspaceLang === 'vi' ? 'Bán kính ảnh hưởng (Blast)' : 'Blast Radius';
+            const thDesc = workspaceLang === 'vi' ? 'Mô tả' : 'Description';
+            
+            let nodesListMarkdown = `\n\n---\n\n### <span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="network" style="width: 18px; height: 18px; color: var(--accent-color);"></i> ${docNodesTitle}</span>\n\n`;
+            nodesListMarkdown += `| ${thEntity} | ${thType} | ${thLocation} | ${thBlast} | ${thDesc} |\n`;
+            nodesListMarkdown += `| :--- | :--- | :--- | :---: | :--- |\n`;
+            
+            for (const nodeId of linkedNodeIds) {
+                const node = graphNodesMap[nodeId];
+                if (node) {
+                    const type = node.type || 'unknown';
+                    const name = node.name || node.id;
+                    const filePath = node.filePath || '';
+                    const lines = (node.startLine && node.endLine) ? `L${node.startLine}-${node.endLine}` : '';
+                    
+                    let location = 'unknown';
+                    if (filePath) {
+                        const absolutePath = path.resolve(projectDir, 'repo', filePath).replace(/\\/g, '/');
+                        const linkText = `${filePath}${lines ? ':' + lines : ''}`;
+                        location = `[${linkText}](file:///${absolutePath}${lines ? '#L' + node.startLine + '-L' + node.endLine : ''})`;
+                    }
+                    
+                    const blastRadius = calculateBlastRadius ? calculateBlastRadius(node.id) : 0;
+                    const description = (node.semantic && node.semantic.summary) || 'No description available.';
+                    
+                    let iconName = 'code';
+                    if (type === 'file') iconName = 'file-code';
+                    else if (type === 'class') iconName = 'box';
+                    else if (type === 'function') iconName = 'play-circle';
+                    else if (type === 'interface') iconName = 'layout';
+                    else if (type === 'variable') iconName = 'trello';
+                    
+                    const iconHtml = `<i data-lucide="${iconName}" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; color: var(--text-secondary);"></i>`;
+                    nodesListMarkdown += `| ${iconHtml} \`${name}\` | \`${type}\` | ${location} | **${blastRadius}** | ${description} |\n`;
+                }
+            }
+            modifiedMarkdown += nodesListMarkdown;
+        }
+
         // Escape special chars to prevent breaking JS template literals
-        const escapedMarkdown = markdownContent
+        const escapedMarkdown = modifiedMarkdown
             .replace(/\\/g, '\\\\')
             .replace(/`/g, '\\`')
             .replace(/\${/g, '\\${');
@@ -404,39 +471,7 @@ function renderDirectory(srcDir, destDir, template) {
     }
     collectMdFiles(treeRoot);
     
-    const searchIndex = [];
-    for (const sourceFile of allMdFiles) {
-        const relativeFromRoot = path.relative(srcDir, sourceFile);
-        const targetFile = path.join(destDir, relativeFromRoot.replace(/\.md$/, '.html'));
-        renderSingleFile(sourceFile, targetFile, treeRoot, srcDir, destDir, template);
-        
-        // Collect search index
-        try {
-            const rawContent = fs.readFileSync(sourceFile, 'utf8');
-            const cleanTitle = getMarkdownCleanName(sourceFile);
-            
-            // Strip markdown formatting & limit length
-            let cleanText = rawContent
-                .replace(/```[\s\S]*?```/g, ' ') // replace code blocks with space to keep index size optimal
-                .replace(/[\#\*\`\[\]\(\)\-\+\!\_\>]/g, ' ') // strip syntax chars
-                .replace(/\s+/g, ' ')
-                .trim();
-                
-            if (cleanText.length > 15000) {
-                cleanText = cleanText.substring(0, 15000) + '...';
-            }
-            
-            const relHtmlUrl = relativeFromRoot.replace(/\.md$/, '.html').replace(/\\/g, '/');
-            searchIndex.push({
-                path: relHtmlUrl,
-                title: cleanTitle,
-                content: cleanText
-            });
-        } catch (e) {
-            console.warn(`Warning: Failed to parse search index for ${sourceFile}`, e.message);
-        }
-    }
-    // Calculate Graph Traceability and compile dashboard.html
+    // Load Graph data first to support dynamic node referencing in renderSingleFile
     const projectDir = path.dirname(srcDir);
     const graphDir = path.join(projectDir, '.beads', 'graph');
     const entitiesPath = path.join(graphDir, 'entities.jsonl');
@@ -480,7 +515,96 @@ function renderDirectory(srcDir, destDir, template) {
             console.warn('Warning: Failed to read or parse graph entities.jsonl:', e.message);
         }
     }
+
+    const graphNodesMap = {};
+    const impactAdjacencyList = {};
+    const blastRadii = {};
+    let calculateBlastRadius = null;
+
+    if (hasGraph) {
+        for (const node of graphNodes) {
+            graphNodesMap[node.id] = node;
+        }
+
+        if (fs.existsSync(relationsPath)) {
+            try {
+                const relLines = fs.readFileSync(relationsPath, 'utf8').split('\n');
+                for (const line of relLines) {
+                    if (line.trim()) {
+                        const rel = JSON.parse(line);
+                        if (rel.sourceId && rel.targetId) {
+                            if (!impactAdjacencyList[rel.targetId]) {
+                                impactAdjacencyList[rel.targetId] = [];
+                            }
+                            if (!impactAdjacencyList[rel.targetId].includes(rel.sourceId)) {
+                                impactAdjacencyList[rel.targetId].push(rel.sourceId);
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('Warning: Failed to build impact list:', e.message);
+            }
+        }
+
+        calculateBlastRadius = function(nodeId) {
+            if (blastRadii[nodeId] !== undefined) return blastRadii[nodeId];
+            
+            const visited = new Set();
+            const queue = [nodeId];
+            visited.add(nodeId);
+            
+            while (queue.length > 0) {
+                const current = queue.shift();
+                const dependents = impactAdjacencyList[current] || [];
+                for (const dep of dependents) {
+                    if (!visited.has(dep)) {
+                        visited.add(dep);
+                        queue.push(dep);
+                    }
+                }
+            }
+            
+            const radius = visited.size - 1;
+            blastRadii[nodeId] = radius;
+            return radius;
+        };
+    }
+
+    const searchIndex = [];
+    for (const sourceFile of allMdFiles) {
+        const relativeFromRoot = path.relative(srcDir, sourceFile);
+        const targetFile = path.join(destDir, relativeFromRoot.replace(/\.md$/, '.html'));
+        renderSingleFile(sourceFile, targetFile, treeRoot, srcDir, destDir, template, graphNodesMap, calculateBlastRadius);
+        
+        // Collect search index
+        try {
+            const rawContent = fs.readFileSync(sourceFile, 'utf8');
+            const cleanTitle = getMarkdownCleanName(sourceFile);
+            
+            // Strip markdown formatting & limit length
+            let cleanText = rawContent
+                .replace(/```[\s\S]*?```/g, ' ') // replace code blocks with space to keep index size optimal
+                .replace(/[\#\*\`\[\]\(\)\-\+\!\_\>]/g, ' ') // strip syntax chars
+                .replace(/\s+/g, ' ')
+                .trim();
+                
+            if (cleanText.length > 15000) {
+                cleanText = cleanText.substring(0, 15000) + '...';
+            }
+            
+            const relHtmlUrl = relativeFromRoot.replace(/\.md$/, '.html').replace(/\\/g, '/');
+            searchIndex.push({
+                path: relHtmlUrl,
+                title: cleanTitle,
+                content: cleanText
+            });
+        } catch (e) {
+            console.warn(`Warning: Failed to parse search index for ${sourceFile}`, e.message);
+        }
+    }
     
+    // Calculate Graph Traceability and compile dashboard.html
     let docsWithAnchors = 0;
     for (const mdFile of allMdFiles) {
         try {
@@ -507,51 +631,6 @@ function renderDirectory(srcDir, destDir, template) {
     let processedNodesData = [];
     
     if (hasGraph) {
-        const impactAdjacencyList = {};
-        if (fs.existsSync(relationsPath)) {
-            try {
-                const relLines = fs.readFileSync(relationsPath, 'utf8').split('\n');
-                for (const line of relLines) {
-                    if (line.trim()) {
-                        const rel = JSON.parse(line);
-                        if (rel.sourceId && rel.targetId) {
-                            if (!impactAdjacencyList[rel.targetId]) {
-                                impactAdjacencyList[rel.targetId] = [];
-                            }
-                            if (!impactAdjacencyList[rel.targetId].includes(rel.sourceId)) {
-                                impactAdjacencyList[rel.targetId].push(rel.sourceId);
-                            }
-                        }
-                    }
-                }
-            } catch (e) {
-                console.warn('Warning: Failed to build impact list:', e.message);
-            }
-        }
-
-        const blastRadii = {};
-        function calculateBlastRadius(nodeId) {
-            if (blastRadii[nodeId] !== undefined) return blastRadii[nodeId];
-            
-            const visited = new Set();
-            const queue = [nodeId];
-            visited.add(nodeId);
-            
-            while (queue.length > 0) {
-                const current = queue.shift();
-                const dependents = impactAdjacencyList[current] || [];
-                for (const dep of dependents) {
-                    if (!visited.has(dep)) {
-                        visited.add(dep);
-                        queue.push(dep);
-                    }
-                }
-            }
-            
-            const radius = visited.size - 1;
-            blastRadii[nodeId] = radius;
-            return radius;
-        }
 
         const enrichableNodes = graphNodes.filter(node => {
             const isTest = node.filePath && (node.filePath.startsWith('tests/') || node.filePath.includes('.test.'));
@@ -693,6 +772,8 @@ function renderDirectory(srcDir, destDir, template) {
             
             const sidebarHtml = ''; // Dashboard runs inside Portal iframe, no sidebar needed
             
+            const allMdFilesRelative = allMdFiles.map(filePath => path.relative(srcDir, filePath).replace(/\\/g, '/'));
+            
             dashboardHtml = dashboardHtml
                 .replaceAll('/* WORKSPACE_LANG */', workspaceLang)
                 .replaceAll('/* README_RELATIVE_URL */', relativeReadmeFromTarget)
@@ -701,7 +782,8 @@ function renderDirectory(srcDir, destDir, template) {
                 .replaceAll('/* KERNEL_VERSION */', kernelVersion)
                 .replaceAll('<!-- DOCS_LIST_PLACEHOLDER -->', sidebarHtml)
                 .replace(/const dashboardStats = [^;]+;/, 'const dashboardStats = ' + JSON.stringify(dashboardStats, null, 2) + ';')
-                .replace(/const graphNodesData = [^;]+;/, 'const graphNodesData = ' + JSON.stringify(processedNodesData, null, 2) + ';');
+                .replace(/const graphNodesData = [^;]+;/, 'const graphNodesData = ' + JSON.stringify(processedNodesData, null, 2) + ';')
+                .replace(/const allMarkdownFiles = [^;]+;/, 'const allMarkdownFiles = ' + JSON.stringify(allMdFilesRelative, null, 2) + ';');
                 
             fs.writeFileSync(path.join(destDir, 'dashboard.html'), dashboardHtml, 'utf8');
             console.log('📊 Compiled documentation quality Dashboard successfully.');

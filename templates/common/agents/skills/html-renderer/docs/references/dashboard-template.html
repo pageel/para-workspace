@@ -932,6 +932,32 @@
             background-color: var(--hover-color);
             color: var(--text-primary);
         }
+
+        /* Calibration Panel CSS */
+        .folder-check-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+            cursor: pointer;
+            user-select: none;
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .folder-check-item:hover {
+            background-color: var(--hover-color);
+        }
+        .folder-check-item input[type="checkbox"] {
+            cursor: pointer;
+            accent-color: var(--accent-color);
+            width: 14px;
+            height: 14px;
+        }
+        .link-excluded {
+            text-decoration: line-through;
+            opacity: 0.45;
+        }
     </style>
 </head>
 <body>
@@ -948,6 +974,70 @@
                     </div>
                     <div>
                         <span id="project-version-badge" class="badge badge-type">v/* KERNEL_VERSION */</span>
+                    </div>
+                </div>
+
+                <!-- Calibration Panel Toggle -->
+                <div class="calibration-toggle-container" style="display: flex; justify-content: flex-end; margin-top: -12px; margin-bottom: -8px;">
+                    <button id="btn-toggle-calibration" onclick="toggleCalibrationPanel()" style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); cursor: pointer; font-size: 12.5px; font-weight: 500; transition: all 0.2s;">
+                        <i data-lucide="sliders" style="width: 14px; height: 14px;"></i>
+                        <span>/* TRANSLATE:calibrationTitle */</span>
+                        <i data-lucide="chevron-down" id="calibration-chevron" style="width: 14px; height: 14px; transition: transform 0.2s;"></i>
+                    </button>
+                </div>
+
+                <!-- Calibration Panel Content -->
+                <div id="calibration-panel" class="card" style="display: none; flex-direction: column; gap: 20px; padding: 20px; border-radius: 12px; margin-bottom: 8px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 24px;">
+                        
+                        <!-- Left Column: Folder Exclusion -->
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <h5 style="font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                                <i data-lucide="folder-x" style="width: 14px; height: 14px;"></i> /* TRANSLATE:calibrationFolders */
+                            </h5>
+                            <div id="folder-exclusion-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 140px; overflow-y: auto; padding-right: 6px;">
+                                <!-- Inject dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Weight Calibration -->
+                        <div style="display: flex; flex-direction: column; gap: 12px; border-left: 1px solid var(--border-color); padding-left: 24px;">
+                            <h5 style="font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                                <i data-lucide="scale" style="width: 14px; height: 14px;"></i> /* TRANSLATE:calibrationWeights */
+                            </h5>
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <!-- Critical Node Weight -->
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span class="badge badge-weight-critical" style="width: 120px; justify-content: center; font-size: 11px;">💥 /* TRANSLATE:filterCritical */</span>
+                                    <input type="range" id="weight-critical-slider" min="1" max="10" step="0.5" value="5" oninput="updateWeightInputs('critical', this.value)" style="flex-grow: 1; accent-color: var(--accent-color);">
+                                    <input type="number" id="weight-critical-number" min="1" max="10" step="0.5" value="5" oninput="updateWeightInputs('critical', this.value)" style="width: 55px; padding: 4px; border: 1px solid var(--border-color); border-radius: 4px; text-align: center; font-size: 12px; background: var(--bg-primary); color: var(--text-primary);">
+                                </div>
+                                <!-- Medium Node Weight -->
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span class="badge badge-weight-medium" style="width: 120px; justify-content: center; font-size: 11px;">/* TRANSLATE:filterMedium */</span>
+                                    <input type="range" id="weight-medium-slider" min="0.5" max="5" step="0.5" value="2" oninput="updateWeightInputs('medium', this.value)" style="flex-grow: 1; accent-color: var(--accent-color);">
+                                    <input type="number" id="weight-medium-number" min="0.5" max="5" step="0.5" value="2" oninput="updateWeightInputs('medium', this.value)" style="width: 55px; padding: 4px; border: 1px solid var(--border-color); border-radius: 4px; text-align: center; font-size: 12px; background: var(--bg-primary); color: var(--text-primary);">
+                                </div>
+                                <!-- Low Node Weight -->
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span class="badge badge-weight-low" style="width: 120px; justify-content: center; font-size: 11px;">/* TRANSLATE:filterLow */</span>
+                                    <input type="range" id="weight-low-slider" min="0.1" max="2" step="0.1" value="0.5" oninput="updateWeightInputs('low', this.value)" style="flex-grow: 1; accent-color: var(--accent-color);">
+                                    <input type="number" id="weight-low-number" min="0.1" max="2" step="0.1" value="0.5" oninput="updateWeightInputs('low', this.value)" style="width: 55px; padding: 4px; border: 1px solid var(--border-color); border-radius: 4px; text-align: center; font-size: 12px; background: var(--bg-primary); color: var(--text-primary);">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <!-- Footer Info and Reset -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-top: 1px solid var(--border-color); padding-top: 14px; gap: 20px;">
+                        <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.5; flex-grow: 1; max-width: 80%;">
+                            /* TRANSLATE:calibrationDesc */
+                        </p>
+                        <button onclick="resetCalibration()" style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.2s;">
+                            <i data-lucide="refresh-cw" style="width: 12px; height: 12px;"></i>
+                            /* TRANSLATE:calibrationReset */
+                        </button>
                     </div>
                 </div>
 
@@ -1155,6 +1245,24 @@
         // Data injected statically from render.js
         const dashboardStats = JSON.parse('{}');
         const graphNodesData = JSON.parse('[]');
+        const allMarkdownFiles = JSON.parse('[]');
+
+        // Calibration state loaded from localStorage or defaults
+        let activeWeights = {
+            critical: 5.0,
+            medium: 2.0,
+            low: 0.5
+        };
+        let activeExclusions = ['researches', 'explorations']; // Defaults
+
+        try {
+            const savedWeights = localStorage.getItem('calib_weights');
+            if (savedWeights) activeWeights = JSON.parse(savedWeights);
+            const savedExclusions = localStorage.getItem('calib_exclusions');
+            if (savedExclusions) activeExclusions = JSON.parse(savedExclusions);
+        } catch (e) {
+            console.error('Failed to load calibration state:', e);
+        }
 
         // Initialize lucide icons
         lucide.createIcons();
@@ -1312,35 +1420,198 @@
         };
         const t = i18n[lang] || i18n['en'];
 
-        function initializeDashboard() {
-            const stats = dashboardStats;
-            const score = Math.round(stats.weightedHealthScore);
-            document.getElementById('dashboard-health-score').textContent = score;
+        function toggleCalibrationPanel() {
+            const panel = document.getElementById('calibration-panel');
+            const chevron = document.getElementById('calibration-chevron');
+            const btn = document.getElementById('btn-toggle-calibration');
+            if (panel.style.display === 'none') {
+                panel.style.display = 'flex';
+                chevron.style.transform = 'rotate(180deg)';
+                btn.style.background = 'var(--hover-color)';
+            } else {
+                panel.style.display = 'none';
+                chevron.style.transform = 'rotate(0deg)';
+                btn.style.background = 'var(--bg-secondary)';
+            }
+        }
+
+        function updateWeightInputs(type, val) {
+            const numericVal = parseFloat(val);
+            if (isNaN(numericVal)) return;
             
-            const scoreCard = document.querySelector('.score-card');
-            if (scoreCard) {
-                scoreCard.title = t.tooltipHealthScore;
-                scoreCard.style.cursor = 'help';
+            activeWeights[type] = numericVal;
+            document.getElementById(`weight-${type}-slider`).value = numericVal;
+            document.getElementById(`weight-${type}-number`).value = numericVal;
+            
+            try {
+                localStorage.setItem('calib_weights', JSON.stringify(activeWeights));
+            } catch (e) {}
+            
+            recalculateMetrics();
+        }
+
+        function toggleFolderExclusion(folder, isChecked) {
+            if (isChecked) {
+                activeExclusions = activeExclusions.filter(f => f !== folder);
+            } else {
+                if (!activeExclusions.includes(folder)) {
+                    activeExclusions.push(folder);
+                }
             }
             
+            try {
+                localStorage.setItem('calib_exclusions', JSON.stringify(activeExclusions));
+            } catch (e) {}
+            
+            recalculateMetrics();
+        }
+
+        function discoverFolders() {
+            const folders = new Set();
+            if (typeof allMarkdownFiles !== 'undefined' && Array.isArray(allMarkdownFiles)) {
+                allMarkdownFiles.forEach(file => {
+                    const slashIdx = file.indexOf('/');
+                    if (slashIdx !== -1) {
+                        folders.add(file.substring(0, slashIdx));
+                    }
+                });
+            }
+            return Array.from(folders).sort();
+        }
+
+        function renderFolderExclusionUI() {
+            const listEl = document.getElementById('folder-exclusion-list');
+            if (!listEl) return;
+            listEl.innerHTML = '';
+            
+            const folders = discoverFolders();
+            if (folders.length === 0) {
+                listEl.innerHTML = `<span style="font-size: 12px; color: var(--text-secondary); italic">${lang === 'vi' ? 'Không tìm thấy thư mục con.' : 'No subfolders found.'}</span>`;
+                return;
+            }
+            
+            folders.forEach(folder => {
+                const label = document.createElement('label');
+                label.className = 'folder-check-item';
+                
+                const isExcluded = activeExclusions.includes(folder);
+                label.innerHTML = `
+                    <input type="checkbox" ${!isExcluded ? 'checked' : ''} onchange="toggleFolderExclusion('${folder}', this.checked)">
+                    <span>📁 docs/<b>${folder}</b>/</span>
+                `;
+                listEl.appendChild(label);
+            });
+        }
+
+        function resetCalibration() {
+            activeWeights = {
+                critical: 5.0,
+                medium: 2.0,
+                low: 0.5
+            };
+            activeExclusions = ['researches', 'explorations'];
+            
+            try {
+                localStorage.setItem('calib_weights', JSON.stringify(activeWeights));
+                localStorage.setItem('calib_exclusions', JSON.stringify(activeExclusions));
+            } catch (e) {}
+            
+            for (const type of ['critical', 'medium', 'low']) {
+                document.getElementById(`weight-${type}-slider`).value = activeWeights[type];
+                document.getElementById(`weight-${type}-number`).value = activeWeights[type];
+            }
+            
+            renderFolderExclusionUI();
+            recalculateMetrics();
+        }
+
+        function getAnchorFolder(anchor) {
+            let clean = anchor;
+            if (clean.startsWith('docs/')) {
+                clean = clean.substring(5);
+            } else {
+                const match = clean.match(/Projects\/[^\/]+\/docs\/(.+)/);
+                if (match) {
+                    clean = match[1];
+                }
+            }
+            const slashIdx = clean.indexOf('/');
+            if (slashIdx !== -1) {
+                return clean.substring(0, slashIdx);
+            }
+            return '';
+        }
+
+        function recalculateMetrics() {
+            const activeDocs = allMarkdownFiles.filter(file => {
+                const slashIdx = file.indexOf('/');
+                const folder = slashIdx !== -1 ? file.substring(0, slashIdx) : '';
+                return !activeExclusions.includes(folder);
+            });
+
+            const activeDocsWithAnchors = new Set();
+            graphNodesData.forEach(node => {
+                node.isLinkedActive = false;
+                node.activeAnchors = [];
+                if (node.docAnchors && node.docAnchors.length > 0) {
+                    node.activeAnchors = node.docAnchors.filter(anchor => {
+                        const folder = getAnchorFolder(anchor);
+                        return !activeExclusions.includes(folder);
+                    });
+                    node.isLinkedActive = node.activeAnchors.length > 0;
+                    
+                    node.activeAnchors.forEach(anchor => {
+                        let docPath = anchor.split('#')[0];
+                        if (docPath.startsWith('docs/')) {
+                            docPath = docPath.substring(5);
+                        } else {
+                            const match = docPath.match(/Projects\/[^\/]+\/docs\/(.+)/);
+                            if (match) {
+                                docPath = match[1];
+                            }
+                        }
+                        activeDocsWithAnchors.add(docPath);
+                    });
+                }
+                
+                let weight = activeWeights.medium;
+                if (node.weightedClass === 'critical') {
+                    weight = activeWeights.critical;
+                } else if (node.weightedClass === 'low') {
+                    weight = activeWeights.low;
+                }
+                node.activeWeight = weight;
+            });
+
+            const activeDocsWithAnchorsCount = Array.from(activeDocsWithAnchors).filter(doc => activeDocs.includes(doc)).length;
+
+            let linkedWeight = 0;
+            let totalWeight = 0;
+            graphNodesData.forEach(node => {
+                totalWeight += node.activeWeight;
+                if (node.isLinkedActive) {
+                    linkedWeight += node.activeWeight;
+                }
+            });
+            const score = totalWeight > 0 ? Math.round((linkedWeight / totalWeight) * 100) : 100;
+
+            document.getElementById('dashboard-health-score').textContent = score;
             const circle = document.getElementById('progress-circle');
             const circumference = 471.24;
             const offset = circumference - (score / 100) * circumference;
             circle.style.strokeDashoffset = offset;
 
+            const label = document.getElementById('score-eval-label');
             if (score >= 90) {
                 circle.style.stroke = 'var(--success-color)';
-                const label = document.getElementById('score-eval-label');
                 label.textContent = t.scoreGold;
                 label.className = 'score-evaluation score-eval-gold';
             } else if (score >= 70) {
                 circle.style.stroke = 'var(--warning-color)';
-                const label = document.getElementById('score-eval-label');
                 label.textContent = t.scoreGood;
                 label.className = 'score-evaluation score-eval-good';
             } else {
                 circle.style.stroke = 'var(--danger-color)';
-                const label = document.getElementById('score-eval-label');
                 label.textContent = t.scorePoor;
                 label.className = 'score-evaluation score-eval-poor';
             }
@@ -1377,32 +1648,53 @@
                 }
             }
 
-            const docsPct = stats.totalDocs > 0 ? Math.round(stats.docsWithAnchors / stats.totalDocs * 100) : 0;
-            document.getElementById('stat-total-docs').textContent = stats.totalDocs;
-            document.getElementById('stat-docs-with-anchors-sub').textContent = t.docsWithAnchorsSub(stats.docsWithAnchors, docsPct);
+            const docsPct = activeDocs.length > 0 ? Math.round(activeDocsWithAnchorsCount / activeDocs.length * 100) : 0;
+            document.getElementById('stat-total-docs').textContent = activeDocs.length;
+            document.getElementById('stat-docs-with-anchors-sub').textContent = t.docsWithAnchorsSub(activeDocsWithAnchorsCount, docsPct);
             updateBadge('stat-docs-pct-badge', docsPct);
             
-            const nodesPct = stats.enrichableNodes > 0 ? Math.round(stats.linkedNodes / stats.enrichableNodes * 100) : 0;
-            document.getElementById('stat-total-nodes').textContent = stats.totalNodes;
-            document.getElementById('stat-linked-nodes-sub').textContent = t.linkedNodesSub(stats.linkedNodes, stats.enrichableNodes, nodesPct);
+            const linkedActiveNodes = graphNodesData.filter(n => n.isLinkedActive).length;
+            const nodesPct = graphNodesData.length > 0 ? Math.round(linkedActiveNodes / graphNodesData.length * 100) : 0;
+            document.getElementById('stat-total-nodes').textContent = graphNodesData.length;
+            document.getElementById('stat-linked-nodes-sub').textContent = t.linkedNodesSub(linkedActiveNodes, graphNodesData.length, nodesPct);
             updateBadge('stat-nodes-pct-badge', nodesPct);
 
-            document.getElementById('stat-god-nodes').textContent = `${stats.documentedGodNodes}/${stats.totalGodNodes}`;
-            const godRatio = stats.totalGodNodes > 0 ? Math.round(stats.documentedGodNodes / stats.totalGodNodes * 100) : 0;
+            const totalGod = graphNodesData.filter(n => n.weightedClass === 'critical').length;
+            const documentedGod = graphNodesData.filter(n => n.weightedClass === 'critical' && n.isLinkedActive).length;
+            document.getElementById('stat-god-nodes').textContent = `${documentedGod}/${totalGod}`;
+            const godRatio = totalGod > 0 ? Math.round(documentedGod / totalGod * 100) : 0;
             document.getElementById('stat-god-nodes-sub').textContent = t.godNodesSub(godRatio);
             updateBadge('stat-god-pct-badge', godRatio);
 
-            const healthPct = stats.totalDocs > 0 ? Math.round((stats.totalDocs - stats.staleDocsCount) / stats.totalDocs * 100) : 100;
+            const staleDocs = new Set();
+            graphNodesData.forEach(node => {
+                if (node.isStale && node.activeAnchors) {
+                    node.activeAnchors.forEach(anchor => {
+                        let docPath = anchor.split('#')[0];
+                        if (docPath.startsWith('docs/')) {
+                            docPath = docPath.substring(5);
+                        } else {
+                            const match = docPath.match(/Projects\/[^\/]+\/docs\/(.+)/);
+                            if (match) {
+                                docPath = match[1];
+                            }
+                        }
+                        staleDocs.add(docPath);
+                    });
+                }
+            });
+            const activeStaleDocsCount = Array.from(staleDocs).filter(doc => activeDocs.includes(doc)).length;
+            const healthPct = activeDocs.length > 0 ? Math.round((activeDocs.length - activeStaleDocsCount) / activeDocs.length * 100) : 100;
             document.getElementById('stat-stale-docs').textContent = healthPct + '%';
 
             const staleBox = document.getElementById('box-stale-status');
             const staleIconWrapper = document.getElementById('icon-stale-status');
             const healthBadge = document.getElementById('stat-health-pct-badge');
-            if (stats.staleDocsCount > 0) {
+            if (activeStaleDocsCount > 0) {
                 if (staleBox) staleBox.className = 'stat-box box-danger';
                 if (staleIconWrapper) staleIconWrapper.className = 'stat-box-icon-wrapper theme-danger';
                 document.getElementById('stat-stale-docs').style.color = 'var(--danger-color)';
-                document.getElementById('stat-stale-docs-sub').textContent = t.staleDocsSubWarning(stats.staleDocsCount);
+                document.getElementById('stat-stale-docs-sub').textContent = t.staleDocsSubWarning(activeStaleDocsCount);
                 if (healthBadge) {
                     healthBadge.textContent = t.badgeStale;
                     healthBadge.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
@@ -1422,79 +1714,16 @@
                 }
             }
 
-            // Apply tooltips to badges
-            const docsBadge = document.getElementById('stat-docs-pct-badge');
-            if (docsBadge) docsBadge.title = t.tooltipDocsPct;
-            const nodesBadge = document.getElementById('stat-nodes-pct-badge');
-            if (nodesBadge) nodesBadge.title = t.tooltipNodesPct;
-            const godBadge = document.getElementById('stat-god-pct-badge');
-            if (godBadge) godBadge.title = t.tooltipGodPct;
-            if (healthBadge) healthBadge.title = t.tooltipHealthPct;
-
             document.getElementById('count-all').textContent = graphNodesData.length;
             document.getElementById('count-critical').textContent = graphNodesData.filter(n => n.weightedClass === 'critical').length;
             document.getElementById('count-medium').textContent = graphNodesData.filter(n => n.weightedClass === 'medium').length;
             document.getElementById('count-low').textContent = graphNodesData.filter(n => n.weightedClass === 'low').length;
-            document.getElementById('count-unlinked').textContent = graphNodesData.filter(n => !n.isLinked).length;
+            document.getElementById('count-unlinked').textContent = graphNodesData.filter(n => !n.isLinkedActive).length;
             document.getElementById('count-unenriched').textContent = graphNodesData.filter(n => !n.isEnriched).length;
 
-            // Generate node type bar chart
-            const chartContainer = document.getElementById('node-type-chart');
-            if (chartContainer) {
-                chartContainer.innerHTML = '';
-                
-                const typeCounts = {};
-                graphNodesData.forEach(node => {
-                    const t = node.type || 'other';
-                    typeCounts[t] = (typeCounts[t] || 0) + 1;
-                });
-                
-                const sortedTypes = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]);
-                const maxCount = Math.max(...sortedTypes.map(t => t[1])) || 1;
-                
-                sortedTypes.forEach(([type, count]) => {
-                    const pct = (count / maxCount) * 100;
-                    
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'bar-column-wrapper';
-                    
-                    const bar = document.createElement('div');
-                    bar.className = 'bar-column';
-                    bar.style.height = `${pct}%`;
-                    
-                    const colors = {
-                        'file': 'linear-gradient(180deg, #2383e2 0%, rgba(35, 131, 226, 0.3) 100%)',
-                        'function': 'linear-gradient(180deg, #10b981 0%, rgba(16, 185, 129, 0.3) 100%)',
-                        'class': 'linear-gradient(180deg, #ea580c 0%, rgba(234, 88, 12, 0.3) 100%)',
-                        'interface': 'linear-gradient(180deg, #8b5cf6 0%, rgba(139, 92, 246, 0.3) 100%)',
-                        'variable': 'linear-gradient(180deg, #6b7280 0%, rgba(107, 114, 128, 0.3) 100%)'
-                    };
-                    if (colors[type]) {
-                        bar.style.background = colors[type];
-                    }
-                    
-                    const valSpan = document.createElement('span');
-                    valSpan.className = 'bar-value';
-                    valSpan.textContent = count;
-                    
-                    const labelDiv = document.createElement('div');
-                    labelDiv.className = 'bar-label';
-                    const displayType = t['type' + type.charAt(0).toUpperCase() + type.slice(1)] || type;
-                    labelDiv.textContent = displayType;
-                    labelDiv.title = displayType;
-                    
-                    bar.appendChild(valSpan);
-                    wrapper.appendChild(bar);
-                    wrapper.appendChild(labelDiv);
-                    chartContainer.appendChild(wrapper);
-                });
-            }
-
-            // Generate node weight bar chart (Stacked)
             const weightChartContainer = document.getElementById('node-weight-chart');
             if (weightChartContainer) {
                 weightChartContainer.innerHTML = '';
-                
                 const weightDetails = {
                     'critical': { total: 0, unlinked: 0, unenriched: 0, completed: 0 },
                     'medium': { total: 0, unlinked: 0, unenriched: 0, completed: 0 },
@@ -1505,7 +1734,7 @@
                     const w = node.weightedClass || 'low';
                     if (weightDetails[w]) {
                         weightDetails[w].total++;
-                        if (!node.isLinked) {
+                        if (!node.isLinkedActive) {
                             weightDetails[w].unlinked++;
                         } else if (!node.isEnriched) {
                             weightDetails[w].unenriched++;
@@ -1541,7 +1770,6 @@
                     const unlinkedPct = details.total > 0 ? (details.unlinked / details.total) * 100 : 0;
                     const unenrichedPct = details.total > 0 ? (details.unenriched / details.total) * 100 : 0;
                     
-                    // Render Completed segment
                     if (details.completed > 0) {
                         const seg = document.createElement('div');
                         seg.className = `bar-segment segment-completed-${weight}`;
@@ -1549,8 +1777,6 @@
                         seg.title = t.completed + `${details.completed}` + t.nodes + ` (${Math.round(completedPct)}%)`;
                         bar.appendChild(seg);
                     }
-                    
-                    // Render Unlinked segment
                     if (details.unlinked > 0) {
                         const seg = document.createElement('div');
                         seg.className = 'bar-segment segment-unlinked';
@@ -1558,8 +1784,6 @@
                         seg.title = t.legendUnlinked + `: ${details.unlinked}` + t.nodes + ` (${Math.round(unlinkedPct)}%)`;
                         bar.appendChild(seg);
                     }
-                    
-                    // Render Unenriched segment
                     if (details.unenriched > 0) {
                         const seg = document.createElement('div');
                         seg.className = 'bar-segment segment-unenriched';
@@ -1584,12 +1808,11 @@
                 });
             }
 
-            // Generate Priority Hotspots
             const hotspotsList = document.getElementById('hotspots-list');
             if (hotspotsList) {
                 hotspotsList.innerHTML = '';
                 const hotspots = graphNodesData
-                    .filter(n => !n.isLinked || !n.isEnriched)
+                    .filter(n => !n.isLinkedActive || !n.isEnriched)
                     .sort((a, b) => (b.blastRadius || 0) - (a.blastRadius || 0))
                     .slice(0, 3);
                 
@@ -1597,10 +1820,9 @@
                     hotspots.forEach(node => {
                         const li = document.createElement('li');
                         li.className = 'hotspot-item';
-                        
                         const displayType = t['type' + node.type.charAt(0).toUpperCase() + node.type.slice(1)] || node.type;
                         let reason = '';
-                        if (!node.isLinked) {
+                        if (!node.isLinkedActive) {
                             reason = lang === 'vi' ? 'Chưa gán link' : 'Unlinked';
                         } else {
                             reason = lang === 'vi' ? 'Chưa mô tả AI' : 'Unenriched';
@@ -1626,7 +1848,6 @@
                             document.getElementById('node-search').value = '';
                             searchQuery = '';
                             renderTable();
-                            
                             const rows = document.querySelectorAll('#nodes-table-body tr');
                             let targetRow = null;
                             rows.forEach(r => {
@@ -1634,7 +1855,6 @@
                                     targetRow = r;
                                 }
                             });
-                            
                             if (targetRow) {
                                 targetRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 targetRow.style.backgroundColor = 'rgba(35, 131, 226, 0.15)';
@@ -1657,8 +1877,85 @@
                 }
             }
 
-            updateSortIcons();
             renderTable();
+        }
+
+        function initializeDashboard() {
+            for (const type of ['critical', 'medium', 'low']) {
+                const slider = document.getElementById(`weight-${type}-slider`);
+                const num = document.getElementById(`weight-${type}-number`);
+                if (slider) slider.value = activeWeights[type];
+                if (num) num.value = activeWeights[type];
+            }
+
+            const stats = dashboardStats;
+            const scoreCard = document.querySelector('.score-card');
+            if (scoreCard) {
+                scoreCard.title = t.tooltipHealthScore;
+                scoreCard.style.cursor = 'help';
+            }
+
+            const docsBadge = document.getElementById('stat-docs-pct-badge');
+            if (docsBadge) docsBadge.title = t.tooltipDocsPct;
+            const nodesBadge = document.getElementById('stat-nodes-pct-badge');
+            if (nodesBadge) nodesBadge.title = t.tooltipNodesPct;
+            const godBadge = document.getElementById('stat-god-pct-badge');
+            if (godBadge) godBadge.title = t.tooltipGodPct;
+            const healthBadge = document.getElementById('stat-health-pct-badge');
+            if (healthBadge) healthBadge.title = t.tooltipHealthPct;
+
+            const chartContainer = document.getElementById('node-type-chart');
+            if (chartContainer) {
+                chartContainer.innerHTML = '';
+                const typeCounts = {};
+                graphNodesData.forEach(node => {
+                    const t = node.type || 'other';
+                    typeCounts[t] = (typeCounts[t] || 0) + 1;
+                });
+                
+                const sortedTypes = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]);
+                const maxCount = Math.max(...sortedTypes.map(t => t[1])) || 1;
+                
+                sortedTypes.forEach(([type, count]) => {
+                    const pct = (count / maxCount) * 100;
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'bar-column-wrapper';
+                    
+                    const bar = document.createElement('div');
+                    bar.className = 'bar-column';
+                    bar.style.height = `${pct}%`;
+                    
+                    const colors = {
+                        'file': 'linear-gradient(180deg, #2383e2 0%, rgba(35, 131, 226, 0.3) 100%)',
+                        'function': 'linear-gradient(180deg, #10b981 0%, rgba(16, 185, 129, 0.3) 100%)',
+                        'class': 'linear-gradient(180deg, #ea580c 0%, rgba(234, 88, 12, 0.3) 100%)',
+                        'interface': 'linear-gradient(180deg, #8b5cf6 0%, rgba(139, 92, 246, 0.3) 100%)',
+                        'variable': 'linear-gradient(180deg, #6b7280 0%, rgba(107, 114, 128, 0.3) 100%)'
+                    };
+                    if (colors[type]) {
+                        bar.style.background = colors[type];
+                    }
+                    
+                    const valSpan = document.createElement('span');
+                    valSpan.className = 'bar-value';
+                    valSpan.textContent = count;
+                    
+                    const labelDiv = document.createElement('div');
+                    labelDiv.className = 'bar-label';
+                    const displayType = t['type' + type.charAt(0).toUpperCase() + type.slice(1)] || type;
+                    labelDiv.textContent = displayType;
+                    labelDiv.title = displayType;
+                    
+                    bar.appendChild(valSpan);
+                    wrapper.appendChild(bar);
+                    wrapper.appendChild(labelDiv);
+                    chartContainer.appendChild(wrapper);
+                });
+            }
+
+            renderFolderExclusionUI();
+            recalculateMetrics();
+            updateSortIcons();
         }
 
         let sortKey = 'degree';
@@ -1721,7 +2018,7 @@
                 if (currentFilter === 'critical') return node.weightedClass === 'critical';
                 if (currentFilter === 'medium') return node.weightedClass === 'medium';
                 if (currentFilter === 'low') return node.weightedClass === 'low';
-                if (currentFilter === 'unlinked') return !node.isLinked;
+                if (currentFilter === 'unlinked') return !node.isLinkedActive;
                 if (currentFilter === 'unenriched') return !node.isEnriched;
 
                 return true;
@@ -1745,8 +2042,8 @@
                 } else if (sortKey === 'blastRadius') {
                     comparison = (a.blastRadius || 0) - (b.blastRadius || 0);
                 } else if (sortKey === 'status') {
-                    const aStatus = a.isLinked ? 1 : 0;
-                    const bStatus = b.isLinked ? 1 : 0;
+                    const aStatus = a.isLinkedActive ? 1 : 0;
+                    const bStatus = b.isLinkedActive ? 1 : 0;
                     comparison = aStatus - bStatus;
                 }
                 
@@ -1825,18 +2122,17 @@
                 tr.appendChild(blastRadiusTd);
 
                 const docsTd = document.createElement('td');
-                const docStatusBadge = node.isLinked 
+                const docStatusBadge = node.isLinkedActive 
                     ? `<span class="badge badge-status-linked"><i data-lucide="check-circle" style="width: 10px; height: 10px;"></i> ${t.badgeLinked}</span>`
                     : `<span class="badge badge-status-unlinked"><i data-lucide="x-circle" style="width: 10px; height: 10px;"></i> ${t.badgeUnlinked}</span>`;
                 
                 let anchorsHtml = '';
-                if (node.isLinked && node.docAnchors && node.docAnchors.length > 0) {
+                if (node.docAnchors && node.docAnchors.length > 0) {
                     anchorsHtml = '<div class="docs-links-container" style="margin-top: 6px;">';
                     node.docAnchors.forEach(anchor => {
                         const parts = anchor.split('#');
                         let docPath = parts[0];
                         
-                        // Clean "docs/" prefix if exists, as output HTML is flat under .html/
                         if (docPath.startsWith('docs/')) {
                             docPath = docPath.substring(5);
                         } else {
@@ -1850,7 +2146,11 @@
                         const displayName = docPath.split('/').pop();
                         const hrefUrl = htmlPath + (parts[1] ? '#' + parts[1] : '');
                         
-                        anchorsHtml += `<a href="${hrefUrl}" class="doc-link-item" onclick="event.stopPropagation(); event.preventDefault(); window.parent.postMessage({ type: 'navigate', href: '${hrefUrl}', baseUrl: window.location.href }, '*');"><i data-lucide="link" style="width: 10px; height: 10px;"></i> ${displayName}</a>`;
+                        const folder = getAnchorFolder(anchor);
+                        const isExcluded = activeExclusions.includes(folder);
+                        const excludedClass = isExcluded ? ' link-excluded' : '';
+                        
+                        anchorsHtml += `<a href="${hrefUrl}" class="doc-link-item${excludedClass}" onclick="event.stopPropagation(); event.preventDefault(); if(!${isExcluded}) { window.parent.postMessage({ type: 'navigate', href: '${hrefUrl}', baseUrl: window.location.href }, '*'); }"><i data-lucide="link" style="width: 10px; height: 10px;"></i> ${displayName}</a>`;
                     });
                     anchorsHtml += '</div>';
                 }
@@ -2163,7 +2463,6 @@
                 'cập nhật neo tài liệu bị cũ', 'update stale document anchor'
             ];
             
-            // Check for combined suggestion + custom comment
             let suggestionStr = commentStr;
             let customComment = '';
             const separatorIdx = commentStr.indexOf(' | ');
@@ -2180,12 +2479,28 @@
                 const node = graphNodesData.find(n => n.id === inlineSelectedNode.id);
                 if (node) {
                     if (lang === 'vi') {
+                        const action = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
+                        
                         if (suggestionStr === 'phân tích tác động' || suggestionStr === 'phân tích tác động và ảnh hưởng' || suggestionStr === 'phân tích tác động ảnh hưởng') {
-                            const action = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
                             formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Thành phần mã \`${node.name}\` (${node.type}) có Bán kính ảnh hưởng (Blast Radius) là ${node.blastRadius || 0}. Hãy phân tích tác động nếu chỉnh sửa thành phần này${action}.`;
                         } else if (suggestionStr === 'cập nhật neo tài liệu bị cũ') {
-                            const action = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
                             formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Neo tài liệu (docAnchor) của thành phần mã \`${node.name}\` (${node.type}) đang bị cũ (stale) do code thay đổi chữ ký (signature) hoặc cấu trúc. Hãy phân tích code tại \`${node.filePath}\` và cập nhật lại neo tài liệu (docAnchor) trong tài liệu liên quan để đồng bộ${action}.`;
+                        } else if (suggestionStr === 'viết mô tả tóm tắt summary' || suggestionStr === 'write semantic summary') {
+                            if (node.isEnriched) {
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Thành phần mã \`${node.name}\` (${node.type}) đã có mô tả ngữ nghĩa (AI enrichment) nhưng cần cập nhật. Hãy phân tích mã nguồn tại \`${node.filePath}\` để cập nhật mô tả ngữ nghĩa (AI enrichment) chi tiết${action}.`;
+                            } else {
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Thành phần mã \`${node.name}\` (${node.type}) chưa có mô tả ngữ nghĩa (AI enrichment). Hãy phân tích mã nguồn tại \`${node.filePath}\` để viết mô tả ngữ nghĩa (AI enrichment) chi tiết${action}.`;
+                            }
+                        } else if (suggestionStr === 'tìm tài liệu phù hợp để neo' || suggestionStr === 'find suitable doc to link') {
+                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Thành phần mã \`${node.name}\` (${node.type}) chưa được liên kết với tài liệu nào. Hãy phân tích mã nguồn tại \`${node.filePath}\` và đề xuất file tài liệu phù hợp để neo tài liệu (docAnchor)${action}.`;
+                        } else if (suggestionStr === 'viết tài liệu kỹ thuật mới cho thành phần này' || suggestionStr === 'write new technical doc for this') {
+                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Thành phần mã \`${node.name}\` (${node.type}) chưa được liên kết với tài liệu nào. Hãy phân tích mã nguồn tại \`${node.filePath}\` và viết tài liệu kỹ thuật mới cho thành phần này${action}.`;
+                        } else if (suggestionStr === 'giải thích hoạt động của code' || suggestionStr === 'explain how code works') {
+                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Đối với thành phần mã \`${node.name}\` tại \`${node.filePath}\`, hãy giải thích hoạt động của code${action}.`;
+                        } else if (suggestionStr === 'sửa code liên quan' || suggestionStr === 'edit related code') {
+                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Đối với thành phần mã \`${node.name}\` tại \`${node.filePath}\`, hãy sửa code liên quan${action}.`;
+                        } else if (suggestionStr === 'viết lại hoặc tối ưu' || suggestionStr === 'rewrite or optimize') {
+                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Đối với thành phần mã \`${node.name}\` tại \`${node.filePath}\`, hãy viết lại hoặc tối ưu hóa code${action}.`;
                         } else if (suggestionStr === 'tất cả gợi ý') {
                             const missingStatus = [];
                             const missingActions = [];
@@ -2193,7 +2508,7 @@
                                 missingStatus.push("có neo tài liệu (docAnchor) bị cũ (stale)");
                                 missingActions.push("cập nhật lại neo tài liệu (docAnchor)");
                             }
-                            if (!node.isLinked) {
+                            if (!node.isLinkedActive) {
                                 missingStatus.push("chưa được liên kết với tài liệu nào");
                                 missingActions.push("đề xuất file tài liệu phù hợp để neo tài liệu (docAnchor)");
                             }
@@ -2226,45 +2541,40 @@
                                 const actionSuffix = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
                                 formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Đối với thành phần mã \`${node.name}\` tại \`${node.filePath}\`, hãy giải thích hoạt động của code, đồng thời sửa code liên quan${actionSuffix}.`;
                             }
-                        } else if (!node.isLinked) {
-                            if (suggestionStr === 'viết tài liệu kỹ thuật mới cho thành phần này') {
-                                const action = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
-                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Thành phần mã \`${node.name}\` (${node.type}) chưa được liên kết với tài liệu nào. Hãy phân tích mã nguồn tại \`${node.filePath}\` và viết tài liệu kỹ thuật mới cho thành phần này${action}.`;
-                            } else {
-                                const action = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
-                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Thành phần mã \`${node.name}\` (${node.type}) chưa được liên kết với tài liệu nào. Hãy phân tích mã nguồn tại \`${node.filePath}\` và đề xuất file tài liệu phù hợp để neo tài liệu (docAnchor)${action}.`;
-                            }
-                        } else if (!node.isEnriched) {
-                            if (suggestionStr === 'giải thích hoạt động của code') {
-                                const action = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
-                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Thành phần mã \`${node.name}\` (${node.type}) chưa có mô tả ngữ nghĩa (AI enrichment). Hãy phân tích mã nguồn tại \`${node.filePath}\` để giải thích hoạt động của code${action}.`;
-                            } else {
-                                const action = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
-                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Thành phần mã \`${node.name}\` (${node.type}) chưa có mô tả ngữ nghĩa (AI enrichment). Hãy phân tích mã nguồn tại \`${node.filePath}\` để viết mô tả ngữ nghĩa (AI enrichment) chi tiết${action}.`;
-                            }
-                        } else if (inlineSelectedText && inlineSelectedText !== t.emptySummary) {
-                            const isEnrichText = node.summary && node.summary.includes(inlineSelectedText);
-                            const contextLabel = isEnrichText 
-                                ? 'liên quan đến thông tin mô tả ngữ nghĩa (AI enrichment)' 
-                                : 'liên quan đến ngữ cảnh';
-                            
-                            if (hasComment) {
-                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Đối với thành phần mã \`${node.name}\` tại \`${node.filePath}\`, ${contextLabel}: "${inlineSelectedText}", hãy thực hiện yêu cầu chỉnh sửa: "${feedbackStr}"`;
-                            } else {
-                                const action = feedbackStr || 'kiểm tra';
-                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Đối với thành phần mã \`${node.name}\` tại \`${node.filePath}\`, ${contextLabel}: "${inlineSelectedText}", hãy thực hiện yêu cầu: "${action}".`;
-                            }
                         } else {
-                            const action = feedbackStr || 'chỉnh sửa code';
-                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Đối với thành phần mã \`${node.name}\` tại \`${node.filePath}\`, hãy thực hiện yêu cầu: "${action}".`;
+                            if (inlineSelectedText && inlineSelectedText !== t.emptySummary) {
+                                const isEnrichText = node.summary && node.summary.includes(inlineSelectedText);
+                                const contextLabel = isEnrichText 
+                                    ? 'liên quan đến thông tin mô tả ngữ nghĩa (AI enrichment)' 
+                                    : 'liên quan đến ngữ cảnh';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Đối với thành phần mã \`${node.name}\` tại \`${node.filePath}\`, ${contextLabel}: "${inlineSelectedText}", hãy thực hiện yêu cầu: "${feedbackStr || 'kiểm tra'}".`;
+                            } else {
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Đối với thành phần mã \`${node.name}\` tại \`${node.filePath}\`, hãy thực hiện yêu cầu: "${feedbackStr || 'chỉnh sửa code'}".`;
+                            }
                         }
                     } else {
+                        const action = hasComment ? `, and handle request: "${feedbackStr}"` : '';
+                        
                         if (suggestionStr === 'analyze dependency impact') {
-                            const action = hasComment ? `, and handle request: "${feedbackStr}"` : '';
                             formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Code entity \`${node.name}\` (${node.type}) has a Blast Radius of ${node.blastRadius || 0}. Please perform an impact analysis if this component is modified${action}.`;
                         } else if (suggestionStr === 'update stale document anchor') {
-                            const action = hasComment ? `, and handle request: "${feedbackStr}"` : '';
                             formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Graph anchor for code entity \`${node.name}\` (${node.type}) is stale due to signature or structural changes. Please analyze code at \`${node.filePath}\` and update the document anchor (docAnchor) in the related document to sync${action}.`;
+                        } else if (suggestionStr === 'viết mô tả tóm tắt summary' || suggestionStr === 'write semantic summary') {
+                            if (node.isEnriched) {
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Code entity \`${node.name}\` (${node.type}) already has a semantic summary (AI enrichment) but needs updating. Please analyze the source code at \`${node.filePath}\` to update the semantic summary (AI enrichment) in detail${action}.`;
+                            } else {
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Code entity \`${node.name}\` (${node.type}) lacks a semantic summary (AI enrichment). Please analyze the source code at \`${node.filePath}\` to generate a detailed semantic summary (AI enrichment)${action}.`;
+                            }
+                        } else if (suggestionStr === 'tìm tài liệu phù hợp để neo' || suggestionStr === 'find suitable doc to link') {
+                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Code entity \`${node.name}\` (${node.type}) is not linked to any documentation. Please analyze the source code at \`${node.filePath}\` and suggest a suitable document anchor (docAnchor)${action}.`;
+                        } else if (suggestionStr === 'viết tài liệu kỹ thuật mới cho thành phần này' || suggestionStr === 'write new technical doc for this') {
+                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Code entity \`${node.name}\` (${node.type}) is not linked to any documentation. Please analyze the source code at \`${node.filePath}\` and write a new technical document for this${action}.`;
+                        } else if (suggestionStr === 'explain how code works') {
+                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] For code entity \`${node.name}\` at \`${node.filePath}\`, please explain how the code works${action}.`;
+                        } else if (suggestionStr === 'edit related code') {
+                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] For code entity \`${node.name}\` at \`${node.filePath}\`, please edit the related code${action}.`;
+                        } else if (suggestionStr === 'rewrite or optimize') {
+                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] For code entity \`${node.name}\` at \`${node.filePath}\`, please rewrite or optimize the code${action}.`;
                         } else if (suggestionStr === 'all suggestions') {
                             const missingStatus = [];
                             const missingActions = [];
@@ -2272,7 +2582,7 @@
                                 missingStatus.push("has a stale document anchor (docAnchor)");
                                 missingActions.push("update the stale document anchor (docAnchor)");
                             }
-                            if (!node.isLinked) {
+                            if (!node.isLinkedActive) {
                                 missingStatus.push("is not linked to any document");
                                 missingActions.push("suggest a suitable document for the document anchor (docAnchor)");
                             }
@@ -2305,41 +2615,15 @@
                                 const actionSuffix = hasComment ? `, and handle request: "${feedbackStr}"` : '';
                                 formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] For code entity \`${node.name}\` at \`${node.filePath}\`, please explain how the code works, and edit the related code${actionSuffix}.`;
                             }
-                        } else if (!node.isLinked) {
-                            if (suggestionStr === 'write new technical doc for this') {
-                                const action = hasComment ? `, and handle request: "${feedbackStr}"` : '';
-                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Code entity \`${node.name}\` (${node.type}) is not linked to any documentation. Please analyze the source code at \`${node.filePath}\` and write a new technical document for this${action}.`;
-                            } else {
-                                const action = hasComment ? `, and handle request: "${feedbackStr}"` : '';
-                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Code entity \`${node.name}\` (${node.type}) is not linked to any documentation. Please analyze the source code at \`${node.filePath}\` and suggest a suitable document anchor (docAnchor)${action}.`;
-                            }
-                        } else if (!node.isEnriched) {
-                            if (suggestionStr === 'explain how code works') {
-                                const action = hasComment ? `, and handle request: "${feedbackStr}"` : '';
-                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Code entity \`${node.name}\` (${node.type}) lacks a semantic summary (AI enrichment). Please analyze the source code at \`${node.filePath}\` to explain how the code works${action}.`;
-                            } else {
-                                const action = hasComment ? `, and handle request: "${feedbackStr}"` : '';
-                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Code entity \`${node.name}\` (${node.type}) lacks a semantic summary (AI enrichment). Please analyze the source code at \`${node.filePath}\` to generate a detailed semantic summary (AI enrichment)${action}.`;
-                            }
-                        } else if (inlineSelectedText && inlineSelectedText !== t.emptySummary) {
-                            const isEnrichText = node.summary && node.summary.includes(inlineSelectedText);
-                            const contextLabel = isEnrichText 
-                                ? 'regarding the semantic summary (AI enrichment)' 
-                                : 'regarding the selected context';
-                            
-                            if (hasComment) {
-                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] For code entity \`${node.name}\` at \`${node.filePath}\`, ${contextLabel}: "${inlineSelectedText}", please perform edit: "${feedbackStr}"`;
-                            } else {
-                                const action = feedbackStr || 'check';
-                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] For code entity \`${node.name}\` at \`${node.filePath}\`, ${contextLabel}: "${inlineSelectedText}", please handle: "${action}".`;
-                            }
                         } else {
-                            if (suggestionStr === 'all suggestions') {
-                                const actionSuffix = hasComment ? `, and handle request: "${feedbackStr}"` : '';
-                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] For code entity \`${node.name}\` at \`${node.filePath}\`, please explain how the code works, and edit the related code${actionSuffix}.`;
+                            if (inlineSelectedText && inlineSelectedText !== t.emptySummary) {
+                                const isEnrichText = node.summary && node.summary.includes(inlineSelectedText);
+                                const contextLabel = isEnrichText 
+                                    ? 'regarding the semantic summary (AI enrichment)' 
+                                    : 'regarding the selected context';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] For code entity \`${node.name}\` at \`${node.filePath}\`, ${contextLabel}: "${inlineSelectedText}", please handle: "${feedbackStr || 'check'}".`;
                             } else {
-                                const action = feedbackStr || 'edit code';
-                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] For code entity \`${node.name}\` at \`${node.filePath}\`, please handle request: "${action}".`;
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] For code entity \`${node.name}\` at \`${node.filePath}\`, please handle request: "${feedbackStr || 'edit code'}".`;
                             }
                         }
                     }
