@@ -52,6 +52,7 @@ Follow the steps in `.agents/skills/scan-sec/SKILL.md` to:
 - Run in **SMALL Mode** (inline) or **LARGE Mode** (sequential chunking).
 - Trace data flow using **L1-L4 trust classification** (Reasoning-First).
 - If `--graph` is active, call `graph-analyzer.js` to enrich findings with caller count, Mermaid call tree, and suggested remediation points.
+- **Pattern Verify (Step G, para-graph §4.2):** After graph analysis, run `grep_search` to cross-validate inline pattern counts (e.g., `details: err.message`, `console.log(error)`) against graph estimates. Log discrepancies: `⚠️ Pattern Verify: Graph estimated N files, grep verified M files`.
 
 ### 4. Output Results
 Generate a bilingual markdown report and save to:

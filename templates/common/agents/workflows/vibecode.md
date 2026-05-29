@@ -18,7 +18,7 @@ Execution mode controller that defines HOW the Agent approaches code work. Each 
 | `loop` | Iterative refinement — repeat until zero errors | Critical features, complex logic |
 | `auto` | Fully automated — execute plan phases sequentially | Well-defined plans, routine tasks |
 | `review` | Plan audit — check logic, security, token budget | Before executing any plan |
-| `session` | Dynamic session loop — code in milestones, auto-commit after checkpoints, suggest TDD/QA/Brainstorm | Fast coding, bug fixes, ad-hoc changes |
+| `session` | Dynamic session loop — JIT Phase creation, mandatory Quality Gate (/brainstorm, /qa, TDD, --graph, --hardened), auto-commit after checkpoints | Fast coding, bug fixes, ad-hoc changes |
 
 ### Global Flag: `--sandbox`
 
@@ -36,6 +36,9 @@ Append `--sandbox` to ANY mode to redirect all writes to `Projects/_playground/v
 | `review plan.md --sandbox --max 5` | Review+fix with custom max iterations |
 | `session topic` | Start dynamic session plan & execute in milestones |
 | `session topic --tdd` | Start dynamic session with forced TDD mode |
+| `session` | Start DSP Draft (no topic) — phases added JIT as user requests goals |
+| `session --graph` | Start DSP Draft with graph-aware phases |
+| `session --hardened` | Start DSP Draft with auto-detect + forced TDD on sensitive code |
 
 ### Mode Chaining
 
@@ -77,6 +80,12 @@ test -d "Projects/$PROJECT" && echo "✅ Project exists" || echo "❌ Project no
 
 # Active plan
 grep -o 'active_plan:.*' "Projects/$PROJECT/project.md" 2>/dev/null || echo "⚠️ No active plan"
+
+# Start Dynamic Session KI Memory (Only for execution modes, not read-only review)
+if [ "[mode]" != "review" ]; then
+  PLAN_PATH=$(grep -oP 'active_plan:\s*"\K[^"]+' "Projects/$PROJECT/project.md" 2>/dev/null || grep -oP "active_plan:\s*\K[^\s]+" "Projects/$PROJECT/project.md" 2>/dev/null || echo "N/A")
+  bash .agents/skills/vibecode/scripts/session-manager.sh start "$PROJECT" "$PLAN_PATH" "[target]"
+fi
 ```
 
 Agent MUST then:
@@ -341,6 +350,13 @@ IF project has `.beads/graph/` directory:
    - **metadata:** `{ "iterations": N, "status": "complete|partial|failed", "patterns": ["P1", ...] }`
 2. Call `memory_curate(projectName)` to consolidate memory events.
 
+// turbo
+
+```bash
+# Reset Dynamic Session KI Memory
+bash .agents/skills/vibecode/scripts/session-manager.sh stop
+```
+
 **If `--sandbox` and status = ✅ Complete:**
 
 ```
@@ -438,57 +454,182 @@ Phase [Y]: 🔨 Task 2/4
 [What went well, what needed loop-mode fallback, unexpected issues]
 ```
 
+// turbo
+
+```bash
+# Reset Dynamic Session KI Memory
+bash .agents/skills/vibecode/scripts/session-manager.sh stop
+```
+
 ---
 
-## ⚡ Mode: session [topic] [--tdd] [--qa] [--graph]
+## ⚡ Mode: session [topic] [--tdd] [--qa] [--graph] [--hardened]
 
-> **Purpose:** Dynamic session-based development. Code in milestones (sprint-lets), run checkpoints, auto-commit code, and proactively receive quality tool suggestions (TDD, QA, Brainstorm) as requirements evolve.
-> **Target:** Session topic/slug (e.g., `refactor-auth`).
+> **Purpose:** Dynamic session-based development. Code in milestones (sprint-lets), run checkpoints, auto-commit code, and proactively receive quality tool suggestions (/brainstorm, /qa, TDD, --graph, --hardened) as requirements evolve. Supports JIT Phase creation for free-form coding sessions.
+> **Target:** Session topic/slug (e.g., `refactor-auth`). If omitted, creates a DSP Draft with no predefined goals.
 > **Global flag:** `--sandbox` confines writes to sandbox and requires explicit copy on success.
+
+### Command Variants
+
+| Command | Behavior |
+|:--|:--|
+| `session [topic]` | Start DSP with topic → Phase 1 ready (existing behavior) |
+| `session [topic] --tdd` | Start DSP with topic, force TDD mode on all phases |
+| `session` (no args) | Start DSP Draft → phases added JIT as user requests goals |
+| `session --graph` | Start DSP Draft with graph-aware phases |
+| `session --hardened` | Start DSP Draft with auto-detect + forced TDD on sensitive code |
 
 ### Steps
 
 #### 1. Session Initialization
 
-1. **Auto-Create DSP File:** Agent automatically creates a dynamic session plan:
+**Load references:**
+- Read `skills/vibecode/references/session-quality-gate.md` (Quality Gate template + sensitive keywords)
+- Read `skills/plan/references/session-plan.md` (DSP templates)
+
+**Branch A — Topic-Based DSP** (`/vibecode session [topic]`):
+
+1. **Auto-Create DSP File:** Agent creates a dynamic session plan using **Template A**:
    `Projects/[project-name]/artifacts/plans/v1.x.x-[YYYY-MM-DD]-session-[topic].md` (or exact version if known).
 2. **Activate Immediately:** Save the file with `Status: 🔨 Active` (skipping the preliminary draft audit gate).
 3. **Queue Initial Milestone:** Identify the first task/milestone to complete and add it as `Phase 1` in the DSP file.
+4. → Proceed to **Step 2 (Quality Gate)** for Phase 1.
 
-#### 2. Milestone Execution Loop (Code by Milestone)
+**Branch B — DSP Draft** (`/vibecode` or `/vibecode session`):
+
+1. **Determine Sequence Number:**
+   ```bash
+   # Scan existing DSP Draft files for today
+   ls artifacts/plans/v1.x.x-session-$(date +%Y-%m-%d)-*.md 2>/dev/null \
+     | grep -oP '\d{2}(?=\.md$)' \
+     | sort -n | tail -1
+   # If empty → NN=01, else → NN = max + 1 (zero-padded)
+   ```
+2. **Auto-Create DSP Draft:** Create file using **Template B**:
+   `Projects/[project-name]/artifacts/plans/v1.x.x-session-[YYYY-MM-DD]-[NN].md`
+3. **Activate Immediately:** Save with `Status: 🔨 Active`, empty milestone queue.
+4. **Wait for User:** Agent announces session is ready and waits for user to request a specific goal.
+5. → Proceed to **Step 1b (Intent Detection)** to listen for goals.
+
+#### 1b. Intent Detection (Branch B only — JIT Phase Creation)
+
+When running in DSP Draft mode, Agent actively listens for action intent in user messages.
+
+**Detection keywords** (loaded from `references/session-quality-gate.md`):
+- Vietnamese: `thêm`, `sửa`, `fix`, `tạo`, `xóa`, `refactor`, `chỉnh`, `cập nhật`...
+- English: `add`, `create`, `remove`, `fix`, `update`, `change`, `modify`, `refactor`...
+
+**When action intent detected:**
+
+```
+🎯 DETECTED GOAL: "[extracted goal from user message]"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Create Phase [N] for this goal? (y/n/refine)
+```
+
+**Rules:**
+- Agent MUST ask user confirmation before creating a Phase — NEVER auto-create silently.
+- Agent MUST NOT interpret questions or discussions as action requests.
+- If unsure whether user wants action or discussion → ASK, don't assume.
+- User can say "refine" to adjust the goal description before creating the Phase.
+
+**After user confirms → proceed to Step 2 (Quality Gate).**
+
+#### 2. Phase-Level Quality Gate (MANDATORY — ALL phases, ALL branches)
+
+> ⛔ **CHECKPOINT:** Agent MUST present this gate at the START of EVERY Phase.
+> This gate is NON-SKIPPABLE even for trivial tasks.
+
+**2a. Context Reload (MANDATORY):** At the start of EVERY Phase, Agent MUST:
+1. Read the **§ Phase Context Reload** table in `skills/vibecode/SKILL.md`
+2. Execute the **Mandatory** reload list (project rules, skills, domain skill)
+3. Execute the **Conditional** reload list based on tools activated in the Quality Gate
+
+> **Why:** Long sessions cause context drift. Reloading at Phase boundaries ensures
+> the Agent has fresh project rules, domain knowledge, and tool-specific guidance.
+> The sidecar skill centralizes all routing — the workflow only says WHEN, the skill says WHAT.
+
+**2b. Pre-analysis:** Before presenting the gate, Agent performs:
+- Scan user's goal description against the **Sensitive Keywords Registry** (from `references/session-quality-gate.md`).
+- If `--graph` is available: run `graph_impact_analysis` on target files to determine blast radius.
+- **Pattern Verify (Step G, para-graph §4.2):** If analysis involves inline code patterns, run `grep_search` to cross-validate file counts against graph estimates.
+- Estimate task complexity (🟢 Low / 🟡 Medium / 🔴 High).
+
+**2c. Present Quality Gate:**
+
+```
+📋 PHASE [N] QUALITY GATE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Goal: [Phase goal description]
+
+Proposed quality tools for this phase:
+
+  Pre-code (run BEFORE coding):
+  ⚗️ /brainstorm   → [✅ Recommended | ⚪ Optional] — [Reason]
+  📋 /qa           → [✅ Recommended | ⚪ Optional] — [Reason]
+
+  During dev (activate WHILE coding):
+  🧪 TDD Mode      → [✅ Recommended | ⚪ Optional] — [Reason]
+  🔍 --graph       → [✅ Recommended | ⚪ Optional] — [Reason]
+  🔒 --hardened    → [✅ Recommended | ⚪ Optional] — [Reason]
+
+💡 Recommended flow: brainstorm → QA stress-test → then code with TDD + --graph
+Select tools to activate: (all / pick / none)
+```
+
+**2d. Auto-recommend logic** (from `references/session-quality-gate.md`):
+- `/brainstorm` → YES if architecture unclear, multiple valid approaches, new patterns
+- `/qa` → YES if complex business logic, security-critical, edge cases likely
+- `TDD` → YES if logic-heavy, DB/API changes, business rules
+- `--graph` → YES if blast radius ≥ 3 files, cross-module dependency
+- `--hardened` → YES if sensitive keyword detected (password, auth, token, etc.)
+- If `--hardened` → TDD is **automatically co-recommended** (defense-in-depth)
+
+**2e. Execute pre-code tools** (if user selected):
+1. **`/brainstorm` first** (if selected): Run focused 3-turn brainstorm → log decision in Phase's `⚗️ Brainstorm Log`
+2. **`/qa` second** (if selected): Run stress-test review → issues found feed into implementation steps
+3. Then proceed to coding with activated dev tools (TDD, --graph, --hardened)
+
+**User has final say — Agent only recommends, never forces.**
+
+#### 3. Milestone Execution Loop (Code by Milestone)
 
 For each milestone (Phase N) in the session plan:
 
-**2a. Proactive Quality Suggestion Gate:**
-Analyze the milestone's target files and logic complexity:
-- **If logic-heavy, DB, or API changes:** Proactively suggest activating **🧪 TDD Mode** (forces test-first development and loads `.agents/skills/tdd/SKILL.md`).
-- **If blast radius is large (touches 3+ files):** Suggest **🔴 QA Mode** (strict verification checkpoint after code).
-- **If architecture is vague or has unknowns:** Suggest **⚗️ Quick Brainstorm** (fast 3-turn discussion to lock the design).
-*Agent MUST ask and get user confirmation on the chosen mode before starting to code.*
-
-**2b. Boundary-Locked Code Work:**
+**3a. Boundary-Locked Code Work:**
 - Agent locks scope: performs coding changes only within target files designated for the current milestone. Do NOT bleed changes into unrelated components.
+- If TDD is active: Follow RED → GREEN → REFACTOR cycle (load `.agents/skills/tdd/SKILL.md`).
+- If `--graph` is active: Use `graph_context_bundle` for upstream/downstream awareness.
+- If `--hardened` is active: Apply Audit Gate mini-checklist (sanitization, auth checks, secret scan).
 
-**2c. Checkpoint & Verification Gate:**
+**3b. Checkpoint & Verification Gate:**
 - Run verification tests/lints automatically.
 - Present test results and Git diff to the User.
 - ⛔ **CHECKPOINT (Interactive Pause):** Wait for User confirmation that the milestone is successful.
 
-**2d. Commit & Track Gate:**
+**3c. Commit & Track Gate:**
 - Upon User confirmation, Agent automatically executes git commit:
   ```bash
   git commit -m "session([topic]): [phase goal]"
   ```
 - Retrieve commit SHA and write it next to Phase N in the DSP plan file. Mark the Phase `[x] Complete`.
+- Update the `Quality Tools` column with actually-used tools.
 
-#### 3. Dynamic Append (Scope Evolution)
+#### 4. Dynamic Append (Scope Evolution)
 
 If the user wants to add new tasks or fix a bug discovered during the session:
 1. Append the new requirement to the `⏳ Pending Queue` as `Phase N+1` in the DSP file.
-2. Resume the execution loop from Step 2 for `Phase N+1`.
+2. Resume the execution loop from **Step 2 (Quality Gate)** for `Phase N+1`.
 *Ensure a single phase contains no more than 3-4 tasks or 150 LOC to maintain tight commit feedback loops.*
 
-#### 4. Session Teardown
+#### 5. Session Teardown
+
+// turbo
+
+```bash
+# Reset Dynamic Session KI Memory
+bash .agents/skills/vibecode/scripts/session-manager.sh stop
+```
 
 Upon running `/end` or declaring the session finished:
 1. **Compress & Sync:** Extract all completed phases and append them to `artifacts/tasks/done.md` with the `#session` tag and the recorded Commit SHAs.
@@ -769,6 +910,8 @@ echo "🧹 Review copy deleted. Original unchanged."
 | **Target** | Plan file | Plan file | Source code | Source code | Plan phases | Plan phases | Source code & DSP | Source code & DSP |
 | **File writes** | None | Sandbox (plan) | Sandbox (code) | Real project | Real project | Sandbox | Real project | Sandbox |
 | **Iterations** | 1 | Max 3 | Max 5 | Max 5 | 1/task | 1/task | 1/milestone | 1/milestone |
+| **Quality Gate** | N/A | N/A | N/A | N/A | N/A | N/A | ✅ Every Phase (TDD/graph/QA/brainstorm/hardened) | ✅ Every Phase |
+| **Context Reload** | N/A | N/A | N/A | N/A | Phase boundary | Phase boundary | ✅ Every Phase (via sidecar) | ✅ Every Phase (via sidecar) |
 | **Auto-fix** | No | 🟢 auto, 🟡 ask, 🔴 block | Build/lint | Build/lint | Build/lint | Build/lint | Build/lint | Build/lint |
 | **Adaptive Loop** | N/A | N/A | ✅ Pattern Scan | ✅ Pattern Scan | Fallback to loop | Fallback to loop | ✅ Pattern Scan | ✅ Pattern Scan |
 | **Knowledge** | N/A | N/A | ✅ seeds.md | ✅ seeds.md | N/A | N/A | ✅ done.md & Graph | ✅ done.md & Graph |

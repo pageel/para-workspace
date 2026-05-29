@@ -136,3 +136,40 @@ Before committing, Agent MUST read `artifacts/tests/tdd-evidence.log` and verify
 |:--|:--|:--|
 | TDD Evidence Logger | `scripts/tdd-test.sh` | Bash wrapper that logs test FAIL/PASS to `artifacts/tests/tdd-evidence.log` for TDD Gate verification |
 
+## 7. Isolated TDD Protocol (Workspace & Repo Protection)
+
+To protect the active workspace from configuration pollution (junk files) and avoid committing ad-hoc test scripts to the open-source templates repository, Agent MUST follow the Isolated TDD Protocol:
+
+### A. Workspace Isolation (Mock/Sandbox output)
+- When writing tests for CLI synchronization, installations, or file mutations, Agent **MUST NOT** run installer commands directly targeting the active workspace (e.g., `para install` or raw `install.sh`).
+- Route all test outputs, created directories, and mock files to a sandboxed directory (e.g., `artifacts/tests/tmp/sandbox/`).
+
+### B. Temporary Test Scripts Management
+- All test scripts written during a TDD cycle to verify template sync, CLI commands, or shell scripts **MUST NOT** be committed to the `repo/` repository.
+- Store these temporary test scripts in the project's internal `artifacts/tests/tmp/` folder.
+- **Naming Convention:** `test-tmp-[YYYY-MM-DD]-[topic].sh`.
+  - If multiple test scripts are created for the same topic or session, append an incremental index suffix: `test-tmp-[YYYY-MM-DD]-[topic]-[index].sh` (e.g., `test-tmp-2026-05-29-sync-01.sh`).
+- These files MUST be ignored via `.gitignore` to prevent polluting the OSS template repository.
+
+### C. Repo State Snapshot (Junk File Prevention)
+- **At the start of the Plan (Phase 0):** Agent MUST execute a repo state snapshot command (e.g., `git status` or a file structure log) and save it to `artifacts/tests/tmp/tdd-repo-before-[date].log`. This serves as the Ground Truth Before.
+  - If multiple snapshots are taken (e.g., across multiple sub-sessions or coding iterations), append an incremental index suffix: `tdd-repo-before-[date]-[index].log` (e.g., `tdd-repo-before-2026-05-29-01.log`).
+- **At the end of the Plan (Walkthrough / Completion Gate):** Agent MUST compare the final repo state against the snapshot log. Any unexpected modified or untracked files (junk/zombie files generated during testing) MUST be cleaned up completely before proposing the plan's transition to Done.
+
+#### Example Plan Task Templates:
+To implement this protocol, a TDD-hardened plan MUST include the following tasks:
+
+1. **Phase 0 (Start Snapshot):**
+   ```markdown
+   - [ ] 0.X 🤖 **TDD Repo Before Snapshot** (run `git status` & `git log -n 1 --oneline` and save to `artifacts/tests/tmp/tdd-repo-before-[date].log`)
+   ```
+
+2. **Phase 2 (Pre-Commit Cleanup):**
+   ```markdown
+   - [ ] 2.X 🤖 **TDD Drift Verification & Cleanup** (compare current repo state with `tdd-repo-before-[date].log` to clean up temporary/junk files before commit)
+   ```
+
+3. **Walkthrough (Final Post-Release Audit):**
+   ```markdown
+   - [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `tdd-repo-before-[date].log` and completely clean up any junk files generated during local TDD/testing before completion.
+   ```

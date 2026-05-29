@@ -79,7 +79,8 @@
 - [ ] 0.0 🤖 Graph Knowledge Preparation (if para-graph enabled)
 - [ ] 0.1 🤖 [Task description]
 - [ ] 0.2 🤖 [Task description]
-- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x] BEFORE proceeding to Phase 1. Ask User to proceed.
+- [ ] 0.3 🤖 **TDD Repo Before Snapshot** (run `git status --ignored --porcelain` & `git log -n 1 --oneline` and save to `artifacts/tests/tdd-repo-before-[date].log`)
+- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x] AND get explicit User approval before proceeding to Phase 1.
 
 ---
 
@@ -158,7 +159,7 @@
   - [ ] (If missing FAIL) 🛑 Revert code, rewrite RED test.
 - [ ] 5.5 🤖 **Pre-commit Gate:** Run project's linter/compiler (e.g., `npm run lint`) and resolve any type/lint problems.
 - [ ] 6. 👤 **Commit** (`tdd(scope): [Behavior]`)
-- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 1 are checked [x] BEFORE proceeding to the next Phase. Ask User to proceed.
+- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 1 are checked [x] AND get explicit User approval before proceeding to the next Phase.
 
 ---
 
@@ -181,7 +182,7 @@
   ```bash
   git commit -a -m "refactor: cleanup [Component] implementation"
   ```
-- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 2 are checked [x] BEFORE proceeding to the next Phase. Ask User to proceed.
+- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 2 are checked [x] AND get explicit User approval before proceeding to the next Phase.
 
 ---
 
@@ -198,6 +199,7 @@
 - [ ] All Task List items from Phase 0 → Phase N are ticked `[x]`.
 - [ ] Every new function/method has a corresponding test.
 - [ ] 100% tests pass with pristine output (no errors/warnings).
+- [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `git status --ignored --porcelain` snapshot in `tdd-repo-before-[date].log` to identify newly generated untracked or ignored files. Agent MUST present the list to User and ask whether to delete them (if junk) or commit them (if missed in plan) before proceeding with cleanup.
 - [ ] [Project-specific checks: build pass, docs updated, governance rules...]
 - [ ] ⛔ CHECKPOINT (Walkthrough Completion): Agent MUST verify all above Walkthrough items are ticked [x] BEFORE proposing Status transition.
 - [ ] ⛔ CHECKPOINT (C7 Status Transition): Agent MUST NOT change Status to "✅ Done" without user approval.

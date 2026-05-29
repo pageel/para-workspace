@@ -47,6 +47,7 @@ IF graph exists, use `graph_impact_analysis` on the primary changed entity to ve
    ```
    ⚠️ BLAST RADIUS GAP: [caller-name] depends on changed code but is not tested in walkthrough.
    ```
+5. **Pattern Verify (Step G, para-graph §4.2):** If the change involves inline code patterns (e.g., error handling, logging), run `grep_search` to verify all pattern occurrences are covered by the walkthrough.
 
 IF no graph → Skip. Proceed with manual verification only.
 

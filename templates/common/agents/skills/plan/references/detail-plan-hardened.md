@@ -160,7 +160,8 @@ Reloaded Skills:
 - [ ] 0.0 🤖 Graph Knowledge Preparation (if para-graph enabled)
 - [ ] 0.1 🤖 [Task description]
 - [ ] 0.2 🤖 [Task description]
-- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x] BEFORE proceeding to Phase 1. Ask User to proceed.
+- [ ] 0.3 🤖 **TDD Repo Before Snapshot** (run `git status --ignored --porcelain` & `git log -n 1 --oneline` and save to `artifacts/tests/tdd-repo-before-[date].log`)
+- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x] AND get explicit User approval before proceeding to Phase 1.
 
 ---
 
@@ -251,7 +252,7 @@ git push origin main
 - [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
 - [ ] 1.N-1 🤖 **Pre-commit Gate:** Run project's linter/compiler/tests and resolve any problems.
 - [ ] 1.N 👤 Git commit Phase 1.
-- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 1 are checked [x] BEFORE proceeding to the next Phase. Ask User to proceed.
+- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 1 are checked [x] AND get explicit User approval before proceeding to the next Phase.
 - [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Agent MUST ask User for confirmation BEFORE pushing.
 - [ ] 1.N+1 👤 Git push origin main.
 
@@ -293,6 +294,7 @@ git push origin main
 - [ ] Post-Draft Audit Gate completed with PASS result.
 - [ ] All 🧪 TDD tasks have evidence in `artifacts/tests/tdd-evidence.log`.
 - [ ] All tests pass with pristine output (no errors/warnings).
+- [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `git status --ignored --porcelain` snapshot in `tdd-repo-before-[date].log` to identify newly generated untracked or ignored files. Agent MUST present the list to User and ask whether to delete them (if junk) or commit them (if missed in plan) before proceeding with cleanup.
 - [ ] [Project-specific checks: build pass, docs updated, governance rules...]
 - [ ] ⛔ CHECKPOINT (Walkthrough Completion): Agent MUST verify all above Walkthrough items are ticked [x] BEFORE proposing Status transition.
 - [ ] ⛔ CHECKPOINT (C7 Status Transition): Agent MUST NOT change Status to "✅ Done" or clear `active_plan` without explicit user approval. Agent presents the completed Walkthrough checklist → User verifies → User approves transition. Only AFTER user confirms → Agent sets Status and clears `active_plan`.

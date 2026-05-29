@@ -85,4 +85,22 @@
 
 ## Next Steps
 
+<!-- ⚠️ AGENT INSTRUCTION:
+Agent MUST populate this section with the chosen next action(s).
+Present ALL options to the user (from /brainstorm Step 5) before filling in.
+
+Options menu to present:
+  A. 📐 /plan [project] create  — Formalize into implementation plan (RECOMMENDED for decided brainstorms)
+  B. 📥 /backlog add            — Create tasks directly if simple enough
+  C. 📝 /spec [project] create  — Write structured specification before coding
+  D. 🔴 /qa [project] [topic]   — Stress-test decision with Red Team review
+  E. 🌱 Save to Seeds           — Incubate further in .beads/seeds.md
+  F. 📄 Save as project doc     — Keep as reference in docs/
+  G. 🎓 /learn                  — Extract reusable lesson for Areas/Learning/
+  H. 📊 Extract to Research     — Standalone research document in docs/researches/
+
+Agent MUST wait for user selection before proceeding.
+Agent MUST NOT auto-transition to /plan or /spec without explicit user choice.
+-->
+
 1. ...

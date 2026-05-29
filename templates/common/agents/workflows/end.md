@@ -89,6 +89,11 @@ If yes, **append one row** to `Areas/Workspace/SYNC.md` under the `## Pending` t
 
 > **Rule:** `hybrid-3-file-integrity.md` C5 — `/end` is the sole sync point for all task reconciliation.
 
+```bash
+# Reset Dynamic Session KI Memory
+bash .agents/skills/vibecode/scripts/session-manager.sh stop
+```
+
 **Step A: Process Quick Tasks** (from sprint-current.md)
 
 1. Read `artifacts/tasks/sprint-current.md`. If file not exists → skip to Step B.
@@ -98,7 +103,7 @@ If yes, **append one row** to `Areas/Workspace/SYNC.md` under the `## Pending` t
      - [x] <task-description> #session
      ```
 3. For each item still `[ ]` in `## Quick Tasks`:
-   - Ask user: **“Giữ cho phiên sau?”** or **“Promote vào backlog?”**
+   - Ask user: **"Keep for next session?"** or **"Promote to backlog?"**
    - If promote → add to `backlog.md` via normal format, remove from sprint-current
    - If keep → leave in sprint-current for next session
 4. Clean sprint-current.md: remove all `[x]` items, keep `[ ]` items and `## Notes`.
@@ -111,9 +116,9 @@ If yes, **append one row** to `Areas/Workspace/SYNC.md` under the `## Pending` t
 3. Cross-reference with `backlog.md` active items (grep for matching IDs).
 4. For each match, suggest to user:
    ```
-   💡 Phiên này bạn đã làm việc với:
-   - FEAT-13: Safety Guardrails — Đánh dấu Done?
-   - BUG-16: Inbox categorization — Đánh dấu Done?
+   💡 This session you worked on:
+   - FEAT-13: Safety Guardrails — Mark as Done?
+   - BUG-16: Inbox categorization — Mark as Done?
    ```
 5. For user-confirmed items:
    - Update status in `backlog.md` to `✅ Done (YYYY-MM-DD)`

@@ -77,6 +77,15 @@ Check the `strategy` field from `project.md` (already loaded above):
 
 //turbo
 
+```bash
+# Check Vibecode Session Memory at startup (detect unfinished sessions)
+SESSION_FILE="${HOME}/.gemini/antigravity-ide/knowledge/vibecode_session/artifacts/session.md"
+if grep -q "Status.*Active" "$SESSION_FILE" 2>/dev/null; then
+  echo "⚠️ DETECTED ACTIVE CODING SESSION:"
+  grep -E "Active Plan:|Current Phase:|Project:" "$SESSION_FILE" 2>/dev/null
+fi
+```
+
 > This step is **MANDATORY** for every session, regardless of project.
 > **MUST NOT** skip. Global rules and skills apply to ALL projects.
 
@@ -286,6 +295,24 @@ IF BOTH `strategy` AND `roadmap` fields have non-null values:
 
 IF EITHER field is null → Skip cascade check entirely. Zero I/O.
 
+### 5.6. Scan for Draft Plans
+
+// turbo
+
+> ⚗️ **Token budget:** 1 grep, ~30 tokens max.
+
+Scan for any implementation plans that are in Draft status in the project's plans directory:
+
+```bash
+grep -l -E "Status.*Draft" Projects/[project-name]/artifacts/plans/*.md 2>/dev/null
+```
+
+- **IF found:**
+  1. Extract plan filenames and titles.
+  2. Store the list of draft plans for the report (Step 8):
+     `📝 DRAFT PLAN: [plan-name](file:///absolute/path/to/plan)`
+- **IF not found** → Skip.
+
 ### 6. 🔔 Check Sync Queue (Cross-Project Notifications)
 
 //turbo
@@ -348,6 +375,10 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
    Phase [X/Y] | Progress: [N/M] tasks | Timeline: [est]
    (omit if no active plan)
 
+📝 DRAFT PLAN: [plan-name]
+   → Review and transition status to Active to execute
+   (omit if no draft plans)
+
 💭 BRAINSTORM PENDING: [topic] (YYYY-MM-DD)
    → /brainstorm to continue, or /plan to formalize
    (omit if no pending brainstorms)
@@ -388,10 +419,11 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 
 > **Priority logic for Suggested Actions:**
 > 1. Active plan tasks (if any)
-> 2. ⚠️ Strategy cascade / SYNC pending (if any)
-> 3. 💭 Pending brainstorms (if any)
-> 4. 📐 Roadmap next phase — only when no active plan
-> 5. 🔥 Hot lane items
+> 2. 📝 Draft plan review (if draft plans detected)
+> 3. ⚠️ Strategy cascade / SYNC pending (if any)
+> 4. 💭 Pending brainstorms (if any)
+> 5. 📐 Roadmap next phase — only when no active plan
+> 6. 🔥 Hot lane items
 >
 > 🔗 **Display constraint:** When suggesting an action that refers to a specific document (e.g., a detail plan, brainstorm file, roadmap, or hot lane file), **MUST** include a clickable markdown file link to that document so the user can open it instantly. (Format: `[filename](file:///absolute/path/to/file)`)
 

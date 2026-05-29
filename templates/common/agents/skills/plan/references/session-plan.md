@@ -1,8 +1,15 @@
 # Session Plan Template
 
-> **Naming:** `v[ver/1.x.x]-[YYYY-MM-DD]-session-[topic].md` (e.g., `v1.x.x-2026-05-23-session-refactor-auth.md`)
+> **Naming:**
+> - With topic: `v[ver/1.x.x]-[YYYY-MM-DD]-session-[topic].md` (e.g., `v1.x.x-2026-05-23-session-refactor-auth.md`)
+> - Without topic (Draft): `v1.x.x-session-YYYY-MM-DD-NN.md` (e.g., `v1.x.x-session-2026-05-27-01.md`, NN = sequential 01, 02...)
+>
 > **Lifecycle:** Created Active → completed phases synced to done.md → archived to `plans/done/`.
 > **Role:** Light-weight DSP (Dynamic Session Plan) for fast coding (vibecode) with auto-commits and micro-workflows.
+
+## Template A: Topic-Based DSP (Existing Behavior)
+
+> Use when: `/vibecode session [topic]` — user provides a specific topic/goal upfront.
 
 ````markdown
 # Session Plan: [Topic]
@@ -23,9 +30,9 @@
 
 ## 📋 Dynamic Milestone Queue
 
-| Phase | Milestone / Goal | Activated Workflows | Commit SHA | Status |
+| Phase | Milestone / Goal | Quality Tools | Commit SHA | Status |
 |:---|:---|:---|:---|:---|
-| Phase 1 | [Goal name] | `[--graph, --tdd, ...]` | [SHA] | 🔨 Active |
+| Phase 1 | [Goal name] | `[--tdd, --graph, ...]` | [SHA] | 🔨 Active |
 | Phase 2 | [Goal name] | `[--qa, ...]` | — | ⏳ Pending |
 
 ---
@@ -34,7 +41,7 @@
 
 ### Phase 1: [Milestone Name] ⚙️ `Difficulty: [🟢 Low | 🟡 Medium | 🔴 High]`
 
-> **Activated Workflows:** `[--graph, --brainstorm, --tdd, --qa, --docs]`
+> **Quality Tools:** `[--tdd, --graph, --brainstorm, --qa, --hardened]`
 
 #### 🗺️ Blast Radius & Context Lock
 - **Target Files:**
@@ -46,16 +53,13 @@
 - **Question:** [Quick discussion topic/question]
 - **Decision:** [Final decision reached]
 
-#### 📝 Implementation Steps
-1.1 🤖 **Step 1:** [Detail...]
-1.2 🤖 **Step 2:** [Detail...]
-
-#### 📋 Task Checklist
-- [ ] 1.1 🤖 [Task description]
-- [ ] 1.2 🤖 [Task description]
-- [ ] 1.N-1 🤖 **Pre-commit Gate:** Run tests & lints (`npm test`, `npm run lint`).
+#### 📝 Implementation Steps & Checklist
+- [ ] 1.1 🤖 **Step 1:** [Task description]
+- [ ] 1.2 🤖 **Step 2:** [Task description]
+- [ ] 1.N-1 🤖 **Pre-commit Gate:** Run tests & lints (`npm run build` and `npx vitest run` or equivalent verification commands).
 - [ ] 1.N 👤 **Git Checkpoint:** Commit changes with message `session([topic]): [milestone goal]`.
-- [ ] ⛔ CHECKPOINT: Agent verification pass -> Present diff & tests to User -> User confirms -> Write commit SHA & mark Phase Done.
+- [ ] ⛔ CHECKPOINT: Agent verification pass -> Present diff & tests to User -> get explicit User approval before writing commit SHA & marking Phase Done.
+
 
 ---
 
@@ -64,7 +68,7 @@
 > Add new milestones/tasks discovered during the session here. They will be promoted to active phases sequentially.
 
 - **Phase N+1: [Milestone Name]**
-  - **Activated Workflows:** `[options]`
+  - **Quality Tools:** `[options]`
   - **Goal:** [Brief description]
   - **Tasks:**
     - [ ] [Task detail]
@@ -76,5 +80,61 @@
 - [ ] All completed phases synced to `artifacts/tasks/done.md` (with `#session` tag and recorded SHAs).
 - [ ] Codebase graph updated and enriched (`/para-graph build` & `graph_enrich` if --graph active).
 - [ ] DSP file moved to `artifacts/plans/done/` directory.
-- [ ] ⛔ CHECKPOINT: Present completed session summary -> User approves -> Transition Status to ✅ Done and clear `active_plan` in `project.md`.
+- [ ] ⛔ CHECKPOINT: Present completed session summary -> get explicit User approval before transitioning Status to ✅ Done and clearing `active_plan` in `project.md`.
+````
+
+---
+
+## Template B: DSP Draft (New — JIT Phase Creation)
+
+> Use when: `/vibecode` (no args) or `/vibecode session` (no topic) — user starts a free coding session.
+> Phases are created dynamically (JIT) as the user requests specific goals during the conversation.
+> Each Phase starts with a **mandatory Quality Gate** proposing TDD, --graph, QA brainstorm, and --hardened.
+
+````markdown
+# Session Plan: Ad-hoc Session
+
+> **Created:** YYYY-MM-DD
+> **Status:** 🔨 Active
+> **Topic Slug:** session-YYYY-MM-DD-NN
+
+<!-- ⚠️ STATUS GATE: DSP Draft — phases added JIT as user requests goals.
+     Lifecycle: 🔨 Active → ✅ Done.
+     Each Phase begins with a mandatory Quality Gate (TDD/graph/QA/hardened proposal).
+     Transition from Active → Done requires explicit user approval. -->
+
+---
+
+## ⚡ Session Goals
+
+Free coding session — phases will be created dynamically
+as specific tasks are identified during the conversation.
+
+## 📋 Dynamic Milestone Queue
+
+| Phase | Milestone / Goal | Quality Tools | Commit SHA | Status |
+|:---|:---|:---|:---|:---|
+| *(Queue empty — waiting for user requests)* | | | | |
+
+---
+
+## 🏁 Milestone Details
+
+> Phases will be appended here as the user requests specific goals.
+> Each Phase starts with a Quality Gate (see `references/session-quality-gate.md`).
+
+---
+
+## ⏳ Pending Queue
+
+> (Empty on initialization)
+
+---
+
+## 🏁 Completion & Teardown
+
+- [ ] All completed phases synced to `artifacts/tasks/done.md` (with `#session` tag and recorded SHAs).
+- [ ] Codebase graph updated and enriched (`/para-graph build` & `graph_enrich` if --graph active).
+- [ ] DSP file moved to `artifacts/plans/done/` directory.
+- [ ] ⛔ CHECKPOINT: Present completed session summary -> get explicit User approval before transitioning Status to ✅ Done and clearing `active_plan` in `project.md`.
 ````

@@ -25,6 +25,18 @@
 
 ## Next Steps
 
+<!-- ⚠️ AGENT INSTRUCTION:
+When user is ready to act, present these options (from /brainstorm Step 5):
+  A. 📐 /plan [project] create  — Formalize into implementation plan
+  B. 📥 /backlog add            — Create tasks directly
+  C. 📝 /spec [project] create  — Write specification before coding
+  D. 🔴 /qa [project] [topic]   — Stress-test with Red Team review
+  E. 🌱 Keep incubating         — Continue appending to this brainstorm
+  F. ✅ Promote to Decision      — Create frozen decision in para-decisions/
+
+Agent MUST wait for user selection before proceeding.
+-->
+
 1. [Next action item]
 
 <!-- ⚠️ AGENT INSTRUCTION:

@@ -1,0 +1,39 @@
+{
+  "title": "Vibecode Session Workspace Memory (v1.8.x)",
+  "slug": "para_vibecode_session",
+  "owner": "para",
+  "summary": "Holds temporary runtime memory of the active coding session (plan name, phase, and behavior invariants) to enforce plan adherence, quality gates, and automated context reload.",
+  "version": "1.0",
+  "scope": "workspace",
+  "domain": "workspace",
+  "purpose": "memory",
+  "para_version": "1.8.15",
+  "tags": [
+    "vibecode",
+    "dsp",
+    "quality-gate",
+    "session-memory",
+    "context-reload",
+    "intent-detection"
+  ],
+  "references": [
+    {
+      "type": "file",
+      "value": ".para-workspace.yml"
+    },
+    {
+      "type": "file",
+      "value": ".agents/rules/agent-behavior.md"
+    },
+    {
+      "type": "file",
+      "value": ".agents/skills/vibecode/SKILL.md"
+    }
+  ],
+  "code_refs": [
+    "templates/common/agents/workflows/vibecode.md",
+    "templates/common/agents/skills/vibecode/SKILL.md",
+    "templates/common/agents/skills/vibecode/references/session-quality-gate.md",
+    "templates/common/agents/skills/vibecode/scripts/session-manager.sh"
+  ]
+}

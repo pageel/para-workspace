@@ -105,5 +105,52 @@ The guard header serves as:
 | 2 | All function names match actual exports | `grep "export.*functionName"` in source |
 | 3 | All env vars exist in config or code | `grep` in `wrangler.jsonc` + source files |
 | 4 | No feature described as "active" without code | `grep` binding name in `src/` — zero results = `[Planned]` |
-| 5 | Guard header present with file list and date | Visual check |
 
+## Graph-Anchoring Protocol
+
+> ⛔ **Traceability Guard (v1.8.11):** Every architecture/feature doc
+> SHOULD include `<!-- @graph-node: nodeId -->` anchors for key code
+> entities it describes.
+
+### Anchor Placement Rules
+
+| Doc Type | Anchor Density | Example |
+|:--|:--|:--|
+| Architecture | 1 anchor per component/class | `<!-- @graph-node: src/graph/CodeGraph.ts::CodeGraph -->` |
+| Feature | 1 anchor per key function | `<!-- @graph-node: src/mcp/tools.ts::graph_enrich -->` |
+| Reference/Schema | 1 anchor per type/interface | `<!-- @graph-node: src/types.ts::GraphNode -->` |
+| Guide/Workflow | Optional — only for implementation refs | — |
+
+### Linking Workflow
+
+1. Write doc content (Step 6 for `new`, Step 4 for `update`)
+2. Insert `<!-- @graph-node: nodeId -->` anchors at relevant sections
+3. After Source Verification (Step 6.5), run `graph_link_docs` (Step 6.8 / Step 4.5)
+4. Verify link result: `linked > 0`, `skipped = 0`, `errors = []`
+
+> **v0.16.1+ Engine Change:** `linkDocs` auto-initializes `semantic: {}` for non-enriched nodes.
+> All anchors link successfully regardless of enrichment status — no pre-enrichment needed.
+
+## Index Statistics Convention
+
+When `/docs update --graph` runs, Agent MUST update the
+`## Graph Traceability` section in `docs/README.md`.
+
+### Required Metrics
+
+| Metric | Source | Description |
+|:--|:--|:--|
+| Total docs | Index table row count | Files listed in all section tables |
+| Docs with graph anchors | `grep "<!-- @graph-node"` in docs/ | Files containing anchor comments |
+| Graph nodes with docAnchors | `graph_query` results | Nodes with non-empty `docAnchors` array |
+| Stale docs | `staleSince` field on linked nodes | Code changed but docs not updated |
+
+### Staleness Detection
+
+A document is considered **stale** when:
+1. It has `<!-- @graph-node: X -->` anchors
+2. Node X has `staleSince` set (code signature changed after last enrichment)
+3. The doc's "last reviewed" date is earlier than `staleSince`
+
+Agent SHOULD list stale documents in the `### Stale Documents` sub-table
+within the Graph Traceability section.

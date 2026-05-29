@@ -223,12 +223,12 @@ When creating a new backlog.md (via `/new-project` or `/backlog add`), use this 
 ---
 
 ## §4 🗺️ Roadmap Sync
-
-> ⚠️ **VIEW-ONLY**: Các block công việc tương lai được đồng bộ định kỳ từ `plans/roadmap.md`. KHÔNG trực tiếp thêm task/ID vào đây. Chỉ gán ID khi promote lên §1 (Active Scope).
-
+ 
+> ⚠️ **VIEW-ONLY**: Future epics/themes are periodically synchronized from `plans/roadmap.md`. DO NOT add tasks/IDs directly here. Only assign IDs when promoted to §1 (Active Scope).
+ 
 | Future Epic / Theme | Target Phase |
 | :-- | :-- |
-| _(Đợi đồng bộ từ roadmap)_ | |
+| _(Awaiting roadmap sync)_ | |
 
 ---
 

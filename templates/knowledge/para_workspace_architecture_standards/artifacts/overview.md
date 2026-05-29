@@ -379,6 +379,7 @@ Sidecar skills (`plan`, `docs`, `brainstorm`, `spec`) reference the centralized 
 | 1.8.12 | Release | Config Migration: support multi-path config resolution, smart IDE detection, and TDD-hardened setup iteration with smart filtering for Antigravity IDE 2.x & v1.x |
 | 1.8.13 | Release | Artifact Authority & Platform Separation: prevent agents from aligning code execution with ephemeral IDE-internal brain artifacts |
 | 1.8.14 | Release | Fix BUG-37: convert RUNTIME_CMD via cygpath -m on Windows for MCP setups, defensive .exe check, and plan workflow auto-activation with Suggested Next Steps template updates |
+| 1.8.15 | Release | Vibecode DSP (Dynamic Session Plan) enhancements including JIT Phase creation for DSP Draft mode, mandatory Pre-code Phase-level Quality Gate (brainstorm, qa, TDD, --graph, --hardened), automated Context Reload at Phase start via Sidecar Skill mapping, Intent Detection, and sequential session naming convention |
 
 
 ## 16. Dynamic Tool System (v1.8.0)

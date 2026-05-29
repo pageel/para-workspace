@@ -89,7 +89,48 @@ const translations = {
         calloutTip: "Gợi ý:",
         calloutImportant: "Quan trọng:",
         calloutWarning: "Cảnh báo:",
-        calloutCaution: "Lưu ý nguy hiểm:"
+        calloutCaution: "Lưu ý nguy hiểm:",
+        // Quality Dashboard translations
+        dashboardTitle: "Đồ thị Chất lượng Tài liệu (Docs Quality Dashboard)",
+        dashboardSubtitle: "Đo lường độ bao phủ tài liệu kỹ thuật dựa trên phân tích trọng số Code-Graph.",
+        scoreCardTitle: "Docs Health Score",
+        scoreLabel: "Điểm số",
+        totalDocs: "Tổng số tài liệu",
+        graphNodes: "Nodes Đồ thị",
+        businessGodNodes: "God Nodes Nghiệp vụ",
+        healthStatus: "Trạng thái Sức khỏe",
+        entityTypeDistribution: "Phân bố Thành phần mã (Entity Type Distribution)",
+        weightDistribution: "Phân loại theo Trọng số (Weight Distribution)",
+        legendCompleted: "Đạt chuẩn (Đầy đủ)",
+        legendUnlinked: "Chưa gán link (Unlinked)",
+        legendUnenriched: "Chưa mô tả AI (Unenriched)",
+        explorerTitle: "Trình duyệt Đồ thị Mã & Neo tài liệu",
+        searchPlaceholderNodes: "Tìm kiếm node theo tên, file...",
+        filterAll: "Tất cả",
+        filterCritical: "Cốt lõi (Trọng số 5)",
+        filterMedium: "Trung bình",
+        filterLow: "Bổ trợ",
+        filterUnlinked: "Chưa gắn link",
+        filterUnenriched: "Chưa mô tả AI",
+        thNodeEntity: "Thành phần mã (Node Entity)",
+        thType: "Phân loại",
+        thWeightDegree: "Trọng số / Degree",
+        thBlastRadius: "Bán kính ảnh hưởng (Blast)",
+        thDocLinks: "Liên kết tài liệu (docAnchors)",
+        thDescription: "Mô tả / Ngữ nghĩa Hệ thống",
+        hotspotsTitle: "⚠️ Điểm nóng ưu tiên",
+        hotspotsSubtitle: "Thành phần ảnh hưởng lớn cần viết tài liệu",
+        badgeStale: "Cần cập nhật",
+        noNodesFound: "Không tìm thấy thành phần mã nào khớp với bộ lọc và tìm kiếm hiện tại.",
+        graphStatsUpdated: "Thống kê đồ thị cập nhật lúc:",
+        collapseSidebar: "Thu gọn sidebar",
+        expandSidebar: "Mở rộng sidebar",
+        loadingSearch: "Đang tải dữ liệu tìm kiếm...",
+        noSearchResults: "Không tìm thấy kết quả",
+        inlineFeedbackChatWithAI: "Chat với AI",
+        inlineFeedbackCopy: "Sao chép",
+        inlineCommentFormPlaceholder: "Nhập phản hồi sửa code...",
+        inlineFeedbackSubmitTitle: "Sao chép prompt"
     },
     en: {
         title: "PARA Workspace Docs",
@@ -126,7 +167,48 @@ const translations = {
         calloutTip: "Tip:",
         calloutImportant: "Important:",
         calloutWarning: "Warning:",
-        calloutCaution: "Caution:"
+        calloutCaution: "Caution:",
+        // Quality Dashboard translations
+        dashboardTitle: "Docs Quality Dashboard",
+        dashboardSubtitle: "Measure documentation coverage based on Code-Graph weights.",
+        scoreCardTitle: "Docs Health Score",
+        scoreLabel: "Score",
+        totalDocs: "Total Documents",
+        graphNodes: "Graph Nodes",
+        businessGodNodes: "Business God Nodes",
+        healthStatus: "Health Status",
+        entityTypeDistribution: "Entity Type Distribution",
+        weightDistribution: "Weight Distribution",
+        legendCompleted: "Completed (Full)",
+        legendUnlinked: "Unlinked",
+        legendUnenriched: "Unenriched",
+        explorerTitle: "Code Graph & Doc Anchors Explorer",
+        searchPlaceholderNodes: "Search nodes by name, file...",
+        filterAll: "All",
+        filterCritical: "Critical (Weight 5)",
+        filterMedium: "Medium",
+        filterLow: "Low",
+        filterUnlinked: "Unlinked",
+        filterUnenriched: "Unenriched",
+        thNodeEntity: "Node Entity",
+        thType: "Type",
+        thWeightDegree: "Weight / Degree",
+        thBlastRadius: "Blast Radius",
+        thDocLinks: "Doc Links (docAnchors)",
+        thDescription: "Description / System Semantics",
+        hotspotsTitle: "⚠️ Priority Hotspots",
+        hotspotsSubtitle: "High-impact components lacking docs",
+        badgeStale: "Stale / Outdated",
+        noNodesFound: "No code entities found matching the current filter and search.",
+        graphStatsUpdated: "Graph stats updated at:",
+        collapseSidebar: "Collapse sidebar",
+        expandSidebar: "Expand sidebar",
+        loadingSearch: "Loading search data...",
+        noSearchResults: "No results found",
+        inlineFeedbackChatWithAI: "Chat with AI",
+        inlineFeedbackCopy: "Copy",
+        inlineCommentFormPlaceholder: "Enter code edit feedback...",
+        inlineFeedbackSubmitTitle: "Copy prompt"
     }
 };
 
@@ -206,7 +288,23 @@ function treeToHtml(node, currentSourcePath, currentTargetPath, rootDir, rootOut
     }
     
     if (node.path === rootDir) {
-        return childrenHtml;
+        // Calculate relative URL to dashboard.html from currentTargetPath
+        const dashboardHtmlPath = path.join(rootOutputDir, 'dashboard.html');
+        let relativeDashboardUrl = path.relative(path.dirname(currentTargetPath), dashboardHtmlPath);
+        relativeDashboardUrl = relativeDashboardUrl.replace(/\\/g, '/');
+        
+        const isDashboardActive = (currentTargetPath.endsWith('dashboard.html'));
+        const activeClass = isDashboardActive ? 'active' : '';
+        const hrefValue = isDashboardActive ? '#' : relativeDashboardUrl;
+
+        const dashboardSidebarItem = `
+        <li class="tree-item" style="margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+            <a href="${hrefValue}" class="menu-link ${activeClass}" id="dashboard-link">
+                <i data-lucide="layout-dashboard" style="color: #ea580c;"></i> Dashboard
+            </a>
+        </li>`;
+
+        return dashboardSidebarItem + childrenHtml;
     }
     
     if (!childrenHtml.trim()) return '';
@@ -238,7 +336,7 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
         const absoluteSourcePath = path.resolve(sourceFile);
         const docCleanName = getMarkdownCleanName(sourceFile);
         
-        const sidebarHtml = treeToHtml(treeRoot, sourceFile, targetFile, rootDir, rootOutputDir);
+        const sidebarHtml = ''; // Sub-pages run in App Shell iframe and do not need individual sidebars
         
         const now = new Date();
         const renderTime = now.toLocaleString(workspaceLang === 'vi' ? 'vi-VN' : 'en-US', {
@@ -336,6 +434,306 @@ function renderDirectory(srcDir, destDir, template) {
             });
         } catch (e) {
             console.warn(`Warning: Failed to parse search index for ${sourceFile}`, e.message);
+        }
+    }
+    // Calculate Graph Traceability and compile dashboard.html
+    const projectDir = path.dirname(srcDir);
+    const graphDir = path.join(projectDir, '.beads', 'graph');
+    const entitiesPath = path.join(graphDir, 'entities.jsonl');
+    const relationsPath = path.join(graphDir, 'relations.jsonl');
+    
+    const degrees = {};
+    if (fs.existsSync(relationsPath)) {
+        try {
+            const relLines = fs.readFileSync(relationsPath, 'utf8').split('\n');
+            for (const line of relLines) {
+                if (line.trim()) {
+                    const rel = JSON.parse(line);
+                    if (rel.sourceId) {
+                        degrees[rel.sourceId] = (degrees[rel.sourceId] || 0) + 1;
+                    }
+                    if (rel.targetId) {
+                        degrees[rel.targetId] = (degrees[rel.targetId] || 0) + 1;
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn('Warning: Failed to read or parse graph relations.jsonl:', e.message);
+        }
+    }
+    
+    let graphNodes = [];
+    let hasGraph = false;
+    
+    if (fs.existsSync(entitiesPath)) {
+        try {
+            const lines = fs.readFileSync(entitiesPath, 'utf8').split('\n');
+            for (const line of lines) {
+                if (line.trim()) {
+                    const node = JSON.parse(line);
+                    node.degree = degrees[node.id] || 0;
+                    graphNodes.push(node);
+                }
+            }
+            hasGraph = true;
+        } catch (e) {
+            console.warn('Warning: Failed to read or parse graph entities.jsonl:', e.message);
+        }
+    }
+    
+    let docsWithAnchors = 0;
+    for (const mdFile of allMdFiles) {
+        try {
+            const content = fs.readFileSync(mdFile, 'utf8');
+            if (content.includes('<!-- @graph-node:')) {
+                docsWithAnchors++;
+            }
+        } catch (e) {}
+    }
+    
+    let dashboardStats = {
+        totalDocs: allMdFiles.length,
+        docsWithAnchors: docsWithAnchors,
+        totalNodes: graphNodes.length,
+        enrichableNodes: 0,
+        linkedNodes: 0,
+        enrichedNodes: 0,
+        totalGodNodes: 0,
+        documentedGodNodes: 0,
+        weightedHealthScore: 0,
+        staleDocsCount: 0
+    };
+    
+    let processedNodesData = [];
+    
+    if (hasGraph) {
+        const impactAdjacencyList = {};
+        if (fs.existsSync(relationsPath)) {
+            try {
+                const relLines = fs.readFileSync(relationsPath, 'utf8').split('\n');
+                for (const line of relLines) {
+                    if (line.trim()) {
+                        const rel = JSON.parse(line);
+                        if (rel.sourceId && rel.targetId) {
+                            if (!impactAdjacencyList[rel.targetId]) {
+                                impactAdjacencyList[rel.targetId] = [];
+                            }
+                            if (!impactAdjacencyList[rel.targetId].includes(rel.sourceId)) {
+                                impactAdjacencyList[rel.targetId].push(rel.sourceId);
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('Warning: Failed to build impact list:', e.message);
+            }
+        }
+
+        const blastRadii = {};
+        function calculateBlastRadius(nodeId) {
+            if (blastRadii[nodeId] !== undefined) return blastRadii[nodeId];
+            
+            const visited = new Set();
+            const queue = [nodeId];
+            visited.add(nodeId);
+            
+            while (queue.length > 0) {
+                const current = queue.shift();
+                const dependents = impactAdjacencyList[current] || [];
+                for (const dep of dependents) {
+                    if (!visited.has(dep)) {
+                        visited.add(dep);
+                        queue.push(dep);
+                    }
+                }
+            }
+            
+            const radius = visited.size - 1;
+            blastRadii[nodeId] = radius;
+            return radius;
+        }
+
+        const enrichableNodes = graphNodes.filter(node => {
+            const isTest = node.filePath && (node.filePath.startsWith('tests/') || node.filePath.includes('.test.'));
+            return !isTest;
+        });
+        
+        const linkedNodes = enrichableNodes.filter(node => node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0);
+        const enrichedNodes = enrichableNodes.filter(node => node.semantic && node.semantic.summary && node.semantic.summary.trim() !== '');
+        
+        const godNodes = enrichableNodes.filter(node => node.degree >= 20);
+        const documentedGodNodes = godNodes.filter(node => node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0);
+        const staleNodes = enrichableNodes.filter(node => node.staleSince && node.staleSince !== null);
+        
+        let totalWeight = 0;
+        let linkedWeight = 0;
+        
+        processedNodesData = enrichableNodes.map(node => {
+            let weight = 2; // medium default
+            let weightedClass = 'medium';
+            
+            const isCritical = node.degree >= 20;
+            
+            if (isCritical) {
+                weight = 5;
+                weightedClass = 'critical';
+            } else if (node.type === 'variable') {
+                weight = 0.5;
+                weightedClass = 'low';
+            }
+            
+            const isLinked = node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0;
+            const isEnriched = node.semantic && node.semantic.summary && node.semantic.summary.trim() !== '';
+            
+            totalWeight += weight;
+            if (isLinked) {
+                linkedWeight += weight;
+            }
+            
+            return {
+                id: node.id,
+                name: node.name,
+                type: node.type,
+                filePath: node.filePath,
+                absoluteFilePath: path.resolve(projectDir, 'repo', node.filePath || ''),
+                startLine: node.startLine || 1,
+                endLine: node.endLine || 1,
+                degree: node.degree || 0,
+                blastRadius: calculateBlastRadius(node.id),
+                isStale: node.staleSince !== undefined && node.staleSince !== null,
+                weight: weight,
+                weightedClass: weightedClass,
+                isLinked: isLinked,
+                isEnriched: isEnriched,
+                docAnchors: (node.semantic && node.semantic.docAnchors) || [],
+                summary: (node.semantic && node.semantic.summary) || ''
+            };
+        });
+        
+        const weightedHealthScore = totalWeight > 0 ? (linkedWeight / totalWeight) * 100 : 0;
+        
+        dashboardStats.enrichableNodes = enrichableNodes.length;
+        dashboardStats.linkedNodes = linkedNodes.length;
+        dashboardStats.enrichedNodes = enrichedNodes.length;
+        dashboardStats.totalGodNodes = godNodes.length;
+        dashboardStats.documentedGodNodes = documentedGodNodes.length;
+        dashboardStats.weightedHealthScore = weightedHealthScore;
+        dashboardStats.staleDocsCount = staleNodes.length;
+        
+        // Auto-update README.md with new Graph Traceability stats
+        const readmePath = path.join(srcDir, 'README.md');
+        if (fs.existsSync(readmePath)) {
+            try {
+                let readmeContent = fs.readFileSync(readmePath, 'utf8');
+                const traceabilityHeader = '## Graph Traceability';
+                const updatedDate = new Date().toISOString().split('T')[0];
+                
+                const docsWithAnchorsPct = Math.round(docsWithAnchors / allMdFiles.length * 100);
+                const linkedPct = Math.round(linkedNodes.length / enrichableNodes.length * 100);
+                const godPct = godNodes.length > 0 ? Math.round(documentedGodNodes.length / godNodes.length * 100) : 0;
+                
+                const newTraceabilityContent = `## Graph Traceability
+
+> Auto-generated by \`/docs update --graph\` | Last scan: ${updatedDate}
+
+| Metric | Value |
+|:--|:--|
+| Total docs | ${allMdFiles.length} |
+| Docs with graph anchors | ${docsWithAnchors} (${docsWithAnchorsPct}%) |
+| Graph nodes with docAnchors | ${linkedNodes.length}/${enrichableNodes.length} enrichable (${linkedPct}%) |
+| God Nodes documented | ${documentedGodNodes.length}/${godNodes.length} top-connected (${godPct}%) |
+| Docs Health Score (Weighted) | ${Math.round(weightedHealthScore)}/100 |
+| Stale docs (code changed) | ${staleNodes.length} |
+`;
+                const regex = /## Graph Traceability[\s\S]*/;
+                if (readmeContent.match(regex)) {
+                    readmeContent = readmeContent.replace(regex, newTraceabilityContent.trim() + '\n');
+                } else {
+                    readmeContent = readmeContent.trim() + '\n\n' + newTraceabilityContent;
+                }
+                fs.writeFileSync(readmePath, readmeContent, 'utf8');
+                console.log('📝 Automatically updated Graph Traceability stats in README.md');
+            } catch (e) {
+                console.warn('Warning: Failed to update README.md index statistics:', e.message);
+            }
+        }
+    }
+    
+    // Compile dashboard.html
+    const dashboardTemplatePath = path.join(__dirname, '..', 'references', 'dashboard-template.html');
+    if (fs.existsSync(dashboardTemplatePath)) {
+        try {
+            let dashboardHtml = fs.readFileSync(dashboardTemplatePath, 'utf8');
+            console.log('DEBUG: Compiling dashboard.html with language:', workspaceLang);
+            const currentTranslations = translations[workspaceLang] || translations['en'];
+            console.log('DEBUG: Keys in currentTranslations:', Object.keys(currentTranslations));
+            for (const key in currentTranslations) {
+                if (key === 'dashboardTitle') {
+                    console.log('DEBUG: replacing dashboardTitle with:', currentTranslations[key]);
+                    console.log('DEBUG: before replace, html contains title placeholder:', dashboardHtml.includes('/* TRANSLATE:dashboardTitle */'));
+                }
+                dashboardHtml = dashboardHtml.replaceAll(`/* TRANSLATE:${key} */`, currentTranslations[key]);
+                if (key === 'dashboardTitle') {
+                    console.log('DEBUG: after replace, html contains title placeholder:', dashboardHtml.includes('/* TRANSLATE:dashboardTitle */'));
+                }
+            }
+            
+            const relativeReadmeFromTarget = 'README.html';
+            const relativeSearchIndexUrl = 'search-index.js';
+            
+            const now = new Date();
+            const renderTime = now.toLocaleString(workspaceLang === 'vi' ? 'vi-VN' : 'en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            
+            const sidebarHtml = ''; // Dashboard runs inside Portal iframe, no sidebar needed
+            
+            dashboardHtml = dashboardHtml
+                .replaceAll('/* WORKSPACE_LANG */', workspaceLang)
+                .replaceAll('/* README_RELATIVE_URL */', relativeReadmeFromTarget)
+                .replaceAll('/* SEARCH_INDEX_RELATIVE_URL */', relativeSearchIndexUrl)
+                .replaceAll('/* RENDER_TIME */', renderTime)
+                .replaceAll('/* KERNEL_VERSION */', kernelVersion)
+                .replaceAll('<!-- DOCS_LIST_PLACEHOLDER -->', sidebarHtml)
+                .replace(/const dashboardStats = [^;]+;/, 'const dashboardStats = ' + JSON.stringify(dashboardStats, null, 2) + ';')
+                .replace(/const graphNodesData = [^;]+;/, 'const graphNodesData = ' + JSON.stringify(processedNodesData, null, 2) + ';');
+                
+            fs.writeFileSync(path.join(destDir, 'dashboard.html'), dashboardHtml, 'utf8');
+            console.log('📊 Compiled documentation quality Dashboard successfully.');
+
+            // Compile Portal index.html
+            const portalTemplatePath = path.join(__dirname, '..', 'references', 'portal-template.html');
+            if (fs.existsSync(portalTemplatePath)) {
+                try {
+                    let portalHtml = fs.readFileSync(portalTemplatePath, 'utf8');
+                    
+                    portalHtml = portalHtml.replaceAll('/* WORKSPACE_LANG */', workspaceLang);
+                    const currentTranslations = translations[workspaceLang] || translations['en'];
+                    for (const key in currentTranslations) {
+                        portalHtml = portalHtml.replaceAll(`/* TRANSLATE:${key} */`, currentTranslations[key]);
+                    }
+                    
+                    const relativeSearchIndexUrl = 'search-index.js';
+                    const portalSidebarHtml = treeToHtml(treeRoot, '', path.join(destDir, 'index.html'), srcDir, destDir);
+                    
+                    portalHtml = portalHtml
+                        .replaceAll('/* SEARCH_INDEX_RELATIVE_URL */', relativeSearchIndexUrl)
+                        .replaceAll('/* KERNEL_VERSION */', kernelVersion)
+                        .replaceAll('<!-- DOCS_LIST_PLACEHOLDER -->', portalSidebarHtml);
+                        
+                    fs.writeFileSync(path.join(destDir, 'index.html'), portalHtml, 'utf8');
+                    console.log('💻 Compiled Portal App Shell index.html successfully.');
+                } catch (e) {
+                    console.error('Error compiling index.html Portal:', e.message);
+                }
+            }
+        } catch (e) {
+            console.error('Error compiling dashboard.html:', e.message);
         }
     }
     

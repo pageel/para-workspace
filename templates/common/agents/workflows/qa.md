@@ -91,8 +91,9 @@ If the `--graph` flag is provided, execute an INTERACTIVE Graph Preparation Phas
    - *Note on Working Directory:* If the project has a `repo/` directory (e.g., `Projects/[project]/repo/`), the `Cwd` MUST be set to that `repo/` directory, not the project root.
 2. **Identify & Analyze Nodes:** Use MCP tools (`graph_god_nodes`, `graph_query`, `graph_context_bundle`, `graph_impact_analysis`) to deeply analyze the core files and God nodes related to the artifact.
 3. **Enrich:** For any unenriched God nodes found, use `graph_enrich` to document their semantic meaning.
-4. **Interactive Report:** Pause the workflow and present a Chat Report to the user containing the impact analysis and blast radius of the components covered in the artifact.
-5. **Wait for User:** Ask if the user wants to analyze any other aspects/nodes before generating the QA Strategy. **STOP HERE.** Proceed to Step 0.5 only after user confirms.
+4. **Pattern Verify (Step G, para-graph §4.2):** If the artifact contains file count estimates for inline code patterns, run `grep_search` to cross-validate. Challenge: "Does the plan claim N files? Verify with grep."
+5. **Interactive Report:** Pause the workflow and present a Chat Report to the user containing the impact analysis and blast radius of the components covered in the artifact.
+6. **Wait for User:** Ask if the user wants to analyze any other aspects/nodes before generating the QA Strategy. **STOP HERE.** Proceed to Step 0.5 only after user confirms.
 
 ### Step 0.5. Process Selection & Pre-QA Strategy (The QA Kickoff)
 

@@ -92,3 +92,13 @@ BEFORE executing any task item in a plan Phase, Agent MUST:
 4. **IF guard condition is not met → STOP and resolve before continuing**
 
 > Principle: Guards are **momentum breakers** — they exist to prevent Agent from auto-piloting through critical operations.
+
+### 5. Role Boundary & Plan Adherence (Vibecode Session)
+
+- **IF** the system KI `vibecode_session` is **Active**:
+  - Agent **MUST** act strictly as a Developer implementing the active plan.
+  - Agent **MUST** focus only on writing code to complete the active phase.
+  - Agent **MUST NOT** modify project management artifacts (such as `backlog.md`, `done.md`, `project.md`) or system rules files under `.agents/` during coding execution.
+  - **Exception**: Changes are allowed if explicitly written as a task in the active phase file inventory.
+  - Agent **MUST** defer all backlog updating and status synchronizations to the `/end` workflow.
+

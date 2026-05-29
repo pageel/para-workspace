@@ -3,9 +3,21 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.8.15] - 2026-05-29
+
+Vibecode DSP & Template Consolidation.
+
+- **Added**: New System KI template `para_vibecode_session` for tracking JIT session goals, active phase and execution rules.
+- **Added**: Pre-code Quality Gate (supporting /brainstorm, /qa, TDD, --graph, --hardened) and automated Context Reload at Phase start.
+- **Changed**: Updated phase transition checkpoints across all 6 plan templates (`detail-plan.md`, `detail-plan-docs.md`, `detail-plan-tdd.md`, `detail-plan-hardened.md`, `session-plan.md` and `guard-catalog.md`) to require explicit user approval.
+- **Changed**: Upgraded TDD Repo Snapshot strategy using `git status --ignored --porcelain` to catch untracked and ignored garbage files.
+- **Changed**: Added User Consent Gate for repo drift cleanup at Walkthrough stage to prevent accidental deletion of draft plan files.
+- **Fixed**: Translated remaining Vietnamese strings to English in `backlog`, `end`, and `qa` workflow templates for strict English-First compliance in the public repository.
+
 ## [1.8.14] - 2026-05-26
 
 MCP Windows Path Conversion & Plan Auto-Activation.
+
 
 - **Fixed**: Convert absolute POSIX path of `RUNTIME_CMD` (Node.exe) to Windows mixed path via `cygpath -m` on Windows in `cli/commands/mcp-setup.sh`, preventing path execution errors (BUG-37).
 - **Fixed**: Integrated defensive check to append `.exe` to `RUNTIME_CMD` if the exact resolved path does not exist but the `.exe` file does.

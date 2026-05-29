@@ -11,94 +11,95 @@
 workspace: "1.8.14"
 
 workflows:
-  backlog:         "1.8.10"  # updated: graph router integration
-  open:            "1.8.10"  # Project Skill + memory_search at session start
-  end:             "1.8.10"  # Project Skill + auto memory_curate
+  backlog:         "1.8.15"  # updated: translated Vietnamese to English
+  open:            "1.8.15"  # JIT Phase creation, user intent detection
+  end:             "1.8.15"  # translated Vietnamese to English
   install:         "1.0.0"
-  new-project:     "1.8.10"  # updated: next action suggestion hook
-  verify:          "1.8.9"   # graph_impact_analysis blast radius check
-  retro:          "1.8.9"   # memory_search + memory_push + memory_curate
-  push:            "1.8.11"  # updated: VCS automation updates
+  new-project:     "1.8.10"
+  verify:          "1.8.15"  # JIT Phase creation check, user intent detection
+  retro:          "1.8.9"
+  push:            "1.8.11"
   release:         "1.0.1"
   merge:           "1.0.0"
-  config:          "1.7.13"   # updated: preferences.date_format support
+  config:          "1.7.13"
   backup:          "1.0.0"
   para:            "1.1.0"
   inbox:           "1.1.0"
-  learn:           "1.8.9"   # memory_push for lessons
-  para-workflow:   "1.8.8"   # Purged legacy catalog.yml version references
-  para-rule:       "1.8.8"   # Purged legacy catalog.yml version references
-  plan:            "1.8.13"  # updated: Remove create activation prompt, add dev auto-activation
-  para-audit:      "1.8.8"   # Quarantine Hook
-  docs:            "1.8.10"  # Modular HTML Renderer + watch option
-  update:          "1.8.13"  # updated: preferences.node_path check
-  brainstorm:      "1.8.10"  # Project Skill + memory lifecycle
+  learn:           "1.8.9"
+  para-workflow:   "1.8.8"
+  para-rule:       "1.8.8"
+  plan:            "1.8.13"
+  para-audit:      "1.8.8"
+  docs:            "1.8.15"  # JIT Phase creation check, user intent detection
+  update:          "1.8.13"
+  brainstorm:      "1.8.10"
   para-knowledge:  "1.4.0"
-  para-skill:      "1.8.8"   # Purged legacy catalog.yml version references
-  write:           "1.7.16"   # FEAT-79: style guide, social template
-  logs:            "1.8.9"   # memory_search cross-reference in deep audit
-  spec:            "1.8.10"  # --graph pipeline + Project Skill + memory ops
-  qa:              "1.8.10"  # memory_search + memory_push + memory_curate
-  staging:         "1.8.11"  # NEW: Staging Manager
-  vibecode:        "1.8.11"  # NEW: Execution Mode Controller
-  scan-sec:        "1.8.11"  # NEW: Vulnerability Scanner
-  resource:        "1.8.11"  # NEW: Resource Study Manager
+  para-skill:      "1.8.8"
+  write:           "1.7.16"
+  logs:            "1.8.9"
+  spec:            "1.8.10"
+  qa:              "1.8.15"  # translated Vietnamese to English
+  staging:         "1.8.11"
+  vibecode:        "1.8.15"  # JIT Phase creation check, user intent detection
+  scan-sec:        "1.8.15"  # added missing telemetry check
+  resource:        "1.8.11"
 
 rules:
-  agent-behavior:          "1.7.16"   # C7 file guards, proactive guard scan
+  agent-behavior:          "1.8.15"  # consolidated checkpoints
   governance:              "1.0.0"
   artifact-standard:       "1.8.13"
   context-rules:           "1.1.0"
   exports-data:            "1.0.0"
-  naming:                  "1.7.13"   # updated: date format convention
+  naming:                  "1.7.13"
   para-discipline:         "1.0.0"
-  vcs:                     "1.7.13.2" # updated: SafeToAutoRun gate
-  versioning:              "1.7.13"   # updated: VERSIONS.yml reference
-  hybrid-3-file-integrity: "1.7.16"   # C7: plan status transition is USER-ONLY
+  vcs:                     "1.7.13.2"
+  versioning:              "1.7.13"
+  hybrid-3-file-integrity: "1.7.16"
   knowledge:               "1.1.0"
-  agent-persona:           "1.8.10"   # NEW: Custom conversational style
-  graph-first-policy:      "1.8.10"   # NEW: Graph-First Investigation Policy
-  tool-routing:            "1.8.10"   # NEW: Tool selection heuristic guide
+  agent-persona:           "1.8.10"
+  graph-first-policy:      "1.8.10"
+  tool-routing:            "1.8.10"
 
 skills:
-  para-kit:    "1.8.8"   # Purged legacy catalog.yml version references
+  para-kit:    "1.8.8"
   formatting:  "1.1.0"
   page-map:    "1.0.0"
   para-skill:  "1.0.0"
-  plan:        "1.8.13"  # updated: Prominent dev plan options in Next Steps
-  docs:        "1.8.10"  # graph router §3.3.2 Graph-Awareness
-  brainstorm:  "1.8.10"  # graph router §3.3.3 Graph-Awareness
-  write:       "1.7.16"   # social template added
-  harness:     "1.8.7"   # Enforced governance guards
-  spec:        "1.8.10"  # graph router §3.3.4 Graph-Awareness
-  qa:          "1.8.10"  # Force Red Team @[/brainstorm] for Critical
-  tdd:         "1.8.8"   # Automated TDD Gate (--gate)
-  logs:        "1.8.7"   # NEW: Logs Audit Extensions
-  html-renderer: "1.8.10" # NEW: Modular HTML Renderer skill
-  new-project: "1.8.10"  # NEW: Sidecar skill for /new-project
-  resource:    "1.8.11"  # NEW: Resource Study Templates
-  scan-sec:    "1.8.11"  # NEW: Vulnerability Scanner Templates
-  staging:     "1.8.11"  # NEW: Staging Templates
-  vibecode:    "1.8.11"  # NEW: Vibecode Execution Templates
-  sidecar-skill: "1.8.11" # NEW: Sidecar Skill Governance
+  plan:        "1.8.15"  # detail-plan phase transition checkpoints updated
+  docs:        "1.8.15"  # detail-plan-docs template updated
+  brainstorm:  "1.8.15"  # templates updated
+  write:       "1.7.16"
+  harness:     "1.8.15"  # guard-catalog updated
+  spec:        "1.8.10"
+  qa:          "1.8.10"
+  tdd:         "1.8.15"  # tdd/SKILL.md update
+  logs:        "1.8.7"
+  html-renderer: "1.8.15" # dashboard and portal template support
+  new-project: "1.8.10"
+  resource:    "1.8.11"
+  scan-sec:    "1.8.11"
+  staging:     "1.8.11"
+  vibecode:    "1.8.15"  # session-quality-gate and session-manager.sh support
+  sidecar-skill: "1.8.11"
 
 cli:
-  para:            "1.8.2"   # MCP Management commands, help text
-  install-tool:    "1.8.11"  # updated: dirty-check logic
-  remove-tool:     "1.8.0"   # NEW: remove installed tools
-  list-tools:      "1.8.0"   # NEW: list installed tools
-  install:         "1.8.0"   # Add tool system asset sync (section 3.6)
-  mcp-setup:       "1.8.14"  # updated: convert RUNTIME_CMD via cygpath on Windows (BUG-37)
-  mcp-list:        "1.8.2"   # NEW: list MCP-capable tools
-  mcp-remove:      "1.8.2"   # NEW: remove IDE MCP config
+  para:            "1.8.2"
+  install-tool:    "1.8.11"
+  remove-tool:     "1.8.0"
+  list-tools:      "1.8.0"
+  install:         "1.8.0"
+  mcp-setup:       "1.8.14"
+  mcp-list:        "1.8.2"
+  mcp-remove:      "1.8.2"
 
 templates:
-  tool-wrapper:    "1.8.0"   # NEW: auto-generated wrapper for tool plugins
+  tool-wrapper:    "1.8.0"
 
 registry:
-  tools:           "1.8.13"  # para-graph latest bumped to 0.15.8
-  tool-schema:     "1.8.5"   # shipped_in + min_engine_version (additive)
+  tools:           "1.8.13"
+  tool-schema:     "1.8.5"
 
 knowledge:
-  para_workspace_architecture_standards: "1.8.13" # updated: Artifact Authority & Platform Separation
-  para_anti_truncation_guardrail: "1.8.10" # NEW: Anti-truncation mechanism and safety guardrails
+  para_workspace_architecture_standards: "1.8.15" # updated: Vibecode DSP standards
+  para_anti_truncation_guardrail: "1.8.10"
+  para_vibecode_session: "1.8.15" # NEW: Vibecode session workspace memory KI

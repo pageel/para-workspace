@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="/* WORKSPACE_LANG */">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>/* TRANSLATE:title */</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+    
+    <!-- Google Fonts: Outfit, Inter, Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            /* Light Theme colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #fbfbfa;
+            --text-primary: #37352f;
+            --text-secondary: #7c7b77;
+            --border-color: #efefe8;
+            --accent-color: #2383e2;
+            --accent-hover: #1263ad;
+            --sidebar-width: 280px;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji";
+            --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
+            --header-height: 56px;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme colors */
+            --bg-primary: #191919;
+            --bg-secondary: #202020;
+            --text-primary: #e3e3e2;
+            --text-secondary: #9b9a97;
+            --border-color: #2e2e2e;
+            --accent-color: #2eaadc;
+            --accent-hover: #1b85af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Portal Layout */
+        .portal-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Left Sidebar */
+        aside.left-sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            flex-shrink: 0;
+            transition: width 0.2s ease, border-right-color 0.2s ease;
+        }
+
+        aside.left-sidebar.collapsed {
+            width: 0 !important;
+            border-right-color: transparent;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            height: var(--header-height);
+            padding: 0 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header h1 {
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-menu {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 14px 10px;
+            white-space: nowrap;
+        }
+
+        .menu-title {
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            padding-left: 8px;
+        }
+
+        /* Folder Tree Styling */
+        .tree-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tree-item {
+            margin-bottom: 1px;
+        }
+
+        .tree-folder {
+            margin-bottom: 2px;
+        }
+
+        .folder-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 8px;
+            border-radius: 5px;
+            color: var(--text-primary);
+            font-size: 13.5px;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .folder-toggle:hover {
+            background-color: rgba(55, 53, 47, 0.04);
+        }
+        [data-theme="dark"] .folder-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.055);
+        }
+
+        .folder-toggle .chevron-icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 10px;
+            height: 10px;
+        }
+
+        .folder-toggle .chevron-icon-container svg {
+            width: 10px;
+            height: 10px;
+            color: var(--text-secondary);
+        }
+
+        .folder-toggle svg.lucide-folder {
+            color: #f59e0b;
+            fill: #f59e0b;
+            fill-opacity: 0.15;
+            width: 14px;
+            height: 14px;
+        }
+
+        .menu-link svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+        .folder-content {
+            list-style: none;
+            padding-left: 12px;
+            margin-left: 12px;
+            margin-top: 1px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 8px;
+            border-radius: 5px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 400;
+            cursor: pointer;
+            word-break: break-all;
+        }
+
+        .menu-link:hover, .menu-link.active {
+            background-color: rgba(55, 53, 47, 0.04);
+            color: var(--text-primary);
+        }
+        [data-theme="dark"] .menu-link:hover, [data-theme="dark"] .menu-link.active {
+            background-color: rgba(255, 255, 255, 0.055);
+            color: var(--text-primary);
+        }
+
+        .menu-link.active {
+            font-weight: 600;
+            background-color: rgba(55, 53, 47, 0.06) !important;
+        }
+        [data-theme="dark"] .menu-link.active {
+            background-color: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        /* Sidebar Footer (Theme, fold status) */
+        .sidebar-footer {
+            padding: 12px 14px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .footer-action-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-action-btn:hover {
+            background-color: rgba(55, 53, 47, 0.04);
+            color: var(--text-primary);
+        }
+        [data-theme="dark"] .footer-action-btn:hover {
+            background-color: rgba(255, 255, 255, 0.055);
+            color: var(--text-primary);
+        }
+
+        /* Resizer */
+        .resizer {
+            width: 4px;
+            background-color: transparent;
+            cursor: col-resize;
+            position: relative;
+            z-index: 100;
+            flex-shrink: 0;
+            height: 100%;
+        }
+
+        .resizer:hover, .resizer.resizing {
+            background-color: var(--accent-color);
+        }
+
+        .resizer.collapsed {
+            display: none !important;
+        }
+
+        /* Main Portal Viewport */
+        main.portal-main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-primary);
+        }
+
+        /* App Shell Header */
+        .portal-header {
+            height: var(--header-height);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            background-color: var(--bg-primary);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-toggle-sidebar {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-toggle-sidebar:hover {
+            background-color: rgba(55, 53, 47, 0.04);
+            color: var(--text-primary);
+        }
+        [data-theme="dark"] .header-toggle-sidebar:hover {
+            background-color: rgba(255, 255, 255, 0.055);
+        }
+
+        .header-doc-title {
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Unified Search Bar */
+        .search-container {
+            position: relative;
+            width: 240px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 6px 10px 6px 30px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-color);
+            background-color: var(--bg-primary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            width: 14px;
+            height: 14px;
+            pointer-events: none;
+        }
+
+        /* Search Dropdown Results */
+        .search-results {
+            position: absolute;
+            top: calc(100% + 4px);
+            right: 0;
+            width: 320px;
+            max-height: 400px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+        }
+
+        .search-result-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background-color: rgba(55, 53, 47, 0.04);
+        }
+        [data-theme="dark"] .search-result-item:hover {
+            background-color: rgba(255, 255, 255, 0.055);
+        }
+
+        .result-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .result-snippet {
+            font-size: 11.5px;
+            color: var(--text-secondary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .no-results {
+            padding: 14px;
+            text-align: center;
+            font-size: 12.5px;
+            color: var(--text-secondary);
+        }
+
+        /* Iframe Viewport Container */
+        .viewport-container {
+            flex-grow: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #content-viewport {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: var(--bg-primary);
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <div class="portal-container">
+        
+        <!-- Shared Left Sidebar -->
+        <aside class="left-sidebar" id="left-sidebar">
+            <div class="sidebar-header">
+                <h1 title="/* TRANSLATE:title */"><i data-lucide="book-open" style="display:inline-block; vertical-align:middle; margin-right:6px; color:var(--accent-color);"></i>/* TRANSLATE:title */</h1>
+            </div>
+            
+            <div class="sidebar-menu">
+                <div class="menu-title">/* TRANSLATE:treeTitle */</div>
+                <ul class="tree-list" id="docs-list">
+                    <!-- DOCS_LIST_PLACEHOLDER -->
+                </ul>
+            </div>
+
+            <!-- Sidebar Footer: settings & actions -->
+            <div class="sidebar-footer">
+                <span>Kernel v/* KERNEL_VERSION */</span>
+                <div style="display: flex; gap: 4px;">
+                    <button class="footer-action-btn" onclick="toggleTheme()" title="/* TRANSLATE:themeBtn */">
+                        <i data-lucide="sun" id="theme-icon-light"></i>
+                        <i data-lucide="moon" id="theme-icon-dark" style="display: none;"></i>
+                    </button>
+                    <button class="footer-action-btn" onclick="toggleSidebar()" title="/* TRANSLATE:collapseSidebar */">
+                        <i data-lucide="sidebar"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Draggable Resizer for Sidebar -->
+        <div class="resizer" id="left-resizer"></div>
+
+        <!-- Main Portal Container -->
+        <main class="portal-main">
+            
+            <!-- App Header -->
+            <header class="portal-header">
+                <div class="header-left">
+                    <button class="header-toggle-sidebar" id="sidebar-toggle-btn" style="display: none;" onclick="toggleSidebar()" title="/* TRANSLATE:expandSidebar */">
+                        <i data-lucide="sidebar"></i>
+                    </button>
+                    <span class="header-doc-title" id="header-doc-title">Dashboard</span>
+                </div>
+                <div class="header-right">
+                    <!-- Search Input -->
+                    <div class="search-container">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" class="search-input" id="portal-search-input" placeholder="/* TRANSLATE:searchPlaceholder */" autocomplete="off" oninput="handleGlobalSearch()">
+                        <div class="search-results" id="portal-search-results"></div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Iframe Document Viewport -->
+            <div class="viewport-container">
+                <iframe id="content-viewport" src="dashboard.html"></iframe>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- Inject Search Index Data Script -->
+    <script src="/* SEARCH_INDEX_RELATIVE_URL */"></script>
+
+    <script>
+        // Initialize lucide icons
+        lucide.createIcons();
+
+        const leftSidebar = document.getElementById('left-sidebar');
+        const leftResizer = document.getElementById('left-resizer');
+        const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+        const viewport = document.getElementById('content-viewport');
+        const headerTitle = document.getElementById('header-doc-title');
+
+        // Theme management
+        let currentTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-theme', currentTheme);
+        updateThemeIcons(currentTheme);
+
+        function updateThemeIcons(theme) {
+            const sunIcon = document.getElementById('theme-icon-light');
+            const moonIcon = document.getElementById('theme-icon-dark');
+            if (theme === 'dark') {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+        }
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', currentTheme);
+            localStorage.setItem('theme', currentTheme);
+            updateThemeIcons(currentTheme);
+            
+            // Sync theme to iframe con
+            syncThemeToIframe();
+        }
+
+        function syncThemeToIframe() {
+            if (viewport && viewport.contentWindow) {
+                viewport.contentWindow.postMessage({
+                    type: 'set-theme',
+                    theme: currentTheme
+                }, '*');
+            }
+        }
+
+        // Send theme immediately when iframe loads
+        viewport.addEventListener('load', () => {
+            syncThemeToIframe();
+            
+            // Try to extract document title from iframe path
+            try {
+                const iframeUrl = viewport.contentWindow.location.href;
+                const pathParts = viewport.contentWindow.location.pathname.split('/');
+                const filename = pathParts.pop();
+                
+                if (filename === 'dashboard.html') {
+                    headerTitle.textContent = 'Dashboard';
+                } else {
+                    const cleanName = filename.replace(/\.html$/, '');
+                    // Find corresponding item in Sidebar to get its true title
+                    const sidebarLink = document.querySelector(`.menu-link[data-docpath$="${filename}"]`);
+                    if (sidebarLink) {
+                        headerTitle.textContent = sidebarLink.innerText.trim();
+                    } else {
+                        headerTitle.textContent = decodeURIComponent(cleanName);
+                    }
+                }
+            } catch (e) {}
+        });
+
+        // Left sidebar folding & resizing
+        if (localStorage.getItem('sidebar-left-collapsed') === 'true') {
+            leftSidebar.classList.add('collapsed');
+            leftResizer.classList.add('collapsed');
+            sidebarToggleBtn.style.display = 'flex';
+        }
+
+        function toggleSidebar() {
+            const isCollapsed = leftSidebar.classList.toggle('collapsed');
+            leftResizer.classList.toggle('collapsed', isCollapsed);
+            sidebarToggleBtn.style.display = isCollapsed ? 'flex' : 'none';
+            localStorage.setItem('sidebar-left-collapsed', isCollapsed);
+        }
+
+        // Resizing logic
+        let isResizing = false;
+        leftResizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            leftResizer.classList.add('resizing');
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            let newWidth = e.clientX;
+            if (newWidth < 180) newWidth = 180;
+            if (newWidth > 500) newWidth = 500;
+            document.documentElement.style.setProperty('--sidebar-width', newWidth + 'px');
+            localStorage.setItem('sidebar-left-width', newWidth);
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = 'default';
+                leftResizer.classList.remove('resizing');
+            }
+        });
+
+        // Set saved width
+        const savedLeftWidth = localStorage.getItem('sidebar-left-width');
+        if (savedLeftWidth) {
+            document.documentElement.style.setProperty('--sidebar-width', savedLeftWidth + 'px');
+        }
+
+        // Left Sidebar Navigation Handler
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.menu-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const href = link.getAttribute('href');
+                    if (href && href !== '#') {
+                        viewport.src = href;
+                        setActiveLink(link);
+                    }
+                });
+            });
+
+            // Set active dashboard link on load
+            const activeDashboardLink = document.getElementById('dashboard-link');
+            if (activeDashboardLink) {
+                activeDashboardLink.classList.add('active');
+            }
+        });
+
+        function setActiveLink(activeLink) {
+            document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+            activeLink.classList.add('active');
+            
+            // Expand parent folders if any
+            let parentFolder = activeLink.closest('.folder-content');
+            while (parentFolder) {
+                parentFolder.style.display = 'block';
+                const folderToggle = parentFolder.previousElementSibling;
+                if (folderToggle && folderToggle.classList.contains('folder-toggle')) {
+                    const chevron = folderToggle.querySelector('.chevron-icon-container');
+                    if (chevron) {
+                        chevron.innerHTML = '<i data-lucide="chevron-down"></i>';
+                    }
+                }
+                parentFolder = parentFolder.parentElement.closest('.folder-content');
+            }
+            lucide.createIcons();
+        }
+
+        // Listen for communication from iframe con
+        window.addEventListener('message', (e) => {
+            if (e.data) {
+                if (e.data.type === 'navigate') {
+                    // Resolve relative link using baseUrl sent by child to avoid SecurityError in file:///
+                    let base = e.data.baseUrl;
+                    if (!base) {
+                        try {
+                            base = viewport.contentWindow.location.href;
+                        } catch (err) {
+                            base = window.location.href;
+                        }
+                    }
+                    const resolvedUrl = new URL(e.data.href, base).href;
+                    
+                    // Set viewport src to resolved URL
+                    viewport.src = resolvedUrl;
+                    
+                    // Find matching link on Sidebar to active it
+                    try {
+                        const urlObj = new URL(resolvedUrl);
+                        const pathname = urlObj.pathname;
+                        const filename = pathname.split('/').pop();
+                        
+                        // Find matching data-docpath in Sidebar links
+                        const matchingLink = Array.from(document.querySelectorAll('.menu-link')).find(link => {
+                            const linkHref = link.getAttribute('href');
+                            return linkHref && linkHref.endsWith(filename);
+                        });
+                        
+                        if (matchingLink) {
+                            setActiveLink(matchingLink);
+                        }
+                    } catch (err) {}
+                }
+            }
+        });
+
+        // Folder Toggle logic
+        document.querySelectorAll('.folder-toggle').forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                const content = toggle.nextElementSibling;
+                const isOpening = content.style.display === 'none';
+                content.style.display = isOpening ? 'block' : 'none';
+                
+                const container = toggle.querySelector('.chevron-icon-container');
+                if (container) {
+                    container.innerHTML = `<i data-lucide="${isOpening ? 'chevron-down' : 'chevron-right'}"></i>`;
+                    lucide.createIcons();
+                }
+                e.stopPropagation();
+            });
+        });
+
+        // Global Search Logic
+        const searchResultsDiv = document.getElementById('portal-search-results');
+        const searchInput = document.getElementById('portal-search-input');
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-container')) {
+                searchResultsDiv.style.display = 'none';
+            }
+        });
+
+        function handleGlobalSearch() {
+            const query = searchInput.value.toLowerCase().trim();
+            if (!query) {
+                searchResultsDiv.style.display = 'none';
+                return;
+            }
+
+            if (!window.searchIndexData) {
+                searchResultsDiv.innerHTML = '<div class="no-results">/* TRANSLATE:loadingSearch */</div>';
+                searchResultsDiv.style.display = 'block';
+                return;
+            }
+
+            const results = window.searchIndexData.filter(item => {
+                return item.title.toLowerCase().includes(query) || item.content.toLowerCase().includes(query);
+            });
+
+            if (results.length === 0) {
+                searchResultsDiv.innerHTML = '<div class="no-results">/* TRANSLATE:noSearchResults */</div>';
+            } else {
+                searchResultsDiv.innerHTML = '';
+                results.slice(0, 10).forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'search-result-item';
+                    
+                    // Generate small snippet
+                    let snippet = '';
+                    const idx = item.content.toLowerCase().indexOf(query);
+                    if (idx !== -1) {
+                        const start = Math.max(0, idx - 40);
+                        const end = Math.min(item.content.length, idx + 80);
+                        snippet = item.content.substring(start, end);
+                        if (start > 0) snippet = '...' + snippet;
+                        if (end < item.content.length) snippet = snippet + '...';
+                    } else {
+                        snippet = item.content.substring(0, 100) + '...';
+                    }
+
+                    div.innerHTML = `
+                        <span class="result-title">${item.title}</span>
+                        <span class="result-snippet">${escapeHtml(snippet)}</span>
+                    `;
+                    div.addEventListener('click', () => {
+                        viewport.src = item.path;
+                        
+                        // Highlight matching link in Sidebar
+                        const matchingLink = Array.from(document.querySelectorAll('.menu-link')).find(link => {
+                            const linkHref = link.getAttribute('href');
+                            return linkHref && linkHref.endsWith(item.path);
+                        });
+                        
+                        if (matchingLink) {
+                            setActiveLink(matchingLink);
+                        }
+                        
+                        searchResultsDiv.style.display = 'none';
+                        searchInput.value = '';
+                    });
+                    searchResultsDiv.appendChild(div);
+                });
+            }
+            searchResultsDiv.style.display = 'block';
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>

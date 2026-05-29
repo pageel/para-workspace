@@ -1,0 +1,2463 @@
+<!DOCTYPE html>
+<html lang="/* WORKSPACE_LANG */">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>/* TRANSLATE:dashboardTitle */</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #fbfbfa;
+            --text-primary: #37352f;
+            --text-secondary: #7c7b77;
+            --border-color: #efefe8;
+            --accent-color: #2383e2;
+            --accent-hover: #1263ad;
+            --hover-color: rgba(55, 53, 47, 0.04);
+            --danger-color: #eb5757;
+            --warning-color: #ea580c;
+            --success-color: #0f9d58;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji";
+            --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
+            --header-height: 56px;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #191919;
+            --bg-secondary: #202020;
+            --text-primary: #e3e3e2;
+            --text-secondary: #9b9a97;
+            --border-color: #2e2e2e;
+            --accent-color: #2eaadc;
+            --accent-hover: #1b85af;
+            --hover-color: rgba(255, 255, 255, 0.055);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .content-wrapper {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 36px;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* Title section */
+        .dashboard-title-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+        }
+
+        .dashboard-title-section h2 {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .dashboard-title-section p {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Metrics grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .score-card {
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+        }
+
+        /* Progress ring */
+        .progress-ring-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-ring-circle-bg {
+            fill: none;
+            stroke: var(--border-color);
+            stroke-width: 10;
+        }
+
+        .progress-ring-circle {
+            fill: none;
+            stroke: var(--accent-color);
+            stroke-width: 10;
+            stroke-linecap: round;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 0.35s;
+        }
+
+        .progress-text {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-text-score {
+            font-family: var(--font-display);
+            font-size: 40px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .progress-text-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .score-evaluation {
+            font-size: 13.5px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .score-eval-gold {
+            background-color: rgba(15, 157, 88, 0.1);
+            color: var(--success-color);
+        }
+
+        .score-eval-good {
+            background-color: rgba(234, 88, 12, 0.1);
+            color: var(--warning-color);
+        }
+
+        .score-eval-poor {
+            background-color: rgba(235, 87, 87, 0.1);
+            color: var(--danger-color);
+        }
+
+        /* Stats boxes */
+        .stats-cards-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            height: 100%;
+        }
+
+        .stat-box {
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.01);
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04);
+            background-color: var(--bg-primary);
+        }
+        [data-theme="dark"] .stat-box:hover {
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            background-color: var(--bg-primary);
+        }
+
+        .stat-box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .stat-box-icon-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background-color: var(--hover-color);
+            transition: all 0.25s ease;
+        }
+
+        .stat-box-icon-wrapper svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-secondary);
+            transition: all 0.25s ease;
+        }
+
+        /* Themed wrappers and accents */
+        .stat-box.box-blue:hover { border-color: rgba(35, 131, 226, 0.5); }
+        .stat-box.box-indigo:hover { border-color: rgba(99, 102, 241, 0.5); }
+        .stat-box.box-gold:hover { border-color: rgba(245, 158, 11, 0.5); }
+        .stat-box.box-success:hover { border-color: rgba(16, 185, 129, 0.5); }
+        .stat-box.box-danger:hover { border-color: rgba(239, 68, 68, 0.5); }
+        
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: transparent;
+            transition: all 0.25s;
+        }
+        .stat-box.box-blue:hover::before { background: #2383e2; }
+        .stat-box.box-indigo:hover::before { background: #6366f1; }
+        .stat-box.box-gold:hover::before { background: #f59e0b; }
+        .stat-box.box-success:hover::before { background: #10b981; }
+        .stat-box.box-danger:hover::before { background: #ef4444; }
+
+        .stat-box:hover .stat-box-icon-wrapper.theme-blue {
+            background-color: rgba(35, 131, 226, 0.15);
+        }
+        .stat-box:hover .stat-box-icon-wrapper.theme-blue svg {
+            color: #2383e2;
+            transform: scale(1.1);
+        }
+
+        .stat-box:hover .stat-box-icon-wrapper.theme-indigo {
+            background-color: rgba(99, 102, 241, 0.15);
+        }
+        .stat-box:hover .stat-box-icon-wrapper.theme-indigo svg {
+            color: #6366f1;
+            transform: scale(1.1);
+        }
+
+        .stat-box:hover .stat-box-icon-wrapper.theme-gold {
+            background-color: rgba(245, 158, 11, 0.15);
+        }
+        .stat-box:hover .stat-box-icon-wrapper.theme-gold svg {
+            color: #f59e0b;
+            transform: scale(1.1);
+        }
+
+        .stat-box:hover .stat-box-icon-wrapper.theme-success {
+            background-color: rgba(16, 185, 129, 0.15);
+        }
+        .stat-box:hover .stat-box-icon-wrapper.theme-success svg {
+            color: #10b981;
+            transform: scale(1.1);
+        }
+
+        .stat-box:hover .stat-box-icon-wrapper.theme-danger {
+            background-color: rgba(239, 68, 68, 0.15);
+        }
+        .stat-box:hover .stat-box-icon-wrapper.theme-danger svg {
+            color: #ef4444;
+            transform: scale(1.1);
+        }
+
+        .stat-box-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-box-value {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.1;
+            color: var(--text-primary);
+        }
+
+        .stat-box-sub {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Explorer list */
+        .explorer-section {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background-color: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .explorer-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .explorer-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .explorer-header h3 {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 280px;
+        }
+
+        .search-wrapper input {
+            width: 100%;
+            padding: 6px 12px 6px 30px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .search-wrapper input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .search-wrapper svg {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 13px;
+            height: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Filter buttons */
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-btn {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-btn:hover {
+            background-color: var(--hover-color);
+            color: var(--text-primary);
+        }
+
+        .filter-btn.active {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #ffffff;
+        }
+
+        .filter-btn.active span {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+        }
+
+        .filter-btn span {
+            background-color: var(--hover-color);
+            color: var(--text-secondary);
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-size: 10.5px;
+            font-weight: 600;
+        }
+
+        /* Explorer table */
+        .table-wrapper {
+            overflow-x: auto;
+            background-color: var(--bg-primary);
+        }
+
+        .nodes-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+        }
+
+        .nodes-table th, .nodes-table td {
+            padding: 12px 18px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nodes-table th {
+            background-color: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nodes-table tbody tr {
+            cursor: pointer;
+        }
+
+        .nodes-table tbody tr:hover {
+            background-color: rgba(55, 53, 47, 0.015);
+        }
+        [data-theme="dark"] .nodes-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.01);
+        }
+
+        .node-name-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .node-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .node-path {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-family: SFMono-Regular, Consolas, monospace;
+        }
+
+        /* Badges */
+        .badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-badge {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            cursor: help;
+        }
+
+        .badge-type {
+            background-color: var(--hover-color);
+            color: var(--text-primary);
+        }
+
+        .badge-weight-critical {
+            background-color: rgba(235, 87, 87, 0.1);
+            color: var(--danger-color);
+        }
+
+        .badge-weight-medium {
+            background-color: rgba(234, 88, 12, 0.1);
+            color: var(--warning-color);
+        }
+
+        .badge-weight-low {
+            background-color: var(--hover-color);
+            color: var(--text-secondary);
+        }
+
+        .badge-status-linked {
+            background-color: rgba(15, 157, 88, 0.1);
+            color: var(--success-color);
+        }
+
+        .badge-status-unlinked {
+            background-color: rgba(235, 87, 87, 0.1);
+            color: var(--danger-color);
+        }
+
+        .badge-status-enriched {
+            background-color: rgba(35, 131, 226, 0.1);
+            color: var(--accent-color);
+        }
+
+        .badge-status-unenriched {
+            background-color: var(--hover-color);
+            color: var(--text-secondary);
+        }
+
+        /* docAnchors links container */
+        .docs-links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .doc-link-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11.5px;
+            color: var(--accent-color);
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .doc-link-item:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        .node-summary {
+            font-size: 12.5px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            max-width: 460px;
+        }
+
+        /* Results fallback */
+        .no-results {
+            padding: 30px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13.5px;
+        }
+
+        .docs-footer {
+            margin-top: 40px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11.5px;
+            color: var(--text-secondary);
+            opacity: 0.75;
+        }
+
+        .docs-footer span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Bar chart styling */
+        .bar-chart-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 200px;
+            padding: 20px 10px 10px 10px;
+            border-bottom: 2px solid var(--border-color);
+            margin-top: 10px;
+            gap: 12px;
+        }
+
+        .bar-column-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+            max-width: 80px;
+            height: 100%;
+            justify-content: flex-end;
+            position: relative;
+        }
+
+        .bar-column {
+            width: 100%;
+            background: linear-gradient(180deg, var(--accent-color) 0%, rgba(35, 131, 226, 0.4) 100%);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease;
+            min-height: 4px;
+        }
+
+        .bar-column:hover {
+            transform: scaleY(1.05);
+            filter: brightness(1.1);
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -22px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .bar-label {
+            margin-top: 8px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: capitalize;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        /* Stacked segments & Legend */
+        .bar-column-stacked {
+            background: transparent !important;
+            display: flex;
+            flex-direction: column-reverse;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            border-radius: 4px 4px 0 0;
+        }
+
+        .bar-segment {
+            width: 100%;
+            transition: opacity 0.15s ease, filter 0.15s ease;
+            cursor: pointer;
+        }
+
+        .bar-segment:hover {
+            filter: brightness(1.15);
+            opacity: 0.9;
+        }
+
+        .segment-completed-critical,
+        .segment-completed-medium,
+        .segment-completed-low {
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+        }
+
+        .segment-unlinked {
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(239, 68, 68, 0.75),
+                rgba(239, 68, 68, 0.75) 6px,
+                rgba(220, 38, 38, 0.85) 6px,
+                rgba(220, 38, 38, 0.85) 12px
+            );
+        }
+
+        .segment-unenriched {
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(245, 158, 11, 0.75),
+                rgba(245, 158, 11, 0.75) 6px,
+                rgba(217, 119, 6, 0.85) 6px,
+                rgba(217, 119, 6, 0.85) 12px
+            );
+        }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 14px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(55, 53, 47, 0.05);
+            padding-top: 12px;
+        }
+        [data-theme="dark"] .chart-legend {
+            border-top-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            display: inline-block;
+            border: 1px solid var(--border-color);
+        }
+
+        .legend-color-completed {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .legend-color-unlinked {
+            background: repeating-linear-gradient(45deg, #ef4444, #ef4444 2px, #dc2626 2px, #dc2626 4px);
+        }
+
+        .legend-color-unenriched {
+            background: repeating-linear-gradient(45deg, #f59e0b, #f59e0b 2px, #d97706 2px, #d97706 4px);
+        }
+
+        .open-editor-btn {
+            opacity: 0.2;
+            transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+        }
+        
+        tr:hover .open-editor-btn {
+            opacity: 0.7;
+        }
+
+        .open-editor-btn:hover {
+            opacity: 1 !important;
+            background-color: var(--hover-color);
+            color: var(--accent-color) !important;
+        }
+
+        /* Medium-style inline comment popup */
+        #inline-feedback-popup {
+            position: absolute;
+            display: none;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 6px;
+            padding: 6px 10px;
+            z-index: 1000;
+            align-items: center;
+        }
+
+        #inline-feedback-popup button {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 12px;
+            font-family: var(--font-sans);
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        #inline-feedback-popup button:hover {
+            color: var(--accent-color);
+        }
+
+        #inline-feedback-popup button svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        #inline-feedback-input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: var(--font-sans);
+            font-size: 12px;
+            color: var(--text-primary);
+            width: 180px;
+        }
+
+        #inline-feedback-copy-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        #inline-feedback-copy-btn:hover {
+            color: var(--accent-color) !important;
+        }
+
+        /* Toast notification */
+        #toast-notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: #2e7d32;
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 3000;
+        }
+        
+        #toast-notification svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Priority Hotspots Styles */
+        #hotspots-card {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            justify-content: flex-start;
+        }
+        .hotspot-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .hotspot-item:hover {
+            border-color: var(--accent-color);
+            background-color: var(--hover-color);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .hotspot-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            overflow: hidden;
+            flex-grow: 1;
+            margin-right: 8px;
+            text-align: left;
+        }
+        .hotspot-name {
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text-primary);
+        }
+        .hotspot-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .hotspot-badge-type {
+            font-size: 9.5px;
+            padding: 1px 5px;
+            border-radius: 3px;
+            background-color: var(--hover-color);
+            color: var(--text-secondary);
+        }
+        
+        /* Table sort style */
+        .nodes-table th.sortable:hover {
+            background-color: var(--hover-color);
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        <div class="content-wrapper">
+            <div class="dashboard-container">
+                
+                <!-- Title Section -->
+                <div class="dashboard-title-section">
+                    <div>
+                        <h2>/* TRANSLATE:dashboardTitle */</h2>
+                        <p>/* TRANSLATE:dashboardSubtitle */</p>
+                    </div>
+                    <div>
+                        <span id="project-version-badge" class="badge badge-type">v/* KERNEL_VERSION */</span>
+                    </div>
+                </div>
+
+                <!-- Grid metrics -->
+                <div class="dashboard-grid">
+                    
+                    <!-- Left Column Stack -->
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <!-- Left circular score card -->
+                        <div class="card score-card" style="width: 100%;">
+                            <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px;">/* TRANSLATE:scoreCardTitle */</h4>
+                            
+                            <div class="progress-ring-container">
+                                <svg width="180" height="180">
+                                    <circle class="progress-ring-circle-bg" cx="90" cy="90" r="75"></circle>
+                                    <circle id="progress-circle" class="progress-ring-circle" cx="90" cy="90" r="75" stroke-dasharray="471.24" stroke-dashoffset="471.24"></circle>
+                                </svg>
+                                <div class="progress-text">
+                                    <span class="progress-text-score" id="dashboard-health-score">0</span>
+                                    <span class="progress-text-label">/* TRANSLATE:scoreLabel */</span>
+                                </div>
+                            </div>
+
+                            <span id="score-eval-label" class="score-evaluation score-eval-good">-</span>
+                        </div>
+
+                        <!-- Priority Hotspots Card -->
+                        <div class="card" id="hotspots-card">
+                            <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                                <i data-lucide="alert-triangle" style="width: 14px; height: 14px; color: var(--warning-color);"></i> /* TRANSLATE:hotspotsTitle */
+                            </h4>
+                            <p style="font-size: 11px; color: var(--text-secondary); margin-top: -6px;">/* TRANSLATE:hotspotsSubtitle */</p>
+                            <ul id="hotspots-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
+                                <!-- Inject dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right detail metrics list -->
+                    <div class="stats-cards-container">
+                        
+                        <div class="stat-box box-blue">
+                            <div class="stat-box-header">
+                                <span class="stat-box-title">/* TRANSLATE:totalDocs */</span>
+                                <div class="stat-box-icon-wrapper theme-blue">
+                                    <i data-lucide="files"></i>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+                                <div style="display: flex; flex-direction: column; gap: 4px;">
+                                    <span class="stat-box-value" id="stat-total-docs">0</span>
+                                    <span class="stat-box-sub" id="stat-docs-with-anchors-sub">0</span>
+                                </div>
+                                <span id="stat-docs-pct-badge" class="badge stat-badge">0%</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-box box-indigo">
+                            <div class="stat-box-header">
+                                <span class="stat-box-title">/* TRANSLATE:graphNodes */</span>
+                                <div class="stat-box-icon-wrapper theme-indigo">
+                                    <i data-lucide="network"></i>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+                                <div style="display: flex; flex-direction: column; gap: 4px;">
+                                    <span class="stat-box-value" id="stat-total-nodes">0</span>
+                                    <span class="stat-box-sub" id="stat-linked-nodes-sub">0</span>
+                                </div>
+                                <span id="stat-nodes-pct-badge" class="badge stat-badge">0%</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-box box-gold">
+                            <div class="stat-box-header">
+                                <span class="stat-box-title">/* TRANSLATE:businessGodNodes */</span>
+                                <div class="stat-box-icon-wrapper theme-gold">
+                                    <i data-lucide="crown"></i>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+                                <div style="display: flex; flex-direction: column; gap: 4px;">
+                                    <span class="stat-box-value" id="stat-god-nodes">0/0</span>
+                                    <span class="stat-box-sub" id="stat-god-nodes-sub">0</span>
+                                </div>
+                                <span id="stat-god-pct-badge" class="badge stat-badge">0%</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-box box-success" id="box-stale-status">
+                            <div class="stat-box-header">
+                                <span class="stat-box-title">/* TRANSLATE:healthStatus */</span>
+                                <div class="stat-box-icon-wrapper theme-success" id="icon-stale-status">
+                                    <i data-lucide="shield-alert"></i>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+                                <div style="display: flex; flex-direction: column; gap: 4px;">
+                                    <span class="stat-box-value" id="stat-stale-docs">0</span>
+                                    <span class="stat-box-sub" id="stat-stale-docs-sub">0</span>
+                                </div>
+                                <span id="stat-health-pct-badge" class="badge stat-badge">100%</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Bar Charts Section -->
+                <div class="charts-grid">
+                    <!-- Chart 1: Entity Type Distribution -->
+                    <div class="card chart-card">
+                        <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; margin-bottom: 16px; display: flex; align-items: center; gap: 6px;">
+                            <i data-lucide="bar-chart-3" style="width: 14px; height: 14px; color: var(--accent-color);"></i> /* TRANSLATE:entityTypeDistribution */
+                        </h4>
+                        <div class="bar-chart-container" id="node-type-chart">
+                            <!-- Dynamic JS Injection -->
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Node Weight Distribution -->
+                    <div class="card chart-card">
+                        <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; margin-bottom: 16px; display: flex; align-items: center; gap: 6px;" id="weight-chart-title">
+                            <i data-lucide="activity" style="width: 14px; height: 14px; color: var(--warning-color);"></i> /* TRANSLATE:weightDistribution */
+                        </h4>
+                        <div class="bar-chart-container" id="node-weight-chart">
+                            <!-- Dynamic JS Injection -->
+                        </div>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <span class="legend-color legend-color-completed"></span>
+                                <span>/* TRANSLATE:legendCompleted */</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color legend-color-unlinked"></span>
+                                <span>/* TRANSLATE:legendUnlinked */</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color legend-color-unenriched"></span>
+                                <span>/* TRANSLATE:legendUnenriched */</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explorer Section -->
+                <div class="explorer-section">
+                    
+                    <div class="explorer-header">
+                        <div class="explorer-header-top">
+                            <h3>/* TRANSLATE:explorerTitle */</h3>
+                            <div class="search-wrapper">
+                                <i data-lucide="search"></i>
+                                <input type="text" id="node-search" class="search-input" placeholder="/* TRANSLATE:searchPlaceholderNodes */" oninput="handleSearch()">
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <button class="filter-btn active" id="btn-filter-all" onclick="setFilter('all')">/* TRANSLATE:filterAll */ <span id="count-all">0</span></button>
+                            <button class="filter-btn" id="btn-filter-critical" onclick="setFilter('critical')"><i data-lucide="zap" style="width: 12px; height: 12px; color: var(--danger-color); fill: var(--danger-color); fill-opacity: 0.15;"></i> /* TRANSLATE:filterCritical */ <span id="count-critical">0</span></button>
+                            <button class="filter-btn" id="btn-filter-medium" onclick="setFilter('medium')">/* TRANSLATE:filterMedium */ <span id="count-medium">0</span></button>
+                            <button class="filter-btn" id="btn-filter-low" onclick="setFilter('low')">/* TRANSLATE:filterLow */ <span id="count-low">0</span></button>
+                            <button class="filter-btn" id="btn-filter-unlinked" onclick="setFilter('unlinked')"><i data-lucide="file-x" style="width: 12px; height: 12px; color: var(--danger-color);"></i> /* TRANSLATE:filterUnlinked */ <span id="count-unlinked">0</span></button>
+                            <button class="filter-btn" id="btn-filter-unenriched" onclick="setFilter('unenriched')">/* TRANSLATE:filterUnenriched */ <span id="count-unenriched">0</span></button>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="nodes-table">
+                            <thead>
+                                <tr>
+                                    <th class="sortable" style="width: 280px; cursor: pointer; user-select: none;" onclick="handleSort('name')">/* TRANSLATE:thNodeEntity */ <span id="sort-icon-name"></span></th>
+                                    <th class="sortable" style="width: 100px; cursor: pointer; user-select: none;" onclick="handleSort('type')">/* TRANSLATE:thType */ <span id="sort-icon-type"></span></th>
+                                    <th class="sortable" style="width: 110px; cursor: pointer; user-select: none;" onclick="handleSort('degree')">/* TRANSLATE:thWeightDegree */ <span id="sort-icon-degree"></span></th>
+                                    <th class="sortable" style="width: 110px; cursor: pointer; user-select: none;" onclick="handleSort('blastRadius')">/* TRANSLATE:thBlastRadius */ <span id="sort-icon-blastRadius"></span></th>
+                                    <th class="sortable" style="width: 150px; cursor: pointer; user-select: none;" onclick="handleSort('status')">/* TRANSLATE:thDocLinks */ <span id="sort-icon-status"></span></th>
+                                    <th>/* TRANSLATE:thDescription */</th>
+                                </tr>
+                            </thead>
+                            <tbody id="nodes-table-body">
+                                <!-- Inject dynamically -->
+                            </tbody>
+                        </table>
+                        <div id="no-nodes-found" class="no-results" style="display: none;">
+                            /* TRANSLATE:noNodesFound */
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer -->
+                <footer class="docs-footer">
+                    <span><i data-lucide="clock"></i> /* TRANSLATE:graphStatsUpdated */ /* RENDER_TIME */</span>
+                    <span><i data-lucide="cpu"></i> PARA Graph Analytics Engine</span>
+                </footer>
+                
+                <div class="footer-spacer"></div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Data injected statically from render.js
+        const dashboardStats = JSON.parse('{}');
+        const graphNodesData = JSON.parse('[]');
+
+        // Initialize lucide icons
+        lucide.createIcons();
+
+        // Theme management (synchronized by Portal)
+        let theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.type === 'set-theme') {
+                const newTheme = e.data.theme;
+                document.documentElement.setAttribute('data-theme', newTheme);
+                if (theme !== newTheme) {
+                    theme = newTheme;
+                    localStorage.setItem('theme', newTheme);
+                    location.reload();
+                }
+            }
+        });
+
+        // Intercept relative docs link clicks to notify Portal parent
+        document.addEventListener('click', (e) => {
+            const a = e.target.closest('a');
+            if (a) {
+                const href = a.getAttribute('href');
+                if (href && !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('#') && !href.startsWith('file://')) {
+                    e.preventDefault();
+                    window.parent.postMessage({
+                        type: 'navigate',
+                        href: href,
+                        baseUrl: window.location.href
+                    }, '*');
+                }
+            }
+        });
+
+        // Trigger IDE open target file
+        async function openFileInSystem(filePath) {
+            try {
+                await fetch('http://localhost:3000/api/open-file', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ file: filePath })
+                });
+            } catch (err) {}
+        }
+
+        // --- DASHBOARD CORE LOGIC ---
+        let currentFilter = 'all';
+        let searchQuery = '';
+        let selectionRect = null;
+        let selectionScrollX = 0;
+        let selectionScrollY = 0;
+
+        const lang = document.documentElement.getAttribute('lang') || 'en';
+        const i18n = {
+            vi: {
+                docsWithAnchorsSub: (count, pct) => `${count} tệp chứa neo graph`,
+                linkedNodesSub: (linked, total, pct) => `${linked}/${total} nodes được gán neo`,
+                godNodesSub: (pct) => `Bao phủ God Nodes sản xuất`,
+                staleDocsSubWarning: (count) => `⚠️ ${count} tài liệu hết hạn, cần re-sync`,
+                staleDocsSubClean: 'Đồng bộ hoàn toàn với code',
+                staleDocsDefaultSub: 'Tài liệu bị cũ (Code thay đổi signature)',
+                scoreGold: 'Xuất sắc (Gold standard)',
+                scoreGood: 'Đạt yêu cầu (Good)',
+                scorePoor: 'Cần bổ sung (Poor)',
+                openEditorTitle: 'Mở file bằng Editor',
+                badgeCritical: 'Cốt lõi',
+                badgeMedium: 'Trung bình',
+                badgeLow: 'Bổ trợ',
+                badgeLinked: 'Đã neo',
+                badgeUnlinked: 'Chưa neo',
+                emptySummary: 'Chưa có mô tả ngữ nghĩa từ AI Agent...',
+                noNodesFound: 'Không tìm thấy thành phần mã nào khớp với bộ lọc và tìm kiếm hiện tại.',
+                promptEditCode: (comment) => `hãy sửa phần code liên quan: "${comment}"`,
+                promptCopied: 'Đã sao chép prompt gửi AI!',
+                promptCopiedWatcher: ' (Watcher server đang chạy)',
+                promptCopyError: 'Lỗi sao chép prompt',
+                toastCopied: 'Sao chép ✓',
+                toastCopyFailed: 'Không thể sao chép',
+                completed: 'Đạt chuẩn: ',
+                nodes: ' node',
+                legendCompleted: 'Đạt chuẩn (Đầy đủ)',
+                legendUnlinked: 'Chưa gán link (Unlinked)',
+                legendUnenriched: 'Chưa mô tả AI (Unenriched)',
+                typeFile: 'Tệp tin',
+                typeFunction: 'Hàm',
+                typeClass: 'Lớp',
+                typeInterface: 'Giao diện',
+                typeVariable: 'Biến',
+                typeOther: 'Khác',
+                degreeLabel: 'Liên kết',
+                statusEnriched: 'Đã mô tả AI',
+                statusUnenriched: 'Chưa mô tả AI',
+                blastRadiusTooltip: (val) => `Bán kính ảnh hưởng: ${val} (số lượng các thành phần bị tác động nếu node này thay đổi)`,
+                hotspotsTitle: '⚠️ Điểm nóng ưu tiên',
+                hotspotsSubtitle: 'Thành phần ảnh hưởng lớn cần viết tài liệu',
+                badgeStale: 'Cần cập nhật',
+                badgeSynced: 'Đồng bộ',
+                tooltipDocsPct: 'Tỷ lệ tài liệu đã được gán neo định vị vào đồ thị mã nguồn (docAnchor)',
+                tooltipNodesPct: 'Tỷ lệ các thành phần mã nguồn (hàm, lớp, file) đã được liên kết với tài liệu thuyết minh',
+                tooltipGodPct: 'Tỷ lệ phủ tài liệu đối với các God Node quan trọng nhất (ảnh hưởng trực tiếp đến nghiệp vụ sản xuất)',
+                tooltipHealthPct: 'Tỷ lệ đồng bộ của tài liệu so với code (100% nghĩa là không có tài liệu nào bị hết hạn)',
+                tooltipHealthScore: 'Điểm số chất lượng tài liệu được tính toán dựa trên trọng số liên kết đồ thị (docAnchor). Các thành phần lõi (God Nodes) có độ ảnh hưởng cao đóng góp trọng số lớn hơn (5x) so với các biến thông thường (0.5x), phản ánh độ bao phủ thực tế của tài liệu kỹ thuật đối với hệ thống.'
+            },
+            en: {
+                docsWithAnchorsSub: (count, pct) => `${count} files with graph anchors`,
+                linkedNodesSub: (linked, total, pct) => `${linked}/${total} nodes with docAnchors`,
+                godNodesSub: (pct) => `Production God Nodes coverage`,
+                staleDocsSubWarning: (count) => `⚠️ ${count} stale docs, re-sync needed`,
+                staleDocsSubClean: 'Fully synced with code',
+                staleDocsDefaultSub: 'Stale documents (code signature changed)',
+                scoreGold: 'Excellent (Gold standard)',
+                scoreGood: 'Acceptable (Good)',
+                scorePoor: 'Needs improvement (Poor)',
+                openEditorTitle: 'Open in Editor',
+                badgeCritical: 'Critical',
+                badgeMedium: 'Medium',
+                badgeLow: 'Low',
+                badgeLinked: 'Linked',
+                badgeUnlinked: 'Unlinked',
+                emptySummary: 'No semantic description from AI Agent yet...',
+                noNodesFound: 'No code entities found matching the current filter and search.',
+                promptEditCode: (comment) => `please edit the related code: "${comment}"`,
+                promptCopied: 'Copied prompt to clipboard!',
+                promptCopiedWatcher: ' (Watcher server active)',
+                promptCopyError: 'Failed to copy prompt',
+                toastCopied: 'Copied ✓',
+                toastCopyFailed: 'Failed to copy',
+                completed: 'Completed: ',
+                nodes: ' nodes',
+                legendCompleted: 'Completed (Full)',
+                legendUnlinked: 'Unlinked',
+                legendUnenriched: 'Unenriched',
+                typeFile: 'File',
+                typeFunction: 'Function',
+                typeClass: 'Class',
+                typeInterface: 'Interface',
+                typeVariable: 'Variable',
+                typeOther: 'Other',
+                degreeLabel: 'Degree',
+                statusEnriched: 'Enriched',
+                statusUnenriched: 'Unenriched',
+                blastRadiusTooltip: (val) => `Blast Radius: ${val} (number of impacted components if this node changes)`,
+                hotspotsTitle: '⚠️ Priority Hotspots',
+                hotspotsSubtitle: 'High-impact components lacking docs',
+                badgeStale: 'Stale / Outdated',
+                badgeSynced: 'Synced',
+                tooltipDocsPct: 'Percentage of documents containing active source code anchors (docAnchors)',
+                tooltipNodesPct: 'Percentage of enrichable code entities linked to explanation docs',
+                tooltipGodPct: 'Documentation coverage of critical business God Nodes',
+                tooltipHealthPct: 'Documentation synchronization rate (100% means zero stale documents)',
+                tooltipHealthScore: 'Weighted health score based on code graph traceabilities. High-impact core components (God Nodes) contribute much more weight (5x) than standard variables (0.5x), reflecting the actual coverage of system architecture documentation.'
+            }
+        };
+        const t = i18n[lang] || i18n['en'];
+
+        function initializeDashboard() {
+            const stats = dashboardStats;
+            const score = Math.round(stats.weightedHealthScore);
+            document.getElementById('dashboard-health-score').textContent = score;
+            
+            const scoreCard = document.querySelector('.score-card');
+            if (scoreCard) {
+                scoreCard.title = t.tooltipHealthScore;
+                scoreCard.style.cursor = 'help';
+            }
+            
+            const circle = document.getElementById('progress-circle');
+            const circumference = 471.24;
+            const offset = circumference - (score / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+
+            if (score >= 90) {
+                circle.style.stroke = 'var(--success-color)';
+                const label = document.getElementById('score-eval-label');
+                label.textContent = t.scoreGold;
+                label.className = 'score-evaluation score-eval-gold';
+            } else if (score >= 70) {
+                circle.style.stroke = 'var(--warning-color)';
+                const label = document.getElementById('score-eval-label');
+                label.textContent = t.scoreGood;
+                label.className = 'score-evaluation score-eval-good';
+            } else {
+                circle.style.stroke = 'var(--danger-color)';
+                const label = document.getElementById('score-eval-label');
+                label.textContent = t.scorePoor;
+                label.className = 'score-evaluation score-eval-poor';
+            }
+
+            function updateBadge(badgeId, percentage, type = 'progress') {
+                const el = document.getElementById(badgeId);
+                if (!el) return;
+                el.textContent = percentage + '%';
+                
+                if (type === 'health') {
+                    if (percentage === 100) {
+                        el.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+                        el.style.color = 'var(--success-color)';
+                        el.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+                    } else {
+                        el.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                        el.style.color = 'var(--danger-color)';
+                        el.style.borderColor = 'rgba(239, 68, 68, 0.2)';
+                    }
+                } else {
+                    if (percentage >= 80) {
+                        el.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+                        el.style.color = 'var(--success-color)';
+                        el.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+                    } else if (percentage >= 50) {
+                        el.style.backgroundColor = 'rgba(234, 88, 12, 0.1)';
+                        el.style.color = 'var(--warning-color)';
+                        el.style.borderColor = 'rgba(234, 88, 12, 0.2)';
+                    } else {
+                        el.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                        el.style.color = 'var(--danger-color)';
+                        el.style.borderColor = 'rgba(239, 68, 68, 0.2)';
+                    }
+                }
+            }
+
+            const docsPct = stats.totalDocs > 0 ? Math.round(stats.docsWithAnchors / stats.totalDocs * 100) : 0;
+            document.getElementById('stat-total-docs').textContent = stats.totalDocs;
+            document.getElementById('stat-docs-with-anchors-sub').textContent = t.docsWithAnchorsSub(stats.docsWithAnchors, docsPct);
+            updateBadge('stat-docs-pct-badge', docsPct);
+            
+            const nodesPct = stats.enrichableNodes > 0 ? Math.round(stats.linkedNodes / stats.enrichableNodes * 100) : 0;
+            document.getElementById('stat-total-nodes').textContent = stats.totalNodes;
+            document.getElementById('stat-linked-nodes-sub').textContent = t.linkedNodesSub(stats.linkedNodes, stats.enrichableNodes, nodesPct);
+            updateBadge('stat-nodes-pct-badge', nodesPct);
+
+            document.getElementById('stat-god-nodes').textContent = `${stats.documentedGodNodes}/${stats.totalGodNodes}`;
+            const godRatio = stats.totalGodNodes > 0 ? Math.round(stats.documentedGodNodes / stats.totalGodNodes * 100) : 0;
+            document.getElementById('stat-god-nodes-sub').textContent = t.godNodesSub(godRatio);
+            updateBadge('stat-god-pct-badge', godRatio);
+
+            const healthPct = stats.totalDocs > 0 ? Math.round((stats.totalDocs - stats.staleDocsCount) / stats.totalDocs * 100) : 100;
+            document.getElementById('stat-stale-docs').textContent = healthPct + '%';
+
+            const staleBox = document.getElementById('box-stale-status');
+            const staleIconWrapper = document.getElementById('icon-stale-status');
+            const healthBadge = document.getElementById('stat-health-pct-badge');
+            if (stats.staleDocsCount > 0) {
+                if (staleBox) staleBox.className = 'stat-box box-danger';
+                if (staleIconWrapper) staleIconWrapper.className = 'stat-box-icon-wrapper theme-danger';
+                document.getElementById('stat-stale-docs').style.color = 'var(--danger-color)';
+                document.getElementById('stat-stale-docs-sub').textContent = t.staleDocsSubWarning(stats.staleDocsCount);
+                if (healthBadge) {
+                    healthBadge.textContent = t.badgeStale;
+                    healthBadge.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                    healthBadge.style.color = 'var(--danger-color)';
+                    healthBadge.style.borderColor = 'rgba(239, 68, 68, 0.2)';
+                }
+            } else {
+                if (staleBox) staleBox.className = 'stat-box box-success';
+                if (staleIconWrapper) staleIconWrapper.className = 'stat-box-icon-wrapper theme-success';
+                document.getElementById('stat-stale-docs').style.color = 'var(--success-color)';
+                document.getElementById('stat-stale-docs-sub').textContent = t.staleDocsSubClean;
+                if (healthBadge) {
+                    healthBadge.textContent = t.badgeSynced;
+                    healthBadge.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+                    healthBadge.style.color = 'var(--success-color)';
+                    healthBadge.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+                }
+            }
+
+            // Apply tooltips to badges
+            const docsBadge = document.getElementById('stat-docs-pct-badge');
+            if (docsBadge) docsBadge.title = t.tooltipDocsPct;
+            const nodesBadge = document.getElementById('stat-nodes-pct-badge');
+            if (nodesBadge) nodesBadge.title = t.tooltipNodesPct;
+            const godBadge = document.getElementById('stat-god-pct-badge');
+            if (godBadge) godBadge.title = t.tooltipGodPct;
+            if (healthBadge) healthBadge.title = t.tooltipHealthPct;
+
+            document.getElementById('count-all').textContent = graphNodesData.length;
+            document.getElementById('count-critical').textContent = graphNodesData.filter(n => n.weightedClass === 'critical').length;
+            document.getElementById('count-medium').textContent = graphNodesData.filter(n => n.weightedClass === 'medium').length;
+            document.getElementById('count-low').textContent = graphNodesData.filter(n => n.weightedClass === 'low').length;
+            document.getElementById('count-unlinked').textContent = graphNodesData.filter(n => !n.isLinked).length;
+            document.getElementById('count-unenriched').textContent = graphNodesData.filter(n => !n.isEnriched).length;
+
+            // Generate node type bar chart
+            const chartContainer = document.getElementById('node-type-chart');
+            if (chartContainer) {
+                chartContainer.innerHTML = '';
+                
+                const typeCounts = {};
+                graphNodesData.forEach(node => {
+                    const t = node.type || 'other';
+                    typeCounts[t] = (typeCounts[t] || 0) + 1;
+                });
+                
+                const sortedTypes = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]);
+                const maxCount = Math.max(...sortedTypes.map(t => t[1])) || 1;
+                
+                sortedTypes.forEach(([type, count]) => {
+                    const pct = (count / maxCount) * 100;
+                    
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'bar-column-wrapper';
+                    
+                    const bar = document.createElement('div');
+                    bar.className = 'bar-column';
+                    bar.style.height = `${pct}%`;
+                    
+                    const colors = {
+                        'file': 'linear-gradient(180deg, #2383e2 0%, rgba(35, 131, 226, 0.3) 100%)',
+                        'function': 'linear-gradient(180deg, #10b981 0%, rgba(16, 185, 129, 0.3) 100%)',
+                        'class': 'linear-gradient(180deg, #ea580c 0%, rgba(234, 88, 12, 0.3) 100%)',
+                        'interface': 'linear-gradient(180deg, #8b5cf6 0%, rgba(139, 92, 246, 0.3) 100%)',
+                        'variable': 'linear-gradient(180deg, #6b7280 0%, rgba(107, 114, 128, 0.3) 100%)'
+                    };
+                    if (colors[type]) {
+                        bar.style.background = colors[type];
+                    }
+                    
+                    const valSpan = document.createElement('span');
+                    valSpan.className = 'bar-value';
+                    valSpan.textContent = count;
+                    
+                    const labelDiv = document.createElement('div');
+                    labelDiv.className = 'bar-label';
+                    const displayType = t['type' + type.charAt(0).toUpperCase() + type.slice(1)] || type;
+                    labelDiv.textContent = displayType;
+                    labelDiv.title = displayType;
+                    
+                    bar.appendChild(valSpan);
+                    wrapper.appendChild(bar);
+                    wrapper.appendChild(labelDiv);
+                    chartContainer.appendChild(wrapper);
+                });
+            }
+
+            // Generate node weight bar chart (Stacked)
+            const weightChartContainer = document.getElementById('node-weight-chart');
+            if (weightChartContainer) {
+                weightChartContainer.innerHTML = '';
+                
+                const weightDetails = {
+                    'critical': { total: 0, unlinked: 0, unenriched: 0, completed: 0 },
+                    'medium': { total: 0, unlinked: 0, unenriched: 0, completed: 0 },
+                    'low': { total: 0, unlinked: 0, unenriched: 0, completed: 0 }
+                };
+                
+                graphNodesData.forEach(node => {
+                    const w = node.weightedClass || 'low';
+                    if (weightDetails[w]) {
+                        weightDetails[w].total++;
+                        if (!node.isLinked) {
+                            weightDetails[w].unlinked++;
+                        } else if (!node.isEnriched) {
+                            weightDetails[w].unenriched++;
+                        } else {
+                            weightDetails[w].completed++;
+                        }
+                    }
+                });
+                
+                const weightLabels = {
+                    'critical': lang === 'vi' ? 'Cốt lõi (Critical)' : 'Critical',
+                    'medium': lang === 'vi' ? 'Trung bình (Medium)' : 'Medium',
+                    'low': lang === 'vi' ? 'Bổ trợ (Low)' : 'Low'
+                };
+                
+                const sortedWeights = ['critical', 'medium', 'low'];
+                const maxCount = Math.max(...Object.values(weightDetails).map(d => d.total)) || 1;
+                
+                sortedWeights.forEach(weight => {
+                    const details = weightDetails[weight];
+                    const pct = (details.total / maxCount) * 100;
+                    
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'bar-column-wrapper';
+                    wrapper.style.maxWidth = '120px';
+                    
+                    const bar = document.createElement('div');
+                    bar.className = 'bar-column bar-column-stacked';
+                    bar.style.height = `${pct}%`;
+                    bar.style.position = 'relative';
+                    
+                    const completedPct = details.total > 0 ? (details.completed / details.total) * 100 : 0;
+                    const unlinkedPct = details.total > 0 ? (details.unlinked / details.total) * 100 : 0;
+                    const unenrichedPct = details.total > 0 ? (details.unenriched / details.total) * 100 : 0;
+                    
+                    // Render Completed segment
+                    if (details.completed > 0) {
+                        const seg = document.createElement('div');
+                        seg.className = `bar-segment segment-completed-${weight}`;
+                        seg.style.height = `${completedPct}%`;
+                        seg.title = t.completed + `${details.completed}` + t.nodes + ` (${Math.round(completedPct)}%)`;
+                        bar.appendChild(seg);
+                    }
+                    
+                    // Render Unlinked segment
+                    if (details.unlinked > 0) {
+                        const seg = document.createElement('div');
+                        seg.className = 'bar-segment segment-unlinked';
+                        seg.style.height = `${unlinkedPct}%`;
+                        seg.title = t.legendUnlinked + `: ${details.unlinked}` + t.nodes + ` (${Math.round(unlinkedPct)}%)`;
+                        bar.appendChild(seg);
+                    }
+                    
+                    // Render Unenriched segment
+                    if (details.unenriched > 0) {
+                        const seg = document.createElement('div');
+                        seg.className = 'bar-segment segment-unenriched';
+                        seg.style.height = `${unenrichedPct}%`;
+                        seg.title = t.legendUnenriched + `: ${details.unenriched}` + t.nodes + ` (${Math.round(unenrichedPct)}%)`;
+                        bar.appendChild(seg);
+                    }
+                    
+                    const valSpan = document.createElement('span');
+                    valSpan.className = 'bar-value';
+                    valSpan.textContent = details.total;
+                    bar.appendChild(valSpan);
+                    
+                    const labelDiv = document.createElement('div');
+                    labelDiv.className = 'bar-label';
+                    labelDiv.textContent = weightLabels[weight];
+                    labelDiv.title = weightLabels[weight];
+                    
+                    wrapper.appendChild(bar);
+                    wrapper.appendChild(labelDiv);
+                    weightChartContainer.appendChild(wrapper);
+                });
+            }
+
+            // Generate Priority Hotspots
+            const hotspotsList = document.getElementById('hotspots-list');
+            if (hotspotsList) {
+                hotspotsList.innerHTML = '';
+                const hotspots = graphNodesData
+                    .filter(n => !n.isLinked || !n.isEnriched)
+                    .sort((a, b) => (b.blastRadius || 0) - (a.blastRadius || 0))
+                    .slice(0, 3);
+                
+                if (hotspots.length > 0) {
+                    hotspots.forEach(node => {
+                        const li = document.createElement('li');
+                        li.className = 'hotspot-item';
+                        
+                        const displayType = t['type' + node.type.charAt(0).toUpperCase() + node.type.slice(1)] || node.type;
+                        let reason = '';
+                        if (!node.isLinked) {
+                            reason = lang === 'vi' ? 'Chưa gán link' : 'Unlinked';
+                        } else {
+                            reason = lang === 'vi' ? 'Chưa mô tả AI' : 'Unenriched';
+                        }
+                        
+                        li.innerHTML = `
+                            <div class="hotspot-info">
+                                <span class="hotspot-name" title="${node.name}">${node.name}</span>
+                                <div class="hotspot-meta">
+                                    <span class="hotspot-badge-type">${displayType}</span>
+                                    <span style="font-size: 10px; color: var(--danger-color); font-weight: 500;">${reason}</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 4px;">
+                                <span class="badge badge-weight-critical" style="font-size: 10.5px; padding: 2px 6px;">
+                                    💥 ${node.blastRadius || 0}
+                                </span>
+                            </div>
+                        `;
+                        
+                        li.onclick = () => {
+                            setFilter('all');
+                            document.getElementById('node-search').value = '';
+                            searchQuery = '';
+                            renderTable();
+                            
+                            const rows = document.querySelectorAll('#nodes-table-body tr');
+                            let targetRow = null;
+                            rows.forEach(r => {
+                                if (r.getAttribute('data-nodeid') === node.id) {
+                                    targetRow = r;
+                                }
+                            });
+                            
+                            if (targetRow) {
+                                targetRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                targetRow.style.backgroundColor = 'rgba(35, 131, 226, 0.15)';
+                                setTimeout(() => {
+                                    targetRow.style.backgroundColor = '';
+                                }, 2000);
+                            }
+                        };
+                        
+                        hotspotsList.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.style.fontSize = '12px';
+                    li.style.color = 'var(--text-secondary)';
+                    li.style.textAlign = 'center';
+                    li.style.padding = '8px';
+                    li.textContent = lang === 'vi' ? 'Không có điểm nóng nào cần xử lý.' : 'No priority hotspots.';
+                    hotspotsList.appendChild(li);
+                }
+            }
+
+            updateSortIcons();
+            renderTable();
+        }
+
+        let sortKey = 'degree';
+        let sortDirection = 'desc';
+
+        function handleSort(key) {
+            if (sortKey === key) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortKey = key;
+                sortDirection = 'desc';
+            }
+            updateSortIcons();
+            renderTable();
+        }
+
+        function updateSortIcons() {
+            const keys = ['name', 'type', 'degree', 'blastRadius', 'status'];
+            keys.forEach(k => {
+                const iconSpan = document.getElementById(`sort-icon-${k}`);
+                if (iconSpan) {
+                    if (sortKey === k) {
+                        iconSpan.textContent = sortDirection === 'asc' ? ' ▲' : ' ▼';
+                        iconSpan.style.opacity = '1';
+                        iconSpan.style.color = 'var(--accent-color)';
+                    } else {
+                        iconSpan.textContent = ' ↕';
+                        iconSpan.style.opacity = '0.3';
+                        iconSpan.style.color = 'inherit';
+                    }
+                }
+            });
+        }
+
+        function setFilter(filterType) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-filter-${filterType}`).classList.add('active');
+            currentFilter = filterType;
+            renderTable();
+        }
+
+        function handleSearch() {
+            searchQuery = document.getElementById('node-search').value.toLowerCase().trim();
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('nodes-table-body');
+            tbody.innerHTML = '';
+
+            let filtered = graphNodesData.filter(node => {
+                if (searchQuery) {
+                    const nameMatch = node.name.toLowerCase().includes(searchQuery);
+                    const idMatch = node.id.toLowerCase().includes(searchQuery);
+                    const fileMatch = node.filePath.toLowerCase().includes(searchQuery);
+                    const summaryMatch = node.summary && node.summary.toLowerCase().includes(searchQuery);
+                    if (!nameMatch && !idMatch && !fileMatch && !summaryMatch) return false;
+                }
+
+                if (currentFilter === 'critical') return node.weightedClass === 'critical';
+                if (currentFilter === 'medium') return node.weightedClass === 'medium';
+                if (currentFilter === 'low') return node.weightedClass === 'low';
+                if (currentFilter === 'unlinked') return !node.isLinked;
+                if (currentFilter === 'unenriched') return !node.isEnriched;
+
+                return true;
+            });
+
+            filtered.sort((a, b) => {
+                let comparison = 0;
+                if (sortKey === 'name') {
+                    comparison = a.name.localeCompare(b.name);
+                } else if (sortKey === 'type') {
+                    comparison = a.type.localeCompare(b.type);
+                } else if (sortKey === 'degree') {
+                    const weights = { critical: 3, medium: 2, low: 1 };
+                    const aW = weights[a.weightedClass] || 1;
+                    const bW = weights[b.weightedClass] || 1;
+                    if (aW !== bW) {
+                        comparison = aW - bW;
+                    } else {
+                        comparison = (a.degree || 0) - (b.degree || 0);
+                    }
+                } else if (sortKey === 'blastRadius') {
+                    comparison = (a.blastRadius || 0) - (b.blastRadius || 0);
+                } else if (sortKey === 'status') {
+                    const aStatus = a.isLinked ? 1 : 0;
+                    const bStatus = b.isLinked ? 1 : 0;
+                    comparison = aStatus - bStatus;
+                }
+                
+                return sortDirection === 'asc' ? comparison : -comparison;
+            });
+
+            if (filtered.length === 0) {
+                document.getElementById('no-nodes-found').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('no-nodes-found').style.display = 'none';
+            }
+
+            filtered.forEach(node => {
+                const tr = document.createElement('tr');
+                tr.setAttribute('data-abspath', node.absoluteFilePath);
+                tr.setAttribute('data-startline', node.startLine);
+                tr.setAttribute('data-nodename', node.name);
+                tr.setAttribute('data-nodeid', node.id);
+
+                const nameTd = document.createElement('td');
+                const staleBadge = node.isStale 
+                    ? `<span class="badge" style="background-color: rgba(234, 88, 12, 0.1); color: var(--warning-color); border: 1px solid rgba(234, 88, 12, 0.2); font-size: 10px; margin-left: 6px; display: inline-flex; align-items: center; gap: 3px; padding: 2px 5px;"><i data-lucide="alert-circle" style="width: 10px; height: 10px;"></i> ${t.badgeStale}</span>`
+                    : '';
+                nameTd.innerHTML = `
+                    <div class="node-name-wrapper" style="position: relative; padding-right: 32px;">
+                        <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px;">
+                            <span class="node-name">${node.name}</span>
+                            ${staleBadge}
+                        </div>
+                        <span class="node-path">${node.filePath}:${node.startLine}</span>
+                        <button class="open-editor-btn" onclick="event.stopPropagation(); openFileInSystem('${node.absoluteFilePath}');" title="${t.openEditorTitle}" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 4px;">
+                            <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                        </button>
+                    </div>
+                `;
+                tr.appendChild(nameTd);
+
+                const typeTd = document.createElement('td');
+                const translatedType = t['type' + node.type.charAt(0).toUpperCase() + node.type.slice(1)] || node.type;
+                typeTd.innerHTML = `<span class="badge badge-type">${translatedType}</span>`;
+                tr.appendChild(typeTd);
+
+                const degreeTd = document.createElement('td');
+                let weightBadge = '';
+                if (node.weightedClass === 'critical') {
+                    weightBadge = `<span class="badge badge-weight-critical"><i data-lucide="zap" style="width: 10px; height: 10px; fill: currentColor; fill-opacity: 0.15;"></i> ${t.badgeCritical}</span>`;
+                } else if (node.weightedClass === 'medium') {
+                    weightBadge = `<span class="badge badge-weight-medium">${t.badgeMedium}</span>`;
+                } else {
+                    weightBadge = `<span class="badge badge-weight-low">${t.badgeLow}</span>`;
+                }
+                degreeTd.innerHTML = `
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <div>${weightBadge}</div>
+                        <div style="font-size: 11.5px; color: var(--text-secondary); padding-left: 2px;">${t.degreeLabel}: <strong>${node.degree || 0}</strong></div>
+                    </div>
+                `;
+                tr.appendChild(degreeTd);
+
+                const blastRadiusTd = document.createElement('td');
+                let blastRadiusClass = 'badge-weight-low';
+                if (node.blastRadius >= 15) {
+                    blastRadiusClass = 'badge-weight-critical';
+                } else if (node.blastRadius >= 5) {
+                    blastRadiusClass = 'badge-weight-medium';
+                }
+                blastRadiusTd.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: flex-start;" title="${t.blastRadiusTooltip(node.blastRadius || 0)}">
+                        <span class="badge ${blastRadiusClass}">
+                            <i data-lucide="flame" style="width: 10px; height: 10px;"></i>
+                            <strong>${node.blastRadius || 0}</strong>
+                        </span>
+                    </div>
+                `;
+                tr.appendChild(blastRadiusTd);
+
+                const docsTd = document.createElement('td');
+                const docStatusBadge = node.isLinked 
+                    ? `<span class="badge badge-status-linked"><i data-lucide="check-circle" style="width: 10px; height: 10px;"></i> ${t.badgeLinked}</span>`
+                    : `<span class="badge badge-status-unlinked"><i data-lucide="x-circle" style="width: 10px; height: 10px;"></i> ${t.badgeUnlinked}</span>`;
+                
+                let anchorsHtml = '';
+                if (node.isLinked && node.docAnchors && node.docAnchors.length > 0) {
+                    anchorsHtml = '<div class="docs-links-container" style="margin-top: 6px;">';
+                    node.docAnchors.forEach(anchor => {
+                        const parts = anchor.split('#');
+                        let docPath = parts[0];
+                        
+                        // Clean "docs/" prefix if exists, as output HTML is flat under .html/
+                        if (docPath.startsWith('docs/')) {
+                            docPath = docPath.substring(5);
+                        } else {
+                            const match = docPath.match(/Projects\/[^\/]+\/docs\/(.+)/);
+                            if (match) {
+                                docPath = match[1];
+                            }
+                        }
+                        
+                        const htmlPath = docPath.replace(/\.md$/, '.html');
+                        const displayName = docPath.split('/').pop();
+                        const hrefUrl = htmlPath + (parts[1] ? '#' + parts[1] : '');
+                        
+                        anchorsHtml += `<a href="${hrefUrl}" class="doc-link-item" onclick="event.stopPropagation(); event.preventDefault(); window.parent.postMessage({ type: 'navigate', href: '${hrefUrl}', baseUrl: window.location.href }, '*');"><i data-lucide="link" style="width: 10px; height: 10px;"></i> ${displayName}</a>`;
+                    });
+                    anchorsHtml += '</div>';
+                }
+                docsTd.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                        <div>${docStatusBadge}</div>
+                        ${anchorsHtml}
+                    </div>
+                `;
+                tr.appendChild(docsTd);
+
+                const descTd = document.createElement('td');
+                const enrichedBadge = node.isEnriched
+                    ? `<span class="badge badge-status-enriched" style="margin-bottom: 6px;">${t.statusEnriched}</span>`
+                    : `<span class="badge badge-status-unenriched" style="margin-bottom: 6px;">${t.statusUnenriched}</span>`;
+                
+                const summaryText = node.isEnriched ? node.summary : `<em style="color: var(--text-secondary); opacity: 0.65;">${t.emptySummary}</em>`;
+                descTd.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px;">
+                        <div>${enrichedBadge}</div>
+                        <div class="node-summary">${summaryText}</div>
+                    </div>
+                `;
+                tr.appendChild(descTd);
+
+                tbody.appendChild(tr);
+            });
+
+            lucide.createIcons();
+        }
+
+        // --- Inline Feedback Selection Logic ---
+        let inlineSelectedText = '';
+        let inlineSelectedNode = null;
+
+        function getInlinePopup() {
+            return document.getElementById('inline-feedback-popup');
+        }
+
+        function getInlineInput() {
+            return document.getElementById('inline-feedback-input');
+        }
+
+        const contentWrapper = document.querySelector('.content-wrapper');
+        if (contentWrapper) {
+            contentWrapper.addEventListener('mouseup', function(e) {
+                setTimeout(() => {
+                    const selection = window.getSelection();
+                    const selectedText = selection.toString().trim();
+                    
+                    if (selectedText && selectedText.length > 0) {
+                        let parent = selection.anchorNode.parentNode;
+                        let tr = null;
+                        while (parent) {
+                            if (parent.tagName === 'TR') {
+                                tr = parent;
+                                break;
+                            }
+                            parent = parent.parentNode;
+                        }
+                        
+                        inlineSelectedText = selectedText;
+                        if (tr) {
+                            const absPath = tr.getAttribute('data-abspath');
+                            const startLine = tr.getAttribute('data-startline');
+                            const nodeName = tr.getAttribute('data-nodename');
+                            const nodeId = tr.getAttribute('data-nodeid');
+                            
+                            if (absPath) {
+                                inlineSelectedNode = {
+                                    absPath,
+                                    startLine,
+                                    nodeName,
+                                    id: nodeId
+                                };
+                            } else {
+                                inlineSelectedNode = null;
+                            }
+                        } else {
+                            inlineSelectedNode = null;
+                        }
+                        
+                        document.getElementById('inline-action-menu').style.display = 'flex';
+                        document.getElementById('inline-comment-form').style.display = 'none';
+                        
+                        const range = selection.getRangeAt(0);
+                        selectionRect = range.getBoundingClientRect();
+                        selectionScrollX = window.pageXOffset || document.documentElement.scrollLeft;
+                        selectionScrollY = window.pageYOffset || document.documentElement.scrollTop;
+                        
+                        positionPopup();
+                        
+                        e.stopPropagation();
+                        return;
+                    }
+                    
+                    if (!e.target.closest('#inline-feedback-popup')) {
+                        hideInlinePopup();
+                    }
+                }, 50);
+            });
+        }
+
+        function positionPopup() {
+            const popup = getInlinePopup();
+            if (!popup || !selectionRect) return;
+            
+            popup.style.display = 'flex';
+            const popupWidth = popup.offsetWidth || 340;
+            const popupHeight = popup.offsetHeight || 80;
+            
+            let leftPos = selectionRect.left + selectionScrollX + (selectionRect.width / 2) - (popupWidth / 2);
+            let topPos = selectionRect.top + selectionScrollY - popupHeight - 8;
+            
+            // Constrain left boundary
+            if (leftPos < 8) {
+                leftPos = 8;
+            } else if (leftPos + popupWidth > window.innerWidth - 8) {
+                leftPos = window.innerWidth - popupWidth - 8;
+            }
+            
+            // Constrain top boundary
+            if (topPos < 8) {
+                topPos = selectionRect.bottom + selectionScrollY + 8;
+            }
+            
+            popup.style.left = leftPos + 'px';
+            popup.style.top = topPos + 'px';
+        }
+
+        function switchToInlineComment(e) {
+            if (e) e.stopPropagation();
+            document.getElementById('inline-action-menu').style.display = 'none';
+            document.getElementById('inline-comment-form').style.display = 'flex';
+            
+            const listEl = document.getElementById('inline-suggestions-list');
+            if (listEl) {
+                listEl.innerHTML = '';
+                const suggestions = [];
+                
+                if (inlineSelectedNode) {
+                    const node = graphNodesData.find(n => n.id === inlineSelectedNode.id);
+                    if (node) {
+                        if (node.isStale) {
+                            suggestions.push({
+                                label: lang === 'vi' ? '🔄 Cập nhật neo' : '🔄 Update anchor',
+                                value: lang === 'vi' ? 'cập nhật neo tài liệu bị cũ' : 'update stale document anchor',
+                                isPrimary: true
+                            });
+                        }
+                        // All suggestions available, status-specific ones are isPrimary = true
+                        if (!node.isLinked) {
+                            suggestions.push({ label: lang === 'vi' ? '✨ Tất cả gợi ý' : '✨ All suggestions', value: 'tất cả gợi ý', isPrimary: true });
+                            suggestions.push({ label: lang === 'vi' ? '🔗 Gán link neo' : '🔗 Suggest link', value: 'tìm tài liệu phù hợp để neo', isPrimary: true });
+                            suggestions.push({ label: lang === 'vi' ? '✍️ Viết tài liệu' : '✍️ Write doc', value: 'viết tài liệu kỹ thuật mới cho thành phần này', isPrimary: true });
+                            suggestions.push({ label: lang === 'vi' ? '🧠 Viết mô tả AI' : '🧠 Write AI summary', value: 'viết mô tả tóm tắt summary' });
+                            suggestions.push({ label: lang === 'vi' ? '🔍 Giải thích code' : '🔍 Explain code', value: 'giải thích hoạt động của code' });
+                            suggestions.push({ label: lang === 'vi' ? '🛠️ Sửa logic' : '🛠️ Edit logic', value: 'sửa code liên quan' });
+                        } else if (!node.isEnriched) {
+                            suggestions.push({ label: lang === 'vi' ? '✨ Tất cả gợi ý' : '✨ All suggestions', value: 'tất cả gợi ý', isPrimary: true });
+                            suggestions.push({ label: lang === 'vi' ? '🧠 Viết mô tả AI' : '🧠 Write AI summary', value: 'viết mô tả tóm tắt summary', isPrimary: true });
+                            suggestions.push({ label: lang === 'vi' ? '🔍 Giải thích code' : '🔍 Explain code', value: 'giải thích hoạt động của code', isPrimary: true });
+                            suggestions.push({ label: lang === 'vi' ? '🔗 Gán link neo' : '🔗 Suggest link', value: 'tìm tài liệu phù hợp để neo' });
+                            suggestions.push({ label: lang === 'vi' ? '✍️ Viết tài liệu' : '✍️ Write doc', value: 'viết tài liệu kỹ thuật mới cho thành phần này' });
+                            suggestions.push({ label: lang === 'vi' ? '🛠️ Sửa logic' : '🛠️ Edit logic', value: 'sửa code liên quan' });
+                        } else {
+                            suggestions.push({ label: lang === 'vi' ? '✨ Tất cả gợi ý' : '✨ All suggestions', value: 'tất cả gợi ý', isPrimary: true });
+                            suggestions.push({ label: lang === 'vi' ? '🛠️ Sửa logic' : '🛠️ Edit logic', value: 'sửa code liên quan', isPrimary: true });
+                            suggestions.push({ label: lang === 'vi' ? '🔍 Giải thích code' : '🔍 Explain code', value: 'giải thích hoạt động của code', isPrimary: true });
+                            suggestions.push({ label: lang === 'vi' ? '🔗 Gán link neo' : '🔗 Suggest link', value: 'tìm tài liệu phù hợp để neo' });
+                            suggestions.push({ label: lang === 'vi' ? '✍️ Viết tài liệu' : '✍️ Write doc', value: 'viết tài liệu kỹ thuật mới cho thành phần này' });
+                            suggestions.push({ label: lang === 'vi' ? '🧠 Viết mô tả AI' : '🧠 Write AI summary', value: 'viết mô tả tóm tắt summary' });
+                        }
+                        if (node.blastRadius > 0) {
+                            suggestions.push({
+                                label: lang === 'vi' ? '💥 Phân tích tác động' : '💥 Analyze impact',
+                                value: lang === 'vi' ? 'phân tích tác động' : 'analyze dependency impact',
+                                isPrimary: node.blastRadius >= 15
+                            });
+                        }
+                    }
+                } else {
+                    suggestions.push({
+                        label: lang === 'vi' ? '🧠 Giải thích' : '🧠 Explain',
+                        value: lang === 'vi' ? 'giải thích phần bôi đen này' : 'explain this selected text'
+                    });
+                    suggestions.push({
+                        label: lang === 'vi' ? '✍️ Viết lại' : '✍️ Rewrite',
+                        value: lang === 'vi' ? 'viết lại hoặc tối ưu' : 'rewrite or optimize'
+                    });
+                }
+                
+                suggestions.forEach(s => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'quick-suggest-btn';
+                    btn.textContent = s.label;
+                    btn.style.fontSize = '11px';
+                    btn.style.padding = '4px 8px';
+                    btn.style.borderRadius = '4px';
+                    btn.style.border = '1px solid var(--border-color)';
+                    btn.style.background = 'var(--bg-primary)';
+                    btn.style.color = 'var(--text-primary)';
+                    btn.style.cursor = 'pointer';
+                    btn.style.transition = 'all 0.15s ease';
+                    
+                    if (s.isPrimary) {
+                        btn.style.borderColor = 'var(--accent-color)';
+                        btn.style.color = 'var(--accent-color)';
+                        btn.style.fontWeight = '600';
+                    }
+                    
+                    btn.onmouseover = () => {
+                        btn.style.background = 'var(--accent-color)';
+                        btn.style.color = 'white';
+                        btn.style.borderColor = 'var(--accent-color)';
+                    };
+                    btn.onmouseout = () => {
+                        btn.style.background = s.isPrimary ? 'var(--bg-primary)' : 'var(--bg-primary)';
+                        btn.style.color = s.isPrimary ? 'var(--accent-color)' : 'var(--text-primary)';
+                        btn.style.borderColor = s.isPrimary ? 'var(--accent-color)' : 'var(--border-color)';
+                    };
+                    
+                    btn.onclick = (evt) => {
+                        evt.stopPropagation();
+                        const input = getInlineInput();
+                        if (input) {
+                            const existingVal = input.value.trim();
+                            if (existingVal) {
+                                const parts = existingVal.split(' | ');
+                                const customComment = parts.length > 1 ? parts.slice(1).join(' | ').trim() : existingVal;
+                                input.value = s.value + " | " + customComment;
+                            } else {
+                                input.value = s.value;
+                            }
+                            updateLivePreview();
+                        }
+                        submitInlineFeedback();
+                    };
+                    listEl.appendChild(btn);
+                });
+            }
+            
+            const input = getInlineInput();
+            
+            if (input) {
+                if (!input.hasKeyDownListener) {
+                    input.hasKeyDownListener = true;
+                    input.addEventListener('keydown', function(evt) {
+                        if (evt.key === 'Enter') {
+                            submitInlineFeedback();
+                            evt.preventDefault();
+                        } else if (evt.key === 'Escape') {
+                            hideInlinePopup();
+                            window.getSelection().removeAllRanges();
+                        }
+                    });
+                }
+                input.focus();
+                input.select();
+            }
+            
+            positionPopup();
+            updateLivePreview();
+        }
+
+        async function copyRawSelectionText(e) {
+            if (e) e.stopPropagation();
+            if (!inlineSelectedText) return;
+            try {
+                await navigator.clipboard.writeText(inlineSelectedText);
+                showToast(t.toastCopied);
+            } catch (err) {
+                showToast(t.toastCopyFailed, true);
+            }
+            hideInlinePopup();
+            window.getSelection().removeAllRanges();
+        }
+
+        function hideInlinePopup() {
+            const popup = getInlinePopup();
+            const input = getInlineInput();
+            if (popup) {
+                popup.style.display = 'none';
+            }
+            if (input) {
+                input.value = '';
+            }
+            document.getElementById('inline-action-menu').style.display = 'flex';
+            document.getElementById('inline-comment-form').style.display = 'none';
+            inlineSelectedText = '';
+            inlineSelectedNode = null;
+            selectionRect = null;
+        }
+
+        function getPromptText(comment = '') {
+            let formattedPrompt = '';
+            const commentStr = comment.trim();
+            
+            const suggestionValues = [
+                'tìm tài liệu phù hợp để neo', 'find suitable doc to link',
+                'viết tài liệu kỹ thuật mới cho thành phần này', 'write new technical doc for this',
+                'viết mô tả tóm tắt summary', 'write semantic summary',
+                'giải thích hoạt động của code', 'explain how code works',
+                'sửa code liên quan', 'edit related code',
+                'giải thích phần bôi đen này', 'explain this selected text',
+                'viết lại hoặc tối ưu', 'rewrite or optimize',
+                'tất cả gợi ý', 'all suggestions',
+                'phân tích tác động', 'phân tích tác động và ảnh hưởng', 'phân tích tác động ảnh hưởng', 'analyze dependency impact',
+                'cập nhật neo tài liệu bị cũ', 'update stale document anchor'
+            ];
+            
+            // Check for combined suggestion + custom comment
+            let suggestionStr = commentStr;
+            let customComment = '';
+            const separatorIdx = commentStr.indexOf(' | ');
+            if (separatorIdx !== -1) {
+                suggestionStr = commentStr.substring(0, separatorIdx).trim();
+                customComment = commentStr.substring(separatorIdx + 3).trim();
+            }
+            
+            const isSuggestion = suggestionValues.includes(suggestionStr);
+            const hasComment = isSuggestion ? (customComment !== '') : (commentStr !== '');
+            const feedbackStr = isSuggestion ? customComment : commentStr;
+            
+            if (inlineSelectedNode) {
+                const node = graphNodesData.find(n => n.id === inlineSelectedNode.id);
+                if (node) {
+                    if (lang === 'vi') {
+                        if (suggestionStr === 'phân tích tác động' || suggestionStr === 'phân tích tác động và ảnh hưởng' || suggestionStr === 'phân tích tác động ảnh hưởng') {
+                            const action = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
+                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Thành phần mã \`${node.name}\` (${node.type}) có Bán kính ảnh hưởng (Blast Radius) là ${node.blastRadius || 0}. Hãy phân tích tác động nếu chỉnh sửa thành phần này${action}.`;
+                        } else if (suggestionStr === 'cập nhật neo tài liệu bị cũ') {
+                            const action = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
+                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Neo tài liệu (docAnchor) của thành phần mã \`${node.name}\` (${node.type}) đang bị cũ (stale) do code thay đổi chữ ký (signature) hoặc cấu trúc. Hãy phân tích code tại \`${node.filePath}\` và cập nhật lại neo tài liệu (docAnchor) trong tài liệu liên quan để đồng bộ${action}.`;
+                        } else if (suggestionStr === 'tất cả gợi ý') {
+                            const missingStatus = [];
+                            const missingActions = [];
+                            if (node.isStale) {
+                                missingStatus.push("có neo tài liệu (docAnchor) bị cũ (stale)");
+                                missingActions.push("cập nhật lại neo tài liệu (docAnchor)");
+                            }
+                            if (!node.isLinked) {
+                                missingStatus.push("chưa được liên kết với tài liệu nào");
+                                missingActions.push("đề xuất file tài liệu phù hợp để neo tài liệu (docAnchor)");
+                            }
+                            if (!node.isEnriched) {
+                                missingStatus.push("chưa có mô tả ngữ nghĩa (AI enrichment)");
+                                missingActions.push("viết mô tả ngữ nghĩa (AI enrichment) chi tiết");
+                            }
+                            
+                            if (missingActions.length > 0) {
+                                let statusText = "";
+                                if (missingStatus.length === 1) {
+                                    statusText = missingStatus[0];
+                                } else if (missingStatus.length === 2) {
+                                    statusText = `${missingStatus[0]} và ${missingStatus[1]}`;
+                                } else {
+                                    statusText = `${missingStatus[0]}, ${missingStatus[1]} và ${missingStatus[2]}`;
+                                }
+
+                                let actionsText = "";
+                                if (missingActions.length === 1) {
+                                    actionsText = missingActions[0];
+                                } else if (missingActions.length === 2) {
+                                    actionsText = `${missingActions[0]}, đồng thời ${missingActions[1]}`;
+                                } else {
+                                    actionsText = `${missingActions[0]}, ${missingActions[1]}, đồng thời ${missingActions[2]}`;
+                                }
+                                const actionSuffix = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Thành phần mã \`${node.name}\` (${node.type}) ${statusText}. Hãy phân tích mã nguồn tại \`${node.filePath}\` để ${actionsText}${actionSuffix}.`;
+                            } else {
+                                const actionSuffix = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Đối với thành phần mã \`${node.name}\` tại \`${node.filePath}\`, hãy giải thích hoạt động của code, đồng thời sửa code liên quan${actionSuffix}.`;
+                            }
+                        } else if (!node.isLinked) {
+                            if (suggestionStr === 'viết tài liệu kỹ thuật mới cho thành phần này') {
+                                const action = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Thành phần mã \`${node.name}\` (${node.type}) chưa được liên kết với tài liệu nào. Hãy phân tích mã nguồn tại \`${node.filePath}\` và viết tài liệu kỹ thuật mới cho thành phần này${action}.`;
+                            } else {
+                                const action = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Thành phần mã \`${node.name}\` (${node.type}) chưa được liên kết với tài liệu nào. Hãy phân tích mã nguồn tại \`${node.filePath}\` và đề xuất file tài liệu phù hợp để neo tài liệu (docAnchor)${action}.`;
+                            }
+                        } else if (!node.isEnriched) {
+                            if (suggestionStr === 'giải thích hoạt động của code') {
+                                const action = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Thành phần mã \`${node.name}\` (${node.type}) chưa có mô tả ngữ nghĩa (AI enrichment). Hãy phân tích mã nguồn tại \`${node.filePath}\` để giải thích hoạt động của code${action}.`;
+                            } else {
+                                const action = hasComment ? `, đồng thời thực hiện yêu cầu: "${feedbackStr}"` : '';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Thành phần mã \`${node.name}\` (${node.type}) chưa có mô tả ngữ nghĩa (AI enrichment). Hãy phân tích mã nguồn tại \`${node.filePath}\` để viết mô tả ngữ nghĩa (AI enrichment) chi tiết${action}.`;
+                            }
+                        } else if (inlineSelectedText && inlineSelectedText !== t.emptySummary) {
+                            const isEnrichText = node.summary && node.summary.includes(inlineSelectedText);
+                            const contextLabel = isEnrichText 
+                                ? 'liên quan đến thông tin mô tả ngữ nghĩa (AI enrichment)' 
+                                : 'liên quan đến ngữ cảnh';
+                            
+                            if (hasComment) {
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Đối với thành phần mã \`${node.name}\` tại \`${node.filePath}\`, ${contextLabel}: "${inlineSelectedText}", hãy thực hiện yêu cầu chỉnh sửa: "${feedbackStr}"`;
+                            } else {
+                                const action = feedbackStr || 'kiểm tra';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Đối với thành phần mã \`${node.name}\` tại \`${node.filePath}\`, ${contextLabel}: "${inlineSelectedText}", hãy thực hiện yêu cầu: "${action}".`;
+                            }
+                        } else {
+                            const action = feedbackStr || 'chỉnh sửa code';
+                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Đối với thành phần mã \`${node.name}\` tại \`${node.filePath}\`, hãy thực hiện yêu cầu: "${action}".`;
+                        }
+                    } else {
+                        if (suggestionStr === 'analyze dependency impact') {
+                            const action = hasComment ? `, and handle request: "${feedbackStr}"` : '';
+                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Code entity \`${node.name}\` (${node.type}) has a Blast Radius of ${node.blastRadius || 0}. Please perform an impact analysis if this component is modified${action}.`;
+                        } else if (suggestionStr === 'update stale document anchor') {
+                            const action = hasComment ? `, and handle request: "${feedbackStr}"` : '';
+                            formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Graph anchor for code entity \`${node.name}\` (${node.type}) is stale due to signature or structural changes. Please analyze code at \`${node.filePath}\` and update the document anchor (docAnchor) in the related document to sync${action}.`;
+                        } else if (suggestionStr === 'all suggestions') {
+                            const missingStatus = [];
+                            const missingActions = [];
+                            if (node.isStale) {
+                                missingStatus.push("has a stale document anchor (docAnchor)");
+                                missingActions.push("update the stale document anchor (docAnchor)");
+                            }
+                            if (!node.isLinked) {
+                                missingStatus.push("is not linked to any document");
+                                missingActions.push("suggest a suitable document for the document anchor (docAnchor)");
+                            }
+                            if (!node.isEnriched) {
+                                missingStatus.push("lacks a semantic summary (AI enrichment)");
+                                missingActions.push("generate a detailed semantic summary (AI enrichment)");
+                            }
+                            
+                            if (missingActions.length > 0) {
+                                let statusText = "";
+                                if (missingStatus.length === 1) {
+                                    statusText = missingStatus[0];
+                                } else if (missingStatus.length === 2) {
+                                    statusText = `${missingStatus[0]} and ${missingStatus[1]}`;
+                                } else {
+                                    statusText = `${missingStatus[0]}, ${missingStatus[1]} and ${missingStatus[2]}`;
+                                }
+
+                                let actionsText = "";
+                                if (missingActions.length === 1) {
+                                    actionsText = missingActions[0];
+                                } else if (missingActions.length === 2) {
+                                    actionsText = `${missingActions[0]} and ${missingActions[1]}`;
+                                } else {
+                                    actionsText = `${missingActions[0]}, ${missingActions[1]} and ${missingActions[2]}`;
+                                }
+                                const actionSuffix = hasComment ? `, and handle request: "${feedbackStr}"` : '';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Code entity \`${node.name}\` (${node.type}) ${statusText}. Please analyze the source code at \`${node.filePath}\` to ${actionsText}${actionSuffix}.`;
+                            } else {
+                                const actionSuffix = hasComment ? `, and handle request: "${feedbackStr}"` : '';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] For code entity \`${node.name}\` at \`${node.filePath}\`, please explain how the code works, and edit the related code${actionSuffix}.`;
+                            }
+                        } else if (!node.isLinked) {
+                            if (suggestionStr === 'write new technical doc for this') {
+                                const action = hasComment ? `, and handle request: "${feedbackStr}"` : '';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Code entity \`${node.name}\` (${node.type}) is not linked to any documentation. Please analyze the source code at \`${node.filePath}\` and write a new technical document for this${action}.`;
+                            } else {
+                                const action = hasComment ? `, and handle request: "${feedbackStr}"` : '';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Code entity \`${node.name}\` (${node.type}) is not linked to any documentation. Please analyze the source code at \`${node.filePath}\` and suggest a suitable document anchor (docAnchor)${action}.`;
+                            }
+                        } else if (!node.isEnriched) {
+                            if (suggestionStr === 'explain how code works') {
+                                const action = hasComment ? `, and handle request: "${feedbackStr}"` : '';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Code entity \`${node.name}\` (${node.type}) lacks a semantic summary (AI enrichment). Please analyze the source code at \`${node.filePath}\` to explain how the code works${action}.`;
+                            } else {
+                                const action = hasComment ? `, and handle request: "${feedbackStr}"` : '';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] Code entity \`${node.name}\` (${node.type}) lacks a semantic summary (AI enrichment). Please analyze the source code at \`${node.filePath}\` to generate a detailed semantic summary (AI enrichment)${action}.`;
+                            }
+                        } else if (inlineSelectedText && inlineSelectedText !== t.emptySummary) {
+                            const isEnrichText = node.summary && node.summary.includes(inlineSelectedText);
+                            const contextLabel = isEnrichText 
+                                ? 'regarding the semantic summary (AI enrichment)' 
+                                : 'regarding the selected context';
+                            
+                            if (hasComment) {
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] For code entity \`${node.name}\` at \`${node.filePath}\`, ${contextLabel}: "${inlineSelectedText}", please perform edit: "${feedbackStr}"`;
+                            } else {
+                                const action = feedbackStr || 'check';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] For code entity \`${node.name}\` at \`${node.filePath}\`, ${contextLabel}: "${inlineSelectedText}", please handle: "${action}".`;
+                            }
+                        } else {
+                            if (suggestionStr === 'all suggestions') {
+                                const actionSuffix = hasComment ? `, and handle request: "${feedbackStr}"` : '';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] For code entity \`${node.name}\` at \`${node.filePath}\`, please explain how the code works, and edit the related code${actionSuffix}.`;
+                            } else {
+                                const action = feedbackStr || 'edit code';
+                                formattedPrompt = `@[${node.absoluteFilePath}:${node.startLine}] For code entity \`${node.name}\` at \`${node.filePath}\`, please handle request: "${action}".`;
+                            }
+                        }
+                    }
+                } else {
+                    const action = isSuggestion ? (customComment || 'edit code') : (commentStr || 'edit code');
+                    formattedPrompt = `@[${inlineSelectedNode.absPath}:${inlineSelectedNode.startLine}] ${t.promptEditCode(action)}`;
+                }
+            } else {
+                const action = isSuggestion ? (customComment || 'giải thích hoặc chỉnh sửa') : (commentStr || 'giải thích hoặc chỉnh sửa');
+                formattedPrompt = lang === 'vi'
+                    ? `ngữ cảnh bôi đen: "${inlineSelectedText}"\nyêu cầu: "${action}"`
+                    : `selected context: "${inlineSelectedText}"\nrequest: "${isSuggestion ? (customComment || 'explain or edit') : (commentStr || 'explain or edit')}"`;
+            }
+            return formattedPrompt;
+        }
+
+        function updateLivePreview() {
+            const input = getInlineInput();
+            const previewEl = document.getElementById('inline-prompt-preview');
+            if (input && previewEl) {
+                previewEl.textContent = getPromptText(input.value);
+            }
+        }
+
+        async function submitInlineFeedback() {
+            const input = getInlineInput();
+            if (!input) return;
+            const comment = input.value.trim();
+            
+            let feedbackData;
+            let formattedPrompt = getPromptText(comment);
+            let sentToServer = false;
+
+            if (inlineSelectedNode) {
+                feedbackData = {
+                    file: inlineSelectedNode.absPath,
+                    section: `Node: ${inlineSelectedNode.nodeName} (Line ${inlineSelectedNode.startLine})`,
+                    comment: comment || 'Quick action selected',
+                    timestamp: new Date().toISOString()
+                };
+            } else {
+                feedbackData = {
+                    file: 'Dashboard',
+                    section: 'General Dashboard',
+                    comment: `Selected text: "${inlineSelectedText}" | Comment: "${comment || 'Quick action selected'}"`,
+                    timestamp: new Date().toISOString()
+                };
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/api/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(feedbackData)
+                });
+                if (response.ok) sentToServer = true;
+            } catch (e) {}
+
+            try {
+                await navigator.clipboard.writeText(formattedPrompt);
+                let message = t.promptCopied;
+                if (sentToServer) {
+                    message += t.promptCopiedWatcher;
+                }
+                showToast(message);
+            } catch (err) {
+                showToast(t.promptCopyError, true);
+            }
+
+            hideInlinePopup();
+            window.getSelection().removeAllRanges();
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast-notification');
+            const msgEl = document.getElementById('toast-message');
+            if (!toast || !msgEl) return;
+            msgEl.textContent = message;
+            toast.style.backgroundColor = isError ? '#c62828' : '#2e7d32';
+            toast.style.display = 'flex';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2500);
+        }
+
+        window.addEventListener('load', initializeDashboard);
+    </script>
+
+    <!-- Inline Feedback Tooltip Popup -->
+    <div id="inline-feedback-popup">
+        <!-- Mode 1: Action Menu -->
+        <div id="inline-action-menu" style="display: flex; gap: 4px; align-items: center;">
+            <button onclick="switchToInlineComment(event)" title="/* TRANSLATE:inlineFeedbackSubmitTitle */" style="display: flex; align-items: center; gap: 4px;">
+                <i data-lucide="message-square" style="color: var(--accent-color);"></i> /* TRANSLATE:inlineFeedbackChatWithAI */
+            </button>
+            <span style="border-left: 1px solid var(--border-color); height: 16px; margin: 0 4px;"></span>
+            <button onclick="copyRawSelectionText(event)" title="Copy text" style="display: flex; align-items: center; gap: 4px;">
+                <i data-lucide="copy"></i> /* TRANSLATE:inlineFeedbackCopy */
+            </button>
+        </div>
+        <!-- Mode 2: Comment Form -->
+        <div id="inline-comment-form" style="display: none; flex-direction: column; gap: 6px; width: 340px;">
+            <div style="display: flex; align-items: center; gap: 6px; width: 100%;">
+                <input type="text" id="inline-feedback-input" placeholder="/* TRANSLATE:inlineCommentFormPlaceholder */" style="flex-grow: 1; padding: 6px 10px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 12px; background: var(--bg-primary); color: var(--text-primary);" oninput="updateLivePreview()">
+                <button id="inline-feedback-copy-btn" onclick="submitInlineFeedback()" title="/* TRANSLATE:inlineFeedbackSubmitTitle */" style="background: var(--accent-color); border: none; color: white; padding: 6px 10px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+                </button>
+            </div>
+            <!-- Suggestions list -->
+            <div id="inline-suggestions-list" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px;"></div>
+            <!-- Live Preview -->
+            <div id="inline-prompt-preview" style="font-family: SFMono-Regular, Consolas, monospace; font-size: 10px; color: var(--text-secondary); background: var(--bg-secondary); padding: 4px 8px; border-radius: 4px; border: 1px dashed var(--border-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px;"></div>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast-notification">
+        <i data-lucide="check-circle"></i> <span id="toast-message">Copied!</span>
+    </div>
+</body>
+</html>

@@ -7,7 +7,7 @@
 **The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.8.14-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.8.15-blue.svg)](./CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -801,6 +801,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] **Antigravity IDE 2.x and v1.x Config Migration & TDD hardening** _(shipped in v1.8.12)_
 - [x] **Node Path Resolution (NVM/fnm/Volta) & Rule/KI Artifact Authority improvements** _(shipped in v1.8.13)_
 - [x] **MCP Windows Path Conversion (BUG-37) & Plan Auto-Activation** _(shipped in v1.8.14)_
+- [x] **Vibecode DSP & Template Consolidation** _(shipped in v1.8.15)_
 - [ ] Department System _(v1.9.0 — planned)_
 - [ ] Community & Trust Boundary _(v1.10.0 — planned)_
 
@@ -842,4 +843,4 @@ The `/scan-sec` security audit module (governed under [scan-sec SKILL.md](./temp
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.8.14_
+_Version: 1.8.15_

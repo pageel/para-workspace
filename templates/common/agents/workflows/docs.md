@@ -143,7 +143,9 @@ If the `--graph` flag is provided, execute the graph intelligence pipeline BEFOR
 2. **Identify Target Nodes:** Use MCP tools `graph_query` and `graph_god_nodes` to locate architectural nodes and hot spots related to the project's core modules.
 3. **Deep Context:** Use MCP tools `graph_context_bundle` and `graph_edges` on the identified nodes to gather callers, callees, dependencies, and structural relationships.
 4. **Impact Analysis:** Use `graph_impact_analysis` on God nodes to map upstream/downstream dependencies — essential for writing accurate architecture diagrams and component relationship docs.
-5. **Inject Context:** Keep this graph intelligence in memory to ground the documentation in the actual codebase structure, preventing hallucinations and ensuring accuracy.
+5. **Pattern Verify (Step G):** If the documentation covers specific code patterns (e.g., error handling, logging, environment variables), run `grep_search` to cross-validate and get the exact file counts and locations.
+6. **Inject Context:** Keep this enriched graph and grep intelligence in memory to ground the documentation in the actual codebase structure, preventing hallucinations and ensuring accuracy.
+
 
 #### 1. Read Project Contract
 
@@ -284,7 +286,14 @@ Create each approved document using the appropriate template from Section "Doc T
 4. Save to `Projects/[project-name]/docs/[doc-name].md`
 5. **Git Guard**: DO NOT run `git commit` for files created in `docs/` (internal docs are not git-tracked).
 
-#### 6.5. Source Verification Gate
+#### 6.1. Auto-Insert Graph Anchors (MANDATORY)
+
+When generating or updating any documentation sections (e.g. classes, functions, files, schemas, APIs):
+1. **Identify Node IDs:** The Agent MUST identify the corresponding code entities (functions, classes, schemas, config files) that are referenced or explained in each section using Code-Graph queries.
+2. **Inject Anchors:** The Agent MUST automatically insert the HTML comment annotation `<!-- @graph-node: nodeId -->` immediately before the section heading (H2 or H3).
+3. **No Ceremony:** Do NOT wait for user instructions to do this — it is a default requirement for codebase traceability.
+
+#### 6.2. Source Verification Gate
 
 > ⛔ CHECKPOINT: Agent MUST NOT proceed to Step 7 until verification is complete.
 
@@ -306,6 +315,18 @@ done
 ```
 
 If any `🔴 MISSING` is found → fix the doc before proceeding.
+
+#### 6.3. Anchor Linking
+
+// turbo
+
+> **Gate:** Only runs if the project graph is available (`Projects/[project-name]/.beads/graph/` exists).
+
+1. Scan the newly created Markdown document for anchor annotations `<!-- @graph-node: nodeId -->`.
+2. If found, call the MCP tool `graph_link_docs` with the parameters:
+   - `projectName`: Name of the project
+   - `docPath`: Relative path to the document file (e.g., `docs/architecture.md`)
+3. This command parses all anchors in the file, links them to the corresponding code entities, and updates the `docAnchors` attribute on the graph.
 
 #### 7. Create or Update Doc Index
 
@@ -374,12 +395,20 @@ Audit existing documentation for completeness, accuracy, and freshness.
 
 // turbo
 
-1. Read `Projects/[project-name]/docs/README.md` (Doc Index) to get the inventory.
-2. For each doc, check:
+1. Read `Projects/[project-name]/docs/README.md` (Doc Index) to get the authoritative document list.
+   - **Index Drift Check**: Cross-check the list of physical files in `docs/` against the inventory declared in the Doc Index table (ignore historical log folders like `docs/researches/` or daily `sessions/` data).
+   - If files exist in the folder (excluding ignored ones) but are missing from the Doc Index, report them as `⚠️ Index Drift` to avoid orphan documentation.
+2. **Traceability & Staleness check**: If the graph is available, perform codebase-to-docs checks:
+   - **Undocumented God Nodes**: Invoke `graph_god_nodes` to fetch the top-connected core components. Cross-check these God Nodes against their documentation status (where `docAnchors` is empty or missing).
+   - **Stale linked nodes**: Use `graph_query` to find stale nodes (where `staleSince` is not null). Correlate with the time when code signatures were changed.
+   - **Traceability Alignment**: Scan the index-registered documents for graph anchors (`<!-- @graph-node -->`). If any index-registered document contains anchors but lacks active links in the graph database, highlight them for sync.
+   - **Target-Seeking Loop Target**: Report the exact ratio of documented God Nodes vs total God Nodes. Instruct the agent to run an active target-seeking loop to reach 100% coverage (adding anchors for all God Nodes and resolving all unlinked anchors).
+3. For each doc, check:
    - **Freshness**: Is "last reviewed" date > 30 days old?
    - **Accuracy**: Does the doc reference files/functions that still exist?
    - **Completeness**: Are there gaps (e.g., does Architecture doc miss new modules)?
-3. Present audit report:
+   - **Staleness**: Are there any linked nodes marked as stale (outdated due to code signature changes)?
+4. Present audit report:
 
 ```
 📖 Docs Audit: [Project Name]
@@ -391,12 +420,21 @@ Audit existing documentation for completeness, accuracy, and freshness.
 | cli-reference.md | ⚠️ Stale | Last reviewed 45 days ago |
 | deployment.md | 🔴 Missing | No deployment docs found |
 
+⚠️ Index Drift (Orphan Files):
+- `[doc-name].md` — Exists on disk but is missing from README.md index.
+
+🔴 Undocumented Core Components (God Nodes):
+- `[nodeId]` (calls/callers: N) — Missing docAnchors. Recommendation: Add graph anchor to docs.
+
 💡 Recommendations:
   1. Update cli-reference.md (new commands added since last review)
   2. Create deployment.md (project has deploy scripts)
+  3. Document core component `[nodeId]` in architecture.md or target guides.
+  4. Register `[doc-name].md` in the README.md index.
 
 ❓ Fix these issues now?
 ```
+
 
 ---
 
@@ -406,12 +444,76 @@ Update specific documentation to reflect current project state.
 
 ### Steps
 
-1. User specifies which doc to update (or "all").
-2. Re-read the relevant source code.
-3. Diff current doc against actual code to find discrepancies.
-4. Update the doc and bump "last reviewed" date.
-5. Log in session.
-6. **HTML Compilation & Watch (Optional)**:
+#### 1. User specifies which doc to update (or "all").
+
+#### 1.5. Index-Driven File List
+
+// turbo
+
+> ⚠️ **MANDATORY**: Agent MUST read the doc index before proceeding.
+> The index is the authoritative file list — do NOT rely solely on user input.
+
+1. Read `Projects/[project-name]/docs/README.md`
+2. Parse ALL file entries from the tables (across all sections: Features, Architecture, References, Guides, Workflows, etc.)
+3. Build a checklist of files to check/update
+4. For "update all": iterate **every file** in the checklist — no exceptions
+5. For specific file: verify the file exists in the index, warn if not listed
+
+> **Anti-drift guard:** If a file exists in `docs/` but is NOT in the index, report it to the user and suggest adding it.
+
+#### 2. Re-read the relevant source code.
+
+#### 3. Diff current doc against actual code to find discrepancies.
+
+#### 4. Update the doc and bump "last reviewed" date.
+
+#### 4.5. Re-Link Anchors
+
+If the graph is available, re-run `graph_link_docs(projectName, links)` for the updated document file to reset the `staleSince` state and refresh graph linkages.
+
+> **v0.16.1+:** `linkDocs` now auto-initializes `semantic: {}` for non-enriched nodes — all anchors will link successfully regardless of enrichment status.
+
+#### 5. Log in session.
+
+#### 5.5. Update Index Statistics (if --graph)
+
+// turbo
+
+> **Gate:** Only runs if `--graph` flag is provided and `.beads/graph/` exists.
+
+1. Call `graph_query(projectName)` to get total enrichable node count
+2. Count how many nodes have `docAnchors` (non-empty array)
+3. Count docs in index that contain `<!-- @graph-node -->` anchors
+4. Call `graph_god_nodes(projectName)` to get top-connected God Nodes count (G)
+5. Count how many of these God Nodes have non-empty `docAnchors` (L)
+6. Check for stale nodes (where `staleSince` is not null AND have `docAnchors`)
+7. Update or create the `## Graph Traceability` section in `docs/README.md`:
+
+```markdown
+## Graph Traceability
+
+> Auto-generated by `/docs update --graph` | Last scan: YYYY-MM-DD
+
+| Metric | Value |
+|:--|:--|
+| Total docs | N |
+| Docs with graph anchors | M (P%) |
+| Graph nodes with docAnchors | X/Y enrichable (Z%) |
+| God Nodes documented | L/G top-connected (K%) |
+| Stale docs (code changed) | S |
+```
+
+If stale docs are found, append a table:
+
+```markdown
+### Stale Documents
+
+| Document | Stale Since | Affected Nodes |
+|:--|:--|:--|
+| architecture.md | 2026-05-20 | `CodeGraph`, `AstStore` |
+```
+
+#### 6. **HTML Compilation & Watch (Optional)**:
    // turbo
    
    Compile the updated Markdown documents:
@@ -426,7 +528,7 @@ Update specific documentation to reflect current project state.
 
    After compilation, the agent MUST print the clickable `file://` URL of the generated `README.html` (using absolute workspace path) and guide the user on how to open it.
    
-7. **Git Guard**: DO NOT run `git commit` or `git add` for files in `docs/` (internal docs are not git-tracked).
+#### 7. **Git Guard**: DO NOT run `git commit` or `git add` for files in `docs/` (internal docs are not git-tracked).
 
 ---
 

@@ -83,7 +83,7 @@ Carry the Execution Ownership icon from the Implementation Plan.]
 [ ] 0.0 🤖 Graph Knowledge Preparation (if para-graph enabled)
 [ ] 0.1 🤖 [Task description]
 [ ] 0.2 🤖 [Task description]
-[ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x] BEFORE proceeding to Phase 1. Ask User to proceed.
+- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x] AND get explicit User approval before proceeding to Phase 1.
 
 ---
 
@@ -143,7 +143,7 @@ git push origin main
 [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
 [ ] 1.N-1 🤖 **Pre-commit Gate:** Run project's linter/compiler/tests (e.g., `npm run lint`, `npm test`) and resolve any problems. (If running tests, MUST use TDD skill).
 [ ] 1.N 👤 Git commit Phase 1.
-[ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 1 are checked [x] BEFORE proceeding to the next Phase. Ask User to proceed.
+- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 1 are checked [x] AND get explicit User approval before proceeding to the next Phase.
 [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Agent MUST ask User for confirmation BEFORE pushing.
 [ ] 1.N+1 👤 Git push origin main.
 
