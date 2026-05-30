@@ -40,7 +40,7 @@ workflows:
   spec:            "1.8.10"
   qa:              "1.8.15"  # translated Vietnamese to English
   staging:         "1.8.16"
-  vibecode:        "1.8.15"  # JIT Phase creation check, user intent detection
+  vibecode:        "1.8.16"  # added pre-code checkpoint and early project rules loading
   scan-sec:        "1.8.15"  # added missing telemetry check
   resource:        "1.8.11"
 
@@ -79,7 +79,7 @@ skills:
   resource:    "1.8.11"
   scan-sec:    "1.8.11"
   staging:     "1.8.16"
-  vibecode:    "1.8.15"  # session-quality-gate and session-manager.sh support
+  vibecode:    "1.8.16"  # session-quality-gate, session-manager.sh, and AGENTS.md reading support
   sidecar-skill: "1.8.11"
 
 cli:

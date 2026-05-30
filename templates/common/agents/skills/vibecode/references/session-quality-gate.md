@@ -6,12 +6,11 @@
 
 ## Phase-Level Quality Gate Template
 
-At the **start of every Phase** (before any code work), Agent MUST present the
-following gate to the user:
+At the **start of every Phase** (before any code work), Agent MUST present the following gate to the user, complete all pre-code steps (brainstorm, QA), and obtain approval at the **Pre-Code Checkpoint (2f)**:
 
 ```
 📋 PHASE [N] QUALITY GATE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Goal: [Phase goal description]
 
 Proposed quality tools for this phase:
@@ -32,6 +31,7 @@ Select tools to activate: (all / pick / none)
 **Rules:**
 - Agent MUST present this gate for EVERY Phase, no exceptions.
 - Agent MUST NOT skip the gate even if the task seems trivial.
+- **MANDATORY CHECKPOINT:** After selecting and running pre-code tools, Agent MUST present the final proposed files/tasks for Phase N and get explicit User confirmation to proceed before starting coding.
 - User has final say — Agent only recommends, never forces.
 - If user says "none", Agent proceeds with Standard mode (code → verify → commit).
 

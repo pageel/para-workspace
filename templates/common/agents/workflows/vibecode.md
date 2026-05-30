@@ -483,9 +483,11 @@ bash .agents/skills/vibecode/scripts/session-manager.sh stop
 
 #### 1. Session Initialization
 
-**Load references:**
+**Load references & Project Context (MANDATORY):**
 - Read `skills/vibecode/references/session-quality-gate.md` (Quality Gate template + sensitive keywords)
 - Read `skills/plan/references/session-plan.md` (DSP templates)
+- **Project Governance Load:** Agent MUST read the project contract (`Projects/[project-name]/project.md`), project indices (`.agents/rules.md` and `.agents/skills.md`), and the project-level developer guidelines (`.agents/AGENTS.md` or `agents.md` if they exist).
+- **CRITICAL DETAIL READ:** Agent MUST use the `view_file` tool to read the full contents of all rules, skills, and developer guidelines (`.agents/AGENTS.md` or `agents.md`) relevant to the project *at this initialization moment* before generating the DSP file.
 
 **Branch A — Topic-Based DSP** (`/vibecode session [topic]`):
 
@@ -533,7 +535,9 @@ Create Phase [N] for this goal? (y/n/refine)
 - If unsure whether user wants action or discussion → ASK, don't assume.
 - User can say "refine" to adjust the goal description before creating the Phase.
 
-**After user confirms → proceed to Step 2 (Quality Gate).**
+**After user confirms:**
+- **MANDATORY CONTEXT RELOAD:** Agent MUST reload project rules and skills indices immediately, identify rules/skills relevant to the new phase, and use the `view_file` tool to read their details and the project-level developer guidelines (`.agents/AGENTS.md` or `agents.md` if they exist) *at the exact moment the phase is created* (before presenting the Quality Gate or drafting phase tasks).
+- Then proceed to **Step 2 (Quality Gate)**.
 
 #### 2. Phase-Level Quality Gate (MANDATORY — ALL phases, ALL branches)
 
@@ -588,7 +592,14 @@ Select tools to activate: (all / pick / none)
 **2e. Execute pre-code tools** (if user selected):
 1. **`/brainstorm` first** (if selected): Run focused 3-turn brainstorm → log decision in Phase's `⚗️ Brainstorm Log`
 2. **`/qa` second** (if selected): Run stress-test review → issues found feed into implementation steps
-3. Then proceed to coding with activated dev tools (TDD, --graph, --hardened)
+3. Update the plan file to ensure all proposed file modifications are documented in `Proposed Changes` and all tasks are listed in the implementation checklist.
+
+**2f. ⛔ PRE-CODE CHECKPOINT (MANDATORY):**
+Before writing any code or making any file modifications for Phase N, Agent MUST:
+1. Present the detailed `Proposed Changes` and the checklist of tasks for Phase N.
+2. Suggest and confirm with the User to use the workflow `/plan [project-name] dev` to formally transition/continue the plan execution.
+3. Specifically wait for the User's explicit confirmation and approval to begin coding.
+4. **CRITICAL:** Do NOT run any code modification or file writing commands until the User explicitly confirms they want to proceed with coding (e.g. by approving this checkpoint or running `/plan [project-name] dev`). Writing code before this checkpoint is strictly prohibited.
 
 **User has final say — Agent only recommends, never forces.**
 
@@ -631,7 +642,14 @@ If the user wants to add new tasks or fix a bug discovered during the session:
 bash .agents/skills/vibecode/scripts/session-manager.sh stop
 ```
 
-Upon running `/end` or declaring the session finished:
+⛔ **MANDATORY CHECKPOINT:**
+Upon running `/end` or declaring the session finished, Agent MUST NOT perform teardown actions automatically.
+1. Agent MUST present the completed session summary to the User.
+2. Agent MUST suggest running the workflow `/plan [project-name] end` to formally audit, sync, and archive the plan.
+3. Agent MUST wait for explicit User confirmation to close the vibecode session.
+4. **PROHIBITED:** Syncing tasks to `done.md`, archiving the plan file (DSP), or clearing the active plan in `project.md` before the User explicitly approves ending the vibecode session (e.g. by confirming or running `/plan [project-name] end`) is strictly forbidden.
+
+Once approved:
 1. **Compress & Sync:** Extract all completed phases and append them to `artifacts/tasks/done.md` with the `#session` tag and the recorded Commit SHAs.
 2. **Archive:** Move the DSP file to `artifacts/plans/done/`.
 3. **Graph Update:** Rebuild code graph using `/para-graph build` and run `graph_enrich` to document the newly introduced code nodes.

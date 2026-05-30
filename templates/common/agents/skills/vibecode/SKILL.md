@@ -68,6 +68,7 @@ to prevent drift in long sessions. This table defines WHAT to reload.
 | 1 | Project rules index | `Projects/[project]/.agents/rules.md` | If exists |
 | 2 | Project skills index | `Projects/[project]/.agents/skills.md` | If exists |
 | 3 | Project domain skill | `Projects/[project]/.agents/skills/[project]/SKILL.md` | If exists |
+| 4 | Project developer guidelines | `Projects/[project]/.agents/AGENTS.md` (or `agents.md` in root) | If exists |
 
 ### Conditional (based on activated Quality Tools)
 
@@ -92,9 +93,11 @@ After execution, verify:
 - [ ] All exit criteria explicitly defined (loop mode)
 - [ ] User confirmed before real writes
 - [ ] Phase gates respected (auto mode)
-- [ ] Quality Gate presented at EVERY Phase start (session mode — TDD/graph/QA/hardened)
+- [ ] Quality Gate and Pre-Code Checkpoint presented at EVERY Phase start (session mode — TDD/graph/QA/hardened)
+- [ ] User approval obtained at Pre-Code Checkpoint and confirmed to run `/plan [project-name] dev` before making any code modifications
 - [ ] Rollback mechanism available (loop: git stash, sandbox: delete)
 - [ ] Path substitution correct (--sandbox: sandbox prefix)
 - [ ] Bash scripts syntax-checked with `bash -n` (--sandbox)
 - [ ] Sandbox cleaned up after completion
 - [ ] Final report generated with file inventory + lessons learned
+- [ ] Mandatory User confirmation obtained (suggesting `/plan [project-name] end`) before performing session teardown or archiving/cleaning plan files
