@@ -8,11 +8,11 @@ Below is the practical importance of these two link types for developers and sof
 
 ## 1. 📥 Inbound Links (Indegree / Upstream / Callers)
 
-**Meaning:** *"Who is using/calling me?"*
+**Meaning:** *"Who is calling me directly?"*
 
 ### ⚠️ Risk Assessment and Change Planning (Impact Analysis)
-When you want to modify or upgrade a function/class (e.g., changing the return type, adding a required parameter), the number of inbound links represents the **Blast Radius**.
-- **Low Indegree (0 - 2):** Low risk. You can confidently make changes quickly because very few components are affected.
+When you want to modify or upgrade a function/class (e.g., changing the return type, adding a required parameter), the number of direct inbound links (Indegree) combined with transitive callers forms the **Blast Radius**.
+- **Low Indegree (0 - 2):** Low risk. You can confidently make changes quickly because very few components directly call it. However, always verify the actual Blast Radius (see Section 3) since there might be complex indirect calls upstream.
 - **High Indegree (20+):** These are **God Nodes** (Core modules such as DB client, Authentication helper, Logger). Any change here could break or cause regressions in dozens of upstream features. Modifying these nodes requires detailed planning, rigorous regression testing, and thorough documentation.
 
 ### 🗑️ Dead Code Elimination
@@ -36,6 +36,42 @@ If a function has a high Outdegree (it calls dozens of other libraries or helper
 
 ### 🔍 Scope Narrowing during Debugging (Bug Hunting)
 When an API endpoint or a major feature behaves incorrectly, the outbound connection map (downstream) helps developers quickly narrow down the bug scope: is the issue within the function's own logic, or does it originate from one of the helper functions called below it?
+
+---
+
+## 3. 🔍 Distinguishing Inbound Links (Indegree) and Blast Radius
+
+Developers often conflate **Indegree** (number of inbound links) and **Blast Radius**. Understanding the distinction is vital for accurate risk assessment when performing codebase modifications.
+
+### 💡 Basic Concepts
+*   **Direct Inbound Links (Indegree / Direct Callers):** The number of functions or components that call the current node directly (interaction distance = $1$ step).
+*   **Blast Radius (Transitive Callers):** The total number of functions or components affected either directly **or indirectly** (all transitive callers up the call chain). This is computed by traversing the call graph backwards (Upstream BFS/DFS Traversal) from the current node.
+
+> [!IMPORTANT]
+> **Mathematical Rule:** $\text{Blast Radius} \ge \text{Indegree}$. 
+> Blast Radius equals Indegree only if none of the direct callers are called by any other nodes (i.e., there are no transitive/indirect calling flows upstream).
+
+### 📊 Illustrative Examples
+
+#### 1. Linear Chain
+Consider the following calling sequence:
+```text
+A ──> B ──> C
+```
+*   **For Node C:**
+    *   **Indegree = 1:** Only node `B` calls `C` directly.
+    *   **Blast Radius = 2:** If you make a breaking change to `C`, `B` breaks, which in turn breaks `A` (since `A` calls `B`). Both `B` and `A` are within the blast radius.
+
+#### 2. Branching Tree
+Consider a more complex calling hierarchy:
+```text
+D ──> A ──┐
+          ├──> C
+E ──> B ──┘
+```
+*   **For Node C:**
+    *   **Indegree = 2:** Directly called by 2 nodes: `A` and `B`.
+    *   **Blast Radius = 4:** A breaking change to `C` directly impacts `A` and `B`. Consequently, `D` (which calls `A`) and `E` (which calls `B`) are also affected. The entire set of nodes `{A, B, D, E}` lies within the Blast Radius.
 
 ---
 
