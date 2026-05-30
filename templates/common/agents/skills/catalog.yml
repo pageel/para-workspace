@@ -164,7 +164,7 @@ items:
   kernel_min: 1.8.9
   kernel_max: 1.x
   entrypoint: html-renderer/SKILL.md
-  description: Modular HTML rendering engine for PARA Workspace. Converts Markdown docs, code graphs, and standalone files to themed HTML pages.
+  description: Modular HTML rendering engine for PARA Workspace. Converts Markdown docs, code graphs, and standalone files to themed HTML pages. Supports dashboard, portal, help templates and wiki articles.
   tags:
   - html
   - renderer

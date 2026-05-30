@@ -8,7 +8,7 @@
 # See: naming.md §6 (date format), versioning.md §5 (version tracking)
 # Updated: 2026-05-22
 
-workspace: "1.8.14"
+workspace: "1.8.16"
 
 workflows:
   backlog:         "1.8.15"  # updated: translated Vietnamese to English
@@ -39,7 +39,7 @@ workflows:
   logs:            "1.8.9"
   spec:            "1.8.10"
   qa:              "1.8.15"  # translated Vietnamese to English
-  staging:         "1.8.11"
+  staging:         "1.8.16"
   vibecode:        "1.8.15"  # JIT Phase creation check, user intent detection
   scan-sec:        "1.8.15"  # added missing telemetry check
   resource:        "1.8.11"
@@ -74,11 +74,11 @@ skills:
   qa:          "1.8.10"
   tdd:         "1.8.15"  # tdd/SKILL.md update
   logs:        "1.8.15"  # added parse-transcript.py script and references
-  html-renderer: "1.8.15" # dashboard and portal template support
+  html-renderer: "1.8.16" # dashboard and portal template support
   new-project: "1.8.10"
   resource:    "1.8.11"
   scan-sec:    "1.8.11"
-  staging:     "1.8.11"
+  staging:     "1.8.16"
   vibecode:    "1.8.15"  # session-quality-gate and session-manager.sh support
   sidecar-skill: "1.8.11"
 
