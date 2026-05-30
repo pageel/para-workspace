@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.8.16] - 2026-05-30
+
+Release Staged Templates & Dogfooding Rule Refinement.
+
+- **Added**: Released HTML Renderer templates (dashboard, portal, help templates) and updated glossary wiki articles on Indegree vs Blast Radius.
+- **Changed**: Updated staging workflow template to support automatic Commit ID logging for local staging tasks.
+- **Changed**: Refined Dogfooding Policy (Rule 3) to mandate that `./para update` is only run after all code changes are committed and pushed to remote, preventing version conflicts.
+- **Changed**: Synced version to 1.8.16 in `cli/para`, `project.md`, `README.md`, and language locales (vi-VN, zh-CN, fr-FR, es-ES).
+
 ## [1.8.15] - 2026-05-29
 
 Vibecode DSP & Template Consolidation.
