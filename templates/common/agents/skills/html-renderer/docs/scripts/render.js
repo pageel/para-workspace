@@ -479,7 +479,8 @@ function renderDirectory(srcDir, destDir, template) {
     const entitiesPath = path.join(graphDir, 'entities.jsonl');
     const relationsPath = path.join(graphDir, 'relations.jsonl');
     
-    const degrees = {};
+    const outdegrees = {};
+    const indegrees = {};
     if (fs.existsSync(relationsPath)) {
         try {
             const relLines = fs.readFileSync(relationsPath, 'utf8').split('\n');
@@ -487,10 +488,10 @@ function renderDirectory(srcDir, destDir, template) {
                 if (line.trim()) {
                     const rel = JSON.parse(line);
                     if (rel.sourceId) {
-                        degrees[rel.sourceId] = (degrees[rel.sourceId] || 0) + 1;
+                        outdegrees[rel.sourceId] = (outdegrees[rel.sourceId] || 0) + 1;
                     }
                     if (rel.targetId) {
-                        degrees[rel.targetId] = (degrees[rel.targetId] || 0) + 1;
+                        indegrees[rel.targetId] = (indegrees[rel.targetId] || 0) + 1;
                     }
                 }
             }
@@ -508,7 +509,9 @@ function renderDirectory(srcDir, destDir, template) {
             for (const line of lines) {
                 if (line.trim()) {
                     const node = JSON.parse(line);
-                    node.degree = degrees[node.id] || 0;
+                    node.indegree = indegrees[node.id] || 0;
+                    node.outdegree = outdegrees[node.id] || 0;
+                    node.degree = node.indegree + node.outdegree;
                     graphNodes.push(node);
                 }
             }
@@ -680,6 +683,8 @@ function renderDirectory(srcDir, destDir, template) {
                 startLine: node.startLine || 1,
                 endLine: node.endLine || 1,
                 degree: node.degree || 0,
+                indegree: node.indegree || 0,
+                outdegree: node.outdegree || 0,
                 blastRadius: calculateBlastRadius(node.id),
                 isStale: node.staleSince !== undefined && node.staleSince !== null,
                 weight: weight,

@@ -1362,6 +1362,8 @@
                 typeVariable: 'Biến',
                 typeOther: 'Khác',
                 degreeLabel: 'Liên kết',
+                degreeInLabel: 'Vào',
+                degreeOutLabel: 'Ra',
                 statusEnriched: 'Đã mô tả AI',
                 statusUnenriched: 'Chưa mô tả AI',
                 blastRadiusTooltip: (val) => `Bán kính ảnh hưởng: ${val} (số lượng các thành phần bị tác động nếu node này thay đổi)`,
@@ -1411,6 +1413,8 @@
                 typeVariable: 'Variable',
                 typeOther: 'Other',
                 degreeLabel: 'Degree',
+                degreeInLabel: 'In',
+                degreeOutLabel: 'Out',
                 statusEnriched: 'Enriched',
                 statusUnenriched: 'Unenriched',
                 blastRadiusTooltip: (val) => `Blast Radius: ${val} (number of impacted components if this node changes)`,
@@ -2106,7 +2110,12 @@
                 degreeTd.innerHTML = `
                     <div style="display: flex; flex-direction: column; gap: 4px;">
                         <div>${weightBadge}</div>
-                        <div style="font-size: 11.5px; color: var(--text-secondary); padding-left: 2px;">${t.degreeLabel}: <strong>${node.degree || 0}</strong></div>
+                        <div style="font-size: 11.5px; color: var(--text-secondary); padding-left: 2px;">
+                            ${t.degreeLabel}: <strong>${node.degree || 0}</strong> 
+                            <span style="opacity: 0.8; font-size: 10.5px; display: block; margin-top: 2px;">
+                                (${t.degreeInLabel}: ${node.indegree || 0} | ${t.degreeOutLabel}: ${node.outdegree || 0})
+                            </span>
+                        </div>
                     </div>
                 `;
                 tr.appendChild(degreeTd);
