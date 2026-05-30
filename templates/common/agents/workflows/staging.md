@@ -21,6 +21,7 @@ Export workspace-level artifacts (workflows, skills, rules) that have been modif
 | `[project]` | Yes | Target project name (e.g., `para-workspace`). Must have `repo/templates/` directory. |
 | `--dry-run` | No | Preview what would be staged without copying files or logging tasks. |
 | `--track` | No | Detect workspace changes in the current session and log them to sprint-current.md without copying files. |
+| `--commit` | No | Create a local Git commit for the staged templates automatically in the project's repository (without pushing). |
 
 ## Steps
 
@@ -110,9 +111,15 @@ For each approved item:
 
 3. **Report:** List each copied file with source → destination paths.
 
-> ⚠️ **GUARD:** Agent MUST NOT auto-commit these copies. They are staged into the repo working tree for the user to review and commit via `/push` during the project's release cycle.
+4. **Local Git Commit (Optional / if --commit is set):**
+   - If the `--commit` option is active, or after asking the user and receiving explicit approval:
+     - Run `git add` for all copied files in the project's repository.
+     - Run `git commit -m "feat([component]): stage templates from workspace (YYYY-MM-DD)"`.
+     - Report the local commit SHA and verify the working directory status.
 
-> ⚡ **Track Bypass:** If `--track` is active, SKIP all file copying logic. Skip Step 3 entirely, as no physical copies are made.
+> ⚠️ **GUARD:** Agent MUST NOT auto-push these copies. Staged files must sit in the local repository as a progress checkpoint until the user runs `/push` or merges via PR.
+
+> ⚡ **Track Bypass:** If `--track` is active, SKIP all file copying and committing logic. Skip Step 3 entirely, as no physical copies or commits are made.
 
 ### Step 4. Log to Sprint Current
 
@@ -155,7 +162,7 @@ Sprint:  sprint-current.md updated ✅
 
 | Constraint | Rule |
 |:--|:--|
-| No auto-commit | Staged files sit in working tree until user commits |
+| No auto-push | Staged templates are committed locally (if confirmed or --commit is set) but MUST never be pushed to remote without PR/push workflows |
 | No catalog mutation | `catalog.yml` is never overwritten — update via release plan |
 | No version bump | Version changes require a proper plan (not ad-hoc staging) |
 | Preserve `source: catalog` | Agent MUST NOT change frontmatter `source` field in copied files |
