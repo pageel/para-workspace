@@ -126,7 +126,7 @@ For each approved item:
 Append a task entry to the target project's `sprint-current.md`:
 
 ```markdown
-- [ ] 📦 Staged templates from workspace (YYYY-MM-DD): [list of staged items]. Needs: version bump, catalog update, release plan.
+- [ ] 📦 Staged templates from workspace (YYYY-MM-DD): [list of staged items]. Staged and committed locally (Commit ID: `[SHA]`). Needs: version bump, catalog update, release plan.
 # OR if running in track-only mode (--track):
 - [ ] 📦 Tracked session workspace changes (YYYY-MM-DD):
   - Modified files in workspace:
