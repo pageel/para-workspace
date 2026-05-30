@@ -80,6 +80,7 @@ const translations = {
         inlineCopyBtn: "Sao chép",
         searchPlaceholder: "Tìm kiếm tài liệu...",
         searchBtnLabel: "Tìm kiếm",
+        helpBtnTitle: "Glossary & Wiki Trợ giúp (Help)",
         alertCopySuccess: "🎉 Đã copy yêu cầu chỉnh sửa tài liệu vào clipboard!\\n\\n",
         alertServerSuccess: "📬 Watch server của Agent đã nhận yêu cầu ghi đĩa.\\n",
         alertInstructions: "👉 Hãy quay lại khung chat và dán (Ctrl+V) để Agent xử lý ngay.",
@@ -163,6 +164,7 @@ const translations = {
         inlineCopyBtn: "Copy text",
         searchPlaceholder: "Search docs...",
         searchBtnLabel: "Search",
+        helpBtnTitle: "Glossary & Help Wiki",
         alertCopySuccess: "🎉 Document edit request copied to clipboard!\\n\\n",
         alertServerSuccess: "📬 Agent watch server received the write request.\\n",
         alertInstructions: "👉 Go back to chat box and Paste (Ctrl+V) to execute.",
@@ -812,6 +814,56 @@ function renderDirectory(srcDir, destDir, template) {
                     console.log('💻 Compiled Portal App Shell index.html successfully.');
                 } catch (e) {
                     console.error('Error compiling index.html Portal:', e.message);
+                }
+            }
+
+            // Compile Glossary Help help.html
+            const helpTemplatePath = path.join(__dirname, '..', 'references', 'help-template.html');
+            if (fs.existsSync(helpTemplatePath)) {
+                try {
+                    let helpHtml = fs.readFileSync(helpTemplatePath, 'utf8');
+                    
+                    helpHtml = helpHtml.replaceAll('/* WORKSPACE_LANG */', workspaceLang);
+                    const currentTranslations = translations[workspaceLang] || translations['en'];
+                    for (const key in currentTranslations) {
+                        helpHtml = helpHtml.replaceAll(`/* TRANSLATE:${key} */`, currentTranslations[key]);
+                    }
+                    
+                    fs.writeFileSync(path.join(destDir, 'help.html'), helpHtml, 'utf8');
+                    console.log('📖 Compiled Glossary Help help.html successfully.');
+                } catch (e) {
+                    console.error('Error compiling help.html:', e.message);
+                }
+            }
+
+            // Compile Developer Wiki pages recursively (supports subfolders like vi/ and en/)
+            const wikiSourceDir = path.join(__dirname, '..', 'references', 'wiki');
+            const wikiDestDir = path.join(destDir, 'wiki');
+            if (fs.existsSync(wikiSourceDir)) {
+                try {
+                    function walkWikiAndCompile(currentSrcSubdir, currentDestSubdir) {
+                        if (!fs.existsSync(currentDestSubdir)) {
+                            fs.mkdirSync(currentDestSubdir, { recursive: true });
+                        }
+                        const items = fs.readdirSync(currentSrcSubdir);
+                        for (const item of items) {
+                            const srcPath = path.join(currentSrcSubdir, item);
+                            const destPath = path.join(currentDestSubdir, item);
+                            const stats = fs.statSync(srcPath);
+                            
+                            if (stats.isDirectory()) {
+                                walkWikiAndCompile(srcPath, destPath);
+                            } else if (item.endsWith('.md')) {
+                                const targetHtmlPath = destPath.replace(/\.md$/, '.html');
+                                renderSingleFile(srcPath, targetHtmlPath, treeRoot, srcDir, destDir, template, graphNodesMap, calculateBlastRadius);
+                                const relWikiPath = path.relative(wikiSourceDir, srcPath);
+                                console.log(`📚 Compiled Developer Wiki page ${relWikiPath} successfully.`);
+                            }
+                        }
+                    }
+                    walkWikiAndCompile(wikiSourceDir, wikiDestDir);
+                } catch (e) {
+                    console.error('Error compiling Developer Wiki:', e.message);
                 }
             }
         } catch (e) {

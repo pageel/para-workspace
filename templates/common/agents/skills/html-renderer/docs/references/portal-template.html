@@ -496,6 +496,10 @@
                         <input type="text" class="search-input" id="portal-search-input" placeholder="/* TRANSLATE:searchPlaceholder */" autocomplete="off" oninput="handleGlobalSearch()">
                         <div class="search-results" id="portal-search-results"></div>
                     </div>
+                    <!-- Global Help Button -->
+                    <button class="footer-action-btn" onclick="openHelp()" title="/* TRANSLATE:helpBtnTitle */" style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; background: none; color: var(--text-secondary); cursor: pointer; transition: all 0.2s;">
+                        <i data-lucide="help-circle" style="width: 16px; height: 16px;"></i>
+                    </button>
                 </div>
             </header>
 
@@ -514,6 +518,14 @@
     <script>
         // Initialize lucide icons
         lucide.createIcons();
+
+        // Global Help Navigation
+        function openHelp() {
+            viewport.src = 'help.html';
+            document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+            const isVi = (document.documentElement.getAttribute('lang') === 'vi');
+            headerTitle.textContent = isVi ? 'Trợ giúp & Tài liệu tham khảo' : 'Help & Glossary';
+        }
 
         const leftSidebar = document.getElementById('left-sidebar');
         const leftResizer = document.getElementById('left-resizer');

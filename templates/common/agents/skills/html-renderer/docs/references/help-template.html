@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="/* WORKSPACE_LANG */">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>/* TRANSLATE:title */ - Glossary Help</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #fbfbfa;
+            --text-primary: #37352f;
+            --text-secondary: #7c7b77;
+            --border-color: #efefe8;
+            --accent-color: #2383e2;
+            --accent-hover: #1263ad;
+            --hover-color: rgba(55, 53, 47, 0.04);
+            --danger-color: #eb5757;
+            --warning-color: #ea580c;
+            --success-color: #0f9d58;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji";
+            --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
+            --header-height: 56px;
+            --right-sidebar-width: 260px;
+        }
+
+        /* Dark mode palette override */
+        [data-theme="dark"] {
+            --bg-primary: #191919;
+            --bg-secondary: #202020;
+            --text-primary: rgba(255, 255, 255, 0.9);
+            --text-secondary: #9b9b9b;
+            --border-color: #2d2d2d;
+            --accent-color: #2eaadc;
+            --accent-hover: #1b85b1;
+            --hover-color: rgba(255, 255, 255, 0.055);
+            --danger-color: #ff5252;
+            --warning-color: #f97316;
+            --success-color: #4caf50;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Main Content Area */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        header {
+            height: var(--header-height);
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            padding: 0 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-action {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-action:hover {
+            background-color: rgba(55, 53, 47, 0.04);
+        }
+        [data-theme="dark"] .btn-action:hover {
+            background-color: rgba(255, 255, 255, 0.055);
+        }
+
+        .customizer-select {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .content-wrapper {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 36px;
+            scroll-behavior: smooth;
+        }
+
+        /* Header Styles */
+        .help-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+        }
+
+        .help-header h1 {
+            font-family: var(--font-display);
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .help-header p {
+            font-size: 14.5px;
+            color: var(--text-secondary);
+        }
+
+        /* Section & Glossary Card Styles */
+        .glossary-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .glossary-section h2 {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 6px;
+            width: fit-content;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .glossary-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: border-color 0.2s ease;
+        }
+
+        .glossary-card:hover {
+            border-color: var(--accent-color);
+        }
+
+        .glossary-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .glossary-title i {
+            color: var(--accent-color);
+            width: 18px;
+            height: 18px;
+        }
+
+        .glossary-desc {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .glossary-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-info {
+            background-color: rgba(35, 131, 226, 0.08);
+            color: var(--accent-color);
+        }
+
+        .badge-warning {
+            background-color: rgba(234, 88, 12, 0.08);
+            color: var(--warning-color);
+        }
+
+        /* Callout Box (Alerts) */
+        .callout {
+            background-color: var(--bg-secondary);
+            border-left: 4px solid var(--accent-color);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 13.5px;
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .callout-warning {
+            border-left-color: var(--warning-color);
+            background-color: rgba(234, 88, 12, 0.02);
+        }
+
+        .callout-icon {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .callout-icon-info { color: var(--accent-color); }
+        .callout-icon-warning { color: var(--warning-color); }
+
+        .callout-content h5 {
+            font-weight: 600;
+            font-size: 13.5px;
+            margin-bottom: 4px;
+        }
+
+        /* Footer */
+        .help-footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .help-main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        /* Resizable Divider for Right Sidebar */
+        .resizer {
+            width: 4px;
+            background-color: transparent;
+            cursor: col-resize;
+            position: relative;
+            z-index: 100;
+            flex-shrink: 0;
+            height: 100%;
+        }
+
+        .resizer:hover, .resizer.resizing {
+            background-color: var(--accent-color);
+        }
+
+        .resizer.collapsed {
+            display: none !important;
+        }
+
+        /* Right Sidebar: Table of Contents */
+        aside.right-sidebar {
+            width: var(--right-sidebar-width);
+            background-color: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            flex-shrink: 0;
+            transition: width 0.2s ease, border-left-color 0.2s ease;
+        }
+
+        aside.right-sidebar.collapsed {
+            width: 0 !important;
+            border-left-color: transparent;
+            overflow: hidden;
+        }
+
+        .right-header {
+            height: var(--header-height);
+            padding: 0 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .right-sidebar-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Wiki Sidebar Widget Styles */
+        .wiki-sidebar-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .wiki-sidebar-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .wiki-sidebar-group-title {
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+        .menu-list {
+            list-style: none;
+            padding-left: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .menu-item {
+            margin-bottom: 0;
+        }
+        .menu-item a {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            line-height: 1.4;
+            border-radius: 6px;
+            padding: 6px 8px;
+        }
+        .menu-item a:hover {
+            background-color: rgba(55, 53, 47, 0.04);
+            color: var(--text-primary);
+        }
+        [data-theme="dark"] .menu-item a:hover {
+            background-color: rgba(255, 255, 255, 0.055);
+            color: var(--text-primary);
+        }
+        .menu-item a i {
+            width: 14px;
+            height: 14px;
+            margin-top: 2px;
+            flex-shrink: 0;
+            color: var(--text-secondary);
+        }
+        .menu-item a:hover i {
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Content Area -->
+    <main>
+        <header>
+            <div class="header-top">
+                <div class="header-left">
+                    <span id="font-size-indicator" style="display: none;">16px</span>
+                    <span id="width-indicator" style="display: none;">1000px</span>
+                </div>
+                <div class="header-actions">
+                    <!-- Typography adjustments -->
+                    <select class="customizer-select" id="font-select" onchange="changeFont(this.value)">
+                        <option value="inter">Inter</option>
+                        <option value="outfit">Outfit</option>
+                        <option value="roboto">Roboto</option>
+                        <option value="georgia">Georgia</option>
+                    </select>
+
+                    <button class="btn-action" onclick="changeFontSize(-1)"><i data-lucide="minus"></i></button>
+                    <button class="btn-action" onclick="changeFontSize(1)"><i data-lucide="plus"></i></button>
+
+                    <span style="border-left: 1px solid var(--border-color); height: 20px; margin: 0 2px;"></span>
+                    
+                    <!-- Page margins width control -->
+                    <button class="btn-action" onclick="changePageWidth(-50)"><i data-lucide="minimize-2"></i></button>
+                    <button class="btn-action" onclick="changePageWidth(50)"><i data-lucide="maximize-2"></i></button>
+
+                    <span style="border-left: 1px solid var(--border-color); height: 20px; margin: 0 2px;"></span>
+
+                    <button class="btn-action" onclick="toggleRightSidebar()" title="Toggle Sidebar"><i data-lucide="list"></i></button>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <div id="content-container" style="width: 100%; max-width: 1000px; display: flex; flex-direction: column; margin: 0 auto; gap: 32px;">
+                
+                <!-- Header -->
+                <div class="help-header">
+                    <h1><i data-lucide="help-circle" style="color: var(--accent-color); width: 28px; height: 28px;"></i> <span id="title-text">Giải thích Chỉ số & Thuật ngữ Đồ thị</span></h1>
+                    <p id="subtitle-text">Tài liệu tham khảo kỹ thuật dành cho nhà phát triển (Developer Guide) về Code-Graph và Traceability.</p>
+                </div>
+
+                <!-- Glossary Content -->
+                <div class="help-main-content">
+                    
+                    <!-- Section 1: Core Metrics & Glossary -->
+                    <div id="glossary-metrics" class="glossary-section">
+                        <h2><i data-lucide="bar-chart-3" style="width: 18px; height: 18px;"></i> <span id="sec-title-glossary">Chỉ số Chất lượng & Thuật ngữ Đồ thị</span></h2>
+                        
+                        <!-- Docs Health Score -->
+                        <div class="glossary-card">
+                            <div class="glossary-title">
+                                <i data-lucide="heart"></i> Docs Health Score (Điểm sức khỏe tài liệu)
+                            </div>
+                            <div class="glossary-desc">
+                                Điểm số đại diện cho chất lượng bao phủ của tài liệu kỹ thuật dựa trên phân tích trọng số của toàn bộ Code-Graph. Điểm số này phản ánh khách quan mức độ tài liệu hóa đối với các thành phần cốt lõi thay vì chỉ tính trung bình số lượng file.
+                                <br/><br/>
+                                <b>Công thức tính toán:</b>
+                                <br/>
+                                <code>Weighted Health Score = (Tổng trọng số của các nút đã được gán neo) / (Tổng trọng số của toàn bộ các nút) * 100</code>
+                            </div>
+                            <div class="glossary-meta">
+                                <span class="badge badge-info"><i data-lucide="activity" style="width: 10px; height: 10px;"></i> Thang điểm: 0 - 100</span>
+                                <span class="badge badge-info"><i data-lucide="scale" style="width: 10px; height: 10px;"></i> Tính theo trọng số (Weighted)</span>
+                            </div>
+                        </div>
+
+                        <!-- Blast Radius -->
+                        <div class="glossary-card">
+                            <div class="glossary-title">
+                                <i data-lucide="zap"></i> Blast Radius (Bán kính ảnh hưởng / Lan truyền ngược)
+                            </div>
+                            <div class="glossary-desc">
+                                Đo lường mức độ ảnh hưởng của một thành phần mã nguồn lên phần còn lại của hệ thống. Đây là <b>tổng số lượng các hàm, lớp, hoặc tệp tin khác trực tiếp hoặc gián tiếp gọi/phụ thuộc vào nút hiện tại (Upstream BFS)</b>.
+                                <br/><br/>
+                                Chỉ số này giúp nhà phát triển đánh giá mức độ rủi ro khi thay đổi code:
+                                <br/>• <b>Blast Radius = 0:</b> Thay đổi an toàn, không ảnh hưởng đến các thành phần backend khác.
+                                <br/>• <b>Blast Radius từ 1 - 5:</b> Rủi ro trung bình, cần kiểm tra các file gọi trực tiếp.
+                                <br/>• <b>Blast Radius > 10:</b> Rủi ro rất cao, thay đổi có thể phá hỏng kiến trúc hệ thống (cần test hồi quy kỹ).
+                            </div>
+                            <div class="glossary-meta">
+                                <span class="badge badge-info"><i data-lucide="git-branch" style="width: 10px; height: 10px;"></i> Upstream BFS traversal</span>
+                                <span class="badge badge-warning"><i data-lucide="shield-alert" style="width: 10px; height: 10px;"></i> Chỉ số đo lường rủi ro</span>
+                            </div>
+                        </div>
+
+                        <!-- API Endpoint Callout -->
+                        <div class="callout callout-warning">
+                            <i data-lucide="info" class="callout-icon callout-icon-warning" style="width: 16px; height: 16px;"></i>
+                            <div class="callout-content">
+                                <h5 id="api-callout-title">Lưu ý đặc biệt đối với API Endpoints (Entry Points):</h5>
+                                <p class="glossary-desc" id="api-callout-desc">
+                                    Các API endpoint (như <code>POST src/pages/api/crm/customers/index.ts</code>) có nhiệm vụ tiếp nhận HTTP request trực tiếp từ trình duyệt của người dùng thông qua mạng. Chúng là các <b>điểm đầu vào (Entry Points)</b> của server và không có bất kỳ tệp code backend nào khác trong codebase gọi hàm xử lý của chúng trực tiếp. Do đó, **Upstream Blast Radius của API Endpoint luôn luôn bằng 0**.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Degree -->
+                        <div class="glossary-card">
+                            <div class="glossary-title">
+                                <i data-lucide="git-commit"></i> Degree (Bậc đồ thị)
+                            </div>
+                            <div class="glossary-desc">
+                                Là tổng số liên kết đi và đến của một nút (Node) trong đồ thị. Bậc đồ thị phản ánh mật độ kết nối trực tiếp của thành phần đó.
+                                <br/><br/>
+                                • <b>Bậc đi (Outdegree):</b> Số lượng các hàm/file khác mà nút hiện tại đang gọi/sử dụng (Downstream). Chỉ số này quá cao là dấu hiệu vi phạm nguyên lý Single Responsibility (ôm đồm quá nhiều logic).
+                                <br/>• <b>Bậc đến (Indegree):</b> Số lượng các hàm/file đang gọi nút hiện tại (Upstream).
+                            </div>
+                        </div>
+
+                        <!-- God Nodes -->
+                        <div class="glossary-card">
+                            <div class="glossary-title">
+                                <i data-lucide="crown"></i> God Nodes (Nút cốt lõi / Điểm nóng nghiệp vụ)
+                            </div>
+                            <div class="glossary-desc">
+                                Những thành phần mã nguồn có độ kết nối cực kỳ cao (Bậc đồ thị <code>Degree >= 20</code>). Đây là xương sống kiến trúc của dự án (ví dụ: database client, auth helper, logger). Việc tài liệu hóa và kiểm thử các God Nodes này luôn được hệ thống chấm điểm và ưu tiên cao nhất.
+                            </div>
+                        </div>
+
+                        <!-- Calibration Weights -->
+                        <div class="glossary-card">
+                            <div class="glossary-title">
+                                <i data-lucide="sliders"></i> Node Weight (Trọng số thành phần mã)
+                            </div>
+                            <div class="glossary-desc">
+                                Đại diện cho mức độ quan trọng tương đối của từng loại thành phần mã nguồn để tính toán điểm sức khỏe tài liệu:
+                                <br/>• <b>Cốt lõi (Critical - Trọng số mặc định: 5.0):</b> Các God Nodes ảnh hưởng lớn đến hệ thống.
+                                <br/>• <b>Trung bình (Medium - Trọng số mặc định: 2.0):</b> Lớp, hàm, hoặc tệp tin tiêu chuẩn.
+                                <br/>• <b>Bổ trợ (Low - Trọng số mặc định: 0.5):</b> Các biến, hằng số, hoặc cấu hình phụ trợ.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Traceability Status -->
+                    <div id="traceability-status" class="glossary-section">
+                        <h2><i data-lucide="check-square" style="width: 18px; height: 18px;"></i> <span id="sec-title-traceability">Trạng thái Liên kết (Traceability Status)</span></h2>
+                        
+                        <div class="glossary-card" style="gap: 16px;">
+                            <div>
+                                <span class="badge badge-info" style="background-color: rgba(15, 157, 88, 0.08); color: var(--success-color); margin-bottom: 6px;"><i data-lucide="check-circle" style="width: 10px; height: 10px;"></i> Đạt chuẩn / Đầy đủ (Completed)</span>
+                                <p class="glossary-desc">Thành phần mã nguồn đã được định vị qua comment neo <code>&lt;!-- @graph-node --&gt;</code> trong tài liệu VÀ đã được AI Agent tóm tắt ngữ nghĩa thành công.</p>
+                            </div>
+                            <div style="border-top: 1px solid var(--border-color); padding-top: 12px;">
+                                <span class="badge badge-info" style="background-color: rgba(235, 87, 87, 0.08); color: var(--danger-color); margin-bottom: 6px;"><i data-lucide="x-circle" style="width: 10px; height: 10px;"></i> Chưa gán link (Unlinked)</span>
+                                <p class="glossary-desc">Thành phần mã nguồn chưa được liên kết đến bất kỳ mục tài liệu kỹ thuật nào trong thư mục <code>docs/</code>.</p>
+                            </div>
+                            <div style="border-top: 1px solid var(--border-color); padding-top: 12px;">
+                                <span class="badge badge-info" style="background-color: rgba(234, 88, 12, 0.08); color: var(--warning-color); margin-bottom: 6px;"><i data-lucide="alert-circle" style="width: 10px; height: 10px;"></i> Chưa mô tả AI (Unenriched)</span>
+                                <p class="glossary-desc">Thành phần mã đã được liên kết tài liệu nhưng chưa chạy quy trình làm giàu ngữ nghĩa (phân tích tóm tắt logic từ AI Agent) trong cơ sở dữ liệu đồ thị.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <footer class="help-footer">
+                    <span><i data-lucide="cpu" style="width: 12px; height: 12px; display: inline-block; vertical-align: middle;"></i> PARA Graph Knowledge Spec</span>
+                    <span>v1.8.x</span>
+                </footer>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Draggable Divider for Right Sidebar -->
+    <div class="resizer" id="right-resizer"></div>
+
+    <!-- Right Sidebar: Developer Wiki (Sidebar) -->
+    <aside class="right-sidebar" id="right-sidebar">
+        <div class="right-header">
+            <span id="wiki-header-title" style="display: flex; align-items: center; gap: 6px;">
+                <i data-lucide="book-open" style="color: var(--accent-color); width: 14px; height: 14px;"></i> Developer Wiki
+            </span>
+        </div>
+        
+        <div class="right-sidebar-content">
+            <div class="wiki-sidebar-list">
+                <!-- Nhóm 1: Kiến trúc -->
+                <div class="wiki-sidebar-group">
+                    <div class="wiki-sidebar-group-title" id="col-title-arch">Kiến trúc & Phân tích</div>
+                    <ul class="menu-list">
+                        <li class="menu-item">
+                            <a href="wiki/vi/importance-of-links.html" id="wiki-link-1">
+                                <i data-lucide="file-text"></i>
+                                <span id="wiki-text-1">Tầm quan trọng của Liên kết đi/đến</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="wiki/vi/optimizing-blast-radius.html" id="wiki-link-2">
+                                <i data-lucide="file-text"></i>
+                                <span id="wiki-text-2">Tối ưu Blast Radius & God Nodes</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Nhóm 2: Hướng dẫn -->
+                <div class="wiki-sidebar-group">
+                    <div class="wiki-sidebar-group-title" id="col-title-process">Quy trình & Hướng dẫn</div>
+                    <ul class="menu-list">
+                        <li class="menu-item">
+                            <a href="wiki/vi/writing-docs-guidelines.html" id="wiki-link-3">
+                                <i data-lucide="file-text"></i>
+                                <span id="wiki-text-3">Viết tài liệu chuẩn PARA</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <script>
+        // Initialize lucide icons
+        lucide.createIcons();
+
+        // Sync dark theme if embedded or loaded
+        const theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.type === 'set-theme') {
+                document.documentElement.setAttribute('data-theme', e.data.theme);
+            }
+        });
+
+        // Scroll to section handler
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Apply customized Font and Width settings
+        let currentFontSize = parseInt(localStorage.getItem('doc-font-size')) || 16;
+        let currentFontFamily = localStorage.getItem('doc-font-family') || 'inter';
+        let currentPageWidth = localStorage.getItem('doc-page-width') || '1000px';
+
+        function applyTypography() {
+            const container = document.getElementById('content-container');
+            
+            const fontMap = {
+                'inter': '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+                'outfit': "'Outfit', sans-serif",
+                'roboto': "'Roboto', sans-serif",
+                'georgia': "'Georgia', serif"
+            };
+            const fontValue = fontMap[currentFontFamily] || fontMap['inter'];
+            document.documentElement.style.setProperty('--font-sans', fontValue);
+
+            document.body.className = document.body.className
+                .replace(/\bfont-preset-\S+/g, '')
+                .trim();
+            document.body.classList.add('font-preset-' + currentFontFamily);
+            
+            if (container) {
+                container.style.fontSize = currentFontSize + 'px';
+            }
+            
+            const wrapper = document.querySelector('.content-wrapper');
+            let paddingVal = '24px';
+            if (currentPageWidth === 'Full') {
+                if (container) container.style.maxWidth = '100%';
+                paddingVal = '12px';
+            } else {
+                if (container) container.style.maxWidth = currentPageWidth;
+                const widthNum = parseInt(currentPageWidth);
+                
+                if (widthNum <= 600) {
+                    paddingVal = '48px';
+                } else if (widthNum <= 720) {
+                    paddingVal = '36px';
+                } else if (widthNum <= 800) {
+                    paddingVal = '28px';
+                } else if (widthNum <= 900) {
+                    paddingVal = '20px';
+                } else {
+                    paddingVal = '24px';
+                }
+            }
+            if (wrapper) {
+                wrapper.style.padding = paddingVal;
+            }
+            
+            document.getElementById('font-select').value = currentFontFamily;
+            document.getElementById('font-size-indicator').textContent = currentFontSize + 'px';
+            document.getElementById('width-indicator').textContent = currentPageWidth;
+        }
+
+        function changeFont(fontName) {
+            currentFontFamily = fontName;
+            localStorage.setItem('doc-font-family', fontName);
+            applyTypography();
+        }
+
+        function changeFontSize(direction) {
+            currentFontSize = Math.max(12, Math.min(24, currentFontSize + direction * 1));
+            localStorage.setItem('doc-font-size', currentFontSize);
+            applyTypography();
+        }
+
+        function changePageWidth(delta) {
+            if (currentPageWidth === 'Full') {
+                if (delta < 0) {
+                    currentPageWidth = '1000px';
+                }
+            } else {
+                let currentVal = parseInt(currentPageWidth);
+                let newVal = currentVal + delta;
+                if (newVal >= 600 && newVal <= 1000) {
+                    currentPageWidth = newVal + 'px';
+                } else if (newVal > 1000) {
+                    currentPageWidth = 'Full';
+                }
+            }
+            localStorage.setItem('doc-page-width', currentPageWidth);
+            applyTypography();
+        }
+
+        // Run typography on load
+        applyTypography();
+
+        // Right Sidebar Dragging
+        const rightSidebar = document.getElementById('right-sidebar');
+        const rightResizer = document.getElementById('right-resizer');
+
+        const savedRightWidth = localStorage.getItem('sidebar-right-width') || 260;
+        document.documentElement.style.setProperty('--right-sidebar-width', savedRightWidth + 'px');
+        if (rightSidebar) rightSidebar.style.width = savedRightWidth + 'px';
+
+        if (localStorage.getItem('sidebar-right-collapsed') === 'true') {
+            if (rightSidebar) rightSidebar.classList.add('collapsed');
+            if (rightResizer) rightResizer.classList.add('collapsed');
+        }
+
+        function toggleRightSidebar() {
+            if (rightSidebar && rightResizer) {
+                rightSidebar.classList.toggle('collapsed');
+                rightResizer.classList.toggle('collapsed');
+                localStorage.setItem('sidebar-right-collapsed', rightSidebar.classList.contains('collapsed'));
+            }
+        }
+
+        if (rightResizer) {
+            rightResizer.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                rightResizer.classList.add('resizing');
+                document.addEventListener('mousemove', resizeRight);
+                document.addEventListener('mouseup', stopResizeRight);
+            });
+        }
+
+        function resizeRight(e) {
+            if (!rightSidebar) return;
+            let width = window.innerWidth - e.clientX;
+            if (width >= 150 && width <= 400) {
+                document.documentElement.style.setProperty('--right-sidebar-width', width + 'px');
+                rightSidebar.style.width = width + 'px';
+            }
+        }
+
+        function stopResizeRight() {
+            if (!rightResizer || !rightSidebar) return;
+            rightResizer.classList.remove('resizing');
+            document.removeEventListener('mousemove', resizeRight);
+            document.removeEventListener('mouseup', stopResizeRight);
+            
+            const currentWidth = parseInt(getComputedStyle(rightSidebar).width);
+            localStorage.setItem('sidebar-right-width', currentWidth);
+        }
+
+        // Detect current language preference
+        const lang = document.documentElement.getAttribute('lang') || 'en';
+        if (lang !== 'vi') {
+            // Apply English translations dynamically to layout headings if not Vietnamese
+            document.getElementById('title-text').textContent = 'Help Center & Graph Glossary';
+            document.getElementById('subtitle-text').textContent = 'Technical documentation reference guide for developers regarding Code-Graph, Traceability, and Architecture.';
+
+            // Translate headings
+            document.getElementById('sec-title-glossary').innerHTML = '<i data-lucide="bar-chart-3" style="width: 18px; height: 18px;"></i> Metrics & Glossary Explanation';
+            document.getElementById('sec-title-traceability').innerHTML = '<i data-lucide="check-square" style="width: 18px; height: 18px;"></i> Traceability Coverage Status';
+            
+            // Translate Callout
+            document.getElementById('api-callout-title').textContent = 'Special notice regarding API Endpoints (Entry Points):';
+            document.getElementById('api-callout-desc').innerHTML = 'API endpoints (e.g. <code>POST src/pages/api/crm/customers/index.ts</code>) are responsible for handling HTTP requests directly from clients over the network. They act as server <b>Entry Points</b> and have no other backend code calling them directly in the codebase. Therefore, **Upstream Blast Radius for API Endpoints is always 0**.';
+
+            // Translate Wiki Column Titles
+            document.getElementById('col-title-arch').textContent = 'Architecture & Analysis';
+            document.getElementById('col-title-process').textContent = 'Workflows & Guidelines';
+
+            // Translate Wiki section header
+            const wikiHeader = document.getElementById('wiki-header-title');
+            if (wikiHeader) {
+                wikiHeader.innerHTML = '<i data-lucide="book-open" style="color: var(--accent-color); width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i> Developer Wiki';
+            }
+            
+            // Article 1
+            const wikiLink1 = document.getElementById('wiki-link-1');
+            const wikiText1 = document.getElementById('wiki-text-1');
+            if (wikiLink1) wikiLink1.setAttribute('href', 'wiki/en/importance-of-links.html');
+            if (wikiText1) wikiText1.textContent = 'The Importance of Inbound and Outbound Links';
+
+            // Article 2
+            const wikiLink2 = document.getElementById('wiki-link-2');
+            const wikiText2 = document.getElementById('wiki-text-2');
+            if (wikiLink2) wikiLink2.setAttribute('href', 'wiki/en/optimizing-blast-radius.html');
+            if (wikiText2) wikiText2.textContent = 'Optimizing Blast Radius & God Nodes';
+
+            // Article 3
+            const wikiLink3 = document.getElementById('wiki-link-3');
+            const wikiText3 = document.getElementById('wiki-text-3');
+            if (wikiLink3) wikiLink3.setAttribute('href', 'wiki/en/writing-docs-guidelines.html');
+            if (wikiText3) wikiText3.textContent = 'Writing Docs in PARA Workspace';
+
+            // Re-create icons for translated headers
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        }
+    </script>
+</body>
+</html>

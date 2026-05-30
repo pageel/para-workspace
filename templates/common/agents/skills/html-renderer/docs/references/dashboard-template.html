@@ -958,6 +958,8 @@
             text-decoration: line-through;
             opacity: 0.45;
         }
+
+
     </style>
 </head>
 <body>
@@ -1190,9 +1192,14 @@
                     <div class="explorer-header">
                         <div class="explorer-header-top">
                             <h3>/* TRANSLATE:explorerTitle */</h3>
-                            <div class="search-wrapper">
-                                <i data-lucide="search"></i>
-                                <input type="text" id="node-search" class="search-input" placeholder="/* TRANSLATE:searchPlaceholderNodes */" oninput="handleSearch()">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div class="search-wrapper">
+                                    <i data-lucide="search"></i>
+                                    <input type="text" id="node-search" class="search-input" placeholder="/* TRANSLATE:searchPlaceholderNodes */" oninput="handleSearch()">
+                                </div>
+                                <button id="btn-dashboard-help" onclick="openHelpPage()" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); cursor: pointer; transition: all 0.2s;" title="Giải thích thuật ngữ & chỉ số (Help)">
+                                    <i data-lucide="help-circle" style="width: 16px; height: 16px;"></i>
+                                </button>
                             </div>
                         </div>
                         
@@ -2709,6 +2716,15 @@
             }, 2500);
         }
 
+        // Help Page Navigation
+        function openHelpPage() {
+            window.parent.postMessage({
+                type: 'navigate',
+                href: 'help.html',
+                baseUrl: window.location.href
+            }, '*');
+        }
+
         window.addEventListener('load', initializeDashboard);
     </script>
 
@@ -2743,5 +2759,7 @@
     <div id="toast-notification">
         <i data-lucide="check-circle"></i> <span id="toast-message">Copied!</span>
     </div>
+
+
 </body>
 </html>
