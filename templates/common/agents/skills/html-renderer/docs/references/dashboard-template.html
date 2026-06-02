@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>/* TRANSLATE:dashboardTitle */</title>
+    <title data-i18n="dashboardTitle">/* TRANSLATE:dashboardTitle */</title>
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     
@@ -451,6 +451,158 @@
             font-weight: 600;
         }
 
+        /* Batch Actions Bar for Dashboard */
+        .batch-actions-bar {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            display: none; /* Hidden by default */
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .batch-actions-bar.active {
+            display: flex;
+        }
+
+        .batch-info-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .batch-count-badge {
+            background-color: rgba(35, 131, 226, 0.15);
+            color: var(--accent-color);
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .batch-btn-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Dropdown style for prompt options */
+        .prompt-dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 4px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            min-width: 280px;
+            padding: 6px 0;
+            animation: fadeIn 0.15s ease-out;
+        }
+        
+        .prompt-dropdown-menu .dropdown-header {
+            padding: 6px 12px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 4px;
+        }
+
+        .prompt-dropdown-menu .dropdown-item {
+            display: flex;
+            flex-direction: column;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: background-color 0.15s;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .prompt-dropdown-menu .dropdown-item:hover {
+            background-color: var(--hover-color);
+        }
+
+        .prompt-dropdown-menu .dropdown-item-title {
+            font-size: 12.5px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .prompt-dropdown-menu .dropdown-item-desc {
+            font-size: 11px;
+            color: var(--text-secondary);
+            white-space: normal;
+            line-height: 1.3;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .batch-action-btn {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .batch-action-btn:hover {
+            background-color: var(--hover-color);
+            border-color: var(--text-secondary);
+        }
+
+        .batch-action-btn-primary {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border-color: var(--accent-color);
+        }
+
+        .batch-action-btn-primary:hover {
+            background-color: var(--accent-hover);
+            border-color: var(--accent-hover);
+            color: #ffffff;
+        }
+
+        .batch-quick-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .batch-quick-btn:hover {
+            background-color: var(--hover-color);
+            color: var(--text-primary);
+        }
+
+        .node-checkbox {
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+            accent-color: var(--accent-color);
+        }
+
         /* Explorer table */
         .table-wrapper {
             overflow-x: auto;
@@ -461,6 +613,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 13.5px;
+            table-layout: fixed;
         }
 
         .nodes-table th, .nodes-table td {
@@ -476,6 +629,23 @@
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            position: relative;
+        }
+
+        .th-resizer {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 6px;
+            height: 100%;
+            cursor: col-resize;
+            user-select: none;
+            z-index: 10;
+        }
+
+        .th-resizer:hover, .th-resizer.resizing {
+            border-right: 2px solid var(--accent-color);
+            background-color: rgba(35, 131, 226, 0.1);
         }
 
         .nodes-table tbody tr {
@@ -639,7 +809,7 @@
             display: flex;
             align-items: flex-end;
             justify-content: space-around;
-            height: 200px;
+            height: 100%;
             padding: 20px 10px 10px 10px;
             border-bottom: 2px solid var(--border-color);
             margin-top: 10px;
@@ -971,19 +1141,25 @@
                 <!-- Title Section -->
                 <div class="dashboard-title-section">
                     <div>
-                        <h2>/* TRANSLATE:dashboardTitle */</h2>
-                        <p>/* TRANSLATE:dashboardSubtitle */</p>
+                        <h2 data-i18n="dashboardTitle">/* TRANSLATE:dashboardTitle */</h2>
+                        <p data-i18n="dashboardSubtitle">/* TRANSLATE:dashboardSubtitle */</p>
                     </div>
                     <div>
                         <span id="project-version-badge" class="badge badge-type">v/* KERNEL_VERSION */</span>
                     </div>
                 </div>
 
-                <!-- Calibration Panel Toggle -->
-                <div class="calibration-toggle-container" style="display: flex; justify-content: flex-end; margin-top: -12px; margin-bottom: -8px;">
+                <!-- Navigation Control Bar -->
+                <div class="calibration-toggle-container" style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: -12px; margin-bottom: -8px;">
+                    <!-- Language Toggle Button -->
+                    <button id="btn-toggle-lang" onclick="toggleLanguage()" style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); cursor: pointer; font-size: 12.5px; font-weight: 500; transition: all 0.2s;">
+                        <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+                        <span data-i18n="langToggleLabel">/* TRANSLATE:langToggleLabel */</span>
+                    </button>
+                    <!-- Calibration Toggle Button -->
                     <button id="btn-toggle-calibration" onclick="toggleCalibrationPanel()" style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); cursor: pointer; font-size: 12.5px; font-weight: 500; transition: all 0.2s;">
                         <i data-lucide="sliders" style="width: 14px; height: 14px;"></i>
-                        <span>/* TRANSLATE:calibrationTitle */</span>
+                        <span data-i18n="calibrationTitle">/* TRANSLATE:calibrationTitle */</span>
                         <i data-lucide="chevron-down" id="calibration-chevron" style="width: 14px; height: 14px; transition: transform 0.2s;"></i>
                     </button>
                 </div>
@@ -992,37 +1168,47 @@
                 <div id="calibration-panel" class="card" style="display: none; flex-direction: column; gap: 20px; padding: 20px; border-radius: 12px; margin-bottom: 8px;">
                     <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 24px;">
                         
-                        <!-- Left Column: Folder Exclusion -->
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
-                            <h5 style="font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
-                                <i data-lucide="folder-x" style="width: 14px; height: 14px;"></i> /* TRANSLATE:calibrationFolders */
-                            </h5>
-                            <div id="folder-exclusion-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 140px; overflow-y: auto; padding-right: 6px;">
-                                <!-- Inject dynamically -->
+                        <!-- Left Column: Folder Exclusion & Verifications -->
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <h5 style="font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                                    <i data-lucide="folder-x" style="width: 14px; height: 14px;"></i> <span data-i18n="calibrationFolders">/* TRANSLATE:calibrationFolders */</span>
+                                </h5>
+                                <div id="folder-exclusion-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 110px; overflow-y: auto; padding-right: 6px;">
+                                    <!-- Inject dynamically -->
+                                </div>
+                            </div>
+                            <!-- Verification settings -->
+                            <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                                <label class="folder-check-item" style="font-weight: 600; font-size: 12.5px;">
+                                    <input type="checkbox" id="calib-verify-comments-checkbox" checked onchange="toggleVerifyComments(this.checked)">
+                                    <span data-i18n="calibrationVerifyComments">/* TRANSLATE:calibrationVerifyComments */</span>
+                                </label>
+                                <span style="font-size: 11px; color: var(--text-secondary); margin-left: 22px;" data-i18n="calibrationVerifyCommentsDesc">/* TRANSLATE:calibrationVerifyCommentsDesc */</span>
                             </div>
                         </div>
 
                         <!-- Right Column: Weight Calibration -->
                         <div style="display: flex; flex-direction: column; gap: 12px; border-left: 1px solid var(--border-color); padding-left: 24px;">
                             <h5 style="font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
-                                <i data-lucide="scale" style="width: 14px; height: 14px;"></i> /* TRANSLATE:calibrationWeights */
+                                <i data-lucide="scale" style="width: 14px; height: 14px;"></i> <span data-i18n="calibrationWeights">/* TRANSLATE:calibrationWeights */</span>
                             </h5>
                             <div style="display: flex; flex-direction: column; gap: 12px;">
                                 <!-- Critical Node Weight -->
                                 <div style="display: flex; align-items: center; gap: 12px;">
-                                    <span class="badge badge-weight-critical" style="width: 120px; justify-content: center; font-size: 11px;">💥 /* TRANSLATE:filterCritical */</span>
+                                    <span class="badge badge-weight-critical" style="width: 120px; justify-content: center; font-size: 11px;">💥 <span data-i18n="filterCritical">/* TRANSLATE:filterCritical */</span></span>
                                     <input type="range" id="weight-critical-slider" min="1" max="10" step="0.5" value="5" oninput="updateWeightInputs('critical', this.value)" style="flex-grow: 1; accent-color: var(--accent-color);">
                                     <input type="number" id="weight-critical-number" min="1" max="10" step="0.5" value="5" oninput="updateWeightInputs('critical', this.value)" style="width: 55px; padding: 4px; border: 1px solid var(--border-color); border-radius: 4px; text-align: center; font-size: 12px; background: var(--bg-primary); color: var(--text-primary);">
                                 </div>
                                 <!-- Medium Node Weight -->
                                 <div style="display: flex; align-items: center; gap: 12px;">
-                                    <span class="badge badge-weight-medium" style="width: 120px; justify-content: center; font-size: 11px;">/* TRANSLATE:filterMedium */</span>
+                                    <span class="badge badge-weight-medium" style="width: 120px; justify-content: center; font-size: 11px;"><span data-i18n="filterMedium">/* TRANSLATE:filterMedium */</span></span>
                                     <input type="range" id="weight-medium-slider" min="0.5" max="5" step="0.5" value="2" oninput="updateWeightInputs('medium', this.value)" style="flex-grow: 1; accent-color: var(--accent-color);">
                                     <input type="number" id="weight-medium-number" min="0.5" max="5" step="0.5" value="2" oninput="updateWeightInputs('medium', this.value)" style="width: 55px; padding: 4px; border: 1px solid var(--border-color); border-radius: 4px; text-align: center; font-size: 12px; background: var(--bg-primary); color: var(--text-primary);">
                                 </div>
                                 <!-- Low Node Weight -->
                                 <div style="display: flex; align-items: center; gap: 12px;">
-                                    <span class="badge badge-weight-low" style="width: 120px; justify-content: center; font-size: 11px;">/* TRANSLATE:filterLow */</span>
+                                    <span class="badge badge-weight-low" style="width: 120px; justify-content: center; font-size: 11px;"><span data-i18n="filterLow">/* TRANSLATE:filterLow */</span></span>
                                     <input type="range" id="weight-low-slider" min="0.1" max="2" step="0.1" value="0.5" oninput="updateWeightInputs('low', this.value)" style="flex-grow: 1; accent-color: var(--accent-color);">
                                     <input type="number" id="weight-low-number" min="0.1" max="2" step="0.1" value="0.5" oninput="updateWeightInputs('low', this.value)" style="width: 55px; padding: 4px; border: 1px solid var(--border-color); border-radius: 4px; text-align: center; font-size: 12px; background: var(--bg-primary); color: var(--text-primary);">
                                 </div>
@@ -1033,12 +1219,12 @@
                     
                     <!-- Footer Info and Reset -->
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; border-top: 1px solid var(--border-color); padding-top: 14px; gap: 20px;">
-                        <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.5; flex-grow: 1; max-width: 80%;">
+                        <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.5; flex-grow: 1; max-width: 80%;" data-i18n="calibrationDesc" data-i18n-html="true">
                             /* TRANSLATE:calibrationDesc */
                         </p>
                         <button onclick="resetCalibration()" style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.2s;">
                             <i data-lucide="refresh-cw" style="width: 12px; height: 12px;"></i>
-                            /* TRANSLATE:calibrationReset */
+                            <span data-i18n="calibrationReset">/* TRANSLATE:calibrationReset */</span>
                         </button>
                     </div>
                 </div>
@@ -1050,7 +1236,7 @@
                     <div style="display: flex; flex-direction: column; gap: 20px;">
                         <!-- Left circular score card -->
                         <div class="card score-card" style="width: 100%;">
-                            <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px;">/* TRANSLATE:scoreCardTitle */</h4>
+                            <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px;" data-i18n="scoreCardTitle">/* TRANSLATE:scoreCardTitle */</h4>
                             
                             <div class="progress-ring-container">
                                 <svg width="180" height="180">
@@ -1059,19 +1245,21 @@
                                 </svg>
                                 <div class="progress-text">
                                     <span class="progress-text-score" id="dashboard-health-score">0</span>
-                                    <span class="progress-text-label">/* TRANSLATE:scoreLabel */</span>
+                                    <span class="progress-text-label" data-i18n="scoreLabel">/* TRANSLATE:scoreLabel */</span>
                                 </div>
                             </div>
-
-                            <span id="score-eval-label" class="score-evaluation score-eval-good">-</span>
+                            
+                            <div class="score-evaluation-container">
+                                <span id="score-eval-label" class="score-evaluation">--</span>
+                            </div>
                         </div>
 
                         <!-- Priority Hotspots Card -->
                         <div class="card" id="hotspots-card">
                             <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
-                                <i data-lucide="alert-triangle" style="width: 14px; height: 14px; color: var(--warning-color);"></i> /* TRANSLATE:hotspotsTitle */
+                                <i data-lucide="alert-triangle" style="width: 14px; height: 14px; color: var(--warning-color);"></i> <span data-i18n="hotspotsTitle">/* TRANSLATE:hotspotsTitle */</span>
                             </h4>
-                            <p style="font-size: 11px; color: var(--text-secondary); margin-top: -6px;">/* TRANSLATE:hotspotsSubtitle */</p>
+                            <p style="font-size: 11px; color: var(--text-secondary); margin-top: -6px;" data-i18n="hotspotsSubtitle">/* TRANSLATE:hotspotsSubtitle */</p>
                             <ul id="hotspots-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
                                 <!-- Inject dynamically -->
                             </ul>
@@ -1083,7 +1271,7 @@
                         
                         <div class="stat-box box-blue">
                             <div class="stat-box-header">
-                                <span class="stat-box-title">/* TRANSLATE:totalDocs */</span>
+                                <span class="stat-box-title" data-i18n="totalDocs">/* TRANSLATE:totalDocs */</span>
                                 <div class="stat-box-icon-wrapper theme-blue">
                                     <i data-lucide="files"></i>
                                 </div>
@@ -1099,7 +1287,7 @@
 
                         <div class="stat-box box-indigo">
                             <div class="stat-box-header">
-                                <span class="stat-box-title">/* TRANSLATE:graphNodes */</span>
+                                <span class="stat-box-title" data-i18n="graphNodes">/* TRANSLATE:graphNodes */</span>
                                 <div class="stat-box-icon-wrapper theme-indigo">
                                     <i data-lucide="network"></i>
                                 </div>
@@ -1115,7 +1303,7 @@
 
                         <div class="stat-box box-gold">
                             <div class="stat-box-header">
-                                <span class="stat-box-title">/* TRANSLATE:businessGodNodes */</span>
+                                <span class="stat-box-title" data-i18n="businessGodNodes">/* TRANSLATE:businessGodNodes */</span>
                                 <div class="stat-box-icon-wrapper theme-gold">
                                     <i data-lucide="crown"></i>
                                 </div>
@@ -1131,7 +1319,7 @@
 
                         <div class="stat-box box-success" id="box-stale-status">
                             <div class="stat-box-header">
-                                <span class="stat-box-title">/* TRANSLATE:healthStatus */</span>
+                                <span class="stat-box-title" data-i18n="healthStatus">/* TRANSLATE:healthStatus */</span>
                                 <div class="stat-box-icon-wrapper theme-success" id="icon-stale-status">
                                     <i data-lucide="shield-alert"></i>
                                 </div>
@@ -1150,66 +1338,128 @@
                 </div>
 
                 <!-- Bar Charts Section -->
-                <div class="charts-grid">
-                    <!-- Chart 1: Entity Type Distribution -->
-                    <div class="card chart-card">
-                        <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; margin-bottom: 16px; display: flex; align-items: center; gap: 6px;">
-                            <i data-lucide="bar-chart-3" style="width: 14px; height: 14px; color: var(--accent-color);"></i> /* TRANSLATE:entityTypeDistribution */
+                <div style="display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
+                    
+                    <div class="card" style="flex: 1;">
+                        <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+                            <i data-lucide="bar-chart-3" style="width: 14px; height: 14px; color: var(--accent-color);"></i> <span data-i18n="entityTypeDistribution">/* TRANSLATE:entityTypeDistribution */</span>
                         </h4>
-                        <div class="bar-chart-container" id="node-type-chart">
-                            <!-- Dynamic JS Injection -->
+                        <div class="chart-wrapper" style="height: 160px;">
+                            <div id="node-type-chart" class="bar-chart-container">
+                                <!-- Inject dynamically -->
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Chart 2: Node Weight Distribution -->
-                    <div class="card chart-card">
-                        <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; margin-bottom: 16px; display: flex; align-items: center; gap: 6px;" id="weight-chart-title">
-                            <i data-lucide="activity" style="width: 14px; height: 14px; color: var(--warning-color);"></i> /* TRANSLATE:weightDistribution */
+                    <div class="card" style="flex: 1.2;">
+                        <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+                            <i data-lucide="activity" style="width: 14px; height: 14px; color: var(--warning-color);"></i> <span data-i18n="weightDistribution">/* TRANSLATE:weightDistribution */</span>
                         </h4>
-                        <div class="bar-chart-container" id="node-weight-chart">
-                            <!-- Dynamic JS Injection -->
+                        
+                        <!-- Legend -->
+                        <div style="display: flex; gap: 16px; margin-bottom: 14px; flex-wrap: wrap;">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: var(--success-color);"></div>
+                                <span data-i18n="legendCompleted">/* TRANSLATE:legendCompleted */</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: var(--danger-color);"></div>
+                                <span data-i18n="legendUnlinked">/* TRANSLATE:legendUnlinked */</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: repeating-linear-gradient(45deg, rgba(234, 88, 12, 0.2), rgba(234, 88, 12, 0.2) 10px, transparent 10px, transparent 20px); border: 1px dashed var(--warning-color);"></div>
+                                <span data-i18n="legendUnenriched">/* TRANSLATE:legendUnenriched */</span>
+                            </div>
                         </div>
-                        <div class="chart-legend">
-                            <div class="legend-item">
-                                <span class="legend-color legend-color-completed"></span>
-                                <span>/* TRANSLATE:legendCompleted */</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="legend-color legend-color-unlinked"></span>
-                                <span>/* TRANSLATE:legendUnlinked */</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="legend-color legend-color-unenriched"></span>
-                                <span>/* TRANSLATE:legendUnenriched */</span>
+
+                        <div class="chart-wrapper" style="height: 160px;">
+                            <div id="node-weight-chart" class="bar-chart-container">
+                                <!-- Inject dynamically -->
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 <!-- Explorer Section -->
-                <div class="explorer-section">
+                <div class="card" style="margin-top: 20px;">
                     
-                    <div class="explorer-header">
-                        <div class="explorer-header-top">
-                            <h3>/* TRANSLATE:explorerTitle */</h3>
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <div class="search-wrapper">
-                                    <i data-lucide="search"></i>
-                                    <input type="text" id="node-search" class="search-input" placeholder="/* TRANSLATE:searchPlaceholderNodes */" oninput="handleSearch()">
-                                </div>
-                                <button id="btn-dashboard-help" onclick="openHelpPage()" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); cursor: pointer; transition: all 0.2s;" title="Giải thích thuật ngữ & chỉ số (Help)">
-                                    <i data-lucide="help-circle" style="width: 16px; height: 16px;"></i>
-                                </button>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 16px; flex-wrap: wrap;">
+                        <h3 data-i18n="explorerTitle">/* TRANSLATE:explorerTitle */</h3>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <div class="search-wrapper" style="position: relative;">
+                                <i data-lucide="search" class="search-icon" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--text-secondary);"></i>
+                                <input type="text" id="node-search" class="search-input" data-i18n="searchPlaceholderNodes" placeholder="/* TRANSLATE:searchPlaceholderNodes */" oninput="handleSearch()">
                             </div>
                         </div>
-                        
-                        <div class="filter-group">
-                            <button class="filter-btn active" id="btn-filter-all" onclick="setFilter('all')">/* TRANSLATE:filterAll */ <span id="count-all">0</span></button>
-                            <button class="filter-btn" id="btn-filter-critical" onclick="setFilter('critical')"><i data-lucide="zap" style="width: 12px; height: 12px; color: var(--danger-color); fill: var(--danger-color); fill-opacity: 0.15;"></i> /* TRANSLATE:filterCritical */ <span id="count-critical">0</span></button>
-                            <button class="filter-btn" id="btn-filter-medium" onclick="setFilter('medium')">/* TRANSLATE:filterMedium */ <span id="count-medium">0</span></button>
-                            <button class="filter-btn" id="btn-filter-low" onclick="setFilter('low')">/* TRANSLATE:filterLow */ <span id="count-low">0</span></button>
-                            <button class="filter-btn" id="btn-filter-unlinked" onclick="setFilter('unlinked')"><i data-lucide="file-x" style="width: 12px; height: 12px; color: var(--danger-color);"></i> /* TRANSLATE:filterUnlinked */ <span id="count-unlinked">0</span></button>
-                            <button class="filter-btn" id="btn-filter-unenriched" onclick="setFilter('unenriched')">/* TRANSLATE:filterUnenriched */ <span id="count-unenriched">0</span></button>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="filter-bar" style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+                        <button class="filter-btn active" id="btn-filter-all" onclick="setFilter('all')"><span data-i18n="filterAll">/* TRANSLATE:filterAll */</span> <span id="count-all">0</span></button>
+                        <button class="filter-btn" id="btn-filter-critical" onclick="setFilter('critical')"><i data-lucide="zap" style="width: 12px; height: 12px; color: var(--danger-color); fill: var(--danger-color); fill-opacity: 0.15;"></i> <span data-i18n="filterCritical">/* TRANSLATE:filterCritical */</span> <span id="count-critical">0</span></button>
+                        <button class="filter-btn" id="btn-filter-medium" onclick="setFilter('medium')"><span data-i18n="filterMedium">/* TRANSLATE:filterMedium */</span> <span id="count-medium">0</span></button>
+                        <button class="filter-btn" id="btn-filter-low" onclick="setFilter('low')"><span data-i18n="filterLow">/* TRANSLATE:filterLow */</span> <span id="count-low">0</span></button>
+                        <button class="filter-btn" id="btn-filter-unlinked-docs" onclick="setFilter('unlinked-docs')"><i data-lucide="anchor" style="width: 12px; height: 12px; color: var(--danger-color);"></i> <span data-i18n="filterUnlinkedDocs">/* TRANSLATE:filterUnlinkedDocs */</span> <span id="count-unlinked-docs">0</span></button>
+                        <button class="filter-btn" id="btn-filter-unlinked-code" onclick="setFilter('unlinked-code')"><i data-lucide="code" style="width: 12px; height: 12px; color: var(--danger-color);"></i> <span data-i18n="filterUnlinkedCode">/* TRANSLATE:filterUnlinkedCode */</span> <span id="count-unlinked-code">0</span></button>
+                        <button class="filter-btn" id="btn-filter-unenriched" onclick="setFilter('unenriched')"><span data-i18n="filterUnenriched">/* TRANSLATE:filterUnenriched */</span> <span id="count-unenriched">0</span></button>
+                        <button class="filter-btn" id="btn-filter-no-owner" onclick="setFilter('no-owner')"><span data-i18n="filterNoOwner">/* TRANSLATE:filterNoOwner */</span> <span id="count-no-owner">0</span></button>
+                    </div>
+
+                    <!-- Batch actions bar -->
+                    <div class="batch-bar" id="batch-actions-bar" style="display: none; justify-content: space-between; align-items: center; padding: 10px 16px; background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 13px; font-weight: 500;"><span data-i18n="batchActions">/* TRANSLATE:batchActions */</span> (<span id="batch-selected-count">0</span>)</span>
+                            <div style="display: flex; gap: 6px;">
+                                <button class="batch-quick-btn" onclick="selectQuick(5)" data-i18n="select5">/* TRANSLATE:select5 */</button>
+                                <button class="batch-quick-btn" onclick="selectQuick(10)" data-i18n="select10">/* TRANSLATE:select10 */</button>
+                                <button class="batch-quick-btn" onclick="toggleSelectAllNodes(true)" data-i18n="selectAll">/* TRANSLATE:selectAll */</button>
+                                <button class="batch-quick-btn" onclick="toggleSelectAllNodes(false)" data-i18n="deselectAll">/* TRANSLATE:deselectAll */</button>
+                            </div>
+                        </div>
+                        <div class="batch-btn-group">
+                            <div class="prompt-dropdown-wrapper" style="position: relative; display: inline-block;">
+                                <button class="batch-action-btn batch-action-btn-primary" id="btn-batch-prompt-dropdown" onclick="togglePromptDropdown(event)">
+                                    <i data-lucide="sparkles" style="width: 13px; height: 13px;"></i> <span data-i18n="copyPrompt">/* TRANSLATE:copyPrompt */</span> <span style="font-size: 8px; margin-left: 2px; opacity: 0.85;">▼</span>
+                                </button>
+                                <div class="prompt-dropdown-menu" id="batch-prompt-menu">
+                                    <div class="dropdown-header">Gợi ý Prompt AI</div>
+                                    <a class="dropdown-item" onclick="copyBatchPrompt('write-docs', event)">
+                                        <span class="dropdown-item-title">📝 Viết tài liệu kỹ thuật</span>
+                                        <span class="dropdown-item-desc">Yêu cầu AI viết đặc tả chi tiết cho các node đã chọn</span>
+                                    </a>
+                                    <a class="dropdown-item" onclick="copyBatchPrompt('update-stale', event)">
+                                        <span class="dropdown-item-title">🔄 Cập nhật tài liệu cũ</span>
+                                        <span class="dropdown-item-desc">Tập trung sửa các node bị stale/lỗi thời</span>
+                                    </a>
+                                    <a class="dropdown-item" onclick="copyBatchPrompt('write-summary', event)">
+                                        <span class="dropdown-item-title">✨ Viết mô tả AI (Summary)</span>
+                                        <span class="dropdown-item-desc">Yêu cầu AI viết tóm tắt nghiệp vụ ngắn gọn cho cấu phần</span>
+                                    </a>
+                                    <a class="dropdown-item" onclick="copyBatchPrompt('assign-owner', event)">
+                                        <span class="dropdown-item-title">👥 Đề xuất phân công (Owner)</span>
+                                        <span class="dropdown-item-desc">Phân tích rủi ro để gán nhân sự phụ trách</span>
+                                    </a>
+                                    <a class="dropdown-item" onclick="copyBatchPrompt('link-graph-docs', event)">
+                                        <span class="dropdown-item-title">⚓ Gán neo đồ thị vào tài liệu (Docs ➔ Code)</span>
+                                        <span class="dropdown-item-desc">Đề xuất chèn thẻ &lt;!-- @graph-node --&gt; vào đặc tả Markdown</span>
+                                    </a>
+                                    <a class="dropdown-item" onclick="copyBatchPrompt('link-code-docs', event)">
+                                        <span class="dropdown-item-title">💻 Chèn comment neo vào mã nguồn (Code ➔ Docs)</span>
+                                        <span class="dropdown-item-desc">Đề xuất comment // @para-doc [file.md#anchor] vào mã nguồn</span>
+                                    </a>
+                                    <a class="dropdown-item" onclick="copyBatchPrompt('risk-analysis', event)">
+                                        <span class="dropdown-item-title">⚠️ Đánh giá rủi ro thiết kế</span>
+                                        <span class="dropdown-item-desc">Đánh giá các node có tầm ảnh hưởng lớn</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <button class="batch-action-btn" onclick="copyBatchMarkdown()">
+                                <i data-lucide="file-text" style="width: 13px; height: 13px;"></i> <span data-i18n="copyMarkdown">/* TRANSLATE:copyMarkdown */</span>
+                            </button>
+                            <button class="batch-action-btn" onclick="copyBatchJson()">
+                                <i data-lucide="code" style="width: 13px; height: 13px;"></i> <span data-i18n="copyJson">/* TRANSLATE:copyJson */</span>
+                            </button>
                         </div>
                     </div>
 
@@ -1217,19 +1467,21 @@
                         <table class="nodes-table">
                             <thead>
                                 <tr>
-                                    <th class="sortable" style="width: 280px; cursor: pointer; user-select: none;" onclick="handleSort('name')">/* TRANSLATE:thNodeEntity */ <span id="sort-icon-name"></span></th>
-                                    <th class="sortable" style="width: 100px; cursor: pointer; user-select: none;" onclick="handleSort('type')">/* TRANSLATE:thType */ <span id="sort-icon-type"></span></th>
-                                    <th class="sortable" style="width: 110px; cursor: pointer; user-select: none;" onclick="handleSort('degree')">/* TRANSLATE:thWeightDegree */ <span id="sort-icon-degree"></span></th>
-                                    <th class="sortable" style="width: 110px; cursor: pointer; user-select: none;" onclick="handleSort('blastRadius')">/* TRANSLATE:thBlastRadius */ <span id="sort-icon-blastRadius"></span></th>
-                                    <th class="sortable" style="width: 150px; cursor: pointer; user-select: none;" onclick="handleSort('status')">/* TRANSLATE:thDocLinks */ <span id="sort-icon-status"></span></th>
-                                    <th>/* TRANSLATE:thDescription */</th>
+                                    <th style="width: 40px; text-align: center;"><input type="checkbox" id="select-all-nodes-checkbox" onchange="toggleSelectAllNodes(this.checked)"></th>
+                                    <th class="sortable" style="width: 280px; cursor: pointer; user-select: none;" onclick="handleSort('name')"><span data-i18n="thNodeEntity">/* TRANSLATE:thNodeEntity */</span> <span id="sort-icon-name"></span></th>
+                                    <th class="sortable" style="width: 100px; cursor: pointer; user-select: none;" onclick="handleSort('type')"><span data-i18n="thType">/* TRANSLATE:thType */</span> <span id="sort-icon-type"></span></th>
+                                    <th class="sortable" style="width: 110px; cursor: pointer; user-select: none;" onclick="handleSort('degree')"><span data-i18n="thWeightDegree">/* TRANSLATE:thWeightDegree */</span> <span id="sort-icon-degree"></span></th>
+                                    <th class="sortable" style="width: 110px; cursor: pointer; user-select: none;" onclick="handleSort('blastRadius')"><span data-i18n="thBlastRadius">/* TRANSLATE:thBlastRadius */</span> <span id="sort-icon-blastRadius"></span></th>
+                                    <th class="sortable" style="width: 160px; cursor: pointer; user-select: none;" onclick="handleSort('status')"><span data-i18n="thDocLinksDocs">/* TRANSLATE:thDocLinksDocs */</span> <span id="sort-icon-status"></span></th>
+                                    <th id="th-doc-links-code" class="sortable" style="width: 160px; cursor: pointer; user-select: none;" onclick="handleSort('codeStatus')"><span data-i18n="thDocLinksCode">/* TRANSLATE:thDocLinksCode */</span> <span id="sort-icon-codeStatus"></span></th>
+                                    <th data-i18n="thDescription">/* TRANSLATE:thDescription */</th>
                                 </tr>
                             </thead>
                             <tbody id="nodes-table-body">
                                 <!-- Inject dynamically -->
                             </tbody>
                         </table>
-                        <div id="no-nodes-found" class="no-results" style="display: none;">
+                        <div id="no-nodes-found" class="no-results" style="display: none;" data-i18n="noNodesFound">
                             /* TRANSLATE:noNodesFound */
                         </div>
                     </div>
@@ -1238,7 +1490,7 @@
 
                 <!-- Footer -->
                 <footer class="docs-footer">
-                    <span><i data-lucide="clock"></i> /* TRANSLATE:graphStatsUpdated */ /* RENDER_TIME */</span>
+                    <span><i data-lucide="clock"></i> <span data-i18n="graphStatsUpdated">/* TRANSLATE:graphStatsUpdated */</span> /* RENDER_TIME */</span>
                     <span><i data-lucide="cpu"></i> PARA Graph Analytics Engine</span>
                 </footer>
                 
@@ -1254,6 +1506,15 @@
         const graphNodesData = JSON.parse('[]');
         const allMarkdownFiles = JSON.parse('[]');
 
+        // Static SVG definitions to replace dynamic Lucide icons in table rendering loop
+        const SVG_ALERT_CIRCLE = '<svg class="lucide lucide-alert-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 10px; height: 10px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"></svg>';
+        const SVG_EXTERNAL_LINK = '<svg class="lucide lucide-external-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px;"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></svg>';
+        const SVG_ZAP = '<svg class="lucide lucide-zap" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 10px; height: 10px; fill: currentColor; fill-opacity: 0.15;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></svg>';
+        const SVG_FLAME = '<svg class="lucide lucide-flame" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 10px; height: 10px;"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></svg>';
+        const SVG_CHECK_CIRCLE = '<svg class="lucide lucide-check-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 10px; height: 10px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"></svg>';
+        const SVG_X_CIRCLE = '<svg class="lucide lucide-x-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 10px; height: 10px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"></svg>';
+        const SVG_LINK = '<svg class="lucide lucide-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 10px; height: 10px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></svg>';
+
         // Calibration state loaded from localStorage or defaults
         let activeWeights = {
             critical: 5.0,
@@ -1261,12 +1522,15 @@
             low: 0.5
         };
         let activeExclusions = ['researches', 'explorations']; // Defaults
+        let verifyComments = true; // Default to true
 
         try {
             const savedWeights = localStorage.getItem('calib_weights');
             if (savedWeights) activeWeights = JSON.parse(savedWeights);
             const savedExclusions = localStorage.getItem('calib_exclusions');
             if (savedExclusions) activeExclusions = JSON.parse(savedExclusions);
+            const savedVerifyComments = localStorage.getItem('calib_verify_comments');
+            if (savedVerifyComments !== null) verifyComments = JSON.parse(savedVerifyComments);
         } catch (e) {
             console.error('Failed to load calibration state:', e);
         }
@@ -1324,18 +1588,74 @@
         let selectionScrollX = 0;
         let selectionScrollY = 0;
 
-        const lang = document.documentElement.getAttribute('lang') || 'en';
+        let lang = localStorage.getItem('dashboard_lang') || document.documentElement.getAttribute('lang') || 'vi';
         const i18n = {
             vi: {
-                docsWithAnchorsSub: (count, pct) => `${count} tệp chứa neo graph`,
-                linkedNodesSub: (linked, total, pct) => `${linked}/${total} nodes được gán neo`,
-                godNodesSub: (pct) => `Bao phủ God Nodes sản xuất`,
-                staleDocsSubWarning: (count) => `⚠️ ${count} tài liệu hết hạn, cần re-sync`,
+                dashboardTitle: "Trình duyệt Đồ thị Mã & Neo tài liệu",
+                dashboardSubtitle: "Đo lường mức độ bao phủ tài liệu dựa trên trọng số Đồ thị Code.",
+                scoreCardTitle: "Điểm Sức khỏe Tài liệu",
+                scoreLabel: "Điểm số",
+                totalDocs: "Tổng số tài liệu",
+                graphNodes: "Cấu phần Đồ thị",
+                businessGodNodes: "Thành phần Lõi Nghiệp vụ (God Nodes)",
+                healthStatus: "Trạng thái Sức khỏe",
+                entityTypeDistribution: "Phân bố theo Loại Cấu phần",
+                weightDistribution: "Phân loại theo Trọng số Đồ thị",
+                legendCompleted: "Đạt chuẩn (Đầy đủ)",
+                legendUnlinked: "Chưa liên kết",
+                legendUnenriched: "Chưa mô tả AI",
+                explorerTitle: "Trình duyệt Đồ thị Mã & Neo tài liệu",
+                searchPlaceholderNodes: "Tìm kiếm node theo tên, file...",
+                filterAll: "Tất cả",
+                filterCritical: "Cốt lõi (Trọng số 5)",
+                filterMedium: "Trung bình",
+                filterLow: "Bổ trợ",
+                filterUnlinked: "Chưa gắn link",
+                filterUnlinkedDocs: "Chưa neo (Docs ➔ Code)",
+                filterUnlinkedCode: "Chưa cmt (Code ➔ Docs)",
+                filterUnenriched: "Chưa mô tả AI",
+                filterNoOwner: "Chưa gán người phụ trách",
+                badgeNoOwner: "Chưa gán người phụ trách",
+                batchActions: "Thao tác hàng loạt",
+                copyPrompt: "Sao chép Prompt AI",
+                copyMarkdown: "Sao chép Markdown List",
+                copyJson: "Sao chép JSON",
+                select5: "Chọn 5",
+                select10: "Chọn 10",
+                selectAll: "Chọn tất cả",
+                deselectAll: "Bỏ chọn",
+                thNodeEntity: "Cấu phần Mã (Entity)",
+                thType: "Phân loại",
+                thWeightDegree: "Trọng số / Độ kết nối (Degree)",
+                thBlastRadius: "Bán kính ảnh hưởng (Blast Radius)",
+                thDocLinks: "Liên kết Tài liệu",
+                thDocLinksDocs: "Docs ➔ Code (Neo)",
+                thDocLinksCode: "Code ➔ Docs (Comment)",
+                thDescription: "Mô tả / Ngữ nghĩa Hệ thống",
+                hotspotsTitle: "⚠️ Điểm nóng ưu tiên",
+                hotspotsSubtitle: "Thành phần ảnh hưởng lớn cần viết tài liệu",
+                badgeStale: "Cần cập nhật",
+                badgeLinkedDocs: "Tài liệu",
+                badgeUnlinkedDocs: "Chưa neo",
+                badgeLinkedCode: "Comment",
+                badgeUnlinkedCode: "Chưa cmt",
+                calibrationVerifyComments: "Kiểm tra comment neo trong mã nguồn (Code ➔ Docs)",
+                calibrationVerifyCommentsDesc: "Yêu cầu có comment <code>// @para-doc [file.md#anchor]</code> trong code để tham chiếu tới tài liệu.",
+                langToggleLabel: "English",
+                calibrationTitle: "Hiệu chỉnh Chỉ số",
+                calibrationFolders: "Loại trừ thư mục tài liệu",
+                calibrationWeights: "Trọng số thành phần mã",
+                calibrationReset: "Đặt lại mặc định",
+                calibrationDesc: "Trọng số đại diện cho độ quan trọng tương đối của từng cấu phần mã:<br/>• <b>Cốt lõi:</b> Các cấu phần lõi ảnh hưởng lớn (Cấu phần Siêu kết nối, độ kết nối >= 20).<br/>• <b>Trung bình:</b> Hàm, lớp, tệp tin tiêu chuẩn.<br/>• <b>Bổ trợ:</b> Các biến và hằng số phụ trợ.<br/>Tài liệu hóa phần Cốt lõi đóng góp điểm số cao hơn.",
+                docsWithAnchorsSub: (count, pct) => `${count} tệp chứa neo đồ thị`,
+                linkedNodesSub: (linked, total, pct) => `${linked}/${total} cấu phần được gán neo`,
+                godNodesSub: (pct) => `Bao phủ cấu phần lõi sản xuất`,
+                staleDocsSubWarning: (count) => `⚠️ ${count} tài liệu hết hạn, cần đồng bộ lại`,
                 staleDocsSubClean: 'Đồng bộ hoàn toàn với code',
-                staleDocsDefaultSub: 'Tài liệu bị cũ (Code thay đổi signature)',
-                scoreGold: 'Xuất sắc (Gold standard)',
-                scoreGood: 'Đạt yêu cầu (Good)',
-                scorePoor: 'Cần bổ sung (Poor)',
+                staleDocsDefaultSub: 'Tài liệu bị cũ (Code thay đổi chữ ký hàm/lớp)',
+                scoreGold: 'Xuất sắc (Tiêu chuẩn Vàng)',
+                scoreGood: 'Đạt yêu cầu',
+                scorePoor: 'Cần bổ sung',
                 openEditorTitle: 'Mở file bằng Editor',
                 badgeCritical: 'Cốt lõi',
                 badgeMedium: 'Trung bình',
@@ -1351,10 +1671,7 @@
                 toastCopied: 'Sao chép ✓',
                 toastCopyFailed: 'Không thể sao chép',
                 completed: 'Đạt chuẩn: ',
-                nodes: ' node',
-                legendCompleted: 'Đạt chuẩn (Đầy đủ)',
-                legendUnlinked: 'Chưa gán link (Unlinked)',
-                legendUnenriched: 'Chưa mô tả AI (Unenriched)',
+                nodes: ' cấu phần',
                 typeFile: 'Tệp tin',
                 typeFunction: 'Hàm',
                 typeClass: 'Lớp',
@@ -1366,18 +1683,71 @@
                 degreeOutLabel: 'Ra',
                 statusEnriched: 'Đã mô tả AI',
                 statusUnenriched: 'Chưa mô tả AI',
-                blastRadiusTooltip: (val) => `Bán kính ảnh hưởng: ${val} (số lượng các thành phần bị tác động nếu node này thay đổi)`,
-                hotspotsTitle: '⚠️ Điểm nóng ưu tiên',
-                hotspotsSubtitle: 'Thành phần ảnh hưởng lớn cần viết tài liệu',
-                badgeStale: 'Cần cập nhật',
+                blastRadiusTooltip: (val) => `Bán kính ảnh hưởng: ${val} (số lượng các cấu phần bị tác động nếu node này thay đổi)`,
                 badgeSynced: 'Đồng bộ',
                 tooltipDocsPct: 'Tỷ lệ tài liệu đã được gán neo định vị vào đồ thị mã nguồn (docAnchor)',
                 tooltipNodesPct: 'Tỷ lệ các thành phần mã nguồn (hàm, lớp, file) đã được liên kết với tài liệu thuyết minh',
-                tooltipGodPct: 'Tỷ lệ phủ tài liệu đối với các God Node quan trọng nhất (ảnh hưởng trực tiếp đến nghiệp vụ sản xuất)',
+                tooltipGodPct: 'Tỷ lệ phủ tài liệu đối với các cấu phần lõi quan trọng nhất (ảnh hưởng trực tiếp đến nghiệp vụ sản xuất)',
                 tooltipHealthPct: 'Tỷ lệ đồng bộ của tài liệu so với code (100% nghĩa là không có tài liệu nào bị hết hạn)',
-                tooltipHealthScore: 'Điểm số chất lượng tài liệu được tính toán dựa trên trọng số liên kết đồ thị (docAnchor). Các thành phần lõi (God Nodes) có độ ảnh hưởng cao đóng góp trọng số lớn hơn (5x) so với các biến thông thường (0.5x), phản ánh độ bao phủ thực tế của tài liệu kỹ thuật đối với hệ thống.'
+                tooltipHealthScore: 'Điểm số chất lượng tài liệu được tính toán dựa trên trọng số liên kết đồ thị (docAnchor). Các thành phần lõi có độ ảnh hưởng cao đóng góp trọng số lớn hơn (5x) so với các biến thông thường (0.5x), phản ánh độ bao phủ thực tế của tài liệu kỹ thuật đối với hệ thống.'
             },
             en: {
+                dashboardTitle: "Docs Quality Dashboard",
+                dashboardSubtitle: "Measure documentation coverage based on Code-Graph weights.",
+                scoreCardTitle: "Docs Health Score",
+                scoreLabel: "Score",
+                totalDocs: "Total Documents",
+                graphNodes: "Graph Nodes",
+                businessGodNodes: "Business God Nodes",
+                healthStatus: "Health Status",
+                entityTypeDistribution: "Entity Type Distribution",
+                weightDistribution: "Weight Distribution",
+                legendCompleted: "Completed (Full)",
+                legendUnlinked: "Unlinked",
+                legendUnenriched: "Unenriched",
+                explorerTitle: "Code Graph & Doc Anchors Explorer",
+                searchPlaceholderNodes: "Search nodes by name, file...",
+                filterAll: "All",
+                filterCritical: "Critical (Weight 5)",
+                filterMedium: "Medium",
+                filterLow: "Low",
+                filterUnlinked: "Unlinked",
+                filterUnlinkedDocs: "Docs ➔ Code Unlinked",
+                filterUnlinkedCode: "Code ➔ Docs Unlinked",
+                filterUnenriched: "Unenriched",
+                filterNoOwner: "No Owner",
+                badgeNoOwner: "No Owner",
+                batchActions: "Batch Actions",
+                copyPrompt: "Copy AI Prompt",
+                copyMarkdown: "Copy Markdown List",
+                copyJson: "Copy JSON",
+                select5: "Select 5",
+                select10: "Select 10",
+                selectAll: "Select All",
+                deselectAll: "Deselect",
+                thNodeEntity: "Node Entity",
+                thType: "Type",
+                thWeightDegree: "Weight / Degree",
+                thBlastRadius: "Blast Radius",
+                thDocLinks: "Doc Links (docAnchors)",
+                thDocLinksDocs: "Docs ➔ Code (Anchor)",
+                thDocLinksCode: "Code ➔ Docs (Comment)",
+                thDescription: "Description / System Semantics",
+                hotspotsTitle: "⚠️ Priority Hotspots",
+                hotspotsSubtitle: "High-impact components lacking docs",
+                badgeStale: "Stale / Outdated",
+                badgeLinkedDocs: "Docs",
+                badgeUnlinkedDocs: "Unanchored",
+                badgeLinkedCode: "Comment",
+                badgeUnlinkedCode: "Uncmt",
+                calibrationVerifyComments: "Verify code comment references (Code ➔ Docs)",
+                calibrationVerifyCommentsDesc: "Require <code>// @para-doc [file.md#anchor]</code> comments in code to refer to documentation.",
+                langToggleLabel: "Tiếng Việt",
+                calibrationTitle: "Calibration Settings",
+                calibrationFolders: "Exclude document folders",
+                calibrationWeights: "Code Entity Weights",
+                calibrationReset: "Reset to Default",
+                calibrationDesc: "Weights represent the relative importance of each code entity:<br/>• <b>Critical:</b> High-impact core components (Hyperconnected components, degree >= 20).<br/>• <b>Medium:</b> Standard functions, classes, and files.<br/>• <b>Low:</b> Auxiliary variables and constants.<br/>Documenting critical components yields a higher score.",
                 docsWithAnchorsSub: (count, pct) => `${count} files with graph anchors`,
                 linkedNodesSub: (linked, total, pct) => `${linked}/${total} nodes with docAnchors`,
                 godNodesSub: (pct) => `Production God Nodes coverage`,
@@ -1403,9 +1773,6 @@
                 toastCopyFailed: 'Failed to copy',
                 completed: 'Completed: ',
                 nodes: ' nodes',
-                legendCompleted: 'Completed (Full)',
-                legendUnlinked: 'Unlinked',
-                legendUnenriched: 'Unenriched',
                 typeFile: 'File',
                 typeFunction: 'Function',
                 typeClass: 'Class',
@@ -1418,9 +1785,6 @@
                 statusEnriched: 'Enriched',
                 statusUnenriched: 'Unenriched',
                 blastRadiusTooltip: (val) => `Blast Radius: ${val} (number of impacted components if this node changes)`,
-                hotspotsTitle: '⚠️ Priority Hotspots',
-                hotspotsSubtitle: 'High-impact components lacking docs',
-                badgeStale: 'Stale / Outdated',
                 badgeSynced: 'Synced',
                 tooltipDocsPct: 'Percentage of documents containing active source code anchors (docAnchors)',
                 tooltipNodesPct: 'Percentage of enrichable code entities linked to explanation docs',
@@ -1429,7 +1793,7 @@
                 tooltipHealthScore: 'Weighted health score based on code graph traceabilities. High-impact core components (God Nodes) contribute much more weight (5x) than standard variables (0.5x), reflecting the actual coverage of system architecture documentation.'
             }
         };
-        const t = i18n[lang] || i18n['en'];
+        let t = i18n[lang] || i18n['en'];
 
         function toggleCalibrationPanel() {
             const panel = document.getElementById('calibration-panel');
@@ -1514,27 +1878,113 @@
             });
         }
 
-        function resetCalibration() {
-            activeWeights = {
-                critical: 5.0,
-                medium: 2.0,
-                low: 0.5
-            };
-            activeExclusions = ['researches', 'explorations'];
-            
+        function applyTranslations(newLang) {
+            lang = newLang;
+            t = i18n[lang] || i18n['en'];
+            document.documentElement.setAttribute('lang', lang);
             try {
-                localStorage.setItem('calib_weights', JSON.stringify(activeWeights));
-                localStorage.setItem('calib_exclusions', JSON.stringify(activeExclusions));
+                localStorage.setItem('dashboard_lang', lang);
             } catch (e) {}
             
-            for (const type of ['critical', 'medium', 'low']) {
-                document.getElementById(`weight-${type}-slider`).value = activeWeights[type];
-                document.getElementById(`weight-${type}-number`).value = activeWeights[type];
+            // Update lang button text
+            const langBtnSpan = document.querySelector('#btn-toggle-lang span');
+            if (langBtnSpan) {
+                langBtnSpan.textContent = t.langToggleLabel;
             }
             
-            renderFolderExclusionUI();
-            recalculateMetrics();
-        }
+            // Translate elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                const translation = t[key];
+                if (translation !== undefined) {
+                    if (el.tagName === 'INPUT' && el.type === 'text') {
+                        el.placeholder = translation;
+                      } else if (el.hasAttribute('data-i18n-html')) {
+                          el.innerHTML = translation;
+                      } else {
+                          // Keep child nodes (like counts or icons) intact
+                          const countSpan = el.querySelector('span[id^="count-"]');
+                          const icon = el.querySelector('i');
+                          
+                          if (countSpan || icon) {
+                              // We just update the text nodes inside
+                              el.childNodes.forEach(child => {
+                                  if (child.nodeType === Node.TEXT_NODE) {
+                                      // Check if this text node is not empty
+                                      if (child.textContent.trim().length > 0) {
+                                          child.textContent = ' ' + translation + ' ';
+                                      }
+                                  }
+                              });
+                          } else {
+                              el.textContent = translation;
+                          }
+                      }
+                  }
+              });
+              
+              document.title = t.dashboardTitle;
+
+              // Update tooltips dynamically
+              const scoreCard = document.querySelector('.score-card');
+              if (scoreCard) scoreCard.title = t.tooltipHealthScore;
+
+              const docsBadge = document.getElementById('stat-docs-pct-badge');
+              if (docsBadge) docsBadge.title = t.tooltipDocsPct;
+              const nodesBadge = document.getElementById('stat-nodes-pct-badge');
+              if (nodesBadge) nodesBadge.title = t.tooltipNodesPct;
+              const godBadge = document.getElementById('stat-god-pct-badge');
+              if (godBadge) godBadge.title = t.tooltipGodPct;
+              const healthBadge = document.getElementById('stat-health-pct-badge');
+              if (healthBadge) healthBadge.title = t.tooltipHealthPct;
+
+              // Refresh dynamic values and type chart
+              recalculateMetrics();
+              if (typeof renderTypeChart === 'function') {
+                  renderTypeChart();
+              }
+          }
+          
+          window.toggleLanguage = function() {
+              const nextLang = lang === 'vi' ? 'en' : 'vi';
+              applyTranslations(nextLang);
+          };
+
+          window.toggleVerifyComments = function(checked) {
+              verifyComments = checked;
+              try {
+                  localStorage.setItem('calib_verify_comments', JSON.stringify(verifyComments));
+              } catch (e) {}
+              recalculateMetrics();
+              renderTable();
+          };
+
+          function resetCalibration() {
+              activeWeights = {
+                  critical: 5.0,
+                  medium: 2.0,
+                  low: 0.5
+              };
+              activeExclusions = ['researches', 'explorations'];
+              verifyComments = true;
+              
+              try {
+                  localStorage.setItem('calib_weights', JSON.stringify(activeWeights));
+                  localStorage.setItem('calib_exclusions', JSON.stringify(activeExclusions));
+                  localStorage.setItem('calib_verify_comments', JSON.stringify(verifyComments));
+              } catch (e) {}
+              
+              for (const type of ['critical', 'medium', 'low']) {
+                  document.getElementById(`weight-${type}-slider`).value = activeWeights[type];
+                  document.getElementById(`weight-${type}-number`).value = activeWeights[type];
+              }
+              
+              const verifyCheckbox = document.getElementById('calib-verify-comments-checkbox');
+              if (verifyCheckbox) verifyCheckbox.checked = true;
+              
+              renderFolderExclusionUI();
+              recalculateMetrics();
+          }
 
         function getAnchorFolder(anchor) {
             let clean = anchor;
@@ -1551,6 +2001,14 @@
                 return clean.substring(0, slashIdx);
             }
             return '';
+        }
+
+        function getActiveCodeDocs(node) {
+            if (!node.codeDocs || node.codeDocs.length === 0) return [];
+            return node.codeDocs.filter(doc => {
+                const folder = getAnchorFolder(doc);
+                return !activeExclusions.includes(folder);
+            });
         }
 
         function recalculateMetrics() {
@@ -1585,6 +2043,11 @@
                     });
                 }
                 
+                // Calculate code comment reference status
+                node.hasCodeDocActive = false;
+                node.activeCodeDocs = getActiveCodeDocs(node);
+                node.hasCodeDocActive = node.activeCodeDocs.length > 0;
+                
                 let weight = activeWeights.medium;
                 if (node.weightedClass === 'critical') {
                     weight = activeWeights.critical;
@@ -1600,9 +2063,20 @@
             let totalWeight = 0;
             graphNodesData.forEach(node => {
                 totalWeight += node.activeWeight;
-                if (node.isLinkedActive) {
-                    linkedWeight += node.activeWeight;
+                let factor = 0;
+                if (verifyComments) {
+                    if (node.isLinkedActive && node.hasCodeDocActive) {
+                        factor = 1.0;
+                    } else if (node.isLinkedActive || node.hasCodeDocActive) {
+                        factor = 0.5;
+                    }
+                } else {
+                    if (node.isLinkedActive) {
+                        factor = 1.0;
+                    }
                 }
+                node.completionFactor = factor;
+                linkedWeight += node.activeWeight * factor;
             });
             const score = totalWeight > 0 ? Math.round((linkedWeight / totalWeight) * 100) : 100;
 
@@ -1651,86 +2125,115 @@
                         el.style.backgroundColor = 'rgba(234, 88, 12, 0.1)';
                         el.style.color = 'var(--warning-color)';
                         el.style.borderColor = 'rgba(234, 88, 12, 0.2)';
-                    } else {
-                        el.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
-                        el.style.color = 'var(--danger-color)';
-                        el.style.borderColor = 'rgba(239, 68, 68, 0.2)';
-                    }
-                }
-            }
+                      } else {
+                          el.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                          el.style.color = 'var(--danger-color)';
+                          el.style.borderColor = 'rgba(239, 68, 68, 0.2)';
+                      }
+                  }
+              }
 
-            const docsPct = activeDocs.length > 0 ? Math.round(activeDocsWithAnchorsCount / activeDocs.length * 100) : 0;
-            document.getElementById('stat-total-docs').textContent = activeDocs.length;
-            document.getElementById('stat-docs-with-anchors-sub').textContent = t.docsWithAnchorsSub(activeDocsWithAnchorsCount, docsPct);
-            updateBadge('stat-docs-pct-badge', docsPct);
-            
-            const linkedActiveNodes = graphNodesData.filter(n => n.isLinkedActive).length;
-            const nodesPct = graphNodesData.length > 0 ? Math.round(linkedActiveNodes / graphNodesData.length * 100) : 0;
-            document.getElementById('stat-total-nodes').textContent = graphNodesData.length;
-            document.getElementById('stat-linked-nodes-sub').textContent = t.linkedNodesSub(linkedActiveNodes, graphNodesData.length, nodesPct);
-            updateBadge('stat-nodes-pct-badge', nodesPct);
+              const docsPct = activeDocs.length > 0 ? Math.round(activeDocsWithAnchorsCount / activeDocs.length * 100) : 0;
+              document.getElementById('stat-total-docs').textContent = activeDocs.length;
+              document.getElementById('stat-docs-with-anchors-sub').textContent = t.docsWithAnchorsSub(activeDocsWithAnchorsCount, docsPct);
+              updateBadge('stat-docs-pct-badge', docsPct);
+              
+              const linkedActiveNodes = graphNodesData.filter(n => n.isLinkedActive).length;
+              const codeLinkedActiveNodes = graphNodesData.filter(n => n.hasCodeDocActive).length;
+              
+              let nodesPct = 0;
+              if (graphNodesData.length > 0) {
+                  const totalFactor = graphNodesData.reduce((acc, n) => acc + n.completionFactor, 0);
+                  nodesPct = Math.round((totalFactor / graphNodesData.length) * 100);
+              }
+              document.getElementById('stat-total-nodes').textContent = graphNodesData.length;
+              if (verifyComments) {
+                  document.getElementById('stat-linked-nodes-sub').innerHTML = `⚓ Neo: <strong>${linkedActiveNodes}</strong>/${graphNodesData.length} | 💻 Comment: <strong>${codeLinkedActiveNodes}</strong>/${graphNodesData.length}`;
+              } else {
+                  document.getElementById('stat-linked-nodes-sub').textContent = t.linkedNodesSub(linkedActiveNodes, graphNodesData.length, nodesPct);
+              }
+              updateBadge('stat-nodes-pct-badge', nodesPct);
 
-            const totalGod = graphNodesData.filter(n => n.weightedClass === 'critical').length;
-            const documentedGod = graphNodesData.filter(n => n.weightedClass === 'critical' && n.isLinkedActive).length;
-            document.getElementById('stat-god-nodes').textContent = `${documentedGod}/${totalGod}`;
-            const godRatio = totalGod > 0 ? Math.round(documentedGod / totalGod * 100) : 0;
-            document.getElementById('stat-god-nodes-sub').textContent = t.godNodesSub(godRatio);
-            updateBadge('stat-god-pct-badge', godRatio);
+              const godNodesList = graphNodesData.filter(n => n.weightedClass === 'critical');
+              const totalGod = godNodesList.length;
+              const documentedGod = godNodesList.filter(n => n.weightedClass === 'critical' && n.isLinkedActive).length;
+              const codeLinkedGod = godNodesList.filter(n => n.weightedClass === 'critical' && n.hasCodeDocActive).length;
+              
+              let godPct = 0;
+              if (totalGod > 0) {
+                  const godTotalFactor = godNodesList.reduce((acc, n) => acc + n.completionFactor, 0);
+                  godPct = Math.round((godTotalFactor / totalGod) * 100);
+              }
+              document.getElementById('stat-god-nodes').textContent = `${documentedGod}/${totalGod}`;
+              if (verifyComments) {
+                  document.getElementById('stat-god-nodes-sub').innerHTML = `⚓ Neo: <strong>${documentedGod}</strong> | 💻 Comment: <strong>${codeLinkedGod}</strong>`;
+              } else {
+                  document.getElementById('stat-god-nodes-sub').textContent = t.godNodesSub(godPct);
+              }
+              updateBadge('stat-god-pct-badge', godPct);
 
-            const staleDocs = new Set();
-            graphNodesData.forEach(node => {
-                if (node.isStale && node.activeAnchors) {
-                    node.activeAnchors.forEach(anchor => {
-                        let docPath = anchor.split('#')[0];
-                        if (docPath.startsWith('docs/')) {
-                            docPath = docPath.substring(5);
-                        } else {
-                            const match = docPath.match(/Projects\/[^\/]+\/docs\/(.+)/);
-                            if (match) {
-                                docPath = match[1];
-                            }
-                        }
-                        staleDocs.add(docPath);
-                    });
-                }
-            });
-            const activeStaleDocsCount = Array.from(staleDocs).filter(doc => activeDocs.includes(doc)).length;
-            const healthPct = activeDocs.length > 0 ? Math.round((activeDocs.length - activeStaleDocsCount) / activeDocs.length * 100) : 100;
-            document.getElementById('stat-stale-docs').textContent = healthPct + '%';
+              const staleDocs = new Set();
+              graphNodesData.forEach(node => {
+                  if (node.isStale && node.activeAnchors) {
+                      node.activeAnchors.forEach(anchor => {
+                          let docPath = anchor.split('#')[0];
+                          if (docPath.startsWith('docs/')) {
+                              docPath = docPath.substring(5);
+                          } else {
+                              const match = docPath.match(/Projects\/[^\/]+\/docs\/(.+)/);
+                              if (match) {
+                                  docPath = match[1];
+                              }
+                          }
+                          staleDocs.add(docPath);
+                      });
+                  }
+              });
+              const activeStaleDocsCount = Array.from(staleDocs).filter(doc => activeDocs.includes(doc)).length;
+              const healthPct = activeDocs.length > 0 ? Math.round((activeDocs.length - activeStaleDocsCount) / activeDocs.length * 100) : 100;
+              document.getElementById('stat-stale-docs').textContent = healthPct + '%';
 
-            const staleBox = document.getElementById('box-stale-status');
-            const staleIconWrapper = document.getElementById('icon-stale-status');
-            const healthBadge = document.getElementById('stat-health-pct-badge');
-            if (activeStaleDocsCount > 0) {
-                if (staleBox) staleBox.className = 'stat-box box-danger';
-                if (staleIconWrapper) staleIconWrapper.className = 'stat-box-icon-wrapper theme-danger';
-                document.getElementById('stat-stale-docs').style.color = 'var(--danger-color)';
-                document.getElementById('stat-stale-docs-sub').textContent = t.staleDocsSubWarning(activeStaleDocsCount);
-                if (healthBadge) {
-                    healthBadge.textContent = t.badgeStale;
-                    healthBadge.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
-                    healthBadge.style.color = 'var(--danger-color)';
-                    healthBadge.style.borderColor = 'rgba(239, 68, 68, 0.2)';
-                }
-            } else {
-                if (staleBox) staleBox.className = 'stat-box box-success';
-                if (staleIconWrapper) staleIconWrapper.className = 'stat-box-icon-wrapper theme-success';
-                document.getElementById('stat-stale-docs').style.color = 'var(--success-color)';
-                document.getElementById('stat-stale-docs-sub').textContent = t.staleDocsSubClean;
-                if (healthBadge) {
-                    healthBadge.textContent = t.badgeSynced;
-                    healthBadge.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
-                    healthBadge.style.color = 'var(--success-color)';
-                    healthBadge.style.borderColor = 'rgba(16, 185, 129, 0.2)';
-                }
-            }
+              const staleBox = document.getElementById('box-stale-status');
+              const staleIconWrapper = document.getElementById('icon-stale-status');
+              const healthBadge = document.getElementById('stat-health-pct-badge');
+              if (activeStaleDocsCount > 0) {
+                  if (staleBox) staleBox.className = 'stat-box box-danger';
+                  if (staleIconWrapper) staleIconWrapper.className = 'stat-box-icon-wrapper theme-danger';
+                  document.getElementById('stat-stale-docs').style.color = 'var(--danger-color)';
+                  document.getElementById('stat-stale-docs-sub').textContent = t.staleDocsSubWarning(activeStaleDocsCount);
+                  if (healthBadge) {
+                      healthBadge.textContent = t.badgeStale;
+                      healthBadge.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                      healthBadge.style.color = 'var(--danger-color)';
+                      healthBadge.style.borderColor = 'rgba(239, 68, 68, 0.2)';
+                  }
+              } else {
+                  if (staleBox) staleBox.className = 'stat-box box-success';
+                  if (staleIconWrapper) staleIconWrapper.className = 'stat-box-icon-wrapper theme-success';
+                  document.getElementById('stat-stale-docs').style.color = 'var(--success-color)';
+                  document.getElementById('stat-stale-docs-sub').textContent = t.staleDocsSubClean;
+                  if (healthBadge) {
+                      healthBadge.textContent = t.badgeSynced;
+                      healthBadge.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+                      healthBadge.style.color = 'var(--success-color)';
+                      healthBadge.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+                  }
+              }
 
-            document.getElementById('count-all').textContent = graphNodesData.length;
-            document.getElementById('count-critical').textContent = graphNodesData.filter(n => n.weightedClass === 'critical').length;
-            document.getElementById('count-medium').textContent = graphNodesData.filter(n => n.weightedClass === 'medium').length;
-            document.getElementById('count-low').textContent = graphNodesData.filter(n => n.weightedClass === 'low').length;
-            document.getElementById('count-unlinked').textContent = graphNodesData.filter(n => !n.isLinkedActive).length;
-            document.getElementById('count-unenriched').textContent = graphNodesData.filter(n => !n.isEnriched).length;
+              document.getElementById('count-all').textContent = graphNodesData.length;
+              document.getElementById('count-critical').textContent = graphNodesData.filter(n => n.weightedClass === 'critical').length;
+              document.getElementById('count-medium').textContent = graphNodesData.filter(n => n.weightedClass === 'medium').length;
+              document.getElementById('count-low').textContent = graphNodesData.filter(n => n.weightedClass === 'low').length;
+              document.getElementById('count-unlinked-docs').textContent = graphNodesData.filter(n => !n.isLinkedActive).length;
+              document.getElementById('count-unlinked-code').textContent = graphNodesData.filter(n => !n.hasCodeDocActive).length;
+              document.getElementById('count-unenriched').textContent = graphNodesData.filter(n => !n.isEnriched).length;
+              const countNoOwnerEl = document.getElementById('count-no-owner');
+              if (countNoOwnerEl) {
+                  countNoOwnerEl.textContent = graphNodesData.filter(n => {
+                      const owner = n.owner || (n.semantic && n.semantic.owner);
+                      return !owner || owner === 'unknown' || owner === 'unassigned' || owner === 'none';
+                  }).length;
+              }
 
             const weightChartContainer = document.getElementById('node-weight-chart');
             if (weightChartContainer) {
@@ -1745,7 +2248,8 @@
                     const w = node.weightedClass || 'low';
                     if (weightDetails[w]) {
                         weightDetails[w].total++;
-                        if (!node.isLinkedActive) {
+                        const isUnlinked = verifyComments ? (!node.isLinkedActive || !node.hasCodeDocActive) : !node.isLinkedActive;
+                        if (isUnlinked) {
                             weightDetails[w].unlinked++;
                         } else if (!node.isEnriched) {
                             weightDetails[w].unenriched++;
@@ -1891,6 +2395,95 @@
             renderTable();
         }
 
+        function makeTableResizable(table) {
+            if (!table) return;
+            const cols = table.querySelectorAll('thead th');
+            cols.forEach((col, index) => {
+                if (index === 0 || col.getAttribute('data-i18n') === 'thDescription') return;
+                if (col.querySelector('.th-resizer')) return;
+
+                const resizer = document.createElement('div');
+                resizer.className = 'th-resizer';
+                col.appendChild(resizer);
+
+                let startX, startWidth;
+
+                resizer.addEventListener('mousedown', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    startX = e.pageX;
+                    startWidth = col.offsetWidth;
+                    resizer.classList.add('resizing');
+                    
+                    const onMouseMove = (e) => {
+                        const width = startWidth + (e.pageX - startX);
+                        if (width > 50) {
+                            col.style.width = width + 'px';
+                        }
+                    };
+
+                    const onMouseUp = () => {
+                        resizer.classList.remove('resizing');
+                        document.removeEventListener('mousemove', onMouseMove);
+                        document.removeEventListener('mouseup', onMouseUp);
+                    };
+
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                });
+            });
+        }
+
+        function renderTypeChart() {
+            const chartContainer = document.getElementById('node-type-chart');
+            if (!chartContainer) return;
+            chartContainer.innerHTML = '';
+            const typeCounts = {};
+            graphNodesData.forEach(node => {
+                const t = node.type || 'other';
+                typeCounts[t] = (typeCounts[t] || 0) + 1;
+            });
+            
+            const sortedTypes = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]);
+            const maxCount = Math.max(...sortedTypes.map(t => t[1])) || 1;
+            
+            sortedTypes.forEach(([type, count]) => {
+                const pct = (count / maxCount) * 100;
+                const wrapper = document.createElement('div');
+                wrapper.className = 'bar-column-wrapper';
+                
+                const bar = document.createElement('div');
+                bar.className = 'bar-column';
+                bar.style.height = `${pct}%`;
+                
+                const colors = {
+                    'file': 'linear-gradient(180deg, #2383e2 0%, rgba(35, 131, 226, 0.3) 100%)',
+                    'function': 'linear-gradient(180deg, #10b981 0%, rgba(16, 185, 129, 0.3) 100%)',
+                    'class': 'linear-gradient(180deg, #ea580c 0%, rgba(234, 88, 12, 0.3) 100%)',
+                    'interface': 'linear-gradient(180deg, #8b5cf6 0%, rgba(139, 92, 246, 0.3) 100%)',
+                    'variable': 'linear-gradient(180deg, #6b7280 0%, rgba(107, 114, 128, 0.3) 100%)'
+                };
+                if (colors[type]) {
+                    bar.style.background = colors[type];
+                }
+                
+                const valSpan = document.createElement('span');
+                valSpan.className = 'bar-value';
+                valSpan.textContent = count;
+                
+                const labelDiv = document.createElement('div');
+                labelDiv.className = 'bar-label';
+                const displayType = t['type' + type.charAt(0).toUpperCase() + type.slice(1)] || type;
+                labelDiv.textContent = displayType;
+                labelDiv.title = displayType;
+                
+                bar.appendChild(valSpan);
+                wrapper.appendChild(bar);
+                wrapper.appendChild(labelDiv);
+                chartContainer.appendChild(wrapper);
+            });
+        }
+
         function initializeDashboard() {
             for (const type of ['critical', 'medium', 'low']) {
                 const slider = document.getElementById(`weight-${type}-slider`);
@@ -1898,79 +2491,26 @@
                 if (slider) slider.value = activeWeights[type];
                 if (num) num.value = activeWeights[type];
             }
+            
+            const verifyCheckbox = document.getElementById('calib-verify-comments-checkbox');
+            if (verifyCheckbox) verifyCheckbox.checked = verifyComments;
 
-            const stats = dashboardStats;
             const scoreCard = document.querySelector('.score-card');
             if (scoreCard) {
-                scoreCard.title = t.tooltipHealthScore;
                 scoreCard.style.cursor = 'help';
             }
 
-            const docsBadge = document.getElementById('stat-docs-pct-badge');
-            if (docsBadge) docsBadge.title = t.tooltipDocsPct;
-            const nodesBadge = document.getElementById('stat-nodes-pct-badge');
-            if (nodesBadge) nodesBadge.title = t.tooltipNodesPct;
-            const godBadge = document.getElementById('stat-god-pct-badge');
-            if (godBadge) godBadge.title = t.tooltipGodPct;
-            const healthBadge = document.getElementById('stat-health-pct-badge');
-            if (healthBadge) healthBadge.title = t.tooltipHealthPct;
-
-            const chartContainer = document.getElementById('node-type-chart');
-            if (chartContainer) {
-                chartContainer.innerHTML = '';
-                const typeCounts = {};
-                graphNodesData.forEach(node => {
-                    const t = node.type || 'other';
-                    typeCounts[t] = (typeCounts[t] || 0) + 1;
-                });
-                
-                const sortedTypes = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]);
-                const maxCount = Math.max(...sortedTypes.map(t => t[1])) || 1;
-                
-                sortedTypes.forEach(([type, count]) => {
-                    const pct = (count / maxCount) * 100;
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'bar-column-wrapper';
-                    
-                    const bar = document.createElement('div');
-                    bar.className = 'bar-column';
-                    bar.style.height = `${pct}%`;
-                    
-                    const colors = {
-                        'file': 'linear-gradient(180deg, #2383e2 0%, rgba(35, 131, 226, 0.3) 100%)',
-                        'function': 'linear-gradient(180deg, #10b981 0%, rgba(16, 185, 129, 0.3) 100%)',
-                        'class': 'linear-gradient(180deg, #ea580c 0%, rgba(234, 88, 12, 0.3) 100%)',
-                        'interface': 'linear-gradient(180deg, #8b5cf6 0%, rgba(139, 92, 246, 0.3) 100%)',
-                        'variable': 'linear-gradient(180deg, #6b7280 0%, rgba(107, 114, 128, 0.3) 100%)'
-                    };
-                    if (colors[type]) {
-                        bar.style.background = colors[type];
-                    }
-                    
-                    const valSpan = document.createElement('span');
-                    valSpan.className = 'bar-value';
-                    valSpan.textContent = count;
-                    
-                    const labelDiv = document.createElement('div');
-                    labelDiv.className = 'bar-label';
-                    const displayType = t['type' + type.charAt(0).toUpperCase() + type.slice(1)] || type;
-                    labelDiv.textContent = displayType;
-                    labelDiv.title = displayType;
-                    
-                    bar.appendChild(valSpan);
-                    wrapper.appendChild(bar);
-                    wrapper.appendChild(labelDiv);
-                    chartContainer.appendChild(wrapper);
-                });
-            }
-
             renderFolderExclusionUI();
-            recalculateMetrics();
+            makeTableResizable(document.querySelector('.nodes-table'));
+
+            applyTranslations(lang);
             updateSortIcons();
         }
 
         let sortKey = 'degree';
         let sortDirection = 'desc';
+        let selectedNodeIds = new Set();
+        let currentFilteredNodes = [];
 
         function handleSort(key) {
             if (sortKey === key) {
@@ -1984,7 +2524,7 @@
         }
 
         function updateSortIcons() {
-            const keys = ['name', 'type', 'degree', 'blastRadius', 'status'];
+            const keys = ['name', 'type', 'degree', 'blastRadius', 'status', 'codeStatus'];
             keys.forEach(k => {
                 const iconSpan = document.getElementById(`sort-icon-${k}`);
                 if (iconSpan) {
@@ -2008,12 +2548,41 @@
             renderTable();
         }
 
+        let searchTimeout = null;
         function handleSearch() {
-            searchQuery = document.getElementById('node-search').value.toLowerCase().trim();
-            renderTable();
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchQuery = document.getElementById('node-search').value.toLowerCase().trim();
+                renderTable();
+            }, 150);
         }
 
         function renderTable() {
+            const thCodeHeader = document.getElementById('th-doc-links-code');
+            if (thCodeHeader) {
+                if (verifyComments) {
+                    thCodeHeader.style.opacity = '1';
+                    thCodeHeader.style.pointerEvents = 'auto';
+                } else {
+                    thCodeHeader.style.opacity = '0.4';
+                    thCodeHeader.style.pointerEvents = 'none';
+                }
+            }
+
+            const btnFilterCode = document.getElementById('btn-filter-unlinked-code');
+            if (btnFilterCode) {
+                if (verifyComments) {
+                    btnFilterCode.style.opacity = '1';
+                    btnFilterCode.style.pointerEvents = 'auto';
+                } else {
+                    btnFilterCode.style.opacity = '0.4';
+                    btnFilterCode.style.pointerEvents = 'none';
+                    if (currentFilter === 'unlinked-code') {
+                        setFilter('all');
+                    }
+                }
+            }
+
             const tbody = document.getElementById('nodes-table-body');
             tbody.innerHTML = '';
 
@@ -2029,11 +2598,18 @@
                 if (currentFilter === 'critical') return node.weightedClass === 'critical';
                 if (currentFilter === 'medium') return node.weightedClass === 'medium';
                 if (currentFilter === 'low') return node.weightedClass === 'low';
-                if (currentFilter === 'unlinked') return !node.isLinkedActive;
+                if (currentFilter === 'unlinked-docs') return !node.isLinkedActive;
+                if (currentFilter === 'unlinked-code') return !node.hasCodeDocActive;
                 if (currentFilter === 'unenriched') return !node.isEnriched;
+                if (currentFilter === 'no-owner') {
+                    const owner = node.owner || (node.semantic && node.semantic.owner);
+                    const hasOwner = owner && owner !== 'unknown' && owner !== 'unassigned' && owner !== 'none';
+                    return !hasOwner;
+                }
 
                 return true;
             });
+            currentFilteredNodes = filtered;
 
             filtered.sort((a, b) => {
                 let comparison = 0;
@@ -2053,9 +2629,9 @@
                 } else if (sortKey === 'blastRadius') {
                     comparison = (a.blastRadius || 0) - (b.blastRadius || 0);
                 } else if (sortKey === 'status') {
-                    const aStatus = a.isLinkedActive ? 1 : 0;
-                    const bStatus = b.isLinkedActive ? 1 : 0;
-                    comparison = aStatus - bStatus;
+                    comparison = (a.isLinkedActive ? 1 : 0) - (b.isLinkedActive ? 1 : 0);
+                } else if (sortKey === 'codeStatus') {
+                    comparison = (a.hasCodeDocActive ? 1 : 0) - (b.hasCodeDocActive ? 1 : 0);
                 }
                 
                 return sortDirection === 'asc' ? comparison : -comparison;
@@ -2068,6 +2644,7 @@
                 document.getElementById('no-nodes-found').style.display = 'none';
             }
 
+            const fragment = document.createDocumentFragment();
             filtered.forEach(node => {
                 const tr = document.createElement('tr');
                 tr.setAttribute('data-abspath', node.absoluteFilePath);
@@ -2075,9 +2652,16 @@
                 tr.setAttribute('data-nodename', node.name);
                 tr.setAttribute('data-nodeid', node.id);
 
+                // Add Checkbox column
+                const checkboxTd = document.createElement('td');
+                checkboxTd.style.textAlign = 'center';
+                const isChecked = selectedNodeIds.has(node.id);
+                checkboxTd.innerHTML = `<input type="checkbox" class="node-checkbox" data-node-id="${node.id}" ${isChecked ? 'checked' : ''} onchange="handleCheckboxChange(event, '${node.id}')" onmousedown="handleCheckboxMouseDown(event, '${node.id}')" onmouseenter="handleCheckboxMouseEnter(event, '${node.id}')" onclick="event.stopPropagation();">`;
+                tr.appendChild(checkboxTd);
+
                 const nameTd = document.createElement('td');
                 const staleBadge = node.isStale 
-                    ? `<span class="badge" style="background-color: rgba(234, 88, 12, 0.1); color: var(--warning-color); border: 1px solid rgba(234, 88, 12, 0.2); font-size: 10px; margin-left: 6px; display: inline-flex; align-items: center; gap: 3px; padding: 2px 5px;"><i data-lucide="alert-circle" style="width: 10px; height: 10px;"></i> ${t.badgeStale}</span>`
+                    ? `<span class="badge" style="background-color: rgba(234, 88, 12, 0.1); color: var(--warning-color); border: 1px solid rgba(234, 88, 12, 0.2); font-size: 10px; margin-left: 6px; display: inline-flex; align-items: center; gap: 3px; padding: 2px 5px;">${SVG_ALERT_CIRCLE} ${t.badgeStale}</span>`
                     : '';
                 nameTd.innerHTML = `
                     <div class="node-name-wrapper" style="position: relative; padding-right: 32px;">
@@ -2087,7 +2671,7 @@
                         </div>
                         <span class="node-path">${node.filePath}:${node.startLine}</span>
                         <button class="open-editor-btn" onclick="event.stopPropagation(); openFileInSystem('${node.absoluteFilePath}');" title="${t.openEditorTitle}" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 4px;">
-                            <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                            ${SVG_EXTERNAL_LINK}
                         </button>
                     </div>
                 `;
@@ -2101,7 +2685,7 @@
                 const degreeTd = document.createElement('td');
                 let weightBadge = '';
                 if (node.weightedClass === 'critical') {
-                    weightBadge = `<span class="badge badge-weight-critical"><i data-lucide="zap" style="width: 10px; height: 10px; fill: currentColor; fill-opacity: 0.15;"></i> ${t.badgeCritical}</span>`;
+                    weightBadge = `<span class="badge badge-weight-critical">${SVG_ZAP} ${t.badgeCritical}</span>`;
                 } else if (node.weightedClass === 'medium') {
                     weightBadge = `<span class="badge badge-weight-medium">${t.badgeMedium}</span>`;
                 } else {
@@ -2130,7 +2714,7 @@
                 blastRadiusTd.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items: flex-start;" title="${t.blastRadiusTooltip(node.blastRadius || 0)}">
                         <span class="badge ${blastRadiusClass}">
-                            <i data-lucide="flame" style="width: 10px; height: 10px;"></i>
+                            ${SVG_FLAME}
                             <strong>${node.blastRadius || 0}</strong>
                         </span>
                     </div>
@@ -2138,26 +2722,35 @@
                 tr.appendChild(blastRadiusTd);
 
                 const docsTd = document.createElement('td');
-                const docStatusBadge = node.isLinkedActive 
-                    ? `<span class="badge badge-status-linked"><i data-lucide="check-circle" style="width: 10px; height: 10px;"></i> ${t.badgeLinked}</span>`
-                    : `<span class="badge badge-status-unlinked"><i data-lucide="x-circle" style="width: 10px; height: 10px;"></i> ${t.badgeUnlinked}</span>`;
+                const codeTd = document.createElement('td');
                 
-                let anchorsHtml = '';
+                // 1. Anchor Status Badge (⚓ Tài liệu / Docs)
+                const anchorStatusBadge = node.isLinkedActive 
+                    ? `<span class="badge badge-status-linked">${SVG_CHECK_CIRCLE} ⚓ ${t.badgeLinkedDocs}</span>`
+                    : `<span class="badge badge-status-unlinked">${SVG_X_CIRCLE} ⚓ ${t.badgeUnlinkedDocs}</span>`;
+                
+                // 2. Code Reference Status Badge (💻 Comment)
+                let codeStatusBadge = '';
+                if (verifyComments) {
+                    codeStatusBadge = node.hasCodeDocActive
+                        ? `<span class="badge badge-status-linked">${SVG_CHECK_CIRCLE} 💻 ${t.badgeLinkedCode}</span>`
+                        : `<span class="badge badge-status-unlinked">${SVG_X_CIRCLE} 💻 ${t.badgeUnlinkedCode}</span>`;
+                } else {
+                    codeStatusBadge = `<span class="badge" style="opacity: 0.4; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-secondary); font-size: 10.5px; display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px;">💻 ${t.badgeLinkedCode}</span>`;
+                }
+                
+                let docAnchorsHtml = '';
+                // Render docAnchors (⚓ Docs -> Code)
                 if (node.docAnchors && node.docAnchors.length > 0) {
-                    anchorsHtml = '<div class="docs-links-container" style="margin-top: 6px;">';
                     node.docAnchors.forEach(anchor => {
                         const parts = anchor.split('#');
                         let docPath = parts[0];
-                        
                         if (docPath.startsWith('docs/')) {
                             docPath = docPath.substring(5);
                         } else {
                             const match = docPath.match(/Projects\/[^\/]+\/docs\/(.+)/);
-                            if (match) {
-                                docPath = match[1];
-                            }
+                            if (match) docPath = match[1];
                         }
-                        
                         const htmlPath = docPath.replace(/\.md$/, '.html');
                         const displayName = docPath.split('/').pop();
                         const hrefUrl = htmlPath + (parts[1] ? '#' + parts[1] : '');
@@ -2166,17 +2759,66 @@
                         const isExcluded = activeExclusions.includes(folder);
                         const excludedClass = isExcluded ? ' link-excluded' : '';
                         
-                        anchorsHtml += `<a href="${hrefUrl}" class="doc-link-item${excludedClass}" onclick="event.stopPropagation(); event.preventDefault(); if(!${isExcluded}) { window.parent.postMessage({ type: 'navigate', href: '${hrefUrl}', baseUrl: window.location.href }, '*'); }"><i data-lucide="link" style="width: 10px; height: 10px;"></i> ${displayName}</a>`;
+                        docAnchorsHtml += `<a href="${hrefUrl}" class="doc-link-item${excludedClass}" style="margin-top: 3px;" onclick="event.stopPropagation(); event.preventDefault(); if(!${isExcluded}) { window.parent.postMessage({ type: 'navigate', href: '${hrefUrl}', baseUrl: window.location.href }, '*'); }">${SVG_LINK} ⚓ ${displayName}${parts[1] ? '#' + parts[1] : ''}</a>`;
                     });
-                    anchorsHtml += '</div>';
                 }
+                
+                let codeDocsHtml = '';
+                // Render codeDocs (💻 Code -> Docs)
+                if (node.codeDocs && node.codeDocs.length > 0) {
+                    node.codeDocs.forEach(codeDoc => {
+                        const parts = codeDoc.split('#');
+                        let docPath = parts[0];
+                        if (docPath.startsWith('docs/')) {
+                            docPath = docPath.substring(5);
+                        } else {
+                            const match = docPath.match(/Projects\/[^\/]+\/docs\/(.+)/);
+                            if (match) docPath = match[1];
+                        }
+                        const htmlPath = docPath.replace(/\.md$/, '.html');
+                        const displayName = docPath.split('/').pop();
+                        const hrefUrl = htmlPath + (parts[1] ? '#' + parts[1] : '');
+                        
+                        const folder = getAnchorFolder(codeDoc);
+                        const isExcluded = activeExclusions.includes(folder);
+                        const excludedClass = isExcluded ? ' link-excluded' : '';
+                        
+                        const disabledStyle = !verifyComments ? ' opacity: 0.4; pointer-events: none;' : '';
+                        
+                        codeDocsHtml += `<a href="${hrefUrl}" class="doc-link-item${excludedClass}" style="margin-top: 3px;${disabledStyle}" onclick="event.stopPropagation(); event.preventDefault(); if(!${isExcluded} && ${verifyComments}) { window.parent.postMessage({ type: 'navigate', href: '${hrefUrl}', baseUrl: window.location.href }, '*'); }">${SVG_LINK} 💻 ${displayName}${parts[1] ? '#' + parts[1] : ''}</a>`;
+                    });
+                }
+                
+                let anchorsContainerHtml = '';
+                if (docAnchorsHtml) {
+                    anchorsContainerHtml = `<div class="docs-links-container" style="margin-top: 6px; display: flex; flex-direction: column; gap: 4px;">${docAnchorsHtml}</div>`;
+                }
+                
+                let codeContainerHtml = '';
+                if (codeDocsHtml) {
+                    codeContainerHtml = `<div class="docs-links-container" style="margin-top: 6px; display: flex; flex-direction: column; gap: 4px;">${codeDocsHtml}</div>`;
+                }
+
                 docsTd.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                        <div>${docStatusBadge}</div>
-                        ${anchorsHtml}
+                        <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 2px;">
+                            ${anchorStatusBadge}
+                        </div>
+                        ${anchorsContainerHtml}
                     </div>
                 `;
+                
+                codeTd.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                        <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 2px;">
+                            ${codeStatusBadge}
+                        </div>
+                        ${codeContainerHtml}
+                    </div>
+                `;
+                
                 tr.appendChild(docsTd);
+                tr.appendChild(codeTd);
 
                 const descTd = document.createElement('td');
                 const enrichedBadge = node.isEnriched
@@ -2192,10 +2834,273 @@
                 `;
                 tr.appendChild(descTd);
 
-                tbody.appendChild(tr);
+                fragment.appendChild(tr);
             });
 
-            lucide.createIcons();
+            tbody.appendChild(fragment);
+
+            updateBatchBar();
+            updateSelectAllCheckboxState();
+        }
+
+        // Batch operations logic for Docs Dashboard
+        function updateSelectAllCheckboxState() {
+            const checkbox = document.getElementById('select-all-nodes-checkbox');
+            if (!checkbox) return;
+            
+            if (currentFilteredNodes.length === 0) {
+                checkbox.checked = false;
+                checkbox.disabled = true;
+                return;
+            }
+            checkbox.disabled = false;
+            
+            const allSelected = currentFilteredNodes.every(node => selectedNodeIds.has(node.id));
+            checkbox.checked = allSelected;
+        }
+
+        window.toggleNodeSelect = function(nodeId, isChecked) {
+            if (isChecked) {
+                selectedNodeIds.add(nodeId);
+            } else {
+                selectedNodeIds.delete(nodeId);
+            }
+            updateBatchBar();
+            updateSelectAllCheckboxState();
+        }
+
+        window.toggleSelectAllNodes = function(isChecked) {
+            currentFilteredNodes.forEach(node => {
+                if (isChecked) {
+                    selectedNodeIds.add(node.id);
+                } else {
+                    selectedNodeIds.delete(node.id);
+                }
+            });
+            
+            // Sync all row checkboxes on screen
+            const checkboxes = document.querySelectorAll('.node-checkbox');
+            checkboxes.forEach(cb => {
+                const nodeId = cb.getAttribute('data-node-id');
+                if (nodeId && currentFilteredNodes.some(n => n.id === nodeId)) {
+                    cb.checked = isChecked;
+                }
+            });
+            
+            const headerCheckbox = document.getElementById('select-all-nodes-checkbox');
+            if (headerCheckbox) headerCheckbox.checked = isChecked;
+            
+            updateBatchBar();
+            updateSelectAllCheckboxState();
+        }
+
+        window.selectQuick = function(count) {
+            let added = 0;
+            for (let node of currentFilteredNodes) {
+                if (!selectedNodeIds.has(node.id)) {
+                    selectedNodeIds.add(node.id);
+                    added++;
+                    if (added >= count) break;
+                }
+            }
+            
+            // Refresh table to update all checkboxes easily
+            renderTable();
+        }
+
+        function updateBatchBar() {
+            const bar = document.getElementById('batch-actions-bar');
+            const countBadge = document.getElementById('batch-selected-count');
+            if (!bar || !countBadge) return;
+            
+            const count = selectedNodeIds.size;
+            countBadge.textContent = count;
+            
+            if (count > 0) {
+                bar.style.display = 'flex';
+            } else {
+                bar.style.display = 'none';
+            }
+        }
+
+        let lastCheckedId = null;
+        let isDraggingCheckboxes = false;
+        let dragCheckedState = false;
+
+        window.handleCheckboxMouseDown = function(event, nodeId) {
+            event.stopPropagation();
+            
+            if (event.shiftKey && lastCheckedId) {
+                event.preventDefault();
+                const targetState = !selectedNodeIds.has(nodeId);
+                performRangeSelect(lastCheckedId, nodeId, targetState);
+                lastCheckedId = nodeId;
+                return;
+            }
+            
+            isDraggingCheckboxes = true;
+            const checkbox = event.target;
+            dragCheckedState = !checkbox.checked;
+        };
+
+        window.handleCheckboxMouseEnter = function(event, nodeId) {
+            if (!isDraggingCheckboxes) return;
+            event.stopPropagation();
+            
+            toggleNodeSelect(nodeId, dragCheckedState);
+            
+            const checkbox = document.querySelector(`.node-checkbox[data-node-id="${nodeId}"]`);
+            if (checkbox) {
+                checkbox.checked = dragCheckedState;
+            }
+        };
+
+        window.handleCheckboxChange = function(event, nodeId) {
+            event.stopPropagation();
+            const checkbox = event.target;
+            toggleNodeSelect(nodeId, checkbox.checked);
+            lastCheckedId = nodeId;
+        };
+
+        function performRangeSelect(startId, endId, isChecked) {
+            if (currentFilteredNodes.length === 0) return;
+            
+            const startIndex = currentFilteredNodes.findIndex(n => n.id === startId);
+            const endIndex = currentFilteredNodes.findIndex(n => n.id === endId);
+            
+            if (startIndex === -1 || endIndex === -1) return;
+            
+            const minIndex = Math.min(startIndex, endIndex);
+            const maxIndex = Math.max(startIndex, endIndex);
+            
+            for (let i = minIndex; i <= maxIndex; i++) {
+                const node = currentFilteredNodes[i];
+                if (isChecked) {
+                    selectedNodeIds.add(node.id);
+                } else {
+                    selectedNodeIds.delete(node.id);
+                }
+                
+                const checkbox = document.querySelector(`.node-checkbox[data-node-id="${node.id}"]`);
+                if (checkbox) {
+                    checkbox.checked = isChecked;
+                }
+            }
+            
+            updateBatchBar();
+            updateSelectAllCheckboxState();
+        }
+
+        window.addEventListener('mouseup', () => {
+            isDraggingCheckboxes = false;
+        });
+
+        window.togglePromptDropdown = function(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('batch-prompt-menu');
+            if (!dropdown) return;
+            const isVisible = dropdown.style.display === 'block';
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        };
+
+        window.closePromptDropdown = function() {
+            const dropdown = document.getElementById('batch-prompt-menu');
+            if (dropdown) dropdown.style.display = 'none';
+        };
+
+        document.addEventListener('click', function(event) {
+            const dropdownWrapper = document.querySelector('.prompt-dropdown-wrapper');
+            if (dropdownWrapper && !dropdownWrapper.contains(event.target)) {
+                closePromptDropdown();
+            }
+        });
+
+        window.copyBatchPrompt = function(promptType = 'write-docs', event) {
+            if (event) event.stopPropagation();
+            if (selectedNodeIds.size === 0) return;
+            
+            const selectedNodes = graphNodesData.filter(n => selectedNodeIds.has(n.id));
+            let nodeDetailsText = '';
+            
+            selectedNodes.forEach((n, idx) => {
+                const summary = n.isEnriched && n.summary ? n.summary : 'Chưa có thông tin tóm tắt semantic.';
+                const owner = n.owner || (n.semantic && n.semantic.owner) || 'Chưa phân công (unknown)';
+                nodeDetailsText += `${idx + 1}. **${n.name}** (${n.type} | \`${n.filePath}\`):\n   - Trạng thái hiện tại: ${summary}\n   - Người phụ trách: ${owner}\n   - Degree (Indegree/Outdegree): ${n.degree || 0} (${n.indegree || 0}/${n.outdegree || 0})\n   - Blast Radius: ${n.blastRadius || 0}\n\n`;
+            });
+            
+            let promptText = '';
+            let promptName = '';
+            
+            if (promptType === 'write-docs') {
+                promptName = 'Viết tài liệu kỹ thuật';
+                promptText = `Tôi cần bạn phân tích các cấu phần mã nguồn sau đây và viết tài liệu hướng dẫn kỹ thuật chi tiết (đặc tả kiến trúc, chức năng, danh sách API, tham số đầu vào/đầu ra và các ví dụ thực tế) bằng định dạng Markdown cho chúng:\n\n${nodeDetailsText}Hãy viết tài liệu thật chi tiết, có cấu trúc tốt, rõ ràng và dễ hiểu cho các lập trình viên khác phát triển tiếp.`;
+            } else if (promptType === 'update-stale') {
+                promptName = 'Cập nhật tài liệu cũ';
+                promptText = `Các cấu phần sau đây trong hệ thống được đánh dấu là có tài liệu bị lỗi thời (stale), không khớp với logic code thực tế:\n\n${nodeDetailsText}Hãy giúp tôi rà soát, viết prompt hoặc cập nhật lại tài liệu đặc tả của chúng để đảm bảo tính đồng bộ hoàn toàn với logic mã nguồn hiện tại.`;
+            } else if (promptType === 'write-summary') {
+                promptName = 'Viết mô tả AI';
+                promptText = `Hãy phân tích logic hoạt động của các cấu phần mã nguồn sau đây và viết một đoạn tóm tắt nghiệp vụ ngắn gọn (semantic summary) khoảng 2-3 câu bằng tiếng Việt giải thích chức năng, mục tiêu của cấu phần đó:\n\n${nodeDetailsText}Đảm bảo các tóm tắt rõ ràng, súc tích và tập trung vào khía cạnh nghiệp vụ thực tế của cấu phần để nạp vào metadata đồ thị code.`;
+            } else if (promptType === 'assign-owner') {
+                promptName = 'Đề xuất phân công (Owner)';
+                promptText = `Dựa trên dữ liệu phân tích tầm ảnh hưởng (Blast Radius, Degree) và thông tin đường dẫn file của các cấu phần sau đây:\n\n${nodeDetailsText}Hãy phân tích mức độ phức tạp, tầm quan trọng và đề xuất phân công nhân sự (gán Owner) phù hợp cho từng cấu phần. Giải thích rõ lý do đề xuất dựa trên mức độ ảnh hưởng của chúng đối với hệ thống.`;
+            } else if (promptType === 'link-graph-docs') {
+                promptName = lang === 'vi' ? 'Gán neo đồ thị (Docs ➔ Code)' : 'Link Graph Anchoring (Docs ➔ Code)';
+                promptText = lang === 'vi' 
+                    ? `Tôi muốn liên kết tài liệu đặc tả (Markdown) với các cấu phần mã nguồn (Code Entities) tương ứng bằng cách sử dụng cú pháp neo đồ thị \`<!-- @graph-node: nodeId -->\`:\n\n${nodeDetailsText}Hãy đề xuất file tài liệu nào (ví dụ: docs/specs/xxx.md hoặc docs/README.md) phù hợp nhất cho từng cấu phần và chỉ rõ vị trí + cách thức chèn đoạn comment HTML \`<!-- @graph-node: nodeId -->\` tương ứng vào trong file tài liệu đó để xây dựng liên kết xuôi (Docs ➔ Code).`
+                    : `I want to link my specification documents (Markdown) with the corresponding code entities using the graph anchoring syntax \`<!-- @graph-node: nodeId -->\`:\n\n${nodeDetailsText}Please suggest which documentation file (e.g. docs/specs/xxx.md or docs/README.md) is best suited for each entity and specify the exact location + format of the HTML comment \`<!-- @graph-node: nodeId -->\` to establish the forward link (Docs ➔ Code).`;
+            } else if (promptType === 'link-code-docs') {
+                promptName = lang === 'vi' ? 'Chèn comment neo (Code ➔ Docs)' : 'Insert Code References (Code ➔ Docs)';
+                promptText = lang === 'vi' 
+                    ? `Tôi muốn liên kết các cấu phần mã nguồn với tài liệu đặc tả của chúng bằng cách chèn các comment neo \`// @para-doc [file.md#anchor]\` vào trong mã nguồn:\n\n${nodeDetailsText}Hãy hướng dẫn tôi cách chèn comment \`// @para-doc [đường_dẫn_tài_liệu.md#neo]\` chuẩn xác ngay trên dòng định nghĩa của từng cấu phần trong file mã nguồn. Đề xuất cụ thể đường dẫn tài liệu (file.md) và anchor (#neo) phù hợp nhất cho mỗi cấu phần để thiết lập liên kết ngược (Code ➔ Docs).`
+                    : `I want to link my source code entities back to their specification documents by inserting code reference comments \`// @para-doc [file.md#anchor]\` directly into the source code:\n\n${nodeDetailsText}Please guide me on how to insert the comment \`// @para-doc [path_to_doc.md#anchor]\` accurately right above the definition of each component in the source code. Suggest the best documentation file path and anchor (#anchor) for each entity to establish the backward link (Code ➔ Docs).`;
+            } else if (promptType === 'risk-analysis') {
+                promptName = 'Đánh giá rủi ro thiết kế';
+                promptText = `Tôi đang có kế hoạch refactor hoặc sửa đổi các cấu phần sau đây:\n\n${nodeDetailsText}Vì các cấu phần này có thể có tầm ảnh hưởng lớn (Blast Radius cao) hoặc độ liên kết phức tạp (Degree cao), hãy thực hiện đánh giá rủi ro thiết kế hệ thống chi tiết. Nêu rõ các module hạ nguồn có khả năng bị ảnh hưởng, các kịch bản lỗi có thể xảy ra và đề xuất phương án giảm thiểu rủi ro (mitigation plan).`;
+            }
+            
+            navigator.clipboard.writeText(promptText).then(() => {
+                showToast(`Đã sao chép prompt "${promptName}" cho ${selectedNodes.length} node!`);
+                closePromptDropdown();
+            }).catch(err => {
+                showToast('Không thể sao chép. Vui lòng thử lại.');
+            });
+        }
+
+        window.copyBatchMarkdown = function() {
+            if (selectedNodeIds.size === 0) return;
+            
+            const selectedNodes = graphNodesData.filter(n => selectedNodeIds.has(n.id));
+            let mdText = `# Danh sách các cấu phần được chọn (${selectedNodes.length} cấu phần)\n\n`;
+            
+            selectedNodes.forEach(n => {
+                mdText += `- [ ] **${n.name}** (\`${n.filePath}\` | *${n.type}*)\n`;
+            });
+            
+            navigator.clipboard.writeText(mdText).then(() => {
+                showToast(`Đã sao chép danh sách Markdown của ${selectedNodes.length} node!`);
+            }).catch(err => {
+                showToast('Không thể sao chép.');
+            });
+        }
+
+        window.copyBatchJson = function() {
+            if (selectedNodeIds.size === 0) return;
+            
+            const selectedNodes = graphNodesData.filter(n => selectedNodeIds.has(n.id));
+            const minimalData = selectedNodes.map(n => ({
+                id: n.id,
+                name: n.name,
+                type: n.type,
+                filePath: n.filePath,
+                docAnchors: n.docAnchors || [],
+                owner: n.owner || (n.semantic && n.semantic.owner) || 'unknown'
+            }));
+            
+            navigator.clipboard.writeText(JSON.stringify(minimalData, null, 2)).then(() => {
+                showToast(`Đã sao chép JSON của ${selectedNodes.length} node!`);
+            }).catch(err => {
+                showToast('Không thể sao chép.');
+            });
         }
 
         // --- Inline Feedback Selection Logic ---

@@ -275,6 +275,134 @@
         .dot-interface { background-color: var(--color-interface); }
         .dot-variable { background-color: var(--color-variable); }
 
+        /* Special Filters Checkbox group spacing */
+        .special-filters-group {
+            margin-top: 10px;
+        }
+
+        /* Batch Action Panel Styles */
+        .batch-panel {
+            background-color: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 20px;
+            display: none; /* Hidden by default, shown when node selected */
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .batch-panel.active {
+            display: flex;
+        }
+
+        .batch-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .batch-selection-count {
+            color: var(--accent-color);
+            background-color: rgba(35, 131, 226, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .batch-quick-select {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+
+        .batch-btn {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 5px 2px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .batch-btn:hover {
+            background-color: var(--hover-color);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .batch-actions-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .batch-action-execute-btn {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border: none;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .batch-action-execute-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .batch-secondary-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .batch-secondary-btn {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+
+        .batch-secondary-btn:hover {
+            background-color: var(--hover-color);
+            border-color: var(--text-secondary);
+        }
+
+        /* Checkbox in node-list-item styling */
+        .node-list-item-checkbox {
+            margin-right: 6px;
+            width: 13px;
+            height: 13px;
+            cursor: pointer;
+            accent-color: var(--accent-color);
+            flex-shrink: 0;
+            align-self: center;
+        }
+
         .slider-wrapper {
             display: flex;
             align-items: center;
@@ -862,6 +990,50 @@
                 </div>
             </div>
 
+            <div class="sidebar-section">
+                <h3><i data-lucide="shield-alert" style="width: 14px; height: 14px;"></i> /* TRANSLATE:specialFilters */</h3>
+                <div class="control-group special-filters-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="filter-no-anchors">
+                        <span>/* TRANSLATE:noAnchors */</span>
+                    </label>
+                    <label class="checkbox-label" style="margin-top: 8px;">
+                        <input type="checkbox" id="filter-no-owner">
+                        <span>/* TRANSLATE:noOwner */</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Batch Actions Panel -->
+            <div class="batch-panel" id="batch-actions-panel">
+                <div class="batch-header">
+                    <span>/* TRANSLATE:batchActions */</span>
+                    <span class="batch-selection-count" id="batch-selected-count">0</span>
+                </div>
+                <div class="batch-quick-select">
+                    <button class="batch-btn" onclick="selectQuick(5)">/* TRANSLATE:select5 */</button>
+                    <button class="batch-btn" onclick="selectQuick(10)">/* TRANSLATE:select10 */</button>
+                    <button class="batch-btn" onclick="selectAllFiltered()">/* TRANSLATE:selectAll */</button>
+                    <button class="batch-btn" onclick="deselectAll()">/* TRANSLATE:deselectAll */</button>
+                </div>
+                <div class="batch-actions-grid">
+                    <button class="batch-action-execute-btn" onclick="copyBatchPrompt()">
+                        <i data-lucide="sparkles" style="width: 12px; height: 12px;"></i>
+                        <span>/* TRANSLATE:copyPrompt */</span>
+                    </button>
+                    <div class="batch-secondary-actions">
+                        <button class="batch-secondary-btn" onclick="copyBatchMarkdown()">
+                            <i data-lucide="file-text" style="width: 12px; height: 12px;"></i>
+                            <span>/* TRANSLATE:copyMarkdown */</span>
+                        </button>
+                        <button class="batch-secondary-btn" onclick="copyBatchJson()">
+                            <i data-lucide="code" style="width: 12px; height: 12px;"></i>
+                            <span>/* TRANSLATE:copyJson */</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Node list scroll container -->
             <div class="node-list-container" id="node-list">
                 <!-- Populated dynamically -->
@@ -1027,6 +1199,7 @@
         let selectedNode = null;
         let highlightedNodes = new Set();
         let highlightedLinks = new Set();
+        let selectedNodeIds = new Set();
         let Graph = null;
         
         // Initialize App
@@ -1144,6 +1317,10 @@
 
             // Confidence check
             document.getElementById('filter-high-confidence').addEventListener('change', updateFilters);
+
+            // Special Filters Checkboxes
+            document.getElementById('filter-no-anchors').addEventListener('change', updateFilters);
+            document.getElementById('filter-no-owner').addEventListener('change', updateFilters);
         }
 
         // Filter and update Graph
@@ -1158,6 +1335,8 @@
             };
             const minDegree = parseInt(document.getElementById('degree-slider').value);
             const highConfidenceOnly = document.getElementById('filter-high-confidence').checked;
+            const filterNoAnchors = document.getElementById('filter-no-anchors').checked;
+            const filterNoOwner = document.getElementById('filter-no-owner').checked;
 
             // Recalculate degrees for filtered links
             const nodeDegree = {};
@@ -1200,7 +1379,20 @@
                 }
                 const matchesType = showTypes[n.type];
                 const matchesDegree = nodeDegree[n.id] >= minDegree;
-                return matchesSearch && matchesType && matchesDegree;
+
+                // Special Filters Check
+                let matchesSpecial = true;
+                if (filterNoAnchors) {
+                    const hasAnchors = (n.docAnchors && n.docAnchors.length > 0) || (n.semantic && n.semantic.docAnchors && n.semantic.docAnchors.length > 0);
+                    if (hasAnchors) matchesSpecial = false;
+                }
+                if (filterNoOwner) {
+                    const owner = n.owner || (n.semantic && n.semantic.owner);
+                    const hasOwner = owner && owner !== 'unknown' && owner !== 'unassigned' && owner !== 'none';
+                    if (hasOwner) matchesSpecial = false;
+                }
+
+                return matchesSearch && matchesType && matchesDegree && matchesSpecial;
             });
 
             const filteredNodeIds = new Set(filteredNodes.map(n => n.id));
@@ -1222,8 +1414,12 @@
             renderNodeList(filteredNodes);
         }
 
+        // Store currently displayed filtered nodes for batch operations
+        let currentFilteredNodes = [];
+
         // Render Sidebar List
         function renderNodeList(nodesList) {
+            currentFilteredNodes = nodesList;
             const container = document.getElementById('node-list');
             container.innerHTML = '';
             
@@ -1246,7 +1442,9 @@
                 else if (node.type === 'variable') { iconName = 'hash'; iconColor = 'var(--color-variable)'; }
 
                 const fileSub = node.filePath ? `<span class="node-list-sub">${node.filePath}</span>` : '';
+                const isChecked = selectedNodeIds.has(node.id);
                 item.innerHTML = `
+                    <input type="checkbox" class="node-list-item-checkbox" data-node-id="${node.id}" ${isChecked ? 'checked' : ''}>
                     <i data-lucide="${iconName}" class="node-type-icon" style="color: ${iconColor};"></i>
                     <div class="node-list-text">
                         <span class="node-list-title">${node.name}</span>
@@ -1254,6 +1452,21 @@
                     </div>
                 `;
                 
+                // Prevent click propagation on checkbox to avoid selecting single node details
+                const checkbox = item.querySelector('.node-list-item-checkbox');
+                checkbox.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+                checkbox.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        selectedNodeIds.add(node.id);
+                    } else {
+                        selectedNodeIds.delete(node.id);
+                    }
+                    updateBatchPanel();
+                    Graph.refresh();
+                });
+
                 item.addEventListener('click', () => {
                     selectNode(node);
                     // Focus camera on node
@@ -1264,6 +1477,107 @@
                 container.appendChild(item);
             });
             lucide.createIcons({attrs: {"style": "width: 14px; height: 14px;"}});
+            updateBatchPanel();
+        }
+
+        // Batch operations helpers
+        window.selectQuick = function(count) {
+            let added = 0;
+            for (let node of currentFilteredNodes) {
+                if (!selectedNodeIds.has(node.id)) {
+                    selectedNodeIds.add(node.id);
+                    added++;
+                    if (added >= count) break;
+                }
+            }
+            updateFilters(); // Re-render list to update checkboxes
+            Graph.refresh();
+        }
+
+        window.selectAllFiltered = function() {
+            currentFilteredNodes.forEach(node => {
+                selectedNodeIds.add(node.id);
+            });
+            updateFilters();
+            Graph.refresh();
+        }
+
+        window.deselectAll = function() {
+            selectedNodeIds.clear();
+            updateFilters();
+            Graph.refresh();
+        }
+
+        function updateBatchPanel() {
+            const panel = document.getElementById('batch-actions-panel');
+            const countBadge = document.getElementById('batch-selected-count');
+            
+            if (!panel || !countBadge) return;
+            const count = selectedNodeIds.size;
+            countBadge.textContent = count;
+            
+            if (count > 0) {
+                panel.classList.add('active');
+            } else {
+                panel.classList.remove('active');
+            }
+        }
+
+        window.copyBatchPrompt = function() {
+            if (selectedNodeIds.size === 0) return;
+            
+            const selectedNodes = GRAPH_DATA.nodes.filter(n => selectedNodeIds.has(n.id));
+            let nodeDetailsText = '';
+            
+            selectedNodes.forEach((n, idx) => {
+                const summary = n.semantic && n.semantic.summary ? n.semantic.summary : 'Chưa có thông tin tóm tắt semantic.';
+                nodeDetailsText += `${idx + 1}. **${n.name}** (${n.type} | \`${n.filePath}\`):\n   - Trạng thái hiện tại: ${summary}\n\n`;
+            });
+            
+            const promptText = `Tôi cần bạn phân tích và bổ sung thông tin nghiệp vụ/tài liệu hướng dẫn hoặc gán lại nhân sự phụ trách cho các cấu phần sau đây trong codebase:\n\n${nodeDetailsText}Hãy giúp tôi viết tài liệu đặc tả chi tiết cho các cấu phần này hoặc xác định logic hoạt động của chúng.`;
+            
+            navigator.clipboard.writeText(promptText).then(() => {
+                showToast(`Đã sao chép prompt AI cho ${selectedNodes.length} node!`);
+            }).catch(err => {
+                showToast('Không thể sao chép. Vui lòng thử lại.');
+            });
+        }
+
+        window.copyBatchMarkdown = function() {
+            if (selectedNodeIds.size === 0) return;
+            
+            const selectedNodes = GRAPH_DATA.nodes.filter(n => selectedNodeIds.has(n.id));
+            let mdText = `# Danh sách các cấu phần được chọn (${selectedNodes.length} cấu phần)\n\n`;
+            
+            selectedNodes.forEach(n => {
+                mdText += `- [ ] **${n.name}** (\`${n.filePath}\` | *${n.type}*)\n`;
+            });
+            
+            navigator.clipboard.writeText(mdText).then(() => {
+                showToast(`Đã sao chép danh sách Markdown của ${selectedNodes.length} node!`);
+            }).catch(err => {
+                showToast('Không thể sao chép.');
+            });
+        }
+
+        window.copyBatchJson = function() {
+            if (selectedNodeIds.size === 0) return;
+            
+            const selectedNodes = GRAPH_DATA.nodes.filter(n => selectedNodeIds.has(n.id));
+            const minimalData = selectedNodes.map(n => ({
+                id: n.id,
+                name: n.name,
+                type: n.type,
+                filePath: n.filePath,
+                docAnchors: n.docAnchors || (n.semantic && n.semantic.docAnchors) || [],
+                owner: n.owner || (n.semantic && n.semantic.owner) || 'unknown'
+            }));
+            
+            navigator.clipboard.writeText(JSON.stringify(minimalData, null, 2)).then(() => {
+                showToast(`Đã sao chép JSON của ${selectedNodes.length} node!`);
+            }).catch(err => {
+                showToast('Không thể sao chép.');
+            });
         }
 
         function initNodeList() {
@@ -1768,6 +2082,20 @@
                         ctx.strokeStyle = '#ffffff';
                         ctx.lineWidth = 2.5;
                         ctx.stroke();
+                    } else if (selectedNodeIds.has(node.id)) {
+                        // Drawing highlighted orange outline for multi-selected nodes
+                        ctx.strokeStyle = '#f39c12';
+                        ctx.lineWidth = 2.0;
+                        ctx.stroke();
+                        
+                        // Additional dotted outer ring
+                        ctx.beginPath();
+                        ctx.arc(node.x, node.y, size + 3, 0, 2 * Math.PI, false);
+                        ctx.strokeStyle = '#f39c12';
+                        ctx.lineWidth = 1.0;
+                        ctx.setLineDash([2, 2]);
+                        ctx.stroke();
+                        ctx.setLineDash([]); // Reset line dash
                     } else if (highlightedNodes.has(node.id)) {
                         if (window.currentImpact) {
                             if (window.currentImpact.upstreamNodes.has(node.id)) {

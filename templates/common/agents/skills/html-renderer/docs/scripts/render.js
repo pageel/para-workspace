@@ -92,36 +92,56 @@ const translations = {
         calloutWarning: "Cảnh báo:",
         calloutCaution: "Lưu ý nguy hiểm:",
         // Quality Dashboard translations
-        dashboardTitle: "Đồ thị Chất lượng Tài liệu (Docs Quality Dashboard)",
-        dashboardSubtitle: "Đo lường độ bao phủ tài liệu kỹ thuật dựa trên phân tích trọng số Code-Graph.",
-        scoreCardTitle: "Docs Health Score",
+        dashboardTitle: "Bảng điều khiển Chất lượng Tài liệu",
+        dashboardSubtitle: "Đo lường độ bao phủ tài liệu kỹ thuật dựa trên phân tích trọng số Đồ thị Mã nguồn.",
+        scoreCardTitle: "Điểm Sức khỏe Tài liệu",
         scoreLabel: "Điểm số",
         totalDocs: "Tổng số tài liệu",
-        graphNodes: "Nodes Đồ thị",
-        businessGodNodes: "God Nodes Nghiệp vụ",
+        graphNodes: "Cấu phần Đồ thị",
+        businessGodNodes: "Thành phần Lõi Nghiệp vụ (God Nodes)",
         healthStatus: "Trạng thái Sức khỏe",
-        entityTypeDistribution: "Phân bố Thành phần mã (Entity Type Distribution)",
-        weightDistribution: "Phân loại theo Trọng số (Weight Distribution)",
+        entityTypeDistribution: "Phân bố theo Loại Cấu phần",
+        weightDistribution: "Phân loại theo Trọng số Đồ thị",
         legendCompleted: "Đạt chuẩn (Đầy đủ)",
-        legendUnlinked: "Chưa gán link (Unlinked)",
-        legendUnenriched: "Chưa mô tả AI (Unenriched)",
+        legendUnlinked: "Chưa liên kết",
+        legendUnenriched: "Chưa mô tả AI",
         explorerTitle: "Trình duyệt Đồ thị Mã & Neo tài liệu",
         searchPlaceholderNodes: "Tìm kiếm node theo tên, file...",
         filterAll: "Tất cả",
         filterCritical: "Cốt lõi (Trọng số 5)",
         filterMedium: "Trung bình",
-        filterLow: "Bổ trợ",
         filterUnlinked: "Chưa gắn link",
+        filterUnlinkedDocs: "Chưa neo (Docs ➔ Code)",
+        filterUnlinkedCode: "Chưa cmt (Code ➔ Docs)",
         filterUnenriched: "Chưa mô tả AI",
-        thNodeEntity: "Thành phần mã (Node Entity)",
+        filterNoOwner: "Chưa gán người phụ trách",
+        badgeNoOwner: "Chưa gán người phụ trách",
+        batchActions: "Thao tác hàng loạt",
+        copyPrompt: "Sao chép Prompt AI",
+        copyMarkdown: "Sao chép Markdown List",
+        copyJson: "Sao chép JSON",
+        select5: "Chọn 5",
+        select10: "Chọn 10",
+        selectAll: "Chọn tất cả",
+        deselectAll: "Bỏ chọn",
+        thNodeEntity: "Cấu phần Mã (Entity)",
         thType: "Phân loại",
-        thWeightDegree: "Trọng số / Degree",
-        thBlastRadius: "Bán kính ảnh hưởng (Blast)",
-        thDocLinks: "Liên kết tài liệu (docAnchors)",
+        thWeightDegree: "Trọng số / Độ kết nối (Degree)",
+        thBlastRadius: "Bán kính ảnh hưởng (Blast Radius)",
+        thDocLinks: "Liên kết Tài liệu",
+        thDocLinksDocs: "Docs ➔ Code (Neo)",
+        thDocLinksCode: "Code ➔ Docs (Cmt)",
         thDescription: "Mô tả / Ngữ nghĩa Hệ thống",
         hotspotsTitle: "⚠️ Điểm nóng ưu tiên",
         hotspotsSubtitle: "Thành phần ảnh hưởng lớn cần viết tài liệu",
         badgeStale: "Cần cập nhật",
+        badgeLinkedDocs: "Tài liệu",
+        badgeUnlinkedDocs: "Chưa neo",
+        badgeLinkedCode: "Comment",
+        badgeUnlinkedCode: "Chưa cmt",
+        calibrationVerifyComments: "Kiểm tra comment neo trong mã nguồn (Code ➔ Docs)",
+        calibrationVerifyCommentsDesc: "Yêu cầu có comment <code>// @para-doc [file.md#anchor]</code> trong code để tham chiếu tới tài liệu.",
+        langToggleLabel: "English",
         noNodesFound: "Không tìm thấy thành phần mã nào khớp với bộ lọc và tìm kiếm hiện tại.",
         graphStatsUpdated: "Thống kê đồ thị cập nhật lúc:",
         collapseSidebar: "Thu gọn sidebar",
@@ -136,7 +156,7 @@ const translations = {
         calibrationFolders: "Loại trừ thư mục tài liệu",
         calibrationWeights: "Trọng số thành phần mã",
         calibrationReset: "Đặt lại mặc định",
-        calibrationDesc: "Trọng số đại diện cho độ quan trọng tương đối của từng thành phần mã cá thể:<br/>• <b>Cốt lõi (Critical):</b> Các thành phần lõi ảnh hưởng lớn (God Nodes, degree >= 20).<br/>• <b>Trung bình (Medium):</b> Hàm, lớp, tệp tin tiêu chuẩn.<br/>• <b>Bổ trợ (Low):</b> Các biến và hằng số phụ trợ.<br/>Tài liệu hóa phần Cốt lõi đóng góp điểm số cao hơn."
+        calibrationDesc: "Trọng số đại diện cho độ quan trọng tương đối của từng cấu phần mã:<br/>• <b>Cốt lõi:</b> Các cấu phần lõi ảnh hưởng lớn (Cấu phần Siêu kết nối, độ kết nối >= 20).<br/>• <b>Trung bình:</b> Hàm, lớp, tệp tin tiêu chuẩn.<br/>• <b>Bổ trợ:</b> Các biến và hằng số phụ trợ.<br/>Tài liệu hóa phần Cốt lõi đóng góp điểm số cao hơn."
     },
     en: {
         title: "PARA Workspace Docs",
@@ -194,18 +214,38 @@ const translations = {
         filterAll: "All",
         filterCritical: "Critical (Weight 5)",
         filterMedium: "Medium",
-        filterLow: "Low",
         filterUnlinked: "Unlinked",
+        filterUnlinkedDocs: "Docs ➔ Code Unlinked",
+        filterUnlinkedCode: "Code ➔ Docs Unlinked",
         filterUnenriched: "Unenriched",
+        filterNoOwner: "No Owner",
+        badgeNoOwner: "No Owner",
+        batchActions: "Batch Actions",
+        copyPrompt: "Copy AI Prompt",
+        copyMarkdown: "Copy Markdown List",
+        copyJson: "Copy JSON",
+        select5: "Select 5",
+        select10: "Select 10",
+        selectAll: "Select All",
+        deselectAll: "Deselect",
         thNodeEntity: "Node Entity",
         thType: "Type",
         thWeightDegree: "Weight / Degree",
         thBlastRadius: "Blast Radius",
         thDocLinks: "Doc Links (docAnchors)",
+        thDocLinksDocs: "Docs ➔ Code (Anchor)",
+        thDocLinksCode: "Code ➔ Docs (Comment)",
         thDescription: "Description / System Semantics",
         hotspotsTitle: "⚠️ Priority Hotspots",
         hotspotsSubtitle: "High-impact components lacking docs",
         badgeStale: "Stale / Outdated",
+        badgeLinkedDocs: "Docs",
+        badgeUnlinkedDocs: "Unanchored",
+        badgeLinkedCode: "Comment",
+        badgeUnlinkedCode: "Uncmt",
+        calibrationVerifyComments: "Verify code comment references (Code ➔ Docs)",
+        calibrationVerifyCommentsDesc: "Require <code>// @para-doc [file.md#anchor]</code> comments in code to refer to documentation.",
+        langToggleLabel: "Tiếng Việt",
         noNodesFound: "No code entities found matching the current filter and search.",
         graphStatsUpdated: "Graph stats updated at:",
         collapseSidebar: "Collapse sidebar",
@@ -652,6 +692,34 @@ function renderDirectory(srcDir, destDir, template) {
         let totalWeight = 0;
         let linkedWeight = 0;
         
+        const fileCommentsCache = {};
+        function getParaDocCommentsForFile(absolutePath) {
+            if (fileCommentsCache[absolutePath]) {
+                return fileCommentsCache[absolutePath];
+            }
+            const comments = [];
+            if (fs.existsSync(absolutePath)) {
+                try {
+                    const content = fs.readFileSync(absolutePath, 'utf8');
+                    const lines = content.split('\n');
+                    lines.forEach((line, idx) => {
+                        const lineNum = idx + 1;
+                        const match = line.match(/@para-doc\s+\[([^\]]+)\]/);
+                        if (match) {
+                            comments.push({
+                                line: lineNum,
+                                docLink: match[1].trim()
+                            });
+                        }
+                    });
+                } catch (e) {
+                    console.warn(`Warning: Failed to read file for @para-doc comments: ${absolutePath}`, e.message);
+                }
+            }
+            fileCommentsCache[absolutePath] = comments;
+            return comments;
+        }
+
         processedNodesData = enrichableNodes.map(node => {
             let weight = 2; // medium default
             let weightedClass = 'medium';
@@ -669,17 +737,38 @@ function renderDirectory(srcDir, destDir, template) {
             const isLinked = node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0;
             const isEnriched = node.semantic && node.semantic.summary && node.semantic.summary.trim() !== '';
             
+            // Parse @para-doc comments from source code
+            const absoluteFilePath = path.resolve(projectDir, 'repo', node.filePath || '');
+            const fileComments = getParaDocCommentsForFile(absoluteFilePath);
+            const codeDocs = [];
+            fileComments.forEach(comment => {
+                if (node.type === 'file') {
+                    if (comment.line <= 5) {
+                        codeDocs.push(comment.docLink);
+                    }
+                } else {
+                    if (comment.line >= (node.startLine || 1) - 4 && comment.line <= (node.startLine || 1)) {
+                        codeDocs.push(comment.docLink);
+                    }
+                }
+            });
+            const hasCodeDoc = codeDocs.length > 0;
+
             totalWeight += weight;
-            if (isLinked) {
-                linkedWeight += weight;
+            let completionFactor = 0;
+            if (isLinked && hasCodeDoc) {
+                completionFactor = 1.0;
+            } else if (isLinked || hasCodeDoc) {
+                completionFactor = 0.5;
             }
+            linkedWeight += weight * completionFactor;
             
             return {
                 id: node.id,
                 name: node.name,
                 type: node.type,
                 filePath: node.filePath,
-                absoluteFilePath: path.resolve(projectDir, 'repo', node.filePath || ''),
+                absoluteFilePath: absoluteFilePath,
                 startLine: node.startLine || 1,
                 endLine: node.endLine || 1,
                 degree: node.degree || 0,
@@ -692,19 +781,41 @@ function renderDirectory(srcDir, destDir, template) {
                 isLinked: isLinked,
                 isEnriched: isEnriched,
                 docAnchors: (node.semantic && node.semantic.docAnchors) || [],
+                codeDocs: codeDocs,
                 summary: (node.semantic && node.semantic.summary) || ''
             };
         });
         
         const weightedHealthScore = totalWeight > 0 ? (linkedWeight / totalWeight) * 100 : 0;
+        const codeLinkedNodes = enrichableNodes.filter(node => {
+            const absPath = path.resolve(projectDir, 'repo', node.filePath || '');
+            const fileComments = getParaDocCommentsForFile(absPath);
+            if (node.type === 'file') {
+                return fileComments.some(c => c.line <= 5);
+            } else {
+                return fileComments.some(c => c.line >= (node.startLine || 1) - 4 && c.line <= (node.startLine || 1));
+            }
+        });
+        const documentedGodNodesCount = godNodes.filter(node => node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0).length;
+        const codeLinkedGodNodesCount = godNodes.filter(node => {
+            const absPath = path.resolve(projectDir, 'repo', node.filePath || '');
+            const fileComments = getParaDocCommentsForFile(absPath);
+            return fileComments.some(c => c.line >= (node.startLine || 1) - 4 && c.line <= (node.startLine || 1));
+        }).length;
         
         dashboardStats.enrichableNodes = enrichableNodes.length;
         dashboardStats.linkedNodes = linkedNodes.length;
         dashboardStats.enrichedNodes = enrichedNodes.length;
         dashboardStats.totalGodNodes = godNodes.length;
-        dashboardStats.documentedGodNodes = documentedGodNodes.length;
+        dashboardStats.documentedGodNodes = documentedGodNodesCount;
         dashboardStats.weightedHealthScore = weightedHealthScore;
         dashboardStats.staleDocsCount = staleNodes.length;
+        
+        // Split stats for storage
+        dashboardStats.linkedDocsNodes = linkedNodes.length;
+        dashboardStats.linkedCodeNodes = codeLinkedNodes.length;
+        dashboardStats.linkedDocsGodNodes = documentedGodNodesCount;
+        dashboardStats.linkedCodeGodNodes = codeLinkedGodNodesCount;
         
         // Auto-update README.md with new Graph Traceability stats
         const readmePath = path.join(srcDir, 'README.md');
@@ -715,8 +826,10 @@ function renderDirectory(srcDir, destDir, template) {
                 const updatedDate = new Date().toISOString().split('T')[0];
                 
                 const docsWithAnchorsPct = Math.round(docsWithAnchors / allMdFiles.length * 100);
-                const linkedPct = Math.round(linkedNodes.length / enrichableNodes.length * 100);
-                const godPct = godNodes.length > 0 ? Math.round(documentedGodNodes.length / godNodes.length * 100) : 0;
+                const linkedDocsPct = Math.round(linkedNodes.length / enrichableNodes.length * 100);
+                const linkedCodePct = Math.round(codeLinkedNodes.length / enrichableNodes.length * 100);
+                const godDocsPct = godNodes.length > 0 ? Math.round(documentedGodNodesCount / godNodes.length * 100) : 0;
+                const godCodePct = godNodes.length > 0 ? Math.round(codeLinkedGodNodesCount / godNodes.length * 100) : 0;
                 
                 const newTraceabilityContent = `## Graph Traceability
 
@@ -726,9 +839,11 @@ function renderDirectory(srcDir, destDir, template) {
 |:--|:--|
 | Total docs | ${allMdFiles.length} |
 | Docs with graph anchors | ${docsWithAnchors} (${docsWithAnchorsPct}%) |
-| Graph nodes with docAnchors | ${linkedNodes.length}/${enrichableNodes.length} enrichable (${linkedPct}%) |
-| God Nodes documented | ${documentedGodNodes.length}/${godNodes.length} top-connected (${godPct}%) |
-| Docs Health Score (Weighted) | ${Math.round(weightedHealthScore)}/100 |
+| Graph nodes with docAnchors (Docs ➔ Code) | ${linkedNodes.length}/${enrichableNodes.length} enrichable (${linkedDocsPct}%) |
+| Graph nodes with para-doc (Code ➔ Docs) | ${codeLinkedNodes.length}/${enrichableNodes.length} enrichable (${linkedCodePct}%) |
+| God Nodes covered (Docs ➔ Code) | ${documentedGodNodesCount}/${godNodes.length} top-connected (${godDocsPct}%) |
+| God Nodes covered (Code ➔ Docs) | ${codeLinkedGodNodesCount}/${godNodes.length} top-connected (${godCodePct}%) |
+| Docs Health Score (Weighted Double-Binding) | ${Math.round(weightedHealthScore)}/100 |
 | Stale docs (code changed) | ${staleNodes.length} |
 `;
                 const regex = /## Graph Traceability[\s\S]*/;
@@ -1007,6 +1122,36 @@ if (hasWatchFlag) {
                 }
             });
             return;
+        }
+        // Serve static files from outputDir
+        if (req.method === 'GET') {
+            const urlParsed = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+            let pathname = urlParsed.pathname;
+            if (pathname === '/') {
+                pathname = '/index.html';
+            }
+            
+            const targetPath = path.join(outputDir, pathname);
+            const normalizedTarget = path.normalize(targetPath);
+            
+            if (normalizedTarget.startsWith(outputDir) && fs.existsSync(normalizedTarget) && fs.statSync(normalizedTarget).isFile()) {
+                const ext = path.extname(normalizedTarget).toLowerCase();
+                const mimeTypes = {
+                    '.html': 'text/html; charset=utf-8',
+                    '.css': 'text/css; charset=utf-8',
+                    '.js': 'text/javascript; charset=utf-8',
+                    '.json': 'application/json; charset=utf-8',
+                    '.png': 'image/png',
+                    '.jpg': 'image/jpeg',
+                    '.gif': 'image/gif',
+                    '.svg': 'image/svg+xml',
+                    '.ico': 'image/x-icon'
+                };
+                
+                res.writeHead(200, { 'Content-Type': mimeTypes[ext] || 'application/octet-stream' });
+                fs.createReadStream(normalizedTarget).pipe(res);
+                return;
+            }
         }
         
         res.writeHead(404);
