@@ -18,6 +18,9 @@
     <!-- Mermaid.js for diagrams -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     
+    <!-- Svg-Pan-Zoom for Mermaid -->
+    <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
+    
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -36,6 +39,7 @@
             --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
             --code-bg: #f7f6f3;
             --header-height: 56px;
+            --hover-color: rgba(55, 53, 47, 0.04);
         }
 
         [data-theme="dark"] {
@@ -48,6 +52,7 @@
             --accent-color: #2eaadc;
             --accent-hover: #1b85af;
             --code-bg: #252525;
+            --hover-color: rgba(255, 255, 255, 0.055);
         }
 
         * {
@@ -695,6 +700,46 @@
             height: 80px;
             flex-shrink: 0;
         }
+
+        /* Mermaid Zoom Toolbar & Fullscreen Styling */
+        .zoom-action-btn:hover {
+            background-color: var(--hover-color);
+        }
+        .mermaid-wrapper-relative {
+            position: relative;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            height: 450px;
+            width: 100%;
+        }
+        .mermaid-wrapper-relative.fullscreen-active {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 99999 !important;
+            border-radius: 0 !important;
+            border: none !important;
+            background-color: var(--bg-primary) !important;
+            padding: 24px !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        .mermaid-wrapper-relative.fullscreen-active .mermaid-viewer-container {
+            flex-grow: 1 !important;
+            height: 100% !important;
+        }
+        .mermaid-viewer-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -918,6 +963,57 @@
             document.getElementById('font-select').value = currentFontFamily;
             document.getElementById('font-size-indicator').textContent = currentFontSize + 'px';
             document.getElementById('width-indicator').textContent = currentPageWidth;
+        }
+
+        // Document Viewer Mermaid Zoom & Fullscreen Controls
+        window.activePanZoomInstances = {};
+
+        function zoomDocMermaid(chartId, factor) {
+            const instance = window.activePanZoomInstances[chartId];
+            if (instance) {
+                if (factor > 1) {
+                    instance.zoomIn();
+                } else {
+                    instance.zoomOut();
+                }
+            }
+        }
+
+        function resetDocMermaid(chartId) {
+            const instance = window.activePanZoomInstances[chartId];
+            if (instance) {
+                instance.reset();
+                instance.fit();
+                instance.center();
+            }
+        }
+
+        function toggleFullscreenDocMermaid(wrapperId, chartId) {
+            const wrapper = document.getElementById(wrapperId);
+            const btn = document.getElementById('btn-fullscreen-' + chartId);
+            
+            if (!wrapper) return;
+            
+            const isFullscreen = wrapper.classList.toggle('fullscreen-active');
+            
+            if (isFullscreen) {
+                btn.innerHTML = '<i data-lucide="minimize-2" style="width: 15px; height: 15px;"></i>';
+            } else {
+                btn.innerHTML = '<i data-lucide="expand" style="width: 15px; height: 15px;"></i>';
+            }
+            
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+            
+            const instance = window.activePanZoomInstances[chartId];
+            if (instance) {
+                setTimeout(() => {
+                    instance.resize();
+                    instance.fit();
+                    instance.center();
+                }, 100);
+            }
         }
 
         function changeFont(fontName) {
@@ -1311,21 +1407,73 @@
                 });
                 
                 const codeBlocks = contentDiv.querySelectorAll('pre code.language-mermaid');
+                const mermaidCharts = [];
                 for (let i = 0; i < codeBlocks.length; i++) {
                     const codeBlock = codeBlocks[i];
                     const preBlock = codeBlock.parentElement;
                     const code = codeBlock.textContent;
+                    const chartId = 'mermaid-chart-' + i;
+                    const wrapperId = 'mermaid-wrapper-' + i;
+                    
+                    // Create Wrapper Relative
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'mermaid-wrapper-relative';
+                    wrapper.id = wrapperId;
+                    
+                    // Create Zoom Toolbar
+                    const toolbar = document.createElement('div');
+                    toolbar.className = 'mermaid-zoom-toolbar';
+                    toolbar.style.cssText = 'position: absolute; top: 12px; right: 12px; display: flex; gap: 4px; background: var(--bg-primary); opacity: 0.85; backdrop-filter: blur(8px); border: 1px solid var(--border-color); padding: 4px; border-radius: 8px; z-index: 99; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);';
+                    toolbar.innerHTML = `
+                        <button class="zoom-action-btn" onclick="zoomDocMermaid('${chartId}', 1.2)" title="Zoom In" style="background: none; border: none; padding: 6px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-primary); transition: background-color 0.2s;"><i data-lucide="zoom-in" style="width: 15px; height: 15px;"></i></button>
+                        <button class="zoom-action-btn" onclick="zoomDocMermaid('${chartId}', 0.8)" title="Zoom Out" style="background: none; border: none; padding: 6px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-primary); transition: background-color 0.2s;"><i data-lucide="zoom-out" style="width: 15px; height: 15px;"></i></button>
+                        <button class="zoom-action-btn" onclick="resetDocMermaid('${chartId}')" title="Reset Zoom" style="background: none; border: none; padding: 6px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-primary); transition: background-color 0.2s;"><i data-lucide="maximize-2" style="width: 15px; height: 15px;"></i></button>
+                        <button class="zoom-action-btn" id="btn-fullscreen-${chartId}" onclick="toggleFullscreenDocMermaid('${wrapperId}', '${chartId}')" title="Toggle Fullscreen" style="background: none; border: none; padding: 6px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-primary); transition: background-color 0.2s;"><i data-lucide="expand" style="width: 15px; height: 15px;"></i></button>
+                    `;
+                    
+                    // Create Container for diagram
+                    const container = document.createElement('div');
+                    container.className = 'mermaid-viewer-container';
                     
                     const div = document.createElement('div');
                     div.className = 'mermaid';
-                    div.id = 'mermaid-chart-' + i;
+                    div.id = chartId;
+                    div.style.cssText = 'width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; border: none; padding: 0; background: transparent; margin: 0;';
                     div.textContent = code;
                     
-                    preBlock.replaceWith(div);
+                    container.appendChild(div);
+                    wrapper.appendChild(toolbar);
+                    wrapper.appendChild(container);
+                    
+                    preBlock.replaceWith(wrapper);
+                    mermaidCharts.push({ chartId, wrapperId, container: div });
                 }
                 
-                if (contentDiv.querySelectorAll('.mermaid').length > 0) {
+                if (mermaidCharts.length > 0) {
+                    mermaidCharts.forEach(item => {
+                        item.container.removeAttribute('data-processed');
+                    });
+                    
                     await mermaid.run();
+                    
+                    window.activePanZoomInstances = window.activePanZoomInstances || {};
+                    mermaidCharts.forEach(item => {
+                        const svgElement = item.container.querySelector('svg');
+                        if (svgElement && window.svgPanZoom) {
+                            svgElement.style.width = '100%';
+                            svgElement.style.height = '100%';
+                            
+                            window.activePanZoomInstances[item.chartId] = window.svgPanZoom(svgElement, {
+                                zoomEnabled: true,
+                                controlIconsEnabled: false,
+                                fit: true,
+                                center: true,
+                                minZoom: 0.1,
+                                maxZoom: 10,
+                                zoomScaleSensitivity: 0.2
+                            });
+                        }
+                    });
                 }
                 
                 generateTOC();

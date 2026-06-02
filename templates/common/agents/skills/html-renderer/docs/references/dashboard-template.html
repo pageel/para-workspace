@@ -16,6 +16,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Mermaid.js -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <!-- Svg-Pan-Zoom for Mermaid -->
+    <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
 
     <style>
         :root {
@@ -1131,6 +1133,29 @@
             opacity: 0.45;
         }
 
+        /* Mermaid Zoom Toolbar & Fullscreen Styling */
+        .zoom-action-btn:hover {
+            background-color: var(--hover-color);
+        }
+        .mermaid-wrapper-relative.fullscreen-active {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 99999 !important;
+            border-radius: 0 !important;
+            border: none !important;
+            background-color: var(--bg-primary) !important;
+            padding: 24px !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        .mermaid-wrapper-relative.fullscreen-active #alignment-mermaid-container {
+            flex-grow: 1 !important;
+            height: 100% !important;
+            min-height: none !important;
+        }
 
     </style>
 </head>
@@ -1396,33 +1421,19 @@
                     </div>
 
                     <div class="alignment-layout" style="display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
-                        <!-- Left Panel: Flow diagram -->
-                        <div class="alignment-panel" style="flex: 1.5; min-width: 320px; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; background-color: var(--bg-secondary);">
-                            <h4 style="margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
-                                <span><i data-lucide="activity" style="width: 16px; height: 16px; margin-right: 6px; vertical-align: middle; color: var(--accent-color);"></i> Sơ đồ luồng hoạt động (Mermaid Diagram)</span>
-                                <button class="batch-quick-btn" onclick="toggleMermaidLayout()"><i data-lucide="refresh-cw" style="width: 10px; height: 10px; margin-right: 2px;"></i> Xoay Sơ đồ</button>
-                            </h4>
-                            <div id="alignment-mermaid-container" class="mermaid" style="text-align: center; overflow: auto; padding: 20px; background-color: var(--bg-primary); border-radius: 6px; border: 1px solid var(--border-color); max-height: 500px;">
-                                <!-- Mermaid graph is rendered here -->
+                        <!-- Left Panel: Decision Table -->
+                        <div class="alignment-panel" style="flex: 1.3; min-width: 320px; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; background-color: var(--bg-secondary);">
+                            <h4 style="margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;"><i data-lucide="table" style="width: 16px; height: 16px; margin-right: 6px; vertical-align: middle; color: var(--accent-color);"></i> Bảng quyết định nghiệp vụ (Decision Table)</h4>
+                            <div id="alignment-decision-container" style="overflow-x: auto; max-height: 450px;">
+                                <!-- Table generated dynamically -->
                             </div>
                         </div>
 
-                        <!-- Right Panel: Consistency Reports & Decision Tables -->
-                        <div class="alignment-panel" style="flex: 1.2; min-width: 300px; display: flex; flex-direction: column; gap: 20px;">
-                            <!-- Decision Table Card -->
-                            <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; background-color: var(--bg-secondary);">
-                                <h4 style="margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;"><i data-lucide="table" style="width: 16px; height: 16px; margin-right: 6px; vertical-align: middle; color: var(--accent-color);"></i> Bảng quyết định nghiệp vụ (Decision Table)</h4>
-                                <div id="alignment-decision-container" style="overflow-x: auto; max-height: 200px;">
-                                    <!-- Table generated dynamically -->
-                                </div>
-                            </div>
-
-                            <!-- Audit Reports Card -->
-                            <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; background-color: var(--bg-secondary);">
-                                <h4 style="margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;"><i data-lucide="shield-alert" style="width: 16px; height: 16px; margin-right: 6px; vertical-align: middle; color: var(--warning-color);"></i> Báo cáo sai lệch & Gaps (Drift Audit)</h4>
-                                <div id="alignment-audit-container" style="display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto;">
-                                    <!-- Audit warnings listed here -->
-                                </div>
+                        <!-- Right Panel: Audit Reports Card -->
+                        <div class="alignment-panel" style="flex: 1; min-width: 300px; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; background-color: var(--bg-secondary);">
+                            <h4 style="margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;"><i data-lucide="shield-alert" style="width: 16px; height: 16px; margin-right: 6px; vertical-align: middle; color: var(--warning-color);"></i> Báo cáo sai lệch & Gaps (Drift Audit)</h4>
+                            <div id="alignment-audit-container" style="display: flex; flex-direction: column; gap: 10px; max-height: 450px; overflow-y: auto;">
+                                <!-- Audit warnings listed here -->
                             </div>
                         </div>
                     </div>
@@ -2566,7 +2577,6 @@
             populateAlignmentDocSelector();
         }
 
-        let mermaidDirection = 'TD'; // 'TD' or 'LR'
         let selectedAlignmentDoc = '';
 
         function populateAlignmentDocSelector() {
@@ -2593,10 +2603,7 @@
             renderAlignmentForSelectedDoc();
         }
 
-        function toggleMermaidLayout() {
-            mermaidDirection = mermaidDirection === 'TD' ? 'LR' : 'TD';
-            renderAlignmentForSelectedDoc();
-        }
+
 
         function renderAlignmentForSelectedDoc() {
             const select = document.getElementById('alignment-doc-select');
@@ -2605,35 +2612,16 @@
             }
             
             const data = alignmentData[selectedAlignmentDoc];
-            const container = document.getElementById('alignment-mermaid-container');
             const decisionContainer = document.getElementById('alignment-decision-container');
             const auditContainer = document.getElementById('alignment-audit-container');
             
             if (!data) {
-                if (container) container.innerHTML = '<div style="color: var(--text-secondary); padding: 20px;">No diagram data</div>';
                 if (decisionContainer) decisionContainer.innerHTML = '';
                 if (auditContainer) auditContainer.innerHTML = '';
                 return;
             }
             
-            // 1. Render Mermaid Flowchart
-            if (container) {
-                container.removeAttribute('data-processed');
-                let mermaidCode = data.mermaid || 'graph TD\n    no_data["No Diagram Data"]';
-                // Adjust layout direction dynamically
-                mermaidCode = mermaidCode.replace(/graph (TD|LR)/, `graph ${mermaidDirection}`);
-                container.innerHTML = mermaidCode;
-                try {
-                    if (window.mermaid) {
-                        window.mermaid.init(undefined, container);
-                    }
-                } catch (e) {
-                    console.error('Mermaid render error:', e);
-                    container.innerHTML = `<pre style="text-align: left; font-size: 11px; color: var(--danger-color); font-family: monospace; white-space: pre-wrap; word-break: break-all;">${mermaidCode}</pre>`;
-                }
-            }
-            
-            // 2. Render Decision Table
+            // 1. Render Decision Table
             if (decisionContainer) {
                 if (data.decisionTable && data.decisionTable.length > 0) {
                     let html = '<table class="nodes-table" style="width: 100%; border-collapse: collapse; font-size: 12px; border: 1px solid var(--border-color); background: var(--bg-primary);">';

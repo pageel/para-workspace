@@ -865,11 +865,18 @@ function renderDirectory(srcDir, destDir, template) {
     
     function isLooseAnchorMatch(anchor, headersList) {
         if (!anchor) return false;
-        const cleanAnchor = anchor.toLowerCase().replace(/[^a-z0-9]/g, '');
+        
+        const removeAccents = (str) => {
+            return str.normalize('NFD')
+                      .replace(/[\u0300-\u036f]/g, '')
+                      .replace(/[đĐ]/g, 'd');
+        };
+        
+        const cleanAnchor = removeAccents(anchor.toLowerCase()).replace(/[^a-z0-9]/g, '');
         if (!cleanAnchor) return false;
         
         return headersList.some(header => {
-            const cleanHeader = header.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const cleanHeader = removeAccents(header.toLowerCase()).replace(/[^a-z0-9]/g, '');
             return cleanHeader.includes(cleanAnchor) || cleanAnchor.includes(cleanHeader);
         });
     }
@@ -895,7 +902,9 @@ function renderDirectory(srcDir, destDir, template) {
         const docNodes = processedNodesData.filter(node => {
             const matchesDoc = (anchor) => {
                 const cleanAnchor = anchor.split('#')[0];
-                return cleanAnchor.includes(path.basename(mdFile)) || mdFile.includes(cleanAnchor);
+                const anchorBase = path.basename(cleanAnchor).toLowerCase();
+                const fileBase = path.basename(mdFile).toLowerCase();
+                return anchorBase === fileBase;
             };
             return node.docAnchors.some(matchesDoc) || node.codeDocs.some(matchesDoc);
         });
@@ -938,7 +947,9 @@ function renderDirectory(srcDir, destDir, template) {
                     const anchorFile = parts[0];
                     const anchorName = parts[1];
                     
-                    if (anchorFile.includes(path.basename(mdFile))) {
+                    const anchorFileBase = path.basename(anchorFile).toLowerCase();
+                    const currentFileBase = path.basename(mdFile).toLowerCase();
+                    if (anchorFileBase === currentFileBase) {
                         const isMatch = isLooseAnchorMatch(anchorName, headers);
                         if (!isMatch) {
                             auditReports.push({
