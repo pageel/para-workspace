@@ -860,6 +860,184 @@ function renderDirectory(srcDir, destDir, template) {
         }
     }
     
+    // 3.5. Build Alignment Data for Dashboard
+    const alignmentData = {};
+    
+    function isLooseAnchorMatch(anchor, headersList) {
+        if (!anchor) return false;
+        const cleanAnchor = anchor.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (!cleanAnchor) return false;
+        
+        return headersList.some(header => {
+            const cleanHeader = header.toLowerCase().replace(/[^a-z0-9]/g, '');
+            return cleanHeader.includes(cleanAnchor) || cleanAnchor.includes(cleanHeader);
+        });
+    }
+
+    for (const mdFile of allMdFiles) {
+        const relPath = path.relative(srcDir, mdFile).replace(/\\/g, '/');
+        const title = getMarkdownCleanName(mdFile);
+        
+        let mdContent = '';
+        try {
+            mdContent = fs.readFileSync(mdFile, 'utf8');
+        } catch (e) {
+            continue;
+        }
+        
+        const headers = [];
+        const headerRegex = /^(#{1,6})\s+(.+)$/gm;
+        let hMatch;
+        while ((hMatch = headerRegex.exec(mdContent)) !== null) {
+            headers.push(hMatch[2].trim());
+        }
+        
+        const docNodes = processedNodesData.filter(node => {
+            const matchesDoc = (anchor) => {
+                const cleanAnchor = anchor.split('#')[0];
+                return cleanAnchor.includes(path.basename(mdFile)) || mdFile.includes(cleanAnchor);
+            };
+            return node.docAnchors.some(matchesDoc) || node.codeDocs.some(matchesDoc);
+        });
+        
+        if (docNodes.length === 0) continue;
+        
+        // Build Mermaid diagram
+        let mermaid = 'graph TD\n';
+        const nodeIdsInDoc = new Set(docNodes.map(n => n.id));
+        
+        docNodes.forEach(n => {
+            const cleanId = n.id.replace(/[^a-zA-Z0-9]/g, '_');
+            const cleanName = n.name.replace(/["']/g, '');
+            mermaid += `    ${cleanId}["${n.type}: ${cleanName}"]\n`;
+        });
+        
+        let hasMermaidRelations = false;
+        for (const targetId in impactAdjacencyList) {
+            if (nodeIdsInDoc.has(targetId)) {
+                impactAdjacencyList[targetId].forEach(sourceId => {
+                    if (nodeIdsInDoc.has(sourceId)) {
+                        const srcClean = sourceId.replace(/[^a-zA-Z0-9]/g, '_');
+                        const tgtClean = targetId.replace(/[^a-zA-Z0-9]/g, '_');
+                        mermaid += `    ${srcClean} --> ${tgtClean}\n`;
+                        hasMermaidRelations = true;
+                    }
+                });
+            }
+        }
+        
+        // Build Audit Reports
+        const auditReports = [];
+        
+        // Broken links check
+        docNodes.forEach(node => {
+            const allAnchors = [...node.docAnchors, ...node.codeDocs];
+            allAnchors.forEach(anchorStr => {
+                if (anchorStr.includes('#')) {
+                    const parts = anchorStr.split('#');
+                    const anchorFile = parts[0];
+                    const anchorName = parts[1];
+                    
+                    if (anchorFile.includes(path.basename(mdFile))) {
+                        const isMatch = isLooseAnchorMatch(anchorName, headers);
+                        if (!isMatch) {
+                            auditReports.push({
+                                severity: 'medium',
+                                title: workspaceLang === 'vi' ? `Neo liên kết hỏng trong \`${node.name}\`` : `Broken Anchor Link in Node \`${node.name}\``,
+                                description: workspaceLang === 'vi' 
+                                    ? `Cấu phần liên kết tới neo \`#${anchorName}\` nhưng tiêu đề này không tồn tại trong tài liệu spec.`
+                                    : `Node linked to anchor \`#${anchorName}\` but this header was not found in the spec file.`,
+                                solution: workspaceLang === 'vi'
+                                    ? `Cập nhật lại tiêu đề spec hoặc sửa chú thích neo trong code thành: ${headers.slice(0, 3).map(h => '`#' + h + '`').join(', ')}.`
+                                    : `Update the spec header or correct the comment link to valid headers: ${headers.slice(0, 3).map(h => '`#' + h + '`').join(', ')}.`
+                            });
+                        }
+                    }
+                }
+            });
+        });
+        
+        // Specific payments check for reconciliation
+        if (relPath.includes('payment') || relPath.includes('reconcil')) {
+            const reconciliationPath = path.resolve(projectDir, 'repo', 'src/lib/reconciliation.ts');
+            if (fs.existsSync(reconciliationPath)) {
+                try {
+                    const codeContent = fs.readFileSync(reconciliationPath, 'utf8');
+                    if (codeContent.includes("status: 'paid'") && codeContent.includes("applyRulesToExistingPayments")) {
+                        const applyRulesBlock = codeContent.substring(codeContent.indexOf("applyRulesToExistingPayments"));
+                        if (applyRulesBlock.includes("status: 'paid'") && !applyRulesBlock.includes("payment.amount >= invoice.amount") && !applyRulesBlock.includes("payment.amount >= matchedInvoice.amount")) {
+                            auditReports.push({
+                                severity: 'high',
+                                title: workspaceLang === 'vi' ? 'GAP: Vi phạm quy tắc Underpayment trong đối soát hàng loạt' : 'GAP: Underpayment violation in batch reconciliation',
+                                description: workspaceLang === 'vi'
+                                    ? `Trong hàm \`applyRulesToExistingPayments\`, hệ thống tự động gán status đơn hàng thành \`'paid'\` khi đối soát hàng loạt mà không check điều kiện thanh toán thiếu.`
+                                    : `In \`applyRulesToExistingPayments\`, the system sets invoice status to \`'paid'\` directly without verifying if the payment amount is sufficient.`,
+                                solution: workspaceLang === 'vi'
+                                    ? `Sửa logic gán status thành: \`const status = payment.amount >= invoice.amount ? 'paid' : 'partially_paid';\`.`
+                                    : `Modify the status assignment logic to check: \`const status = payment.amount >= invoice.amount ? 'paid' : 'partially_paid';\`.`
+                            });
+                        }
+                    }
+                    if (!codeContent.includes("sum(payments.amount)") && !codeContent.includes("sum(payment.amount)")) {
+                        auditReports.push({
+                            severity: 'medium',
+                            title: workspaceLang === 'vi' ? 'GAP: Thiếu cơ chế cộng dồn thanh toán bổ sung' : 'GAP: Missing payment union logic',
+                            description: workspaceLang === 'vi'
+                                ? `Hệ thống chưa có logic cộng dồn tổng tiền các payment để kích hoạt hóa đơn thanh toán thiếu sang paid.`
+                                : `The system lacks logic to sum up partial payments to automatically transition underpaid invoices to paid.`,
+                            solution: workspaceLang === 'vi'
+                                ? `Viết thêm hàm helper \`checkAndUnionPartialPayments(db, invoiceId)\` chạy khi gán payment.`
+                                : `Implement helper function \`checkAndUnionPartialPayments(db, invoiceId)\` to check total payment amount.`
+                        });
+                    }
+                } catch (err) {}
+            }
+        }
+        
+        // Build Decision Table
+        let decisionTable = [];
+        if (relPath.includes('payment') || relPath.includes('reconcil')) {
+            if (workspaceLang === 'vi') {
+                decisionTable = [
+                    { "Kịch bản nghiệp vụ": "Thanh toán đủ", "Khớp Dịch vụ?": true, "Y >= X (Đủ tiền)": true, "Trạng thái Invoice": "paid", "Kích hoạt Dịch vụ": true },
+                    { "Kịch bản nghiệp vụ": "Thanh toán thiếu", "Khớp Dịch vụ?": true, "Y >= X (Đủ tiền)": false, "Trạng thái Invoice": "partially_paid", "Kích hoạt Dịch vụ": false },
+                    { "Kịch bản nghiệp vụ": "Chuyển dư tiền", "Khớp Dịch vụ?": true, "Y >= X (Đủ tiền)": true, "Trạng thái Invoice": "paid (Dư tiền)", "Kích hoạt Dịch vụ": true },
+                    { "Kịch bản nghiệp vụ": "Không khớp dịch vụ", "Khớp Dịch vụ?": false, "Y >= X (Đủ tiền)": "N/A", "Trạng thái Invoice": "N/A", "Kích hoạt Dịch vụ": "Gia hạn cơ chế cũ (100k=30d)" }
+                ];
+            } else {
+                decisionTable = [
+                    { "Scenario": "Full Payment", "Matched Service": true, "Paid >= Price": true, "Invoice Status": "paid", "Activate Service": true },
+                    { "Scenario": "Underpayment", "Matched Service": true, "Paid >= Price": false, "Invoice Status": "partially_paid", "Activate Service": false },
+                    { "Scenario": "Overpayment", "Matched Service": true, "Paid >= Price": true, "Invoice Status": "paid (overpaid)", "Activate Service": true },
+                    { "Scenario": "No Matched Service", "Matched Service": false, "Paid >= Price": "N/A", "Invoice Status": "N/A", "Activate Service": "Extend by 100k=30d legacy logic" }
+                ];
+            }
+        } else {
+            decisionTable = docNodes.slice(0, 3).map(n => {
+                return workspaceLang === 'vi' ? {
+                    "Cấu phần mã": n.name,
+                    "Loại": n.type,
+                    "Vị trí": n.filePath + ':' + n.startLine,
+                    "Độ kết nối": n.degree,
+                    "Đại diện Nghiệp vụ": n.summary ? n.summary.substring(0, 50) + '...' : 'Không có'
+                } : {
+                    "Code Entity": n.name,
+                    "Type": n.type,
+                    "Location": n.filePath + ':' + n.startLine,
+                    "Degree": n.degree,
+                    "Business Meaning": n.summary ? n.summary.substring(0, 50) + '...' : 'None'
+                };
+            });
+        }
+        
+        alignmentData[relPath] = {
+            title: title,
+            mermaid: mermaid,
+            decisionTable: decisionTable,
+            auditReports: auditReports
+        };
+    }
+    
     // Compile dashboard.html
     const dashboardTemplatePath = path.join(__dirname, '..', 'references', 'dashboard-template.html');
     if (fs.existsSync(dashboardTemplatePath)) {
@@ -905,7 +1083,8 @@ function renderDirectory(srcDir, destDir, template) {
                 .replaceAll('<!-- DOCS_LIST_PLACEHOLDER -->', sidebarHtml)
                 .replace(/const dashboardStats = [^;]+;/, 'const dashboardStats = ' + JSON.stringify(dashboardStats, null, 2) + ';')
                 .replace(/const graphNodesData = [^;]+;/, 'const graphNodesData = ' + JSON.stringify(processedNodesData, null, 2) + ';')
-                .replace(/const allMarkdownFiles = [^;]+;/, 'const allMarkdownFiles = ' + JSON.stringify(allMdFilesRelative, null, 2) + ';');
+                .replace(/const allMarkdownFiles = [^;]+;/, 'const allMarkdownFiles = ' + JSON.stringify(allMdFilesRelative, null, 2) + ';')
+                .replace(/const alignmentData = [^;]+;/, 'const alignmentData = ' + JSON.stringify(alignmentData, null, 2) + ';');
                 
             fs.writeFileSync(path.join(destDir, 'dashboard.html'), dashboardHtml, 'utf8');
             console.log('📊 Compiled documentation quality Dashboard successfully.');
