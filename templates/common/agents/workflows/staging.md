@@ -36,8 +36,8 @@ Export workspace-level artifacts (workflows, skills, rules) that have been modif
    - **If found:** Load the project-specific template (custom path mappings, exclusions, post-stage notes).
    - **If not found:** Load `.agents/skills/staging/projects/default.md` (generic convention-based mapping).
    - The loaded template defines: Path Mappings, Exclusions, and Post-Stage Notes.
-4. **Abort if not found:** If the project has no `repo/templates/` directory, print error and stop.
-5. **Identify Tracked Files (if --track is set):** If `--track` is provided, automatically detect untracked or modified files under `.agents/` directory by running `git status`. No manual plan file creation is required. These files represent the current session scope to be logged.
+5. **OSS English-First Guard:** Read the OSS English-First rules (such as `oss_english_first_governance.md`) and scan the files targeted for staging to ensure they contain no non-English text or locale-specific markers in their configuration content (excluding dedicated wiki/docs translations). If any localization drift is detected, STOP and prompt the user for translation/corrections before executing copying.
+6. **Identify Tracked Files (if --track is set):** If `--track` is provided, automatically detect untracked or modified files under `.agents/` directory by running `git status`. No manual plan file creation is required. These files represent the current session scope to be logged.
 
 ### Step 1. Diff Detection (Workspace vs Templates)
 
@@ -103,9 +103,10 @@ done
 For each approved item:
 
 1. **Copy file** from workspace to project template directory:
+   - **Do NOT** use `rm -rf` to clear target directories, as it violates safety invariants. Copy directly using `cp -r` or `cp -a` to overwrite or add files.
    - Workflows: `.agents/workflows/[name].md` → `Projects/[project]/repo/templates/common/agents/workflows/[name].md`
    - Rules: `.agents/rules/[name].md` → `Projects/[project]/repo/templates/common/agents/rules/[name].md`
-   - Skills: `.agents/skills/[name]/` → `Projects/[project]/repo/templates/common/agents/skills/[name]/` (recursive copy)
+   - Skills: `.agents/skills/[name]/` → `Projects/[project]/repo/templates/common/agents/skills/[name]/` (recursive copy via `cp -r` or `cp -a` without removing destination folder first)
 
 2. **Preserve catalog files:** Do NOT overwrite `catalog.yml` — catalog updates are a separate, versioned operation handled during the project's release plan.
 
@@ -137,6 +138,10 @@ Append a task entry to the target project's `sprint-current.md`:
 
 This ensures the next `/open` session on that project surfaces the pending work.
 
+> [!IMPORTANT]
+> **Information Preservation Rule:** This task MUST be logged in the incomplete state `- [ ]`.
+> **DO NOT** mark it as completed `- [x]` immediately after staging, as this task serves as a "pointer" reminding of downstream steps (version bump, catalog update, release plan). If marked `[x]`, the cleanup logic in the `/end` workflow will automatically delete this task at the end of the session, causing you to lose track of incomplete work.
+
 ### Step 5. Summary Report
 
 Present final summary:
@@ -166,7 +171,9 @@ Sprint:  sprint-current.md updated ✅
 | No catalog mutation | `catalog.yml` is never overwritten — update via release plan |
 | No version bump | Version changes require a proper plan (not ad-hoc staging) |
 | Preserve `source: catalog` | Agent MUST NOT change frontmatter `source` field in copied files |
-| Sprint logging | MUST follow C1 (Hot Lane) rules — add `- [ ]` entry only |
+| Sprint logging | MUST follow C1 (Hot Lane) rules — add `- [ ]` entry only (never mark completed `[x]` as it is a downstream pointer) |
+| No Destructive Commands | ABSOLUTELY DO NOT use `rm -rf` on target folders. Always copy directly via `cp -r` or `cp -a` to overwrite. |
+| OSS English-First Guard | Verify staged files contain no non-English content (except dedicated i18n wiki translations). Propose user fixes before copying. |
 
 ---
 
