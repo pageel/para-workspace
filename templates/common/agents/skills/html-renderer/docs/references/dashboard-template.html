@@ -2089,6 +2089,9 @@
               if (typeof renderTypeChart === 'function') {
                   renderTypeChart();
               }
+              if (typeof renderAlignmentForSelectedDoc === 'function') {
+                  renderAlignmentForSelectedDoc();
+              }
           }
           
           // Listen for language change events from parent portal
@@ -2756,6 +2759,37 @@
                 return;
             }
             
+            const headerTranslations = {
+                "Cấu phần mã": { vi: "Cấu phần mã", en: "Code Entity" },
+                "Loại": { vi: "Loại", en: "Type" },
+                "Vị trí": { vi: "Vị trí", en: "Location" },
+                "Độ kết nối": { vi: "Độ kết nối", en: "Degree" },
+                "Đại diện Nghiệp vụ": { vi: "Đại diện Nghiệp vụ", en: "Business Meaning" },
+                "Code Entity": { vi: "Cấu phần mã", en: "Code Entity" },
+                "Type": { vi: "Loại", en: "Type" },
+                "Location": { vi: "Vị trí", en: "Location" },
+                "Degree": { vi: "Độ kết nối", en: "Degree" },
+                "Business Meaning": { vi: "Đại diện Nghiệp vụ", en: "Business Meaning" },
+                "Kịch bản nghiệp vụ": { vi: "Kịch bản nghiệp vụ", en: "Scenario" },
+                "Khớp Dịch vụ?": { vi: "Khớp Dịch vụ?", en: "Matched Service" },
+                "Y >= X (Đủ tiền)": { vi: "Y >= X (Đủ tiền)", en: "Paid >= Price" },
+                "Trạng thái Invoice": { vi: "Trạng thái Invoice", en: "Invoice Status" },
+                "Kích hoạt Dịch vụ": { vi: "Kích hoạt Dịch vụ", en: "Activate Service" },
+                "Scenario": { vi: "Kịch bản nghiệp vụ", en: "Scenario" },
+                "Matched Service": { vi: "Khớp Dịch vụ?", en: "Matched Service" },
+                "Paid >= Price": { vi: "Y >= X (Đủ tiền)", en: "Paid >= Price" },
+                "Invoice Status": { vi: "Trạng thái Invoice", en: "Invoice Status" },
+                "Activate Service": { vi: "Kích hoạt Dịch vụ", en: "Activate Service" }
+            };
+
+            const valueTranslations = {
+                "Không có": { vi: "Không có", en: "None" },
+                "None": { vi: "Không có", en: "None" },
+                "Chuyển dư tiền": { vi: "Chuyển dư tiền", en: "Overpayment scenario" },
+                "Không khớp dịch vụ": { vi: "Không khớp dịch vụ", en: "No matched service" },
+                "Gia hạn cơ chế cũ (100k=30d)": { vi: "Gia hạn cơ chế cũ (100k=30d)", en: "Extend by 100k=30d legacy logic" }
+            };
+            
             // 1. Render Decision Table
             if (decisionContainer) {
                 if (data.decisionTable && data.decisionTable.length > 0) {
@@ -2763,7 +2797,8 @@
                     // Header
                     html += '<thead><tr>';
                     Object.keys(data.decisionTable[0]).forEach(key => {
-                        html += `<th style="padding: 8px; text-align: left; border-bottom: 2px solid var(--border-color); font-weight: 600;">${key}</th>`;
+                        const translatedHeader = (headerTranslations[key] && headerTranslations[key][lang]) || key;
+                        html += `<th style="padding: 8px; text-align: left; border-bottom: 2px solid var(--border-color); font-weight: 600;">${translatedHeader}</th>`;
                     });
                     html += '</tr></thead><tbody>';
                     
@@ -2776,6 +2811,8 @@
                                 cellVal = '<span style="color: var(--success-color); font-weight: bold;">✅ ' + (lang === 'vi' ? 'Đúng' : 'True') + '</span>';
                             } else if (val === false || val === 'false') {
                                 cellVal = '<span style="color: var(--danger-color); font-weight: bold;">❌ ' + (lang === 'vi' ? 'Sai' : 'False') + '</span>';
+                            } else if (typeof val === 'string' && valueTranslations[val.trim()]) {
+                                cellVal = valueTranslations[val.trim()][lang];
                             }
                             html += `<td style="padding: 8px; border-bottom: 1px solid var(--border-color); color: var(--text-primary);">${cellVal}</td>`;
                         });
@@ -2797,16 +2834,56 @@
                         const iconName = report.severity === 'high' ? 'shield-alert' : (report.severity === 'medium' ? 'alert-triangle' : 'info');
                         const color = report.severity === 'high' ? 'var(--danger-color)' : (report.severity === 'medium' ? 'var(--warning-color)' : 'var(--accent-color)');
                         
+                        let reportTitle = report.title;
+                        let reportDesc = report.description;
+                        let reportSol = report.solution;
+                        
+                        if (lang === 'en') {
+                            // Translate Broken Anchor Link warning
+                            if (reportTitle.startsWith('Neo liên kết hỏng trong')) {
+                                const nodeName = reportTitle.replace('Neo liên kết hỏng trong', '').trim();
+                                reportTitle = `Broken Anchor Link in Node ${nodeName}`;
+                            }
+                            if (reportDesc.includes('Cấu phần liên kết tới neo') && reportDesc.includes('nhưng tiêu đề này không tồn tại')) {
+                                const anchorMatch = reportDesc.match(/`#([^`]+)`/);
+                                const anchorName = anchorMatch ? anchorMatch[1] : '';
+                                reportDesc = `Node linked to anchor \`#${anchorName}\` but this header was not found in the spec file.`;
+                            }
+                            if (reportSol && reportSol.startsWith('Cập nhật lại tiêu đề spec hoặc sửa chú thích')) {
+                                const headersMatch = reportSol.substring(reportSol.indexOf(' thành: ') + 8);
+                                reportSol = `Update the spec header or correct the comment link to valid headers: ${headersMatch}`;
+                            }
+                            
+                            // Translate Underpayment warning
+                            if (reportTitle === 'GAP: Vi phạm quy tắc Underpayment trong đối soát hàng loạt') {
+                                reportTitle = 'GAP: Underpayment violation in batch reconciliation';
+                                reportDesc = `In \`applyRulesToExistingPayments\`, the system sets invoice status to \`'paid'\` directly without verifying if the payment amount is sufficient.`;
+                                reportSol = `Modify the status assignment logic to check: \`const status = payment.amount >= invoice.amount ? 'paid' : 'partially_paid';\`.`;
+                            }
+                            
+                            // Translate Missing payment union logic warning
+                            if (reportTitle === 'GAP: Thiếu cơ chế cộng dồn thanh toán bổ sung') {
+                                reportTitle = 'GAP: Missing payment union logic';
+                                reportDesc = `The system lacks logic to sum up partial payments to automatically transition underpaid invoices to paid.`;
+                                reportSol = `Write helper function \`checkAndUnionPartialPayments(db, invoiceId)\` to run on payment assignment.`;
+                            }
+                        } else if (lang === 'vi') {
+                            if (reportTitle.startsWith('Broken Anchor Link in Node')) {
+                                const nodeName = reportTitle.replace('Broken Anchor Link in Node', '').trim();
+                                reportTitle = `Neo liên kết hỏng trong ${nodeName}`;
+                            }
+                        }
+
                         html += `
                         <div class="callout callout-${alertClass}" style="border-left: 4px solid ${color}; padding: 10px 14px; margin-bottom: 8px; border-radius: 4px; background: rgba(0,0,0,0.01);">
                             <div style="font-weight: 600; font-size: 13px; color: ${color}; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
                                 <i data-lucide="${iconName}" style="width: 14px; height: 14px;"></i>
-                                ${report.title}
+                                ${reportTitle}
                             </div>
                             <div style="font-size: 12px; color: var(--text-primary); line-height: 1.4;">
-                                ${report.description}
+                                ${reportDesc}
                             </div>
-                            ${report.solution ? `<div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px; font-style: italic;">💡 ${lang === 'vi' ? 'Giải pháp:' : 'Fix:'} ${report.solution}</div>` : ''}
+                            ${reportSol ? `<div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px; font-style: italic;">💡 ${lang === 'vi' ? 'Giải pháp:' : 'Fix:'} ${reportSol}</div>` : ''}
                         </div>`;
                     });
                     auditContainer.innerHTML = html;
