@@ -30,6 +30,22 @@ source: catalog
 
 > **Convention:** Data files live in `references/` (not `templates/`).
 
+## Frontmatter Order Convention
+
+All documentation Markdown files in the `docs/` directory SHOULD include YAML Frontmatter at the beginning of the file to declare metadata, particularly the display order.
+
+```yaml
+---
+title: "Document Display Title"
+order: 1
+---
+```
+
+### Guidelines:
+1. **Value Range:** Use positive numbers for `order`.
+2. **Sequential Pattern:** Use sequential order numbers starting from `1` (e.g., `1`, `2`, `3`, `4`...). The rendered output will display these exact numbers, maintaining consistency between metadata and the UI.
+3. **Folders Sorting:** Root-level directories are automatically sorted based on their occurrence order in the `README.md` index file. Child files within directories are sorted by their `order` Frontmatter field. If the `order` is missing, files fallback to alphabetical sorting. Special files like `README.md` and `changelog.md` (case-insensitive) are automatically excluded from displaying number prefixes.
+
 ## Graph-Awareness
 
 When generating documentation that covers code architecture or features:

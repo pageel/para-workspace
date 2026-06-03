@@ -297,11 +297,24 @@
             flex-shrink: 0;
             background-color: var(--bg-primary);
         }
-
-        .header-left {
+        .breadcrumbs {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumbs .separator {
+            display: flex;
+            align-items: center;
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        .breadcrumbs svg {
+            width: 12px;
+            height: 12px;
         }
 
         .header-toggle-sidebar {
@@ -322,6 +335,34 @@
         }
         [data-theme="dark"] .header-toggle-sidebar:hover {
             background-color: rgba(255, 255, 255, 0.055);
+        }
+
+        .nav-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(55, 53, 47, 0.04);
+            color: var(--text-primary);
+            border-color: var(--text-secondary);
+        }
+        [data-theme="dark"] .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.055);
+            color: var(--text-primary);
+        }
+        .nav-btn svg {
+            width: 14px;
+            height: 14px;
         }
 
         .header-doc-title {
@@ -472,8 +513,11 @@
         
         <!-- Shared Left Sidebar -->
         <aside class="left-sidebar" id="left-sidebar">
-            <div class="sidebar-header">
-                <h1 title="/* TRANSLATE:title */" data-i18n="title"><i data-lucide="book-open" style="display:inline-block; vertical-align:middle; margin-right:6px; color:var(--accent-color);"></i>/* TRANSLATE:title */</h1>
+            <div class="sidebar-header" style="padding: 0 10px;">
+                <a href="dashboard.html" class="menu-link" id="dashboard-link" style="width: 100%; height: 36px; display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 13.5px; border-radius: 6px; padding: 0 12px; color: var(--text-primary); text-decoration: none; transition: background-color 0.2s;">
+                    <i data-lucide="layout-dashboard" style="color: #ea580c; width: 16px; height: 16px; flex-shrink: 0;"></i>
+                    <span data-i18n="dashboardBtnLabel">Dashboard</span>
+                </a>
             </div>
             
             <div class="sidebar-menu">
@@ -506,13 +550,48 @@
             
             <!-- App Header -->
             <header class="portal-header">
-                <div class="header-left">
+                <div class="header-left" style="display: flex; align-items: center; gap: 8px; overflow: hidden; white-space: nowrap;">
                     <button class="header-toggle-sidebar" id="sidebar-toggle-btn" style="display: none;" onclick="toggleSidebar()" title="/* TRANSLATE:expandSidebar */">
                         <i data-lucide="sidebar"></i>
                     </button>
-                    <span class="header-doc-title" id="header-doc-title">Dashboard</span>
+                    <!-- Iframe Navigation Controls -->
+                    <div class="nav-controls" style="display: flex; align-items: center; gap: 4px;">
+                        <button class="nav-btn" onclick="goHome()" title="/* TRANSLATE:navHome */" id="nav-btn-home">
+                            <i data-lucide="home"></i>
+                        </button>
+                        <button class="nav-btn" onclick="goBack()" title="/* TRANSLATE:navBack */" id="nav-btn-back">
+                            <i data-lucide="arrow-left"></i>
+                        </button>
+                        <button class="nav-btn" onclick="goForward()" title="/* TRANSLATE:navForward */" id="nav-btn-forward">
+                            <i data-lucide="arrow-right"></i>
+                        </button>
+                    </div>
+                    <span class="header-doc-title" id="header-doc-title" style="font-weight: 500; font-size: 14px; color: var(--text-primary); margin-left: 4px;">Dashboard</span>
                 </div>
                 <div class="header-right">
+                    <!-- Viewer controls container -->
+                    <div class="header-actions" id="viewer-controls" style="display: inline-flex; align-items: center; gap: 8px;">
+                        <select class="customizer-select" id="font-select" onchange="sendViewerCmd('set-font', this.value)" style="background-color: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 6px 8px; border-radius: 6px; font-size: 13px; outline: none; cursor: pointer;">
+                            <option value="inter">/* TRANSLATE:fontSelectInter */</option>
+                            <option value="outfit">/* TRANSLATE:fontSelectOutfit */</option>
+                            <option value="roboto">/* TRANSLATE:fontSelectRoboto */</option>
+                            <option value="georgia">/* TRANSLATE:fontSelectGeorgia */</option>
+                        </select>
+
+                        <button class="footer-action-btn" onclick="sendViewerCmd('change-font-size', -1)" style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; background: none; color: var(--text-secondary); cursor: pointer; transition: all 0.2s;" title="Zoom Out"><i data-lucide="minus" style="width: 14px; height: 14px;"></i></button>
+                        <button class="footer-action-btn" onclick="sendViewerCmd('change-font-size', 1)" style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; background: none; color: var(--text-secondary); cursor: pointer; transition: all 0.2s;" title="Zoom In"><i data-lucide="plus" style="width: 14px; height: 14px;"></i></button>
+
+                        <span style="border-left: 1px solid var(--border-color); height: 20px; margin: 0 2px;"></span>
+                        
+                        <button class="footer-action-btn" onclick="sendViewerCmd('change-page-width', -50)" style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; background: none; color: var(--text-secondary); cursor: pointer; transition: all 0.2s;" title="Decrease Page Width"><i data-lucide="minimize-2" style="width: 14px; height: 14px;"></i></button>
+                        <button class="footer-action-btn" onclick="sendViewerCmd('change-page-width', 50)" style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; background: none; color: var(--text-secondary); cursor: pointer; transition: all 0.2s;" title="Increase Page Width"><i data-lucide="maximize-2" style="width: 14px; height: 14px;"></i></button>
+
+                        <span style="border-left: 1px solid var(--border-color); height: 20px; margin: 0 2px;"></span>
+
+                        <button class="footer-action-btn" onclick="sendViewerCmd('toggle-right-sidebar')" title="/* TRANSLATE:tocToggleTitle */" style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; background: none; color: var(--text-secondary); cursor: pointer; transition: all 0.2s;"><i data-lucide="list" style="width: 14px; height: 14px;"></i></button>
+                        
+                        <span style="border-left: 1px solid var(--border-color); height: 20px; margin: 0 2px;"></span>
+                    </div>
                     <!-- Search Input -->
                     <div class="search-container">
                         <i data-lucide="search" class="search-icon"></i>
@@ -549,7 +628,7 @@
 
         // Global Help Navigation
         function openHelp() {
-            viewport.src = 'help.html';
+            setViewportHref('help.html');
             document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
             const isVi = (document.documentElement.getAttribute('lang') === 'vi');
             headerTitle.textContent = isVi ? 'Trợ giúp & Tài liệu tham khảo' : 'Help & Glossary';
@@ -606,6 +685,21 @@
                 const iframeUrl = viewport.contentWindow.location.href;
                 const pathParts = viewport.contentWindow.location.pathname.split('/');
                 const filename = pathParts.pop();
+                
+                // Show or hide viewer controls based on page type
+                const viewerControls = document.getElementById('viewer-controls');
+                if (viewerControls) {
+                    viewerControls.style.display = 'inline-flex';
+                    if (filename === 'dashboard.html') {
+                        renderPortalHeaderLeft(); // Reset to Dashboard view
+                    } else {
+                        // Sync font family value selector
+                        const fontSelect = document.getElementById('font-select');
+                        if (fontSelect) {
+                            fontSelect.value = localStorage.getItem('doc-font-family') || 'inter';
+                        }
+                    }
+                }
                 
                 if (filename === 'dashboard.html') {
                     headerTitle.textContent = 'Dashboard';
@@ -674,7 +768,7 @@
                     e.preventDefault();
                     const href = link.getAttribute('href');
                     if (href && href !== '#') {
-                        viewport.src = href;
+                        setViewportHref(href);
                         setActiveLink(link);
                     }
                 });
@@ -707,9 +801,117 @@
             lucide.createIcons();
         }
 
+        // Send commands like changing font or zoom to the child iframe
+        function sendViewerCmd(action, value) {
+            if (viewport && viewport.contentWindow) {
+                viewport.contentWindow.postMessage({
+                    type: 'viewer-command',
+                    action: action,
+                    value: value
+                }, '*');
+            }
+        }
+
+        function setViewportHref(href) {
+            try {
+                const resolvedUrl = new URL(href, window.location.href).href;
+                if (viewport && viewport.contentWindow) {
+                    viewport.contentWindow.location.href = resolvedUrl;
+                } else {
+                    viewport.src = resolvedUrl;
+                }
+            } catch (e) {
+                viewport.src = href;
+            }
+        }
+
+        function goHome() {
+            // Find README link in Sidebar
+            const readmeLink = Array.from(document.querySelectorAll('.menu-link')).find(link => {
+                const docpath = link.getAttribute('data-docpath');
+                return docpath && docpath.endsWith('README.html');
+            });
+            
+            if (readmeLink) {
+                const docpath = readmeLink.getAttribute('data-docpath');
+                if (docpath) {
+                    setViewportHref(docpath);
+                    setActiveLink(readmeLink);
+                    return;
+                }
+            }
+            
+            // Fallback if not found in sidebar (e.g. root README.html)
+            setViewportHref('README.html');
+            document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+        }
+
+        function goBack() {
+            if (viewport && viewport.contentWindow) {
+                viewport.contentWindow.postMessage({ type: 'history-back' }, '*');
+            }
+        }
+
+        function goForward() {
+            if (viewport && viewport.contentWindow) {
+                viewport.contentWindow.postMessage({ type: 'history-forward' }, '*');
+            }
+        }
+
+        // Render dynamic breadcrumbs and document title on the Portal top bar
+        function renderPortalHeaderLeft(docFile, docTitle) {
+            const headerTitle = document.getElementById('header-doc-title');
+            if (!headerTitle) return;
+            
+            if (!docFile || docFile.includes('dashboard.html')) {
+                headerTitle.textContent = 'Dashboard';
+                headerTitle.style.display = 'inline';
+            } else if (docFile.includes('help.html')) {
+                const isVi = (currentLang === 'vi');
+                headerTitle.textContent = isVi ? 'Trợ giúp & Tài liệu tham khảo' : 'Help & Glossary';
+                headerTitle.style.display = 'inline';
+            } else {
+                headerTitle.textContent = '';
+                headerTitle.style.display = 'none';
+            }
+            
+            headerTitle.style.fontWeight = '500';
+            headerTitle.style.fontSize = '14px';
+        }
+
         // Listen for communication from iframe con
         window.addEventListener('message', (e) => {
             if (e.data) {
+                if (e.data.type === 'viewer-ready') {
+                    renderPortalHeaderLeft(e.data.docFile, e.data.docTitle);
+                    
+                    // Highlight matching link on Sidebar to active it (handles history back/forward & internal clicks)
+                    try {
+                        const docFile = e.data.docFile;
+                        if (docFile) {
+                            const htmlFile = docFile.replace(/\.md$/, '.html').replace(/\\/g, '/');
+                            const filename = htmlFile.split('/').pop();
+                            
+                            // Find matching data-docpath in Sidebar links
+                            const matchingLink = Array.from(document.querySelectorAll('.menu-link')).find(link => {
+                                const docpath = link.getAttribute('data-docpath');
+                                return docpath && (docpath === htmlFile || docpath.endsWith('/' + htmlFile) || docpath.endsWith(filename));
+                            });
+                            
+                            if (matchingLink) {
+                                setActiveLink(matchingLink);
+                            } else if (docFile.includes('dashboard.html')) {
+                                const dashboardLink = document.getElementById('dashboard-link');
+                                if (dashboardLink) {
+                                    setActiveLink(dashboardLink);
+                                }
+                            } else {
+                                // If not found, e.g. help.html, clear active highlights
+                                document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+                            }
+                        }
+                    } catch (err) {}
+                }
                 if (e.data.type === 'navigate') {
                     // Resolve relative link using baseUrl sent by child to avoid SecurityError in file:///
                     let base = e.data.baseUrl;
@@ -723,7 +925,7 @@
                     const resolvedUrl = new URL(e.data.href, base).href;
                     
                     // Set viewport src to resolved URL
-                    viewport.src = resolvedUrl;
+                    setViewportHref(resolvedUrl);
                     
                     // Find matching link on Sidebar to active it
                     try {
@@ -814,7 +1016,7 @@
                         <span class="result-snippet">${escapeHtml(snippet)}</span>
                     `;
                     div.addEventListener('click', () => {
-                        viewport.src = item.path;
+                        setViewportHref(item.path);
                         
                         // Highlight matching link in Sidebar
                         const matchingLink = Array.from(document.querySelectorAll('.menu-link')).find(link => {
@@ -849,6 +1051,7 @@
             vi: {
                 title: "Tài liệu PARA Workspace",
                 treeTitle: "Cây thư mục tài liệu",
+                dashboardBtnLabel: "Bảng điều khiển",
                 searchPlaceholder: "Tìm kiếm tài liệu...",
                 collapseSidebar: "Thu gọn sidebar",
                 expandSidebar: "Mở rộng sidebar",
@@ -856,11 +1059,15 @@
                 helpBtnTitle: "Glossary & Wiki Trợ giúp (Help)",
                 loadingSearch: "Đang tải dữ liệu tìm kiếm...",
                 noSearchResults: "Không tìm thấy kết quả",
-                langToggleLabel: "English"
+                langToggleLabel: "English",
+                navHome: "Tài liệu chính (README)",
+                navBack: "Trở lại",
+                navForward: "Tiến tới"
             },
             en: {
                 title: "PARA Workspace Docs",
                 treeTitle: "Documentation Tree",
+                dashboardBtnLabel: "Dashboard",
                 searchPlaceholder: "Search docs...",
                 collapseSidebar: "Collapse sidebar",
                 expandSidebar: "Expand sidebar",
@@ -868,7 +1075,10 @@
                 helpBtnTitle: "Glossary & Help Wiki",
                 loadingSearch: "Loading search data...",
                 noSearchResults: "No results found",
-                langToggleLabel: "Tiếng Việt"
+                langToggleLabel: "Tiếng Việt",
+                navHome: "Main Documentation (README)",
+                navBack: "Go Back",
+                navForward: "Go Forward"
             }
         };
 
@@ -929,6 +1139,13 @@
             const searchInput = document.getElementById('portal-search-input');
             if (searchInput) searchInput.placeholder = t.searchPlaceholder;
 
+            const homeBtn = document.getElementById('nav-btn-home');
+            if (homeBtn) homeBtn.title = t.navHome;
+            const backBtn = document.getElementById('nav-btn-back');
+            if (backBtn) backBtn.title = t.navBack;
+            const forwardBtn = document.getElementById('nav-btn-forward');
+            if (forwardBtn) forwardBtn.title = t.navForward;
+
             // Dynamically update sidebar link URLs to point to the correct language directory
             document.querySelectorAll('.menu-link').forEach(link => {
                 const href = link.getAttribute('href');
@@ -958,7 +1175,7 @@
                         }
                         
                         if (targetHref && targetHref !== currentHref) {
-                            viewport.src = targetHref;
+                            setViewportHref(targetHref);
                         }
                     }
                 } catch (err) {
@@ -971,7 +1188,7 @@
                             targetSrc = currentSrc.replace(/(^|\/)en\//, '$1vi/');
                         }
                         if (targetSrc && targetSrc !== currentSrc) {
-                            viewport.setAttribute('src', targetSrc);
+                            setViewportHref(targetSrc);
                         }
                     }
                 }

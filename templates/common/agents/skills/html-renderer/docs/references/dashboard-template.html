@@ -1675,13 +1675,19 @@
         document.documentElement.setAttribute('data-theme', theme);
 
         window.addEventListener('message', (e) => {
-            if (e.data && e.data.type === 'set-theme') {
-                const newTheme = e.data.theme;
-                document.documentElement.setAttribute('data-theme', newTheme);
-                if (theme !== newTheme) {
-                    theme = newTheme;
-                    localStorage.setItem('theme', newTheme);
-                    location.reload();
+            if (e.data) {
+                if (e.data.type === 'history-back') {
+                    window.history.back();
+                } else if (e.data.type === 'history-forward') {
+                    window.history.forward();
+                } else if (e.data.type === 'set-theme') {
+                    const newTheme = e.data.theme;
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    if (theme !== newTheme) {
+                        theme = newTheme;
+                        localStorage.setItem('theme', newTheme);
+                        location.reload();
+                    }
                 }
             }
         });

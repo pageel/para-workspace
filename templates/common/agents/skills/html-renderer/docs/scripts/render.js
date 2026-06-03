@@ -160,7 +160,10 @@ const translations = {
         alignmentDocLabel: "Đặc tả:",
         alignmentDecisionTable: "Bảng quyết định nghiệp vụ (Decision Table)",
         alignmentDriftAudit: "Báo cáo sai lệch & Gaps (Drift Audit)",
-        calibrationDesc: "Trọng số đại diện cho độ quan trọng tương đối của từng cấu phần mã:<br/>• <b>Cốt lõi:</b> Các cấu phần lõi ảnh hưởng lớn (Cấu phần Siêu kết nối, độ kết nối >= 20).<br/>• <b>Trung bình:</b> Hàm, lớp, tệp tin tiêu chuẩn.<br/>• <b>Bổ trợ:</b> Các biến và hằng số phụ trợ.<br/>Tài liệu hóa phần Cốt lõi đóng góp điểm số cao hơn."
+        calibrationDesc: "Trọng số đại diện cho độ quan trọng tương đối của từng cấu phần mã:<br/>• <b>Cốt lõi:</b> Các cấu phần lõi ảnh hưởng lớn (Cấu phần Siêu kết nối, độ kết nối >= 20).<br/>• <b>Trung bình:</b> Hàm, lớp, tệp tin tiêu chuẩn.<br/>• <b>Bổ trợ:</b> Các biến và hằng số phụ trợ.<br/>Tài liệu hóa phần Cốt lõi đóng góp điểm số cao hơn.",
+        navHome: "Tài liệu chính (README)",
+        navBack: "Trở lại",
+        navForward: "Tiến tới"
     },
     en: {
         title: "PARA Workspace Docs",
@@ -268,7 +271,10 @@ const translations = {
         alignmentDocLabel: "Spec Document:",
         alignmentDecisionTable: "Business Decision Table",
         alignmentDriftAudit: "Logic Drift & Gaps Audit",
-        calibrationDesc: "Weights represent the relative priority of each individual code entity:<br/>• <b>Critical:</b> High-impact core components (God Nodes, degree >= 20).<br/>• <b>Medium:</b> Standard functions, classes, and source files.<br/>• <b>Low:</b> Auxiliary variables and constants.<br/>Documenting Critical components contributes more to the overall health score."
+        calibrationDesc: "Weights represent the relative priority of each individual code entity:<br/>• <b>Critical:</b> High-impact core components (God Nodes, degree >= 20).<br/>• <b>Medium:</b> Standard functions, classes, and source files.<br/>• <b>Low:</b> Auxiliary variables and constants.<br/>Documenting Critical components contributes more to the overall health score.",
+        navHome: "Main Documentation (README)",
+        navBack: "Go Back",
+        navForward: "Go Forward"
     }
 };
 
@@ -280,15 +286,77 @@ function getMarkdownCleanName(filePath) {
     return path.basename(filePath, '.md');
 }
 
+// Simple parser for YAML Frontmatter to extract order/weight
+function parseFrontmatter(content) {
+    const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    if (!match) return { frontmatter: {}, content: content };
+    const yamlText = match[1];
+    const frontmatter = {};
+    const lines = yamlText.split('\n');
+    for (const line of lines) {
+        const colonIndex = line.indexOf(':');
+        if (colonIndex > 0) {
+            const key = line.substring(0, colonIndex).trim();
+            const val = line.substring(colonIndex + 1).trim();
+            if (/^\d+(\.\d+)?$/.test(val)) {
+                frontmatter[key] = Number(val);
+            } else {
+                frontmatter[key] = val.replace(/^["']|["']$/g, '');
+            }
+        }
+    }
+    const cleanContent = content.substring(match[0].length);
+    return { frontmatter, content: cleanContent };
+}
+
+// Parse folder order list from README.md Structure table
+function getFolderOrderFromReadme(readmePath) {
+    const orderList = [];
+    if (fs.existsSync(readmePath)) {
+        try {
+            const content = fs.readFileSync(readmePath, 'utf8');
+            const matches = content.matchAll(/`([^`\/]+)\/?`/g);
+            for (const match of matches) {
+                const folderName = match[1].trim();
+                if (!orderList.includes(folderName) && folderName !== 'README') {
+                    orderList.push(folderName);
+                }
+            }
+        } catch (e) {
+            console.warn('Warning: Failed to parse folders order from README.md');
+        }
+    }
+    return orderList;
+}
+
 // Recursively construct Folder Tree JSON
-function buildTree(dirPath, rootDir) {
+function buildTree(dirPath, rootDir, folderOrderList = []) {
     const stats = fs.statSync(dirPath);
     const node = {
         name: path.basename(dirPath),
         path: dirPath,
         isDirectory: stats.isDirectory(),
-        title: stats.isDirectory() ? null : getMarkdownCleanName(dirPath)
+        title: stats.isDirectory() ? null : getMarkdownCleanName(dirPath),
+        order: 999999
     };
+    
+    if (!node.isDirectory) {
+        if (path.extname(dirPath) === '.md') {
+            try {
+                const content = fs.readFileSync(dirPath, 'utf8');
+                const { frontmatter } = parseFrontmatter(content);
+                node.order = frontmatter.order !== undefined ? frontmatter.order : 999999;
+            } catch (e) {
+                node.order = 999999;
+            }
+        }
+    } else {
+        const relPath = path.relative(rootDir, dirPath);
+        if (relPath && !relPath.includes(path.sep)) {
+            const idx = folderOrderList.indexOf(node.name);
+            node.order = idx !== -1 ? idx + 1 : 999999;
+        }
+    }
     
     if (node.isDirectory) {
         const files = fs.readdirSync(dirPath);
@@ -303,14 +371,32 @@ function buildTree(dirPath, rootDir) {
                 file === 'dist' || 
                 file === 'docs-html') continue;
                 
-            node.children.push(buildTree(childPath, rootDir));
+            node.children.push(buildTree(childPath, rootDir, folderOrderList));
         }
         
         node.children.sort((a, b) => {
             if (a.isDirectory && !b.isDirectory) return -1;
             if (!a.isDirectory && b.isDirectory) return 1;
+            
+            const orderA = a.order !== undefined ? a.order : 999999;
+            const orderB = b.order !== undefined ? b.order : 999999;
+            if (orderA !== orderB) {
+                return orderA - orderB;
+            }
             return a.name.localeCompare(b.name);
         });
+        
+        let folderCount = 0;
+        let fileCount = 0;
+        for (const child of node.children) {
+            if (child.isDirectory) {
+                folderCount++;
+                child.displayOrder = folderCount;
+            } else {
+                fileCount++;
+                child.displayOrder = fileCount;
+            }
+        }
     }
     return node;
 }
@@ -332,10 +418,12 @@ function treeToHtml(node, currentSourcePath, currentTargetPath, rootDir, rootOut
         
         const relativeHtmlPathFromRoot = relativeFromRoot.replace(/\.md$/, '.html').replace(/\\/g, '/');
         
+        const isSpecialDoc = ['readme.md', 'changelog.md'].includes(node.name.toLowerCase());
+        const orderPrefix = (node.order !== undefined && node.order < 999999 && !isSpecialDoc) ? `${node.order}. ` : '';
         return `
         <li class="tree-item">
             <a href="${hrefValue}" class="menu-link ${activeClass}" data-docpath="${relativeHtmlPathFromRoot}">
-                <i data-lucide="file-text"></i> ${node.title}
+                <i data-lucide="file-text"></i> ${orderPrefix}${node.title}
             </a>
         </li>`;
     }
@@ -348,32 +436,17 @@ function treeToHtml(node, currentSourcePath, currentTargetPath, rootDir, rootOut
     }
     
     if (node.path === rootDir) {
-        // Calculate relative URL to dashboard.html from currentTargetPath
-        const dashboardHtmlPath = path.join(rootOutputDir, 'dashboard.html');
-        let relativeDashboardUrl = path.relative(path.dirname(currentTargetPath), dashboardHtmlPath);
-        relativeDashboardUrl = relativeDashboardUrl.replace(/\\/g, '/');
-        
-        const isDashboardActive = (currentTargetPath.endsWith('dashboard.html'));
-        const activeClass = isDashboardActive ? 'active' : '';
-        const hrefValue = isDashboardActive ? '#' : relativeDashboardUrl;
-
-        const dashboardSidebarItem = `
-        <li class="tree-item" style="margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
-            <a href="${hrefValue}" class="menu-link ${activeClass}" id="dashboard-link">
-                <i data-lucide="layout-dashboard" style="color: #ea580c;"></i> Dashboard
-            </a>
-        </li>`;
-
-        return dashboardSidebarItem + childrenHtml;
+        return childrenHtml;
     }
     
     if (!childrenHtml.trim()) return '';
     
+    const folderPrefix = (node.order !== undefined && node.order < 999999) ? `${node.order}. ` : '';
     return `
     <li class="tree-folder">
         <div class="folder-toggle">
             <span class="chevron-icon-container"><i data-lucide="chevron-right"></i></span>
-            <i data-lucide="folder"></i> ${node.name}
+            <i data-lucide="folder"></i> ${folderPrefix}${node.name}
         </div>
         <ul class="folder-content" style="display: none;">
             ${childrenHtml}
@@ -384,7 +457,8 @@ function treeToHtml(node, currentSourcePath, currentTargetPath, rootDir, rootOut
 // Render a single Markdown file to HTML using the template
 function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputDir, template, graphNodesMap, calculateBlastRadius) {
     try {
-        const markdownContent = fs.readFileSync(sourceFile, 'utf8');
+        const rawContent = fs.readFileSync(sourceFile, 'utf8');
+        const { frontmatter, content: markdownContent } = parseFrontmatter(rawContent);
         
         // Parse markdown content for @graph-node anchors
         const nodeRegex = /<!--\s*@graph-node:\s*([^\s>]+)\s*-->/g;
@@ -507,7 +581,9 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
 
 // Recursively compile source directory to output directory
 function renderDirectory(srcDir, destDir, template) {
-    const treeRoot = buildTree(srcDir, srcDir);
+    const readmePath = path.join(srcDir, 'README.md');
+    const folderOrderList = getFolderOrderFromReadme(readmePath);
+    const treeRoot = buildTree(srcDir, srcDir, folderOrderList);
     
     const allMdFiles = [];
     function collectMdFiles(node) {

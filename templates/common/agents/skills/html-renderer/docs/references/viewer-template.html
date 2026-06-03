@@ -82,19 +82,24 @@
         }
 
         header {
-            height: var(--header-height);
+            min-height: var(--header-height);
+            height: auto;
             border-bottom: 1px solid var(--border-color);
             background-color: var(--bg-primary);
             z-index: 10;
             flex-shrink: 0;
+            display: flex;
+            align-items: center;
         }
 
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 100%;
-            padding: 0 20px;
+            width: 100%;
+            min-height: var(--header-height);
+            height: auto;
+            padding: 10px 20px;
         }
 
         .header-left {
@@ -104,7 +109,7 @@
         }
 
         .header-actions {
-            display: flex;
+            display: none !important;
             align-items: center;
             gap: 8px;
         }
@@ -152,9 +157,8 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-secondary);
-            margin-bottom: 24px;
         }
 
         .breadcrumbs .separator {
@@ -749,7 +753,10 @@
     <main>
         <header>
             <div class="header-top">
-                <div class="header-left">
+                <div class="header-left" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; max-width: 100%;">
+                    <div class="breadcrumbs" id="breadcrumbs-container" style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;"></div>
+                    <span class="separator-main" id="title-separator" style="display: none; align-items: center; color: var(--text-secondary); opacity: 0.5; margin: 0 2px;"><i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i></span>
+                    <span class="header-title" id="header-doc-title" style="font-weight: 600; font-size: 13.5px; color: var(--text-primary); white-space: normal; word-break: break-word;"></span>
                     <span id="font-size-indicator" style="display: none;">16px</span>
                     <span id="width-indicator" style="display: none;">720px</span>
                 </div>
@@ -780,7 +787,6 @@
 
         <div class="content-wrapper">
             <div id="content-container" style="width: 100%; max-width: 720px; display: flex; flex-direction: column; margin: 0 auto;">
-                <div class="breadcrumbs" id="breadcrumbs-container"></div>
                 <article class="markdown-body font-preset-inter" id="content" style="width: 100%; max-width: 100%;">
                     <!-- Markdown parsed structure will be injected here -->
                 </article>
@@ -882,7 +888,11 @@
         // Listen for theme and language change messages from Portal
         window.addEventListener('message', (e) => {
             if (e.data) {
-                if (e.data.type === 'set-theme') {
+                if (e.data.type === 'history-back') {
+                    window.history.back();
+                } else if (e.data.type === 'history-forward') {
+                    window.history.forward();
+                } else if (e.data.type === 'set-theme') {
                     const newTheme = e.data.theme;
                     document.documentElement.setAttribute('data-theme', newTheme);
                     // Reload page if theme changes to force mermaid rebuild with new style
@@ -902,6 +912,18 @@
                     }
                     if (targetHref && targetHref !== currentHref) {
                         window.location.href = targetHref;
+                    }
+                } else if (e.data.type === 'viewer-command') {
+                    const action = e.data.action;
+                    const value = e.data.value;
+                    if (action === 'set-font') {
+                        changeFont(value);
+                    } else if (action === 'change-font-size') {
+                        changeFontSize(value);
+                    } else if (action === 'change-page-width') {
+                        changePageWidth(value);
+                    } else if (action === 'toggle-right-sidebar') {
+                        toggleRightSidebar();
                     }
                 }
             }
@@ -975,9 +997,12 @@
                 wrapper.style.padding = paddingVal;
             }
             
-            document.getElementById('font-select').value = currentFontFamily;
-            document.getElementById('font-size-indicator').textContent = currentFontSize + 'px';
-            document.getElementById('width-indicator').textContent = currentPageWidth;
+            const fontSelect = document.getElementById('font-select');
+            if (fontSelect) fontSelect.value = currentFontFamily;
+            const fontSizeIndicator = document.getElementById('font-size-indicator');
+            if (fontSizeIndicator) fontSizeIndicator.textContent = currentFontSize + 'px';
+            const widthIndicator = document.getElementById('width-indicator');
+            if (widthIndicator) widthIndicator.textContent = currentPageWidth;
         }
 
         // Document Viewer Mermaid Zoom & Fullscreen Controls
@@ -1391,6 +1416,27 @@
                 const contentDiv = document.getElementById('content');
                 contentDiv.innerHTML = html;
                 
+                // Extract document title from the first H1 tag for the Top Bar (Wordpress/Notion Style)
+                const firstH1 = contentDiv.querySelector('h1');
+                let docTitleText = '';
+                if (firstH1) {
+                    docTitleText = firstH1.textContent.trim();
+                    firstH1.style.display = 'none'; // Hide H1 in content to prevent duplication
+                }
+                const headerDocTitle = document.getElementById('header-doc-title');
+                const titleSeparator = document.getElementById('title-separator');
+                if (headerDocTitle && docTitleText) {
+                    headerDocTitle.textContent = docTitleText;
+                    if (titleSeparator) titleSeparator.style.display = 'inline-flex';
+                }
+                
+                // Notify parent portal that the document has loaded
+                window.parent.postMessage({
+                    type: 'viewer-ready',
+                    docFile: currentDocFile,
+                    docTitle: docTitleText
+                }, '*');
+                
                 contentDiv.querySelectorAll('a').forEach(link => {
                     const href = link.getAttribute('href');
                     if (href) {
@@ -1734,7 +1780,13 @@
             const parts = currentDocFile.split('/');
             let html = '<span class="folder" style="font-size: 11px;"><i data-lucide="folder-open"></i></span><span class="separator"><i data-lucide="chevron-right"></i></span>';
             
-            for (let i = 0; i < parts.length; i++) {
+            // Skip the language directory (vi or en) at the beginning to match only functional project directories
+            let startIndex = 0;
+            if (parts[0] === 'vi' || parts[0] === 'en') {
+                startIndex = 1;
+            }
+            
+            for (let i = startIndex; i < parts.length; i++) {
                 const part = parts[i];
                 if (!part) continue;
                 

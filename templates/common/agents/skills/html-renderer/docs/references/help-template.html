@@ -96,7 +96,7 @@
         }
 
         .header-actions {
-            display: flex;
+            display: none !important;
             align-items: center;
             gap: 8px;
         }
@@ -821,8 +821,14 @@
         document.documentElement.setAttribute('data-theme', theme);
         
         window.addEventListener('message', (e) => {
-            if (e.data && e.data.type === 'set-theme') {
-                document.documentElement.setAttribute('data-theme', e.data.theme);
+            if (e.data) {
+                if (e.data.type === 'history-back') {
+                    window.history.back();
+                } else if (e.data.type === 'history-forward') {
+                    window.history.forward();
+                } else if (e.data.type === 'set-theme') {
+                    document.documentElement.setAttribute('data-theme', e.data.theme);
+                }
             }
         });
 
