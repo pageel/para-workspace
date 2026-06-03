@@ -58,3 +58,23 @@ The `--graph` flag is a crucial modifier parameter when executing `/docs` action
     *   Ensures the AI Agent operates on the most up-to-date and accurate structural map of the codebase.
     *   Prevents hallucination by referencing actual source declarations rather than guessing.
     *   Automatically plants accurate `@graph-node` tags matching the latest business hot spots (God Nodes) and Blast Radius.
+
+---
+
+## 💡 Suggested Prompts & Commands
+
+Here are some useful prompts and commands to manage and synchronize your documentation:
+
+*   **Sync documentation with codebase changes**:
+    ```text
+    /docs [project-name] update --graph
+    ```
+*   **Audit documentation coverage and missing graph anchors**:
+    ```text
+    /docs [project-name] review --graph
+    ```
+*   **Compile markdown files to interactive Notion-styled HTML pages**:
+    ```text
+    /docs [project-name] --render --graph
+    ```
+

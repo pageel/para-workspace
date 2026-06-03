@@ -31,3 +31,25 @@ To minimize the impact radius of any code entity, apply the following design pat
 ### 🧪 Strengthen Unit Test Coverage
 - Any node with a `Blast Radius > 5` must have robust unit tests covering edge cases.
 - This guarantees that refactoring does not alter the expected behavioral contracts.
+
+---
+
+## 💡 Suggested Prompts & Commands
+
+Here are some useful prompts and commands to optimize architecture and minimize risk:
+
+*   **Find God Nodes in the project**:
+    Use the `graph_god_nodes` MCP tool, or ask in chat:
+    ```text
+    List all God Nodes with Degree >= 20 in this project to evaluate risk
+    ```
+*   **Analyze Blast Radius of a specific function or file**:
+    Use the `graph_impact_analysis` MCP tool, or ask in chat:
+    ```text
+    Calculate the Blast Radius if I modify the 'autoMatchCustomer' function in 'src/lib/reconciliation.ts'
+    ```
+*   **Get refactoring suggestions to reduce Blast Radius**:
+    ```text
+    Suggest refactoring ideas for src/lib/reconciliation.ts to reduce its Outdegree and Blast Radius
+    ```
+

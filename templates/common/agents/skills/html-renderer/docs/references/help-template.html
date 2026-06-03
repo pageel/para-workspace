@@ -45,6 +45,7 @@
             --danger-color: #ff5252;
             --warning-color: #f97316;
             --success-color: #4caf50;
+            color-scheme: dark;
         }
 
         * {
@@ -418,6 +419,86 @@
         .menu-item a:hover i {
             color: var(--accent-color);
         }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(55, 53, 47, 0.15);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(55, 53, 47, 0.3);
+        }
+
+        [data-theme="dark"] ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Quick Index Table Styles */
+        .index-table-container {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 8px;
+        }
+
+        .index-table-container h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+        }
+
+        .index-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .index-table th, .index-table td {
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .index-table th {
+            font-weight: 600;
+            color: var(--text-secondary);
+            background-color: rgba(55, 53, 47, 0.02);
+        }
+        [data-theme="dark"] .index-table th {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .index-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .index-table a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .index-table a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -464,6 +545,57 @@
                     <p id="subtitle-text">Tài liệu tham khảo kỹ thuật dành cho nhà phát triển (Developer Guide) về Code-Graph và Traceability.</p>
                 </div>
 
+                <!-- Quick Index Table -->
+                <div class="index-table-container">
+                    <h3><i data-lucide="list-ordered" style="width: 16px; height: 16px; color: var(--accent-color);"></i> <span id="index-title">Mục lục tra cứu nhanh</span></h3>
+                    <table class="index-table">
+                        <thead>
+                            <tr>
+                                <th id="th-index-term" style="width: 30%;">Thuật ngữ / Chỉ số</th>
+                                <th id="th-index-cat" style="width: 20%;">Phân loại</th>
+                                <th id="th-index-desc" style="width: 50%;">Mô tả nhanh</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="#card-health"><i data-lucide="heart" style="width: 14px; height: 14px;"></i> <span id="index-term-health">Docs Health Score</span></a></td>
+                                <td><span class="badge badge-info" id="index-cat-health">Chỉ số chất lượng</span></td>
+                                <td id="index-desc-health">Điểm số bao phủ tài liệu kỹ thuật dựa trên Code-Graph.</td>
+                            </tr>
+                            <tr>
+                                <td><a href="#card-blast"><i data-lucide="zap" style="width: 14px; height: 14px;"></i> <span id="index-term-blast">Blast Radius</span></a></td>
+                                <td><span class="badge badge-warning" id="index-cat-blast">Đánh giá rủi ro</span></td>
+                                <td id="index-desc-blast">Đo lường mức độ ảnh hưởng của component lên phần còn lại của hệ thống.</td>
+                            </tr>
+                            <tr>
+                                <td><a href="#card-degree"><i data-lucide="git-commit" style="width: 14px; height: 14px;"></i> <span id="index-term-degree">Degree</span></a></td>
+                                <td><span class="badge badge-info" id="index-cat-degree">Đặc tính cấu trúc</span></td>
+                                <td id="index-desc-degree">Tổng số liên kết đi (Outdegree) và đến (Indegree) của một nút.</td>
+                            </tr>
+                            <tr>
+                                <td><a href="#card-god"><i data-lucide="crown" style="width: 14px; height: 14px;"></i> <span id="index-term-god">God Nodes</span></a></td>
+                                <td><span class="badge badge-warning" id="index-cat-god">Đặc tính cấu trúc</span></td>
+                                <td id="index-desc-god">Thành phần mã có độ kết nối cực kỳ cao (Degree >= 20).</td>
+                            </tr>
+                            <tr>
+                                <td><a href="#card-weight"><i data-lucide="sliders" style="width: 14px; height: 14px;"></i> <span id="index-term-weight">Node Weight</span></a></td>
+                                <td><span class="badge badge-info" id="index-cat-weight">Độ ưu tiên</span></td>
+                                <td id="index-desc-weight">Trọng số phân loại mức độ quan trọng để tính điểm sức khỏe.</td>
+                            </tr>
+                            <tr>
+                                <td><a href="#card-stale"><i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i> <span id="index-term-stale">Stale Nodes</span></a></td>
+                                <td><span class="badge badge-warning" id="index-cat-stale">Cảnh báo lỗi</span></td>
+                                <td id="index-desc-stale">Nút tài liệu đã bị lỗi thời hoặc không còn đồng bộ với mã nguồn.</td>
+                            </tr>
+                            <tr>
+                                <td><a href="#card-drift"><i data-lucide="git-compare" style="width: 14px; height: 14px;"></i> <span id="index-term-drift">Logic Drift</span></a></td>
+                                <td><span class="badge badge-warning" id="index-cat-drift">Cảnh báo lỗi</span></td>
+                                <td id="index-desc-drift">Sự sai lệch giữa đặc tả nghiệp vụ và mã nguồn thực tế.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
                 <!-- Glossary Content -->
                 <div class="help-main-content">
                     
@@ -472,29 +604,29 @@
                         <h2><i data-lucide="bar-chart-3" style="width: 18px; height: 18px;"></i> <span id="sec-title-glossary">Chỉ số Chất lượng & Thuật ngữ Đồ thị</span></h2>
                         
                         <!-- Docs Health Score -->
-                        <div class="glossary-card">
-                            <div class="glossary-title">
+                        <div class="glossary-card" id="card-health">
+                            <div class="glossary-title" id="term-health-title">
                                 <i data-lucide="heart"></i> Docs Health Score (Điểm sức khỏe tài liệu)
                             </div>
-                            <div class="glossary-desc">
+                            <div class="glossary-desc" id="term-health-desc">
                                 Điểm số đại diện cho chất lượng bao phủ của tài liệu kỹ thuật dựa trên phân tích trọng số của toàn bộ Code-Graph. Điểm số này phản ánh khách quan mức độ tài liệu hóa đối với các thành phần cốt lõi thay vì chỉ tính trung bình số lượng file.
                                 <br/><br/>
                                 <b>Công thức tính toán:</b>
                                 <br/>
                                 <code>Weighted Health Score = (Tổng trọng số của các nút đã được gán neo) / (Tổng trọng số của toàn bộ các nút) * 100</code>
                             </div>
-                            <div class="glossary-meta">
+                            <div class="glossary-meta" id="term-health-meta">
                                 <span class="badge badge-info"><i data-lucide="activity" style="width: 10px; height: 10px;"></i> Thang điểm: 0 - 100</span>
                                 <span class="badge badge-info"><i data-lucide="scale" style="width: 10px; height: 10px;"></i> Tính theo trọng số (Weighted)</span>
                             </div>
                         </div>
 
                         <!-- Blast Radius -->
-                        <div class="glossary-card">
-                            <div class="glossary-title">
+                        <div class="glossary-card" id="card-blast">
+                            <div class="glossary-title" id="term-blast-title">
                                 <i data-lucide="zap"></i> Blast Radius (Bán kính ảnh hưởng / Lan truyền ngược)
                             </div>
-                            <div class="glossary-desc">
+                            <div class="glossary-desc" id="term-blast-desc">
                                 Đo lường mức độ ảnh hưởng của một thành phần mã nguồn lên phần còn lại của hệ thống. Đây là <b>tổng số lượng các hàm, lớp, hoặc tệp tin khác trực tiếp hoặc gián tiếp gọi/phụ thuộc vào nút hiện tại (Upstream BFS)</b>.
                                 <br/><br/>
                                 Chỉ số này giúp nhà phát triển đánh giá mức độ rủi ro khi thay đổi code:
@@ -502,7 +634,7 @@
                                 <br/>• <b>Blast Radius từ 1 - 5:</b> Rủi ro trung bình, cần kiểm tra các file gọi trực tiếp.
                                 <br/>• <b>Blast Radius > 10:</b> Rủi ro rất cao, thay đổi có thể phá hỏng kiến trúc hệ thống (cần test hồi quy kỹ).
                             </div>
-                            <div class="glossary-meta">
+                            <div class="glossary-meta" id="term-blast-meta">
                                 <span class="badge badge-info"><i data-lucide="git-branch" style="width: 10px; height: 10px;"></i> Upstream BFS traversal</span>
                                 <span class="badge badge-warning"><i data-lucide="shield-alert" style="width: 10px; height: 10px;"></i> Chỉ số đo lường rủi ro</span>
                             </div>
@@ -520,11 +652,11 @@
                         </div>
 
                         <!-- Degree -->
-                        <div class="glossary-card">
-                            <div class="glossary-title">
+                        <div class="glossary-card" id="card-degree">
+                            <div class="glossary-title" id="term-degree-title">
                                 <i data-lucide="git-commit"></i> Degree (Bậc đồ thị)
                             </div>
-                            <div class="glossary-desc">
+                            <div class="glossary-desc" id="term-degree-desc">
                                 Là tổng số liên kết đi và đến của một nút (Node) trong đồ thị. Bậc đồ thị phản ánh mật độ kết nối trực tiếp của thành phần đó.
                                 <br/><br/>
                                 • <b>Bậc đi (Outdegree):</b> Số lượng các hàm/file khác mà nút hiện tại đang gọi/sử dụng (Downstream). Chỉ số này quá cao là dấu hiệu vi phạm nguyên lý Single Responsibility (ôm đồm quá nhiều logic).
@@ -533,25 +665,45 @@
                         </div>
 
                         <!-- God Nodes -->
-                        <div class="glossary-card">
-                            <div class="glossary-title">
+                        <div class="glossary-card" id="card-god">
+                            <div class="glossary-title" id="term-god-title">
                                 <i data-lucide="crown"></i> God Nodes (Nút cốt lõi / Điểm nóng nghiệp vụ)
                             </div>
-                            <div class="glossary-desc">
+                            <div class="glossary-desc" id="term-god-desc">
                                 Những thành phần mã nguồn có độ kết nối cực kỳ cao (Bậc đồ thị <code>Degree >= 20</code>). Đây là xương sống kiến trúc của dự án (ví dụ: database client, auth helper, logger). Việc tài liệu hóa và kiểm thử các God Nodes này luôn được hệ thống chấm điểm và ưu tiên cao nhất.
                             </div>
                         </div>
 
                         <!-- Calibration Weights -->
-                        <div class="glossary-card">
-                            <div class="glossary-title">
+                        <div class="glossary-card" id="card-weight">
+                            <div class="glossary-title" id="term-weight-title">
                                 <i data-lucide="sliders"></i> Node Weight (Trọng số thành phần mã)
                             </div>
-                            <div class="glossary-desc">
+                            <div class="glossary-desc" id="term-weight-desc">
                                 Đại diện cho mức độ quan trọng tương đối của từng loại thành phần mã nguồn để tính toán điểm sức khỏe tài liệu:
                                 <br/>• <b>Cốt lõi (Critical - Trọng số mặc định: 5.0):</b> Các God Nodes ảnh hưởng lớn đến hệ thống.
                                 <br/>• <b>Trung bình (Medium - Trọng số mặc định: 2.0):</b> Lớp, hàm, hoặc tệp tin tiêu chuẩn.
                                 <br/>• <b>Bổ trợ (Low - Trọng số mặc định: 0.5):</b> Các biến, hằng số, hoặc cấu hình phụ trợ.
+                            </div>
+                        </div>
+
+                        <!-- Stale Nodes -->
+                        <div class="glossary-card" id="card-stale">
+                            <div class="glossary-title" id="term-stale-title">
+                                <i data-lucide="alert-triangle"></i> Stale Nodes (Nút stale / Hết hạn)
+                            </div>
+                            <div class="glossary-desc" id="term-stale-desc">
+                                Các nút tài liệu đã bị lỗi thời hoặc không còn đồng bộ với mã nguồn. Trạng thái này xảy ra khi cấu trúc mã nguồn (tên hàm, lớp, tham số) thay đổi hoặc bị xóa, nhưng comment neo hoặc đường dẫn trong tài liệu tương ứng vẫn trỏ tới chữ ký cũ.
+                            </div>
+                        </div>
+
+                        <!-- Logic Drift -->
+                        <div class="glossary-card" id="card-drift">
+                            <div class="glossary-title" id="term-drift-title">
+                                <i data-lucide="git-compare"></i> Logic Drift / Drift Audit (Sai lệch nghiệp vụ)
+                            </div>
+                            <div class="glossary-desc" id="term-drift-desc">
+                                Sự sai lệch giữa đặc tả nghiệp vụ (Spec/Requirements) được tài liệu hóa và logic thực tế được triển khai trong mã nguồn. Hệ thống tự động phân tích và đối chiếu Bảng Quyết Định (Decision Table) trong Đặc tả với mã nguồn để phát hiện ra các điều kiện nhánh logic bị thiếu hoặc triển khai sai.
                             </div>
                         </div>
                     </div>
@@ -562,16 +714,16 @@
                         
                         <div class="glossary-card" style="gap: 16px;">
                             <div>
-                                <span class="badge badge-info" style="background-color: rgba(15, 157, 88, 0.08); color: var(--success-color); margin-bottom: 6px;"><i data-lucide="check-circle" style="width: 10px; height: 10px;"></i> Đạt chuẩn / Đầy đủ (Completed)</span>
-                                <p class="glossary-desc">Thành phần mã nguồn đã được định vị qua comment neo <code>&lt;!-- @graph-node --&gt;</code> trong tài liệu VÀ đã được AI Agent tóm tắt ngữ nghĩa thành công.</p>
+                                <span class="badge badge-info" id="trace-completed-title" style="background-color: rgba(15, 157, 88, 0.08); color: var(--success-color); margin-bottom: 6px;"><i data-lucide="check-circle" style="width: 10px; height: 10px;"></i> Đạt chuẩn / Đầy đủ (Completed)</span>
+                                <p class="glossary-desc" id="trace-completed-desc">Thành phần mã nguồn đã được định vị qua comment neo <code>&lt;!-- @graph-node --&gt;</code> trong tài liệu VÀ đã được AI Agent tóm tắt ngữ nghĩa thành công.</p>
                             </div>
                             <div style="border-top: 1px solid var(--border-color); padding-top: 12px;">
-                                <span class="badge badge-info" style="background-color: rgba(235, 87, 87, 0.08); color: var(--danger-color); margin-bottom: 6px;"><i data-lucide="x-circle" style="width: 10px; height: 10px;"></i> Chưa gán link (Unlinked)</span>
-                                <p class="glossary-desc">Thành phần mã nguồn chưa được liên kết đến bất kỳ mục tài liệu kỹ thuật nào trong thư mục <code>docs/</code>.</p>
+                                <span class="badge badge-info" id="trace-unlinked-title" style="background-color: rgba(235, 87, 87, 0.08); color: var(--danger-color); margin-bottom: 6px;"><i data-lucide="x-circle" style="width: 10px; height: 10px;"></i> Chưa gán link (Unlinked)</span>
+                                <p class="glossary-desc" id="trace-unlinked-desc">Thành phần mã nguồn chưa được liên kết đến bất kỳ mục tài liệu kỹ thuật nào trong thư mục <code>docs/</code>.</p>
                             </div>
                             <div style="border-top: 1px solid var(--border-color); padding-top: 12px;">
-                                <span class="badge badge-info" style="background-color: rgba(234, 88, 12, 0.08); color: var(--warning-color); margin-bottom: 6px;"><i data-lucide="alert-circle" style="width: 10px; height: 10px;"></i> Chưa mô tả AI (Unenriched)</span>
-                                <p class="glossary-desc">Thành phần mã đã được liên kết tài liệu nhưng chưa chạy quy trình làm giàu ngữ nghĩa (phân tích tóm tắt logic từ AI Agent) trong cơ sở dữ liệu đồ thị.</p>
+                                <span class="badge badge-info" id="trace-unenriched-title" style="background-color: rgba(234, 88, 12, 0.08); color: var(--warning-color); margin-bottom: 6px;"><i data-lucide="alert-circle" style="width: 10px; height: 10px;"></i> Chưa mô tả AI (Unenriched)</span>
+                                <p class="glossary-desc" id="trace-unenriched-desc">Thành phần mã đã được liên kết tài liệu nhưng chưa chạy quy trình làm giàu ngữ nghĩa (phân tích tóm tắt logic từ AI Agent) trong cơ sở dữ liệu đồ thị.</p>
                             </div>
                         </div>
                     </div>
@@ -616,6 +768,19 @@
                                 <span id="wiki-text-2">Tối ưu Blast Radius & God Nodes</span>
                             </a>
                         </li>
+                        <li class="menu-item">
+                            <a href="wiki/vi/understanding-stale-nodes.html" id="wiki-link-4">
+                                <i data-lucide="file-text"></i>
+                                <span id="wiki-text-4">Hiểu về các nút Stale (Bị lỗi thời)</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="wiki/vi/docs-code-double-binding.html" id="wiki-link-6">
+                                <i data-lucide="file-text"></i>
+                                <span id="wiki-text-6">Liên kết hai chiều Docs & Code</span>
+                            </a>
+                        </li>
+
                     </ul>
                 </div>
                 
@@ -627,6 +792,18 @@
                             <a href="wiki/vi/writing-docs-guidelines.html" id="wiki-link-3">
                                 <i data-lucide="file-text"></i>
                                 <span id="wiki-text-3">Viết tài liệu chuẩn PARA</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="wiki/vi/docs-structure-guidelines.html" id="wiki-link-5">
+                                <i data-lucide="file-text"></i>
+                                <span id="wiki-text-5">Cấu trúc thư mục Docs chuẩn</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="wiki/vi/docs-spec-standards.html" id="wiki-link-7">
+                                <i data-lucide="file-text"></i>
+                                <span id="wiki-text-7">Tiêu chuẩn viết Docs & Spec</span>
                             </a>
                         </li>
                     </ul>
@@ -795,54 +972,264 @@
             localStorage.setItem('sidebar-right-width', currentWidth);
         }
 
-        // Detect current language preference
-        const lang = document.documentElement.getAttribute('lang') || 'en';
-        if (lang !== 'vi') {
-            // Apply English translations dynamically to layout headings if not Vietnamese
-            document.getElementById('title-text').textContent = 'Help Center & Graph Glossary';
-            document.getElementById('subtitle-text').textContent = 'Technical documentation reference guide for developers regarding Code-Graph, Traceability, and Architecture.';
+        function applyHelpTranslations(lang) {
+            document.documentElement.setAttribute('lang', lang);
+            try {
+                localStorage.setItem('dashboard_lang', lang);
+            } catch (e) {}
 
-            // Translate headings
-            document.getElementById('sec-title-glossary').innerHTML = '<i data-lucide="bar-chart-3" style="width: 18px; height: 18px;"></i> Metrics & Glossary Explanation';
-            document.getElementById('sec-title-traceability').innerHTML = '<i data-lucide="check-square" style="width: 18px; height: 18px;"></i> Traceability Coverage Status';
-            
-            // Translate Callout
-            document.getElementById('api-callout-title').textContent = 'Special notice regarding API Endpoints (Entry Points):';
-            document.getElementById('api-callout-desc').innerHTML = 'API endpoints (e.g. <code>POST src/pages/api/crm/customers/index.ts</code>) are responsible for handling HTTP requests directly from clients over the network. They act as server <b>Entry Points</b> and have no other backend code calling them directly in the codebase. Therefore, **Upstream Blast Radius for API Endpoints is always 0**.';
+            if (lang !== 'vi') {
+                // Apply English translations dynamically to layout headings if not Vietnamese
+                document.getElementById('title-text').textContent = 'Help Center & Graph Glossary';
+                document.getElementById('subtitle-text').textContent = 'Technical documentation reference guide for developers regarding Code-Graph, Traceability, and Architecture.';
 
-            // Translate Wiki Column Titles
-            document.getElementById('col-title-arch').textContent = 'Architecture & Analysis';
-            document.getElementById('col-title-process').textContent = 'Workflows & Guidelines';
+                // Translate headings
+                document.getElementById('sec-title-glossary').textContent = 'Metrics & Glossary Explanation';
+                document.getElementById('sec-title-traceability').textContent = 'Traceability Coverage Status';
 
-            // Translate Wiki section header
-            const wikiHeader = document.getElementById('wiki-header-title');
-            if (wikiHeader) {
-                wikiHeader.innerHTML = '<i data-lucide="book-open" style="color: var(--accent-color); width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i> Developer Wiki';
+                // Translate Quick Index Table
+                document.getElementById('index-title').textContent = 'Quick Reference Index';
+                document.getElementById('th-index-term').textContent = 'Term / Metric';
+                document.getElementById('th-index-cat').textContent = 'Category';
+                document.getElementById('th-index-desc').textContent = 'Quick Description';
+                
+                document.getElementById('index-cat-health').textContent = 'Quality Metric';
+                document.getElementById('index-desc-health').textContent = 'Documentation coverage score based on Code-Graph weights.';
+                
+                document.getElementById('index-cat-blast').textContent = 'Risk Assessment';
+                document.getElementById('index-desc-blast').textContent = 'Measures the ripple effect of a component change on the system.';
+                
+                document.getElementById('index-cat-degree').textContent = 'Structural Attribute';
+                document.getElementById('index-desc-degree').textContent = 'Total count of inbound and outbound links for a node.';
+                
+                document.getElementById('index-cat-god').textContent = 'Structural Attribute';
+                document.getElementById('index-desc-god').textContent = 'Highly connected core code components (Degree >= 20).';
+                
+                document.getElementById('index-cat-weight').textContent = 'Priority Weight';
+                document.getElementById('index-desc-weight').textContent = 'Relative importance priority weights for health scoring.';
+                
+                document.getElementById('index-cat-stale').textContent = 'Warning Alert';
+                document.getElementById('index-desc-stale').textContent = 'Outdated or desynchronized documentation nodes.';
+                
+                document.getElementById('index-cat-drift').textContent = 'Warning Alert';
+                document.getElementById('index-desc-drift').textContent = 'Discrepancy between business specs and code implementation.';
+                
+                // Translate Callout
+                document.getElementById('api-callout-title').textContent = 'Special notice regarding API Endpoints (Entry Points):';
+                document.getElementById('api-callout-desc').innerHTML = 'API endpoints (e.g. <code>POST src/pages/api/crm/customers/index.ts</code>) are responsible for handling HTTP requests directly from clients over the network. They act as server <b>Entry Points</b> and have no other backend code calling them directly in the codebase. Therefore, **Upstream Blast Radius for API Endpoints is always 0**.';
+
+                // Translate Glossary Items
+                document.getElementById('term-health-title').innerHTML = '<i data-lucide="heart"></i> Docs Health Score';
+                document.getElementById('term-health-desc').innerHTML = 'A score representing the coverage quality of technical documentation based on the weighted analysis of the entire Code-Graph. This score objectively reflects the level of documentation for core components rather than just averaging the number of files.<br/><br/><b>Calculation Formula:</b><br/><code>Weighted Health Score = (Total weight of nodes with anchors) / (Total weight of all nodes) * 100</code>';
+                document.getElementById('term-health-meta').innerHTML = '<span class="badge badge-info"><i data-lucide="activity" style="width: 10px; height: 10px;"></i> Range: 0 - 100</span><span class="badge badge-info"><i data-lucide="scale" style="width: 10px; height: 10px;"></i> Weighted calculation</span>';
+
+                document.getElementById('term-blast-title').innerHTML = '<i data-lucide="zap"></i> Blast Radius (Upstream BFS)';
+                document.getElementById('term-blast-desc').innerHTML = 'Measures the impact of a code component on the rest of the system. This is the <b>total number of other functions, classes, or files that directly or indirectly call/depend on the current node (Upstream BFS)</b>.<br/><br/>This metric helps developers assess the risk of changing code:<br/>• <b>Blast Radius = 0:</b> Safe changes, no impact on other backend components.<br/>• <b>Blast Radius 1 - 5:</b> Medium risk, check files calling this directly.<br/>• <b>Blast Radius > 10:</b> Very high risk, changes could break system architecture (requires regression testing).';
+                document.getElementById('term-blast-meta').innerHTML = '<span class="badge badge-info"><i data-lucide="git-branch" style="width: 10px; height: 10px;"></i> Upstream BFS traversal</span><span class="badge badge-warning"><i data-lucide="shield-alert" style="width: 10px; height: 10px;"></i> Risk metric</span>';
+
+                document.getElementById('term-degree-title').innerHTML = '<i data-lucide="git-commit"></i> Degree';
+                document.getElementById('term-degree-desc').innerHTML = 'The total number of incoming and outgoing links of a Node in the graph. The degree reflects the density of direct connections for that component.<br/><br/>• <b>Outdegree:</b> Number of other functions/files called by the current node (Downstream). A high outdegree suggests a violation of the Single Responsibility Principle.<br/>• <b>Indegree:</b> Number of functions/files calling the current node (Upstream).';
+
+                document.getElementById('term-god-title').innerHTML = '<i data-lucide="crown"></i> God Nodes (Core Components)';
+                document.getElementById('term-god-desc').innerHTML = 'Code components with extremely high connectivity (<code>Degree >= 20</code>). These are the architectural backbone of the project (e.g. database client, auth helper, logger). Documenting and testing these God Nodes always yields the highest score and priority.';
+
+                document.getElementById('term-weight-title').innerHTML = '<i data-lucide="sliders"></i> Node Weight';
+                document.getElementById('term-weight-desc').innerHTML = 'Represents the relative priority of each code entity type for calculating the documentation health score:<br/>• <b>Critical (Default weight: 5.0):</b> High-impact God Nodes.<br/>• <b>Medium (Default weight: 2.0):</b> Standard functions, classes, or source files.<br/>• <b>Low (Default weight: 0.5):</b> Auxiliary variables, constants, or configurations.';
+
+                document.getElementById('term-stale-title').innerHTML = '<i data-lucide="alert-triangle"></i> Stale Nodes';
+                document.getElementById('term-stale-desc').textContent = 'Documentation nodes that are outdated or out of sync with the source code. This occurs when source code structures (function names, classes, parameters) change or are deleted, but the anchor comments or paths in the documents still point to the old signatures.';
+
+                document.getElementById('term-drift-title').innerHTML = '<i data-lucide="git-compare"></i> Logic Drift / Drift Audit';
+                document.getElementById('term-drift-desc').textContent = 'The discrepancy between documented business specifications (Specs/Requirements) and the actual logic implemented in the source code. The system automatically compares the Decision Table in the Spec with the code to detect missing logic paths or incorrect implementations.';
+
+                // Translate Traceability Status Card
+                document.getElementById('trace-completed-title').innerHTML = '<i data-lucide="check-circle" style="width: 10px; height: 10px;"></i> Completed (Full)';
+                document.getElementById('trace-completed-desc').innerHTML = 'The code component has been mapped with a <code>&lt;!-- @graph-node --&gt;</code> anchor in the documentation AND has been successfully summarized by the AI Agent.';
+                document.getElementById('trace-unlinked-title').innerHTML = '<i data-lucide="x-circle" style="width: 10px; height: 10px;"></i> Unlinked';
+                document.getElementById('trace-unlinked-desc').innerHTML = 'The code component has not been linked to any technical documentation page under the <code>docs/</code> folder.';
+                document.getElementById('trace-unenriched-title').innerHTML = '<i data-lucide="alert-circle" style="width: 10px; height: 10px;"></i> Unenriched';
+                document.getElementById('trace-unenriched-desc').innerHTML = 'The code component is linked to a document but has not gone through the AI Agent semantic enrichment process (logic summary) in the graph database.';
+
+                // Translate Wiki Column Titles
+                document.getElementById('col-title-arch').textContent = 'Architecture & Analysis';
+                document.getElementById('col-title-process').textContent = 'Workflows & Guidelines';
+
+                // Translate Wiki section header
+                const wikiHeader = document.getElementById('wiki-header-title');
+                if (wikiHeader) {
+                    wikiHeader.innerHTML = '<i data-lucide="book-open" style="color: var(--accent-color); width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i> Developer Wiki';
+                }
+                
+                // Article 1
+                const wikiLink1 = document.getElementById('wiki-link-1');
+                const wikiText1 = document.getElementById('wiki-text-1');
+                if (wikiLink1) wikiLink1.setAttribute('href', 'wiki/en/importance-of-links.html');
+                if (wikiText1) wikiText1.textContent = 'The Importance of Inbound and Outbound Links';
+
+                // Article 2
+                const wikiLink2 = document.getElementById('wiki-link-2');
+                const wikiText2 = document.getElementById('wiki-text-2');
+                if (wikiLink2) wikiLink2.setAttribute('href', 'wiki/en/optimizing-blast-radius.html');
+                if (wikiText2) wikiText2.textContent = 'Optimizing Blast Radius & God Nodes';
+
+                // Article 3
+                const wikiLink3 = document.getElementById('wiki-link-3');
+                const wikiText3 = document.getElementById('wiki-text-3');
+                if (wikiLink3) wikiLink3.setAttribute('href', 'wiki/en/writing-docs-guidelines.html');
+                if (wikiText3) wikiText3.textContent = 'Writing Docs in PARA Workspace';
+
+                // Article 4
+                const wikiLink4 = document.getElementById('wiki-link-4');
+                const wikiText4 = document.getElementById('wiki-text-4');
+                if (wikiLink4) wikiLink4.setAttribute('href', 'wiki/en/understanding-stale-nodes.html');
+                if (wikiText4) wikiText4.textContent = 'Understanding Stale Graph Nodes';
+
+                // Article 5
+                const wikiLink5 = document.getElementById('wiki-link-5');
+                const wikiText5 = document.getElementById('wiki-text-5');
+                if (wikiLink5) wikiLink5.setAttribute('href', 'wiki/en/docs-structure-guidelines.html');
+                if (wikiText5) wikiText5.textContent = 'Docs Folder Structure Best Practice';
+
+                // Article 6
+                const wikiLink6 = document.getElementById('wiki-link-6');
+                const wikiText6 = document.getElementById('wiki-text-6');
+                if (wikiLink6) wikiLink6.setAttribute('href', 'wiki/en/docs-code-double-binding.html');
+                if (wikiText6) wikiText6.textContent = 'Docs-Code Double-Binding Traceability';
+
+                // Article 7
+                const wikiLink7 = document.getElementById('wiki-link-7');
+                const wikiText7 = document.getElementById('wiki-text-7');
+                if (wikiLink7) wikiLink7.setAttribute('href', 'wiki/en/docs-spec-standards.html');
+                if (wikiText7) wikiText7.textContent = 'Docs & Spec Writing Standards';
+
+            } else {
+                // Apply Vietnamese translations
+                document.getElementById('title-text').textContent = 'Trung tâm Trợ giúp & Thuật ngữ Đồ thị';
+                document.getElementById('subtitle-text').textContent = 'Tài liệu tra cứu thuật ngữ, quy chuẩn thiết lập và giải thích các chỉ số Đồ thị mã nguồn Code-Graph cho lập trình viên.';
+
+                document.getElementById('sec-title-glossary').textContent = 'Giải thích Thuật ngữ & Chỉ số';
+                document.getElementById('sec-title-traceability').textContent = 'Mức độ Bao phủ của Tài liệu';
+
+                // Translate Quick Index Table (Vietnamese)
+                document.getElementById('index-title').textContent = 'Mục lục tra cứu nhanh';
+                document.getElementById('th-index-term').textContent = 'Thuật ngữ / Chỉ số';
+                document.getElementById('th-index-cat').textContent = 'Phân loại';
+                document.getElementById('th-index-desc').textContent = 'Mô tả nhanh';
+                
+                document.getElementById('index-cat-health').textContent = 'Chỉ số chất lượng';
+                document.getElementById('index-desc-health').textContent = 'Điểm số bao phủ tài liệu kỹ thuật dựa trên Code-Graph.';
+                
+                document.getElementById('index-cat-blast').textContent = 'Đánh giá rủi ro';
+                document.getElementById('index-desc-blast').textContent = 'Đo lường mức độ ảnh hưởng của component lên phần còn lại của hệ thống.';
+                
+                document.getElementById('index-cat-degree').textContent = 'Đặc tính cấu trúc';
+                document.getElementById('index-desc-degree').textContent = 'Tổng số liên kết đi (Outdegree) và đến (Indegree) của một nút.';
+                
+                document.getElementById('index-cat-god').textContent = 'Đặc tính cấu trúc';
+                document.getElementById('index-desc-god').textContent = 'Thành phần mã có độ kết nối cực kỳ cao (Degree >= 20).';
+                
+                document.getElementById('index-cat-weight').textContent = 'Độ ưu tiên';
+                document.getElementById('index-desc-weight').textContent = 'Trọng số phân loại mức độ quan trọng để tính điểm sức khỏe.';
+                
+                document.getElementById('index-cat-stale').textContent = 'Cảnh báo lỗi';
+                document.getElementById('index-desc-stale').textContent = 'Nút tài liệu đã bị lỗi thời hoặc không còn đồng bộ với mã nguồn.';
+                
+                document.getElementById('index-cat-drift').textContent = 'Cảnh báo lỗi';
+                document.getElementById('index-desc-drift').textContent = 'Sự sai lệch giữa đặc tả nghiệp vụ và mã nguồn thực tế.';
+                
+                document.getElementById('api-callout-title').textContent = 'Lưu ý đặc biệt đối với API Endpoints (Entry Points):';
+                document.getElementById('api-callout-desc').innerHTML = 'Các API endpoint (như <code>POST src/pages/api/crm/customers/index.ts</code>) có nhiệm vụ tiếp nhận HTTP request trực tiếp từ trình duyệt của người dùng thông qua mạng. Chúng là các <b>điểm đầu vào (Entry Points)</b> của server và không có bất kỳ tệp code backend nào khác trong codebase gọi hàm xử lý của chúng trực tiếp. Do đó, **Upstream Blast Radius của API Endpoint luôn luôn bằng 0**.';
+
+                document.getElementById('term-health-title').innerHTML = '<i data-lucide="heart"></i> Docs Health Score (Điểm sức khỏe tài liệu)';
+                document.getElementById('term-health-desc').innerHTML = 'Điểm số đại diện cho chất lượng bao phủ của tài liệu kỹ thuật dựa trên phân tích trọng số của toàn bộ Code-Graph. Điểm số này phản ánh khách quan mức độ tài liệu hóa đối với các thành phần cốt lõi thay vì chỉ tính trung bình số lượng file.<br/><br/><b>Công thức tính toán:</b><br/><code>Weighted Health Score = (Tổng trọng số của các nút đã được gán neo) / (Tổng trọng số của toàn bộ các nút) * 100</code>';
+                document.getElementById('term-health-meta').innerHTML = '<span class="badge badge-info"><i data-lucide="activity" style="width: 10px; height: 10px;"></i> Thang điểm: 0 - 100</span><span class="badge badge-info"><i data-lucide="scale" style="width: 10px; height: 10px;"></i> Tính theo trọng số (Weighted)</span>';
+
+                document.getElementById('term-blast-title').innerHTML = '<i data-lucide="zap"></i> Blast Radius (Bán kính ảnh hưởng / Lan truyền ngược)';
+                document.getElementById('term-blast-desc').innerHTML = 'Đo lường mức độ ảnh hưởng của một thành phần mã nguồn lên phần còn lại của hệ thống. Đây là <b>tổng số lượng các hàm, lớp, hoặc tệp tin khác trực tiếp hoặc gián tiếp gọi/phụ thuộc vào nút hiện tại (Upstream BFS)</b>.<br/><br/>Chỉ số này giúp nhà phát triển đánh giá mức độ rủi ro khi thay đổi code:<br/>• <b>Blast Radius = 0:</b> Thay đổi an toàn, không ảnh hưởng đến các thành phần backend khác.<br/>• <b>Blast Radius từ 1 - 5:</b> Rủi ro trung bình, cần kiểm tra các file gọi trực tiếp.<br/>• <b>Blast Radius > 10:</b> Rủi ro rất cao, thay đổi có thể phá hỏng kiến trúc hệ thống (cần test hồi quy kỹ).';
+                document.getElementById('term-blast-meta').innerHTML = '<span class="badge badge-info"><i data-lucide="git-branch" style="width: 10px; height: 10px;"></i> Upstream BFS traversal</span><span class="badge badge-warning"><i data-lucide="shield-alert" style="width: 10px; height: 10px;"></i> Chỉ số đo lường rủi ro</span>';
+
+                document.getElementById('term-degree-title').innerHTML = '<i data-lucide="git-commit"></i> Degree (Bậc đồ thị)';
+                document.getElementById('term-degree-desc').innerHTML = 'Là tổng số liên kết đi và đến của một nút (Node) trong đồ thị. Bậc đồ thị phản ánh mật độ kết nối trực tiếp của thành phần đó.<br/><br/>• <b>Bậc đi (Outdegree):</b> Số lượng các hàm/file khác mà nút hiện tại đang gọi/sử dụng (Downstream). Chỉ số này quá cao là dấu hiệu vi phạm nguyên lý Single Responsibility (ôm đồm quá nhiều logic).<br/>• <b>Bậc đến (Indegree):</b> Số lượng các hàm/file đang gọi nút hiện tại (Upstream).';
+
+                document.getElementById('term-god-title').innerHTML = '<i data-lucide="crown"></i> God Nodes (Nút cốt lõi / Điểm nóng nghiệp vụ)';
+                document.getElementById('term-god-desc').innerHTML = 'Những thành phần mã nguồn có độ kết nối cực kỳ cao (Bậc đồ thị <code>Degree >= 20</code>). Đây là xương sống kiến trúc của dự án (ví dụ: database client, auth helper, logger). Việc tài liệu hóa và kiểm thử các God Nodes này luôn được hệ thống chấm điểm và ưu tiên cao nhất.';
+
+                document.getElementById('term-weight-title').innerHTML = '<i data-lucide="sliders"></i> Node Weight (Trọng số thành phần mã)';
+                document.getElementById('term-weight-desc').innerHTML = 'Đai diện cho mức độ quan trọng tương đối của từng loại thành phần mã nguồn để tính toán điểm sức khỏe tài liệu:<br/>• <b>Cốt lõi (Critical - Trọng số mặc định: 5.0):</b> Các God Nodes ảnh hưởng lớn đến hệ thống.<br/>• <b>Trung bình (Medium - Trọng số mặc định: 2.0):</b> Lớp, hàm, hoặc tệp tin tiêu chuẩn.<br/>• <b>Bổ trợ (Low - Trọng số mặc định: 0.5):</b> Các biến, hằng số, hoặc cấu hình phụ trợ.';
+
+                document.getElementById('term-stale-title').innerHTML = '<i data-lucide="alert-triangle"></i> Stale Nodes (Nút stale / Hết hạn)';
+                document.getElementById('term-stale-desc').textContent = 'Các nút tài liệu đã bị lỗi thời hoặc không còn đồng bộ với mã nguồn. Trạng thái này xảy ra khi cấu trúc mã nguồn (tên hàm, lớp, tham số) thay đổi hoặc bị xóa, nhưng comment neo hoặc đường dẫn trong tài liệu tương ứng vẫn trỏ tới chữ ký cũ.';
+
+                document.getElementById('term-drift-title').innerHTML = '<i data-lucide="git-compare"></i> Logic Drift / Drift Audit (Sai lệch nghiệp vụ)';
+                document.getElementById('term-drift-desc').textContent = 'Sự sai lệch giữa đặc tả nghiệp vụ (Spec/Requirements) được tài liệu hóa và logic thực tế được triển khai trong mã nguồn. Hệ thống tự động phân tích và đối chiếu Bảng Quyết Định (Decision Table) trong Đặc tả với mã nguồn để phát hiện ra các điều kiện nhánh logic bị thiếu hoặc triển khai sai.';
+
+                document.getElementById('trace-completed-title').innerHTML = '<i data-lucide="check-circle" style="width: 10px; height: 10px;"></i> Đạt chuẩn / Đầy đủ (Completed)';
+                document.getElementById('trace-completed-desc').innerHTML = 'Thành phần mã nguồn đã được định vị qua comment neo <code>&lt;!-- @graph-node --&gt;</code> trong tài liệu VÀ đã được AI Agent tóm tắt ngữ nghĩa thành công.';
+                document.getElementById('trace-unlinked-title').innerHTML = '<i data-lucide="x-circle" style="width: 10px; height: 10px;"></i> Chưa gán link (Unlinked)';
+                document.getElementById('trace-unlinked-desc').innerHTML = 'Thành phần mã nguồn chưa được liên kết đến bất kỳ mục tài liệu kỹ thuật nào trong thư mục <code>docs/</code>.';
+                document.getElementById('trace-unenriched-title').innerHTML = '<i data-lucide="alert-circle" style="width: 10px; height: 10px;"></i> Chưa mô tả AI (Unenriched)';
+                document.getElementById('trace-unenriched-desc').innerHTML = 'Thành phần mã đã được liên kết tài liệu nhưng chưa chạy quy trình làm giàu ngữ nghĩa (phân tích tóm tắt logic từ AI Agent) trong cơ sở dữ liệu đồ thị.';
+
+                document.getElementById('col-title-arch').textContent = 'Kiến trúc & Phân tích';
+                document.getElementById('col-title-process').textContent = 'Quy trình & Hướng dẫn';
+
+                const wikiHeader = document.getElementById('wiki-header-title');
+                if (wikiHeader) {
+                    wikiHeader.innerHTML = '<i data-lucide="book-open" style="color: var(--accent-color); width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i> Developer Wiki';
+                }
+                
+                const wikiLink1 = document.getElementById('wiki-link-1');
+                const wikiText1 = document.getElementById('wiki-text-1');
+                if (wikiLink1) wikiLink1.setAttribute('href', 'wiki/vi/importance-of-links.html');
+                if (wikiText1) wikiText1.textContent = 'Tầm quan trọng của liên kết Neo tài liệu';
+
+                const wikiLink2 = document.getElementById('wiki-link-2');
+                const wikiText2 = document.getElementById('wiki-text-2');
+                if (wikiLink2) wikiLink2.setAttribute('href', 'wiki/vi/optimizing-blast-radius.html');
+                if (wikiText2) wikiText2.textContent = 'Tối ưu hóa Bán kính ảnh hưởng & God Nodes';
+
+                const wikiLink3 = document.getElementById('wiki-link-3');
+                const wikiText3 = document.getElementById('wiki-text-3');
+                if (wikiLink3) wikiLink3.setAttribute('href', 'wiki/vi/writing-docs-guidelines.html');
+                if (wikiText3) wikiText3.textContent = 'Quy chuẩn viết tài liệu trong PARA';
+
+                const wikiLink4 = document.getElementById('wiki-link-4');
+                const wikiText4 = document.getElementById('wiki-text-4');
+                if (wikiLink4) wikiLink4.setAttribute('href', 'wiki/vi/understanding-stale-nodes.html');
+                if (wikiText4) wikiText4.textContent = 'Hiểu về các nút Stale trong đồ thị';
+
+                const wikiLink5 = document.getElementById('wiki-link-5');
+                const wikiText5 = document.getElementById('wiki-text-5');
+                if (wikiLink5) wikiLink5.setAttribute('href', 'wiki/vi/docs-structure-guidelines.html');
+                if (wikiText5) wikiText5.textContent = 'Cấu trúc thư mục Docs chuẩn';
+
+                const wikiLink6 = document.getElementById('wiki-link-6');
+                const wikiText6 = document.getElementById('wiki-text-6');
+                if (wikiLink6) wikiLink6.setAttribute('href', 'wiki/vi/docs-code-double-binding.html');
+                if (wikiText6) wikiText6.textContent = 'Liên kết hai chiều Docs & Code';
+
+                const wikiLink7 = document.getElementById('wiki-link-7');
+                const wikiText7 = document.getElementById('wiki-text-7');
+                if (wikiLink7) wikiLink7.setAttribute('href', 'wiki/vi/docs-spec-standards.html');
+                if (wikiText7) wikiText7.textContent = 'Tiêu chuẩn viết Docs & Spec';
+
             }
-            
-            // Article 1
-            const wikiLink1 = document.getElementById('wiki-link-1');
-            const wikiText1 = document.getElementById('wiki-text-1');
-            if (wikiLink1) wikiLink1.setAttribute('href', 'wiki/en/importance-of-links.html');
-            if (wikiText1) wikiText1.textContent = 'The Importance of Inbound and Outbound Links';
 
-            // Article 2
-            const wikiLink2 = document.getElementById('wiki-link-2');
-            const wikiText2 = document.getElementById('wiki-text-2');
-            if (wikiLink2) wikiLink2.setAttribute('href', 'wiki/en/optimizing-blast-radius.html');
-            if (wikiText2) wikiText2.textContent = 'Optimizing Blast Radius & God Nodes';
-
-            // Article 3
-            const wikiLink3 = document.getElementById('wiki-link-3');
-            const wikiText3 = document.getElementById('wiki-text-3');
-            if (wikiLink3) wikiLink3.setAttribute('href', 'wiki/en/writing-docs-guidelines.html');
-            if (wikiText3) wikiText3.textContent = 'Writing Docs in PARA Workspace';
-
-            // Re-create icons for translated headers
             if (window.lucide) {
                 window.lucide.createIcons();
             }
         }
+
+        // Initialize language
+        const initialLang = localStorage.getItem('dashboard_lang') || 'en';
+        applyHelpTranslations(initialLang);
+
+        // Listen for language sync events
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.type === 'set-lang') {
+                applyHelpTranslations(e.data.lang);
+            }
+        });
     </script>
 </body>
 </html>

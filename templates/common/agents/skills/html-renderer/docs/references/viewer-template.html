@@ -53,6 +53,7 @@
             --accent-hover: #1b85af;
             --code-bg: #252525;
             --hover-color: rgba(255, 255, 255, 0.055);
+            color-scheme: dark;
         }
 
         * {
@@ -878,16 +879,30 @@
         document.documentElement.setAttribute('data-theme', theme);
         mermaid.initialize({ theme: theme === 'dark' ? 'dark' : 'light' });
 
-        // Listen for theme change message from Portal
+        // Listen for theme and language change messages from Portal
         window.addEventListener('message', (e) => {
-            if (e.data && e.data.type === 'set-theme') {
-                const newTheme = e.data.theme;
-                document.documentElement.setAttribute('data-theme', newTheme);
-                // Reload page if theme changes to force mermaid rebuild with new style
-                if (theme !== newTheme) {
-                    theme = newTheme;
-                    localStorage.setItem('theme', newTheme);
-                    location.reload();
+            if (e.data) {
+                if (e.data.type === 'set-theme') {
+                    const newTheme = e.data.theme;
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    // Reload page if theme changes to force mermaid rebuild with new style
+                    if (theme !== newTheme) {
+                        theme = newTheme;
+                        localStorage.setItem('theme', newTheme);
+                        location.reload();
+                    }
+                } else if (e.data.type === 'set-lang') {
+                    const newLang = e.data.lang;
+                    const currentHref = window.location.href;
+                    let targetHref = null;
+                    if (newLang === 'en' && currentHref.includes('/vi/')) {
+                        targetHref = currentHref.replace('/vi/', '/en/');
+                    } else if (newLang === 'vi' && currentHref.includes('/en/')) {
+                        targetHref = currentHref.replace('/en/', '/vi/');
+                    }
+                    if (targetHref && targetHref !== currentHref) {
+                        window.location.href = targetHref;
+                    }
                 }
             }
         });
@@ -1462,6 +1477,7 @@
                         if (svgElement && window.svgPanZoom) {
                             svgElement.style.width = '100%';
                             svgElement.style.height = '100%';
+                            svgElement.style.maxWidth = 'none';
                             
                             window.activePanZoomInstances[item.chartId] = window.svgPanZoom(svgElement, {
                                 zoomEnabled: true,
@@ -1475,7 +1491,6 @@
                         }
                     });
                 }
-                
                 generateTOC();
                 applyTypography();
                 setupCodeBlockCopyButtons();

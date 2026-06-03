@@ -58,3 +58,23 @@ Cờ `--graph` là tham số cực kỳ quan trọng khi chạy kèm với các 
     *   Giúp AI Agent nắm được sơ đồ liên kết chính xác nhất của dự án ở thời điểm hiện tại.
     *   Tránh việc AI tự ý đoán hoặc sinh nội dung sai lệch so với mã nguồn thực tế (Anti-Hallucination).
     *   Tự động neo các `@graph-node` chuẩn xác vào tài liệu dựa trên phân tích Blast Radius và các God Nodes nóng nhất.
+
+---
+
+## 💡 Đề xuất câu lệnh & Prompt gợi ý
+
+Dưới đây là một số câu lệnh hữu ích bạn có thể gõ vào chat với AI Agent để quản lý và đồng bộ tài liệu:
+
+*   **Tự động cập nhật tài liệu đồng bộ với thay đổi mã nguồn**:
+    ```text
+    /docs [project-name] update --graph
+    ```
+*   **Kiểm tra độ phủ tài liệu và neo graph-node còn thiếu**:
+    ```text
+    /docs [project-name] review --graph
+    ```
+*   **Biên dịch tài liệu thành trang HTML tĩnh Notion-style**:
+    ```text
+    /docs [project-name] --render --graph
+    ```
+

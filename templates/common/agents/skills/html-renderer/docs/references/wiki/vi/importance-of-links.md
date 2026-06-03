@@ -81,3 +81,24 @@ E ──> B ──┘
 | :--- | :--- | :--- | :--- |
 | **Đến (Indegree)** | Upstream / Blast Radius | **An toàn hệ thống**<br/>(Security & Stability) | Blast Radius càng cao $\rightarrow$ Cần review code càng kỹ, viết tài liệu chi tiết, tăng cường phủ test. |
 | **Đi (Outdegree)** | Downstream / Coupling | **Độ sạch của mã nguồn**<br/>(Clean Code & Testability) | Outdegree quá cao $\rightarrow$ Cần refactor chia nhỏ hàm, tách biệt các tầng logic xử lý. |
+
+---
+
+## 💡 Đề xuất câu lệnh & Prompt gợi ý
+
+Dưới đây là một số câu lệnh hữu ích bạn có thể gõ vào chat với AI Agent để phân tích liên kết và tầm ảnh hưởng của mã nguồn:
+
+*   **Kiểm tra các neo liên kết bị thiếu hoặc lỗi thời**:
+    ```text
+    /docs [project-name] review --graph
+    ```
+*   **Truy vấn thông tin liên kết của một node cụ thể**:
+    Sử dụng công cụ MCP `graph_query` hoặc `graph_edges` hoặc hỏi trực tiếp:
+    ```text
+    Tìm các hàm gọi trực tiếp (Indegree) và các hàm phụ thuộc (Outdegree) của file src/lib/auth.ts
+    ```
+*   **Xây dựng lại đồ thị liên kết của dự án**:
+    ```text
+    /para-graph build [project-name]
+    ```
+

@@ -31,3 +31,24 @@ Một thành phần mã nguồn (hàm, class hoặc file) được coi là **God
 ### 🧪 Viết Unit Test bao phủ chặt chẽ
 - Bất kỳ nút nào có `Blast Radius > 5` đều bắt buộc phải có Unit Test kiểm thử đầy đủ các trường hợp biên (edge cases).
 - Đảm bảo việc refactor code không làm thay đổi hành vi đầu ra mong muốn của hàm.
+
+---
+
+## 💡 Đề xuất câu lệnh & Prompt gợi ý
+
+Dưới đây là một số câu lệnh và prompt hữu ích để tối ưu hóa kiến trúc và giảm thiểu rủi ro:
+
+*   **Tìm kiếm các God Nodes trong dự án**:
+    Sử dụng công cụ MCP `graph_god_nodes` hoặc hỏi Agent:
+    ```text
+    Liệt kê tất cả các God Nodes có Degree >= 20 trong dự án này để kiểm tra rủi ro
+    ```
+*   **Phân tích Blast Radius của một hàm/file cụ thể**:
+    Sử dụng công cụ MCP `graph_impact_analysis` hoặc hỏi Agent:
+    ```text
+    Tính toán Blast Radius khi tôi sửa đổi hàm 'autoMatchCustomer' trong file 'src/lib/reconciliation.ts'
+    ```
+*   **Đề xuất chiến lược refactor giảm Blast Radius**:
+    ```text
+    Đề xuất cách phân rã và refactor file src/lib/reconciliation.ts để giảm bớt Outdegree và Blast Radius
+    ```

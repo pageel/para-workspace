@@ -81,3 +81,24 @@ E ──> B ──┘
 | :--- | :--- | :--- | :--- |
 | **Inbound (Indegree)** | Upstream / Blast Radius | **System Safety**<br/>(Security & Stability) | Higher Blast Radius $\rightarrow$ Rigorous code review, detailed documentation, and increased test coverage. |
 | **Outbound (Outdegree)** | Downstream / Coupling | **Code Cleanliness**<br/>(Clean Code & Testability) | Outdegree too high $\rightarrow$ Refactor into smaller modules to separate different layers of logic. |
+
+---
+
+## 💡 Suggested Prompts & Commands
+
+Here are some useful prompts you can type in the chat with the AI Agent to analyze code dependencies and impact:
+
+*   **Review missing or outdated documentation links**:
+    ```text
+    /docs [project-name] review --graph
+    ```
+*   **Query the connections of a specific code node**:
+    Use the `graph_query` or `graph_edges` MCP tools, or ask directly in chat:
+    ```text
+    Find direct callers (Indegree) and dependencies (Outdegree) of file src/lib/auth.ts
+    ```
+*   **Rebuild the project dependency graph**:
+    ```text
+    /para-graph build [project-name]
+    ```
+

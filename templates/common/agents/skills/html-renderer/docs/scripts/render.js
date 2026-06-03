@@ -156,6 +156,10 @@ const translations = {
         calibrationFolders: "Loại trừ thư mục tài liệu",
         calibrationWeights: "Trọng số thành phần mã",
         calibrationReset: "Đặt lại mặc định",
+        alignmentTitle: "Cân chỉnh Đặc tả & Mã nguồn (Docs-Code Alignment)",
+        alignmentDocLabel: "Đặc tả:",
+        alignmentDecisionTable: "Bảng quyết định nghiệp vụ (Decision Table)",
+        alignmentDriftAudit: "Báo cáo sai lệch & Gaps (Drift Audit)",
         calibrationDesc: "Trọng số đại diện cho độ quan trọng tương đối của từng cấu phần mã:<br/>• <b>Cốt lõi:</b> Các cấu phần lõi ảnh hưởng lớn (Cấu phần Siêu kết nối, độ kết nối >= 20).<br/>• <b>Trung bình:</b> Hàm, lớp, tệp tin tiêu chuẩn.<br/>• <b>Bổ trợ:</b> Các biến và hằng số phụ trợ.<br/>Tài liệu hóa phần Cốt lõi đóng góp điểm số cao hơn."
     },
     en: {
@@ -260,6 +264,10 @@ const translations = {
         calibrationFolders: "Exclude Document Folders",
         calibrationWeights: "Code Entity Weights",
         calibrationReset: "Reset to Defaults",
+        alignmentTitle: "Docs-Code Alignment Calibration",
+        alignmentDocLabel: "Spec Document:",
+        alignmentDecisionTable: "Business Decision Table",
+        alignmentDriftAudit: "Logic Drift & Gaps Audit",
         calibrationDesc: "Weights represent the relative priority of each individual code entity:<br/>• <b>Critical:</b> High-impact core components (God Nodes, degree >= 20).<br/>• <b>Medium:</b> Standard functions, classes, and source files.<br/>• <b>Low:</b> Auxiliary variables and constants.<br/>Documenting Critical components contributes more to the overall health score."
     }
 };
@@ -390,8 +398,10 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
         }
 
         let modifiedMarkdown = markdownContent;
-        if (linkedNodeIds.length > 0 && graphNodesMap) {
+        const isWiki = sourceFile.includes('/wiki/') || sourceFile.includes('\\wiki\\') || path.dirname(sourceFile).split(path.sep).includes('wiki');
+        if (linkedNodeIds.length > 0 && graphNodesMap && !isWiki) {
             const projectDir = path.dirname(rootDir);
+
             const docNodesTitle = workspaceLang === 'vi' ? 'Các thành phần mã được tham chiếu' : 'Referenced Code Entities';
             const thEntity = workspaceLang === 'vi' ? 'Thành phần mã' : 'Entity';
             const thType = workspaceLang === 'vi' ? 'Phân loại' : 'Type';
@@ -825,11 +835,30 @@ function renderDirectory(srcDir, destDir, template) {
                 const traceabilityHeader = '## Graph Traceability';
                 const updatedDate = new Date().toISOString().split('T')[0];
                 
-                const docsWithAnchorsPct = Math.round(docsWithAnchors / allMdFiles.length * 100);
-                const linkedDocsPct = Math.round(linkedNodes.length / enrichableNodes.length * 100);
-                const linkedCodePct = Math.round(codeLinkedNodes.length / enrichableNodes.length * 100);
-                const godDocsPct = godNodes.length > 0 ? Math.round(documentedGodNodesCount / godNodes.length * 100) : 0;
-                const godCodePct = godNodes.length > 0 ? Math.round(codeLinkedGodNodesCount / godNodes.length * 100) : 0;
+                const getFormattedPct = (value, total) => {
+                    if (total === 0) return "0";
+                    if (value === total) return "100";
+                    const raw = (value / total) * 100;
+                    return Math.min(raw, 99.9).toFixed(1);
+                };
+                
+                const docsWithAnchorsPct = getFormattedPct(docsWithAnchors, allMdFiles.length);
+                const linkedDocsPct = getFormattedPct(linkedNodes.length, enrichableNodes.length);
+                const linkedCodePct = getFormattedPct(codeLinkedNodes.length, enrichableNodes.length);
+                const godDocsPct = godNodes.length > 0 ? getFormattedPct(documentedGodNodesCount, godNodes.length) : "0";
+                const godCodePct = godNodes.length > 0 ? getFormattedPct(codeLinkedGodNodesCount, godNodes.length) : "0";
+                
+                let healthScoreStr;
+                if (totalWeight > 0) {
+                    if (linkedWeight === totalWeight) {
+                        healthScoreStr = "100";
+                    } else {
+                        const rawScore = (linkedWeight / totalWeight) * 100;
+                        healthScoreStr = Math.min(rawScore, 99.9).toFixed(1);
+                    }
+                } else {
+                    healthScoreStr = "100";
+                }
                 
                 const newTraceabilityContent = `## Graph Traceability
 
@@ -843,7 +872,7 @@ function renderDirectory(srcDir, destDir, template) {
 | Graph nodes with para-doc (Code ➔ Docs) | ${codeLinkedNodes.length}/${enrichableNodes.length} enrichable (${linkedCodePct}%) |
 | God Nodes covered (Docs ➔ Code) | ${documentedGodNodesCount}/${godNodes.length} top-connected (${godDocsPct}%) |
 | God Nodes covered (Code ➔ Docs) | ${codeLinkedGodNodesCount}/${godNodes.length} top-connected (${godCodePct}%) |
-| Docs Health Score (Weighted Double-Binding) | ${Math.round(weightedHealthScore)}/100 |
+| Docs Health Score (Weighted Double-Binding) | ${healthScoreStr}/100 |
 | Stale docs (code changed) | ${staleNodes.length} |
 `;
                 const regex = /## Graph Traceability[\s\S]*/;

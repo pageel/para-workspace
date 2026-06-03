@@ -40,6 +40,7 @@
             --border-color: #2e2e2e;
             --accent-color: #2eaadc;
             --accent-hover: #1b85af;
+            color-scheme: dark;
         }
 
         * {
@@ -441,6 +442,28 @@
             border: none;
             background-color: var(--bg-primary);
         }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(55, 53, 47, 0.15);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(55, 53, 47, 0.3);
+        }
+
+        [data-theme="dark"] ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
     </style>
 </head>
 <body data-theme="light">
@@ -450,11 +473,11 @@
         <!-- Shared Left Sidebar -->
         <aside class="left-sidebar" id="left-sidebar">
             <div class="sidebar-header">
-                <h1 title="/* TRANSLATE:title */"><i data-lucide="book-open" style="display:inline-block; vertical-align:middle; margin-right:6px; color:var(--accent-color);"></i>/* TRANSLATE:title */</h1>
+                <h1 title="/* TRANSLATE:title */" data-i18n="title"><i data-lucide="book-open" style="display:inline-block; vertical-align:middle; margin-right:6px; color:var(--accent-color);"></i>/* TRANSLATE:title */</h1>
             </div>
             
             <div class="sidebar-menu">
-                <div class="menu-title">/* TRANSLATE:treeTitle */</div>
+                <div class="menu-title" data-i18n="treeTitle">/* TRANSLATE:treeTitle */</div>
                 <ul class="tree-list" id="docs-list">
                     <!-- DOCS_LIST_PLACEHOLDER -->
                 </ul>
@@ -464,11 +487,11 @@
             <div class="sidebar-footer">
                 <span>Kernel v/* KERNEL_VERSION */</span>
                 <div style="display: flex; gap: 4px;">
-                    <button class="footer-action-btn" onclick="toggleTheme()" title="/* TRANSLATE:themeBtn */">
+                    <button class="footer-action-btn" id="btn-theme" onclick="toggleTheme()" title="/* TRANSLATE:themeBtn */">
                         <i data-lucide="sun" id="theme-icon-light"></i>
                         <i data-lucide="moon" id="theme-icon-dark" style="display: none;"></i>
                     </button>
-                    <button class="footer-action-btn" onclick="toggleSidebar()" title="/* TRANSLATE:collapseSidebar */">
+                    <button class="footer-action-btn" id="btn-collapse" onclick="toggleSidebar()" title="/* TRANSLATE:collapseSidebar */">
                         <i data-lucide="sidebar"></i>
                     </button>
                 </div>
@@ -496,6 +519,11 @@
                         <input type="text" class="search-input" id="portal-search-input" placeholder="/* TRANSLATE:searchPlaceholder */" autocomplete="off" oninput="handleGlobalSearch()">
                         <div class="search-results" id="portal-search-results"></div>
                     </div>
+                    <!-- Language Toggle Button -->
+                    <button id="btn-toggle-lang" class="footer-action-btn" onclick="toggleLanguage()" title="/* TRANSLATE:langToggleLabel */" style="height: 32px; padding: 0 8px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; background: none; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; gap: 4px;">
+                        <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+                        <span id="lang-text" style="font-size: 11px; font-weight: 700; text-transform: uppercase; line-height: 1;">/* WORKSPACE_LANG */</span>
+                    </button>
                     <!-- Global Help Button -->
                     <button class="footer-action-btn" onclick="openHelp()" title="/* TRANSLATE:helpBtnTitle */" style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; background: none; color: var(--text-secondary); cursor: pointer; transition: all 0.2s;">
                         <i data-lucide="help-circle" style="width: 16px; height: 16px;"></i>
@@ -815,6 +843,162 @@
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;");
         }
+
+        // Translation Dictionary for Portal
+        const portalTranslations = {
+            vi: {
+                title: "Tài liệu PARA Workspace",
+                treeTitle: "Cây thư mục tài liệu",
+                searchPlaceholder: "Tìm kiếm tài liệu...",
+                collapseSidebar: "Thu gọn sidebar",
+                expandSidebar: "Mở rộng sidebar",
+                themeBtn: "Giao diện",
+                helpBtnTitle: "Glossary & Wiki Trợ giúp (Help)",
+                loadingSearch: "Đang tải dữ liệu tìm kiếm...",
+                noSearchResults: "Không tìm thấy kết quả",
+                langToggleLabel: "English"
+            },
+            en: {
+                title: "PARA Workspace Docs",
+                treeTitle: "Documentation Tree",
+                searchPlaceholder: "Search docs...",
+                collapseSidebar: "Collapse sidebar",
+                expandSidebar: "Expand sidebar",
+                themeBtn: "Theme",
+                helpBtnTitle: "Glossary & Help Wiki",
+                loadingSearch: "Loading search data...",
+                noSearchResults: "No results found",
+                langToggleLabel: "Tiếng Việt"
+            }
+        };
+
+        let currentLang = localStorage.getItem('dashboard_lang') || '/* WORKSPACE_LANG */';
+        if (currentLang.startsWith('/*')) {
+            currentLang = 'vi'; // Fallback nếu chưa compile
+        }
+        
+        // Cần apply ngôn ngữ khi load trang
+        document.addEventListener('DOMContentLoaded', () => {
+            applyPortalTranslations(currentLang);
+        });
+
+        function applyPortalTranslations(lang) {
+            currentLang = lang;
+            document.documentElement.setAttribute('lang', lang);
+            try {
+                localStorage.setItem('dashboard_lang', lang);
+            } catch (e) {}
+
+            const t = portalTranslations[lang] || portalTranslations['en'];
+
+            // Translate elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                const translation = t[key];
+                if (translation !== undefined) {
+                    if (el.tagName === 'INPUT') {
+                        el.placeholder = translation;
+                    } else {
+                        if (el.tagName === 'H1') {
+                            const icon = el.querySelector('i');
+                            el.innerHTML = '';
+                            if (icon) el.appendChild(icon);
+                            el.appendChild(document.createTextNode(' ' + translation));
+                        } else {
+                            el.textContent = translation;
+                        }
+                    }
+                }
+            });
+
+            // Translate attributes like title
+            const langBtn = document.getElementById('btn-toggle-lang');
+            if (langBtn) langBtn.title = t.langToggleLabel;
+            const langText = document.getElementById('lang-text');
+            if (langText) langText.textContent = lang.toUpperCase();
+            
+            const helpBtn = document.querySelector('button[onclick="openHelp()"]');
+            if (helpBtn) helpBtn.title = t.helpBtnTitle;
+
+            const themeBtn = document.getElementById('btn-theme');
+            if (themeBtn) themeBtn.title = t.themeBtn;
+
+            const collapseBtn = document.getElementById('btn-collapse');
+            if (collapseBtn) collapseBtn.title = t.collapseSidebar;
+
+            const searchInput = document.getElementById('portal-search-input');
+            if (searchInput) searchInput.placeholder = t.searchPlaceholder;
+
+            // Dynamically update sidebar link URLs to point to the correct language directory
+            document.querySelectorAll('.menu-link').forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && href !== '#' && !href.includes('dashboard.html') && !href.includes('help.html')) {
+                    let newHref = href;
+                    if (lang === 'en') {
+                        newHref = href.replace(/(^|\/)vi\//, '$1en/');
+                    } else {
+                        newHref = href.replace(/(^|\/)en\//, '$1vi/');
+                    }
+                    if (newHref !== href) {
+                        link.setAttribute('href', newHref);
+                    }
+                }
+            });
+
+            // Dynamically update the current iframe document to the selected language version
+            if (viewport) {
+                try {
+                    const currentHref = viewport.contentWindow.location.href;
+                    if (currentHref && !currentHref.includes('about:blank') && !currentHref.includes('dashboard.html') && !currentHref.includes('help.html')) {
+                        let targetHref = null;
+                        if (lang === 'en' && currentHref.includes('/vi/')) {
+                            targetHref = currentHref.replace('/vi/', '/en/');
+                        } else if (lang === 'vi' && currentHref.includes('/en/')) {
+                            targetHref = currentHref.replace('/en/', '/vi/');
+                        }
+                        
+                        if (targetHref && targetHref !== currentHref) {
+                            viewport.src = targetHref;
+                        }
+                    }
+                } catch (err) {
+                    const currentSrc = viewport.getAttribute('src');
+                    if (currentSrc && !currentSrc.includes('dashboard.html') && !currentSrc.includes('help.html')) {
+                        let targetSrc = null;
+                        if (lang === 'en' && currentSrc.includes('vi/')) {
+                            targetSrc = currentSrc.replace(/(^|\/)vi\//, '$1en/');
+                        } else if (lang === 'vi' && currentSrc.includes('en/')) {
+                            targetSrc = currentSrc.replace(/(^|\/)en\//, '$1vi/');
+                        }
+                        if (targetSrc && targetSrc !== currentSrc) {
+                            viewport.setAttribute('src', targetSrc);
+                        }
+                    }
+                }
+            }
+
+            // Sync with iframe con
+            syncLangToIframe();
+        }
+
+        function toggleLanguage() {
+            const nextLang = currentLang === 'vi' ? 'en' : 'vi';
+            applyPortalTranslations(nextLang);
+        }
+
+        function syncLangToIframe() {
+            if (viewport && viewport.contentWindow) {
+                viewport.contentWindow.postMessage({
+                    type: 'set-lang',
+                    lang: currentLang
+                }, '*');
+            }
+        }
+
+        // Send language immediately when iframe loads
+        viewport.addEventListener('load', () => {
+            syncLangToIframe();
+        });
     </script>
 </body>
 </html>
