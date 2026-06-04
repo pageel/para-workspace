@@ -59,6 +59,7 @@
 - [ ] 1.N-1 🤖 **Pre-commit Gate:** Run tests & lints (`npm run build` and `npx vitest run` or equivalent verification commands).
 - [ ] 1.N 👤 **Git Checkpoint:** Commit changes with message `session([topic]): [milestone goal]`.
 - [ ] ⛔ CHECKPOINT: Agent verification pass -> Present diff & tests to User -> get explicit User approval before writing commit SHA & marking Phase Done.
+- [ ] 1.N+1 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
 
 
 ---
@@ -77,10 +78,11 @@
 
 ## 🏁 Completion & Teardown
 
-- [ ] All completed phases synced to `artifacts/tasks/done.md` (with `#session` tag and recorded SHAs).
-- [ ] Codebase graph updated and enriched (`/para-graph build` & `graph_enrich` if --graph active).
-- [ ] DSP file moved to `artifacts/plans/done/` directory.
-- [ ] ⛔ CHECKPOINT: Present completed session summary -> get explicit User approval before transitioning Status to ✅ Done and clearing `active_plan` in `project.md`.
+> ⛔ **CHECKPOINT (Next Steps):** Session has completed all phases. Agent stops here and requests User selection for the next step (choose 1, 2, or 3):
+>
+> 1. **End session and close plan:** Run `/plan end` (Workflow will automatically sync completed tasks to `done.md`, update the codebase graph, archive this plan file to `plans/done/`, and clear `active_plan` in `project.md`).
+> 2. **Continue with another Topic:** Run `/vibecode session [topic]` (to start a new session/phase).
+> 3. **Modify / Update current plan:** Run `/plan update` (to edit phases or add new tasks to this DSP).
 ````
 
 ---
@@ -133,8 +135,9 @@ as specific tasks are identified during the conversation.
 
 ## 🏁 Completion & Teardown
 
-- [ ] All completed phases synced to `artifacts/tasks/done.md` (with `#session` tag and recorded SHAs).
-- [ ] Codebase graph updated and enriched (`/para-graph build` & `graph_enrich` if --graph active).
-- [ ] DSP file moved to `artifacts/plans/done/` directory.
-- [ ] ⛔ CHECKPOINT: Present completed session summary -> get explicit User approval before transitioning Status to ✅ Done and clearing `active_plan` in `project.md`.
+> ⛔ **CHECKPOINT (Next Steps):** Session has completed all phases. Agent stops here and requests User selection for the next step (choose 1, 2, or 3):
+>
+> 1. **End session and close plan:** Run `/plan end` (Workflow will automatically sync completed tasks to `done.md`, update the codebase graph, archive this plan file to `plans/done/`, and clear `active_plan` in `project.md`).
+> 2. **Continue with another Topic:** Run `/vibecode session [topic]` (to start a new session/phase).
+> 3. **Modify / Update current plan:** Run `/plan update` (to edit phases or add new tasks to this DSP).
 ````
