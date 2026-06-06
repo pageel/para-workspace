@@ -28,6 +28,18 @@
 
 [1-2 sentences describing the core objective of this coding session]
 
+---
+
+## 📊 Pre-Session Kickoff Report
+- **Initial Repo Log:** `artifacts/tests/tdd-repo-before-[date].log`
+- **Initial Test Log:** `artifacts/tests/tdd-evidence.log`
+- **Preparation Description:**
+  - Initialize the Dynamic Session Plan (DSP).
+  - Record initial repository state snapshot (working tree clean / dirty).
+  - Confirm active quality tools: [TDD, --graph, --hardened, etc.]
+
+---
+
 ## 📋 Dynamic Milestone Queue
 
 | Phase | Milestone / Goal | Quality Tools | Commit SHA | Status |
@@ -42,6 +54,12 @@
 ### Phase 1: [Milestone Name] ⚙️ `Difficulty: [🟢 Low | 🟡 Medium | 🔴 High]`
 
 > **Quality Tools:** `[--tdd, --graph, --brainstorm, --qa, --hardened]`
+
+#### 📊 Pre-Phase 1 Report
+- **Reference Repo Log:** `artifacts/tests/tdd-repo-before-[date].log`
+- **Reference Test Log:** `artifacts/tests/tdd-evidence.log`
+- **Pre-execution Status:**
+  - [Describe codebase state, bugs to fix or logic to add]
 
 #### 🗺️ Blast Radius & Context Lock
 - **Target Files:**
@@ -58,9 +76,14 @@
 - [ ] 1.2 🤖 **Step 2:** [Task description]
 - [ ] 1.N-1 🤖 **Pre-commit Gate:** Run tests & lints (`npm run build` and `npx vitest run` or equivalent verification commands).
 - [ ] 1.N 👤 **Git Checkpoint:** Commit changes with message `session([topic]): [milestone goal]`.
-- [ ] ⛔ CHECKPOINT: Agent verification pass -> Present diff & tests to User -> get explicit User approval before writing commit SHA & marking Phase Done.
+- [ ] ⛔ CHECKPOINT: Agent verification pass -> Present diff & tests to User (stating: "I have done [actions, log files]. In addition, I have checked done on all tasks. I propose that you confirm agreement to run the commit command...") -> get explicit User approval before writing commit SHA & marking Phase Done.
 - [ ] 1.N+1 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
 
+#### 📊 Post-Phase 1 Report
+- **Post-execution Repo Log:** `artifacts/tests/tdd-repo-before-[date].log`
+- **Post-execution Test Log:** `artifacts/tests/tdd-evidence.log`
+- **Completed Tasks Description:** [Describe completed tasks and results]
+- **Commit SHA:** —
 
 ---
 
@@ -103,7 +126,7 @@
 <!-- ⚠️ STATUS GATE: DSP Draft — phases added JIT as user requests goals.
      Lifecycle: 🔨 Active → ✅ Done.
      Each Phase begins with a mandatory Quality Gate (TDD/graph/QA/hardened proposal).
-     Transition from Active → Done requires explicit user approval. -->
+     Transition from Active → Done requires completed phases synced to done.md + explicit user approval. -->
 
 ---
 
@@ -111,6 +134,18 @@
 
 Free coding session — phases will be created dynamically
 as specific tasks are identified during the conversation.
+
+---
+
+## 📊 Pre-Session Kickoff Report
+- **Initial Repo Log:** `artifacts/tests/tdd-repo-before-[date].log`
+- **Initial Test Log:** `artifacts/tests/tdd-evidence.log`
+- **Preparation Description:**
+  - Initialize the Dynamic Session Plan (DSP).
+  - Record initial repository state snapshot (working tree clean / dirty).
+  - Confirm active quality tools.
+
+---
 
 ## 📋 Dynamic Milestone Queue
 
@@ -123,7 +158,7 @@ as specific tasks are identified during the conversation.
 ## 🏁 Milestone Details
 
 > Phases will be appended here as the user requests specific goals.
-> Each Phase starts with a Quality Gate (see `references/session-quality-gate.md`).
+> Each Phase starts with a Quality Gate (see `references/session-quality-gate.md`) and pre/post phase reports.
 
 ---
 
