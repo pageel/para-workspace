@@ -716,6 +716,12 @@ Start or continue executing the active plan in the project.
 3. **Phase Execution:** If `--phase` flag is present (which is default for this action), execute the plan strictly phase by phase.
 4. **Task Verification & Checkpoints:** The Agent MUST read and obey inline `⛔ CHECKPOINT` guards. When transitioning phases, the Agent CANNOT move to the next phase unless ALL tasks in the current phase are actually marked as completed `[x]`, OR the user explicitly grants permission to skip the remaining tasks. Do not auto-assume tasks are done.
 5. **Execution:** Proceed with performing the coding or related operations defined in the current pending tasks.
+6. **Strict TDD & Commit Gate Protocol (MANDATORY):** If the plan employs TDD (Test-Driven Development) methodology or has tasks classified as `🧪 TDD`, the Agent **MUST** strictly follow this execution order before proposing any `git commit` or `git push`:
+   a. **Log Evidence:** Run test files using the TDD evidence logger script (`tdd-test.sh`). Confirm that `artifacts/tests/tdd-evidence.log` contains a `status: FAIL` entry before the `status: PASS` entry for the respective test file.
+   b. **Checkbox Update:** Check off (`[x]`) the completed tasks in the active plan file and the system `task.md`.
+   c. **Type Safety:** Run `npx astro check` (or language-equivalent static type analysis) and resolve all type errors (0 Errors).
+   d. **Build Test:** Run `npm run build` and ensure the project builds successfully.
+   e. **Commit Trigger:** Propose a `git commit` ONLY after steps (a) through (d) are successfully completed. Triggering or proposing a commit without satisfying all these conditions is a workflow violation.
 
 ---
 
@@ -756,8 +762,16 @@ Finalize the active plan by performing a strict completion audit, syncing backlo
    # Quarantine all test artifacts to tmp/
    if [[ -d "artifacts/tests" ]]; then mkdir -p artifacts/tests/tmp; for f in artifacts/tests/*; do if [[ -e "$f" && "$f" != "artifacts/tests/tmp" ]]; then mv "$f" "artifacts/tests/tmp/$(basename "$f")" 2>/dev/null || true; fi; done; echo "🧹 Test artifacts quarantined"; fi
    ```
-7. **Graph Build & Enrichment (if applicable):**
-   If the project uses `para-graph`, execute `/para-graph build [project-name]` to update the structural Code-Knowledge Graph with the new features. After rebuilding, use the MCP tool `graph_enrich` to add semantic summaries and domain concepts for the newly created or modified nodes related to the plan.
+7. **Graph Build, Enrichment & Insight Curation (MANDATORY INSIGHT GATE):**
+   If the project uses `para-graph`, execute `/para-graph build [project-name]` to update the structural Code-Knowledge Graph with the new features, and use `graph_enrich` to update semantic summaries of modified nodes.
+   
+   **Insight Curation (Replacing general /learn recommendation):**
+   At the end of the plan, the Agent MUST actively review the session history to identify any newly resolved bugs, lessons, or gotchas.
+   - Propose 1-2 structured insights (lessons, gotchas, or risks) to the user.
+   - Offer the following options to store the insights:
+     1. **Store to Code-Graph:** Use MCP `insight_push` to save directly to the project's knowledge database (if `para-graph` is available).
+     2. **Store to Local Files (Fallback):** Append to `.beads/seeds.md` or create a new file in `docs/researches/` (if `para-graph` is not available).
+     3. **Ignore:** If no new reusable insights were discovered.
 
 ---
 
