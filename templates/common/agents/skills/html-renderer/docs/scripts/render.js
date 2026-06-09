@@ -56,6 +56,14 @@ if (fs.existsSync(workspaceConfigPath)) {
 const translations = {
     vi: {
         title: "Tài liệu PARA Workspace",
+        rightSidebarHeader: "Chi tiết & Mục lục",
+        metaAuthor: "Tác giả",
+        metaVersion: "Phiên bản",
+        metaUpdated: "Cập nhật",
+        metaStatus: "Trạng thái",
+        metaProject: "Dự án",
+        metaContext: "Bối cảnh",
+        metaDescription: "Mô tả",
         treeTitle: "Cây thư mục tài liệu",
         tocTitle: "Mục lục trang này",
         sourceLabel: "Nguồn:",
@@ -156,17 +164,53 @@ const translations = {
         calibrationFolders: "Loại trừ thư mục tài liệu",
         calibrationWeights: "Trọng số thành phần mã",
         calibrationReset: "Đặt lại mặc định",
-        alignmentTitle: "Cân chỉnh Đặc tả & Mã nguồn (Docs-Code Alignment)",
+        alignmentTitle: "Đối soát Đặc tả & Mã nguồn (Docs-Code Alignment Audit)",
         alignmentDocLabel: "Đặc tả:",
         alignmentDecisionTable: "Bảng quyết định nghiệp vụ (Decision Table)",
+        alignmentAiPrompts: "Đề xuất Tác vụ AI (AI Assistant Prompts)",
         alignmentDriftAudit: "Báo cáo sai lệch & Gaps (Drift Audit)",
         calibrationDesc: "Trọng số đại diện cho độ quan trọng tương đối của từng cấu phần mã:<br/>• <b>Cốt lõi:</b> Các cấu phần lõi ảnh hưởng lớn (Cấu phần Siêu kết nối, độ kết nối >= 20).<br/>• <b>Trung bình:</b> Hàm, lớp, tệp tin tiêu chuẩn.<br/>• <b>Bổ trợ:</b> Các biến và hằng số phụ trợ.<br/>Tài liệu hóa phần Cốt lõi đóng góp điểm số cao hơn.",
         navHome: "Tài liệu chính (README)",
         navBack: "Trở lại",
-        navForward: "Tiến tới"
+        navForward: "Tiến tới",
+        aiPromptsTitle: "Gợi ý Prompt AI",
+        aiPromptsFrontmatter: "Chuẩn hóa Frontmatter",
+        aiPromptsReview: "Rà soát & Cập nhật tài liệu",
+        aiPromptsReviewStructure: "Review cấu trúc tài liệu",
+        aiPromptsStrategy: "Xây dựng & Xem lại Chiến lược",
+        aiPromptsHeadings: "Chuẩn hóa Đánh số Tiêu đề",
+        toastPromptCopied: "🎉 Đã sao chép prompt AI gợi ý vào clipboard!",
+        driftAuditShort: "Kiểm toán sai lệch",
+        driftAuditNoIssues: "0 phát hiện",
+        driftAuditIssues: "phát hiện",
+        docStatHealth: "Sức khỏe",
+        docStatHealthDesc: "Tỷ lệ liên kết hai chiều (Double-binding rate) của tài liệu này",
+        docStatAnchors: "Độ phủ neo",
+        docStatAnchorsDesc: "Số cấu phần mã được neo trực tiếp trong tài liệu này",
+        docStatComments: "Comment code",
+        docStatCommentsDesc: "Số cấu phần mã chứa comment trỏ ngược lại tài liệu này",
+        docStatEntities: "Cấu phần",
+        docStatEntitiesDesc: "Tổng số cấu phần mã liên quan đến tài liệu này",
+        metadataTitle: "Thông tin tài liệu",
+        statHealthScore: "Sức khỏe",
+        statHealthScoreDesc: "Điểm sức khỏe tài liệu dựa trên trọng số liên kết hai chiều",
+        statCoverage: "Độ phủ",
+        statCoverageDesc: "Tỷ lệ cấu phần mã đã được liên kết tài liệu (Neo/Tổng số)",
+        statStale: "Cần sửa",
+        statStaleDesc: "Số lượng cấu phần tài liệu bị cũ/lệch so với mã nguồn thực tế",
+        statTotalDocs: "Tài liệu",
+        statTotalDocsDesc: "Tổng số tệp tài liệu kỹ thuật trong dự án"
     },
     en: {
         title: "PARA Workspace Docs",
+        rightSidebarHeader: "Details & Outline",
+        metaAuthor: "Author",
+        metaVersion: "Version",
+        metaUpdated: "Updated",
+        metaStatus: "Status",
+        metaProject: "Project",
+        metaContext: "Context",
+        metaDescription: "Description",
         treeTitle: "Documentation Tree",
         tocTitle: "Table of Contents",
         sourceLabel: "Source:",
@@ -267,14 +311,42 @@ const translations = {
         calibrationFolders: "Exclude Document Folders",
         calibrationWeights: "Code Entity Weights",
         calibrationReset: "Reset to Defaults",
-        alignmentTitle: "Docs-Code Alignment Calibration",
+        alignmentTitle: "Docs-Code Alignment Audit",
         alignmentDocLabel: "Spec Document:",
         alignmentDecisionTable: "Business Decision Table",
+        alignmentAiPrompts: "AI Assistant Task Prompts",
         alignmentDriftAudit: "Logic Drift & Gaps Audit",
         calibrationDesc: "Weights represent the relative priority of each individual code entity:<br/>• <b>Critical:</b> High-impact core components (God Nodes, degree >= 20).<br/>• <b>Medium:</b> Standard functions, classes, and source files.<br/>• <b>Low:</b> Auxiliary variables and constants.<br/>Documenting Critical components contributes more to the overall health score.",
         navHome: "Main Documentation (README)",
         navBack: "Go Back",
-        navForward: "Go Forward"
+        navForward: "Go Forward",
+        aiPromptsTitle: "AI Prompt Suggestions",
+        aiPromptsFrontmatter: "Normalize Frontmatter",
+        aiPromptsReview: "Review & Update Docs",
+        aiPromptsReviewStructure: "Review Docs Structure",
+        aiPromptsStrategy: "Build & Review Strategy",
+        aiPromptsHeadings: "Normalize Headings Numbering",
+        toastPromptCopied: "🎉 Copied AI prompt suggestion to clipboard!",
+        driftAuditShort: "Drift Audit",
+        driftAuditNoIssues: "0 issues",
+        driftAuditIssues: "findings",
+        docStatHealth: "Health",
+        docStatHealthDesc: "Double-binding rate of this document",
+        docStatAnchors: "Doc Anchors",
+        docStatAnchorsDesc: "Number of code entities anchored in this document",
+        docStatComments: "Code Comments",
+        docStatCommentsDesc: "Number of code entities containing comments pointing to this document",
+        docStatEntities: "Entities",
+        docStatEntitiesDesc: "Total code entities associated with this document",
+        metadataTitle: "Document Metadata",
+        statHealthScore: "Health",
+        statHealthScoreDesc: "Weighted double-binding documentation health score",
+        statCoverage: "Coverage",
+        statCoverageDesc: "Ratio of documented code entities in graph",
+        statStale: "Stale",
+        statStaleDesc: "Count of outdated doc references relative to source code",
+        statTotalDocs: "Docs",
+        statTotalDocsDesc: "Total documentation files count"
     }
 };
 
@@ -455,11 +527,178 @@ function treeToHtml(node, currentSourcePath, currentTargetPath, rootDir, rootOut
 }
 
 // Render a single Markdown file to HTML using the template
-function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputDir, template, graphNodesMap, calculateBlastRadius) {
+function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputDir, template, graphNodesMap, calculateBlastRadius, dashboardStats, auditReports, fileStats) {
     try {
         const rawContent = fs.readFileSync(sourceFile, 'utf8');
         const { frontmatter, content: markdownContent } = parseFrontmatter(rawContent);
         
+        // Detect file language
+        let fileLang = workspaceLang;
+        const normalizedPath = sourceFile.replace(/\\/g, '/');
+        if (normalizedPath.includes('/en/')) {
+            fileLang = 'en';
+        } else if (normalizedPath.includes('/vi/')) {
+            fileLang = 'vi';
+        }
+        const currentTranslations = translations[fileLang] || translations['en'];
+        
+        // Build stats panel for specific document
+        let statsPanelHtml = '';
+        if (fileStats && fileStats.totalEntities > 0) {
+            const doubleBound = fileStats.doubleBound;
+            const totalEntities = fileStats.totalEntities;
+            const docsToCode = fileStats.docsToCode;
+            const codeToDocs = fileStats.codeToDocs;
+            
+            const healthRate = ((doubleBound / totalEntities) * 100).toFixed(1);
+            
+            statsPanelHtml = `
+            <div class="stats-panel-container">
+                <div class="stat-card" title="${currentTranslations['docStatHealthDesc'] || 'Double-binding rate of this document'}">
+                    <span class="stat-value text-success">${healthRate}%</span>
+                    <span class="stat-label">${currentTranslations['docStatHealth'] || 'Sức khỏe'}</span>
+                </div>
+                <div class="stat-card" title="${currentTranslations['docStatAnchorsDesc'] || 'Number of code entities anchored in this document'}">
+                    <span class="stat-value">${docsToCode}/${totalEntities}</span>
+                    <span class="stat-label">${currentTranslations['docStatAnchors'] || 'Độ phủ neo'}</span>
+                </div>
+                <div class="stat-card" title="${currentTranslations['docStatCommentsDesc'] || 'Number of code entities containing comments pointing to this document'}">
+                    <span class="stat-value">${codeToDocs}/${totalEntities}</span>
+                    <span class="stat-label">${currentTranslations['docStatComments'] || 'Comment code'}</span>
+                </div>
+                <div class="stat-card" title="${currentTranslations['docStatEntitiesDesc'] || 'Total code entities associated with this document'}">
+                    <span class="stat-value">${totalEntities}</span>
+                    <span class="stat-label">${currentTranslations['docStatEntities'] || 'Cấu phần'}</span>
+                </div>
+            </div>`;
+        }
+
+
+        // Build metadata panel if there are frontmatter properties (except title & order)
+        let metadataHtml = '';
+        const metadataKeys = Object.keys(frontmatter).filter(k => k !== 'title' && k !== 'order');
+        if (metadataKeys.length > 0) {
+            metadataHtml = `
+            <div class="metadata-container">
+                <button class="metadata-toggle-btn" id="metadata-toggle-btn" onclick="toggleMetadataDropdown()">
+                    <span style="display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="info" style="width: 14px; height: 14px;"></i>
+                        <span>${currentTranslations['metadataTitle'] || 'Metadata'}</span>
+                    </span>
+                    <i data-lucide="chevron-down" id="metadata-chevron" style="width: 14px; height: 14px; transition: transform 0.2s;"></i>
+                </button>
+                <div class="metadata-dropdown" id="metadata-dropdown">
+                    <div class="doc-metadata-panel">`;
+            for (const key of metadataKeys) {
+                const val = frontmatter[key];
+                if (val === undefined || val === null || val === '') continue;
+                
+                // Translate keys if possible
+                let keyLabel = key.charAt(0).toUpperCase() + key.slice(1);
+                const translationKey = `meta${keyLabel}`;
+                if (currentTranslations[translationKey]) {
+                    keyLabel = currentTranslations[translationKey];
+                }
+                
+                let valueHtml = '';
+                if (key === 'status') {
+                    const statusStr = String(val).trim();
+                    // Normalize accents and strip emojis to apply correct CSS classes
+                    let cleanStatus = statusStr.normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '')
+                        .replace(/[đĐ]/g, 'd')
+                        .replace(/[\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD00-\uDFFF]/g, '')
+                        .trim()
+                        .toLowerCase();
+                    cleanStatus = cleanStatus.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                    
+                    let badgeClass = 'default';
+                    if (['approved', 'done', 'completed', 'da-phe-duyet', 'da-hoan-thanh', 'active', 'hoat-dong'].includes(cleanStatus)) {
+                        badgeClass = 'approved';
+                    } else if (['draft', 'nhap', 'pending', 'dang-xu-ly', 'work-in-progress', 'wip'].includes(cleanStatus)) {
+                        badgeClass = 'draft';
+                    } else if (['stale', 'outdated', 'cu', 'het-han', 'expired'].includes(cleanStatus)) {
+                        badgeClass = 'stale';
+                    }
+                    valueHtml = `<span class="status-badge ${badgeClass}">${statusStr}</span>`;
+                } else {
+                    valueHtml = `<span class="metadata-value">${val}</span>`;
+                }
+                
+                metadataHtml += `
+                        <div class="metadata-row">
+                            <span class="metadata-key" title="${keyLabel}">${keyLabel}</span>
+                            <div class="metadata-value-container">${valueHtml}</div>
+                        </div>`;
+            }
+            metadataHtml += `
+                    </div>
+                </div>
+            </div>`;
+        }
+        
+        // Build Drift Audit Panel
+        let driftAuditHtml = '';
+        if (auditReports) {
+            const hasIssues = auditReports.length > 0;
+            const issuesCount = auditReports.length;
+            const statusClass = hasIssues ? '' : 'no-issues';
+            
+            let toggleLabel = '';
+            let dropdownContent = '';
+            
+            if (hasIssues) {
+                const titleText = currentTranslations['driftAuditShort'] || 'Kiểm toán sai lệch';
+                const countSuffix = currentTranslations['driftAuditIssues'] || (fileLang === 'vi' ? 'phát hiện' : 'findings');
+                const warningMsg = `${issuesCount} ${countSuffix}`;
+                toggleLabel = `
+                    <span style="display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i>
+                        <span>${titleText} (${warningMsg})</span>
+                    </span>`;
+                
+                dropdownContent = `<div class="drift-audit-dropdown-list" style="display: flex; flex-direction: column; gap: 8px;">`;
+                auditReports.forEach(r => {
+                    const sevClass = r.severity || 'medium';
+                    const tText = r.title || 'Gap';
+                    const descText = r.description || '';
+                    const solText = r.solution || '';
+                    
+                    dropdownContent += `
+                        <div class="drift-issue-item ${sevClass}">
+                            <span class="drift-issue-title">${tText}</span>
+                            <span class="drift-issue-desc">${descText}</span>
+                            ${solText ? `<span class="drift-issue-sol"><strong>${fileLang === 'vi' ? 'Đề xuất giải pháp:' : 'Proposed Solution:'}</strong> ${solText}</span>` : ''}
+                        </div>`;
+                });
+                dropdownContent += `</div>`;
+            } else {
+                const titleText = currentTranslations['driftAuditShort'] || 'Kiểm toán sai lệch';
+                const successMsg = currentTranslations['driftAuditNoIssues'] || (fileLang === 'vi' ? '0 phát hiện' : '0 issues');
+                toggleLabel = `
+                    <span style="display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i>
+                        <span>${titleText} (${successMsg})</span>
+                    </span>`;
+                dropdownContent = `
+                    <div class="drift-no-issues-msg">
+                        <i data-lucide="check-circle"></i>
+                        <span>${fileLang === 'vi' ? 'Tuyệt vời! Tài liệu hoàn toàn khớp với logic mã nguồn hiện tại.' : 'Excellent! Documentation fully matches current source code.'}</span>
+                    </div>`;
+            }
+            
+            driftAuditHtml = `
+            <div class="drift-audit-container">
+                <button class="drift-audit-toggle-btn ${statusClass}" id="drift-audit-toggle-btn" onclick="toggleDriftAuditDropdown()">
+                    ${toggleLabel}
+                    <i data-lucide="chevron-down" id="drift-audit-chevron" style="width: 14px; height: 14px; transition: transform 0.2s;"></i>
+                </button>
+                <div class="drift-audit-dropdown" id="drift-audit-dropdown">
+                    ${dropdownContent}
+                </div>
+            </div>`;
+        }
+
         // Parse markdown content for @graph-node anchors
         const nodeRegex = /<!--\s*@graph-node:\s*([^\s>]+)\s*-->/g;
         const linkedNodeIds = [];
@@ -476,12 +715,12 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
         if (linkedNodeIds.length > 0 && graphNodesMap && !isWiki) {
             const projectDir = path.dirname(rootDir);
 
-            const docNodesTitle = workspaceLang === 'vi' ? 'Các thành phần mã được tham chiếu' : 'Referenced Code Entities';
-            const thEntity = workspaceLang === 'vi' ? 'Thành phần mã' : 'Entity';
-            const thType = workspaceLang === 'vi' ? 'Phân loại' : 'Type';
-            const thLocation = workspaceLang === 'vi' ? 'Vị trí' : 'Location';
-            const thBlast = workspaceLang === 'vi' ? 'Bán kính ảnh hưởng (Blast)' : 'Blast Radius';
-            const thDesc = workspaceLang === 'vi' ? 'Mô tả' : 'Description';
+            const docNodesTitle = fileLang === 'vi' ? 'Các thành phần mã được tham chiếu' : 'Referenced Code Entities';
+            const thEntity = fileLang === 'vi' ? 'Thành phần mã' : 'Entity';
+            const thType = fileLang === 'vi' ? 'Phân loại' : 'Type';
+            const thLocation = fileLang === 'vi' ? 'Vị trí' : 'Location';
+            const thBlast = fileLang === 'vi' ? 'Bán kính ảnh hưởng (Blast)' : 'Blast Radius';
+            const thDesc = fileLang === 'vi' ? 'Mô tả' : 'Description';
             
             let nodesListMarkdown = `\n\n---\n\n### <span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="network" style="width: 18px; height: 18px; color: var(--accent-color);"></i> ${docNodesTitle}</span>\n\n`;
             nodesListMarkdown += `| ${thEntity} | ${thType} | ${thLocation} | ${thBlast} | ${thDesc} |\n`;
@@ -525,6 +764,113 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
             .replace(/`/g, '\\`')
             .replace(/\${/g, '\\${');
             
+        // Build dynamic AI Prompt Suggestions based on document status
+        const frontmatterKeys = Object.keys(frontmatter).filter(k => k !== 'title' && k !== 'order');
+        const needsFrontmatter = frontmatterKeys.length === 0;
+
+        const headers = [];
+        const headerRegex = /^(#{1,6})\s+(.+)$/gm;
+        let hMatch;
+        headerRegex.lastIndex = 0;
+        while ((hMatch = headerRegex.exec(rawContent)) !== null) {
+            headers.push(hMatch[2].trim());
+        }
+        let hasHeadingIssues = false;
+        let lastNum = 0;
+        for (const h of headers) {
+            const match = h.match(/^(\d+(?:\.\d+)*)\.?\s+/);
+            if (match) {
+                const parts = match[1].split('.').map(Number);
+                const firstLevel = parts[0];
+                if (!isNaN(firstLevel)) {
+                    if (firstLevel > lastNum + 1) {
+                        hasHeadingIssues = true;
+                        break;
+                    }
+                    if (firstLevel >= lastNum) {
+                        lastNum = firstLevel;
+                    }
+                }
+            }
+        }
+
+        const hasBrokenAnchors = auditReports && auditReports.some(r => r.title && (r.title.includes('Broken Anchor') || r.title.includes('neo liên kết hỏng') || r.title.includes('Neo liên kết hỏng')));
+        const hasBrokenCodeDocs = auditReports && auditReports.some(r => r.title && (r.title.includes('Broken @para-doc') || r.title.includes('neo @para-doc hỏng') || r.title.includes('Neo @para-doc hỏng')));
+        const hasGaps = auditReports && auditReports.some(r => r.title && (r.title.includes('GAP') || r.severity === 'high'));
+
+        const isStrategyDoc = normalizedPath.includes('strategy.md') || normalizedPath.includes('strategy-documentation.md') || normalizedPath.includes('/strategy/');
+        const promptItems = [
+            {
+                key: 'frontmatter',
+                label: currentTranslations['aiPromptsFrontmatter'] || 'Normalize Frontmatter',
+                recommended: needsFrontmatter,
+                badge: fileLang === 'vi' ? 'Thiếu Metadata' : 'Missing Metadata',
+                badgeType: 'attention'
+            },
+            {
+                key: 'headings',
+                label: currentTranslations['aiPromptsHeadings'] || 'Normalize Headings Numbering',
+                recommended: hasHeadingIssues,
+                badge: fileLang === 'vi' ? 'Lệch Tiêu Đề' : 'Bad Numbering',
+                badgeType: 'attention'
+            },
+            {
+                key: 'review-structure',
+                label: currentTranslations['aiPromptsReviewStructure'] || 'Review Docs Structure',
+                recommended: true,
+                badge: fileLang === 'vi' ? 'Tối Ưu' : 'Optimize',
+                badgeType: 'suggest'
+            },
+            {
+                key: 'strategy',
+                label: currentTranslations['aiPromptsStrategy'] || 'Build or Review Strategy',
+                recommended: isStrategyDoc,
+                badge: fileLang === 'vi' ? 'Chiến Lược' : 'Strategy',
+                badgeType: 'suggest'
+            },
+            {
+                key: 'review',
+                label: currentTranslations['aiPromptsReview'] || 'Review & Update Docs',
+                recommended: !needsFrontmatter && !hasHeadingIssues && !isStrategyDoc,
+                badge: fileLang === 'vi' ? 'Đề Xuất' : 'Recommend',
+                badgeType: 'suggest'
+            }
+        ];
+
+        // Bubble up recommended prompts
+        promptItems.sort((a, b) => (b.recommended ? 1 : 0) - (a.recommended ? 1 : 0));
+
+        let dropdownHtml = '';
+        promptItems.forEach(item => {
+            let badgeHtml = '';
+            if (item.recommended) {
+                badgeHtml = `<span class="prompt-badge ${item.badgeType}">${item.badge}</span>`;
+            }
+            dropdownHtml += `
+                    <div class="prompt-item" onclick="copyAiPrompt('${item.key}')">
+                        <span style="display: flex; align-items: center; gap: 4px;">
+                            <span>${item.label}</span>
+                            ${badgeHtml}
+                        </span>
+                        <i data-lucide="copy"></i>
+                    </div>`;
+        });
+
+        const aiPromptsTitle = currentTranslations['aiPromptsTitle'] || 'AI Prompt Suggestions';
+        const aiPromptsHtml = `
+            <div class="ai-prompts-container">
+                <button class="ai-prompts-toggle-btn" id="ai-prompts-toggle-btn" onclick="toggleAiPromptsDropdown()">
+                    <span style="display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="sparkles" style="width: 14px; height: 14px; fill: currentColor;"></i>
+                        ${aiPromptsTitle}
+                    </span>
+                    <i data-lucide="chevron-down" id="ai-prompts-chevron" style="width: 14px; height: 14px; transition: transform 0.2s;"></i>
+                </button>
+                <div class="ai-prompts-dropdown" id="ai-prompts-dropdown">
+                    ${dropdownHtml}
+                </div>
+            </div>`;
+
         const relativeSourcePath = path.relative(process.cwd(), sourceFile);
         const absoluteSourcePath = path.resolve(sourceFile);
         const docCleanName = getMarkdownCleanName(sourceFile);
@@ -532,7 +878,7 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
         const sidebarHtml = ''; // Sub-pages run in App Shell iframe and do not need individual sidebars
         
         const now = new Date();
-        const renderTime = now.toLocaleString(workspaceLang === 'vi' ? 'vi-VN' : 'en-US', {
+        const renderTime = now.toLocaleString(fileLang === 'vi' ? 'vi-VN' : 'en-US', {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
@@ -543,14 +889,22 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
         
         // Apply i18n translation replacements
         let html = template;
-        html = html.replaceAll('/* WORKSPACE_LANG */', workspaceLang);
+        html = html.replaceAll('/* WORKSPACE_LANG */', fileLang);
         
-        const currentTranslations = translations[workspaceLang] || translations['en'];
         for (const key in currentTranslations) {
             html = html.replaceAll(`/* TRANSLATE:${key} */`, currentTranslations[key]);
         }
         
         const relativeReadmeFromTarget = path.relative(path.dirname(targetFile), path.join(rootOutputDir, 'README.html'));
+        
+        // Auto-detect language of README
+        let readmeLangPath = 'README.html';
+        if (fileLang === 'en' && fs.existsSync(path.join(rootOutputDir, 'en', 'README.html'))) {
+            readmeLangPath = 'en/README.html';
+        } else if (fileLang === 'vi' && fs.existsSync(path.join(rootOutputDir, 'vi', 'README.html'))) {
+            readmeLangPath = 'vi/README.html';
+        }
+
         const relativeReadmeUrl = relativeReadmeFromTarget.replace(/\\/g, '/');
         
         const relativeSearchIndexFromTarget = path.relative(path.dirname(targetFile), path.join(rootOutputDir, 'search-index.js'));
@@ -566,6 +920,10 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
             .replaceAll('/* SEARCH_INDEX_RELATIVE_URL */', relativeSearchIndexUrl)
             .replaceAll('/* RENDER_TIME */', renderTime)
             .replaceAll('/* KERNEL_VERSION */', kernelVersion)
+            .replaceAll('<!-- DOC_METADATA_PLACEHOLDER -->', metadataHtml)
+            .replaceAll('<!-- STATS_PANEL_PLACEHOLDER -->', statsPanelHtml)
+            .replaceAll('<!-- DRIFT_AUDIT_PLACEHOLDER -->', driftAuditHtml)
+            .replaceAll('<!-- AI_PROMPTS_PLACEHOLDER -->', aiPromptsHtml)
             .replaceAll('<!-- DOCS_LIST_PLACEHOLDER -->', sidebarHtml);
             
         const targetDir = path.dirname(targetFile);
@@ -695,47 +1053,12 @@ function renderDirectory(srcDir, destDir, template) {
                     }
                 }
             }
-            
-            const radius = visited.size - 1;
-            blastRadii[nodeId] = radius;
-            return radius;
+            blastRadii[nodeId] = visited.size - 1;
+            return blastRadii[nodeId];
         };
     }
 
-    const searchIndex = [];
-    for (const sourceFile of allMdFiles) {
-        const relativeFromRoot = path.relative(srcDir, sourceFile);
-        const targetFile = path.join(destDir, relativeFromRoot.replace(/\.md$/, '.html'));
-        renderSingleFile(sourceFile, targetFile, treeRoot, srcDir, destDir, template, graphNodesMap, calculateBlastRadius);
-        
-        // Collect search index
-        try {
-            const rawContent = fs.readFileSync(sourceFile, 'utf8');
-            const cleanTitle = getMarkdownCleanName(sourceFile);
-            
-            // Strip markdown formatting & limit length
-            let cleanText = rawContent
-                .replace(/```[\s\S]*?```/g, ' ') // replace code blocks with space to keep index size optimal
-                .replace(/[\#\*\`\[\]\(\)\-\+\!\_\>]/g, ' ') // strip syntax chars
-                .replace(/\s+/g, ' ')
-                .trim();
-                
-            if (cleanText.length > 15000) {
-                cleanText = cleanText.substring(0, 15000) + '...';
-            }
-            
-            const relHtmlUrl = relativeFromRoot.replace(/\.md$/, '.html').replace(/\\/g, '/');
-            searchIndex.push({
-                path: relHtmlUrl,
-                title: cleanTitle,
-                content: cleanText
-            });
-        } catch (e) {
-            console.warn(`Warning: Failed to parse search index for ${sourceFile}`, e.message);
-        }
-    }
-    
-    // Calculate Graph Traceability and compile dashboard.html
+    // Calculate Graph Traceability and update README.md
     let docsWithAnchors = 0;
     for (const mdFile of allMdFiles) {
         try {
@@ -762,7 +1085,6 @@ function renderDirectory(srcDir, destDir, template) {
     let processedNodesData = [];
     
     if (hasGraph) {
-
         const enrichableNodes = graphNodes.filter(node => {
             const isTest = node.filePath && (node.filePath.startsWith('tests/') || node.filePath.includes('.test.'));
             return !isTest;
@@ -960,12 +1282,12 @@ function renderDirectory(srcDir, destDir, template) {
                 fs.writeFileSync(readmePath, readmeContent, 'utf8');
                 console.log('📝 Automatically updated Graph Traceability stats in README.md');
             } catch (e) {
-                console.warn('Warning: Failed to update README.md index statistics:', e.message);
+                console.warn('Warning: Failed to update Graph Traceability in README.md:', e.message);
             }
         }
     }
-    
-    // 3.5. Build Alignment Data for Dashboard
+
+// 3.5. Build Alignment Data for Dashboard
     const alignmentData = {};
     
     function isLooseAnchorMatch(anchor, headersList) {
@@ -988,7 +1310,16 @@ function renderDirectory(srcDir, destDir, template) {
 
     for (const mdFile of allMdFiles) {
         const relPath = path.relative(srcDir, mdFile).replace(/\\/g, '/');
+        // Detect file language
+        let fileLang = workspaceLang;
+        const normalizedPath = mdFile.replace(/\\/g, '/');
+        if (normalizedPath.includes('/en/')) {
+            fileLang = 'en';
+        } else if (normalizedPath.includes('/vi/')) {
+            fileLang = 'vi';
+        }
         const title = getMarkdownCleanName(mdFile);
+        let alignmentStats = null;
         
         let mdContent = '';
         try {
@@ -1059,11 +1390,11 @@ function renderDirectory(srcDir, destDir, template) {
                         if (!isMatch) {
                             auditReports.push({
                                 severity: 'medium',
-                                title: workspaceLang === 'vi' ? `Neo liên kết hỏng trong \`${node.name}\`` : `Broken Anchor Link in Node \`${node.name}\``,
-                                description: workspaceLang === 'vi' 
+                                title: fileLang === 'vi' ? `Neo liên kết hỏng trong \`${node.name}\`` : `Broken Anchor Link in Node \`${node.name}\``,
+                                description: fileLang === 'vi' 
                                     ? `Cấu phần liên kết tới neo \`#${anchorName}\` nhưng tiêu đề này không tồn tại trong tài liệu spec.`
                                     : `Node linked to anchor \`#${anchorName}\` but this header was not found in the spec file.`,
-                                solution: workspaceLang === 'vi'
+                                solution: fileLang === 'vi'
                                     ? `Cập nhật lại tiêu đề spec hoặc sửa chú thích neo trong code thành: ${headers.slice(0, 3).map(h => '`#' + h + '`').join(', ')}.`
                                     : `Update the spec header or correct the comment link to valid headers: ${headers.slice(0, 3).map(h => '`#' + h + '`').join(', ')}.`
                             });
@@ -1084,11 +1415,11 @@ function renderDirectory(srcDir, destDir, template) {
                         if (applyRulesBlock.includes("status: 'paid'") && !applyRulesBlock.includes("payment.amount >= invoice.amount") && !applyRulesBlock.includes("payment.amount >= matchedInvoice.amount")) {
                             auditReports.push({
                                 severity: 'high',
-                                title: workspaceLang === 'vi' ? 'GAP: Vi phạm quy tắc Underpayment trong đối soát hàng loạt' : 'GAP: Underpayment violation in batch reconciliation',
-                                description: workspaceLang === 'vi'
+                                title: fileLang === 'vi' ? 'GAP: Vi phạm quy tắc Underpayment trong đối soát hàng loạt' : 'GAP: Underpayment violation in batch reconciliation',
+                                description: fileLang === 'vi'
                                     ? `Trong hàm \`applyRulesToExistingPayments\`, hệ thống tự động gán status đơn hàng thành \`'paid'\` khi đối soát hàng loạt mà không check điều kiện thanh toán thiếu.`
                                     : `In \`applyRulesToExistingPayments\`, the system sets invoice status to \`'paid'\` directly without verifying if the payment amount is sufficient.`,
-                                solution: workspaceLang === 'vi'
+                                solution: fileLang === 'vi'
                                     ? `Sửa logic gán status thành: \`const status = payment.amount >= invoice.amount ? 'paid' : 'partially_paid';\`.`
                                     : `Modify the status assignment logic to check: \`const status = payment.amount >= invoice.amount ? 'paid' : 'partially_paid';\`.`
                             });
@@ -1097,11 +1428,11 @@ function renderDirectory(srcDir, destDir, template) {
                     if (!codeContent.includes("sum(payments.amount)") && !codeContent.includes("sum(payment.amount)")) {
                         auditReports.push({
                             severity: 'medium',
-                            title: workspaceLang === 'vi' ? 'GAP: Thiếu cơ chế cộng dồn thanh toán bổ sung' : 'GAP: Missing payment union logic',
-                            description: workspaceLang === 'vi'
+                            title: fileLang === 'vi' ? 'GAP: Thiếu cơ chế cộng dồn thanh toán bổ sung' : 'GAP: Missing payment union logic',
+                            description: fileLang === 'vi'
                                 ? `Hệ thống chưa có logic cộng dồn tổng tiền các payment để kích hoạt hóa đơn thanh toán thiếu sang paid.`
                                 : `The system lacks logic to sum up partial payments to automatically transition underpaid invoices to paid.`,
-                            solution: workspaceLang === 'vi'
+                            solution: fileLang === 'vi'
                                 ? `Viết thêm hàm helper \`checkAndUnionPartialPayments(db, invoiceId)\` chạy khi gán payment.`
                                 : `Implement helper function \`checkAndUnionPartialPayments(db, invoiceId)\` to check total payment amount.`
                         });
@@ -1110,48 +1441,142 @@ function renderDirectory(srcDir, destDir, template) {
             }
         }
         
-        // Build Decision Table
-        let decisionTable = [];
-        if (relPath.includes('payment') || relPath.includes('reconcil')) {
-            if (workspaceLang === 'vi') {
-                decisionTable = [
-                    { "Kịch bản nghiệp vụ": "Thanh toán đủ", "Khớp Dịch vụ?": true, "Y >= X (Đủ tiền)": true, "Trạng thái Invoice": "paid", "Kích hoạt Dịch vụ": true },
-                    { "Kịch bản nghiệp vụ": "Thanh toán thiếu", "Khớp Dịch vụ?": true, "Y >= X (Đủ tiền)": false, "Trạng thái Invoice": "partially_paid", "Kích hoạt Dịch vụ": false },
-                    { "Kịch bản nghiệp vụ": "Chuyển dư tiền", "Khớp Dịch vụ?": true, "Y >= X (Đủ tiền)": true, "Trạng thái Invoice": "paid (Dư tiền)", "Kích hoạt Dịch vụ": true },
-                    { "Kịch bản nghiệp vụ": "Không khớp dịch vụ", "Khớp Dịch vụ?": false, "Y >= X (Đủ tiền)": "N/A", "Trạng thái Invoice": "N/A", "Kích hoạt Dịch vụ": "Gia hạn cơ chế cũ (100k=30d)" }
-                ];
-            } else {
-                decisionTable = [
-                    { "Scenario": "Full Payment", "Matched Service": true, "Paid >= Price": true, "Invoice Status": "paid", "Activate Service": true },
-                    { "Scenario": "Underpayment", "Matched Service": true, "Paid >= Price": false, "Invoice Status": "partially_paid", "Activate Service": false },
-                    { "Scenario": "Overpayment", "Matched Service": true, "Paid >= Price": true, "Invoice Status": "paid (overpaid)", "Activate Service": true },
-                    { "Scenario": "No Matched Service", "Matched Service": false, "Paid >= Price": "N/A", "Invoice Status": "N/A", "Activate Service": "Extend by 100k=30d legacy logic" }
-                ];
+
+
+        // Always calculate statistical indices for the document
+        const stats = {
+            totalEntities: docNodes.length,
+            doubleBound: 0,
+            docsToCode: 0,
+            codeToDocs: 0,
+            withHeading: 0,
+            typeCounts: {},
+            topHeadings: []
+        };
+        const headingFreq = {};
+        const fileBase = path.basename(mdFile).toLowerCase();
+
+        docNodes.forEach(n => {
+            const getHeadingsFromAnchors = (anchors) => {
+                return anchors
+                    .filter(a => path.basename(a.split('#')[0]).toLowerCase() === fileBase && a.includes('#'))
+                    .map(a => '#' + a.split('#')[1])
+                    .filter((v, i, arr) => arr.indexOf(v) === i); // deduplicate
+            };
+            
+            const docAnchorHeadings = getHeadingsFromAnchors(n.docAnchors);
+            const codeDocHeadings = getHeadingsFromAnchors(n.codeDocs);
+            
+            const hasDocAnchor = docAnchorHeadings.length > 0 || n.docAnchors.some(a => path.basename(a.split('#')[0]).toLowerCase() === fileBase);
+            const hasCodeDoc = codeDocHeadings.length > 0 || n.codeDocs.some(a => path.basename(a.split('#')[0]).toLowerCase() === fileBase);
+            
+            if (hasDocAnchor && hasCodeDoc) {
+                stats.doubleBound++;
             }
-        } else {
-            decisionTable = docNodes.slice(0, 3).map(n => {
-                return workspaceLang === 'vi' ? {
-                    "Cấu phần mã": n.name,
-                    "Loại": n.type,
-                    "Vị trí": n.filePath + ':' + n.startLine,
-                    "Độ kết nối": n.degree,
-                    "Đại diện Nghiệp vụ": n.summary ? n.summary.substring(0, 50) + '...' : 'Không có'
-                } : {
-                    "Code Entity": n.name,
-                    "Type": n.type,
-                    "Location": n.filePath + ':' + n.startLine,
-                    "Degree": n.degree,
-                    "Business Meaning": n.summary ? n.summary.substring(0, 50) + '...' : 'None'
-                };
+            if (hasDocAnchor) {
+                stats.docsToCode++;
+            }
+            if (hasCodeDoc) {
+                stats.codeToDocs++;
+            }
+            
+            const allHeadings = [...new Set([...docAnchorHeadings, ...codeDocHeadings])];
+            if (allHeadings.length > 0) {
+                stats.withHeading++;
+                allHeadings.forEach(h => {
+                    headingFreq[h] = (headingFreq[h] || 0) + 1;
+                });
+            }
+            
+            stats.typeCounts[n.type] = (stats.typeCounts[n.type] || 0) + 1;
+        });
+        
+        // Convert headingFreq to sorted array
+        const sortedHeadings = Object.entries(headingFreq)
+            .map(([heading, count]) => ({ heading, count }))
+            .sort((a, b) => b.count - a.count);
+        
+        stats.topHeadings = sortedHeadings.slice(0, 5);
+        alignmentStats = stats;
+        
+        // Additional Drift Audit: Code→Docs orphan check (codeDocs pointing to non-existent headings)
+        docNodes.forEach(node => {
+            node.codeDocs.forEach(codeDocStr => {
+                if (codeDocStr.includes('#')) {
+                    const parts = codeDocStr.split('#');
+                    const codeDocFile = parts[0];
+                    const codeDocAnchor = parts[1];
+                    
+                    const codeDocBase = path.basename(codeDocFile).toLowerCase();
+                    const currentFileBase = path.basename(mdFile).toLowerCase();
+                    if (codeDocBase === currentFileBase) {
+                        const isMatch = isLooseAnchorMatch(codeDocAnchor, headers);
+                        if (!isMatch) {
+                            // Avoid duplicate if same anchor already reported from docAnchors check
+                            const isDuplicate = auditReports.some(r => r.description && r.description.includes(codeDocAnchor));
+                            if (!isDuplicate) {
+                                auditReports.push({
+                                    severity: 'medium',
+                                    title: fileLang === 'vi' 
+                                        ? `Neo @para-doc hỏng từ \`${node.name}\`` 
+                                        : `Broken @para-doc link from \`${node.name}\``,
+                                    description: fileLang === 'vi' 
+                                        ? `Chú thích @para-doc trong code trỏ tới neo \`#${codeDocAnchor}\` nhưng heading này không tồn tại trong tài liệu.`
+                                        : `@para-doc comment in code points to anchor \`#${codeDocAnchor}\` but this heading was not found in the document.`,
+                                    solution: fileLang === 'vi'
+                                        ? `Cập nhật chú thích @para-doc trong \`${node.filePath}\` hoặc thêm heading phù hợp vào tài liệu.`
+                                        : `Update @para-doc comment in \`${node.filePath}\` or add the matching heading to the document.`
+                                });
+                            }
+                        }
+                    }
+                }
             });
-        }
+        });
         
         alignmentData[relPath] = {
             title: title,
             mermaid: mermaid,
-            decisionTable: decisionTable,
+            alignmentStats: alignmentStats,
             auditReports: auditReports
         };
+    }
+    
+    
+    const searchIndex = [];
+    for (const sourceFile of allMdFiles) {
+        const relativeFromRoot = path.relative(srcDir, sourceFile).replace(/\\/g, '/');
+        const targetFile = path.join(destDir, relativeFromRoot.replace(/\.md$/, '.html'));
+        const fileAlignment = alignmentData[relativeFromRoot];
+        const auditReports = fileAlignment ? fileAlignment.auditReports : [];
+        const fileStats = fileAlignment ? fileAlignment.alignmentStats : null;
+        renderSingleFile(sourceFile, targetFile, treeRoot, srcDir, destDir, template, graphNodesMap, calculateBlastRadius, dashboardStats, auditReports, fileStats);
+        
+        // Collect search index
+        try {
+            const rawContent = fs.readFileSync(sourceFile, 'utf8');
+            const cleanTitle = getMarkdownCleanName(sourceFile);
+            
+            // Strip markdown formatting & limit length
+            let cleanText = rawContent
+                .replace(/```[\s\S]*?```/g, ' ') // replace code blocks with space to keep index size optimal
+                .replace(/[\#\*\`\[\]\(\)\-\+\!\_\>]/g, ' ') // strip syntax chars
+                .replace(/\s+/g, ' ')
+                .trim();
+                
+            if (cleanText.length > 15000) {
+                cleanText = cleanText.substring(0, 15000) + '...';
+            }
+            
+            const relHtmlUrl = relativeFromRoot.replace(/\.md$/, '.html').replace(/\\/g, '/');
+            searchIndex.push({
+                path: relHtmlUrl,
+                title: cleanTitle,
+                content: cleanText
+            });
+        } catch (e) {
+            console.warn(`Warning: Failed to parse search index for ${sourceFile}`, e.message);
+        }
     }
     
     // Compile dashboard.html
@@ -1270,7 +1695,7 @@ function renderDirectory(srcDir, destDir, template) {
                                 walkWikiAndCompile(srcPath, destPath);
                             } else if (item.endsWith('.md')) {
                                 const targetHtmlPath = destPath.replace(/\.md$/, '.html');
-                                renderSingleFile(srcPath, targetHtmlPath, treeRoot, srcDir, destDir, template, graphNodesMap, calculateBlastRadius);
+                                renderSingleFile(srcPath, targetHtmlPath, treeRoot, srcDir, destDir, template, graphNodesMap, calculateBlastRadius, dashboardStats, [], null);
                                 const relWikiPath = path.relative(wikiSourceDir, srcPath);
                                 console.log(`📚 Compiled Developer Wiki page ${relWikiPath} successfully.`);
                             }

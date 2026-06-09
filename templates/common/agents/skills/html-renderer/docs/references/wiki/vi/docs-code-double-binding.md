@@ -1,3 +1,11 @@
+---
+title: "Liên kết hai chiều giữa Tài liệu và Mã nguồn"
+order: 1
+author: "Antigravity (AI Agent)"
+version: "1.0.0"
+status: "✅ Đã phê duyệt"
+updated: "2026-06-03"
+---
 # Liên kết hai chiều giữa Tài liệu và Mã nguồn (Double-Binding Traceability)
 
 Trong một dự án lớn, tài liệu kỹ thuật rất dễ bị lệch pha với mã nguồn thực tế (Documentation Drift). Để giải quyết triệt để vấn đề này, PARA Workspace áp dụng cơ chế **Double-Binding Traceability** (Liên kết hai chiều) giữa tài liệu (`docs/`) và mã nguồn (`src/`) thông qua công cụ Đồ thị mã nguồn Code-Graph (`para-graph`).

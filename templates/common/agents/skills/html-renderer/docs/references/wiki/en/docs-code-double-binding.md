@@ -1,3 +1,11 @@
+---
+title: "Double-Binding Traceability between Docs and Code"
+order: 1
+author: "Antigravity (AI Agent)"
+version: "1.0.0"
+status: "✅ Approved"
+updated: "2026-06-03"
+---
 # Double-Binding Traceability between Docs and Code
 
 In large software projects, technical documentation easily drifts away from the actual source code (Documentation Drift). To solve this issue permanently, the PARA Workspace enforces a **Double-Binding Traceability** mechanism between documentation (`docs/`) and source code (`src/`) utilizing the Code-Graph tool (`para-graph`).

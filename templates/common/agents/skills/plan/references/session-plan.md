@@ -76,7 +76,7 @@
 - [ ] 1.2 🤖 **Step 2:** [Task description]
 - [ ] 1.N-1 🤖 **Pre-commit Gate:** Run tests & lints (`npm run build` and `npx vitest run` or equivalent verification commands).
 - [ ] 1.N 👤 **Git Checkpoint:** Commit changes with message `session([topic]): [milestone goal]`.
-- [ ] ⛔ CHECKPOINT: Agent verification pass -> Present diff & tests to User (stating: "I have done [actions, log files]. In addition, I have checked done on all tasks. I propose that you confirm agreement to run the commit command...") -> get explicit User approval before writing commit SHA & marking Phase Done.
+- [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Receive explicit user approval before recording the commit SHA & marking Phase Done.
 - [ ] 1.N+1 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
 
 #### 📊 Post-Phase 1 Report

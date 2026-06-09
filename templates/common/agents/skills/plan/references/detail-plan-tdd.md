@@ -130,11 +130,9 @@
   - [ ] Log shows 🟢 PASS (Green state)
   - [ ] (If missing FAIL) 🛑 Revert code, rewrite RED test.
 - [ ] 5.5 🤖 **Pre-commit Gate:** Run project's linter/compiler (e.g., `npm run lint`) and resolve any type/lint problems.
-- [ ] 6. 👤 **Commit**
-  ```bash
-  git add exact/path/to/feature.test.ts exact/path/to/feature.ts
-  git commit -m "tdd(feature): [Behavior] — red-green verified"
-  ```
+- [ ] 6. 👤 **Git Checkpoint:** Commit changes with message `tdd(feature): [Behavior] — red-green verified`.
+- [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Receive explicit user approval before committing.
+- [ ] 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
 
 #### Task 1.2: [Next Behavior / Component Name]
 
@@ -158,8 +156,9 @@
   - [ ] Log shows 🟢 PASS (Green state)
   - [ ] (If missing FAIL) 🛑 Revert code, rewrite RED test.
 - [ ] 5.5 🤖 **Pre-commit Gate:** Run project's linter/compiler (e.g., `npm run lint`) and resolve any type/lint problems.
-- [ ] 6. 👤 **Commit** (`tdd(scope): [Behavior]`)
-- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 1 are checked [x] AND get explicit User approval before proceeding to the next Phase.
+- [ ] 6. 👤 **Git Checkpoint:** Commit changes with message `tdd(scope): [Behavior]`.
+- [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Receive explicit user approval before committing and proceeding to the next Phase.
+- [ ] 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
 
 ---
 
@@ -178,11 +177,9 @@
 
 - [ ] 1. 🟣 **REFACTOR:** Clean up and restructure code.
 - [ ] 2. 🟢 **Verify PASS:** Re-run entire test suite (`bash .agents/skills/tdd/scripts/tdd-test.sh npm run test`) to ensure no regressions.
-- [ ] 3. 👤 **Commit Checkpoint**
-  ```bash
-  git commit -a -m "refactor: cleanup [Component] implementation"
-  ```
-- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 2 are checked [x] AND get explicit User approval before proceeding to the next Phase.
+- [ ] 3. 👤 **Git Checkpoint:** Commit changes with message `refactor: cleanup [Component] implementation`.
+- [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Receive explicit user approval before committing and proceeding to the next Phase.
+- [ ] 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
 
 ---
 
@@ -200,6 +197,7 @@
 - [ ] Every new function/method has a corresponding test.
 - [ ] 100% tests pass with pristine output (no errors/warnings).
 - [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `git status --ignored --porcelain` snapshot in `tdd-repo-before-[date].log` to identify newly generated untracked or ignored files. Agent MUST present the list to User and ask whether to delete them (if junk) or commit them (if missed in plan) before proceeding with cleanup.
+- [ ] **Code-Graph Sync:** Cập nhật đồ thị mã nguồn bằng lệnh: `npx para-graph build <project-name>` (if --graph is enabled).
 - [ ] [Project-specific checks: build pass, docs updated, governance rules...]
 - [ ] ⛔ CHECKPOINT (Walkthrough Completion): Agent MUST verify all above Walkthrough items are ticked [x] BEFORE proposing Status transition.
 - [ ] ⛔ CHECKPOINT (C7 Status Transition): Agent MUST NOT change Status to "✅ Done" without user approval.

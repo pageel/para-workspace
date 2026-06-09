@@ -829,7 +829,7 @@
             // Find README link in Sidebar
             const readmeLink = Array.from(document.querySelectorAll('.menu-link')).find(link => {
                 const docpath = link.getAttribute('data-docpath');
-                return docpath && docpath.endsWith('README.html');
+                return docpath && /^(?:[a-z]{2}\/)?README\.html$/i.test(docpath);
             });
             
             if (readmeLink) {

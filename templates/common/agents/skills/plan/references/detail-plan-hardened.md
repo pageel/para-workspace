@@ -253,10 +253,11 @@ git push origin main
 - [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
 - [ ] 1.N-1 🤖 **Pre-commit Gate:** Run project's linter/compiler/tests and resolve any problems.
 - [ ] 🤖 **Compare Git Drift (Pre-commit):** Compare final changes against snapshot before commit to prevent committing junk.
-- [ ] 1.N 👤 Git commit Phase 1.
-- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 1 are checked [x] AND get explicit User approval before proceeding to the next Phase.
+- [ ] 1.N 👤 **Git Checkpoint:** Commit changes with message `[feat/fix/chore]([scope]): [short description]`.
+- [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Receive explicit user approval before committing and proceeding to the next Phase.
+- [ ] 1.N+1 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
 - [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Agent MUST ask User for confirmation BEFORE pushing.
-- [ ] 1.N+1 👤 Git push origin main.
+- [ ] 1.N+2 👤 Git push origin main.
 
 ---
 

@@ -231,12 +231,10 @@
             padding: 20px 16px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
         .right-sidebar-info {
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 16px;
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -296,6 +294,359 @@
         [data-theme="dark"] .menu-item a:hover {
             background-color: rgba(255, 255, 255, 0.055);
             color: var(--text-primary);
+        }
+
+        /* Metadata Accordion */
+        .metadata-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .metadata-toggle-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid rgba(245, 188, 0, 0.25);
+            border-radius: 6px;
+            background-color: rgba(245, 188, 0, 0.05);
+            color: #b58900;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .metadata-toggle-btn:hover {
+            background-color: rgba(245, 188, 0, 0.1);
+            border-color: #b58900;
+        }
+        [data-theme="dark"] .metadata-toggle-btn {
+            color: #d8a000;
+            border-color: rgba(245, 188, 0, 0.3);
+            background-color: rgba(245, 188, 0, 0.07);
+        }
+        [data-theme="dark"] .metadata-toggle-btn:hover {
+            background-color: rgba(245, 188, 0, 0.14);
+            border-color: #d8a000;
+        }
+
+        .metadata-dropdown {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* TOC Accordion */
+        .toc-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toc-toggle-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--hover-color);
+            color: var(--text-primary);
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .toc-toggle-btn:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+            border-color: var(--text-secondary);
+        }
+        [data-theme="dark"] .toc-toggle-btn:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .toc-dropdown {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Drift Audit Accordion */
+        .drift-audit-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .drift-audit-toggle-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 6px;
+            background-color: rgba(239, 68, 68, 0.05);
+            color: #ef4444;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .drift-audit-toggle-btn:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-color: #ef4444;
+        }
+
+        .drift-audit-toggle-btn.no-issues {
+            border-color: rgba(16, 185, 129, 0.25);
+            background-color: rgba(16, 185, 129, 0.05);
+            color: #10b981;
+        }
+
+        .drift-audit-toggle-btn.no-issues:hover {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-color: #10b981;
+        }
+
+        [data-theme="dark"] .drift-audit-toggle-btn {
+            color: #ff6b6b;
+            border-color: rgba(239, 68, 68, 0.3);
+            background-color: rgba(239, 68, 68, 0.07);
+        }
+        [data-theme="dark"] .drift-audit-toggle-btn:hover {
+            background-color: rgba(239, 68, 68, 0.14);
+            border-color: #ff6b6b;
+        }
+
+        [data-theme="dark"] .drift-audit-toggle-btn.no-issues {
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.3);
+            background-color: rgba(16, 185, 129, 0.07);
+        }
+        [data-theme="dark"] .drift-audit-toggle-btn.no-issues:hover {
+            background-color: rgba(16, 185, 129, 0.14);
+            border-color: #34d399;
+        }
+
+        .drift-audit-dropdown {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .drift-issue-item {
+            padding: 8px;
+            border-radius: 4px;
+            background-color: var(--hover-color);
+            border-left: 3px solid #ef4444;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: left;
+        }
+        .drift-issue-item.high {
+            border-left-color: #ef4444;
+            background-color: rgba(239, 68, 68, 0.03);
+        }
+        .drift-issue-item.medium {
+            border-left-color: #f59e0b;
+            background-color: rgba(245, 158, 11, 0.03);
+        }
+        .drift-issue-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .drift-issue-desc {
+            color: var(--text-secondary);
+            font-size: 11px;
+            line-height: 1.4;
+        }
+        .drift-issue-sol {
+            color: var(--accent-color);
+            font-size: 11px;
+            margin-top: 2px;
+            font-style: italic;
+        }
+        .drift-no-issues-msg {
+            color: #10b981;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            text-align: left;
+        }
+
+        /* Stats Panel in Right Sidebar */
+        .stats-panel-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .stat-card {
+            background-color: var(--hover-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--text-secondary);
+            transform: translateY(-1px);
+        }
+
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-value.text-success {
+            color: #2eb85c;
+        }
+        [data-theme="dark"] .stat-value.text-success {
+            color: #4dbd74;
+        }
+
+        .stat-value.text-warning {
+            color: #f9b115;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* AI Prompts Suggestions Panel */
+        .ai-prompts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ai-prompts-toggle-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid rgba(35, 131, 226, 0.25);
+            border-radius: 6px;
+            background-color: rgba(35, 131, 226, 0.05);
+            color: var(--accent-color);
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .ai-prompts-toggle-btn:hover {
+            background-color: rgba(35, 131, 226, 0.1);
+            border-color: var(--accent-color);
+        }
+
+        .ai-prompts-dropdown {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .prompt-badge {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 1px 4px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-left: 6px;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1.2;
+        }
+        .prompt-badge.attention {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+        .prompt-badge.suggest {
+            background-color: rgba(35, 131, 226, 0.1);
+            color: var(--accent-color);
+            border: 1px solid rgba(35, 131, 226, 0.25);
+        }
+
+        .prompt-item {
+            padding: 6px 10px;
+            font-size: 12.5px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-primary);
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+        .prompt-item:hover {
+            background-color: var(--hover-color);
+            color: var(--accent-color) !important;
+        }
+
+        .prompt-item svg {
+            width: 12px;
+            height: 12px;
+            opacity: 0.5;
+            transition: opacity 0.15s ease;
+        }
+
+        .prompt-item:hover svg {
+            opacity: 0.9;
+            color: var(--accent-color);
         }
 
         /* Markdown Formatting (Notion minimal style) */
@@ -745,6 +1096,78 @@
             justify-content: center;
             align-items: center;
         }
+
+        /* Metadata Panel in Right Sidebar */
+        .doc-metadata-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .metadata-row {
+            display: grid;
+            grid-template-columns: 85px 1fr;
+            align-items: center;
+            font-size: 12px;
+            gap: 8px;
+        }
+
+        .metadata-key {
+            color: var(--text-secondary);
+            font-family: var(--font-display);
+            font-size: 10.5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .metadata-value-container {
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .metadata-value {
+            color: var(--text-primary);
+            font-weight: 500;
+            word-break: break-word;
+            font-size: 12.5px;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.2;
+            text-transform: capitalize;
+        }
+
+        .status-badge.approved, .status-badge.done, .status-badge.completed, .status-badge.da-phe-duyet, .status-badge.active, .status-badge.hoat-dong {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .status-badge.draft, .status-badge.nhap, .status-badge.pending, .status-badge.dang-xu-ly, .status-badge.wip {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+
+        .status-badge.stale, .status-badge.outdated, .status-badge.cu, .status-badge.het-han, .status-badge.expired {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .status-badge.default {
+            background-color: var(--code-bg);
+            color: var(--text-secondary);
+        }
     </style>
 </head>
 <body>
@@ -806,7 +1229,7 @@
     <!-- Right Sidebar: Table of Contents & Info -->
     <aside class="right-sidebar" id="right-sidebar">
         <div class="right-header">
-            /* TRANSLATE:tocTitle */
+            /* TRANSLATE:rightSidebarHeader */
         </div>
         
         <div class="right-sidebar-content">
@@ -817,9 +1240,28 @@
                 </a>
             </div>
             
-            <ul class="menu-list" id="toc-list" style="font-size: 13px;">
-                <!-- Dynamically extracted from Markdown headers -->
-            </ul>
+            <!-- STATS_PANEL_PLACEHOLDER -->
+            
+            <!-- DOC_METADATA_PLACEHOLDER -->
+            
+            <!-- AI_PROMPTS_PLACEHOLDER -->
+            
+            <!-- DRIFT_AUDIT_PLACEHOLDER -->
+            
+            <div class="toc-container">
+                <button class="toc-toggle-btn" id="toc-toggle-btn" onclick="toggleTocDropdown()">
+                    <span style="display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="list" style="width: 14px; height: 14px;"></i>
+                        <span>/* TRANSLATE:tocTitle */</span>
+                    </span>
+                    <i data-lucide="chevron-down" id="toc-chevron" style="width: 14px; height: 14px; transition: transform 0.2s; transform: rotate(180deg);"></i>
+                </button>
+                <div class="toc-dropdown" id="toc-dropdown" style="display: flex;">
+                    <ul class="menu-list" id="toc-list" style="font-size: 13px;">
+                        <!-- Dynamically extracted from Markdown headers -->
+                    </ul>
+                </div>
+            </div>
         </div>
     </aside>
 
@@ -1801,6 +2243,74 @@
             }
             container.innerHTML = html;
             lucide.createIcons();
+        }
+
+        // Metadata Accordion control
+        function toggleMetadataDropdown() {
+            const dropdown = document.getElementById('metadata-dropdown');
+            const chevron = document.getElementById('metadata-chevron');
+            if (!dropdown || !chevron) return;
+            const isHidden = dropdown.style.display === 'none' || dropdown.style.display === '';
+            dropdown.style.display = isHidden ? 'flex' : 'none';
+            chevron.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        // TOC Accordion control
+        function toggleTocDropdown() {
+            const dropdown = document.getElementById('toc-dropdown');
+            const chevron = document.getElementById('toc-chevron');
+            if (!dropdown || !chevron) return;
+            const isHidden = dropdown.style.display === 'none' || dropdown.style.display === '';
+            dropdown.style.display = isHidden ? 'flex' : 'none';
+            chevron.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        // AI Prompts Suggestions control
+        function toggleAiPromptsDropdown() {
+            const dropdown = document.getElementById('ai-prompts-dropdown');
+            const chevron = document.getElementById('ai-prompts-chevron');
+            if (!dropdown || !chevron) return;
+            const isHidden = dropdown.style.display === 'none' || dropdown.style.display === '';
+            dropdown.style.display = isHidden ? 'flex' : 'none';
+            chevron.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        // Drift Audit Accordion control
+        function toggleDriftAuditDropdown() {
+            const dropdown = document.getElementById('drift-audit-dropdown');
+            const chevron = document.getElementById('drift-audit-chevron');
+            if (!dropdown || !chevron) return;
+            const isHidden = dropdown.style.display === 'none' || dropdown.style.display === '';
+            dropdown.style.display = isHidden ? 'flex' : 'none';
+            chevron.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        async function copyAiPrompt(type) {
+            const path = currentDocAbsPath;
+            const docLang = '/* WORKSPACE_LANG */';
+            const promptsVi = {
+                'frontmatter': `Hãy chuẩn hóa cấu trúc và dữ liệu frontmatter cho tệp tài liệu này: @[${path}]`,
+                'review': `Hãy rà soát toàn diện và cập nhật tài liệu @[${path}] để đảm bảo phản ánh chính xác 100% cấu trúc mã nguồn thực tế.`,
+                'review-structure': `Hãy phân tích cấu trúc hệ thống tài liệu hiện tại của dự án này từ tệp @[${path}] (và thư mục docs/), kiểm tra sự phân bổ giữa các thư mục specs, architecture, reference, guides, và đề xuất tối ưu hóa cấu trúc để loại bỏ thông tin dư thừa hoặc bổ sung các tài liệu bị thiếu.`,
+                'strategy': `Hãy đối chiếu định hướng phát triển hiện tại trong strategy.md và strategy-documentation.md (hoặc các file tài liệu chiến lược liên quan) của dự án này từ tệp @[${path}], đối chiếu với roadmap và backlog hiện tại để cập nhật/xây dựng lại tài liệu chiến lược cho phù hợp với tầm nhìn sản phẩm.`,
+                'headings': `Hãy rà soát toàn bộ tệp tài liệu @[${path}] và chuẩn hóa lại việc đánh số thứ tự trong các tiêu đề (h1, h2, h3...). Phát hiện các lỗi đánh số không tuần tự (như nhảy số, thiếu phân mục), chuẩn hóa chúng theo định dạng phân cấp tuần tự (ví dụ: 1., 1.1, 1.1.1, 2., 2.1...) và cập nhật lại toàn bộ các liên kết neo nội bộ liên quan. BẮT BUỘC rà soát thêm toàn bộ mã nguồn của dự án để tìm và cập nhật tất cả các comment tham chiếu (như // @para-doc [tên_file.md#neo]) trỏ đến các tiêu đề vừa thay đổi để tránh bị sai lệch thông tin.`
+            };
+            const promptsEn = {
+                'frontmatter': `Please normalize the frontmatter structure and metadata for this document: @[${path}]`,
+                'review': `Please comprehensively review and update the document @[${path}] to ensure it accurately reflects the actual codebase implementation.`,
+                'review-structure': `Please analyze the current documentation structure of this project starting from @[${path}] (and the docs/ directory), verify the distribution among specs, architecture, reference, guides, and propose structural optimizations to eliminate redundancy or add missing docs.`,
+                'strategy': `Please cross-reference the strategic direction in strategy.md and strategy-documentation.md (or related strategy docs) from @[${path}] against the roadmap and backlog to update or rebuild the strategy documentation to align with the product vision.`,
+                'headings': `Please review the document @[${path}] and normalize the heading numbering structure (h1, h2, h3...). Find non-sequential numbering issues (e.g. skipped numbers, missing subsections), normalize them to a sequential hierarchy (e.g. 1., 1.1, 1.1.1, 2., 2.1...), and update all corresponding internal anchor links. You MUST also scan the codebase and update any matching reference comments (e.g. // @para-doc [filename.md#anchor]) to prevent broken links.`
+            };
+            const promptText = (docLang === 'vi') ? promptsVi[type] : promptsEn[type];
+            if (!promptText) return;
+            
+            try {
+                await navigator.clipboard.writeText(promptText);
+                showToast('/* TRANSLATE:toastPromptCopied */');
+            } catch (err) {
+                showToast('Failed to copy prompt', true);
+            }
         }
 
         renderMarkdown();
