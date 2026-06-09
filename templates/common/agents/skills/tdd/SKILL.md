@@ -171,12 +171,17 @@ To implement this protocol, a TDD-hardened plan MUST include the following tasks
    - [ ] 0.X 🤖 **TDD Repo Before Snapshot** (run `git status --ignored --porcelain` & `git log -n 1 --oneline` and save to `artifacts/tests/tdd-repo-before-[date].log`)
    ```
 
-2. **Phase 2 (Pre-Commit Cleanup):**
+2. **At the end of intermediate phases (Phase 1, Phase 2, Phase 3...):**
    ```markdown
-   - [ ] 2.X 🤖 **TDD Drift Verification & Cleanup** (compare current repo state with `artifacts/tests/tdd-repo-before-[date].log` to clean up temporary/junk files before commit)
+   - [ ] X.Y 🤖 **Compare Git Drift** (compare current repo state with `artifacts/tests/tdd-repo-before-[date].log` to identify newly generated untracked/ignored files in this phase)
    ```
 
-3. **Walkthrough (Final Post-Release Audit):**
+3. **Pre-commit Gate (before Git Commit task):**
+   ```markdown
+   - [ ] X.N 🤖 **Compare Git Drift (Pre-commit)** (compare final changes against snapshot before commit to prevent committing junk)
+   ```
+
+4. **Walkthrough (Final Post-Release Audit):**
    ```markdown
    - [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `artifacts/tests/tdd-repo-before-[date].log` and completely clean up any junk files generated during local TDD/testing before completion.
    ```

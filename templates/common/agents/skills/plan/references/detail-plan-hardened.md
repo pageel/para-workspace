@@ -249,8 +249,10 @@ git push origin main
 
 - [ ] 1.1 [🧪/📝] [Task description]
 - [ ] 1.2 [🧪/📝] [Task description]
+- [ ] 🤖 **Compare Git Drift:** Compare current repo state with `artifacts/tests/tdd-repo-before-[date].log` to identify newly generated untracked or ignored files in this phase.
 - [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
 - [ ] 1.N-1 🤖 **Pre-commit Gate:** Run project's linter/compiler/tests and resolve any problems.
+- [ ] 🤖 **Compare Git Drift (Pre-commit):** Compare final changes against snapshot before commit to prevent committing junk.
 - [ ] 1.N 👤 Git commit Phase 1.
 - [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 1 are checked [x] AND get explicit User approval before proceeding to the next Phase.
 - [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Agent MUST ask User for confirmation BEFORE pushing.
