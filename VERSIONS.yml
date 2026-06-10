@@ -8,41 +8,41 @@
 # See: naming.md §6 (date format), versioning.md §5 (version tracking)
 # Updated: 2026-05-22
 
-workspace: "1.8.16"
+workspace: "1.9.0"
 
 workflows:
-  backlog:         "1.8.15"  # updated: translated Vietnamese to English
-  open:            "1.8.15"  # JIT Phase creation, user intent detection
-  end:             "1.8.15"  # translated Vietnamese to English
+  backlog:         "1.9.0"   # standard language resolution block
+  open:            "1.9.0"   # standard language resolution block
+  end:             "1.9.0"   # standard language resolution block
   install:         "1.0.0"
   new-project:     "1.8.10"
-  verify:          "1.8.15"  # JIT Phase creation check, user intent detection
+  verify:          "1.9.0"   # standard language resolution block
   retro:          "1.8.9"
-  push:            "1.8.11"
-  release:         "1.0.1"
+  push:            "1.9.0"   # standard language resolution block
+  release:         "1.9.0"   # standard language resolution block
   merge:           "1.0.0"
-  config:          "1.7.13"
+  para-config:     "1.9.0"   # renamed config to para-config
   backup:          "1.0.0"
   para:            "1.1.0"
   inbox:           "1.1.0"
   learn:           "1.8.9"
-  para-workflow:   "1.8.8"
-  para-rule:       "1.8.8"
-  plan:            "1.8.13"
-  para-audit:      "1.8.8"
-  docs:            "1.8.15"  # JIT Phase creation check, user intent detection
-  update:          "1.8.13"
-  brainstorm:      "1.8.10"
-  para-knowledge:  "1.4.0"
-  para-skill:      "1.8.8"
+  para-workflow:   "1.9.0"   # standard language resolution block
+  para-rule:       "1.9.0"   # standard language resolution block
+  plan:            "1.9.0"   # standard language resolution block
+  para-audit:      "1.9.0"   # integrated dynamic legacy cleanup skill
+  docs:            "1.9.0"   # standard language resolution block
+  update:          "1.9.0"   # standard language resolution block
+  brainstorm:      "1.9.0"   # standard language resolution block
+  para-knowledge:  "1.9.0"   # standard language resolution block
+  para-skill:      "1.9.0"   # standard language resolution block
   write:           "1.7.16"
   logs:            "1.8.9"
-  spec:            "1.8.10"
-  qa:              "1.8.15"  # translated Vietnamese to English
-  staging:         "1.8.16"
-  vibecode:        "1.8.16"  # added pre-code checkpoint and early project rules loading
-  scan-sec:        "1.8.15"  # added missing telemetry check
-  resource:        "1.8.11"
+  spec:            "1.9.0"   # standard language resolution block
+  qa:              "1.9.0"   # standard language resolution block
+  staging:         "1.9.0"   # standard language resolution block
+  vibecode:        "1.9.0"   # standard language resolution block
+  scan-sec:        "1.8.15"
+  resource:        "1.9.0"   # standard language resolution block
 
 rules:
   agent-behavior:          "1.8.15"  # consolidated checkpoints
@@ -63,31 +63,32 @@ rules:
 skills:
   para-kit:    "1.8.8"
   formatting:  "1.1.0"
-  page-map:    "1.0.0"
+  page-map:    "1.9.0"   # restored and translated to English
   para-skill:  "1.0.0"
-  plan:        "1.8.15"  # detail-plan phase transition checkpoints updated
-  docs:        "1.8.15"  # detail-plan-docs template updated
-  brainstorm:  "1.8.15"  # templates updated
+  plan:        "1.8.15"
+  docs:        "1.8.15"
+  brainstorm:  "1.8.15"
   write:       "1.7.16"
-  harness:     "1.8.15"  # guard-catalog updated
+  harness:     "1.8.15"
   spec:        "1.8.10"
   qa:          "1.8.10"
-  tdd:         "1.8.15"  # tdd/SKILL.md update
-  logs:        "1.8.15"  # added parse-transcript.py script and references
-  html-renderer: "1.8.16" # dashboard and portal template support
+  tdd:         "1.8.15"
+  logs:        "1.8.15"
+  html-renderer: "1.8.16"
   new-project: "1.8.10"
   resource:    "1.8.11"
   scan-sec:    "1.8.11"
   staging:     "1.8.16"
-  vibecode:    "1.8.16"  # session-quality-gate, session-manager.sh, and AGENTS.md reading support
+  vibecode:    "1.8.16"
   sidecar-skill: "1.8.11"
+  para-audit:  "1.9.0"   # new dynamic legacy files scanner sidecar skill
 
 cli:
   para:            "1.8.2"
   install-tool:    "1.8.11"
   remove-tool:     "1.8.0"
   list-tools:      "1.8.0"
-  install:         "1.8.0"
+  install:         "1.9.0"   # updated to route KI store automatically
   mcp-setup:       "1.8.14"
   mcp-list:        "1.8.2"
   mcp-remove:      "1.8.2"
@@ -100,6 +101,9 @@ registry:
   tool-schema:     "1.8.5"
 
 knowledge:
-  para_workspace_architecture_standards: "1.8.15" # updated: Vibecode DSP standards
+  para_workspace_architecture_standards: "1.8.15"
   para_anti_truncation_guardrail: "1.8.10"
-  para_vibecode_session: "1.8.15" # NEW: Vibecode session workspace memory KI
+  para_vibecode_session: "1.8.15"
+  para_workspace_structure_and_config: "1.9.0" # packaged and translated to English
+  para_agent_docs_authoring_guardrails: "1.9.0" # packaged and translated to English
+  para_implementation_plan_guidelines: "1.9.0"  # packaged and updated task mapping rules
