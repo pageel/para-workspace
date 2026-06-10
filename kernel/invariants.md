@@ -99,10 +99,13 @@ Each project manages tasks through three files in `artifacts/tasks/`:
 
 ## I11. Workflow Language Compliance
 
-- Every workflow execution MUST read `.para-workspace.yml` at the workspace root
-- The agent MUST use the value of `preferences.language` (e.g., `vi`, `en`) to determine the user's preferred language
-- **All output, reports, session logs, and final summaries** produced by any workflow MUST be translated to this language
-- If `.para-workspace.yml` does not exist or `preferences.language` is not set, default to English (`en`)
+- Every workflow execution MUST read `.para-workspace.yml` at the workspace root to resolve the user's preferred language.
+- The agent MUST parse the language configuration according to the Hierarchical Resolution Pipeline:
+  1. **Modern Map:** Check the `language` key at the root. If it is a map, extract sub-keys: `chat` (for communication), `thinking` (for internal reasoning <thought>), `artifacts` (for task/plan generated files in `artifacts/`), falling back to `default` (or ultimate fallback "en").
+  2. **Root String:** If `language` is a string, use it for chat, thinking, and artifacts.
+  3. **Nested Preferences (Legacy):** If undefined, look for `preferences.language` (legacy).
+  4. **Ultimate Fallback:** Default to English ("en") if no configuration is present (crucial for OSS projects).
+- All outputs (chat responses, generated files, logs, and reports) MUST comply with these parsed language roles.
 
 ---
 

@@ -1,0 +1,8 @@
+{
+  "slug": "para_agent_docs_authoring_guardrails",
+  "title": "Agent Docs Authoring Guardrails (Anti-Hallucination)",
+  "owner": "para",
+  "summary": "General guidelines to prevent hallucination when AI agents write Markdown (Astro) documentation. Bans guessing URL slugs and translating key terminology incorrectly.",
+  "version": "1.0.0",
+  "references": []
+}

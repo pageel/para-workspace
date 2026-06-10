@@ -1,0 +1,11 @@
+{
+  "slug": "para_implementation_plan_guidelines",
+  "title": "Implementation Plan Guidelines",
+  "owner": "para",
+  "summary": "Rules and guidelines distinguishing between the durable Project Implementation Plan (stored under Projects/<name>/artifacts/plans/ via /plan create) and the ephemeral Platform Implementation Plan generated in the brain folder by the Antigravity IDE platform.",
+  "version": "1.0.0",
+  "references": [
+    ".agents/rules/agent-behavior.md",
+    ".agents/skills/plan/SKILL.md"
+  ]
+}

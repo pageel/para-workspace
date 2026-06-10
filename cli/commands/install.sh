@@ -364,6 +364,33 @@ EOL
         echo "   ✓ Automatically populated preferences.node_path with detected path: $detected_node_dir"
       fi
     fi
+
+    # 3. Validate and migrate language config to root map if missing (v1.9.0)
+    if ! grep -q "^language:" "$config_file"; then
+      local lang_val="en"
+      # Read legacy preferences.language
+      if grep -A 6 '^preferences:' "$config_file" | grep -q 'language:'; then
+        lang_val=$(grep -A 6 '^preferences:' "$config_file" | grep 'language:' | sed 's/.*language:[[:space:]]*//; s/"//g; s/'\''//g' | tr -d '[:space:]')
+      fi
+      [ -z "$lang_val" ] && lang_val="en"
+
+      # Insert the language block after kernel_version:
+      awk -v lang="$lang_val" '
+        /^kernel_version:/ {
+          print;
+          print "language:";
+          print "  default: \"" lang "\"";
+          print "  repo: \"en\"";
+          print "  docs: \"en, vi\"";
+          print "  artifacts: \"" lang "\"";
+          print "  thinking: \"" lang "\"";
+          print "  chat: \"" lang "\"";
+          next;
+        }
+        1
+      ' "$config_file" > "${config_file}.tmp" && mv "${config_file}.tmp" "$config_file"
+      echo "   ✓ Automatically migrated legacy preferences.language to root language map: $lang_val"
+    fi
   fi
 }
 
