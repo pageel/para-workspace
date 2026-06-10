@@ -2,8 +2,9 @@
 description: Heuristic guide for AI Agent tool selection — native, bash, and MCP tools
 trigger: always_on
 glob:
-source: user
 ---
+
+<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->
 
 # Tool Routing
 

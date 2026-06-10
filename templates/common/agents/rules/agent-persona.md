@@ -4,6 +4,8 @@ trigger: always_on
 glob:
 ---
 
+<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->
+
 # Agent Persona & Style
 
 > Custom rule for Agent tone of voice and communication style.

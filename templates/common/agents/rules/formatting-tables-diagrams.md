@@ -4,6 +4,8 @@ trigger: manual
 glob:
 ---
 
+<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->
+
 # Formatting Templates — Tables & Diagrams
 
 > Formatting rules for AI Agents when creating tables and diagrams in markdown.

@@ -1,3 +1,11 @@
+---
+description: Graph-first codebase investigation policy using para-graph MCP tools
+trigger: always_on
+glob:
+---
+
+<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->
+
 # Rule: Graph-First Investigation Policy
 
 > Agent MUST prioritize graph-based code analysis using `para-graph` MCP tools before performing direct file I/O operations or assuming architecture flow.
