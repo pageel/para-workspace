@@ -26,6 +26,9 @@ fi
 if [ -f "$LIB_DIR/rollback.sh" ]; then
   source "$LIB_DIR/rollback.sh"
 fi
+if [ -f "$LIB_DIR/mcp-config.sh" ]; then
+  source "$LIB_DIR/mcp-config.sh"
+fi
 
 # === Parse arguments (help first, before env check) ===
 FORCE=false
@@ -489,7 +492,12 @@ echo "   ✓ $tool_asset_count tool assets synced"
 # v1.7.6: Template variable substitution — reads .para-workspace.yml and
 # replaces {{KERNEL_VERSION}}, {{LANGUAGE}}, {{PROFILE}}, etc.
 KI_TMPL_SRC="$REPO_ROOT/templates/knowledge"
-KI_STORE="${HOME}/.gemini/antigravity/knowledge"
+# Nhận diện thư mục KIs hoạt động của IDE
+if command -v detect_installed_ides &>/dev/null && detect_installed_ides | grep -q "antigravity-ide"; then
+  KI_STORE="${HOME}/.gemini/antigravity-ide/knowledge"
+else
+  KI_STORE="${HOME}/.gemini/antigravity/knowledge"
+fi
 
 # Read workspace config for template variables
 WS_CFG="$WS_ROOT/.para-workspace.yml"
@@ -499,7 +507,11 @@ TMPL_PROFILE="dev"
 TMPL_WORKSPACE_CREATED=""
 TMPL_REPO_URL=""
 if [ -f "$WS_CFG" ]; then
-  TMPL_LANGUAGE=$(grep '^language:' "$WS_CFG" | sed 's/language:[[:space:]]*//; s/"//g' | tr -d '[:space:]')
+  if grep -A 4 '^language:' "$WS_CFG" | grep -q 'chat:'; then
+    TMPL_LANGUAGE=$(grep -A 4 '^language:' "$WS_CFG" | grep 'chat:' | sed 's/.*chat:[[:space:]]*//; s/"//g; s/'\''//g' | tr -d '[:space:]')
+  else
+    TMPL_LANGUAGE=$(grep '^language:' "$WS_CFG" | sed 's/language:[[:space:]]*//; s/"//g' | tr -d '[:space:]')
+  fi
   TMPL_PROFILE=$(grep '^profile:' "$WS_CFG" | sed 's/profile:[[:space:]]*//; s/"//g' | tr -d '[:space:]')
   TMPL_WORKSPACE_CREATED=$(grep '^  created:' "$WS_CFG" | sed 's/.*created:[[:space:]]*//; s/"//g' | tr -d '[:space:]')
   TMPL_REPO_URL=$(grep '^  url:' "$WS_CFG" | head -1 | sed 's/.*url:[[:space:]]*//; s/"//g' | tr -d '[:space:]')

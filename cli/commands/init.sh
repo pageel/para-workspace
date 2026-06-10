@@ -127,7 +127,13 @@ cat > "$TARGET_PATH/.para-workspace.yml" <<EOL
 
 kernel_version: "$KERNEL_VERSION"
 profile: "$PROFILE"
-language: "$LANG_PREF"
+language:
+  default: "$LANG_PREF"
+  repo: "en"
+  docs: "en, vi"
+  artifacts: "$LANG_PREF"
+  thinking: "$LANG_PREF"
+  chat: "$LANG_PREF"
 
 # Preferences (BUG-10 Node Path Resolution)
 preferences:

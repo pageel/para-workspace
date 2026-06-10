@@ -41,7 +41,19 @@ LANG_PREF="unknown"
 if [ -f "$CONFIG_FILE" ]; then
   KERNEL_VERSION=$(grep '^kernel_version:' "$CONFIG_FILE" | sed 's/kernel_version:[[:space:]]*//; s/"//g' || echo "unknown")
   PROFILE=$(grep '^profile:' "$CONFIG_FILE" | sed 's/profile:[[:space:]]*//; s/"//g' || echo "unknown")
-  LANG_PREF=$(grep '^language:' "$CONFIG_FILE" | sed 's/language:[[:space:]]*//; s/"//g' || echo "unknown")
+  
+  # Phân giải ngôn ngữ chuẩn hóa (Tối hậu fallback là "en" cho dự án OSS)
+  if grep -A 6 '^language:' "$CONFIG_FILE" | grep -q 'chat:'; then
+    LANG_PREF=$(grep -A 6 '^language:' "$CONFIG_FILE" | grep 'chat:' | sed 's/.*chat:[[:space:]]*//; s/"//g; s/'\''//g' | tr -d '[:space:]')
+  elif grep -A 6 '^language:' "$CONFIG_FILE" | grep -q 'default:'; then
+    LANG_PREF=$(grep -A 6 '^language:' "$CONFIG_FILE" | grep 'default:' | sed 's/.*default:[[:space:]]*//; s/"//g; s/'\''//g' | tr -d '[:space:]')
+  elif grep '^language:' "$CONFIG_FILE" | grep -q -E '^language:[[:space:]]*["'\'']?[a-zA-Z]{2}'; then
+    LANG_PREF=$(grep '^language:' "$CONFIG_FILE" | sed 's/language:[[:space:]]*//; s/"//g; s/'\''//g' | tr -d '[:space:]')
+  elif grep -A 6 '^preferences:' "$CONFIG_FILE" | grep -q 'language:'; then
+    LANG_PREF=$(grep -A 6 '^preferences:' "$CONFIG_FILE" | grep 'language:' | sed 's/.*language:[[:space:]]*//; s/"//g; s/'\''//g' | tr -d '[:space:]')
+  else
+    LANG_PREF="en"
+  fi
 fi
 
 # === Count workspace stats ===
