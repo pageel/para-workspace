@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.9.1] - 2026-06-10
+
+Template Compliance & Standardization.
+
+- **Added**: Safety Guard Headers (C6) added to task templates (`backlog.md`, `done.md`, `sprint-current.md`) and rule templates (`agent-persona.md`, `formatting-tables-diagrams.md`, `graph-first-policy.md`, `tool-routing.md`).
+- **Changed**: Upgraded `plan` workflow and `detail-plan` template to support platform implementation_plan and task.md linking in Draft state, forcing agents to read the actual project plan.
+- **Changed**: Standardized rule templates YAML frontmatter and cleaned up metadata properties.
+- **Changed**: Shortened summary of `para_workspace_architecture_standards` KI to under 800 characters to comply with H10.10.
+- **Changed**: Synced version to 1.9.1 in `cli/para`, `project.md`, `README.md`, and language locales (vi-VN, zh-CN, fr-FR, es-ES).
+
+## [1.9.0] - 2026-06-10
+
+Hierarchical Language Resolution & Knowledge Packaging.
+
+- **Added**: Packaged and translated 3 System KIs to English (`para_workspace_structure_and_config`, `para_agent_docs_authoring_guardrails`, `para_implementation_plan_guidelines`) to support OSSS standards.
+- **Added**: New dynamic legacy files scanner sidecar skill `para-audit` and restored `page-map` skill (translated to English).
+- **Changed**: Implemented Hierarchical Language Resolution for Agent and CLI, enabling automated language fallbacks aligned with `.para-workspace.yml`.
+- **Changed**: Renamed workflow `config` to `para-config` to avoid conflict with other command tools.
+- **Changed**: Updated CLI installer to route and link KI Store automatically for Google Antigravity platform.
+
 ## [1.8.16] - 2026-05-30
 
 Release Staged Templates & Dogfooding Rule Refinement.
