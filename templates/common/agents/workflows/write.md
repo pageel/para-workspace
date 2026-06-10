@@ -54,7 +54,16 @@ Write structured, deep-dive content for a PARA project. Supports multiple conten
 
 ## Principles
 
-> 🛡️ **Constraint:** Read `preferences.language` from `.para-workspace.yml`. All content MUST use this language. Default: `vi`.
+> **Constraint:** Read `.para-workspace.yml` at the workspace root to resolve the user's preferred language.
+> Resolution priority:
+> 1. If `language` is a map: 
+>    - chat language = `language.chat` (fallback: `language.default` -> "en")
+>    - thinking language = `language.thinking` (fallback: `language.default` -> "en")
+>    - artifacts language = `language.artifacts` (fallback: `language.default` -> "en")
+> 2. If `language` is a string: chat & thinking & artifacts language = `language`
+> 3. If `language` is undefined, look for `preferences.language` (legacy)
+> 4. Default ultimate fallback: "en"
+> All output (chat response) MUST be translated to the chat language, all internal reasoning (<thought>) MUST be written in the thinking language, and all generated files in artifacts/ (plans, tasks, qa) MUST follow the artifacts language.
 
 1. **Source-driven.** Content must reference real system files, decisions, or code. Never invent.
 2. **Structured depth.** Every piece follows a standard skeleton: Introduction → Problem → Core Content → Comparison → Conclusion.

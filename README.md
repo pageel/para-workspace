@@ -343,7 +343,7 @@ para mcp-remove <tool>          # Remove MCP config from IDE
 | **[`/backlog`](./docs/workflows/backlog.md)**             | Manage project tasks via canonical backlog.md              |
 | **[`/backup`](./docs/workflows/backup.md)**               | Backup workflows, rules, config, and project data          |
 | **[`/brainstorm`](./docs/workflows/brainstorm.md)**       | Collaborative ideation with structured output              |
-| **[`/config`](./docs/workflows/config.md)**               | Manage workspace configuration                             |
+| **[`/para-config`](./docs/workflows/para-config.md)**               | Manage workspace configuration                             |
 | **[`/end`](./docs/workflows/end.md)**                     | Close session with PARA classification + automated cleanup |
 | **[`/inbox`](./docs/workflows/inbox.md)**                 | Categorize files from `_inbox/` into PARA                  |
 | **[`/install`](./docs/workflows/install.md)**             | Intelligent installer (handles updates/merges)             |

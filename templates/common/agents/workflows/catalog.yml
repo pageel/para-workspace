@@ -110,11 +110,11 @@ items:
   tags:
   - merge
   - conflict
-- id: config
+- id: para-config
   name: Config Manager
   kernel_min: 1.4.0
   kernel_max: 1.x
-  entrypoint: config.md
+  entrypoint: para-config.md
   description: Manage workspace configuration.
   tags:
   - config

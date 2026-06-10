@@ -192,6 +192,16 @@ items:
   - scan-sec
   - security
   - sidecar
+- id: para-audit
+  name: Workspace Audit Extensions
+  kernel_min: 1.8.17
+  kernel_max: 1.x
+  entrypoint: para-audit/SKILL.md
+  description: Sidecar data for /para-audit workflow — version-specific audit rules, legacy files database, and auto-cleanup checks.
+  tags:
+  - audit
+  - sidecar
+  - legacy
 - id: staging
   name: Staging Templates
   kernel_min: 1.8.11

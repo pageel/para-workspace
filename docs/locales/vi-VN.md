@@ -341,7 +341,7 @@ para list-tools               # Liệt kê plugin đã cài
 | **[`/backlog`](.../workflows/backlog.md)** | Quản lý tasks qua backlog.md canonical + plan integration |
 | **[`/backup`](../workflows/backup.md)** | Sao lưu workflows, rules, config, và dữ liệu project |
 | **[`/brainstorm`](../workflows/brainstorm.md)** | Brainstorm ý tưởng với cấu trúc và 5 hướng kế tiếp |
-| **[`/config`](../workflows/config.md)** | Quản lý cấu hình workspace |
+| **[`/para-config`](../workflows/para-config.md)** | Quản lý cấu hình workspace |
 | **[`/end`](../workflows/end.md)** | Đóng phiên + dọn dẹp active_plan tự động |
 | **[`/inbox`](../workflows/inbox.md)** | Phân loại file từ `_inbox/` vào PARA |
 | **[`/install`](../workflows/install.md)** | Cài đặt thông minh (xử lý cập nhật/merge) |

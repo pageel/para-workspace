@@ -22,7 +22,16 @@ Strict workspace macro-assessor. Two modes: full structural audit against Kernel
 
 Full structural audit against Kernel Specs. This is the **only** workflow allowed to full-scan `invariants.md`.
 
-> **Constraint:** Read `.para-workspace.yml` at the workspace root to get the user's preferred language from `preferences.language` (e.g., `vi` for Vietnamese). **All output and the final report MUST be translated to this language.**
+> **Constraint:** Read `.para-workspace.yml` at the workspace root to resolve the user's preferred language.
+> Resolution priority:
+> 1. If `language` is a map: 
+>    - chat language = `language.chat` (fallback: `language.default` -> "en")
+>    - thinking language = `language.thinking` (fallback: `language.default` -> "en")
+>    - artifacts language = `language.artifacts` (fallback: `language.default` -> "en")
+> 2. If `language` is a string: chat & thinking & artifacts language = `language`
+> 3. If `language` is undefined, look for `preferences.language` (legacy)
+> 4. Default ultimate fallback: "en"
+> All output (chat response) MUST be translated to the chat language, all internal reasoning (<thought>) MUST be written in the thinking language, and all generated files in artifacts/ (plans, tasks, qa) MUST follow the artifacts language.
 
 ### 1. Full-scan Kernel Spec (Allowed Exception)
 
@@ -87,8 +96,18 @@ if [[ -f "project.md" ]] && [[ -d "artifacts/tests" ]]; then mkdir -p artifacts/
 
 Post-update compliance check. Run after `./para update` to detect version-specific changes and suggest cleanup.
 
-> **Constraint:** Read `.para-workspace.yml` for preferred language. All output MUST be translated.
+> **Constraint:** Read `.para-workspace.yml` at the workspace root to resolve the user's preferred language.
+> Resolution priority:
+> 1. If `language` is a map: 
+>    - chat language = `language.chat` (fallback: `language.default` -> "en")
+>    - thinking language = `language.thinking` (fallback: `language.default` -> "en")
+>    - artifacts language = `language.artifacts` (fallback: `language.default` -> "en")
+> 2. If `language` is a string: chat & thinking & artifacts language = `language`
+> 3. If `language` is undefined, look for `preferences.language` (legacy)
+> 4. Default ultimate fallback: "en"
+> All output (chat response) MUST be translated to the chat language, all internal reasoning (<thought>) MUST be written in the thinking language, and all generated files in artifacts/ (plans, tasks, qa) MUST follow the artifacts language.
 
+> **Required Skill:** Load `.agents/skills/para-audit/SKILL.md` before executing checks.
 > **Trigger:** Agent or `/update` workflow SHOULD suggest running this after a successful `./para update`.
 
 ### 1. Detect Version Change
@@ -239,6 +258,25 @@ test -f .para/knowledge/index.md && echo "KI_SYSTEM=true" || echo "KI_SYSTEM=fal
 
 **IF KI_SYSTEM=false** → Skip.
 
+### 5.7. Check Legacy Files
+
+// turbo
+
+Check if any legacy files that were renamed or deprecated still exist in the workspace using the `para-audit` skill:
+
+```bash
+if [ -f ".agents/skills/para-audit/scripts/check-legacy.sh" ]; then
+  bash .agents/skills/para-audit/scripts/check-legacy.sh
+else
+  # Fallback if the skill is not installed or staged yet
+  if [ -f ".agents/workflows/config.md" ]; then
+    echo "FOUND|.agents/workflows/config.md|rm|Renamed to para-config.md in v1.9.0"
+  else
+    echo "CLEAN"
+  fi
+fi
+```
+
 ### 6. Generate Post-Update Report
 
 Display an inline report (do NOT create a separate file — this is a quick check, not a full audit):
@@ -266,6 +304,11 @@ Display an inline report (do NOT create a separate file — this is a quick chec
 | Project   | Issue                     | Suggested Action         |
 | --------- | ------------------------- | ------------------------ |
 | project-a | rules.md ≠ disk           | Update `.agents/rules.md` |
+
+🗑️ LEGACY FILES:
+| File | Status | Suggested Action |
+| :--- | :--- | :--- |
+| .agents/workflows/config.md | ⚠️ Legacy | Run 'rm .agents/workflows/config.md' |
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 💡 SUGGESTED ACTIONS:

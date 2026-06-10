@@ -1,0 +1,9 @@
+{
+  "legacy_files": [
+    {
+      "path": ".agents/workflows/config.md",
+      "action": "rm",
+      "reason": "Renamed to para-config.md in v1.9.0"
+    }
+  ]
+}

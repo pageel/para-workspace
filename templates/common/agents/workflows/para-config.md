@@ -3,7 +3,7 @@ description: Manage workspace metadata and configuration
 source: catalog
 ---
 
-# /config [action]
+# /para-config [action]
 
 > **Workspace Version:** 1.5.0 (Governed Libraries)
 

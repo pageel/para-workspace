@@ -59,7 +59,16 @@ SPECIFY ──→ PLAN ──→ TASKS ──→ IMPLEMENT
 
 // turbo
 
-> **Constraint:** Read `.para-workspace.yml` to get the user's preferred language from `language`. All output MUST be in this language.
+> **Constraint:** Read `.para-workspace.yml` at the workspace root to resolve the user's preferred language.
+> Resolution priority:
+> 1. If `language` is a map: 
+>    - chat language = `language.chat` (fallback: `language.default` -> "en")
+>    - thinking language = `language.thinking` (fallback: `language.default` -> "en")
+>    - artifacts language = `language.artifacts` (fallback: `language.default` -> "en")
+> 2. If `language` is a string: chat & thinking & artifacts language = `language`
+> 3. If `language` is undefined, look for `preferences.language` (legacy)
+> 4. Default ultimate fallback: "en"
+> All output (chat response) MUST be translated to the chat language, all internal reasoning (<thought>) MUST be written in the thinking language, and all generated files in artifacts/ (plans, tasks, qa) MUST follow the artifacts language.
 
 > ⚠️ **Proactive Context & Trigger Check:** BEFORE writing any spec, YOU MUST:
 > 1. Read the project's own domain skill at `Projects/[project-name]/.agents/skills/[project-name]/SKILL.md` (if it exists) to understand project-specific rules.

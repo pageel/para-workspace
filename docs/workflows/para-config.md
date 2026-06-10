@@ -1,4 +1,4 @@
-# /config Workflow
+# /para-config Workflow
 
 > **Version**: 1.5.0
 
@@ -7,9 +7,9 @@ Manage workspace configuration stored in `.para-workspace.yml`.
 ## Commands
 
 ```
-/config show              # Display current config
-/config update            # Update a value
-/config add-project       # Register a new project
+/para-config show              # Display current config
+/para-config update            # Update a value
+/para-config add-project       # Register a new project
 ```
 
 ## Actions
