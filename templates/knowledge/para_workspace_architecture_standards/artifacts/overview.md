@@ -1,6 +1,6 @@
-# PARA Workspace v1.8.x Architecture Standards
+# PARA Workspace v1.9.x Architecture Standards
 
-The v1.8.x generation builds on v1.7.x with the **Dynamic Tool System** — extensible plugin architecture for language-agnostic agentic tools (e.g., `para-graph`). It also includes the Knowledge System, ecosystem coordination, governed library catalogs, and token optimization patterns.
+The v1.9.x generation builds on v1.8.x with the **Platform-Separation Architecture** and strict Hybrid 3-File safety guards. It also includes the Knowledge System, ecosystem coordination, governed library catalogs, and token optimization patterns.
 
 ## 1. Core Structural Integrity: Pillar Purity
 
@@ -380,6 +380,7 @@ Sidecar skills (`plan`, `docs`, `brainstorm`, `spec`) reference the centralized 
 | 1.8.13 | Release | Artifact Authority & Platform Separation: prevent agents from aligning code execution with ephemeral IDE-internal brain artifacts |
 | 1.8.14 | Release | Fix BUG-37: convert RUNTIME_CMD via cygpath -m on Windows for MCP setups, defensive .exe check, and plan workflow auto-activation with Suggested Next Steps template updates |
 | 1.8.15 | Release | Vibecode DSP (Dynamic Session Plan) enhancements including JIT Phase creation for DSP Draft mode, mandatory Pre-code Phase-level Quality Gate (brainstorm, qa, TDD, --graph, --hardened), automated Context Reload at Phase start via Sidecar Skill mapping, Intent Detection, and sequential session naming convention |
+| 1.9.1 | Release | Shortened para_workspace_architecture_standards KI summary, updated plan workflows to support platform task tracking and audit runs in Draft state, and injected task/rule template guards |
 
 
 ## 16. Dynamic Tool System (v1.8.0)
