@@ -1,5 +1,7 @@
 # Sprint Current — <Project Name>
 
+<!-- ⚠️ HOT LANE ONLY — No backlog tasks here (C1) -->
+
 > **Source**: backlog.md (Hybrid 3-File Model)
 > **Updated**: YYYY-MM-DD
 > **Mode**: One-way Snapshot — auto-generated from backlog.md, do NOT edit directly.

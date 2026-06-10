@@ -1,5 +1,7 @@
 # Done — <Project Name>
 
+<!-- ⚠️ APPEND-ONLY — /end or /backlog clean only (C2) -->
+
 > **Project**: <project-slug>
 > Completed tasks grouped by plan. See plan files at `plans/done/` for full context.
 
