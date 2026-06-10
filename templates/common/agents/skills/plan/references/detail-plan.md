@@ -16,14 +16,14 @@
 <!-- ⚠️ STATUS GATE: Agent MUST NOT execute any Phase tasks while Status is "📝 Draft".
      Agent may only execute when Status is "🔨 Active".
      Status lifecycle: 📝 Draft → 🔨 Active → ✅ Done
-     - 📝 Draft:   Plan is being written/reviewed. No file modifications allowed.
+     - 📝 Draft:   Plan is being written/reviewed. No project source file modifications allowed. Writing the project plan's markdown link into the platform's implementation_plan.md (forcing the agent to read the project plan) and running review audits ARE allowed.
      - 🔨 Active:  User has approved the plan. Execution permitted.
      - ✅ Done:    All phases completed. Ready for archive to plans/done/.
      Transition from Draft → Active requires explicit user approval.
      Transition from Active → Done requires Walkthrough completion + explicit user approval. -->
 
 > ⛔ **STATUS GATE:** Agent MUST NOT execute Phase tasks while Status = "📝 Draft".
-> Lifecycle: 📝 Draft → 🔨 Active → ✅ Done. Transition requires explicit user approval.
+> Lifecycle: 📝 Draft → 🔨 Active → ✅ Done. Transition requires explicit user approval. Writing the project plan's markdown link into the platform's implementation_plan.md is permitted during Draft.
 
 ---
 

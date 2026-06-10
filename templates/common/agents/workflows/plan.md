@@ -465,16 +465,16 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 #### 9.6. Propose Draft Plan
 
 **Protocol:**
-1. **Present:** Agent presents the draft plan summary of the newly created plan to the User for review (including phases, timeline, and newly created/modified target files). At this point, the `Post-Draft Audit Gate` checklist in the file remains empty (`⬜` and `PENDING`).
-2. **Propose Preliminary Approval:** Ask the User for initial layout approval.
+1. **Present & Track:** Agent presents the draft plan summary of the newly created plan to the User for review (including phases, timeline, and newly created/modified target files). To satisfy the platform's planning mode consent gate, the Agent writes the markdown link of the actual project plan file (`[plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)`) into the platform's `brain/implementation_plan.md`, forcing the agent trigger to read the actual project plan rather than the platform's ephemeral file, and syncs the phase tasks into the platform's `brain/task.md`. At this point, the `Post-Draft Audit Gate` checklist in the plan file remains empty (`⬜` and `PENDING`).
+2. **Propose Preliminary Approval & Audit:** Ask the User for initial layout approval and propose running the Review Audit.
    ```
    📐 DRAFT PLAN READY: [plan-name]
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    Status: 📝 Draft (Unaudited)
    Phases: [N] | Tasks: [N] | File: [path]
 
-   ❓ Do you approve the preliminary layout of this draft plan so I can run the Review Audit?
-      Y → Preliminary approval granted, run Review Audit (Step 9.7)
+   ❓ Do you approve the preliminary layout of this draft plan? If approved, I will write the plan's markdown link into implementation_plan.md and run the Review Audit.
+      Y → Layout approved, write plan link to platform implementation_plan.md, and run Review Audit (Step 9.7)
       N → Refine the draft based on feedback
    ```
 3. **Response:** Only proceed to Step 9.7 if User confirms (Y). If the User provides feedback, modify the draft plan and present again.
