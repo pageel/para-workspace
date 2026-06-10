@@ -5,7 +5,7 @@ source: catalog
 
 # /plan [project-name] [action] [--graph] [--project]
 
-> **Workspace Version:** 1.8.8 (Graph Intelligence + Project Context)
+> **Workspace Version:** 1.9.1 (Graph Intelligence + Project Context)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to resolve the user's preferred language.
 > Resolution priority:
 > 1. If `language` is a map: 
@@ -16,6 +16,9 @@ source: catalog
 > 3. If `language` is undefined, look for `preferences.language` (legacy)
 > 4. Default ultimate fallback: "en"
 > All output (chat response) MUST be translated to the chat language, all internal reasoning (<thought>) MUST be written in the thinking language, and all generated files in artifacts/ (plans, tasks, qa) MUST follow the artifacts language.
+>
+> 🔴 **CRITICAL INVARIANT:** Before executing any action under this workflow, the Agent **MUST** explicitly read the **Implementation Plan Guidelines** KI (`implementation_plan`) at [implementation_plan_rules.md](~/.gemini/antigravity-ide/knowledge/implementation_plan/artifacts/implementation_plan_rules.md) to understand the strict boundary, format, and rules of platform and project plans.
+
 
 Create, review, or update a phased implementation plan for a PARA project.
 
