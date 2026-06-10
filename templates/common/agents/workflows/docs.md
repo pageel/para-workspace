@@ -400,6 +400,7 @@ Audit existing documentation for completeness, accuracy, and freshness.
    - If files exist in the folder (excluding ignored ones) but are missing from the Doc Index, report them as `⚠️ Index Drift` to avoid orphan documentation.
 2. **Traceability & Staleness check**: If the graph is available, perform codebase-to-docs checks:
    - **Undocumented God Nodes**: Invoke `graph_god_nodes` to fetch the top-connected core components. Cross-check these God Nodes against their documentation status (where `docAnchors` is empty or missing).
+   - **Unenriched God Nodes**: For documented (linked) God Nodes, check if their nodes in the graph database contain a non-empty `semantic.description`. If a God Node is documented but not enriched, flag it.
    - **Stale linked nodes**: Use `graph_query` to find stale nodes (where `staleSince` is not null). Correlate with the time when code signatures were changed.
    - **Traceability Alignment**: Scan the index-registered documents for graph anchors (`<!-- @graph-node -->`). If any index-registered document contains anchors but lacks active links in the graph database, highlight them for sync.
    - **Target-Seeking Loop Target**: Report the exact ratio of documented God Nodes vs total God Nodes. Instruct the agent to run an active target-seeking loop to reach 100% coverage (adding anchors for all God Nodes and resolving all unlinked anchors).
@@ -411,6 +412,8 @@ Audit existing documentation for completeness, accuracy, and freshness.
 4. Present audit report:
 
 ```
+Configure review report:
+
 📖 Docs Audit: [Project Name]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -426,11 +429,15 @@ Audit existing documentation for completeness, accuracy, and freshness.
 🔴 Undocumented Core Components (God Nodes):
 - `[nodeId]` (calls/callers: N) — Missing docAnchors. Recommendation: Add graph anchor to docs.
 
+⚠️ Unenriched Core Components (God Nodes):
+- `[nodeId]` (calls/callers: N) — Documented but missing semantic enrichment. Recommendation: Run `/para-graph enrich` before `/docs update --graph`.
+
 💡 Recommendations:
   1. Update cli-reference.md (new commands added since last review)
   2. Create deployment.md (project has deploy scripts)
   3. Document core component `[nodeId]` in architecture.md or target guides.
   4. Register `[doc-name].md` in the README.md index.
+  5. Run `/para-graph enrich` to add semantic descriptions to unenriched God Nodes.
 
 ❓ Fix these issues now?
 ```
@@ -486,8 +493,9 @@ If the graph is available, re-run `graph_link_docs(projectName, links)` for the 
 3. Count docs in index that contain `<!-- @graph-node -->` anchors
 4. Call `graph_god_nodes(projectName)` to get top-connected God Nodes count (G)
 5. Count how many of these God Nodes have non-empty `docAnchors` (L)
-6. Check for stale nodes (where `staleSince` is not null AND have `docAnchors`)
-7. Update or create the `## Graph Traceability` section in `docs/README.md`:
+6. Count how many of these God Nodes have non-empty `docAnchors` AND non-empty `semantic.description` (E)
+7. Check for stale nodes (where `staleSince` is not null AND have `docAnchors`)
+8. Update or create the `## Graph Traceability` section in `docs/README.md`:
 
 ```markdown
 ## Graph Traceability
@@ -500,6 +508,7 @@ If the graph is available, re-run `graph_link_docs(projectName, links)` for the 
 | Docs with graph anchors | M (P%) |
 | Graph nodes with docAnchors | X/Y enrichable (Z%) |
 | God Nodes documented | L/G top-connected (K%) |
+| God Nodes fully covered (Enriched & Linked) | E/G (Y%) |
 | Stale docs (code changed) | S |
 ```
 

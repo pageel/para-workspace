@@ -43,12 +43,18 @@ Agent MUST follow this priority order when investigating code:
 - Agent **MUST** use `graph_edges` to analyze the target's dependencies and dependants (caller/callee relationships).
 - Agent **SHOULD** use `graph_impact_analysis` before refactoring to understand blast radius.
 
-### 3. Transparency
+### 3. Mandatory Insight & Memory Search
+
+- Before creating a plan (`/plan`), designing a specification (`/spec`), evaluating options (`/brainstorm`), or executing code refactoring/bug fixes (`/vibecode` or general coding), Agent **MUST** run `insight_search` and `memory_search` using keywords related to the affected components and tech stack (e.g., `d1`, `sqlite`, `transaction`, `auth`, `migration`, `sepay`).
+- **Purpose:** Search for historically archived lessons (`lesson`), risks (`risk`), decisions (`decision`), gotchas (`gotcha`), and design patterns (`pattern`) to apply or avoid repeating past mistakes.
+- Agent **MUST NOT** design new solutions or modify code related to database structures, API routes, or core logic without executing this knowledge query step first.
+
+### 4. Transparency
 
 - Agent **SHOULD** mention the graph edges or nodes found in the reasoning before calling `replace_file_content`.
 - Agent **MUST** explicitly state in its response that `para-graph` was utilized to map out connections before applying any fix.
 
-### 4. Graceful Degradation
+### 5. Graceful Degradation
 
 - If the MCP server is unavailable or graph data is stale (`metadata.json` older than 7 days), Agent **MAY** fall back to standard file I/O with a warning to the user.
 - Agent **SHOULD** suggest running `/para-graph build` to refresh the graph after the task is complete.
