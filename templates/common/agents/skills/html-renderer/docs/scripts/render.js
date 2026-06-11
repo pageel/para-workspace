@@ -39,9 +39,40 @@ const workspaceConfigPath = path.join(process.cwd(), '.para-workspace.yml');
 if (fs.existsSync(workspaceConfigPath)) {
     try {
         const configText = fs.readFileSync(workspaceConfigPath, 'utf8');
-        const langMatch = configText.match(/^language:\s*["']?([a-z]{2})["']?/m);
+        const langMatch = configText.match(/^language:[ \t]*["']?([a-z]{2})["']?/m);
         if (langMatch) {
             workspaceLang = langMatch[1];
+        } else {
+            // Check for nested keys under language line-by-line
+            const lines = configText.split(/\r?\n/);
+            let inLanguageSection = false;
+            let docsVal = '';
+            let chatVal = '';
+            let thinkingVal = '';
+            
+            for (const line of lines) {
+                if (line.match(/^language:[ \t]*$/)) {
+                    inLanguageSection = true;
+                    continue;
+                }
+                if (inLanguageSection) {
+                    if (line.trim() && !line.startsWith(' ') && !line.startsWith('\t') && !line.startsWith('#')) {
+                        inLanguageSection = false;
+                        continue;
+                    }
+                    const docsMatch = line.match(/^\s*docs:\s*["']?([^"'\r\n]+)["']?/);
+                    if (docsMatch) docsVal = docsMatch[1];
+                    const chatMatch = line.match(/^\s*chat:\s*["']?([^"'\r\n]+)["']?/);
+                    if (chatMatch) chatVal = chatMatch[1];
+                    const thinkingMatch = line.match(/^\s*thinking:\s*["']?([^"'\r\n]+)["']?/);
+                    if (thinkingMatch) thinkingVal = thinkingMatch[1];
+                }
+            }
+            if (docsVal.includes('vi') || chatVal.includes('vi') || thinkingVal.includes('vi')) {
+                workspaceLang = 'vi';
+            } else if (docsVal.includes('en') || chatVal.includes('en') || thinkingVal.includes('en')) {
+                workspaceLang = 'en';
+            }
         }
         const kernelMatch = configText.match(/^kernel_version:\s*["']?([0-9.]+)["']?/m);
         if (kernelMatch) {
@@ -102,12 +133,12 @@ const translations = {
         // Quality Dashboard translations
         dashboardTitle: "Bảng điều khiển Chất lượng Tài liệu",
         dashboardSubtitle: "Đo lường độ bao phủ tài liệu kỹ thuật dựa trên phân tích trọng số Đồ thị Mã nguồn.",
-        scoreCardTitle: "Điểm Sức khỏe Tài liệu",
-        scoreLabel: "Điểm số",
+        scoreCardTitle: "Trạng thái Sức khỏe tổng thể",
+        scoreLabel: "Sức khỏe tổng thể",
         totalDocs: "Tổng số tài liệu",
         graphNodes: "Cấu phần Đồ thị",
         businessGodNodes: "Thành phần Lõi Nghiệp vụ (God Nodes)",
-        healthStatus: "Trạng thái Sức khỏe",
+        healthStatus: "Độ đồng bộ tài liệu",
         entityTypeDistribution: "Phân bố theo Loại Cấu phần",
         weightDistribution: "Phân loại theo Trọng số Đồ thị",
         legendCompleted: "Đạt chuẩn (Đầy đủ)",
@@ -169,12 +200,15 @@ const translations = {
         alignmentDecisionTable: "Bảng quyết định nghiệp vụ (Decision Table)",
         alignmentAiPrompts: "Đề xuất Tác vụ AI (AI Assistant Prompts)",
         alignmentDriftAudit: "Báo cáo sai lệch & Gaps (Drift Audit)",
+        driftDocsTitle: "🔍 Tài liệu bị lệch (Drift)",
+        driftDocsSubtitle: "Tài liệu có neo liên kết hỏng hoặc sai lệch với mã nguồn",
         calibrationDesc: "Trọng số đại diện cho độ quan trọng tương đối của từng cấu phần mã:<br/>• <b>Cốt lõi:</b> Các cấu phần lõi ảnh hưởng lớn (Cấu phần Siêu kết nối, độ kết nối >= 20).<br/>• <b>Trung bình:</b> Hàm, lớp, tệp tin tiêu chuẩn.<br/>• <b>Bổ trợ:</b> Các biến và hằng số phụ trợ.<br/>Tài liệu hóa phần Cốt lõi đóng góp điểm số cao hơn.",
         navHome: "Tài liệu chính (README)",
         navBack: "Trở lại",
         navForward: "Tiến tới",
         aiPromptsTitle: "Gợi ý Prompt AI",
         aiPromptsFrontmatter: "Chuẩn hóa Frontmatter",
+        aiPromptsDriftAudit: "Rà soát sai lệch & Gaps (Drift Audit)",
         aiPromptsReview: "Rà soát & Cập nhật tài liệu",
         aiPromptsReviewStructure: "Review cấu trúc tài liệu",
         aiPromptsStrategy: "Xây dựng & Xem lại Chiến lược",
@@ -249,12 +283,12 @@ const translations = {
         // Quality Dashboard translations
         dashboardTitle: "Docs Quality Dashboard",
         dashboardSubtitle: "Measure documentation coverage based on Code-Graph weights.",
-        scoreCardTitle: "Docs Health Score",
-        scoreLabel: "Score",
+        scoreCardTitle: "Overall Health Status",
+        scoreLabel: "Overall Health",
         totalDocs: "Total Documents",
         graphNodes: "Graph Nodes",
         businessGodNodes: "Business God Nodes",
-        healthStatus: "Health Status",
+        healthStatus: "Doc Sync Rate",
         entityTypeDistribution: "Entity Type Distribution",
         weightDistribution: "Weight Distribution",
         legendCompleted: "Completed (Full)",
@@ -316,12 +350,15 @@ const translations = {
         alignmentDecisionTable: "Business Decision Table",
         alignmentAiPrompts: "AI Assistant Task Prompts",
         alignmentDriftAudit: "Logic Drift & Gaps Audit",
+        driftDocsTitle: "🔍 Outdated Specs (Drift)",
+        driftDocsSubtitle: "Specs with broken anchor links or outdated code references",
         calibrationDesc: "Weights represent the relative priority of each individual code entity:<br/>• <b>Critical:</b> High-impact core components (God Nodes, degree >= 20).<br/>• <b>Medium:</b> Standard functions, classes, and source files.<br/>• <b>Low:</b> Auxiliary variables and constants.<br/>Documenting Critical components contributes more to the overall health score.",
         navHome: "Main Documentation (README)",
         navBack: "Go Back",
         navForward: "Go Forward",
         aiPromptsTitle: "AI Prompt Suggestions",
         aiPromptsFrontmatter: "Normalize Frontmatter",
+        aiPromptsDriftAudit: "Review Logic Drift & Gaps",
         aiPromptsReview: "Review & Update Docs",
         aiPromptsReviewStructure: "Review Docs Structure",
         aiPromptsStrategy: "Build & Review Strategy",
@@ -808,6 +845,13 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
                 badgeType: 'attention'
             },
             {
+                key: 'drift-audit',
+                label: currentTranslations['aiPromptsDriftAudit'] || 'Review Logic Drift & Gaps',
+                recommended: hasBrokenAnchors || hasBrokenCodeDocs || hasGaps,
+                badge: fileLang === 'vi' ? 'Sai Lệch' : 'Logic Drift',
+                badgeType: 'attention'
+            },
+            {
                 key: 'headings',
                 label: currentTranslations['aiPromptsHeadings'] || 'Normalize Headings Numbering',
                 recommended: hasHeadingIssues,
@@ -1083,19 +1127,27 @@ function renderDirectory(srcDir, destDir, template) {
     };
     
     let processedNodesData = [];
+    let enrichableNodes = [];
+    let linkedNodes = [];
+    let godNodes = [];
+    let staleNodes = [];
+    let weightedHealthScore = 100;
+    let codeLinkedNodes = [];
+    let documentedGodNodesCount = 0;
+    let codeLinkedGodNodesCount = 0;
     
     if (hasGraph) {
-        const enrichableNodes = graphNodes.filter(node => {
+        enrichableNodes = graphNodes.filter(node => {
             const isTest = node.filePath && (node.filePath.startsWith('tests/') || node.filePath.includes('.test.'));
             return !isTest;
         });
         
-        const linkedNodes = enrichableNodes.filter(node => node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0);
+        linkedNodes = enrichableNodes.filter(node => node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0);
         const enrichedNodes = enrichableNodes.filter(node => node.semantic && node.semantic.summary && node.semantic.summary.trim() !== '');
         
-        const godNodes = enrichableNodes.filter(node => node.degree >= 20);
+        godNodes = enrichableNodes.filter(node => node.degree >= 20);
         const documentedGodNodes = godNodes.filter(node => node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0);
-        const staleNodes = enrichableNodes.filter(node => node.staleSince && node.staleSince !== null);
+        staleNodes = enrichableNodes.filter(node => node.staleSince && node.staleSince !== null);
         
         let totalWeight = 0;
         let linkedWeight = 0;
@@ -1194,8 +1246,8 @@ function renderDirectory(srcDir, destDir, template) {
             };
         });
         
-        const weightedHealthScore = totalWeight > 0 ? (linkedWeight / totalWeight) * 100 : 0;
-        const codeLinkedNodes = enrichableNodes.filter(node => {
+        weightedHealthScore = totalWeight > 0 ? (linkedWeight / totalWeight) * 100 : 0;
+        codeLinkedNodes = enrichableNodes.filter(node => {
             const absPath = path.resolve(projectDir, 'repo', node.filePath || '');
             const fileComments = getParaDocCommentsForFile(absPath);
             if (node.type === 'file') {
@@ -1204,8 +1256,8 @@ function renderDirectory(srcDir, destDir, template) {
                 return fileComments.some(c => c.line >= (node.startLine || 1) - 4 && c.line <= (node.startLine || 1));
             }
         });
-        const documentedGodNodesCount = godNodes.filter(node => node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0).length;
-        const codeLinkedGodNodesCount = godNodes.filter(node => {
+        documentedGodNodesCount = godNodes.filter(node => node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0).length;
+        codeLinkedGodNodesCount = godNodes.filter(node => {
             const absPath = path.resolve(projectDir, 'repo', node.filePath || '');
             const fileComments = getParaDocCommentsForFile(absPath);
             return fileComments.some(c => c.line >= (node.startLine || 1) - 4 && c.line <= (node.startLine || 1));
@@ -1224,68 +1276,8 @@ function renderDirectory(srcDir, destDir, template) {
         dashboardStats.linkedCodeNodes = codeLinkedNodes.length;
         dashboardStats.linkedDocsGodNodes = documentedGodNodesCount;
         dashboardStats.linkedCodeGodNodes = codeLinkedGodNodesCount;
-        
-        // Auto-update README.md with new Graph Traceability stats
-        const readmePath = path.join(srcDir, 'README.md');
-        if (fs.existsSync(readmePath)) {
-            try {
-                let readmeContent = fs.readFileSync(readmePath, 'utf8');
-                const traceabilityHeader = '## Graph Traceability';
-                const updatedDate = new Date().toISOString().split('T')[0];
-                
-                const getFormattedPct = (value, total) => {
-                    if (total === 0) return "0";
-                    if (value === total) return "100";
-                    const raw = (value / total) * 100;
-                    return Math.min(raw, 99.9).toFixed(1);
-                };
-                
-                const docsWithAnchorsPct = getFormattedPct(docsWithAnchors, allMdFiles.length);
-                const linkedDocsPct = getFormattedPct(linkedNodes.length, enrichableNodes.length);
-                const linkedCodePct = getFormattedPct(codeLinkedNodes.length, enrichableNodes.length);
-                const godDocsPct = godNodes.length > 0 ? getFormattedPct(documentedGodNodesCount, godNodes.length) : "0";
-                const godCodePct = godNodes.length > 0 ? getFormattedPct(codeLinkedGodNodesCount, godNodes.length) : "0";
-                
-                let healthScoreStr;
-                if (totalWeight > 0) {
-                    if (linkedWeight === totalWeight) {
-                        healthScoreStr = "100";
-                    } else {
-                        const rawScore = (linkedWeight / totalWeight) * 100;
-                        healthScoreStr = Math.min(rawScore, 99.9).toFixed(1);
-                    }
-                } else {
-                    healthScoreStr = "100";
-                }
-                
-                const newTraceabilityContent = `## Graph Traceability
-
-> Auto-generated by \`/docs update --graph\` | Last scan: ${updatedDate}
-
-| Metric | Value |
-|:--|:--|
-| Total docs | ${allMdFiles.length} |
-| Docs with graph anchors | ${docsWithAnchors} (${docsWithAnchorsPct}%) |
-| Graph nodes with docAnchors (Docs ➔ Code) | ${linkedNodes.length}/${enrichableNodes.length} enrichable (${linkedDocsPct}%) |
-| Graph nodes with para-doc (Code ➔ Docs) | ${codeLinkedNodes.length}/${enrichableNodes.length} enrichable (${linkedCodePct}%) |
-| God Nodes covered (Docs ➔ Code) | ${documentedGodNodesCount}/${godNodes.length} top-connected (${godDocsPct}%) |
-| God Nodes covered (Code ➔ Docs) | ${codeLinkedGodNodesCount}/${godNodes.length} top-connected (${godCodePct}%) |
-| Docs Health Score (Weighted Double-Binding) | ${healthScoreStr}/100 |
-| Stale docs (code changed) | ${staleNodes.length} |
-`;
-                const regex = /## Graph Traceability[\s\S]*/;
-                if (readmeContent.match(regex)) {
-                    readmeContent = readmeContent.replace(regex, newTraceabilityContent.trim() + '\n');
-                } else {
-                    readmeContent = readmeContent.trim() + '\n\n' + newTraceabilityContent;
-                }
-                fs.writeFileSync(readmePath, readmeContent, 'utf8');
-                console.log('📝 Automatically updated Graph Traceability stats in README.md');
-            } catch (e) {
-                console.warn('Warning: Failed to update Graph Traceability in README.md:', e.message);
-            }
-        }
     }
+
 
 // 3.5. Build Alignment Data for Dashboard
     const alignmentData = {};
@@ -1542,7 +1534,95 @@ function renderDirectory(srcDir, destDir, template) {
         };
     }
     
-    
+    // Calculate server-side healthPct (Documentation Freshness/Sync Rate)
+    const staleDocPaths = new Set();
+    staleNodes.forEach(node => {
+        const anchors = (node.semantic && node.semantic.docAnchors) || [];
+        anchors.forEach(a => {
+            const docPath = a.split('#')[0];
+            let cleanDocPath = docPath;
+            if (docPath.startsWith('docs/')) {
+                cleanDocPath = docPath.substring(5);
+            }
+            staleDocPaths.add(cleanDocPath);
+        });
+    });
+
+    const unhealthyDocPaths = new Set(staleDocPaths);
+    for (const relPath in alignmentData) {
+        const reports = alignmentData[relPath].auditReports || [];
+        if (reports.length > 0) {
+            unhealthyDocPaths.add(relPath);
+        }
+    }
+
+    const activeDocsCount = allMdFiles.length;
+    const unhealthyDocsCount = Array.from(unhealthyDocPaths).filter(p => {
+        return allMdFiles.some(f => path.relative(srcDir, f).replace(/\\/g, '/') === p);
+    }).length;
+
+    const serverHealthPct = activeDocsCount > 0 ? ((activeDocsCount - unhealthyDocsCount) / activeDocsCount) * 100 : 100;
+    const overallHealthScore = weightedHealthScore * (serverHealthPct / 100);
+
+    dashboardStats.overallHealthScore = overallHealthScore;
+    dashboardStats.weightedCoverage = weightedHealthScore;
+    dashboardStats.syncRate = serverHealthPct;
+
+    // Auto-update README.md with new Graph Traceability stats
+    if (fs.existsSync(readmePath)) {
+        try {
+            let readmeContent = fs.readFileSync(readmePath, 'utf8');
+            const traceabilityHeader = '## Graph Traceability';
+            const updatedDate = new Date().toISOString().split('T')[0];
+            
+            const getFormattedPct = (value, total) => {
+                if (total === 0) return "0";
+                if (value === total) return "100";
+                const raw = (value / total) * 100;
+                return Math.min(raw, 99.9).toFixed(1);
+            };
+            
+            const docsWithAnchorsPct = getFormattedPct(docsWithAnchors, allMdFiles.length);
+            const linkedDocsPct = getFormattedPct(linkedNodes.length, enrichableNodes.length);
+            const linkedCodePct = getFormattedPct(codeLinkedNodes.length, enrichableNodes.length);
+            const godDocsPct = godNodes.length > 0 ? getFormattedPct(documentedGodNodesCount, godNodes.length) : "0";
+            const godCodePct = godNodes.length > 0 ? getFormattedPct(codeLinkedGodNodesCount, godNodes.length) : "0";
+            
+            const getFormattedVal = (val) => {
+                if (val === 100) return "100";
+                return Math.min(val, 99.9).toFixed(1);
+            };
+
+            const newTraceabilityContent = `## Graph Traceability
+
+> Auto-generated by \`/docs update --graph\` | Last scan: ${updatedDate}
+
+| Metric | Value |
+|:--|:--|
+| Total docs | ${allMdFiles.length} |
+| Docs with graph anchors | ${docsWithAnchors} (${docsWithAnchorsPct}%) |
+| Graph nodes with docAnchors (Docs ➔ Code) | ${linkedNodes.length}/${enrichableNodes.length} enrichable (${linkedDocsPct}%) |
+| Graph nodes with para-doc (Code ➔ Docs) | ${codeLinkedNodes.length}/${enrichableNodes.length} enrichable (${linkedCodePct}%) |
+| God Nodes covered (Docs ➔ Code) | ${documentedGodNodesCount}/${godNodes.length} top-connected (${godDocsPct}%) |
+| God Nodes covered (Code ➔ Docs) | ${codeLinkedGodNodesCount}/${godNodes.length} top-connected (${godCodePct}%) |
+| Weighted Graph Coverage | ${getFormattedVal(weightedHealthScore)}% |
+| Documentation Freshness/Sync Rate | ${getFormattedVal(serverHealthPct)}% |
+| Overall Health Status Score | ${getFormattedVal(overallHealthScore)}/100 |
+| Stale docs (code changed) | ${staleNodes.length} |
+`;
+            const regex = /## Graph Traceability[\s\S]*/;
+            if (readmeContent.match(regex)) {
+                readmeContent = readmeContent.replace(regex, newTraceabilityContent.trim() + '\n');
+            } else {
+                readmeContent = readmeContent.trim() + '\n\n' + newTraceabilityContent;
+            }
+            fs.writeFileSync(readmePath, readmeContent, 'utf8');
+            console.log('📝 Automatically updated Graph Traceability stats in README.md');
+        } catch (e) {
+            console.warn('Warning: Failed to update Graph Traceability in README.md:', e.message);
+        }
+    }
+
     const searchIndex = [];
     for (const sourceFile of allMdFiles) {
         const relativeFromRoot = path.relative(srcDir, sourceFile).replace(/\\/g, '/');

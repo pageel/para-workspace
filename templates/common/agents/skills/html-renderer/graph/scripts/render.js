@@ -55,9 +55,40 @@ if (!fs.existsSync(workspaceConfigPath)) {
 if (fs.existsSync(workspaceConfigPath)) {
     try {
         const configText = fs.readFileSync(workspaceConfigPath, 'utf8');
-        const langMatch = configText.match(/^language:\s*["']?([a-z]{2})["']?/m);
+        const langMatch = configText.match(/^language:[ \t]*["']?([a-z]{2})["']?/m);
         if (langMatch) {
             workspaceLang = langMatch[1];
+        } else {
+            // Check for nested keys under language line-by-line
+            const lines = configText.split(/\r?\n/);
+            let inLanguageSection = false;
+            let docsVal = '';
+            let chatVal = '';
+            let thinkingVal = '';
+            
+            for (const line of lines) {
+                if (line.match(/^language:[ \t]*$/)) {
+                    inLanguageSection = true;
+                    continue;
+                }
+                if (inLanguageSection) {
+                    if (line.trim() && !line.startsWith(' ') && !line.startsWith('\t') && !line.startsWith('#')) {
+                        inLanguageSection = false;
+                        continue;
+                    }
+                    const docsMatch = line.match(/^\s*docs:\s*["']?([^"'\r\n]+)["']?/);
+                    if (docsMatch) docsVal = docsMatch[1];
+                    const chatMatch = line.match(/^\s*chat:\s*["']?([^"'\r\n]+)["']?/);
+                    if (chatMatch) chatVal = chatMatch[1];
+                    const thinkingMatch = line.match(/^\s*thinking:\s*["']?([^"'\r\n]+)["']?/);
+                    if (thinkingMatch) thinkingVal = thinkingMatch[1];
+                }
+            }
+            if (docsVal.includes('vi') || chatVal.includes('vi') || thinkingVal.includes('vi')) {
+                workspaceLang = 'vi';
+            } else if (docsVal.includes('en') || chatVal.includes('en') || thinkingVal.includes('en')) {
+                workspaceLang = 'en';
+            }
         }
     } catch (e) {
         // fallback to default language if parse fails

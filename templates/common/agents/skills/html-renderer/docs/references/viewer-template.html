@@ -2290,6 +2290,7 @@
             const docLang = '/* WORKSPACE_LANG */';
             const promptsVi = {
                 'frontmatter': `Hãy chuẩn hóa cấu trúc và dữ liệu frontmatter cho tệp tài liệu này: @[${path}]`,
+                'drift-audit': `Hãy rà soát báo cáo sai lệch (drift audit) của tài liệu @[${path}]. Phát hiện và khắc phục toàn bộ các neo liên kết hỏng, các tệp tin mồ côi (không có liên kết neo), hoặc các khoảng trống logic (gaps) giữa mã nguồn thực tế và tài liệu mô tả.`,
                 'review': `Hãy rà soát toàn diện và cập nhật tài liệu @[${path}] để đảm bảo phản ánh chính xác 100% cấu trúc mã nguồn thực tế.`,
                 'review-structure': `Hãy phân tích cấu trúc hệ thống tài liệu hiện tại của dự án này từ tệp @[${path}] (và thư mục docs/), kiểm tra sự phân bổ giữa các thư mục specs, architecture, reference, guides, và đề xuất tối ưu hóa cấu trúc để loại bỏ thông tin dư thừa hoặc bổ sung các tài liệu bị thiếu.`,
                 'strategy': `Hãy đối chiếu định hướng phát triển hiện tại trong strategy.md và strategy-documentation.md (hoặc các file tài liệu chiến lược liên quan) của dự án này từ tệp @[${path}], đối chiếu với roadmap và backlog hiện tại để cập nhật/xây dựng lại tài liệu chiến lược cho phù hợp với tầm nhìn sản phẩm.`,
@@ -2297,6 +2298,7 @@
             };
             const promptsEn = {
                 'frontmatter': `Please normalize the frontmatter structure and metadata for this document: @[${path}]`,
+                'drift-audit': `Please review the drift audit report for document @[${path}]. Detect and fix all broken anchor links, orphan files, or logic gaps between the actual codebase implementation and the documentation.`,
                 'review': `Please comprehensively review and update the document @[${path}] to ensure it accurately reflects the actual codebase implementation.`,
                 'review-structure': `Please analyze the current documentation structure of this project starting from @[${path}] (and the docs/ directory), verify the distribution among specs, architecture, reference, guides, and propose structural optimizations to eliminate redundancy or add missing docs.`,
                 'strategy': `Please cross-reference the strategic direction in strategy.md and strategy-documentation.md (or related strategy docs) from @[${path}] against the roadmap and backlog to update or rebuild the strategy documentation to align with the product vision.`,

@@ -1101,6 +1101,61 @@
             background-color: var(--hover-color);
             color: var(--text-secondary);
         }
+
+        /* Drift Specs Styles */
+        #drift-docs-card {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            justify-content: flex-start;
+        }
+        .drift-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .drift-item:hover {
+            border-color: var(--danger-color);
+            background-color: var(--hover-color);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .drift-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            overflow: hidden;
+            flex-grow: 1;
+            margin-right: 8px;
+            text-align: left;
+        }
+        .drift-title {
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text-primary);
+        }
+        .drift-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .drift-badge-count {
+            font-size: 9.5px;
+            padding: 1px 5px;
+            border-radius: 3px;
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+            font-weight: 600;
+        }
         
         /* Table sort style */
         .nodes-table th.sortable:hover {
@@ -1352,6 +1407,18 @@
                             <div class="score-evaluation-container">
                                 <span id="score-eval-label" class="score-evaluation">--</span>
                             </div>
+                            
+                            <div style="font-size: 11px; color: var(--text-secondary); margin-top: 15px; display: flex; justify-content: space-around; width: 100%; border-top: 1px solid var(--border-color); padding-top: 12px; text-align: center;">
+                                <div>
+                                    <span style="display: block; font-size: 14px; font-weight: 700; color: var(--text-primary);" id="detail-weighted-coverage">0%</span>
+                                    <span style="font-size: 10px;" data-i18n="weightedCoverageLabel">/* TRANSLATE:weightedCoverageLabel */</span>
+                                </div>
+                                <div style="border-left: 1px solid var(--border-color); height: 25px; margin: auto 0;"></div>
+                                <div>
+                                    <span style="display: block; font-size: 14px; font-weight: 700; color: var(--text-primary);" id="detail-sync-rate">0%</span>
+                                    <span style="font-size: 10px;" data-i18n="syncRateLabel">/* TRANSLATE:syncRateLabel */</span>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Priority Hotspots Card -->
@@ -1361,6 +1428,17 @@
                             </h4>
                             <p style="font-size: 11px; color: var(--text-secondary); margin-top: -6px;" data-i18n="hotspotsSubtitle">/* TRANSLATE:hotspotsSubtitle */</p>
                             <ul id="hotspots-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
+                                <!-- Inject dynamically -->
+                            </ul>
+                        </div>
+
+                        <!-- Drift Documents Card -->
+                        <div class="card" id="drift-docs-card" style="margin-top: 10px;">
+                            <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                                <i data-lucide="shield-alert" style="width: 14px; height: 14px; color: var(--danger-color);"></i> <span data-i18n="driftDocsTitle">/* TRANSLATE:driftDocsTitle */</span>
+                            </h4>
+                            <p style="font-size: 11px; color: var(--text-secondary); margin-top: -6px;" data-i18n="driftDocsSubtitle">/* TRANSLATE:driftDocsSubtitle */</p>
+                            <ul id="drift-docs-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
                                 <!-- Inject dynamically -->
                             </ul>
                         </div>
@@ -1763,12 +1841,14 @@
             vi: {
                 dashboardTitle: "Trình duyệt Đồ thị Mã & Neo tài liệu",
                 dashboardSubtitle: "Đo lường mức độ bao phủ tài liệu dựa trên trọng số Đồ thị Code.",
-                scoreCardTitle: "Điểm Sức khỏe Tài liệu",
-                scoreLabel: "Điểm số",
+                scoreCardTitle: "Trạng thái Sức khỏe tổng thể",
+                scoreLabel: "Sức khỏe tổng thể",
                 totalDocs: "Tổng số tài liệu",
                 graphNodes: "Cấu phần Đồ thị",
                 businessGodNodes: "Thành phần Lõi Nghiệp vụ (God Nodes)",
-                healthStatus: "Trạng thái Sức khỏe",
+                healthStatus: "Độ đồng bộ tài liệu",
+                weightedCoverageLabel: "Độ bao phủ Đồ thị",
+                syncRateLabel: "Độ đồng bộ tài liệu",
                 entityTypeDistribution: "Phân bố theo Loại Cấu phần",
                 weightDistribution: "Phân loại theo Trọng số Đồ thị",
                 legendCompleted: "Đạt chuẩn (Đầy đủ)",
@@ -1817,6 +1897,8 @@
                 alignmentCodeEntities: "Chỉ số Cân chỉnh & Gắn kết (Alignment & Binding Metrics)",
                 alignmentAiPrompts: "Đề xuất Tác vụ AI (AI Assistant Prompts)",
                 alignmentDriftAudit: "Báo cáo sai lệch & Gaps (Drift Audit)",
+                driftDocsTitle: "🔍 Tài liệu bị lệch (Drift)",
+                driftDocsSubtitle: "Tài liệu có neo liên kết hỏng hoặc sai lệch với mã nguồn",
                 langToggleLabel: "English",
                 calibrationTitle: "Hiệu chỉnh Chỉ số",
                 calibrationFolders: "Loại trừ thư mục tài liệu",
@@ -1874,12 +1956,14 @@
             en: {
                 dashboardTitle: "Docs Quality Dashboard",
                 dashboardSubtitle: "Measure documentation coverage based on Code-Graph weights.",
-                scoreCardTitle: "Docs Health Score",
-                scoreLabel: "Score",
+                scoreCardTitle: "Overall Health Status",
+                scoreLabel: "Overall Health",
                 totalDocs: "Total Documents",
                 graphNodes: "Graph Nodes",
                 businessGodNodes: "Business God Nodes",
-                healthStatus: "Health Status",
+                healthStatus: "Doc Sync Rate",
+                weightedCoverageLabel: "Weighted Graph Coverage",
+                syncRateLabel: "Doc Sync Rate",
                 entityTypeDistribution: "Entity Type Distribution",
                 weightDistribution: "Weight Distribution",
                 legendCompleted: "Completed (Full)",
@@ -1928,6 +2012,8 @@
                 alignmentCodeEntities: "Alignment & Binding Metrics",
                 alignmentAiPrompts: "AI Assistant Task Prompts",
                 alignmentDriftAudit: "Logic Drift & Gaps Audit",
+                driftDocsTitle: "🔍 Outdated Specs (Drift)",
+                driftDocsSubtitle: "Specs with broken anchor links or outdated code references",
                 langToggleLabel: "Tiếng Việt",
                 calibrationTitle: "Calibration Settings",
                 calibrationFolders: "Exclude document folders",
@@ -2273,42 +2359,23 @@
                 node.completionFactor = factor;
                 linkedWeight += node.activeWeight * factor;
             });
-            let scoreStr;
-            let scoreVal;
+            let weightedCoverageStr;
+            let weightedCoverageVal;
             if (totalWeight > 0) {
                 if (linkedWeight === totalWeight) {
-                    scoreStr = "100";
-                    scoreVal = 100;
+                    weightedCoverageStr = "100";
+                    weightedCoverageVal = 100;
                 } else {
                     const rawScore = (linkedWeight / totalWeight) * 100;
-                    scoreVal = Math.min(rawScore, 99.9);
-                    scoreStr = scoreVal.toFixed(1);
+                    weightedCoverageVal = Math.min(rawScore, 99.9);
+                    weightedCoverageStr = weightedCoverageVal.toFixed(1);
                 }
             } else {
-                scoreStr = "100";
-                scoreVal = 100;
+                weightedCoverageStr = "100";
+                weightedCoverageVal = 100;
             }
 
-            document.getElementById('dashboard-health-score').textContent = scoreStr;
-            const circle = document.getElementById('progress-circle');
-            const circumference = 471.24;
-            const offset = circumference - (scoreVal / 100) * circumference;
-            circle.style.strokeDashoffset = offset;
-
-            const label = document.getElementById('score-eval-label');
-            if (scoreVal >= 90) {
-                circle.style.stroke = 'var(--success-color)';
-                label.textContent = t.scoreGold;
-                label.className = 'score-evaluation score-eval-gold';
-            } else if (scoreVal >= 70) {
-                circle.style.stroke = 'var(--warning-color)';
-                label.textContent = t.scoreGood;
-                label.className = 'score-evaluation score-eval-good';
-            } else {
-                circle.style.stroke = 'var(--danger-color)';
-                label.textContent = t.scorePoor;
-                label.className = 'score-evaluation score-eval-poor';
-            }
+            document.getElementById('detail-weighted-coverage').textContent = weightedCoverageStr + '%';
 
             function updateBadge(badgeId, percentage, type = 'progress') {
                 const el = document.getElementById(badgeId);
@@ -2420,29 +2487,79 @@
                 }
             });
             const activeStaleDocsCount = Array.from(staleDocs).filter(doc => activeDocs.includes(doc)).length;
+            
+            // Calculate total drifts for active documents
+            let totalDrifts = 0;
+            activeDocs.forEach(doc => {
+                const alignment = alignmentData[doc];
+                if (alignment && alignment.auditReports) {
+                    totalDrifts += alignment.auditReports.length;
+                }
+            });
+
             let healthPct;
             if (activeDocs.length > 0) {
-                if (activeStaleDocsCount === 0) {
+                const unhealthyDocsCount = activeDocs.filter(doc => {
+                    const isDocStale = staleDocs.has(doc);
+                    const alignment = alignmentData[doc];
+                    const hasDrifts = alignment && alignment.auditReports && alignment.auditReports.length > 0;
+                    return isDocStale || hasDrifts;
+                }).length;
+
+                if (unhealthyDocsCount === 0) {
                     healthPct = 100;
                 } else {
-                    const rawPct = ((activeDocs.length - activeStaleDocsCount) / activeDocs.length) * 100;
+                    const rawPct = ((activeDocs.length - unhealthyDocsCount) / activeDocs.length) * 100;
                     healthPct = Number(Math.min(rawPct, 99.9).toFixed(1));
                 }
             } else {
                 healthPct = 100;
-            }
             document.getElementById('stat-stale-docs').textContent = healthPct + '%';
+            document.getElementById('detail-sync-rate').textContent = healthPct + '%';
+
+            // Calculate Overall Health Score
+            const overallScoreVal = weightedCoverageVal * (healthPct / 100);
+            const overallScoreStr = overallScoreVal === 100 ? "100" : Math.min(overallScoreVal, 99.9).toFixed(1);
+
+            document.getElementById('dashboard-health-score').textContent = overallScoreStr;
+            const circle = document.getElementById('progress-circle');
+            const circumference = 471.24;
+            const offset = circumference - (overallScoreVal / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+
+            const label = document.getElementById('score-eval-label');
+            if (overallScoreVal >= 90) {
+                circle.style.stroke = 'var(--success-color)';
+                label.textContent = t.scoreGold;
+                label.className = 'score-evaluation score-eval-gold';
+            } else if (overallScoreVal >= 70) {
+                circle.style.stroke = 'var(--warning-color)';
+                label.textContent = t.scoreGood;
+                label.className = 'score-evaluation score-eval-good';
+            } else {
+                circle.style.stroke = 'var(--danger-color)';
+                label.textContent = t.scorePoor;
+                label.className = 'score-evaluation score-eval-poor';
+            }
 
               const staleBox = document.getElementById('box-stale-status');
               const staleIconWrapper = document.getElementById('icon-stale-status');
               const healthBadge = document.getElementById('stat-health-pct-badge');
-              if (activeStaleDocsCount > 0) {
+              if (activeStaleDocsCount > 0 || totalDrifts > 0) {
                   if (staleBox) staleBox.className = 'stat-box box-danger';
                   if (staleIconWrapper) staleIconWrapper.className = 'stat-box-icon-wrapper theme-danger';
                   document.getElementById('stat-stale-docs').style.color = 'var(--danger-color)';
-                  document.getElementById('stat-stale-docs-sub').textContent = t.staleDocsSubWarning(activeStaleDocsCount);
+                  
+                  let subText = '';
+                  if (lang === 'vi') {
+                      subText = `⚠️ ${activeStaleDocsCount} tệp hết hạn | ${totalDrifts} drift`;
+                  } else {
+                      subText = `⚠️ ${activeStaleDocsCount} stale docs | ${totalDrifts} drifts`;
+                  }
+                  document.getElementById('stat-stale-docs-sub').textContent = subText;
+                  
                   if (healthBadge) {
-                      healthBadge.textContent = t.badgeStale;
+                      healthBadge.textContent = `${totalDrifts} drift`;
                       healthBadge.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
                       healthBadge.style.color = 'var(--danger-color)';
                       healthBadge.style.borderColor = 'rgba(239, 68, 68, 0.2)';
@@ -2632,7 +2749,68 @@
                 }
             }
 
+            // Populate Drift Docs List
+            const driftDocsList = document.getElementById('drift-docs-list');
+            if (driftDocsList) {
+                driftDocsList.innerHTML = '';
+                const docPaths = Object.keys(alignmentData);
+                const driftDocs = docPaths
+                    .map(path => {
+                        const data = alignmentData[path];
+                        return {
+                            path: path,
+                            title: data.title || path,
+                            auditReports: data.auditReports || []
+                        };
+                    })
+                    .filter(d => d.auditReports.length > 0)
+                    .sort((a, b) => b.auditReports.length - a.auditReports.length);
+                
+                if (driftDocs.length > 0) {
+                    driftDocs.forEach(doc => {
+                        const li = document.createElement('li');
+                        li.className = 'drift-item';
+                        
+                        const hrefUrl = doc.path.replace(/\.md$/, '.html');
+                        
+                        const issueText = lang === 'vi' 
+                            ? `${doc.auditReports.length} lệch` 
+                            : `${doc.auditReports.length} drift${doc.auditReports.length > 1 ? 's' : ''}`;
+                        
+                        li.innerHTML = `
+                            <div class="drift-info">
+                                <span class="drift-title" title="${doc.title}">${doc.title}</span>
+                                <div class="drift-meta">
+                                    <span class="drift-badge-count">${issueText}</span>
+                                    <span style="font-size: 10px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">${doc.path}</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 4px;">
+                                <i class="chevron-right-icon" data-lucide="chevron-right" style="width: 14px; height: 14px; color: var(--text-secondary);"></i>
+                            </div>
+                        `;
+                        
+                        li.onclick = () => {
+                            window.parent.postMessage({ type: 'navigate', href: hrefUrl, baseUrl: window.location.href }, '*');
+                        };
+                        
+                        driftDocsList.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.style.fontSize = '12px';
+                    li.style.color = 'var(--text-secondary)';
+                    li.style.textAlign = 'center';
+                    li.style.padding = '8px';
+                    li.textContent = lang === 'vi' ? 'Không có tài liệu nào bị lệch.' : 'No specs with drift.';
+                    driftDocsList.appendChild(li);
+                }
+            }
+
             renderTable();
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
         }
 
         function makeTableResizable(table) {
