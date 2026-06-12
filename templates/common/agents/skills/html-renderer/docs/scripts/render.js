@@ -812,6 +812,20 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
             .replace(/\\/g, '\\\\')
             .replace(/`/g, '\\`')
             .replace(/\${/g, '\\${');
+
+        // Build detailed audit text for AI prompt suggestions
+        const auditDetailsText = auditReports && auditReports.length > 0 ? auditReports.map((r, idx) => {
+            const severityLabel = r.severity ? `[${r.severity.toUpperCase()}] ` : '';
+            const solutionText = r.solution ? (fileLang === 'vi' ? `\n   - Giải pháp đề xuất: ${r.solution}` : `\n   - Proposed Solution: ${r.solution}`) : '';
+            return `${idx + 1}. ${severityLabel}**[${r.title}]** ${r.description}${solutionText}`;
+        }).join('\n') : (fileLang === 'vi' ? 'Không phát hiện sai lệch.' : 'No drift issues detected.');
+
+        const escapedAuditDetails = auditDetailsText
+            .replace(/\\/g, '\\\\')
+            .replace(/`/g, '\\`')
+            .replace(/\${/g, '\\${')
+            .replace(/'/g, "\\'")
+            .replace(/"/g, '\\"');
             
         // Build dynamic AI Prompt Suggestions based on document status
         const frontmatterKeys = Object.keys(frontmatter).filter(k => k !== 'title' && k !== 'order');
@@ -969,6 +983,7 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
         // Replace structural data placeholders
         html = html
             .replaceAll('/* MARKDOWN_CONTENT_PLACEHOLDER */', escapedMarkdown)
+            .replaceAll('/* AUDIT_DETAILS_PLACEHOLDER */', escapedAuditDetails)
             .replaceAll('/* SOURCE_MD_PATH */', relativeSourcePath)
             .replaceAll('/* SOURCE_MD_ABS_PATH */', absoluteSourcePath)
             .replaceAll('/* CURRENT_DOC_NAME */', docCleanName)
