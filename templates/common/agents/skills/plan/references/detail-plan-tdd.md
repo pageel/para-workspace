@@ -48,6 +48,20 @@
 - **Required Skills:** [Agent MUST load `.agents/skills/tdd/SKILL.md` before executing TDD tasks]
 [Describe testing layers: Unit, Integration, E2E. Mention testing frameworks used.]
 
+## Context Files & Indices Loaded
+
+> ⛔ **MANDATORY CONTEXT BINDING:** Before executing this plan, Agent MUST read/reload all listed files to ensure full context and prevent workflow drift.
+
+| Scope | File / Index | Purpose | Path |
+| :--- | :--- | :--- | :--- |
+| Workspace | `.agents/rules.md` | Workspace-level rules index (Trigger scan) | [rules.md](file:///absolute/path/to/workspace/.agents/rules.md) |
+| Workspace | `.agents/skills.md` | Workspace-level skills index (Trigger scan) | [skills.md](file:///absolute/path/to/workspace/.agents/skills.md) |
+| Project | `project.md` | Project Contract (Version, status, roadmap tracker) | [project.md](file:///absolute/path/to/project/project.md) |
+| Project | `.agents/rules.md` | Project-level rules index (if exists) | [rules.md](file:///absolute/path/to/project/.agents/rules.md) |
+| Project | `.agents/skills.md` | Project-level skills index (if exists) | [skills.md](file:///absolute/path/to/project/.agents/skills.md) |
+| Specific | [Triggered Rules/Skills] | List of specifically triggered rules/skills for this plan | (e.g., `agent-behavior.md`, `tool-routing.md`, `vcs.md`) |
+| MCP / Tools| [MCP Server / Tool Schema] | Loaded MCP schemas to support tasks | (e.g., `para-graph` schemas) |
+
 **Execution Logic Map:**
 
 > ASCII flowchart showing Phase sequence, Guards, and Dependencies.
@@ -75,6 +89,10 @@
 
 
 #### Task List
+
+<!-- Task format for brainstorm or spec (if proposed during audit/planning):
+     - [ ] X.Y 🧠 **Brainstorm Needed:** [Topic] (Run /brainstorm or /spec workflow to clarify design before implementation)
+     - [ ] X.Y 📝 **Spec Required:** [Feature] (Run /spec workflow to define API / Schema before writing production code) -->
 
 - [ ] 0.0 🤖 Graph Knowledge Preparation (if para-graph enabled)
 - [ ] 0.1 🤖 [Task description]

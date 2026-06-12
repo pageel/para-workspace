@@ -190,6 +190,16 @@ case "$1" in
     exit 0
     ;;
   *)
+    # Prevent mistaking slash commands (workflows) for CLI commands (v1.9.2)
+    case "$1" in
+      staging|open|end|brainstorm|qa|spec)
+        echo "❌ Error: '$1' is a platform workflow, not a CLI command." >&2
+        echo "   Please use the slash command equivalent in the chat UI: /$1" >&2
+        echo "   Do NOT attempt to execute workflows via terminal commands." >&2
+        exit 1
+        ;;
+    esac
+
     # Dynamic tool routing — check if auto-generated wrapper script exists
     if [ -f "$COMMANDS_DIR/$1.sh" ]; then
       CMD="$1"; shift; "$COMMANDS_DIR/$CMD.sh" "$@"

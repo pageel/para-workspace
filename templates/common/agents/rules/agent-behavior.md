@@ -102,3 +102,11 @@ BEFORE executing any task item in a plan Phase, Agent MUST:
   - **Exception**: Changes are allowed if explicitly written as a task in the active phase file inventory.
   - Agent **MUST** defer all backlog updating and status synchronizations to the `/end` workflow.
 
+### 6. Platform Tracker Exemption & CLI Boundary
+
+- **MUST NOT** generate or sync platform-level `task.md` or `implementation_plan.md` files in the `brain/` folder for macro-level plans (e.g., roadmaps, strategies, specifications, brainstorms, or any plans containing `roadmap`, `strategy`, `spec`, or `brainstorm` in their filenames).
+- **MUST** strictly separate terminal commands from slash commands:
+  - Slash Commands (Workflows) are platform-specific UI commands starting with `/` (e.g., `/open`, `/plan`, `/staging`, `/brainstorm`). These MUST only be triggered/recommended in the chat UI.
+  - CLI Commands are local terminal commands starting with `./para` (e.g., `./para status`, `./para update`). These MUST only be run in the terminal shell.
+  - **MUST NOT** execute workflows as CLI commands (e.g., running `./para staging` or `./para open` via terminal is invalid).
+

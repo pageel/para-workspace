@@ -114,6 +114,17 @@ If any check fails → fall back to Native/Bash with a warning to the user sugge
 
 > **Context:** Discovered in [cross-agent-telemetry-review (2026-04-14)](../../docs/researches/process/research-cross-agent-telemetry-review-2026-04-14.md) §5.7 — Agent confabulated "CRITICAL INSTRUCTION 1" absolutely prohibiting bash, leading to incorrect narrative.
 
+### 9. CLI Commands vs Platform Workflows Boundary
+
+To prevent system conflicts and execution errors, Agent **MUST** maintain a strict boundary between Terminal CLI Commands and Platform Workflows (Slash Commands):
+
+- **Slash Commands (Workflows)**: Platform-specific commands starting with a slash `/` (e.g., `/open`, `/plan`, `/staging`, `/brainstorm`).
+  - **Environment**: Executed exclusively via the chat UI/interaction interface.
+  - **Constraint**: **MUST NOT** be executed as terminal scripts. Recommendation to the user must use the slash format (e.g., "Use `/staging`...").
+- **CLI Commands (Terminal)**: Local command-line interface scripts starting with `./para` (e.g., `./para status`, `./para update`, `./para install`).
+  - **Environment**: Executed exclusively inside the terminal shell using `run_command`.
+  - **Constraint**: **MUST NOT** run workflows via the CLI script (e.g., executing `./para staging`, `./para open`, `./para brainstorm` via terminal is strictly prohibited and will trigger a CLI guard error).
+
 ## Related
 
 - [Antigravity System Prompt Analysis](../../docs/researches/analysis/research-antigravity-system-prompt-2026-04-14.md) — Recommendation #1

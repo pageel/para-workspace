@@ -2,7 +2,22 @@
 # Open Diagnostics Tool
 # Usage: run_open.sh [project-name]
 
-WORKSPACE_DIR="/media/tienle/DATA/WORKSPACE/para"
+# Auto-detect Workspace Root by looking up for .para-workspace.yml
+CUR_DIR="$(pwd)"
+WORKSPACE_DIR=""
+while [ "$CUR_DIR" != "/" ]; do
+    if [ -f "$CUR_DIR/.para-workspace.yml" ]; then
+        WORKSPACE_DIR="$CUR_DIR"
+        break
+    fi
+    CUR_DIR="$(dirname "$CUR_DIR")"
+done
+
+if [ -z "$WORKSPACE_DIR" ]; then
+    echo "❌ Error: Could not detect PARA workspace root." >&2
+    exit 1
+fi
+
 cd "$WORKSPACE_DIR" || exit 1
 
 PROJECT_NAME="$1"

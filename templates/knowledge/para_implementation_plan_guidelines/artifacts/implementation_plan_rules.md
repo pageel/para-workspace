@@ -37,3 +37,7 @@ This document outlines the strict boundary and operational guidelines distinguis
 2.  **No Ephemeral Referencing (KR7 Compliance):**
     *   Agents MUST NOT add the temporary platform `brain/implementation_plan.md` or `brain/task.md` paths to the `references` array of any Knowledge Item (KI).
     *   Only Project Implementation Plans are allowed as durable references.
+3.  **Platform Tracker Exemption for Macro Documents:**
+    *   Macro-level documents such as Roadmaps, Strategy documents, Specs, and Brainstorms (typically stored under `artifacts/plans/roadmap.md`, `docs/strategy/`, `artifacts/para-decisions/`, `artifacts/specs/` or containing `roadmap`/`strategy`/`brainstorm`/`spec` in their names) represent high-level orchestrations, requirements, or designs rather than detailed implementation plans.
+    *   To prevent token wastage and system conflicts, these macro documents are **fully exempted** from Platform Tracker synchronization. The agent MUST NOT create or sync temporary platform `implementation_plan.md` or `task.md` files in the brain folder when active_plan references these macro files. Workflows (`/open` and `/plan`) MUST automatically bypass sync gates for these documents.
+

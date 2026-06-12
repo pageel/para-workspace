@@ -243,6 +243,12 @@ Resolve `active_plan` using the shared convention defined after Step 1.
 The resolved path points to the plan file to read.
 
 - **If `active_plan` exists** (local or `@` cross-project):
+  > ⚠️ **Platform Tracker Exemption for Macro Documents (v1.9.2):**
+  > If the resolved plan path matches macro document naming (contains `roadmap`, `strategy`, `spec`, or `brainstorm`), it is a macro-level document.
+  > - **MUST NOT** create or sync platform-level `task.md` or `implementation_plan.md` files in the brain folder.
+  > - Skip setting up active tracking tasks in the brain folder.
+  > - Still extract phase headers for the report in Step 8 if applicable.
+
   1. **Extract phase headers only**:
      ```bash
      grep -n "^### Phase" [resolved-plan-path]
