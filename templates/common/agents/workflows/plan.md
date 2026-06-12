@@ -5,7 +5,7 @@ source: catalog
 
 # /plan [project-name] [action] [--graph] [--project]
 
-> **Workspace Version:** 1.9.1 (Graph Intelligence + Project Context)
+> **Workspace Version:** 1.9.2 (Graph Intelligence + Project Context)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to resolve the user's preferred language.
 > Resolution priority:
 > 1. If `language` is a map: 

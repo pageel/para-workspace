@@ -18,8 +18,7 @@ items:
   kernel_min: 1.7.0
   kernel_max: 1.x
   entrypoint: open.md
-  description: Meta-project type detection (v1.7.6). Platform-injected KI context.
-    Central Gate.
+  description: Meta-project type detection (v1.7.6). Platform-injected KI context. Central Gate. Macro docs exemption (v1.9.2).
   tags:
   - session
   - context
@@ -184,8 +183,7 @@ items:
   kernel_min: 1.7.0
   kernel_max: 1.x
   entrypoint: plan.md
-  description: 'Graph Intelligence (--graph), project context (--project default for
-    create), dev/end actions. Sidecar Skill templates.'
+  description: Graph Intelligence (--graph), project context (--project default for create), dev/end actions. Sidecar Skill templates. Macro docs exemption (v1.9.2).
   tags:
   - planning
   - architecture

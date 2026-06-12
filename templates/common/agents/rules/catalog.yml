@@ -7,7 +7,7 @@ items:
   kernel_min: 1.6.2
   kernel_max: 1.x
   entrypoint: agent-behavior.md
-  description: Proactive Trigger Check, Context Recovery with skills.md (v1.6.2).
+  description: Proactive Trigger Check, Context Recovery. Macro docs exemption & CLI boundary (v1.9.2).
   tags:
   - governance
   - safety
@@ -138,7 +138,7 @@ items:
   kernel_min: 1.8.10
   kernel_max: 1.x
   entrypoint: tool-routing.md
-  description: Heuristic guide for selecting Native API, Bash commands, and MCP tools.
+  description: Heuristic guide for selecting Native API, Bash commands, and MCP tools. CLI/Workflow boundary (v1.9.2).
   tags:
   - tools
   - routing

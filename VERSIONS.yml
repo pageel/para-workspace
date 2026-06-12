@@ -8,11 +8,11 @@
 # See: naming.md §6 (date format), versioning.md §5 (version tracking)
 # Updated: 2026-05-22
 
-workspace: "1.9.0"
+workspace: "1.9.2"
 
 workflows:
   backlog:         "1.9.0"   # standard language resolution block
-  open:            "1.9.0"   # standard language resolution block
+  open:            "1.9.2"   # standard language resolution block
   end:             "1.9.0"   # standard language resolution block
   install:         "1.0.0"
   new-project:     "1.8.10"
@@ -28,11 +28,11 @@ workflows:
   learn:           "1.8.9"
   para-workflow:   "1.9.0"   # standard language resolution block
   para-rule:       "1.9.0"   # standard language resolution block
-  plan:            "1.9.0"   # standard language resolution block
+  plan:            "1.9.2"   # standard language resolution block
   para-audit:      "1.9.0"   # integrated dynamic legacy cleanup skill
-  docs:            "1.9.0"   # standard language resolution block
+  docs:            "1.9.2"   # standard language resolution block
   update:          "1.9.0"   # standard language resolution block
-  brainstorm:      "1.9.0"   # standard language resolution block
+  brainstorm:      "1.9.2"   # standard language resolution block
   para-knowledge:  "1.9.0"   # standard language resolution block
   para-skill:      "1.9.0"   # standard language resolution block
   write:           "1.7.16"
@@ -45,7 +45,7 @@ workflows:
   resource:        "1.9.0"   # standard language resolution block
 
 rules:
-  agent-behavior:          "1.8.15"  # consolidated checkpoints
+  agent-behavior:          "1.9.2"  # consolidated checkpoints
   governance:              "1.0.0"
   artifact-standard:       "1.8.13"
   context-rules:           "1.1.0"
@@ -57,8 +57,8 @@ rules:
   hybrid-3-file-integrity: "1.7.16"
   knowledge:               "1.1.0"
   agent-persona:           "1.9.1"
-  graph-first-policy:      "1.9.1"
-  tool-routing:            "1.9.1"
+  graph-first-policy:      "1.9.2"
+  tool-routing:            "1.9.2"
   formatting-tables-diagrams: "1.9.1"
 
 skills:
@@ -66,26 +66,26 @@ skills:
   formatting:  "1.1.0"
   page-map:    "1.9.0"   # restored and translated to English
   para-skill:  "1.0.0"
-  plan:        "1.8.15"
-  docs:        "1.8.15"
+  plan:        "1.9.2"
+  docs:        "1.9.2"
   brainstorm:  "1.8.15"
   write:       "1.7.16"
   harness:     "1.8.15"
   spec:        "1.8.10"
   qa:          "1.8.10"
-  tdd:         "1.8.15"
+  tdd:         "1.9.2"
   logs:        "1.8.15"
-  html-renderer: "1.8.16"
+  html-renderer: "1.9.2"
   new-project: "1.8.10"
-  resource:    "1.8.11"
+  resource:    "1.9.2"
   scan-sec:    "1.8.11"
-  staging:     "1.8.16"
+  staging:     "1.9.2"
   vibecode:    "1.8.16"
   sidecar-skill: "1.8.11"
   para-audit:  "1.9.0"   # new dynamic legacy files scanner sidecar skill
 
 cli:
-  para:            "1.8.2"
+  para:            "1.9.2"
   install-tool:    "1.8.11"
   remove-tool:     "1.8.0"
   list-tools:      "1.8.0"
@@ -110,4 +110,4 @@ knowledge:
   para_vibecode_session: "1.8.15"
   para_workspace_structure_and_config: "1.9.0" # packaged and translated to English
   para_agent_docs_authoring_guardrails: "1.9.0" # packaged and translated to English
-  para_implementation_plan_guidelines: "1.9.0"  # packaged and updated task mapping rules
+  para_implementation_plan_guidelines: "1.9.2"  # packaged and updated task mapping rules
