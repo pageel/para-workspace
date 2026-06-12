@@ -111,12 +111,65 @@
             margin-top: 4px;
         }
 
-        /* Metrics grid */
-        .dashboard-grid {
+        /* 3-column equal width layouts for Row 1 and Row 2 */
+        .overview-grid-3col, .analytics-grid-3col {
             display: grid;
-            grid-template-columns: 320px 1fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
         }
+
+        @media (max-width: 1024px) {
+            .overview-grid-3col, .analytics-grid-3col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Tabs Panel style */
+        .tabs-container {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 12px;
+            gap: 16px;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 8px 0;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+        .tab-btn.active {
+            color: var(--accent-color);
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent-color);
+        }
+        .tab-content {
+            display: none;
+            height: 100%;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
 
         .card {
             background-color: var(--bg-secondary);
@@ -210,7 +263,6 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 16px;
-            height: 100%;
         }
 
         .stat-box {
@@ -1351,19 +1403,19 @@
                             <div style="display: flex; flex-direction: column; gap: 12px;">
                                 <!-- Critical Node Weight -->
                                 <div style="display: flex; align-items: center; gap: 12px;">
-                                    <span class="badge badge-weight-critical" style="width: 120px; justify-content: center; font-size: 11px;">💥 <span data-i18n="filterCritical">/* TRANSLATE:filterCritical */</span></span>
+                                    <span class="badge badge-weight-critical" style="width: 170px; justify-content: center; font-size: 11px;">💥 <span data-i18n="filterCritical">/* TRANSLATE:filterCritical */</span></span>
                                     <input type="range" id="weight-critical-slider" min="1" max="10" step="0.5" value="5" oninput="updateWeightInputs('critical', this.value)" style="flex-grow: 1; accent-color: var(--accent-color);">
                                     <input type="number" id="weight-critical-number" min="1" max="10" step="0.5" value="5" oninput="updateWeightInputs('critical', this.value)" style="width: 55px; padding: 4px; border: 1px solid var(--border-color); border-radius: 4px; text-align: center; font-size: 12px; background: var(--bg-primary); color: var(--text-primary);">
                                 </div>
                                 <!-- Medium Node Weight -->
                                 <div style="display: flex; align-items: center; gap: 12px;">
-                                    <span class="badge badge-weight-medium" style="width: 120px; justify-content: center; font-size: 11px;"><span data-i18n="filterMedium">/* TRANSLATE:filterMedium */</span></span>
+                                    <span class="badge badge-weight-medium" style="width: 170px; justify-content: center; font-size: 11px;"><span data-i18n="filterMedium">/* TRANSLATE:filterMedium */</span></span>
                                     <input type="range" id="weight-medium-slider" min="0.5" max="5" step="0.5" value="2" oninput="updateWeightInputs('medium', this.value)" style="flex-grow: 1; accent-color: var(--accent-color);">
                                     <input type="number" id="weight-medium-number" min="0.5" max="5" step="0.5" value="2" oninput="updateWeightInputs('medium', this.value)" style="width: 55px; padding: 4px; border: 1px solid var(--border-color); border-radius: 4px; text-align: center; font-size: 12px; background: var(--bg-primary); color: var(--text-primary);">
                                 </div>
                                 <!-- Low Node Weight -->
                                 <div style="display: flex; align-items: center; gap: 12px;">
-                                    <span class="badge badge-weight-low" style="width: 120px; justify-content: center; font-size: 11px;"><span data-i18n="filterLow">/* TRANSLATE:filterLow */</span></span>
+                                    <span class="badge badge-weight-low" style="width: 170px; justify-content: center; font-size: 11px;"><span data-i18n="filterLow">/* TRANSLATE:filterLow */</span></span>
                                     <input type="range" id="weight-low-slider" min="0.1" max="2" step="0.1" value="0.5" oninput="updateWeightInputs('low', this.value)" style="flex-grow: 1; accent-color: var(--accent-color);">
                                     <input type="number" id="weight-low-number" min="0.1" max="2" step="0.1" value="0.5" oninput="updateWeightInputs('low', this.value)" style="width: 55px; padding: 4px; border: 1px solid var(--border-color); border-radius: 4px; text-align: center; font-size: 12px; background: var(--bg-primary); color: var(--text-primary);">
                                 </div>
@@ -1385,69 +1437,45 @@
                 </div>
 
                 <!-- Grid metrics -->
-                <div class="dashboard-grid">
+                <!-- Row 1: Overview (3 Columns) -->
+                <div class="overview-grid-3col">
                     
-                    <!-- Left Column Stack -->
-                    <div style="display: flex; flex-direction: column; gap: 20px;">
-                        <!-- Left circular score card -->
-                        <div class="card score-card" style="width: 100%;">
-                            <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px;" data-i18n="scoreCardTitle">/* TRANSLATE:scoreCardTitle */</h4>
-                            
-                            <div class="progress-ring-container">
-                                <svg width="180" height="180">
-                                    <circle class="progress-ring-circle-bg" cx="90" cy="90" r="75"></circle>
-                                    <circle id="progress-circle" class="progress-ring-circle" cx="90" cy="90" r="75" stroke-dasharray="471.24" stroke-dashoffset="471.24"></circle>
-                                </svg>
-                                <div class="progress-text">
-                                    <span class="progress-text-score" id="dashboard-health-score">0</span>
-                                    <span class="progress-text-label" data-i18n="scoreLabel">/* TRANSLATE:scoreLabel */</span>
-                                </div>
-                            </div>
-                            
-                            <div class="score-evaluation-container">
-                                <span id="score-eval-label" class="score-evaluation">--</span>
-                            </div>
-                            
-                            <div style="font-size: 11px; color: var(--text-secondary); margin-top: 15px; display: flex; justify-content: space-around; width: 100%; border-top: 1px solid var(--border-color); padding-top: 12px; text-align: center;">
-                                <div>
-                                    <span style="display: block; font-size: 14px; font-weight: 700; color: var(--text-primary);" id="detail-weighted-coverage">0%</span>
-                                    <span style="font-size: 10px;" data-i18n="weightedCoverageLabel">/* TRANSLATE:weightedCoverageLabel */</span>
-                                </div>
-                                <div style="border-left: 1px solid var(--border-color); height: 25px; margin: auto 0;"></div>
-                                <div>
-                                    <span style="display: block; font-size: 14px; font-weight: 700; color: var(--text-primary);" id="detail-sync-rate">0%</span>
-                                    <span style="font-size: 10px;" data-i18n="syncRateLabel">/* TRANSLATE:syncRateLabel */</span>
-                                </div>
+                    <!-- Column 1: circular score card -->
+                    <div class="card score-card" style="width: 100%;">
+                        <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px;" data-i18n="scoreCardTitle">/* TRANSLATE:scoreCardTitle */</h4>
+                        
+                        <div class="progress-ring-container" style="margin: 8px 0;">
+                            <svg width="180" height="180">
+                                <circle class="progress-ring-circle-bg" cx="90" cy="90" r="75"></circle>
+                                <circle id="progress-circle" class="progress-ring-circle" cx="90" cy="90" r="75" stroke-dasharray="471.24" stroke-dashoffset="471.24"></circle>
+                            </svg>
+                            <div class="progress-text">
+                                <span class="progress-text-score" id="dashboard-health-score">0</span>
+                                <span class="progress-text-label" data-i18n="scoreLabel">/* TRANSLATE:scoreLabel */</span>
                             </div>
                         </div>
-
-                        <!-- Priority Hotspots Card -->
-                        <div class="card" id="hotspots-card">
-                            <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
-                                <i data-lucide="alert-triangle" style="width: 14px; height: 14px; color: var(--warning-color);"></i> <span data-i18n="hotspotsTitle">/* TRANSLATE:hotspotsTitle */</span>
-                            </h4>
-                            <p style="font-size: 11px; color: var(--text-secondary); margin-top: -6px;" data-i18n="hotspotsSubtitle">/* TRANSLATE:hotspotsSubtitle */</p>
-                            <ul id="hotspots-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
-                                <!-- Inject dynamically -->
-                            </ul>
+                        
+                        <div class="score-evaluation-container">
+                            <span id="score-eval-label" class="score-evaluation">--</span>
                         </div>
-
-                        <!-- Drift Documents Card -->
-                        <div class="card" id="drift-docs-card" style="margin-top: 10px;">
-                            <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
-                                <i data-lucide="shield-alert" style="width: 14px; height: 14px; color: var(--danger-color);"></i> <span data-i18n="driftDocsTitle">/* TRANSLATE:driftDocsTitle */</span>
-                            </h4>
-                            <p style="font-size: 11px; color: var(--text-secondary); margin-top: -6px;" data-i18n="driftDocsSubtitle">/* TRANSLATE:driftDocsSubtitle */</p>
-                            <ul id="drift-docs-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
-                                <!-- Inject dynamically -->
-                            </ul>
+                        
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 15px; display: flex; justify-content: space-around; width: 100%; border-top: 1px solid var(--border-color); padding-top: 12px; text-align: center;">
+                            <div>
+                                <span style="display: block; font-size: 14px; font-weight: 700; color: var(--text-primary);" id="detail-weighted-coverage">0%</span>
+                                <span style="font-size: 10px;" data-i18n="weightedCoverageLabel">/* TRANSLATE:weightedCoverageLabel */</span>
+                            </div>
+                            <div style="border-left: 1px solid var(--border-color); height: 25px; margin: auto 0;"></div>
+                            <div>
+                                <span style="display: block; font-size: 14px; font-weight: 700; color: var(--text-primary);" id="detail-sync-rate">0%</span>
+                                <span style="font-size: 10px;" data-i18n="syncRateLabel">/* TRANSLATE:syncRateLabel */</span>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Right detail metrics list -->
-                    <div class="stats-cards-container">
+                    <!-- Column 2: Stats Cards A (Total Docs & Graph Nodes) -->
+                    <div style="display: flex; flex-direction: column; gap: 16px; justify-content: space-between;">
                         
-                        <div class="stat-box box-blue">
+                        <div class="stat-box box-blue" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
                             <div class="stat-box-header">
                                 <span class="stat-box-title" data-i18n="totalDocs">/* TRANSLATE:totalDocs */</span>
                                 <div class="stat-box-icon-wrapper theme-blue">
@@ -1463,7 +1491,7 @@
                             </div>
                         </div>
 
-                        <div class="stat-box box-indigo">
+                        <div class="stat-box box-indigo" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
                             <div class="stat-box-header">
                                 <span class="stat-box-title" data-i18n="graphNodes">/* TRANSLATE:graphNodes */</span>
                                 <div class="stat-box-icon-wrapper theme-indigo">
@@ -1479,7 +1507,12 @@
                             </div>
                         </div>
 
-                        <div class="stat-box box-gold">
+                    </div>
+
+                    <!-- Column 3: Stats Cards B (Business God Nodes & Health Sync Rate) -->
+                    <div style="display: flex; flex-direction: column; gap: 16px; justify-content: space-between;">
+                        
+                        <div class="stat-box box-gold" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
                             <div class="stat-box-header">
                                 <span class="stat-box-title" data-i18n="businessGodNodes">/* TRANSLATE:businessGodNodes */</span>
                                 <div class="stat-box-icon-wrapper theme-gold">
@@ -1495,7 +1528,7 @@
                             </div>
                         </div>
 
-                        <div class="stat-box box-success" id="box-stale-status">
+                        <div class="stat-box box-success" id="box-stale-status" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
                             <div class="stat-box-header">
                                 <span class="stat-box-title" data-i18n="healthStatus">/* TRANSLATE:healthStatus */</span>
                                 <div class="stat-box-icon-wrapper theme-success" id="icon-stale-status">
@@ -1515,49 +1548,85 @@
 
                 </div>
 
-                <!-- Bar Charts Section -->
-                <div style="display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
+                <!-- Row 2: Analytics, Alerts & Charts (3 Columns) -->
+                <div class="analytics-grid-3col" style="margin-top: 20px;">
                     
-                    <div class="card" style="flex: 1;">
+                    <!-- Column 1: Alerts (Priority Hotspots & Drift tabbed panel) -->
+                    <div class="card" style="display: flex; flex-direction: column; justify-content: flex-start; gap: 12px; height: 100%; margin: 0;">
+                        
+                        <!-- Tabs Header -->
+                        <div class="tabs-container">
+                            <button class="tab-btn active" onclick="switchTab('hotspots')" id="tab-btn-hotspots">
+                                <i data-lucide="alert-triangle" style="width: 13px; height: 13px; color: var(--warning-color);"></i>
+                                <span data-i18n="hotspotsTitle">/* TRANSLATE:hotspotsTitle */</span>
+                            </button>
+                            <button class="tab-btn" onclick="switchTab('drift')" id="tab-btn-drift">
+                                <i data-lucide="shield-alert" style="width: 13px; height: 13px; color: var(--danger-color);"></i>
+                                <span data-i18n="driftDocsTitle">/* TRANSLATE:driftDocsTitle */</span>
+                            </button>
+                        </div>
+
+                        <!-- Tab 1 content: Priority Hotspots -->
+                        <div id="tab-content-hotspots" class="tab-content active">
+                            <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 10px;" data-i18n="hotspotsSubtitle">/* TRANSLATE:hotspotsSubtitle */</p>
+                            <ul id="hotspots-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px; max-height: 180px; overflow-y: auto; padding-right: 4px;">
+                                <!-- Inject dynamically -->
+                            </ul>
+                        </div>
+
+                        <!-- Tab 2 content: Drift Documents -->
+                        <div id="tab-content-drift" class="tab-content">
+                            <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 10px;" data-i18n="driftDocsSubtitle">/* TRANSLATE:driftDocsSubtitle */</p>
+                            <ul id="drift-docs-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px; max-height: 180px; overflow-y: auto; padding-right: 4px;">
+                                <!-- Inject dynamically -->
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <!-- Column 2: Entity Type Distribution Chart -->
+                    <div class="card" style="margin: 0; height: 100%; justify-content: flex-start;">
                         <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
                             <i data-lucide="bar-chart-3" style="width: 14px; height: 14px; color: var(--accent-color);"></i> <span data-i18n="entityTypeDistribution">/* TRANSLATE:entityTypeDistribution */</span>
                         </h4>
-                        <div class="chart-wrapper" style="height: 160px;">
-                            <div id="node-type-chart" class="bar-chart-container">
+                        <div class="chart-wrapper" style="flex-grow: 1; min-height: 160px; display: flex; flex-direction: column;">
+                            <div id="node-type-chart" class="bar-chart-container" style="padding: 10px 10px 5px 10px;">
                                 <!-- Inject dynamically -->
                             </div>
                         </div>
                     </div>
 
-                    <div class="card" style="flex: 1.2;">
+                    <!-- Column 3: Weight Distribution Chart -->
+                    <div class="card" style="margin: 0; height: 100%; justify-content: flex-start;">
                         <h4 style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
                             <i data-lucide="activity" style="width: 14px; height: 14px; color: var(--warning-color);"></i> <span data-i18n="weightDistribution">/* TRANSLATE:weightDistribution */</span>
                         </h4>
                         
                         <!-- Legend -->
-                        <div style="display: flex; gap: 16px; margin-bottom: 14px; flex-wrap: wrap;">
+                        <div style="display: flex; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; font-size: 10px;">
                             <div class="legend-item">
-                                <div class="legend-color" style="background-color: var(--success-color);"></div>
+                                <div class="legend-color" style="width: 9px; height: 9px; background-color: var(--success-color);"></div>
                                 <span data-i18n="legendCompleted">/* TRANSLATE:legendCompleted */</span>
                             </div>
                             <div class="legend-item">
-                                <div class="legend-color" style="background-color: var(--danger-color);"></div>
+                                <div class="legend-color" style="width: 9px; height: 9px; background-color: var(--danger-color);"></div>
                                 <span data-i18n="legendUnlinked">/* TRANSLATE:legendUnlinked */</span>
                             </div>
                             <div class="legend-item">
-                                <div class="legend-color" style="background: repeating-linear-gradient(45deg, rgba(234, 88, 12, 0.2), rgba(234, 88, 12, 0.2) 10px, transparent 10px, transparent 20px); border: 1px dashed var(--warning-color);"></div>
+                                <div class="legend-color" style="width: 9px; height: 9px; background: repeating-linear-gradient(45deg, rgba(234, 88, 12, 0.2), rgba(234, 88, 12, 0.2) 6px, transparent 6px, transparent 12px); border: 1px dashed var(--warning-color);"></div>
                                 <span data-i18n="legendUnenriched">/* TRANSLATE:legendUnenriched */</span>
                             </div>
                         </div>
 
-                        <div class="chart-wrapper" style="height: 160px;">
-                            <div id="node-weight-chart" class="bar-chart-container">
+                        <div class="chart-wrapper" style="flex-grow: 1; min-height: 160px; display: flex; flex-direction: column;">
+                            <div id="node-weight-chart" class="bar-chart-container" style="padding: 10px 10px 5px 10px;">
                                 <!-- Inject dynamically -->
                             </div>
                         </div>
                     </div>
 
                 </div>
+
 
                 <!-- Alignment Section -->
                 <div class="card" style="margin-top: 20px; display: none !important;">
@@ -1827,6 +1896,24 @@
                     body: JSON.stringify({ file: filePath })
                 });
             } catch (err) {}
+        }
+
+        function switchTab(tabName) {
+            // Buttons
+            document.getElementById('tab-btn-hotspots').classList.remove('active');
+            document.getElementById('tab-btn-drift').classList.remove('active');
+            
+            // Contents
+            document.getElementById('tab-content-hotspots').classList.remove('active');
+            document.getElementById('tab-content-drift').classList.remove('active');
+            
+            if (tabName === 'hotspots') {
+                document.getElementById('tab-btn-hotspots').classList.add('active');
+                document.getElementById('tab-content-hotspots').classList.add('active');
+            } else {
+                document.getElementById('tab-btn-drift').classList.add('active');
+                document.getElementById('tab-content-drift').classList.add('active');
+            }
         }
 
         // --- DASHBOARD CORE LOGIC ---
@@ -2514,6 +2601,7 @@
                 }
             } else {
                 healthPct = 100;
+            }
             document.getElementById('stat-stale-docs').textContent = healthPct + '%';
             document.getElementById('detail-sync-rate').textContent = healthPct + '%';
 

@@ -233,7 +233,9 @@ const translations = {
         statStale: "Cần sửa",
         statStaleDesc: "Số lượng cấu phần tài liệu bị cũ/lệch so với mã nguồn thực tế",
         statTotalDocs: "Tài liệu",
-        statTotalDocsDesc: "Tổng số tệp tài liệu kỹ thuật trong dự án"
+        statTotalDocsDesc: "Tổng số tệp tài liệu kỹ thuật trong dự án",
+        weightedCoverageLabel: "Độ bao phủ Đồ thị",
+        syncRateLabel: "Độ đồng bộ tài liệu"
     },
     en: {
         title: "PARA Workspace Docs",
@@ -383,7 +385,9 @@ const translations = {
         statStale: "Stale",
         statStaleDesc: "Count of outdated doc references relative to source code",
         statTotalDocs: "Docs",
-        statTotalDocsDesc: "Total documentation files count"
+        statTotalDocsDesc: "Total documentation files count",
+        weightedCoverageLabel: "Weighted Graph Coverage",
+        syncRateLabel: "Doc Sync Rate"
     }
 };
 
@@ -424,7 +428,7 @@ function getFolderOrderFromReadme(readmePath) {
     if (fs.existsSync(readmePath)) {
         try {
             const content = fs.readFileSync(readmePath, 'utf8');
-            const matches = content.matchAll(/`([^`\/]+)\/?`/g);
+            const matches = content.matchAll(/`([^`\/\s\r\n]+)\/?`/g);
             for (const match of matches) {
                 const folderName = match[1].trim();
                 if (!orderList.includes(folderName) && folderName !== 'README') {
@@ -611,21 +615,23 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
         }
 
 
-        // Build metadata panel if there are frontmatter properties (except title & order)
+        // Build metadata panel (always show to support frontmatter suggestions)
         let metadataHtml = '';
         const metadataKeys = Object.keys(frontmatter).filter(k => k !== 'title' && k !== 'order');
+        
+        metadataHtml = `
+        <div class="metadata-container">
+            <button class="metadata-toggle-btn" id="metadata-toggle-btn" onclick="toggleMetadataDropdown()">
+                <span style="display: flex; align-items: center; gap: 6px;">
+                    <i data-lucide="info" style="width: 14px; height: 14px;"></i>
+                    <span>${currentTranslations['metadataTitle'] || 'Metadata'}</span>
+                </span>
+                <i data-lucide="chevron-down" id="metadata-chevron" style="width: 14px; height: 14px; transition: transform 0.2s;"></i>
+            </button>
+            <div class="metadata-dropdown" id="metadata-dropdown">
+                <div class="doc-metadata-panel">`;
+                
         if (metadataKeys.length > 0) {
-            metadataHtml = `
-            <div class="metadata-container">
-                <button class="metadata-toggle-btn" id="metadata-toggle-btn" onclick="toggleMetadataDropdown()">
-                    <span style="display: flex; align-items: center; gap: 6px;">
-                        <i data-lucide="info" style="width: 14px; height: 14px;"></i>
-                        <span>${currentTranslations['metadataTitle'] || 'Metadata'}</span>
-                    </span>
-                    <i data-lucide="chevron-down" id="metadata-chevron" style="width: 14px; height: 14px; transition: transform 0.2s;"></i>
-                </button>
-                <div class="metadata-dropdown" id="metadata-dropdown">
-                    <div class="doc-metadata-panel">`;
             for (const key of metadataKeys) {
                 const val = frontmatter[key];
                 if (val === undefined || val === null || val === '') continue;
@@ -668,11 +674,17 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
                             <div class="metadata-value-container">${valueHtml}</div>
                         </div>`;
             }
+        } else {
             metadataHtml += `
-                    </div>
-                </div>
-            </div>`;
+                        <div style="font-size: 12px; color: var(--text-secondary); text-align: center; padding: 4px 0; font-style: italic; display: flex; align-items: center; gap: 6px; justify-content: center;">
+                            <i data-lucide="alert-circle" style="width: 14px; height: 14px; color: #d97706;"></i>
+                            <span>${fileLang === 'vi' ? 'Thiếu thông tin Frontmatter' : 'Missing Frontmatter metadata'}</span>
+                        </div>`;
         }
+        metadataHtml += `
+                </div>
+            </div>
+        </div>`;
         
         // Build Drift Audit Panel
         let driftAuditHtml = '';

@@ -890,12 +890,14 @@
                         const docFile = e.data.docFile;
                         if (docFile) {
                             const htmlFile = docFile.replace(/\.md$/, '.html').replace(/\\/g, '/');
-                            const filename = htmlFile.split('/').pop();
                             
                             // Find matching data-docpath in Sidebar links
                             const matchingLink = Array.from(document.querySelectorAll('.menu-link')).find(link => {
                                 const docpath = link.getAttribute('data-docpath');
-                                return docpath && (docpath === htmlFile || docpath.endsWith('/' + htmlFile) || docpath.endsWith(filename));
+                                if (!docpath) return false;
+                                const cleanDocpath = docpath.replace(/(^|\/)(vi|en)\//, '$1');
+                                const cleanHtmlFile = htmlFile.replace(/(^|\/)(vi|en)\//, '$1');
+                                return cleanDocpath === cleanHtmlFile;
                             });
                             
                             if (matchingLink) {
@@ -930,13 +932,17 @@
                     // Find matching link on Sidebar to active it
                     try {
                         const urlObj = new URL(resolvedUrl);
-                        const pathname = urlObj.pathname;
-                        const filename = pathname.split('/').pop();
+                        const portalUrl = new URL(window.location.href);
+                        const portalDir = portalUrl.pathname.substring(0, portalUrl.pathname.lastIndexOf('/') + 1);
+                        let relPath = urlObj.pathname.substring(portalDir.length);
                         
                         // Find matching data-docpath in Sidebar links
                         const matchingLink = Array.from(document.querySelectorAll('.menu-link')).find(link => {
-                            const linkHref = link.getAttribute('href');
-                            return linkHref && linkHref.endsWith(filename);
+                            const docpath = link.getAttribute('data-docpath');
+                            if (!docpath) return false;
+                            const cleanDocpath = docpath.replace(/(^|\/)(vi|en)\//, '$1');
+                            const cleanRelPath = relPath.replace(/(^|\/)(vi|en)\//, '$1');
+                            return cleanDocpath === cleanRelPath;
                         });
                         
                         if (matchingLink) {
