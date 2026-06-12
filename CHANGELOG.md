@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.9.2] - 2026-06-12
+
+Staged Release & Roadmap Optimization.
+
+- **Added**: Upgraded CLI validation logic in `repo/cli/para` to prevent terminal execution of slash command workflows, suggesting Chat UI invocation (Smart Hint).
+- **Changed**: Exempted strategic planning documents (Roadmaps, Strategies, Specifications, and Brainstorms) from Platform Tracker sync inside `implementation_plan_rules.md`, `agent-behavior.md`, `open` and `plan` workflows.
+- **Changed**: Cleaned up hardcoded local directories in plan templates (`detail-plan.md`, `detail-plan-tdd.md`, `detail-plan-hardened.md`) to enforce path privacy.
+- **Changed**: Synced version to 1.9.2 across `VERSION`, `VERSIONS.yml`, `cli/para`, `project.md`, `README.md`, translation locales, and catalogs.
+
 ## [1.9.1] - 2026-06-10
 
 Template Compliance & Standardization.
