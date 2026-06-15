@@ -40,27 +40,28 @@
 [Component diagram + Tech stack table]
 
 **Test Strategy & Rules:**
+
 - **Framework:** [e.g., Vitest, Jest]
 - **Test Location:** [Where should test files be saved? (e.g., `tests/`, `__tests__/`, next to source files)]
 - **Test Runner / Command:** [How to run the tests? (e.g., `npm run test`, `npx vitest run path/to/file`)]
 - **Testing Rules & Naming:** [Any specific rules for naming test files or blocks? (e.g., `*.test.ts`, `describe` blocks structure)]
 - **Cleanup Policy:** [Should mock files or temporary test data be cleaned up after testing?]
 - **Required Skills:** [Agent MUST load `.agents/skills/tdd/SKILL.md` before executing TDD tasks]
-[Describe testing layers: Unit, Integration, E2E. Mention testing frameworks used.]
+  [Describe testing layers: Unit, Integration, E2E. Mention testing frameworks used.]
 
 ## Context Files & Indices Loaded
 
 > ⛔ **MANDATORY CONTEXT BINDING:** Before executing this plan, Agent MUST read/reload all listed files to ensure full context and prevent workflow drift.
 
-| Scope | File / Index | Purpose | Path |
-| :--- | :--- | :--- | :--- |
-| Workspace | `.agents/rules.md` | Workspace-level rules index (Trigger scan) | [rules.md](file:///absolute/path/to/workspace/.agents/rules.md) |
-| Workspace | `.agents/skills.md` | Workspace-level skills index (Trigger scan) | [skills.md](file:///absolute/path/to/workspace/.agents/skills.md) |
-| Project | `project.md` | Project Contract (Version, status, roadmap tracker) | [project.md](file:///absolute/path/to/project/project.md) |
-| Project | `.agents/rules.md` | Project-level rules index (if exists) | [rules.md](file:///absolute/path/to/project/.agents/rules.md) |
-| Project | `.agents/skills.md` | Project-level skills index (if exists) | [skills.md](file:///absolute/path/to/project/.agents/skills.md) |
-| Specific | [Triggered Rules/Skills] | List of specifically triggered rules/skills for this plan | (e.g., `agent-behavior.md`, `tool-routing.md`, `vcs.md`) |
-| MCP / Tools| [MCP Server / Tool Schema] | Loaded MCP schemas to support tasks | (e.g., `para-graph` schemas) |
+| Scope       | File / Index               | Purpose                                                   | Path                                                              |
+| :---------- | :------------------------- | :-------------------------------------------------------- | :---------------------------------------------------------------- |
+| Workspace   | `.agents/rules.md`         | Workspace-level rules index (Trigger scan)                | [rules.md](file:///absolute/path/to/workspace/.agents/rules.md)   |
+| Workspace   | `.agents/skills.md`        | Workspace-level skills index (Trigger scan)               | [skills.md](file:///absolute/path/to/workspace/.agents/skills.md) |
+| Project     | `project.md`               | Project Contract (Version, status, roadmap tracker)       | [project.md](file:///absolute/path/to/project/project.md)         |
+| Project     | `.agents/rules.md`         | Project-level rules index (if exists)                     | [rules.md](file:///absolute/path/to/project/.agents/rules.md)     |
+| Project     | `.agents/skills.md`        | Project-level skills index (if exists)                    | [skills.md](file:///absolute/path/to/project/.agents/skills.md)   |
+| Specific    | [Triggered Rules/Skills]   | List of specifically triggered rules/skills for this plan | (e.g., `agent-behavior.md`, `tool-routing.md`, `vcs.md`)          |
+| MCP / Tools | [MCP Server / Tool Schema] | Loaded MCP schemas to support tasks                       | (e.g., `para-graph` schemas)                                      |
 
 **Execution Logic Map:**
 
@@ -85,8 +86,6 @@
 
 0.1 🤖 **Define Test Architecture** — Verify project conventions and update the Test Strategy section above with Location and Execution Command.
 0.2 🤖 **Configure Mocks** — Set up global mocks or test environments if needed.
-
-
 
 #### Task List
 
@@ -113,11 +112,13 @@
 #### Task 1.1: [Behavior / Component Name]
 
 **Files:**
+
 - Create: `exact/path/to/new_feature.ts` (if applicable)
 - Modify: `exact/path/to/existing_feature.ts` (with line ranges if known)
 - Test: `exact/path/to/feature.test.ts`
 
 **Graph Impact (if para-graph enabled):**
+
 - God Nodes affected: [List of God nodes]
 - Blast Radius: [Impact analysis/callers]
 - Enrichment: [Nodes needing semantic enrichment]
@@ -127,14 +128,15 @@
 - [ ] 1. 🔴 **RED: Write Failing Test**
   ```typescript
   // Example code block testing specific behavior
-  test('should return correct format', () => {
-     // ...
+  test("should return correct format", () => {
+    // ...
   });
   ```
 - [ ] 2. 🔴 **Verify FAIL**
   ```bash
   bash .agents/skills/tdd/scripts/tdd-test.sh npm test exact/path/to/feature.test.ts
   ```
+
   - Expected: FAIL due to missing code/logic. Evidence auto-logged to `artifacts/tests/tdd-evidence.log`.
 - [ ] 3. 🟢 **GREEN: Write Minimal Code**
   - Implement minimum required logic in `feature.ts` to pass the test above (No extra features).
@@ -142,6 +144,7 @@
   ```bash
   bash .agents/skills/tdd/scripts/tdd-test.sh npm test exact/path/to/feature.test.ts
   ```
+
   - Expected: PASS without warnings. Evidence auto-logged.
 - [ ] 5. 🤖 **TDD Gate:** Recheck `tdd-evidence.log`
   - [ ] Log shows 🔴 FAIL (Logic error, not syntax)
@@ -155,16 +158,19 @@
 #### Task 1.2: [Next Behavior / Component Name]
 
 **Files:**
+
 - Create: `exact/path/to/new_feature.ts` (if applicable)
 - Modify: `exact/path/to/existing_feature.ts` (with line ranges if known)
 - Test: `exact/path/to/feature.test.ts`
 
 **Graph Impact (if para-graph enabled):**
+
 - God Nodes affected: [List of God nodes]
 - Blast Radius: [Impact analysis/callers]
 - Enrichment: [Nodes needing semantic enrichment]
 
 **TDD Cycle:**
+
 - [ ] 1. 🔴 **RED: Write Failing Test**
 - [ ] 2. 🔴 **Verify FAIL** (`bash .agents/skills/tdd/scripts/tdd-test.sh ...`)
 - [ ] 3. 🟢 **GREEN: Write Minimal Code**
@@ -239,10 +245,10 @@
 
 ## Commit Consolidation Policy
 
-| Squash allowed?  | Condition                              |
-| :--------------- | :------------------------------------- |
-| ⛔ No            | Each TDD cycle gets its own commit (1 commit = test + production, prefix `tdd(scope):`) |
-| ⛔ Never         | Push — ALWAYS separate from commits    |
+| Squash allowed? | Condition                                                                               |
+| :-------------- | :-------------------------------------------------------------------------------------- |
+| ⛔ No           | Each TDD cycle gets its own commit (1 commit = test + production, prefix `tdd(scope):`) |
+| ⛔ Never        | Push — ALWAYS separate from commits                                                     |
 
 > **Audit trail:** TDD compliance is verified via `artifacts/tests/tdd-evidence.log` (auto-generated by
 > `tdd-test.sh`), not via separate git commits. Agent MUST pass TDD Gate before committing.
@@ -262,14 +268,14 @@
 ```markdown
 IF project has agent.rules: true OR agent.skills: true:
 
-  Scan project .agents/rules.md → for each rule with matching trigger:
-    [ ] [rule-name]: [key requirement from rule]
+Scan project .agents/rules.md → for each rule with matching trigger:
+[ ] [rule-name]: [key requirement from rule]
 
-  Scan project .agents/skills.md → for each skill with matching trigger:
-    [ ] [skill-name]: [key requirement from skill]
+Scan project .agents/skills.md → for each skill with matching trigger:
+[ ] [skill-name]: [key requirement from skill]
 
 ELSE:
-  (No project-specific governance — standard checklist only)
+(No project-specific governance — standard checklist only)
 ```
 
 ## Suggested Next Steps
@@ -277,5 +283,4 @@ ELSE:
 - **Option A (Activate & Execute):** Run `/plan [project-name] dev` (or `/plan dev`) to begin automatic execution of the phases.
 - **Option B (Sandbox Run):** Run `/vibecode loop` to execute tasks in a sandboxed/interactive loop.
 - **Option C (Stress-test Plan):** Run `/qa [project-name] plan` (or `/qa plan`) to trigger a Red Team Q&A review before execution.
-
 ````

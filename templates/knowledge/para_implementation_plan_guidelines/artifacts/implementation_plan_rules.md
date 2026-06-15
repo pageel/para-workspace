@@ -40,4 +40,7 @@ This document outlines the strict boundary and operational guidelines distinguis
 3.  **Platform Tracker Exemption for Macro Documents:**
     *   Macro-level documents such as Roadmaps, Strategy documents, Specs, and Brainstorms (typically stored under `artifacts/plans/roadmap.md`, `docs/strategy/`, `artifacts/para-decisions/`, `artifacts/specs/` or containing `roadmap`/`strategy`/`brainstorm`/`spec` in their names) represent high-level orchestrations, requirements, or designs rather than detailed implementation plans.
     *   To prevent token wastage and system conflicts, these macro documents are **fully exempted** from Platform Tracker synchronization. The agent MUST NOT create or sync temporary platform `implementation_plan.md` or `task.md` files in the brain folder when active_plan references these macro files. Workflows (`/open` and `/plan`) MUST automatically bypass sync gates for these documents.
+4.  **Plan Creation & Tracker Setup:**
+    *   Immediately upon creating or activating a plan, the Agent **MUST** initialize the temporary platform tracker files (`brain/implementation_plan.md` and `brain/task.md`) by writing **ONLY** the single absolute Markdown link pointing directly to the durable Project Plan. 
+    *   No duplicate details, checklists, or other task contents should ever be written to these temporary files from the very beginning of the plan execution.
 

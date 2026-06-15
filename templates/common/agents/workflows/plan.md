@@ -468,7 +468,7 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 #### 9.6. Propose Draft Plan
 
 **Protocol:**
-1. **Present & Track:** Agent presents the draft plan summary of the newly created plan to the User for review (including phases, timeline, and newly created/modified target files). To satisfy the platform's planning mode consent gate, the Agent writes the markdown link of the actual project plan file (`[plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)`) into the platform's `brain/implementation_plan.md`, forcing the agent trigger to read the actual project plan rather than the platform's ephemeral file, and syncs the phase tasks into the platform's `brain/task.md`. At this point, the `Post-Draft Audit Gate` checklist in the plan file remains empty (`⬜` and `PENDING`).
+1. **Present & Track:** Agent presents the draft plan summary of the newly created plan to the User for review (including phases, timeline, and newly created/modified target files). To satisfy the platform's planning mode consent gate and adhere to the OSS-first philosophy (keeping the platform footprint minimal and single-sourced in the repo), the Agent **MUST overwrite and truncate** the platform files: write the markdown link of the actual project plan file (`[plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)`) as the **sole content** of both the platform's `brain/implementation_plan.md` and `brain/task.md`, wiping out any verbose details or redundant task checklists. At this point, the `Post-Draft Audit Gate` checklist in the plan file remains empty (`⬜` and `PENDING`).
    * **Exemption Rule (v1.9.2):** If the plan name represents a macro-level document (contains `roadmap`, `strategy`, `spec`, or `brainstorm`), it is **fully exempted** from Platform Tracker synchronization. In this case, the Agent **MUST NOT** write to or create any `implementation_plan.md` or `task.md` files in the platform's `brain/` folder.
 2. **Propose Preliminary Approval & Audit:** Ask the User for initial layout approval and propose running the Review Audit.
    ```
@@ -718,21 +718,22 @@ Start or continue executing the active plan in the project.
 ### Steps
 
 1. **Locate Plan:** Read `project.md` to find `active_plan` or search `artifacts/plans/` for the latest plan file.
-   - IF the found plan is a Draft (`Status: 📝 Draft`): Automatically update its Status to `🔨 Active`, set `active_plan` in `project.md` to point to it, run `/backlog sync` (if not exempted), and proceed with execution.
+   - IF the found plan is a Draft (`Status: 📝 Draft`): Automatically update its Status to `🔨 Active`, set `active_plan` in `project.md` to point to it, run `/backlog sync` (if not exempted), and proceed with execution. As part of this activation, the Agent **MUST overwrite and truncate** the platform files (`brain/implementation_plan.md` and `brain/task.md`), leaving **ONLY the markdown link** pointing to the newly activated plan file.
      - **Platform Tracker Exemption (v1.9.2):** If the plan name contains `roadmap`, `strategy`, `spec`, or `brainstorm`, skip the creation/sync of platform-level `task.md` or `implementation_plan.md` in the brain folder.
      - **Cross-project (v1.6.0+):** If plan file is in an ecosystem meta-project (`@{ecosystem}/plans/...`), set `active_plan` as a cross-project reference:
        ```yaml
        active_plan: "@{ecosystem}/plans/[plan-name].md"
        ```
      - **Roadmap sync (v1.6.3):** After activation, check `roadmap` field in `project.md`. If set, find the matching phase row and update Status → `🔨 Active` + link to plan file (see Step 10 Roadmap auto-update in create action for details).
-   - IF the found plan is already Active (`Status: 🔨 Active`) or does not require activation: Load the plan and proceed.
+   - IF the found plan is already Active (`Status: 🔨 Active`) or does not require activation: Load the plan and proceed. Even when loading an already active plan, the Agent **MUST ensure** the platform files (`brain/implementation_plan.md` and `brain/task.md`) are cleared and contain **only the markdown link** pointing to the active plan file.
+
 2. **Load Plan Methodology Skills:** Scan the loaded plan file. Check the `Methodology` or `Required Skill` blockquotes. If the plan specifies a specific methodology (e.g., Strict TDD), or if a flag like `--tdd` is passed, the Agent MUST load the corresponding `.agents/skills/[skill-name]/SKILL.md` into context before executing any code.
 3. **Phase Execution:** If `--phase` flag is present (which is default for this action), execute the plan strictly phase by phase.
 4. **Task Verification & Checkpoints:** The Agent MUST read and obey inline `⛔ CHECKPOINT` guards. When transitioning phases, the Agent CANNOT move to the next phase unless ALL tasks in the current phase are actually marked as completed `[x]`, OR the user explicitly grants permission to skip the remaining tasks. Do not auto-assume tasks are done.
 5. **Execution:** Proceed with performing the coding or related operations defined in the current pending tasks.
 6. **Strict TDD & Commit Gate Protocol (MANDATORY):** If the plan employs TDD (Test-Driven Development) methodology or has tasks classified as `🧪 TDD`, the Agent **MUST** strictly follow this execution order before proposing any `git commit` or `git push`:
    a. **Log Evidence:** Run test files using the TDD evidence logger script (`tdd-test.sh`). Confirm that `artifacts/tests/tdd-evidence.log` contains a `status: FAIL` entry before the `status: PASS` entry for the respective test file.
-   b. **Checkbox Update:** Check off (`[x]`) the completed tasks in the active plan file and the system `task.md` (skip updating `task.md` if the active plan is a macro document exempted from the Platform Tracker).
+   b. **Checkbox Update:** Check off (`[x]`) the completed tasks in the active plan file of the project (no need to update the platform's system `task.md` since it only holds the plan link under the OSS-first model).
    c. **Type Safety:** Run `npx astro check` (or language-equivalent static type analysis) and resolve all type errors (0 Errors).
    d. **Build Test:** Run `npm run build` and ensure the project builds successfully.
    e. **Commit Trigger:** Propose a `git commit` ONLY after steps (a) through (d) are successfully completed. Triggering or proposing a commit without satisfying all these conditions is a workflow violation.

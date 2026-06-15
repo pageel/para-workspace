@@ -49,15 +49,15 @@
 
 > ⛔ **MANDATORY CONTEXT BINDING:** Before executing this plan, Agent MUST read/reload all listed files to ensure full context and prevent workflow drift.
 
-| Scope | File / Index | Purpose | Path |
-| :--- | :--- | :--- | :--- |
-| Workspace | `.agents/rules.md` | Workspace-level rules index (Trigger scan) | [rules.md](file:///absolute/path/to/workspace/.agents/rules.md) |
-| Workspace | `.agents/skills.md` | Workspace-level skills index (Trigger scan) | [skills.md](file:///absolute/path/to/workspace/.agents/skills.md) |
-| Project | `project.md` | Project Contract (Version, status, roadmap tracker) | [project.md](file:///absolute/path/to/project/project.md) |
-| Project | `.agents/rules.md` | Project-level rules index (if exists) | [rules.md](file:///absolute/path/to/project/.agents/rules.md) |
-| Project | `.agents/skills.md` | Project-level skills index (if exists) | [skills.md](file:///absolute/path/to/project/.agents/skills.md) |
-| Specific | [Triggered Rules/Skills] | List of specifically triggered rules/skills for this plan | (e.g., `agent-behavior.md`, `tool-routing.md`, `vcs.md`) |
-| MCP / Tools| [MCP Server / Tool Schema] | Loaded MCP schemas to support tasks | (e.g., `para-graph` schemas) |
+| Scope       | File / Index               | Purpose                                                   | Path                                                              |
+| :---------- | :------------------------- | :-------------------------------------------------------- | :---------------------------------------------------------------- |
+| Workspace   | `.agents/rules.md`         | Workspace-level rules index (Trigger scan)                | [rules.md](file:///absolute/path/to/workspace/.agents/rules.md)   |
+| Workspace   | `.agents/skills.md`        | Workspace-level skills index (Trigger scan)               | [skills.md](file:///absolute/path/to/workspace/.agents/skills.md) |
+| Project     | `project.md`               | Project Contract (Version, status, roadmap tracker)       | [project.md](file:///absolute/path/to/project/project.md)         |
+| Project     | `.agents/rules.md`         | Project-level rules index (if exists)                     | [rules.md](file:///absolute/path/to/project/.agents/rules.md)     |
+| Project     | `.agents/skills.md`        | Project-level skills index (if exists)                    | [skills.md](file:///absolute/path/to/project/.agents/skills.md)   |
+| Specific    | [Triggered Rules/Skills]   | List of specifically triggered rules/skills for this plan | (e.g., `agent-behavior.md`, `tool-routing.md`, `vcs.md`)          |
+| MCP / Tools | [MCP Server / Tool Schema] | Loaded MCP schemas to support tasks                       | (e.g., `para-graph` schemas)                                      |
 
 ## Architecture Overview & Execution Logic
 
@@ -77,6 +77,7 @@
      Agent MUST NOT skip this section. -->
 
 > ⛔ **MANDATORY AUDIT:** After writing the Draft, Agent MUST:
+>
 > 1. Announce to User that Draft is ready and audit is required.
 > 2. Wait for User confirmation before proceeding.
 > 3. Reload ALL project rules + skills (full scan, not just triggered).
@@ -86,15 +87,15 @@
 
 ### Audit Checklist
 
-| Dimension | Status | Notes |
-| :-- | :-- | :-- |
-| **Logic Review** — Phase sequence makes sense, no circular dependencies | ⬜ | |
-| **Security Review** — Context guards, no exposed secrets, published-only data | ⬜ | |
-| **Governance Compliance** — Project maintenance rules, version sync, release process | ⬜ | |
-| **Completeness** — All target files accounted for, no orphan steps | ⬜ | |
-| **Risk Coverage** — Every risk in Risks table has a corresponding Harness Guard | ⬜ | |
-| **Brainstorm Sync** — Plan matches the target files, risks, and TDD proposals from brainstorm | ⬜ | |
-| **Brainstorm & Spec Scope Check** — Propose if any task/phase needs separate brainstorm or spec to ensure safety | ⬜ | |
+| Dimension                                                                                                        | Status | Notes |
+| :--------------------------------------------------------------------------------------------------------------- | :----- | :---- |
+| **Logic Review** — Phase sequence makes sense, no circular dependencies                                          | ⬜     |       |
+| **Security Review** — Context guards, no exposed secrets, published-only data                                    | ⬜     |       |
+| **Governance Compliance** — Project maintenance rules, version sync, release process                             | ⬜     |       |
+| **Completeness** — All target files accounted for, no orphan steps                                               | ⬜     |       |
+| **Risk Coverage** — Every risk in Risks table has a corresponding Harness Guard                                  | ⬜     |       |
+| **Brainstorm Sync** — Plan matches the target files, risks, and TDD proposals from brainstorm                    | ⬜     |       |
+| **Brainstorm & Spec Scope Check** — Propose if any task/phase needs separate brainstorm or spec to ensure safety | ⬜     |       |
 
 ### Project Governance Reload
 
@@ -102,10 +103,12 @@
 
 ```markdown
 Reloaded Rules:
-  - [ ] [rule-name]: [key finding or "compliant"]
+
+- [ ] [rule-name]: [key finding or "compliant"]
 
 Reloaded Skills:
-  - [ ] [skill-name]: [key finding or "compliant"]
+
+- [ ] [skill-name]: [key finding or "compliant"]
 ```
 
 ### Audit Result
@@ -130,26 +133,26 @@ Reloaded Skills:
 
 ### Classification Criteria
 
-| Type | Icon | When to apply |
-| :-- | :-- | :-- |
-| 🧪 TDD | `🧪` | Logic changes, algorithms, data transforms, bug fixes, security-critical code, API changes |
-| 📝 Standard | `📝` | Documentation, config changes, version bumps, changelog, formatting, git operations |
+| Type        | Icon | When to apply                                                                              |
+| :---------- | :--- | :----------------------------------------------------------------------------------------- |
+| 🧪 TDD      | `🧪` | Logic changes, algorithms, data transforms, bug fixes, security-critical code, API changes |
+| 📝 Standard | `📝` | Documentation, config changes, version bumps, changelog, formatting, git operations        |
 
 ### Task Classification Table
 
-| Task ID | Task Name | Type | Rationale |
-| :-- | :-- | :-- | :-- |
-| [1.1] | [Task description] | [🧪 / 📝] | [Why this classification - mapping back to brainstorm proposal] |
+| Task ID | Task Name          | Type      | Rationale                                                       |
+| :------ | :----------------- | :-------- | :-------------------------------------------------------------- |
+| [1.1]   | [Task description] | [🧪 / 📝] | [Why this classification - mapping back to brainstorm proposal] |
 
 ### TDD Strategy & Testing Rules
 
 > ⛔ **MANDATORY:** If any tasks are classified as 🧪 TDD, Agent MUST define the testing strategy here.
 
-*   **Test Location:** [Where should test files be saved? (e.g., `tests/`, `__tests__/`, next to source files)]
-*   **Test Runner / Command:** [How to run the tests? (e.g., `npm run test`, `npx vitest run path/to/file`)]
-*   **Testing Rules & Naming:** [Any specific rules for naming test files or blocks? (e.g., `*.test.ts`, `describe` blocks structure)]
-*   **Cleanup Policy:** [Should mock files or temporary test data be cleaned up after testing?]
-*   **Required Skills:** [Agent MUST load `.agents/skills/tdd/SKILL.md` before executing TDD tasks]
+- **Test Location:** [Where should test files be saved? (e.g., `tests/`, `__tests__/`, next to source files)]
+- **Test Runner / Command:** [How to run the tests? (e.g., `npm run test`, `npx vitest run path/to/file`)]
+- **Testing Rules & Naming:** [Any specific rules for naming test files or blocks? (e.g., `*.test.ts`, `describe` blocks structure)]
+- **Cleanup Policy:** [Should mock files or temporary test data be cleaned up after testing?]
+- **Required Skills:** [Agent MUST load `.agents/skills/tdd/SKILL.md` before executing TDD tasks]
 
 ---
 
@@ -167,8 +170,6 @@ Reloaded Skills:
 
 0.1 🤖 **[Step 1 name]** — [Detail: file path, line number, operation]
 0.2 🤖 **[Step 2 name]** — [Detail: ...]
-
-
 
 #### Task List
 
@@ -200,19 +201,21 @@ Reloaded Skills:
 [Goal in 1-2 sentences.]
 
 **Files:**
+
 - Create: `exact/path/to/new_file.ts` (if applicable)
 - Modify: `exact/path/to/existing_file.ts` (with line ranges if known)
 
 **Graph Impact (if para-graph enabled):**
+
 - God Nodes affected: [List of God nodes]
 - Blast Radius: [Impact analysis/callers]
 - Enrichment: [Nodes needing semantic enrichment]
 
-1.1 🤖 **[Step name]** — [Detail: file path, line number, operation, source reference if applicable.]
-1.2 👤 **[Step name]** — [Detail: destructive/external operation, Agent proposes → User approves.]
+  1.1 🤖 **[Step name]** — [Detail: file path, line number, operation, source reference if applicable.]
+  1.2 👤 **[Step name]** — [Detail: destructive/external operation, Agent proposes → User approves.]
 
-1.N-1 🤖 **Pre-commit Gate** — Run project's linter/compiler (e.g., `npm run lint`, `tsc`, `cargo check`) and resolve any type/lint problems before commit.
-1.N 👤 **Git checkpoint Phase 1 — Commit**
+  1.N-1 🤖 **Pre-commit Gate** — Run project's linter/compiler (e.g., `npm run lint`, `tsc`, `cargo check`) and resolve any type/lint problems before commit.
+  1.N 👤 **Git checkpoint Phase 1 — Commit**
 
 ```bash
 git add [scope]
@@ -247,6 +250,7 @@ git push origin main
   ```bash
   bash .agents/skills/tdd/scripts/tdd-test.sh [test-command] [test-file]
   ```
+
   - Expected: FAIL due to missing code/logic. Evidence auto-logged to `artifacts/tests/tdd-evidence.log`.
 - [ ] 3. 🟢 **GREEN: Write Minimal Code**
   - Implement minimum required logic to pass the test above (No extra features).
@@ -254,6 +258,7 @@ git push origin main
   ```bash
   bash .agents/skills/tdd/scripts/tdd-test.sh [test-command] [test-file]
   ```
+
   - Expected: PASS without warnings. Evidence auto-logged.
 - [ ] 5. 🤖 **TDD Gate:** Recheck `tdd-evidence.log`
   - [ ] Log shows 🔴 FAIL (Logic error, not syntax)
@@ -345,10 +350,10 @@ git push origin main
 
 ### Commit Consolidation Policy
 
-| Squash allowed?  | Condition                              |
-| :--------------- | :------------------------------------- |
-| ⛔ No            | Each FEAT/BUG gets its own commit. TDD tasks use `tdd(scope):` prefix |
-| ⛔ Never         | Push — ALWAYS separate from commits    |
+| Squash allowed? | Condition                                                             |
+| :-------------- | :-------------------------------------------------------------------- |
+| ⛔ No           | Each FEAT/BUG gets its own commit. TDD tasks use `tdd(scope):` prefix |
+| ⛔ Never        | Push — ALWAYS separate from commits                                   |
 
 > **Audit trail:** TDD compliance is verified via `artifacts/tests/tdd-evidence.log` (auto-generated by
 > `tdd-test.sh`), not via separate git commits. Agent MUST pass TDD Gate before committing.
@@ -378,14 +383,14 @@ git push origin main
 ```markdown
 IF project has agent.rules: true OR agent.skills: true:
 
-  Scan project .agents/rules.md → for each rule with matching trigger:
-    [ ] [rule-name]: [key requirement from rule] (e.g., "maintenance.md: version sync across package.json + tool.manifest.yml")
+Scan project .agents/rules.md → for each rule with matching trigger:
+[ ] [rule-name]: [key requirement from rule] (e.g., "maintenance.md: version sync across package.json + tool.manifest.yml")
 
-  Scan project .agents/skills.md → for each skill with matching trigger:
-    [ ] [skill-name]: [key requirement from skill] (e.g., "release: tarball includes dist/ + templates/ + tool.manifest.yml + package.json")
+Scan project .agents/skills.md → for each skill with matching trigger:
+[ ] [skill-name]: [key requirement from skill] (e.g., "release: tarball includes dist/ + templates/ + tool.manifest.yml + package.json")
 
 ELSE:
-  (No project-specific governance — standard checklist only)
+(No project-specific governance — standard checklist only)
 ```
 
 ### Suggested Next Steps

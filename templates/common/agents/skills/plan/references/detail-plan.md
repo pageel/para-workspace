@@ -47,15 +47,15 @@
 
 > ⛔ **MANDATORY CONTEXT BINDING:** Before executing this plan, Agent MUST read/reload all listed files to ensure full context and prevent workflow drift.
 
-| Scope | File / Index | Purpose | Path |
-| :--- | :--- | :--- | :--- |
-| Workspace | `.agents/rules.md` | Workspace-level rules index (Trigger scan) | [rules.md](file:///absolute/path/to/workspace/.agents/rules.md) |
-| Workspace | `.agents/skills.md` | Workspace-level skills index (Trigger scan) | [skills.md](file:///absolute/path/to/workspace/.agents/skills.md) |
-| Project | `project.md` | Project Contract (Version, status, roadmap tracker) | [project.md](file:///absolute/path/to/project/project.md) |
-| Project | `.agents/rules.md` | Project-level rules index (if exists) | [rules.md](file:///absolute/path/to/project/.agents/rules.md) |
-| Project | `.agents/skills.md` | Project-level skills index (if exists) | [skills.md](file:///absolute/path/to/project/.agents/skills.md) |
-| Specific | [Triggered Rules/Skills] | List of specifically triggered rules/skills for this plan | (e.g., `agent-behavior.md`, `tool-routing.md`, `vcs.md`) |
-| MCP / Tools| [MCP Server / Tool Schema] | Loaded MCP schemas to support tasks | (e.g., `para-graph` schemas) |
+| Scope       | File / Index               | Purpose                                                   | Path                                                              |
+| :---------- | :------------------------- | :-------------------------------------------------------- | :---------------------------------------------------------------- |
+| Workspace   | `.agents/rules.md`         | Workspace-level rules index (Trigger scan)                | [rules.md](file:///absolute/path/to/workspace/.agents/rules.md)   |
+| Workspace   | `.agents/skills.md`        | Workspace-level skills index (Trigger scan)               | [skills.md](file:///absolute/path/to/workspace/.agents/skills.md) |
+| Project     | `project.md`               | Project Contract (Version, status, roadmap tracker)       | [project.md](file:///absolute/path/to/project/project.md)         |
+| Project     | `.agents/rules.md`         | Project-level rules index (if exists)                     | [rules.md](file:///absolute/path/to/project/.agents/rules.md)     |
+| Project     | `.agents/skills.md`        | Project-level skills index (if exists)                    | [skills.md](file:///absolute/path/to/project/.agents/skills.md)   |
+| Specific    | [Triggered Rules/Skills]   | List of specifically triggered rules/skills for this plan | (e.g., `agent-behavior.md`, `tool-routing.md`, `vcs.md`)          |
+| MCP / Tools | [MCP Server / Tool Schema] | Loaded MCP schemas to support tasks                       | (e.g., `para-graph` schemas)                                      |
 
 ## Architecture Overview & Execution Logic
 
@@ -85,8 +85,6 @@ Prefix each step with an Execution Ownership icon (see legend below).]
 0.1 🤖 **[Step 1 name]** — [Detail: file path, line number, operation]
 0.2 🤖 **[Step 2 name]** — [Detail: ...]
 
-
-
 #### Task List
 
 [Progress tracking checklist — Agent ticks items when completed.
@@ -101,6 +99,7 @@ Carry the Execution Ownership icon from the Implementation Plan.]
 [ ] 0.0 🤖 Graph Knowledge Preparation (if para-graph enabled)
 [ ] 0.1 🤖 [Task description]
 [ ] 0.2 🤖 [Task description]
+
 - [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x] AND get explicit User approval before proceeding to Phase 1.
 
 ---
@@ -120,19 +119,21 @@ Carry the Execution Ownership icon from the Implementation Plan.]
 [Goal in 1-2 sentences.]
 
 **Files:**
+
 - Create: `exact/path/to/new_file.ts` (if applicable)
 - Modify: `exact/path/to/existing_file.ts` (with line ranges if known)
 
 **Graph Impact (if para-graph enabled):**
+
 - God Nodes affected: [List of God nodes]
 - Blast Radius: [Impact analysis/callers]
 - Enrichment: [Nodes needing semantic enrichment]
 
-1.1 🤖 **[Step name]** — [Detail: file path, line number, operation, source reference if applicable.]
-1.2 👤 **[Step name]** — [Detail: destructive/external operation, Agent proposes → User approves.]
+  1.1 🤖 **[Step name]** — [Detail: file path, line number, operation, source reference if applicable.]
+  1.2 👤 **[Step name]** — [Detail: destructive/external operation, Agent proposes → User approves.]
 
-1.N-1 🤖 **Pre-commit Gate** — Run project's linter/compiler (e.g., `npm run lint`, `tsc`, `cargo check`) and resolve any type/lint problems before commit.
-1.N 👤 **Git checkpoint Phase 1 — Commit**
+  1.N-1 🤖 **Pre-commit Gate** — Run project's linter/compiler (e.g., `npm run lint`, `tsc`, `cargo check`) and resolve any type/lint problems before commit.
+  1.N 👤 **Git checkpoint Phase 1 — Commit**
 
 ```bash
 git add [scope]
@@ -161,11 +162,11 @@ git push origin main
 [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
 [ ] 1.N-1 🤖 **Pre-commit Gate:** Run project's linter/compiler/tests (e.g., `npm run lint`, `npm test`) and resolve any problems. (If running tests, MUST use TDD skill).
 [ ] 1.N 👤 **Git Checkpoint:** Commit changes with message `[feat/fix/chore]([scope]): [short description]`.
-- [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Receive explicit user approval before committing and proceeding to the next Phase.
-[ ] 1.N+1 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
-[ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Agent MUST ask User for confirmation BEFORE pushing.
-[ ] 1.N+2 👤 Git push origin main.
 
+- [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Receive explicit user approval before committing and proceeding to the next Phase.
+      [ ] 1.N+1 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
+      [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Agent MUST ask User for confirmation BEFORE pushing.
+      [ ] 1.N+2 👤 Git push origin main.
 
 ---
 
@@ -230,10 +231,10 @@ git push origin main
 
 ### Commit Consolidation Policy
 
-| Squash allowed?  | Condition                              |
-| :--------------- | :------------------------------------- |
-| ⛔ No            | Each FEAT/BUG gets its own commit      |
-| ⛔ Never         | Push — ALWAYS separate from commits    |
+| Squash allowed? | Condition                           |
+| :-------------- | :---------------------------------- |
+| ⛔ No           | Each FEAT/BUG gets its own commit   |
+| ⛔ Never        | Push — ALWAYS separate from commits |
 
 ### Review & Audit Tracking
 
@@ -259,14 +260,14 @@ git push origin main
 ```markdown
 IF project has agent.rules: true OR agent.skills: true:
 
-  Scan project .agents/rules.md → for each rule with matching trigger:
-    [ ] [rule-name]: [key requirement from rule] (e.g., "maintenance.md: version sync across package.json + tool.manifest.yml")
+Scan project .agents/rules.md → for each rule with matching trigger:
+[ ] [rule-name]: [key requirement from rule] (e.g., "maintenance.md: version sync across package.json + tool.manifest.yml")
 
-  Scan project .agents/skills.md → for each skill with matching trigger:
-    [ ] [skill-name]: [key requirement from skill] (e.g., "release: tarball includes dist/ + templates/ + tool.manifest.yml + package.json")
+Scan project .agents/skills.md → for each skill with matching trigger:
+[ ] [skill-name]: [key requirement from skill] (e.g., "release: tarball includes dist/ + templates/ + tool.manifest.yml + package.json")
 
 ELSE:
-  (No project-specific governance — standard checklist only)
+(No project-specific governance — standard checklist only)
 ```
 
 > **Why this matters:** Session v0.8.5 missed `tool.manifest.yml` version bump and `--version` flag
