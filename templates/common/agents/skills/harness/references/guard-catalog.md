@@ -27,6 +27,7 @@
 | KERNEL | `<!-- ⚠️ READ-ONLY SNAPSHOT — Do NOT modify (I9) -->` | `kernel/`, `Resources/ai-agents/kernel/` |
 | GOVERNED | `<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->` | `.agents/rules/` |
 | WORKSPACE | `<!-- ⚠️ APPEND-ONLY — via /end only -->` | `Areas/Workspace/` |
+| TRACKER (link-only) | `<!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->` | `brain/implementation_plan.md`, `brain/task.md` |
 
 ## Placement Convention
 

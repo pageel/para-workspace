@@ -196,6 +196,19 @@ test -f "Projects/[project-name]/.beads/graph/memory-slices.jsonl" || test -f "P
   2. Use `memory_search` with a broad query (project name + "architecture" or "decision") to surface the most relevant past session insights. Limit to 5 results for token efficiency.
 - **If not exists** → Skip silently. No memory overhead.
 
+### 3.7. Project Insights & CSA Compliance Search (v0.16.2+)
+
+// turbo
+
+Check if SQLite graph DB exists:
+```bash
+test -f "Projects/[project-name]/.beads/graph/[project-name].db" || test -f "Projects/[project-name]/repo/.beads/graph/[project-name].db"
+```
+
+- **If exists:**
+  1. Use `insight_search` with `category: "risk"` or empty query `""` to retrieve outstanding project risks, gotchas, or decisions. Print them to the session context so the Agent is aware of architectural warnings (e.g., audit drift).
+  2. Run `npx para-graph audit csa --project Projects/[project-name]` (or use the `graph_audit_csa` MCP tool) to show the current CSA coverage rate and list any dangling spec links.
+
 ### 4. Read task context — Memory-First (Anti-Truncation)
 
 > ⚠️ **Anti-Truncation Architecture:** Read task state from Graph Memory first to avoid bash output truncation. Fallback to file reading only if memory is stale or missing.

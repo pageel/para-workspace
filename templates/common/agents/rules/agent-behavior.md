@@ -18,12 +18,22 @@ glob:
 
 ### 1. Language Configuration
 
-- **MUST** respect the `preferences.language` setting in `.para-workspace.yml` for documentation and chat responses.
-- **MUST** use the configured language for internal reasoning and thinking, not just visible output.
-- **MUST** keep technical artifacts (code variables, commit messages) in English for standard compatibility.
-- **SHOULD** adapt communication language to the user's configured preference.
+Agent **MUST** read the `language` map in `.para-workspace.yml` and apply each key independently:
 
-### 2. Communication Style
+| Key | Purpose | Rule |
+|:--|:--|:--|
+| `repo` | Language for `.agents/` files (rules, skills, workflows), specs, and OSS templates | **MUST** write in English when value contains `english` or `OSS` — overrides all other keys for governed files |
+| `thinking` | Language for internal reasoning and chain-of-thought | **MUST** use this language for thinking, not just visible output |
+| `chat` | Language for chat responses to the user | **MUST** reply in this language unless user switches mid-conversation |
+| `docs` | Language for documentation and artifacts | **SHOULD** use first listed language as primary; second as fallback or bilingual |
+
+**Defaults & constraints:**
+
+- **IF** a key is missing or empty → fallback to `en` (English).
+- **MUST** keep technical identifiers (code variables, commit messages, branch names) in English regardless of language settings.
+- **IF** `repo` contains `OSS` → the OSS English-First governance applies. All `.agents/` content **MUST** be English.
+
+### 2. Agent Tone & Response Format
 
 - **MUST** be concise — focus on the solution, avoid fluff.
 - **SHOULD** use checklists when completing multi-step tasks (✅ Done, ⏳ Pending).
@@ -31,9 +41,20 @@ glob:
 
 ### 3. Workflow Standards
 
-- **MUST** perform a verification step (`npm run build` or test) after every code change, unless the user explicitly requests `--quick`.
-- **MUST NOT** `git commit` or `git push` without user confirmation, unless explicitly running a trusted workflow (`/push`, `/release`).
+#### 3a. Development Verification
+
+Applies **only** when Agent has made source code changes (created, edited, or deleted code files):
+
+- **MUST** perform a project-appropriate verification step (e.g., build or test command resolved from the project contract `project.md`, project rules in `.agents/rules/` like `maintenance.md`, or package manifests like `package.json`, `Cargo.toml`, etc.) after every code change, unless the user explicitly requests `--quick`.
 - **MUST** check the build result before reporting "Done".
+- **MUST NOT** `git commit` or `git push` without user confirmation, unless explicitly running a trusted workflow (`/push`, `/release`).
+
+> **Scope clarifier:** These rules do NOT apply to non-development workflows (`/open`, `/brainstorm`, `/docs`, `/end`, `/backlog`, etc.) or to editing governance files (rules, skills, workflows).
+
+#### 3b. General Execution Standards
+
+Applies to **all** workflows and tasks:
+
 - **SHOULD** prioritize using defined workflows in `.agents/workflows/` over ad-hoc commands.
 - **SHOULD** ask the user instead of assuming when uncertain.
 
@@ -45,7 +66,8 @@ When context appears incomplete (cannot recall loaded rules, received truncation
 2. **MUST** re-read `.agents/skills.md` (workspace skills index, v1.6.2+) before performing any side-effect.
 3. **MUST** re-read project `.agents/rules.md` (if exists) before project-specific actions.
 4. **MUST** re-read project `.agents/skills.md` (if exists) before project-specific actions.
-5. **SHOULD** inform user: "Context recovery — re-loaded rules + skills indices."
+5. **MUST** check for and read `Projects/<project-name>/.agents/AGENTS.md` (or any variation like `agents.md`, `.agents/agents.md`, or `AGENTS.md`/`agents.md` in the project root) if it exists, to load project-specific instructions and developer guidelines.
+6. **SHOULD** inform user: "Context recovery — re-loaded rules, skills, and project guidelines."
 
 **Proactive Trigger Check (v1.6.2+):**
 

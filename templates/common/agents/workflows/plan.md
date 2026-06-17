@@ -468,7 +468,20 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 #### 9.6. Propose Draft Plan
 
 **Protocol:**
-1. **Present & Track:** Agent presents the draft plan summary of the newly created plan to the User for review (including phases, timeline, and newly created/modified target files). To satisfy the platform's planning mode consent gate and adhere to the OSS-first philosophy (keeping the platform footprint minimal and single-sourced in the repo), the Agent **MUST overwrite and truncate** the platform files: write the markdown link of the actual project plan file (`[plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)`) as the **sole content** of both the platform's `brain/implementation_plan.md` and `brain/task.md`, wiping out any verbose details or redundant task checklists. At this point, the `Post-Draft Audit Gate` checklist in the plan file remains empty (`⬜` and `PENDING`).
+1. **Present & Track:** Agent presents the draft plan summary of the newly created plan to the User for review (including phases, timeline, and newly created/modified target files). To satisfy the platform's planning mode consent gate and adhere to the OSS-first philosophy (keeping the platform footprint minimal and single-sourced in the repo), the Agent **MUST overwrite and truncate** the platform files (`brain/implementation_plan.md` and `brain/task.md`), leaving **ONLY** the direct markdown link to the project plan file (`[plan-name](file://...)`) and the specific `TRACKER (link-only)` file guard comment at the bottom, wiping out any verbose details, checklists, or other content:
+   * In `brain/implementation_plan.md`:
+     ```markdown
+     [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
+
+     <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+     ```
+   * In `brain/task.md`:
+     ```markdown
+     - [ ] Tasks are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
+
+     <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+     ```
+   At this point, the `Post-Draft Audit Gate` checklist in the plan file remains empty (`⬜` and `PENDING`).
    * **Exemption Rule (v1.9.2):** If the plan name represents a macro-level document (contains `roadmap`, `strategy`, `spec`, or `brainstorm`), it is **fully exempted** from Platform Tracker synchronization. In this case, the Agent **MUST NOT** write to or create any `implementation_plan.md` or `task.md` files in the platform's `brain/` folder.
 2. **Propose Preliminary Approval & Audit:** Ask the User for initial layout approval and propose running the Review Audit.
    ```
@@ -718,14 +731,38 @@ Start or continue executing the active plan in the project.
 ### Steps
 
 1. **Locate Plan:** Read `project.md` to find `active_plan` or search `artifacts/plans/` for the latest plan file.
-   - IF the found plan is a Draft (`Status: 📝 Draft`): Automatically update its Status to `🔨 Active`, set `active_plan` in `project.md` to point to it, run `/backlog sync` (if not exempted), and proceed with execution. As part of this activation, the Agent **MUST overwrite and truncate** the platform files (`brain/implementation_plan.md` and `brain/task.md`), leaving **ONLY the markdown link** pointing to the newly activated plan file.
+   - IF the found plan is a Draft (`Status: 📝 Draft`): Automatically update its Status to `🔨 Active`, set `active_plan` in `project.md` to point to it, run `/backlog sync` (if not exempted), and proceed with execution. As part of this activation, the Agent **MUST overwrite and truncate** the platform files (`brain/implementation_plan.md` and `brain/task.md`), leaving **ONLY** the direct markdown link to the newly activated plan file and the specific `TRACKER (link-only)` file guard comment at the bottom, using the exact format:
+     * In `brain/implementation_plan.md`:
+       ```markdown
+       [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
+
+       <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+       ```
+     * In `brain/task.md`:
+       ```markdown
+       - [ ] Tasks are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
+
+       <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+       ```
      - **Platform Tracker Exemption (v1.9.2):** If the plan name contains `roadmap`, `strategy`, `spec`, or `brainstorm`, skip the creation/sync of platform-level `task.md` or `implementation_plan.md` in the brain folder.
      - **Cross-project (v1.6.0+):** If plan file is in an ecosystem meta-project (`@{ecosystem}/plans/...`), set `active_plan` as a cross-project reference:
        ```yaml
        active_plan: "@{ecosystem}/plans/[plan-name].md"
        ```
      - **Roadmap sync (v1.6.3):** After activation, check `roadmap` field in `project.md`. If set, find the matching phase row and update Status → `🔨 Active` + link to plan file (see Step 10 Roadmap auto-update in create action for details).
-   - IF the found plan is already Active (`Status: 🔨 Active`) or does not require activation: Load the plan and proceed. Even when loading an already active plan, the Agent **MUST ensure** the platform files (`brain/implementation_plan.md` and `brain/task.md`) are cleared and contain **only the markdown link** pointing to the active plan file.
+   - IF the found plan is already Active (`Status: 🔨 Active`) or does not require activation: Load the plan and proceed. Even when loading an already active plan, the Agent **MUST ensure** the platform files (`brain/implementation_plan.md` and `brain/task.md`) are cleared and contain **only the markdown link** and the specific `TRACKER (link-only)` file guard comment at the bottom, using the exact format:
+     * In `brain/implementation_plan.md`:
+       ```markdown
+       [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
+
+       <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+       ```
+     * In `brain/task.md`:
+       ```markdown
+       - [ ] Tasks are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
+
+       <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+       ```
 
 2. **Load Plan Methodology Skills:** Scan the loaded plan file. Check the `Methodology` or `Required Skill` blockquotes. If the plan specifies a specific methodology (e.g., Strict TDD), or if a flag like `--tdd` is passed, the Agent MUST load the corresponding `.agents/skills/[skill-name]/SKILL.md` into context before executing any code.
 3. **Phase Execution:** If `--phase` flag is present (which is default for this action), execute the plan strictly phase by phase.

@@ -28,7 +28,7 @@ workflows:
   learn:           "1.8.9"
   para-workflow:   "1.9.0"   # standard language resolution block
   para-rule:       "1.9.0"   # standard language resolution block
-  plan:            "1.9.2"   # standard language resolution block
+  plan:            "1.9.2.1" # link-only tracker file format with guard comment
   para-audit:      "1.9.0"   # integrated dynamic legacy cleanup skill
   docs:            "1.9.2"   # standard language resolution block
   update:          "1.9.0"   # standard language resolution block
@@ -70,7 +70,7 @@ skills:
   docs:        "1.9.2"
   brainstorm:  "1.8.15"
   write:       "1.7.16"
-  harness:     "1.8.15"
+  harness:     "1.9.2.1" # added TRACKER (link-only) subtype definition
   spec:        "1.8.10"
   qa:          "1.8.10"
   tdd:         "1.9.2"

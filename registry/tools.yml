@@ -6,3 +6,12 @@ test-plugin:
   min_runtime_version: "18"
   entry: "dist/cli.js"
   tarball_pattern: "https://example.com/{{VERSION}}.tar.gz"
+
+graph:
+  repo: "pageel/para-graph"
+  description: "Hybrid Code-Knowledge Graph for PARA Workspace"
+  latest: "0.16.2"
+  runtime: "node"
+  min_runtime_version: "18.0.0"
+  entry: "dist/cli.js"
+  tarball_pattern: "https://github.com/pageel/para-graph/releases/download/v{{VERSION}}/para-graph-v{{VERSION}}.tar.gz"
