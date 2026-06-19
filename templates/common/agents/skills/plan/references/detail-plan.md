@@ -66,6 +66,10 @@
 > ASCII flowchart showing Phase sequence, Guards, and Dependencies.
 > Helps verify logic, security, and context coverage before execution.
 
+### Execution Rules & Environment Guards
+
+> ⛔ **MANDATORY NVM PATH GUARD:** Due to the Headless Bash environment, `node` and `npm` are NOT in the default `$PATH`. Agent MUST read the `node_path` value from the workspace root `.para-workspace.yml` and prepend `export PATH="<node_path_value>:$PATH" && ` before running ANY `npm` or `node` command in this plan.
+
 ## Implementation Phases
 
 ### Phase 0. Setup & Infrastructure ⚙️ `Difficulty: 🟢 Low`
@@ -99,6 +103,7 @@ Carry the Execution Ownership icon from the Implementation Plan.]
 [ ] 0.0 🤖 Graph Knowledge Preparation (if para-graph enabled)
 [ ] 0.1 🤖 [Task description]
 [ ] 0.2 🤖 [Task description]
+[ ] 0.3 🤖 **MCP Project Directory Snapshot** (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool to capture the baseline configuration, rules, and workspace knowledge)
 
 - [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x] AND get explicit User approval before proceeding to Phase 1.
 
@@ -203,6 +208,8 @@ git push origin main
 > Equivalent to the Walkthrough artifact in Antigravity Planning mode.
 
 [ ] All Task List items from Phase 0 → Phase N are [x] (including git commit + push).
+[ ] **CSA Quality Verification:** Run CSA compliance audit (invoke `graph_audit_csa` MCP tool or run `npx para-graph audit csa`) to verify Spec-to-Code coverage >= 90.0% and no dangling spec edges (if CSA is applicable).
+[ ] **MCP Snapshot Diff Evaluation:** Run `project_snapshot` (at completion) and `project_diff` MCP tools to evaluate physical directory drift and verify the integrity of protected files.
 [ ] [Project-specific checks: build pass, docs updated, governance rules...]
 [ ] ⛔ CHECKPOINT (Walkthrough Completion): Agent MUST verify all above Walkthrough items are ticked [x] BEFORE proposing Status transition.
 [ ] ⛔ CHECKPOINT (C7 Status Transition): Agent MUST NOT change Status to "✅ Done" or clear `active_plan` without explicit user approval. Agent presents the completed Walkthrough checklist → User verifies → User approves transition. Only AFTER user confirms → Agent sets Status and clears `active_plan`.

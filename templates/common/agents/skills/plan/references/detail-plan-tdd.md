@@ -49,6 +49,10 @@
 - **Required Skills:** [Agent MUST load `.agents/skills/tdd/SKILL.md` before executing TDD tasks]
   [Describe testing layers: Unit, Integration, E2E. Mention testing frameworks used.]
 
+### Execution Rules & Environment Guards
+
+> ⛔ **MANDATORY NVM PATH GUARD:** Due to the Headless Bash environment, `node` and `npm` are NOT in the default `$PATH`. Agent MUST read the `node_path` value from the workspace root `.para-workspace.yml` and prepend `export PATH="<node_path_value>:$PATH" && ` before running ANY `npm` or `node` command in this plan.
+
 ## Context Files & Indices Loaded
 
 > ⛔ **MANDATORY CONTEXT BINDING:** Before executing this plan, Agent MUST read/reload all listed files to ensure full context and prevent workflow drift.
@@ -96,7 +100,8 @@
 - [ ] 0.0 🤖 Graph Knowledge Preparation (if para-graph enabled)
 - [ ] 0.1 🤖 [Task description]
 - [ ] 0.2 🤖 [Task description]
-- [ ] 0.3 🤖 **TDD Repo Before Snapshot** (run `git status --ignored --porcelain` & `git log -n 1 --oneline` and save to `artifacts/tests/tdd-repo-before-[date].log`)
+- [ ] 0.3 🤖 **MCP Project Directory Snapshot** (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool to capture the baseline configuration, rules, and workspace knowledge)
+- [ ] 0.4 🤖 **TDD Repo Before Snapshot** (run `git status --ignored --porcelain` & `git log -n 1 --oneline` and save to `artifacts/tests/tdd-repo-before-[date].log`)
 - [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x] AND get explicit User approval before proceeding to Phase 1.
 
 ---
@@ -220,6 +225,8 @@
 - [ ] All Task List items from Phase 0 → Phase N are ticked `[x]`.
 - [ ] Every new function/method has a corresponding test.
 - [ ] 100% tests pass with pristine output (no errors/warnings).
+- [ ] **CSA Quality Verification:** Run CSA compliance audit (invoke `graph_audit_csa` MCP tool or run `npx para-graph audit csa`) to verify Spec-to-Code coverage >= 90.0% and no dangling spec edges (if CSA is applicable).
+- [ ] **MCP Snapshot Diff Evaluation:** Run `project_snapshot` (at completion) and `project_diff` MCP tools to evaluate physical directory drift and verify the integrity of protected files.
 - [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `git status --ignored --porcelain` snapshot in `tdd-repo-before-[date].log` to identify newly generated untracked or ignored files. Agent MUST present the list to User and ask whether to delete them (if junk) or commit them (if missed in plan) before proceeding with cleanup.
 - [ ] **Code-Graph Sync:** Cập nhật đồ thị mã nguồn bằng lệnh: `npx para-graph build <project-name>` (if --graph is enabled).
 - [ ] [Project-specific checks: build pass, docs updated, governance rules...]

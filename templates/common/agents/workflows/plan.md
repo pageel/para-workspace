@@ -483,7 +483,7 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
      ```
    At this point, the `Post-Draft Audit Gate` checklist in the plan file remains empty (`⬜` and `PENDING`).
    * **Exemption Rule (v1.9.2):** If the plan name represents a macro-level document (contains `roadmap`, `strategy`, `spec`, or `brainstorm`), it is **fully exempted** from Platform Tracker synchronization. In this case, the Agent **MUST NOT** write to or create any `implementation_plan.md` or `task.md` files in the platform's `brain/` folder.
-2. **Propose Preliminary Approval & Audit:** Ask the User for initial layout approval and propose running the Review Audit.
+2. **Propose Preliminary Approval & Audit:** Ask the User for initial layout approval and propose running the Review Audit. At this stage, also check if the project has the `csa:` configuration map in `project.md` and ask the User if they want to apply Convergent Specification Architecture (CSA) integration checkpoints.
    ```
    📐 DRAFT PLAN READY: [plan-name]
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -493,6 +493,10 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
    ❓ Do you approve the preliminary layout of this draft plan? If approved, I will write the plan's markdown link into implementation_plan.md (if not exempted) and run the Review Audit.
       Y → Layout approved, write plan link to platform implementation_plan.md (unless exempted), and run Review Audit (Step 9.7)
       N → Refine the draft based on feedback
+
+   ❓ [CSA Integration Prompt] Apply CSA integration checkpoints to this plan?
+      - Yes (recommended if project.md has csa map) → Inject automated csa compliance checks (graph_audit_csa / project_snapshot) at phase transitions.
+      - No → Generate plan with standard tasks.
    ```
 3. **Response:** Only proceed to Step 9.7 if User confirms (Y). If the User provides feedback, modify the draft plan and present again.
 

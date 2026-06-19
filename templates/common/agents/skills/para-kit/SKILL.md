@@ -64,6 +64,7 @@ All fields in YAML frontmatter:
 | `strategy` | string/~ | ✅ | `~` | Current strategic approach |
 | `roadmap` | path | ✅ | — | Relative path to roadmap plan |
 | `active_plan` | string | ❌ | `""` | Current implementation plan path |
+| `csa` | map | ❌ | — | CSA configuration map (spec/doc thresholds, gate) |
 | `agent.rules` | bool | ✅ | `false` | Has project-specific rules? |
 | `agent.skills` | bool | ✅ | `false` | Has project-specific skills? |
 | `type` | enum | ❌ | `standard` | standard / ecosystem |

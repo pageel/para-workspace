@@ -10,6 +10,10 @@ dod: []
 active_plan: ""
 strategy: ~
 roadmap: ~
+csa:
+  spec_threshold: 90
+  doc_threshold: 50
+  doc_gate: soft
 has_rules: false  # DEPRECATED v1.6.2 — kept for backward compat
 last_reviewed: ""
 tags: []

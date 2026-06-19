@@ -13,6 +13,11 @@ active_plan: ""             # Relative path to current plan (e.g., "plans/my-pla
 strategy: ~                 # ✅ Current strategic approach (~ = not yet defined)
 roadmap: ~                  # ✅ Relative path to roadmap plan (~ = none)
 
+csa:                        # CSA configuration (v1.7.2+ — optional)
+  spec_threshold: 90        # Minimum spec-to-code trace coverage target (percentage)
+  doc_threshold: 50         # Minimum doc-to-code trace coverage target (percentage)
+  doc_gate: soft            # Enforcement gate: strict (error on fail) | soft (warning on fail)
+
 # Agent configuration (v1.6.2+ — replaces deprecated has_rules)
 agent:
   rules: false              # ✅ true if .agents/rules/ exists with project rules
