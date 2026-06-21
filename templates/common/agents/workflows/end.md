@@ -98,7 +98,10 @@ If yes, **append one row** to `Areas/Workspace/SYNC.md` under the `## Pending` t
 > **Rule:** `hybrid-3-file-integrity.md` C5 — `/end` is the sole sync point for all task reconciliation.
 
 ```bash
-# Reset Dynamic Session KI Memory
+# 1. Compact Session Context to KI Memory (if project has graph)
+# Agent MUST call 'project_session_compact' MCP tool (or equivalent command) before resetting.
+
+# 2. Reset Dynamic Session KI Memory
 bash .agents/skills/vibecode/scripts/session-manager.sh stop
 ```
 

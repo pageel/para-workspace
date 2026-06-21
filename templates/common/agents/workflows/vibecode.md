@@ -89,10 +89,11 @@ fi
 ```
 
 Agent MUST then:
-1. Read the project's own domain skill at `Projects/[project-name]/.agents/skills/[project-name]/SKILL.md` (if exists) to understand project-specific rules
-2. Read `.agents/rules.md` (workspace rules trigger index)
-3. Read `.agents/skills.md` (workspace skills trigger index)
-4. Read `Projects/[project-name]/project.md`
+1. **Context Compaction (MANDATORY):** If `[mode]` is an execution mode (not `review`) AND the project has a graph available (e.g., `Projects/[project-name]/.beads/graph/` directory exists), Agent **MUST** immediately invoke the MCP tool `project_session_compact(projectName: "[project-name]")` to compile and write all rules, skills, and project contract into the Vibecode Session KI (`session.md`). If the project does not support graphs, skip this step gracefully.
+2. Read the project's own domain skill at `Projects/[project-name]/.agents/skills/[project-name]/SKILL.md` (if exists) to understand project-specific rules
+3. Read `.agents/rules.md` (workspace rules trigger index)
+4. Read `.agents/skills.md` (workspace skills trigger index)
+5. Read `Projects/[project-name]/project.md`
 5. Read sidecar skill: `.agents/skills/vibecode/SKILL.md`
 6. Read `Projects/[project-name]/.beads/seeds.md` (if exists) — prior loop patterns for Adaptive Loop context
 7. IF graph exists: use `memory_search` to find past vibecode loop results, error patterns, and architectural decisions related to the target
@@ -548,9 +549,10 @@ Create Phase [N] for this goal? (y/n/refine)
 1. Read the **§ Phase Context Reload** table in `skills/vibecode/SKILL.md`
 2. Execute the **Mandatory** reload list (project rules, skills, domain skill)
 3. Execute the **Conditional** reload list based on tools activated in the Quality Gate
+4. **Vibecode Session Compaction:** If the project has a graph available, Agent **MUST** run the MCP tool `project_session_compact(projectName: "[project-name]")` to compile, compress, and write all rules, skills, and project contract into the Vibecode Session KI (`session.md`).
 
-> **Why:** Long sessions cause context drift. Reloading at Phase boundaries ensures
-> the Agent has fresh project rules, domain knowledge, and tool-specific guidance.
+> **Why:** Long sessions cause context drift. Reloading and compacting at Phase boundaries ensures
+> the Agent has fresh project rules, domain knowledge, and tool-specific guidance in memory.
 > The sidecar skill centralizes all routing — the workflow only says WHEN, the skill says WHAT.
 
 **2b. Pre-analysis:** Before presenting the gate, Agent performs:

@@ -88,7 +88,7 @@ If the `--graph` flag is provided, execute an INTERACTIVE Graph Preparation Phas
      - `detail-plan-tdd.md`: Strongly suggest if the changes involve heavy logic, complex impact radius, or core mechanics.
      - `detail-plan.md`: Suggest for standard UI, configuration, or simple features.
      - `detail-plan-docs.md`: Suggest if the changes are purely documentation.
-5. ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here. ONLY AFTER the user confirms the context is sufficient and explicitly selects a template, Agent may proceed to Step 1 to generate the plan file. Do NOT auto-generate the plan without user consent.
+5. ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here. The Agent **MUST NOT** auto-select any template or proceed with file generation. ONLY AFTER the user confirms the context is sufficient and explicitly selects a template in the chat, Agent may proceed to Step 1 to generate the plan file. Auto-generating the plan without explicit user consent is a severe violation.
 
 #### 1. Read Project Contract
 
@@ -271,7 +271,7 @@ Context:
   📋 Detail Plans: [N active, M archived]
 ```
 
-> ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here and ask the user which plan type to create. Do NOT guess or proceed to generating the plan until the user responds.
+> ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here and ask the user which plan type to create. Do NOT guess or proceed to generating the plan until the user responds. The Agent **MUST NOT** auto-select the plan type or template under any circumstances unless explicitly configured via CLI flags (`--tdd` or `--hardened`).
 
 **If roadmap exists → smart suggest:**
 
@@ -465,48 +465,25 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 4. **D. Run Plan Review Protocols:** Explicitly analyze checklist dependencies from governance files (e.g. `maintenance.md`).
 5. **E. Re-read Plan References:** Re-read the brainstorm files loaded in Step 2.5 to ensure the plan structure doesn't contradict past brainstorm decisions.
 
-#### 9.6. Propose Draft Plan
+#### 9.6. Post-Draft Audit Gate (MANDATORY)
+
+**Purpose:** Force a comprehensive quality audit of the generated draft plan before presenting it to the User. This is a mandatory checkpoint that CANNOT be bypassed, but execution requires user confirmation.
 
 **Protocol:**
-1. **Present & Track:** Agent presents the draft plan summary of the newly created plan to the User for review (including phases, timeline, and newly created/modified target files). To satisfy the platform's planning mode consent gate and adhere to the OSS-first philosophy (keeping the platform footprint minimal and single-sourced in the repo), the Agent **MUST overwrite and truncate** the platform files (`brain/implementation_plan.md` and `brain/task.md`), leaving **ONLY** the direct markdown link to the project plan file (`[plan-name](file://...)`) and the specific `TRACKER (link-only)` file guard comment at the bottom, wiping out any verbose details, checklists, or other content:
-   * In `brain/implementation_plan.md`:
-     ```markdown
-     [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
 
-     <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
-     ```
-   * In `brain/task.md`:
-     ```markdown
-     - [ ] Tasks are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
-
-     <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
-     ```
-   At this point, the `Post-Draft Audit Gate` checklist in the plan file remains empty (`⬜` and `PENDING`).
-   * **Exemption Rule (v1.9.2):** If the plan name represents a macro-level document (contains `roadmap`, `strategy`, `spec`, or `brainstorm`), it is **fully exempted** from Platform Tracker synchronization. In this case, the Agent **MUST NOT** write to or create any `implementation_plan.md` or `task.md` files in the platform's `brain/` folder.
-2. **Propose Preliminary Approval & Audit:** Ask the User for initial layout approval and propose running the Review Audit. At this stage, also check if the project has the `csa:` configuration map in `project.md` and ask the User if they want to apply Convergent Specification Architecture (CSA) integration checkpoints.
+1. ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here, present the raw draft plan link to the User, and ask for permission to run the Quality Audit process and modify the draft plan file.
    ```
-   📐 DRAFT PLAN READY: [plan-name]
+   📐 DRAFT PLAN GENERATED: [plan-name]
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   Status: 📝 Draft (Unaudited)
-   Phases: [N] | Tasks: [N] | File: [path]
+   File: [path]
 
-   ❓ Do you approve the preliminary layout of this draft plan? If approved, I will write the plan's markdown link into implementation_plan.md (if not exempted) and run the Review Audit.
-      Y → Layout approved, write plan link to platform implementation_plan.md (unless exempted), and run Review Audit (Step 9.7)
-      N → Refine the draft based on feedback
-
-   ❓ [CSA Integration Prompt] Apply CSA integration checkpoints to this plan?
-      - Yes (recommended if project.md has csa map) → Inject automated csa compliance checks (graph_audit_csa / project_snapshot) at phase transitions.
-      - No → Generate plan with standard tasks.
+   ❓ Do you approve running the Post-Draft Quality Audit and embedding the results into the plan file?
+      Y → Run Quality Audit (proceed to Step 2)
+      N → Stop and wait for layout refinement
    ```
-3. **Response:** Only proceed to Step 9.7 if User confirms (Y). If the User provides feedback, modify the draft plan and present again.
+   If User confirms (Y), proceed to Step 2. If the User provides feedback, modify the draft plan and present again.
 
-#### 9.7. Post-Draft Audit Gate
-
-**Purpose:** Force a comprehensive quality audit of the preliminary approved draft plan before activation.
-
-**Protocol:**
-
-1. **RELOAD:** Reload ALL project rules + skills (full scan):
+2. **RELOAD:** Reload ALL project rules + skills (full scan):
    ```bash
    # Full project governance reload
    cat Projects/[project-name]/.agents/rules.md 2>/dev/null
@@ -515,23 +492,63 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
    ```
    Focus areas: `maintenance.md`, release checklists, version sync rules.
 
-2. **AUDIT:** Perform an independent quality review of the plan across 5 dimensions:
+3. **AUDIT:** Perform an independent quality review of the plan across 5 dimensions:
    - **Logic:** Phase sequence makes sense? No circular dependencies?
    - **Security:** Security controls in place? No hardcoded or leaked tokens?
    - **Governance:** Project maintenance rules satisfied? Version sync points covered?
+     - **CSA Spec Warning:** If the project has a `csa:` configuration map in `project.md` (CSA is enabled) and this plan was created after a brainstorm session, the Agent **MUST** check if a specification has been created or proposed. If no spec exists, the Agent **MUST** trigger a warning advising the user to create a specification using the `/spec` workflow first to enable full CSA double-binding compliance.
    - **Completeness:** All target files to be created/modified are accounted for?
    - **Risk Coverage:** High risks mapped to corresponding Harness Guards?
 
-3. **CLASSIFY & INJECT (TDD):** Classify each task in the plan:
+4. **CLASSIFY & INJECT (TDD):** Classify each task in the plan:
    - 🧪 **TDD:** Complex logic changes, algorithms, API endpoints. Inject Red-Green-Refactor cycles and load `.agents/skills/tdd/SKILL.md`.
    - 📝 **Standard:** UI tweaks, documentation, version bumps, changelog. Keep standard task format.
 
-4. **UPDATE FILE:** Write the audit results directly to the plan file. If the template used does not contain the audit section (e.g. standard `detail-plan.md` or `roadmap.md`), the Agent MUST append the `## Post-Draft Audit Gate` section and the `## TDD Task Classification` table at the bottom of the plan file.
+5. **UPDATE FILE:** Write the audit results directly to the plan file. If the template used does not contain the audit section (e.g. standard `detail-plan.md` or `roadmap.md`), the Agent MUST append the `## Post-Draft Audit Gate` section and the `## TDD Task Classification` table at the bottom of the plan file.
    - Update checklist statuses in the `## Post-Draft Audit Gate` table from `⬜` to `✅ Passed`.
    - Update the `## TDD Task Classification` table.
    - Set `Audit Result` from `PENDING` to `PASSED` and increment the review counter by 1.
 
-5. **Report:** Present the detailed audit report to the User and proceed to Step 10 for activation.
+#### 9.7. Propose Audited Plan & Platform Mirroring
+
+**Protocol:**
+1. **Present Audited Draft:** Agent presents the audited draft plan summary of the newly created plan to the User for review (including phases, timeline, newly created/modified target files, audit outcomes, and TDD/Standard classifications).
+2. **Platform Tracking Pointer:** Once the User approves the plan, the Agent **MUST overwrite and truncate** the platform files (`brain/implementation_plan.md`, `brain/task.md`, and `brain/walkthrough.md`), leaving **ONLY** the direct markdown link to the project plan file (`[plan-name](file://...)`) and the specific `TRACKER (link-only)` file guard comment at the bottom:
+   * In `brain/implementation_plan.md`:
+     ```markdown
+     [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
+
+     <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+     ```
+   * In `brain/task.md`:
+     ```markdown
+     - [ ] Tasks are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md#walkthrough-completion-gate)
+
+     <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+     ```
+   * In `brain/walkthrough.md`:
+     ```markdown
+     Walkthrough details are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md#walkthrough-completion-gate)
+
+     <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+     ```
+   * **Exemption Rule (v1.9.2):** If the plan name represents a macro-level document (contains `roadmap`, `strategy`, `spec`, or `brainstorm`), it is **fully exempted** from Platform Tracker synchronization. In this case, the Agent **MUST NOT** write to or create any `implementation_plan.md`, `task.md`, or `walkthrough.md` files in the platform's `brain/` folder.
+3. **Ask for Approval & CSA:** Check if the project has the `csa:` configuration map in `project.md` and ask the User if they want to apply CSA integration checkpoints, alongside obtaining final plan approval.
+   ```
+   📐 AUDITED DRAFT PLAN READY: [plan-name]
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Status: 📝 Draft (Audited & Passed)
+   Phases: [N] | Tasks: [N] | File: [path]
+
+   ❓ Do you approve this audited draft plan? If approved, I will write the plan's markdown link to platform trackers (unless exempted) and prepare for execution.
+      Y → Plan approved, proceed to Step 10
+      N → Refine the draft based on feedback
+
+   ❓ [CSA Integration Prompt] Apply CSA integration checkpoints to this plan?
+      - Yes (recommended if project.md has csa map) → Inject automated csa compliance checks (graph_audit_csa / project_snapshot) at phase transitions.
+      - No → Keep plan with standard tasks.
+   ```
+4. **Response:** Only proceed to Step 10 if User confirms (Y). If the User provides feedback, modify the draft plan, re-run audit, and present again.
 
 #### 10. Complete Plan Creation
 
@@ -735,7 +752,7 @@ Start or continue executing the active plan in the project.
 ### Steps
 
 1. **Locate Plan:** Read `project.md` to find `active_plan` or search `artifacts/plans/` for the latest plan file.
-   - IF the found plan is a Draft (`Status: 📝 Draft`): Automatically update its Status to `🔨 Active`, set `active_plan` in `project.md` to point to it, run `/backlog sync` (if not exempted), and proceed with execution. As part of this activation, the Agent **MUST overwrite and truncate** the platform files (`brain/implementation_plan.md` and `brain/task.md`), leaving **ONLY** the direct markdown link to the newly activated plan file and the specific `TRACKER (link-only)` file guard comment at the bottom, using the exact format:
+   - IF the found plan is a Draft (`Status: 📝 Draft`): Automatically update its Status to `🔨 Active`, set `active_plan` in `project.md` to point to it, run `/backlog sync` (if not exempted), and proceed with execution. As part of this activation, the Agent **MUST overwrite and truncate** the platform files (`brain/implementation_plan.md`, `brain/task.md`, and `brain/walkthrough.md`), leaving **ONLY** the direct markdown link to the newly activated plan file and the specific `TRACKER (link-only)` file guard comment at the bottom, using the exact format:
      * In `brain/implementation_plan.md`:
        ```markdown
        [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
@@ -744,17 +761,23 @@ Start or continue executing the active plan in the project.
        ```
      * In `brain/task.md`:
        ```markdown
-       - [ ] Tasks are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
+       - [ ] Tasks are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md#walkthrough-completion-gate)
 
        <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
        ```
-     - **Platform Tracker Exemption (v1.9.2):** If the plan name contains `roadmap`, `strategy`, `spec`, or `brainstorm`, skip the creation/sync of platform-level `task.md` or `implementation_plan.md` in the brain folder.
+     * In `brain/walkthrough.md`:
+       ```markdown
+       Walkthrough details are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md#walkthrough-completion-gate)
+
+       <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+       ```
+     - **Platform Tracker Exemption (v1.9.2):** If the plan name contains `roadmap`, `strategy`, `spec`, or `brainstorm`, skip the creation/sync of platform-level `task.md`, `implementation_plan.md`, or `walkthrough.md` in the brain folder.
      - **Cross-project (v1.6.0+):** If plan file is in an ecosystem meta-project (`@{ecosystem}/plans/...`), set `active_plan` as a cross-project reference:
        ```yaml
        active_plan: "@{ecosystem}/plans/[plan-name].md"
        ```
      - **Roadmap sync (v1.6.3):** After activation, check `roadmap` field in `project.md`. If set, find the matching phase row and update Status → `🔨 Active` + link to plan file (see Step 10 Roadmap auto-update in create action for details).
-   - IF the found plan is already Active (`Status: 🔨 Active`) or does not require activation: Load the plan and proceed. Even when loading an already active plan, the Agent **MUST ensure** the platform files (`brain/implementation_plan.md` and `brain/task.md`) are cleared and contain **only the markdown link** and the specific `TRACKER (link-only)` file guard comment at the bottom, using the exact format:
+   - IF the found plan is already Active (`Status: 🔨 Active`) or does not require activation: Load the plan and proceed. Even when loading an already active plan, the Agent **MUST ensure** the platform files (`brain/implementation_plan.md`, `brain/task.md`, and `brain/walkthrough.md`) are cleared and contain **only the markdown link** and the specific `TRACKER (link-only)` file guard comment at the bottom, using the exact format:
      * In `brain/implementation_plan.md`:
        ```markdown
        [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
@@ -763,16 +786,28 @@ Start or continue executing the active plan in the project.
        ```
      * In `brain/task.md`:
        ```markdown
-       - [ ] Tasks are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
+       - [ ] Tasks are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md#walkthrough-completion-gate)
+
+       <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+       ```
+     * In `brain/walkthrough.md`:
+       ```markdown
+       Walkthrough details are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md#walkthrough-completion-gate)
 
        <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
        ```
 
-2. **Load Plan Methodology Skills:** Scan the loaded plan file. Check the `Methodology` or `Required Skill` blockquotes. If the plan specifies a specific methodology (e.g., Strict TDD), or if a flag like `--tdd` is passed, the Agent MUST load the corresponding `.agents/skills/[skill-name]/SKILL.md` into context before executing any code.
-3. **Phase Execution:** If `--phase` flag is present (which is default for this action), execute the plan strictly phase by phase.
-4. **Task Verification & Checkpoints:** The Agent MUST read and obey inline `⛔ CHECKPOINT` guards. When transitioning phases, the Agent CANNOT move to the next phase unless ALL tasks in the current phase are actually marked as completed `[x]`, OR the user explicitly grants permission to skip the remaining tasks. Do not auto-assume tasks are done.
-5. **Execution:** Proceed with performing the coding or related operations defined in the current pending tasks.
-6. **Strict TDD & Commit Gate Protocol (MANDATORY):** If the plan employs TDD (Test-Driven Development) methodology or has tasks classified as `🧪 TDD`, the Agent **MUST** strictly follow this execution order before proposing any `git commit` or `git push`:
+2. **Session Context Compaction (MANDATORY):** Before executing any task, if the project has a code graph available (e.g., `Projects/[project-name]/.beads/graph/` directory exists), the Agent **MUST** run the MCP tool `project_session_compact(projectName: "[project-name]")` for the project to compile, compress, and write all workspace and project rules, skills, contract, and guidelines into the Vibecode Session KI (`session.md`). This ensures the Session KI is updated with the latest context for JIT Context Recovery. If the project does not support graphs, skip this step gracefully.
+
+3. **Load Plan Methodology Skills:** Scan the loaded plan file. Check the `Methodology` or `Required Skill` blockquotes. If the plan specifies a specific methodology (e.g., Strict TDD), or if a flag like `--tdd` is passed, the Agent MUST load the corresponding `.agents/skills/[skill-name]/SKILL.md` into context before executing any code.
+
+4. **Phase Execution:** If `--phase` flag is present (which is default for this action), execute the plan strictly phase by phase.
+
+5. **Task Verification & Checkpoints:** The Agent MUST read and obey inline `⛔ CHECKPOINT` guards. When transitioning phases, the Agent CANNOT move to the next phase unless ALL tasks in the current phase are actually marked as completed `[x]`, OR the user explicitly grants permission to skip the remaining tasks. Do not auto-assume tasks are done.
+
+6. **Execution:** Proceed with performing the coding or related operations defined in the current pending tasks.
+
+7. **Strict TDD & Commit Gate Protocol (MANDATORY):** If the plan employs TDD (Test-Driven Development) methodology or has tasks classified as `🧪 TDD`, the Agent **MUST** strictly follow this execution order before proposing any `git commit` or `git push`:
    a. **Log Evidence:** Run test files using the TDD evidence logger script (`tdd-test.sh`). Confirm that `artifacts/tests/tdd-evidence.log` contains a `status: FAIL` entry before the `status: PASS` entry for the respective test file.
    b. **Checkbox Update:** Check off (`[x]`) the completed tasks in the active plan file of the project (no need to update the platform's system `task.md` since it only holds the plan link under the OSS-first model).
    c. **Type Safety:** Run `npx astro check` (or language-equivalent static type analysis) and resolve all type errors (0 Errors).

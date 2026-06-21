@@ -35,7 +35,9 @@
 - **Initial Test Log:** `artifacts/tests/tdd-evidence.log`
 - **Preparation Description:**
   - Initialize the Dynamic Session Plan (DSP).
+  - **Project Snapshot:** Run MCP tool `project_snapshot` to backup the project configuration baseline.
   - Record initial repository state snapshot (working tree clean / dirty).
+  - **Session Compaction:** Run MCP tool `project_session_compact` to build the Vibecode Session KI context.
   - Confirm active quality tools: [TDD, --graph, --hardened, etc.]
 
 ---
@@ -72,6 +74,8 @@
 - **Decision:** [Final decision reached]
 
 #### 📝 Implementation Steps & Checklist
+- [ ] 1.0a 🤖 **Project Directory Snapshot:** (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool to capture the baseline configuration, rules, and workspace knowledge)
+- [ ] 1.0b 🤖 **Session Context Compaction:** (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to capture and write all rules, skills, and project contract to Vibecode Session KI)
 - [ ] 1.1 🤖 **Step 1:** [Task description]
 - [ ] 1.2 🤖 **Step 2:** [Task description]
 - [ ] 1.N-1 🤖 **Pre-commit Gate:** Run tests & lints (`npm run build` and `npx vitest run` or equivalent verification commands).
@@ -142,7 +146,9 @@ as specific tasks are identified during the conversation.
 - **Initial Test Log:** `artifacts/tests/tdd-evidence.log`
 - **Preparation Description:**
   - Initialize the Dynamic Session Plan (DSP).
+  - **Project Snapshot:** Run MCP tool `project_snapshot` to backup the project configuration baseline.
   - Record initial repository state snapshot (working tree clean / dirty).
+  - **Session Compaction:** Run MCP tool `project_session_compact` to build the Vibecode Session KI context.
   - Confirm active quality tools.
 
 ---
@@ -159,6 +165,10 @@ as specific tasks are identified during the conversation.
 
 > Phases will be appended here as the user requests specific goals.
 > Each Phase starts with a Quality Gate (see `references/session-quality-gate.md`) and pre/post phase reports.
+>
+> **Mandatory Tasks for each dynamic Phase:**
+> - `[ ] Phase.0a 🤖 Project Directory Snapshot` (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool to capture baseline before changes)
+> - `[ ] Phase.0b 🤖 Session Context Compaction` (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to compile and write rules/skills/contract to the Vibecode Session KI)
 
 ---
 

@@ -102,6 +102,7 @@
 - [ ] 0.2 🤖 [Task description]
 - [ ] 0.3 🤖 **MCP Project Directory Snapshot** (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool to capture the baseline configuration, rules, and workspace knowledge)
 - [ ] 0.4 🤖 **TDD Repo Before Snapshot** (run `git status --ignored --porcelain` & `git log -n 1 --oneline` and save to `artifacts/tests/tdd-repo-before-[date].log`)
+- [ ] 0.5 🤖 **Session Context Compaction** (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to capture and write all rules, skills, and project contract to Vibecode Session KI)
 - [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x] AND get explicit User approval before proceeding to Phase 1.
 
 ---
