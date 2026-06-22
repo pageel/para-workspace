@@ -22,6 +22,8 @@ Start a new working session with full context from previous sessions.
 > 4. Default ultimate fallback: "en"
 > All output (chat response) MUST be translated to the chat language, all internal reasoning (<thought>) MUST be written in the thinking language, and all generated files in artifacts/ (plans, tasks, qa) MUST follow the artifacts language.
 
+> **Constraint: Code Modification Ban during /open:** During the execution of the `/open` workflow, the Agent **MUST NOT** perform any code modifications, file writes, or git operations on the project codebase. The Agent **MUST** only read files, analyze context, check diagnostics, and output the startup report. Any identified issues (e.g., bugs in backlog, drift, or outdated items) **MUST** only be proposed as Suggested Actions in the final report, waiting for the user's explicit command/request before making any edits.
+
 ### 1. Identify project paths
 
 ```

@@ -58,6 +58,12 @@ Applies to **all** workflows and tasks:
 - **SHOULD** prioritize using defined workflows in `.agents/workflows/` over ad-hoc commands.
 - **SHOULD** ask the user instead of assuming when uncertain.
 
+#### 3c. Session Open Constraints (/open)
+
+- **MUST NOT** perform any code modifications, file edits, or git operations during the `/open` workflow execution.
+- The `/open` workflow is strictly read-only and designed to gather context, check workspace diagnostics, and present the startup report.
+- The Agent **MUST** only report discovered issues (such as backlog bugs, configuration drift, or outdated items) as Suggested Actions, and **MUST** wait for the user's explicit command/request before making any edits.
+
 ### 4. Context Recovery
 
 When context appears incomplete (cannot recall loaded rules, received truncation/checkpoint notice, or conversation has been very long):
@@ -126,7 +132,12 @@ BEFORE executing any task item in a plan Phase, Agent MUST:
 
 ### 6. Platform Tracker Exemption & CLI Boundary
 
-- **MUST NOT** generate or sync platform-level `task.md` or `implementation_plan.md` files in the `brain/` folder for macro-level plans (e.g., roadmaps, strategies, specifications, brainstorms, or any plans containing `roadmap`, `strategy`, `spec`, or `brainstorm` in their filenames).
+- **MUST NOT** write detailed content or synchronize files directly into the platform-level `brain/implementation_plan.md`, `brain/task.md`, or `brain/walkthrough.md` if the active project has a local plan file under `Projects/<project>/artifacts/plans/` or has `active_plan` defined in `project.md`.
+- **MUST** initialize these files in the `brain/` directory as **Link-Only Pointers** (using `IsArtifact: true` with the target path inside the IDE's `brain/` folder). The pointer file format MUST contain the `TRACKER (link-only)` safety guard comment and a clickable link to the corresponding section in the project plan:
+  - `brain/implementation_plan.md` ➔ Links to the Project Plan file.
+  - `brain/task.md` ➔ Links to the specific active Phase's Task List section inside the Project Plan file.
+  - `brain/walkthrough.md` ➔ Links to the `## Walkthrough` section inside the Project Plan file.
+- **MUST** focus 100% of execution progress, checklist management, and verification logs in the local project files (using `IsArtifact: false` with the target path inside `Projects/`).
 - **MUST** strictly separate terminal commands from slash commands:
   - Slash Commands (Workflows) are platform-specific UI commands starting with `/` (e.g., `/open`, `/plan`, `/staging`, `/brainstorm`). These MUST only be triggered/recommended in the chat UI.
   - CLI Commands are local terminal commands starting with `./para` (e.g., `./para status`, `./para update`). These MUST only be run in the terminal shell.
