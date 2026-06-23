@@ -320,8 +320,8 @@ const translations = {
         thWeightDegree: "Weight / Degree",
         thBlastRadius: "Blast Radius",
         thDocLinks: "Doc Links (docAnchors)",
-        thDocLinksDocs: "Docs ➔ Code (Anchor)",
-        thDocLinksCode: "Code ➔ Docs (Comment)",
+        thDocLinksDocs: "Docs ➔ Code (Neo)",
+        thDocLinksCode: "Code ➔ Docs (Cmt)",
         thDescription: "Description / System Semantics",
         hotspotsTitle: "⚠️ Priority Hotspots",
         hotspotsSubtitle: "High-impact components lacking docs",
@@ -514,12 +514,40 @@ function buildTree(dirPath, rootDir, folderOrderList = []) {
     return node;
 }
 
+// Helper to calculate virtual relative paths for docs, sysdesigns, specs, and writings
+function getVirtualRelativePath(filePath, srcDir) {
+    const projectDir = path.dirname(srcDir);
+    const sysdesignsDir = path.join(projectDir, 'artifacts', 'sysdesigns');
+    const specsDir = path.join(projectDir, 'artifacts', 'specs');
+    const writingsDir = fs.existsSync(path.join(projectDir, 'writings'))
+        ? path.join(projectDir, 'writings')
+        : path.join(projectDir, 'artifacts', 'writings');
+    
+    const normFile = path.normalize(filePath);
+    const normSys = path.normalize(sysdesignsDir);
+    const normSpecs = path.normalize(specsDir);
+    const normWritings = path.normalize(writingsDir);
+    const normDocs = path.normalize(srcDir);
+    
+    if (fs.existsSync(sysdesignsDir) && normFile.startsWith(normSys)) {
+        return path.join('sysdesigns', path.relative(sysdesignsDir, filePath)).replace(/\\/g, '/');
+    } else if (fs.existsSync(specsDir) && normFile.startsWith(normSpecs)) {
+        return path.join('specs', path.relative(specsDir, filePath)).replace(/\\/g, '/');
+    } else if (fs.existsSync(writingsDir) && normFile.startsWith(normWritings)) {
+        return path.join('writings', path.relative(writingsDir, filePath)).replace(/\\/g, '/');
+    } else if (normFile.startsWith(normDocs)) {
+        return path.join('docs', path.relative(srcDir, filePath)).replace(/\\/g, '/');
+    } else {
+        return path.relative(srcDir, filePath).replace(/\\/g, '/');
+    }
+}
+
 // Convert Folder Tree JSON into HTML Sidebar navigation list
-function treeToHtml(node, currentSourcePath, currentTargetPath, rootDir, rootOutputDir) {
+function treeToHtml(node, currentSourcePath, currentTargetPath, rootDir, rootOutputDir, srcDir) {
     if (!node.isDirectory) {
         if (path.extname(node.path) !== '.md') return '';
         
-        const relativeFromRoot = path.relative(rootDir, node.path);
+        const relativeFromRoot = getVirtualRelativePath(node.path, srcDir);
         const correspondingHtmlPath = path.join(rootOutputDir, relativeFromRoot.replace(/\.md$/, '.html'));
         
         let relativeUrl = path.relative(path.dirname(currentTargetPath), correspondingHtmlPath);
@@ -544,7 +572,7 @@ function treeToHtml(node, currentSourcePath, currentTargetPath, rootDir, rootOut
     let childrenHtml = '';
     if (node.children) {
         for (const child of node.children) {
-            childrenHtml += treeToHtml(child, currentSourcePath, currentTargetPath, rootDir, rootOutputDir);
+            childrenHtml += treeToHtml(child, currentSourcePath, currentTargetPath, rootDir, rootOutputDir, srcDir);
         }
     }
     
@@ -554,7 +582,7 @@ function treeToHtml(node, currentSourcePath, currentTargetPath, rootDir, rootOut
     
     if (!childrenHtml.trim()) return '';
     
-    const folderPrefix = (node.order !== undefined && node.order < 999999) ? `${node.order}. ` : '';
+    const folderPrefix = (node.order !== undefined && node.order < 90000 && !node.hideOrder) ? `${node.order}. ` : '';
     return `
     <li class="tree-folder">
         <div class="folder-toggle">
@@ -748,8 +776,8 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
             </div>`;
         }
 
-        // Parse markdown content for @graph-node anchors
-        const nodeRegex = /<!--\s*@graph-node:\s*([^\s>]+)\s*-->/g;
+        // Parse markdown content for Unified CSA <span id="csa-..."> anchors
+        const nodeRegex = /<span\s+id=["'](csa-[a-zA-Z0-9.:\/_-]+)["'][^>]*><\/span>/g;
         const linkedNodeIds = [];
         let match;
         while ((match = nodeRegex.exec(markdownContent)) !== null) {
@@ -776,7 +804,11 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
             nodesListMarkdown += `| :--- | :--- | :--- | :---: | :--- |\n`;
             
             for (const nodeId of linkedNodeIds) {
-                const node = graphNodesMap[nodeId];
+                let node = graphNodesMap[nodeId];
+                if (!node) {
+                    const cleanId = nodeId.startsWith('csa-') ? nodeId.substring(4) : nodeId;
+                    node = graphNodesMap[cleanId] || Object.values(graphNodesMap).find(n => n.name === cleanId || n.id === cleanId || n.id.endsWith('::' + cleanId));
+                }
                 if (node) {
                     const type = node.type || 'unknown';
                     const name = node.name || node.id;
@@ -965,7 +997,8 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
             html = html.replaceAll(`/* TRANSLATE:${key} */`, currentTranslations[key]);
         }
         
-        const relativeReadmeFromTarget = path.relative(path.dirname(targetFile), path.join(rootOutputDir, 'README.html'));
+        const readmeVirtualPath = getVirtualRelativePath(path.join(rootDir, 'README.md'), rootDir).replace(/\.md$/, '.html');
+        const relativeReadmeFromTarget = path.relative(path.dirname(targetFile), path.join(rootOutputDir, readmeVirtualPath));
         
         // Auto-detect language of README
         let readmeLangPath = 'README.html';
@@ -1012,8 +1045,69 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
 function renderDirectory(srcDir, destDir, template) {
     const readmePath = path.join(srcDir, 'README.md');
     const folderOrderList = getFolderOrderFromReadme(readmePath);
-    const treeRoot = buildTree(srcDir, srcDir, folderOrderList);
     
+    const projectDir = path.dirname(srcDir);
+    const sysdesignsDir = path.join(projectDir, 'artifacts', 'sysdesigns');
+    const specsDir = path.join(projectDir, 'artifacts', 'specs');
+    const writingsDir = fs.existsSync(path.join(projectDir, 'writings'))
+        ? path.join(projectDir, 'writings')
+        : path.join(projectDir, 'artifacts', 'writings');
+
+    // Create a virtualRoot as a parent node
+    const virtualRoot = {
+        name: 'Root',
+        path: projectDir,
+        isDirectory: true,
+        children: []
+    };
+
+    // 1. Add sysdesigns branch
+    if (fs.existsSync(sysdesignsDir)) {
+        const sysTree = buildTree(sysdesignsDir, sysdesignsDir);
+        if (sysTree.children && sysTree.children.length > 0) {
+            sysTree.name = 'sysdesigns';
+            sysTree.order = 10;
+            sysTree.hideOrder = true;
+            virtualRoot.children.push(sysTree);
+        }
+    }
+
+    // 2. Add specs branch
+    if (fs.existsSync(specsDir)) {
+        const specsTree = buildTree(specsDir, specsDir);
+        if (specsTree.children && specsTree.children.length > 0) {
+            specsTree.name = 'specs';
+            specsTree.order = 20;
+            specsTree.hideOrder = true;
+            virtualRoot.children.push(specsTree);
+        }
+    }
+
+    // 3. Add docs branch
+    const docsTree = buildTree(srcDir, srcDir, folderOrderList);
+    docsTree.name = 'docs';
+    docsTree.order = 30;
+    docsTree.hideOrder = true;
+    virtualRoot.children.push(docsTree);
+
+    // 4. Add writings branch
+    if (fs.existsSync(writingsDir)) {
+        const writingsTree = buildTree(writingsDir, writingsDir);
+        if (writingsTree.children && writingsTree.children.length > 0) {
+            writingsTree.name = 'writings';
+            writingsTree.order = 40;
+            writingsTree.hideOrder = true;
+            virtualRoot.children.push(writingsTree);
+        }
+    }
+
+    // Sort virtual subtrees
+    virtualRoot.children.sort((a, b) => {
+        const orderA = a.order !== undefined ? a.order : 999999;
+        const orderB = b.order !== undefined ? b.order : 999999;
+        return orderA - orderB;
+    });
+
     const allMdFiles = [];
     function collectMdFiles(node) {
         if (!node.isDirectory) {
@@ -1026,10 +1120,9 @@ function renderDirectory(srcDir, destDir, template) {
             }
         }
     }
-    collectMdFiles(treeRoot);
+    collectMdFiles(virtualRoot);
     
     // Load Graph data first to support dynamic node referencing in renderSingleFile
-    const projectDir = path.dirname(srcDir);
     const graphDir = path.join(projectDir, '.beads', 'graph');
     const entitiesPath = path.join(graphDir, 'entities.jsonl');
     const relationsPath = path.join(graphDir, 'relations.jsonl');
@@ -1129,15 +1222,46 @@ function renderDirectory(srcDir, destDir, template) {
         };
     }
 
-    // Calculate Graph Traceability and update README.md
+    // Pre-scan all markdown files to extract HTML csa- anchors and resolve them to code entities
+    const nodeToAnchorsMap = {}; // Maps node.id to Set of relativeMdPath#anchorId
     let docsWithAnchors = 0;
+    
     for (const mdFile of allMdFiles) {
         try {
             const content = fs.readFileSync(mdFile, 'utf8');
-            if (content.includes('<!-- @graph-node:')) {
+            let hasAnchor = false;
+            
+            const nodeRegex = /<span\s+id=["'](csa-[a-zA-Z0-9.:\/_-]+)["'][^>]*><\/span>/g;
+            let match;
+            const relativeMdPath = getVirtualRelativePath(mdFile, srcDir).replace(/\\/g, '/');
+            
+            while ((match = nodeRegex.exec(content)) !== null) {
+                const anchorId = match[1];
+                hasAnchor = true;
+                
+                if (hasGraph) {
+                    // Resolve anchorId to a node in the graph
+                    let targetNode = graphNodesMap[anchorId];
+                    if (!targetNode) {
+                        const cleanId = anchorId.startsWith('csa-') ? anchorId.substring(4) : anchorId;
+                        targetNode = graphNodesMap[cleanId] || Object.values(graphNodesMap).find(n => n.name === cleanId || n.id === cleanId || n.id.endsWith('::' + cleanId));
+                    }
+                    
+                    if (targetNode) {
+                        if (!nodeToAnchorsMap[targetNode.id]) {
+                            nodeToAnchorsMap[targetNode.id] = new Set();
+                        }
+                        nodeToAnchorsMap[targetNode.id].add(`${relativeMdPath}#${anchorId}`);
+                    }
+                }
+            }
+            
+            if (hasAnchor) {
                 docsWithAnchors++;
             }
-        } catch (e) {}
+        } catch (e) {
+            console.warn(`Warning: Failed to parse anchors for mapping in ${mdFile}:`, e.message);
+        }
     }
     
     let dashboardStats = {
@@ -1169,11 +1293,19 @@ function renderDirectory(srcDir, destDir, template) {
             return !isTest;
         });
         
-        linkedNodes = enrichableNodes.filter(node => node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0);
+        linkedNodes = enrichableNodes.filter(node => {
+            const hasSemantic = node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0;
+            const hasScanned = nodeToAnchorsMap[node.id] && nodeToAnchorsMap[node.id].size > 0;
+            return hasSemantic || hasScanned;
+        });
         const enrichedNodes = enrichableNodes.filter(node => node.semantic && node.semantic.summary && node.semantic.summary.trim() !== '');
         
         godNodes = enrichableNodes.filter(node => node.degree >= 20);
-        const documentedGodNodes = godNodes.filter(node => node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0);
+        const documentedGodNodes = godNodes.filter(node => {
+            const hasSemantic = node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0;
+            const hasScanned = nodeToAnchorsMap[node.id] && nodeToAnchorsMap[node.id].size > 0;
+            return hasSemantic || hasScanned;
+        });
         staleNodes = enrichableNodes.filter(node => node.staleSince && node.staleSince !== null);
         
         let totalWeight = 0;
@@ -1221,7 +1353,21 @@ function renderDirectory(srcDir, destDir, template) {
                 weightedClass = 'low';
             }
             
-            const isLinked = node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0;
+            const finalDocAnchors = (() => {
+                const scanned = nodeToAnchorsMap[node.id] ? Array.from(nodeToAnchorsMap[node.id]) : [];
+                const standard = (node.semantic && node.semantic.docAnchors) || [];
+                const finalAnchors = [...scanned];
+                standard.forEach(std => {
+                    const stdFile = std.split('#')[0].replace(/\\/g, '/');
+                    const alreadyHas = finalAnchors.some(sa => sa.split('#')[0].replace(/\\/g, '/') === stdFile);
+                    if (!alreadyHas) {
+                        finalAnchors.push(std);
+                    }
+                });
+                return finalAnchors;
+            })();
+            
+            const isLinked = finalDocAnchors.length > 0;
             const isEnriched = node.semantic && node.semantic.summary && node.semantic.summary.trim() !== '';
             
             // Parse @para-doc comments from source code
@@ -1267,7 +1413,7 @@ function renderDirectory(srcDir, destDir, template) {
                 weightedClass: weightedClass,
                 isLinked: isLinked,
                 isEnriched: isEnriched,
-                docAnchors: (node.semantic && node.semantic.docAnchors) || [],
+                docAnchors: finalDocAnchors,
                 codeDocs: codeDocs,
                 summary: (node.semantic && node.semantic.summary) || ''
             };
@@ -1283,7 +1429,11 @@ function renderDirectory(srcDir, destDir, template) {
                 return fileComments.some(c => c.line >= (node.startLine || 1) - 4 && c.line <= (node.startLine || 1));
             }
         });
-        documentedGodNodesCount = godNodes.filter(node => node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0).length;
+        documentedGodNodesCount = godNodes.filter(node => {
+            const hasSemantic = node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0;
+            const hasScanned = nodeToAnchorsMap[node.id] && nodeToAnchorsMap[node.id].size > 0;
+            return hasSemantic || hasScanned;
+        }).length;
         codeLinkedGodNodesCount = godNodes.filter(node => {
             const absPath = path.resolve(projectDir, 'repo', node.filePath || '');
             const fileComments = getParaDocCommentsForFile(absPath);
@@ -1328,7 +1478,7 @@ function renderDirectory(srcDir, destDir, template) {
     }
 
     for (const mdFile of allMdFiles) {
-        const relPath = path.relative(srcDir, mdFile).replace(/\\/g, '/');
+        const relPath = getVirtualRelativePath(mdFile, srcDir);
         // Detect file language
         let fileLang = workspaceLang;
         const normalizedPath = mdFile.replace(/\\/g, '/');
@@ -1354,13 +1504,31 @@ function renderDirectory(srcDir, destDir, template) {
             headers.push(hMatch[2].trim());
         }
         
-        const docNodes = processedNodesData.filter(node => {
-            const matchesDoc = (anchor) => {
-                const cleanAnchor = anchor.split('#')[0];
-                const anchorBase = path.basename(cleanAnchor).toLowerCase();
-                const fileBase = path.basename(mdFile).toLowerCase();
-                return anchorBase === fileBase;
+        const matchesDoc = (anchor) => {
+            const cleanAnchor = anchor.split('#')[0].replace(/\\/g, '/').toLowerCase();
+            const cleanMd = mdFile.replace(/\\/g, '/').toLowerCase();
+            
+            const getRelativeSignature = (p) => {
+                for (const marker of ['/docs/', '/artifacts/', '/writings/']) {
+                    const idx = p.indexOf(marker);
+                    if (idx !== -1) return p.substring(idx + 1);
+                }
+                if (p.startsWith('docs/') || p.startsWith('artifacts/') || p.startsWith('writings/')) {
+                    return p;
+                }
+                return path.basename(p);
             };
+
+            const anchorSig = getRelativeSignature(cleanAnchor);
+            const mdSig = getRelativeSignature(cleanMd);
+            
+            if (!anchorSig.includes('/') || !mdSig.includes('/')) {
+                return path.basename(anchorSig) === path.basename(mdSig);
+            }
+            return anchorSig === mdSig;
+        };
+
+        const docNodes = processedNodesData.filter(node => {
             return node.docAnchors.some(matchesDoc) || node.codeDocs.some(matchesDoc);
         });
         
@@ -1402,9 +1570,7 @@ function renderDirectory(srcDir, destDir, template) {
                     const anchorFile = parts[0];
                     const anchorName = parts[1];
                     
-                    const anchorFileBase = path.basename(anchorFile).toLowerCase();
-                    const currentFileBase = path.basename(mdFile).toLowerCase();
-                    if (anchorFileBase === currentFileBase) {
+                    if (matchesDoc(anchorFile)) {
                         const isMatch = isLooseAnchorMatch(anchorName, headers);
                         if (!isMatch) {
                             auditReports.push({
@@ -1473,12 +1639,10 @@ function renderDirectory(srcDir, destDir, template) {
             topHeadings: []
         };
         const headingFreq = {};
-        const fileBase = path.basename(mdFile).toLowerCase();
-
         docNodes.forEach(n => {
             const getHeadingsFromAnchors = (anchors) => {
                 return anchors
-                    .filter(a => path.basename(a.split('#')[0]).toLowerCase() === fileBase && a.includes('#'))
+                    .filter(a => matchesDoc(a) && a.includes('#'))
                     .map(a => '#' + a.split('#')[1])
                     .filter((v, i, arr) => arr.indexOf(v) === i); // deduplicate
             };
@@ -1486,8 +1650,15 @@ function renderDirectory(srcDir, destDir, template) {
             const docAnchorHeadings = getHeadingsFromAnchors(n.docAnchors);
             const codeDocHeadings = getHeadingsFromAnchors(n.codeDocs);
             
-            const hasDocAnchor = docAnchorHeadings.length > 0 || n.docAnchors.some(a => path.basename(a.split('#')[0]).toLowerCase() === fileBase);
-            const hasCodeDoc = codeDocHeadings.length > 0 || n.codeDocs.some(a => path.basename(a.split('#')[0]).toLowerCase() === fileBase);
+            const hasDocAnchor = docAnchorHeadings.length > 0 || n.docAnchors.some(a => matchesDoc(a));
+            const hasCodeDoc = codeDocHeadings.length > 0 || n.codeDocs.some(a => {
+                if (!a.includes('#')) {
+                    // Shortened anchor ID match
+                    const cleanA = a.startsWith('csa-') ? a.substring(4) : a;
+                    return a === n.id || cleanA === n.name || n.id.endsWith('::' + cleanA);
+                }
+                return matchesDoc(a);
+            });
             
             if (hasDocAnchor && hasCodeDoc) {
                 stats.doubleBound++;
@@ -1549,6 +1720,39 @@ function renderDirectory(srcDir, destDir, template) {
                             }
                         }
                     }
+                } else {
+                    // Shortened anchor ID match check
+                    const currentFileRel = path.relative(rootDir, mdFile).replace(/\\/g, '/');
+                    const matchesDoc = node.docAnchors.some(a => {
+                        const relA = a.replace(/\\/g, '/');
+                        return relA === currentFileRel || relA.endsWith('/' + currentFileRel) || currentFileRel.endsWith('/' + relA);
+                    });
+                    
+                    if (matchesDoc) {
+                        const cleanDocStr = codeDocStr.startsWith('csa-') ? codeDocStr.substring(4) : codeDocStr;
+                        const hasAnchorInDoc = linkedNodeIds.some(id => {
+                            const cleanId = id.startsWith('csa-') ? id.substring(4) : id;
+                            return cleanId === cleanDocStr;
+                        });
+                        
+                        if (!hasAnchorInDoc) {
+                            const isDuplicate = auditReports.some(r => r.description && r.description.includes(codeDocStr));
+                            if (!isDuplicate) {
+                                auditReports.push({
+                                    severity: 'medium',
+                                    title: fileLang === 'vi' 
+                                        ? `Neo @para-doc hỏng từ \`${node.name}\`` 
+                                        : `Broken @para-doc link from \`${node.name}\``,
+                                    description: fileLang === 'vi' 
+                                        ? `Chú thích @para-doc trong code trỏ tới neo \`${codeDocStr}\` nhưng thẻ neo này không tồn tại trong tài liệu.`
+                                        : `@para-doc comment in code points to anchor \`${codeDocStr}\` but this anchor was not found in the document.`,
+                                    solution: fileLang === 'vi'
+                                        ? `Thêm thẻ neo \`<span id="${codeDocStr.startsWith('csa-') ? codeDocStr : 'csa-' + codeDocStr}"></span>\` vào tài liệu.`
+                                        : `Add the anchor tag \`<span id="${codeDocStr.startsWith('csa-') ? codeDocStr : 'csa-' + codeDocStr}"></span>\` to the document.`
+                                });
+                            }
+                        }
+                    }
                 }
             });
         });
@@ -1567,9 +1771,13 @@ function renderDirectory(srcDir, destDir, template) {
         const anchors = (node.semantic && node.semantic.docAnchors) || [];
         anchors.forEach(a => {
             const docPath = a.split('#')[0];
-            let cleanDocPath = docPath;
-            if (docPath.startsWith('docs/')) {
-                cleanDocPath = docPath.substring(5);
+            let cleanDocPath = docPath.replace(/\\/g, '/');
+            if (cleanDocPath.startsWith('docs/')) {
+                cleanDocPath = cleanDocPath.substring(5);
+            } else if (cleanDocPath.startsWith('artifacts/sysdesigns/')) {
+                cleanDocPath = 'sysdesigns/' + cleanDocPath.substring(21);
+            } else if (cleanDocPath.startsWith('artifacts/specs/')) {
+                cleanDocPath = 'specs/' + cleanDocPath.substring(16);
             }
             staleDocPaths.add(cleanDocPath);
         });
@@ -1585,7 +1793,7 @@ function renderDirectory(srcDir, destDir, template) {
 
     const activeDocsCount = allMdFiles.length;
     const unhealthyDocsCount = Array.from(unhealthyDocPaths).filter(p => {
-        return allMdFiles.some(f => path.relative(srcDir, f).replace(/\\/g, '/') === p);
+        return allMdFiles.some(f => getVirtualRelativePath(f, srcDir) === p);
     }).length;
 
     const serverHealthPct = activeDocsCount > 0 ? ((activeDocsCount - unhealthyDocsCount) / activeDocsCount) * 100 : 100;
@@ -1652,12 +1860,12 @@ function renderDirectory(srcDir, destDir, template) {
 
     const searchIndex = [];
     for (const sourceFile of allMdFiles) {
-        const relativeFromRoot = path.relative(srcDir, sourceFile).replace(/\\/g, '/');
+        const relativeFromRoot = getVirtualRelativePath(sourceFile, srcDir);
         const targetFile = path.join(destDir, relativeFromRoot.replace(/\.md$/, '.html'));
         const fileAlignment = alignmentData[relativeFromRoot];
         const auditReports = fileAlignment ? fileAlignment.auditReports : [];
         const fileStats = fileAlignment ? fileAlignment.alignmentStats : null;
-        renderSingleFile(sourceFile, targetFile, treeRoot, srcDir, destDir, template, graphNodesMap, calculateBlastRadius, dashboardStats, auditReports, fileStats);
+        renderSingleFile(sourceFile, targetFile, virtualRoot, srcDir, destDir, template, graphNodesMap, calculateBlastRadius, dashboardStats, auditReports, fileStats);
         
         // Collect search index
         try {
@@ -1720,7 +1928,7 @@ function renderDirectory(srcDir, destDir, template) {
             
             const sidebarHtml = ''; // Dashboard runs inside Portal iframe, no sidebar needed
             
-            const allMdFilesRelative = allMdFiles.map(filePath => path.relative(srcDir, filePath).replace(/\\/g, '/'));
+            const allMdFilesRelative = allMdFiles.map(filePath => getVirtualRelativePath(filePath, srcDir));
             
             dashboardHtml = dashboardHtml
                 .replaceAll('/* WORKSPACE_LANG */', workspaceLang)
@@ -1750,7 +1958,7 @@ function renderDirectory(srcDir, destDir, template) {
                     }
                     
                     const relativeSearchIndexUrl = 'search-index.js';
-                    const portalSidebarHtml = treeToHtml(treeRoot, '', path.join(destDir, 'index.html'), srcDir, destDir);
+                    const portalSidebarHtml = treeToHtml(virtualRoot, '', path.join(destDir, 'index.html'), virtualRoot.path, destDir, srcDir);
                     
                     portalHtml = portalHtml
                         .replaceAll('/* SEARCH_INDEX_RELATIVE_URL */', relativeSearchIndexUrl)
@@ -1802,7 +2010,7 @@ function renderDirectory(srcDir, destDir, template) {
                                 walkWikiAndCompile(srcPath, destPath);
                             } else if (item.endsWith('.md')) {
                                 const targetHtmlPath = destPath.replace(/\.md$/, '.html');
-                                renderSingleFile(srcPath, targetHtmlPath, treeRoot, srcDir, destDir, template, graphNodesMap, calculateBlastRadius, dashboardStats, [], null);
+                                renderSingleFile(srcPath, targetHtmlPath, virtualRoot, srcDir, destDir, template, graphNodesMap, calculateBlastRadius, dashboardStats, [], null);
                                 const relWikiPath = path.relative(wikiSourceDir, srcPath);
                                 console.log(`📚 Compiled Developer Wiki page ${relWikiPath} successfully.`);
                             }
@@ -2012,9 +2220,29 @@ if (hasWatchFlag) {
         }, 300);
     }
     
+    const projectDir = path.dirname(sourceDir);
+    const sysdesignsDir = path.join(projectDir, 'artifacts', 'sysdesigns');
+    const specsDir = path.join(projectDir, 'artifacts', 'specs');
+
     fs.watch(sourceDir, { recursive: true }, (eventType, filename) => {
         if (filename && filename.endsWith('.md')) {
             triggerRebuild();
         }
     });
+
+    if (fs.existsSync(sysdesignsDir)) {
+        fs.watch(sysdesignsDir, { recursive: true }, (eventType, filename) => {
+            if (filename && filename.endsWith('.md')) {
+                triggerRebuild();
+            }
+        });
+    }
+
+    if (fs.existsSync(specsDir)) {
+        fs.watch(specsDir, { recursive: true }, (eventType, filename) => {
+            if (filename && filename.endsWith('.md')) {
+                triggerRebuild();
+            }
+        });
+    }
 }

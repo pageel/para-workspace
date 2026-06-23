@@ -137,9 +137,12 @@ If the `--graph` flag is provided, execute an INTERACTIVE Graph Preparation Phas
 Before diving into general Red Team questions, the Agent MUST step into the role of the **Project Tech Lead** to enforce project-specific compliance:
 
 1. **Load Context:** Read the project's `.agents/rules.md` and `.agents/skills.md` indexes. Identify and read all project-specific rules (e.g., `maintenance.md`) and skills.
-2. **Generate Governance Checklist:** Create a dedicated set of crucial checklist questions based strictly on these loaded rules and skills. (e.g., "Does this plan violate the scope containment defined in `maintenance.md`?", "Are we following the architecture defined in the project skill?").
-3. **Document:** Append this checklist to the QA Report file under a new `## 0.5 Tech Lead Governance Checklist` section.
-4. **Halt for Review:** The Agent MUST stop and present this checklist to the user. **STOP HERE.** Wait for the user to confirm this checklist before moving to structure scan and general question generation.
+2. **Project-Specific QA Rules Integration:** Check if the project rules index contains a rule file mapping to `qa.md` (e.g., `Projects/[project]/.agents/rules/qa.md`). If present, read it and extract all pre-defined checklist questions.
+3. **Generate Governance Checklist:** Create a dedicated set of crucial checklist questions by combining:
+   - The pre-defined project questions extracted from `Projects/[project]/.agents/rules/qa.md` (if any).
+   - Custom compliance questions generated strictly from the loaded rules (`maintenance.md`, `csa-compliance.md`, etc.) and project skills.
+4. **Document:** Append this combined checklist to the QA Report file under a new `## 0.5 Tech Lead Governance Checklist` section.
+5. **Halt for Review:** The Agent MUST stop and present this checklist to the user. **STOP HERE.** Wait for the user to confirm this checklist before moving to structure scan and general question generation.
 
 ### Step 1. Structure Scan
 

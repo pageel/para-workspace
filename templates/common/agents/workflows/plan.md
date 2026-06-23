@@ -273,16 +273,22 @@ Context:
 
 > ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here and ask the user which plan type to create. Do NOT guess or proceed to generating the plan until the user responds. The Agent **MUST NOT** auto-select the plan type or template under any circumstances unless explicitly configured via CLI flags (`--tdd` or `--hardened`).
 
-**If roadmap exists → smart suggest:**
+**If roadmap exists → Smart Suggest Hardening:**
 
-```text
-📐 Roadmap: roadmap-[name].md (N phases)
+The Agent **MUST** follow these steps to map roadmap phase and template before proceeding:
+1. Load the roadmap file and check if the target plan version/name has already been implemented (i.e. has `✅ Done` status on Roadmap, or exists in `artifacts/plans/done/`). If it exists, the Agent **MUST** print a conflict error, abort the process, and stop to await instructions.
+2. If the version matches a pending phase (e.g. `📋 Planned` or `⏳ Pending`), the Agent **MUST** print the phase detail and prompt the user to explicitly select a plan template:
+   ```text
+   📐 Smart Suggest: Roadmap phase detected.
+   Found Phase [N]: [Phase Title] (v[Version]) — 📋 Planned
 
-Next phase without detail plan:
-→ Phase [N]: [Name] (vX.Y) — 📋 Planned
-
-Create Detail Plan for Phase [N]? (y/n)
-```
+   ❓ Which plan template would you like to use for Phase [N]?
+      1. detail-plan.md (Standard Detail Plan)
+      2. detail-plan-tdd.md (Strict TDD Plan)
+      3. detail-plan-hardened.md (Hardened Plan - Recommended)
+      4. detail-plan-docs.md (Documentation Only)
+   ```
+3. ⛔ **CHECKPOINT (Interactive Pause):** The Agent **MUST** stop here. The Agent is strictly prohibited from writing or generating the plan file until the user explicitly responds in the chat and selects a template.
 
 > **Roadmap naming convention:** `roadmap-[scope].md`. Never `active_plan`.
 > **Detail plan:** Standard `*.md` (non-roadmap). IS `active_plan`, archived to `plans/done/` when done.

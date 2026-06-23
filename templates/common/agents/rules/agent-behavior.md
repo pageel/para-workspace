@@ -22,7 +22,9 @@ Agent **MUST** read the `language` map in `.para-workspace.yml` and apply each k
 
 | Key | Purpose | Rule |
 |:--|:--|:--|
-| `repo` | Language for `.agents/` files (rules, skills, workflows), specs, and OSS templates | **MUST** write in English when value contains `english` or `OSS` — overrides all other keys for governed files |
+| `repo` | Language for `.agents/` files (rules, skills, workflows) and OSS templates | **MUST** write in English when value contains `english` or `OSS` — overrides all other keys for governed files |
+| `specs` | Language for project specifications (specs) | **SHOULD** use first listed language as primary; second as fallback or bilingual |
+| `sysdesigns` | Language for project system designs (sysdesigns) | **SHOULD** use first listed language as primary; second as fallback or bilingual |
 | `thinking` | Language for internal reasoning and chain-of-thought | **MUST** use this language for thinking, not just visible output |
 | `chat` | Language for chat responses to the user | **MUST** reply in this language unless user switches mid-conversation |
 | `docs` | Language for documentation and artifacts | **SHOULD** use first listed language as primary; second as fallback or bilingual |
@@ -142,4 +144,20 @@ BEFORE executing any task item in a plan Phase, Agent MUST:
   - Slash Commands (Workflows) are platform-specific UI commands starting with `/` (e.g., `/open`, `/plan`, `/staging`, `/brainstorm`). These MUST only be triggered/recommended in the chat UI.
   - CLI Commands are local terminal commands starting with `./para` (e.g., `./para status`, `./para update`). These MUST only be run in the terminal shell.
   - **MUST NOT** execute workflows as CLI commands (e.g., running `./para staging` or `./para open` via terminal is invalid).
+
+### 7. Platform Harness Guards (v1.8.5)
+
+To prevent the Agent from bypassing critical decision checkpoints, the following harness gates are strictly enforced:
+
+#### 7a. Checkpoint Gate (Interactive Pause)
+- Whenever a task description, workflow block, or plan phase contains a line prefixed with `⛔ CHECKPOINT` (e.g., `⛔ CHECKPOINT:`, `⛔ CHECKPOINT (Interactive Pause)`), the Agent **MUST** immediately stop calling tools and end its turn to await user confirmation.
+- The Agent **MUST NOT** execute any further tool calls (specifically file modifications like `write_to_file`, `replace_file_content`, or terminal commands via `run_command`) in the same turn before receiving explicit user approval or input in the chat.
+
+#### 7b. Roadmap Sync Gate (Roadmap Hardening)
+- When a user initiates plan creation (e.g., via `/plan create [version]`), the Agent **MUST** read the active project's roadmap specified in `project.md`.
+- **Conflict Prevention:** If the target `[version]` already exists in the completed plans directory (`plans/done/`) or is marked as `✅ Done` on the Roadmap, the Agent **MUST** abort plan generation, print a warning, and stop to wait for user instructions. It **MUST NOT** overwrite or rename the plan file.
+- **Alignment Verification:** If the target `[version]` matches a pending phase (`📋 Planned` or `⏳ Pending`) on the Roadmap, the Agent **MUST** display the phase details and ask the user to explicitly select a plan template:
+  `"Roadmap phase detected: Phase [N]: [Phase Name] (v[Version]). Which plan template would you like to use? (e.g. detail-plan.md, detail-plan-tdd.md, detail-plan-hardened.md)"`
+  The Agent **MUST NOT** generate or write any plan file until the user explicitly selects a template.
+
 

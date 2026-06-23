@@ -168,6 +168,7 @@ When creating the QA Report at Step 0.5 (Pre-QA Strategy), the Agent MUST format
 > **Context requirement:** This persona's questions are only meaningful AFTER loading
 > the project's full governance context (rules, skills, release process) in Pre-flight Step 5.
 
+- Check for project-level QA checklists in `.agents/rules/qa.md`. If it exists, read it and integrate its questions directly into the Tech Lead's checklist.
 - "The project has maintenance rule M[N] requiring version sync across N files — does the plan list ALL locations?"
 - "Project type is OSS with tarball release — does the plan include a Release phase per M6?"
 - "Maintenance rule M1 restricts `git add` to `repo/` only — are all git commands scoped correctly?"
