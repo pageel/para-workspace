@@ -1497,10 +1497,14 @@
                             <span id="score-eval-label" class="score-evaluation">--</span>
                         </div>
                         
-                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 15px; display: flex; justify-content: center; width: 100%; border-top: 1px solid var(--border-color); padding-top: 12px; text-align: center;">
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 15px; display: flex; justify-content: space-around; width: 100%; border-top: 1px solid var(--border-color); padding-top: 12px; text-align: center;">
                             <div>
                                 <span style="display: block; font-size: 14px; font-weight: 700; color: var(--text-primary);" id="detail-weighted-coverage">0%</span>
                                 <span style="font-size: 10px;" data-i18n="weightedCoverageLabel">/* TRANSLATE:weightedCoverageLabel */</span>
+                            </div>
+                            <div style="border-left: 1px solid var(--border-color); padding-left: 15px;">
+                                <span style="display: block; font-size: 14px; font-weight: 700; color: var(--text-primary);" id="detail-total-docs">0</span>
+                                <span style="font-size: 10px;" data-i18n="totalDocs">/* TRANSLATE:totalDocs */</span>
                             </div>
                         </div>
                     </div>
@@ -1508,23 +1512,6 @@
                     <!-- Column 2 & 3: Nested Stats Grid -->
                     <div class="stats-grid-container">
                         
-                        <!-- Card 1: Total Docs -->
-                        <div class="stat-box box-blue" style="display: flex; flex-direction: column; justify-content: space-between;">
-                            <div class="stat-box-header">
-                                <span class="stat-box-title" data-i18n="totalDocs">/* TRANSLATE:totalDocs */</span>
-                                <div class="stat-box-icon-wrapper theme-blue">
-                                    <i data-lucide="files"></i>
-                                </div>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
-                                <div style="display: flex; flex-direction: column; gap: 4px;">
-                                    <span class="stat-box-value" id="stat-total-docs">0</span>
-                                    <span class="stat-box-sub" id="stat-docs-with-anchors-sub">0</span>
-                                </div>
-                                <span id="stat-docs-pct-badge" class="badge stat-badge">0%</span>
-                            </div>
-                        </div>
-
                         <!-- Card 2: Graph Nodes -->
                         <div class="stat-box box-indigo" style="display: flex; flex-direction: column; justify-content: space-between;">
                             <div class="stat-box-header">
@@ -1542,25 +1529,25 @@
                             </div>
                         </div>
 
-                        <!-- Card 3: Outdated Documents -->
-                        <div class="stat-box box-success" id="box-stale-status" style="display: flex; flex-direction: column; justify-content: space-between;">
+                        <!-- Card 5: Business God Nodes -->
+                        <div class="stat-box box-gold" style="display: flex; flex-direction: column; justify-content: space-between;">
                             <div class="stat-box-header">
-                                <span class="stat-box-title" data-i18n="healthStatus">/* TRANSLATE:healthStatus */</span>
-                                <div class="stat-box-icon-wrapper theme-success" id="icon-stale-status">
-                                    <i data-lucide="shield-alert"></i>
+                                <span class="stat-box-title" data-i18n="businessGodNodes">/* TRANSLATE:businessGodNodes */</span>
+                                <div class="stat-box-icon-wrapper theme-gold">
+                                    <i data-lucide="crown"></i>
                                 </div>
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
                                 <div style="display: flex; flex-direction: column; gap: 4px;">
-                                    <span class="stat-box-value" id="stat-stale-docs">0</span>
-                                    <span class="stat-box-sub" id="stat-stale-docs-sub">0</span>
+                                    <span class="stat-box-value" id="stat-god-nodes">0/0</span>
+                                    <span class="stat-box-sub" id="stat-god-nodes-sub">0</span>
                                 </div>
-                                <span id="stat-health-pct-badge" class="badge stat-badge">100%</span>
+                                <span id="stat-god-pct-badge" class="badge stat-badge">0%</span>
                             </div>
                         </div>
 
                         <!-- Card 4: Dangling CSA Links -->
-                        <div class="stat-box box-red" id="box-dangling-status" style="display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid var(--danger-color, #ef4444); cursor: pointer;" onclick="setFilter('dangling')">
+                        <div class="stat-box box-danger" id="box-dangling-status" style="display: flex; flex-direction: column; justify-content: space-between; cursor: pointer;" onclick="setFilter('dangling')">
                             <div class="stat-box-header">
                                 <span class="stat-box-title" data-i18n="danglingLinks">Dangling CSA Links</span>
                                 <div class="stat-box-icon-wrapper theme-red" style="background-color: rgba(239, 68, 68, 0.1); color: var(--danger-color, #ef4444); border-radius: 6px; padding: 4px;">
@@ -1576,20 +1563,20 @@
                             </div>
                         </div>
 
-                        <!-- Card 5: Business God Nodes (Spans 2 columns) -->
-                        <div class="stat-box box-gold" style="grid-column: span 2; display: flex; flex-direction: column; justify-content: space-between;">
+                        <!-- Card 3: Outdated Documents -->
+                        <div class="stat-box box-success" id="box-stale-status" style="display: flex; flex-direction: column; justify-content: space-between;">
                             <div class="stat-box-header">
-                                <span class="stat-box-title" data-i18n="businessGodNodes">/* TRANSLATE:businessGodNodes */</span>
-                                <div class="stat-box-icon-wrapper theme-gold">
-                                    <i data-lucide="crown"></i>
+                                <span class="stat-box-title" data-i18n="healthStatus">/* TRANSLATE:healthStatus */</span>
+                                <div class="stat-box-icon-wrapper theme-success" id="icon-stale-status">
+                                    <i data-lucide="shield-alert"></i>
                                 </div>
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
                                 <div style="display: flex; flex-direction: column; gap: 4px;">
-                                    <span class="stat-box-value" id="stat-god-nodes">0/0</span>
-                                    <span class="stat-box-sub" id="stat-god-nodes-sub">0</span>
+                                    <span class="stat-box-value" id="stat-stale-docs">0</span>
+                                    <span class="stat-box-sub" id="stat-stale-docs-sub">0</span>
                                 </div>
-                                <span id="stat-god-pct-badge" class="badge stat-badge">0%</span>
+                                <span id="stat-health-pct-badge" class="badge stat-badge">100%</span>
                             </div>
                         </div>
 
@@ -1868,6 +1855,7 @@
         // Data injected statically from render.js
         const dashboardStats = JSON.parse('{}');
         const graphNodesData = JSON.parse('[]');
+        const existingSpecAnchorIdsData = [];
         const allMarkdownFiles = JSON.parse('[]');
         const alignmentData = JSON.parse('{}');
 
@@ -2461,7 +2449,7 @@
                 return !isFolderExcluded(folder);
             });
 
-            const existingSpecAnchorIds = new Set();
+            const existingSpecAnchorIds = new Set(existingSpecAnchorIdsData);
             graphNodesData.forEach(n => {
                 if (n.type === 'spec_anchor') {
                     existingSpecAnchorIds.add(n.id);
@@ -2471,6 +2459,7 @@
                 }
             });
 
+            let totalActiveCodeDocsCount = 0;
             let danglingLinksCount = 0;
             const activeDocsWithAnchors = new Set();
             graphNodesData.forEach(node => {
@@ -2505,8 +2494,10 @@
                 
                 if (node.hasCodeDocActive && node.activeCodeDocs) {
                     node.activeCodeDocs.forEach(doc => {
+                        if (!doc.includes('#')) return; // Bỏ qua liên kết file toàn cục không có anchor
+                        totalActiveCodeDocsCount++;
                         const parts = doc.split('#');
-                        const anchorId = parts.length > 1 ? parts[1] : parts[0];
+                        const anchorId = parts[1];
                         if (!existingSpecAnchorIds.has(anchorId) && !existingSpecAnchorIds.has(doc)) {
                             danglingLinksCount++;
                             node.danglingDocs.push(doc);
@@ -2605,9 +2596,10 @@
             } else {
                 docsPct = 0;
             }
-            document.getElementById('stat-total-docs').textContent = activeDocs.length;
-            document.getElementById('stat-docs-with-anchors-sub').textContent = t.docsWithAnchorsSub(activeDocsWithAnchorsCount, docsPct);
-            updateBadge('stat-docs-pct-badge', docsPct);
+            const detailTotalDocsEl = document.getElementById('detail-total-docs');
+            if (detailTotalDocsEl) {
+                detailTotalDocsEl.textContent = activeDocs.length;
+            }
             
             const linkedActiveNodes = graphNodesData.filter(n => n.isLinkedActive).length;
             const codeLinkedActiveNodes = graphNodesData.filter(n => n.hasCodeDocActive).length;
@@ -2701,7 +2693,8 @@
             } else {
                 healthPct = 100;
             }
-            document.getElementById('stat-stale-docs').textContent = unhealthyDocsCount;
+            const healthyDocsCount = activeDocs.length - unhealthyDocsCount;
+            document.getElementById('stat-stale-docs').textContent = `${healthyDocsCount}/${activeDocs.length}`;
             const syncRateEl = document.getElementById('detail-sync-rate');
             if (syncRateEl) {
                 syncRateEl.textContent = healthPct + '%';
@@ -2773,17 +2766,22 @@
               const danglingLinksSubEl = document.getElementById('stat-dangling-links-sub');
               const danglingBadge = document.getElementById('stat-dangling-badge');
 
-              if (danglingLinksEl) danglingLinksEl.textContent = danglingLinksCount;
+              const danglingPct = totalActiveCodeDocsCount > 0 
+                  ? ((totalActiveCodeDocsCount - danglingLinksCount) / totalActiveCodeDocsCount) * 100 
+                  : 100;
+              const danglingPctStr = danglingPct === 100 ? "100%" : danglingPct.toFixed(1) + "%";
+
+              if (danglingLinksEl) danglingLinksEl.textContent = `${danglingLinksCount}/${totalActiveCodeDocsCount}`;
               if (danglingLinksCount > 0) {
                   if (danglingBox) danglingBox.className = 'stat-box box-danger';
                   if (danglingLinksEl) danglingLinksEl.style.color = 'var(--danger-color)';
                   if (danglingLinksSubEl) {
                       danglingLinksSubEl.textContent = lang === 'vi' 
-                          ? `⚠️ Phát hiện ${danglingLinksCount} neo mồ côi` 
-                          : `⚠️ Detected ${danglingLinksCount} dangling links`;
+                          ? `⚠️ Phát hiện ${danglingLinksCount}/${totalActiveCodeDocsCount} neo mồ côi` 
+                          : `⚠️ Detected ${danglingLinksCount}/${totalActiveCodeDocsCount} dangling links`;
                   }
                   if (danglingBadge) {
-                      danglingBadge.textContent = 'ERROR';
+                      danglingBadge.textContent = danglingPctStr;
                       danglingBadge.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
                       danglingBadge.style.color = 'var(--danger-color)';
                       danglingBadge.style.borderColor = 'rgba(239, 68, 68, 0.2)';
@@ -2792,10 +2790,12 @@
                   if (danglingBox) danglingBox.className = 'stat-box box-success';
                   if (danglingLinksEl) danglingLinksEl.style.color = 'var(--success-color)';
                   if (danglingLinksSubEl) {
-                      danglingLinksSubEl.textContent = lang === 'vi' ? 'Không phát hiện neo mồ côi' : 'No dangling anchors';
+                      danglingLinksSubEl.textContent = lang === 'vi' 
+                          ? `Không phát hiện neo mồ côi (0/${totalActiveCodeDocsCount})` 
+                          : `No dangling anchors (0/${totalActiveCodeDocsCount})`;
                   }
                   if (danglingBadge) {
-                      danglingBadge.textContent = 'OK';
+                      danglingBadge.textContent = danglingPctStr;
                       danglingBadge.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
                       danglingBadge.style.color = 'var(--success-color)';
                       danglingBadge.style.borderColor = 'rgba(16, 185, 129, 0.2)';

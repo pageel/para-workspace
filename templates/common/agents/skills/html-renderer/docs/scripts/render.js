@@ -6,6 +6,7 @@ const http = require('http');
 let anchorToCodeNodesMap = null;
 let nodeToCodeDocsMap = {};
 let hasGraph = false;
+let existingSpecAnchorIds = new Set();
 
 // Get command line arguments: node render.js <source_md_dir> [target_html_dir] [--watch]
 const args = process.argv.slice(2);
@@ -1604,7 +1605,7 @@ function renderDirectory(srcDir, destDir, template) {
         dashboardStats.linkedDocsGodNodes = documentedGodNodesCount;
         dashboardStats.linkedCodeGodNodes = codeLinkedGodNodesCount;
 
-        const existingSpecAnchorIds = new Set();
+        existingSpecAnchorIds.clear();
         graphNodes.forEach(n => {
             if (n.type === 'spec_anchor') {
                 existingSpecAnchorIds.add(n.id);
@@ -1619,8 +1620,9 @@ function renderDirectory(srcDir, destDir, template) {
             node.danglingDocs = [];
             if (node.codeDocs && node.codeDocs.length > 0) {
                 node.codeDocs.forEach(doc => {
+                    if (!doc.includes('#')) return; // Bỏ qua liên kết file toàn cục không có anchor
                     const parts = doc.split('#');
-                    const anchorId = parts.length > 1 ? parts[1] : parts[0];
+                    const anchorId = parts[1];
                     if (!existingSpecAnchorIds.has(anchorId) && !existingSpecAnchorIds.has(doc)) {
                         danglingLinksCount++;
                         node.danglingDocs.push(doc);
@@ -2122,6 +2124,7 @@ function renderDirectory(srcDir, destDir, template) {
                 .replaceAll('<!-- DOCS_LIST_PLACEHOLDER -->', sidebarHtml)
                 .replace(/const dashboardStats = [^;]+;/, 'window.PROJECT_CALIBRATION_CONFIG = ' + JSON.stringify(projectCalibration, null, 2) + ';\n                const dashboardStats = ' + JSON.stringify(dashboardStats, null, 2) + ';')
                 .replace(/const graphNodesData = [^;]+;/, 'const graphNodesData = ' + JSON.stringify(processedNodesData, null, 2) + ';')
+                .replace(/const existingSpecAnchorIdsData = [^;]+;/, 'const existingSpecAnchorIdsData = ' + JSON.stringify(Array.from(existingSpecAnchorIds)) + ';')
                 .replace(/const allMarkdownFiles = [^;]+;/, 'const allMarkdownFiles = ' + JSON.stringify(allMdFilesRelative, null, 2) + ';')
                 .replace(/const alignmentData = [^;]+;/, 'const alignmentData = ' + JSON.stringify(alignmentData, null, 2) + ';');
                 
