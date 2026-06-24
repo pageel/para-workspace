@@ -88,7 +88,8 @@ Projects/[project-name]/docs/
 - [ ] 0.0 🤖 Graph Knowledge Preparation (if para-graph enabled)
 - [ ] 0.1 🤖 Graph pipeline per `para-graph §3.3.2` (**skip if no `.beads/graph/`**).
 - [ ] 0.2 🤖 Update `docs/README.md` index.
-- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x] AND get explicit User approval before proceeding to Phase 1.
+- [ ] 0.3 🤖 **Project Directory Junk Audit** (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool with `auditJunk: true` to check for physical junk files before starting work)
+- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x], run the MCP tool `project_session_compact` to update session memory, read the updated `session.md` using `view_file` to reload context, and obtain explicit User approval in the chat to transition to Phase 1.
 
 ---
 

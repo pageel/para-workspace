@@ -2,6 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const http = require('http');
 
+// Global maps to coordinate graph-based CSA resolution
+let anchorToCodeNodesMap = null;
+let nodeToCodeDocsMap = {};
+let hasGraph = false;
+
 // Get command line arguments: node render.js <source_md_dir> [target_html_dir] [--watch]
 const args = process.argv.slice(2);
 const hasWatchFlag = args.includes('--watch');
@@ -878,12 +883,22 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
             nodesListMarkdown += `| :--- | :--- | :--- | :---: | :--- |\n`;
             
             for (const nodeId of linkedNodeIds) {
-                const cleanId = nodeId.startsWith('csa-') ? nodeId.substring(4) : nodeId;
-                let node = graphNodesMap[cleanId];
-                if (!node) {
-                    node = graphNodesMap[nodeId] || Object.values(graphNodesMap).find(n => n.name === cleanId || n.id === cleanId || n.id.endsWith('::' + cleanId));
+                let resolvedNodes = [];
+                if (hasGraph && anchorToCodeNodesMap && anchorToCodeNodesMap[nodeId]) {
+                    resolvedNodes = anchorToCodeNodesMap[nodeId];
+                } else {
+                    // Fallback to name-based heuristic if no graph or not found in map
+                    const cleanId = nodeId.startsWith('csa-') ? nodeId.substring(4) : nodeId;
+                    let node = graphNodesMap[cleanId];
+                    if (!node) {
+                        node = graphNodesMap[nodeId] || Object.values(graphNodesMap).find(n => n.name === cleanId || n.id === cleanId || n.id.endsWith('::' + cleanId));
+                    }
+                    if (node) {
+                        resolvedNodes.push(node);
+                    }
                 }
-                if (node) {
+                
+                for (const node of resolvedNodes) {
                     const type = node.type || 'unknown';
                     const name = node.name || node.id;
                     const filePath = node.filePath || '';
@@ -1223,7 +1238,7 @@ function renderDirectory(srcDir, destDir, template) {
     }
     
     let graphNodes = [];
-    let hasGraph = false;
+    hasGraph = false;
     
     if (fs.existsSync(entitiesPath)) {
         try {
@@ -1296,8 +1311,28 @@ function renderDirectory(srcDir, destDir, template) {
         };
     }
 
-    // Pre-scan all markdown files to extract HTML csa- anchors and resolve them to code entities
+    // Helper to map project-relative paths (from graph) to virtual relative paths (used by dashboard render)
+    function projectPathToVirtualRelativePath(projPath) {
+        const normalized = projPath.replace(/\\/g, '/');
+        if (normalized.startsWith('artifacts/sysdesigns/')) {
+            return normalized.replace('artifacts/sysdesigns/', 'sysdesigns/');
+        } else if (normalized.startsWith('artifacts/specs/')) {
+            return normalized.replace('artifacts/specs/', 'specs/');
+        } else if (normalized.startsWith('artifacts/writings/')) {
+            return normalized.replace('artifacts/writings/', 'writings/');
+        } else if (normalized.startsWith('artifacts/')) {
+            return normalized.replace('artifacts/', '');
+        }
+        return normalized;
+    }
+
+    // Reset global maps
+    anchorToCodeNodesMap = {};
     const nodeToAnchorsMap = {}; // Maps node.id to Set of relativeMdPath#anchorId
+    nodeToCodeDocsMap = {};
+    
+    // Maps anchorId to its virtual relative markdown file path
+    const definedAnchorsMap = {};
     let docsWithAnchors = 0;
     
     for (const mdFile of allMdFiles) {
@@ -1312,22 +1347,7 @@ function renderDirectory(srcDir, destDir, template) {
             while ((match = nodeRegex.exec(content)) !== null) {
                 const anchorId = match[1];
                 hasAnchor = true;
-                
-                if (hasGraph) {
-                    // Resolve anchorId to a node in the graph (prioritize code entities over spec_anchor nodes)
-                    const cleanId = anchorId.startsWith('csa-') ? anchorId.substring(4) : anchorId;
-                    let targetNode = graphNodesMap[cleanId];
-                    if (!targetNode) {
-                        targetNode = graphNodesMap[anchorId] || Object.values(graphNodesMap).find(n => n.name === cleanId || n.id === cleanId || n.id.endsWith('::' + cleanId));
-                    }
-                    
-                    if (targetNode) {
-                        if (!nodeToAnchorsMap[targetNode.id]) {
-                            nodeToAnchorsMap[targetNode.id] = new Set();
-                        }
-                        nodeToAnchorsMap[targetNode.id].add(`${relativeMdPath}#${anchorId}`);
-                    }
-                }
+                definedAnchorsMap[anchorId] = relativeMdPath;
             }
             
             if (hasAnchor) {
@@ -1335,6 +1355,54 @@ function renderDirectory(srcDir, destDir, template) {
             }
         } catch (e) {
             console.warn(`Warning: Failed to parse anchors for mapping in ${mdFile}:`, e.message);
+        }
+    }
+
+    // Populate maps from graph relationships
+    if (hasGraph && fs.existsSync(relationsPath)) {
+        try {
+            const relLines = fs.readFileSync(relationsPath, 'utf8').split('\n');
+            for (const line of relLines) {
+                if (line.trim()) {
+                    const rel = JSON.parse(line);
+                    if (rel.relation === 'DOCUMENTED_BY' && rel.sourceId && rel.targetId) {
+                        const sourceId = rel.sourceId;
+                        const targetId = rel.targetId;
+                        
+                        const targetNode = graphNodesMap[targetId];
+                        if (targetNode) {
+                            let virtualPath = definedAnchorsMap[targetId];
+                            if (!virtualPath) {
+                                virtualPath = projectPathToVirtualRelativePath(targetNode.filePath);
+                            }
+                            
+                            const anchorLink = `${virtualPath}#${targetId}`;
+                            
+                            if (!nodeToAnchorsMap[sourceId]) {
+                                nodeToAnchorsMap[sourceId] = new Set();
+                            }
+                            nodeToAnchorsMap[sourceId].add(anchorLink);
+                            
+                            if (!nodeToCodeDocsMap[sourceId]) {
+                                nodeToCodeDocsMap[sourceId] = [];
+                            }
+                            nodeToCodeDocsMap[sourceId].push(anchorLink);
+                            
+                            const codeNode = graphNodesMap[sourceId];
+                            if (codeNode) {
+                                if (!anchorToCodeNodesMap[targetId]) {
+                                    anchorToCodeNodesMap[targetId] = [];
+                                }
+                                if (!anchorToCodeNodesMap[targetId].some(n => n.id === codeNode.id)) {
+                                    anchorToCodeNodesMap[targetId].push(codeNode);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn('Warning: Failed to parse relations for anchors mapping:', e.message);
         }
     }
     
@@ -1450,19 +1518,23 @@ function renderDirectory(srcDir, destDir, template) {
             
             // Parse @para-doc comments from source code
             const absoluteFilePath = path.resolve(projectDir, 'repo', node.filePath || '');
-            const fileComments = getParaDocCommentsForFile(absoluteFilePath);
-            const codeDocs = [];
-            fileComments.forEach(comment => {
-                if (node.type === 'file') {
-                    if (comment.line <= 5) {
-                        codeDocs.push(comment.docLink);
+            let codeDocs = [];
+            if (hasGraph && nodeToCodeDocsMap[node.id]) {
+                codeDocs = nodeToCodeDocsMap[node.id];
+            } else {
+                const fileComments = getParaDocCommentsForFile(absoluteFilePath);
+                fileComments.forEach(comment => {
+                    if (node.type === 'file') {
+                        if (comment.line <= 5) {
+                            codeDocs.push(comment.docLink);
+                        }
+                    } else {
+                        if (comment.line >= (node.startLine || 1) - 4 && comment.line <= (node.startLine || 1)) {
+                            codeDocs.push(comment.docLink);
+                        }
                     }
-                } else {
-                    if (comment.line >= (node.startLine || 1) - 4 && comment.line <= (node.startLine || 1)) {
-                        codeDocs.push(comment.docLink);
-                    }
-                }
-            });
+                });
+            }
             const hasCodeDoc = codeDocs.length > 0;
 
             totalWeight += weight;
@@ -1601,6 +1673,13 @@ function renderDirectory(srcDir, destDir, template) {
             continue;
         }
         
+        const fileSpans = new Set();
+        const spanRegex = /<span\s+id=["'](csa-[a-zA-Z0-9.:\/_-]+)["'][^>]*><\/span>/g;
+        let spanMatch;
+        while ((spanMatch = spanRegex.exec(mdContent)) !== null) {
+            fileSpans.add(spanMatch[1]);
+        }
+
         const headers = [];
         const headerRegex = /^(#{1,6})\s+(.+)$/gm;
         let hMatch;
@@ -1675,7 +1754,7 @@ function renderDirectory(srcDir, destDir, template) {
                     const anchorName = parts[1];
                     
                     if (matchesDoc(anchorFile)) {
-                        const isMatch = isLooseAnchorMatch(anchorName, headers);
+                        const isMatch = fileSpans.has(anchorName) || (anchorName.startsWith('csa-') ? fileSpans.has(anchorName.substring(4)) : fileSpans.has('csa-' + anchorName)) || isLooseAnchorMatch(anchorName, headers);
                         if (!isMatch) {
                             auditReports.push({
                                 severity: 'medium',
@@ -1804,7 +1883,7 @@ function renderDirectory(srcDir, destDir, template) {
                     const codeDocBase = path.basename(codeDocFile).toLowerCase();
                     const currentFileBase = path.basename(mdFile).toLowerCase();
                     if (codeDocBase === currentFileBase) {
-                        const isMatch = isLooseAnchorMatch(codeDocAnchor, headers);
+                        const isMatch = fileSpans.has(codeDocAnchor) || (codeDocAnchor.startsWith('csa-') ? fileSpans.has(codeDocAnchor.substring(4)) : fileSpans.has('csa-' + codeDocAnchor)) || isLooseAnchorMatch(codeDocAnchor, headers);
                         if (!isMatch) {
                             // Avoid duplicate if same anchor already reported from docAnchors check
                             const isDuplicate = auditReports.some(r => r.description && r.description.includes(codeDocAnchor));
@@ -1834,7 +1913,7 @@ function renderDirectory(srcDir, destDir, template) {
                     
                     if (matchesDoc) {
                         const cleanDocStr = codeDocStr.startsWith('csa-') ? codeDocStr.substring(4) : codeDocStr;
-                        const hasAnchorInDoc = linkedNodeIds.some(id => {
+                        const hasAnchorInDoc = fileSpans.has(codeDocStr) || (codeDocStr.startsWith('csa-') ? fileSpans.has(codeDocStr.substring(4)) : fileSpans.has('csa-' + codeDocStr)) || linkedNodeIds.some(id => {
                             const cleanId = id.startsWith('csa-') ? id.substring(4) : id;
                             return cleanId === cleanDocStr;
                         });
