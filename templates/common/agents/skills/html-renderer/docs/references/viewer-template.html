@@ -1850,6 +1850,111 @@
             });
         }
 
+        function resolveRelativeMarkdownLink(currentDocFile, href) {
+            const parts = currentDocFile.replace(/\\/g, '/').split('/');
+            let projectDir = "";
+            if (parts[0] === 'Projects' && parts.length > 1) {
+                projectDir = parts[0] + '/' + parts[1];
+            } else {
+                projectDir = parts.slice(0, parts.length - 2).join('/');
+            }
+
+            const hashParts = href.split('#');
+            const queryParts = hashParts[0].split('?');
+            let pathPart = queryParts[0];
+
+            if (!pathPart.endsWith('.md')) {
+                return href;
+            }
+
+            const currentDirParts = parts.slice(0, parts.length - 1);
+            const relParts = pathPart.split('/');
+
+            for (const part of relParts) {
+                if (part === '.' || part === '') {
+                    continue;
+                } else if (part === '..') {
+                    if (currentDirParts.length > 0) {
+                        currentDirParts.pop();
+                    }
+                } else {
+                    currentDirParts.push(part);
+                }
+            }
+
+            const targetPhysicalPath = currentDirParts.join('/');
+            
+            const prefixSpecs = projectDir + '/artifacts/specs/';
+            const prefixSys = projectDir + '/artifacts/sysdesigns/';
+            const prefixWritingsArtifacts = projectDir + '/artifacts/writings/';
+            const prefixWritings = projectDir + '/writings/';
+            const prefixDocs = projectDir + '/docs/';
+
+            let targetVirtual = "";
+            if (targetPhysicalPath.startsWith(prefixSpecs)) {
+                targetVirtual = 'specs/' + targetPhysicalPath.substring(prefixSpecs.length);
+            } else if (targetPhysicalPath.startsWith(prefixSys)) {
+                targetVirtual = 'sysdesigns/' + targetPhysicalPath.substring(prefixSys.length);
+            } else if (targetPhysicalPath.startsWith(prefixWritingsArtifacts)) {
+                targetVirtual = 'writings/' + targetPhysicalPath.substring(prefixWritingsArtifacts.length);
+            } else if (targetPhysicalPath.startsWith(prefixWritings)) {
+                targetVirtual = 'writings/' + targetPhysicalPath.substring(prefixWritings.length);
+            } else if (targetPhysicalPath.startsWith(prefixDocs)) {
+                targetVirtual = 'docs/' + targetPhysicalPath.substring(prefixDocs.length);
+            } else {
+                if (targetPhysicalPath.includes('/docs/')) {
+                    const idx = targetPhysicalPath.indexOf('/docs/');
+                    targetVirtual = targetPhysicalPath.substring(idx + 1);
+                } else {
+                    targetVirtual = targetPhysicalPath;
+                }
+            }
+
+            const currentPhysical = currentDocFile.replace(/\\/g, '/');
+            let currentVirtual = "";
+            if (currentPhysical.startsWith(prefixSpecs)) {
+                currentVirtual = 'specs/' + currentPhysical.substring(prefixSpecs.length);
+            } else if (currentPhysical.startsWith(prefixSys)) {
+                currentVirtual = 'sysdesigns/' + currentPhysical.substring(prefixSys.length);
+            } else if (currentPhysical.startsWith(prefixWritingsArtifacts)) {
+                currentVirtual = 'writings/' + currentPhysical.substring(prefixWritingsArtifacts.length);
+            } else if (currentPhysical.startsWith(prefixWritings)) {
+                currentVirtual = 'writings/' + currentPhysical.substring(prefixWritings.length);
+            } else if (currentPhysical.startsWith(prefixDocs)) {
+                currentVirtual = 'docs/' + currentPhysical.substring(prefixDocs.length);
+            } else {
+                if (currentPhysical.includes('/docs/')) {
+                    const idx = currentPhysical.indexOf('/docs/');
+                    currentVirtual = currentPhysical.substring(idx + 1);
+                } else {
+                    currentVirtual = currentPhysical;
+                }
+            }
+
+            const currentVirtualParts = currentVirtual.split('/');
+            const targetVirtualParts = targetVirtual.split('/');
+
+            currentVirtualParts.pop(); 
+            
+            let upCount = currentVirtualParts.length;
+            let upPath = "";
+            for (let i = 0; i < upCount; i++) {
+                upPath += '../';
+            }
+            if (!upPath) {
+                upPath = './';
+            }
+
+            const targetFileName = targetVirtualParts[targetVirtualParts.length - 1].replace(/\.md$/, '.html');
+            targetVirtualParts[targetVirtualParts.length - 1] = targetFileName;
+
+            const newPathPart = upPath + targetVirtualParts.join('/');
+            
+            queryParts[0] = newPathPart;
+            hashParts[0] = queryParts.join('?');
+            return hashParts.join('#');
+        }
+
         async function renderMarkdown() {
             try {
                 let html = marked.parse(embeddedMarkdown);
@@ -1884,17 +1989,8 @@
                     if (href) {
                         const isRelative = !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('/') && !href.startsWith('#');
                         if (isRelative) {
-                            const hashParts = href.split('#');
-                            const queryParts = hashParts[0].split('?');
-                            let pathPart = queryParts[0];
-                            
-                            if (pathPart.endsWith('.md')) {
-                                pathPart = pathPart.substring(0, pathPart.length - 3) + '.html';
-                                queryParts[0] = pathPart;
-                                hashParts[0] = queryParts.join('?');
-                                const newHref = hashParts.join('#');
-                                link.setAttribute('href', newHref);
-                            }
+                            const newHref = resolveRelativeMarkdownLink(currentDocFile, href);
+                            link.setAttribute('href', newHref);
                         }
                     }
                 });
@@ -2290,35 +2386,35 @@
             const docLang = '/* WORKSPACE_LANG */';
             const promptsVi = {
                 'frontmatter': `Hãy chuẩn hóa cấu trúc và dữ liệu frontmatter cho tệp tài liệu này: @[${path}]`,
-                'drift-audit': `Dưới đây là báo cáo sai lệch (drift audit) chi tiết của tài liệu @[${path}]. Hãy rà soát báo cáo này, phân tích mã nguồn thực tế và tài liệu mô tả để phát hiện nguyên nhân, sau đó khắc phục toàn bộ các sai lệch (gồm neo liên kết hỏng, tệp mồ côi, hoặc khoảng trống logic giữa tài liệu và code).
+                'drift-audit': `Dưới đây là báo cáo sai lệch (drift audit) chi tiết của tài liệu @[${path}]. Hãy rà soát báo cáo này, phân tích mã nguồn thực tế và tài liệu mô tả để phát hiện nguyên nhân, sau đó khắc phục toàn bộ các sai lệch (khoảng trống logic giữa tài liệu và code).
 
 Yêu cầu cụ thể:
 1. Đọc và phân tích kỹ từng lỗi/cảnh báo trong danh sách chi tiết dưới đây.
-2. Đối chiếu mã nguồn thực tế (không được sửa code/comment trong file code trừ khi được yêu cầu rõ ràng) và cập nhật tài liệu spec/tài liệu hướng dẫn tại @[${path}] để đồng bộ 100% với code.
-3. Giải quyết dứt điểm các neo bị hỏng bằng cách sửa/thêm các tiêu đề tương ứng trong file tài liệu hoặc cập nhật các neo liên kết.
+2. TUYỆT ĐỐI KHÔNG sửa đổi, thêm hoặc xóa comment/code trong bất kỳ file mã nguồn (code) nào. Việc khắc phục sai lệch chỉ được thực hiện bằng cách cập nhật tài liệu spec/tài liệu hướng dẫn tại @[${path}] để đồng bộ 100% với code.
+3. Giải quyết dứt điểm các neo bị thiếu/hỏng bằng cách chèn thẻ neo HTML \`<span id="csa-nodeId"></span>\` tại vị trí phù hợp trong file tài liệu Markdown.
 
 Chi tiết báo cáo sai lệch phát hiện được (Drift Audit Details):
 /* AUDIT_DETAILS_PLACEHOLDER */`,
                 'review': `Hãy rà soát toàn diện và cập nhật tài liệu @[${path}] để đảm bảo phản ánh chính xác 100% cấu trúc và logic mã nguồn thực tế. Đối chiếu mã nguồn và bổ sung bất kỳ phần giải thích hoặc thực thể code nào bị thiếu.`,
                 'review-structure': `Hãy phân tích cấu trúc hệ thống tài liệu hiện tại của dự án này từ tệp @[${path}] (và thư mục docs/), kiểm tra sự phân bổ giữa các thư mục specs, architecture, reference, guides, và đề xuất tối ưu hóa cấu trúc để loại bỏ thông tin dư thừa hoặc bổ sung các tài liệu bị thiếu.`,
                 'strategy': `Hãy đối chiếu định hướng phát triển hiện tại trong strategy.md và strategy-documentation.md (hoặc các file tài liệu chiến lược liên quan) của dự án này từ tệp @[${path}], đối chiếu với roadmap và backlog hiện tại để cập nhật/xây dựng lại tài liệu chiến lược cho phù hợp với tầm nhìn sản phẩm.`,
-                'headings': `Hãy rà soát toàn bộ tệp tài liệu @[${path}] và chuẩn hóa lại việc đánh số thứ tự trong các tiêu đề (h1, h2, h3...). Phát hiện các lỗi đánh số không tuần tự (như nhảy số, thiếu phân mục), chuẩn hóa chúng theo định dạng phân cấp tuần tự (ví dụ: 1., 1.1, 1.1.1, 2., 2.1...) và cập nhật lại toàn bộ các liên kết neo nội bộ liên quan. BẮT BUỘC rà soát thêm toàn bộ mã nguồn của dự án để tìm và cập nhật tất cả các comment tham chiếu (như // @para-doc [tên_file.md#neo]) trỏ đến các tiêu đề vừa thay đổi để tránh bị sai lệch thông tin.`
+                'headings': `Hãy rà soát toàn bộ tệp tài liệu @[${path}] và chuẩn hóa lại việc đánh số thứ tự trong các tiêu đề (h1, h2, h3...). Phát hiện các lỗi đánh số không tuần tự (như nhảy số, thiếu phân mục), chuẩn hóa chúng theo định dạng phân cấp tuần tự (ví dụ: 1., 1.1, 1.1.1, 2., 2.1...) và cập nhật lại toàn bộ các liên kết neo nội bộ liên quan. Lưu ý: các thẻ neo HTML dạng <span id="csa-..."></span> vẫn được giữ nguyên vị trí và ID để không làm ảnh hưởng đến các liên kết đối soát từ mã nguồn.`
             };
             const promptsEn = {
                 'frontmatter': `Please normalize the frontmatter structure and metadata for this document: @[${path}]`,
-                'drift-audit': `Below is the detailed drift audit report for document @[${path}]. Please review this report, analyze the actual codebase implementation and documentation, identify the root causes, and fix all drift issues (including broken anchor links, orphan files, or logic gaps between documentation and code).
+                'drift-audit': `Below is the detailed drift audit report for document @[${path}]. Please review this report, analyze the actual codebase implementation and documentation, identify the root causes, and fix all drift issues (logic gaps between documentation and code).
 
 Specific Requirements:
 1. Carefully read and analyze each error/warning in the detailed list below.
-2. Cross-reference with the actual source code (do NOT modify code/comments in source files directly unless explicitly requested) and update the documentation at @[${path}] to ensure 100% alignment with the code.
-3. Completely resolve broken anchors by fixing or adding corresponding headers/sections in the documentation or updating the anchor references.
+2. ABSOLUTELY DO NOT modify, add, or delete any comments or code in any source files. Resolving drift must only be done by updating the documentation at @[${path}] to ensure 100% alignment with the code.
+3. Completely resolve broken or missing anchors by inserting \`<span id="csa-nodeId"></span>\` anchor tags in the target sections of the Markdown document.
 
 Drift Audit Details:
 /* AUDIT_DETAILS_PLACEHOLDER */`,
                 'review': `Please comprehensively review and update the document @[${path}] to ensure it accurately reflects 100% of the actual codebase structure and logic. Check the relevant source files and add any missing explanations or code entities.`,
                 'review-structure': `Please analyze the current documentation structure of this project starting from @[${path}] (and the docs/ directory), verify the distribution among specs, architecture, reference, guides, and propose structural optimizations to eliminate redundancy or add missing docs.`,
                 'strategy': `Please cross-reference the strategic direction in strategy.md and strategy-documentation.md (or related strategy docs) from @[${path}] against the roadmap and backlog to update or rebuild the strategy documentation to align with the product vision.`,
-                'headings': `Please review the document @[${path}] and normalize the heading numbering structure (h1, h2, h3...). Find non-sequential numbering issues (e.g. skipped numbers, missing subsections), normalize them to a sequential hierarchy (e.g. 1., 1.1, 1.1.1, 2., 2.1...), and update all corresponding internal anchor links. You MUST also scan the codebase and update any matching reference comments (e.g. // @para-doc [filename.md#anchor]) to prevent broken links.`
+                'headings': `Please review the document @[${path}] and normalize the heading numbering structure (h1, h2, h3...). Find non-sequential numbering issues (e.g. skipped numbers, missing subsections), normalize them to a sequential hierarchy (e.g. 1., 1.1, 1.1.1, 2., 2.1...), and update all corresponding internal anchor links. Note: keep all HTML anchor tags <span id="csa-..."></span> intact with their original IDs so that codebase linkage remains unbroken.`
             };
             const promptText = (docLang === 'vi') ? promptsVi[type] : promptsEn[type];
             if (!promptText) return;

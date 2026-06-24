@@ -83,6 +83,78 @@ if (fs.existsSync(workspaceConfigPath)) {
     }
 }
 
+// Read project.md calibration config
+const projectMdPath = path.join(path.dirname(sourceDir), 'project.md');
+let projectCalibration = {
+    exclude_folders: [],
+    weights: {
+        critical: 5.0,
+        medium: 2.0,
+        low: 0.5,
+        god_node_degree_threshold: 20
+    }
+};
+
+if (fs.existsSync(projectMdPath)) {
+    try {
+        const content = fs.readFileSync(projectMdPath, 'utf8');
+        const match = content.match(/^---([\s\S]*?)---/);
+        if (match) {
+            const yamlText = match[1];
+            const lines = yamlText.split('\n');
+            let inCsa = false;
+            let inCalibration = false;
+            let currentKey = null;
+            
+            for (let line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed || trimmed.startsWith('#')) continue;
+                
+                const indent = line.match(/^(\s*)/)[0].length;
+                
+                if (indent === 0) {
+                    if (trimmed.startsWith('csa:')) {
+                        inCsa = true;
+                    } else {
+                        inCsa = false;
+                        inCalibration = false;
+                    }
+                } else if (inCsa && indent > 0) {
+                    if (trimmed.startsWith('calibration:')) {
+                        inCalibration = true;
+                    } else if (inCalibration) {
+                        if (trimmed.startsWith('exclude_folders:')) {
+                            currentKey = 'exclude_folders';
+                        } else if (trimmed.startsWith('weights:')) {
+                            currentKey = 'weights';
+                        } else if (trimmed.startsWith('-') && currentKey === 'exclude_folders') {
+                            const folder = trimmed.substring(1).trim().replace(/['"]/g, '');
+                            projectCalibration.exclude_folders.push(folder);
+                        } else if (currentKey === 'weights') {
+                            const parts = trimmed.split(':');
+                            if (parts.length === 2) {
+                                const wKey = parts[0].trim();
+                                const wVal = parseFloat(parts[1].trim());
+                                if (!isNaN(wVal)) {
+                                    projectCalibration.weights[wKey] = wVal;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    } catch (e) {
+        console.warn('Warning: Failed to parse project.md calibration config:', e.message);
+    }
+}
+
+const isExcluded = (filePath) => {
+    if (!filePath) return false;
+    const normalized = filePath.replace(/\\/g, '/');
+    return projectCalibration.exclude_folders.some(folder => normalized.startsWith(folder));
+};
+
 // Multi-language dictionary translations
 const translations = {
     vi: {
@@ -150,8 +222,9 @@ const translations = {
         filterCritical: "Cốt lõi (Trọng số 5)",
         filterMedium: "Trung bình",
         filterUnlinked: "Chưa gắn link",
-        filterUnlinkedDocs: "Chưa neo (Docs ➔ Code)",
-        filterUnlinkedCode: "Chưa cmt (Code ➔ Docs)",
+        filterUnlinkedDocs: "Chưa neo (CSA trên Docs)",
+        filterUnlinkedCode: "Chưa cmt (CSA trên Code)",
+        filterDangling: "Neo mồ côi (Dangling)",
         filterUnenriched: "Chưa mô tả AI",
         filterNoOwner: "Chưa gán người phụ trách",
         badgeNoOwner: "Chưa gán người phụ trách",
@@ -168,17 +241,17 @@ const translations = {
         thWeightDegree: "Trọng số / Độ kết nối (Degree)",
         thBlastRadius: "Bán kính ảnh hưởng (Blast Radius)",
         thDocLinks: "Liên kết Tài liệu",
-        thDocLinksDocs: "Docs ➔ Code (Neo)",
-        thDocLinksCode: "Code ➔ Docs (Cmt)",
+        thDocLinksDocs: "CSA trên Docs",
+        thDocLinksCode: "CSA trên Code",
         thDescription: "Mô tả / Ngữ nghĩa Hệ thống",
         hotspotsTitle: "⚠️ Điểm nóng ưu tiên",
         hotspotsSubtitle: "Thành phần ảnh hưởng lớn cần viết tài liệu",
         badgeStale: "Cần cập nhật",
-        badgeLinkedDocs: "Tài liệu",
-        badgeUnlinkedDocs: "Chưa neo",
-        badgeLinkedCode: "Comment",
-        badgeUnlinkedCode: "Chưa cmt",
-        calibrationVerifyComments: "Kiểm tra comment neo trong mã nguồn (Code ➔ Docs)",
+        badgeLinkedDocs: "Đã neo (Docs)",
+        badgeUnlinkedDocs: "Chưa neo (Docs)",
+        badgeLinkedCode: "Đã cmt (Code)",
+        badgeUnlinkedCode: "Chưa cmt (Code)",
+        calibrationVerifyComments: "Kiểm tra comment neo trong mã nguồn (CSA trên Code)",
         calibrationVerifyCommentsDesc: "Yêu cầu có comment <code>// @para-doc [file.md#anchor]</code> trong code để tham chiếu tới tài liệu.",
         langToggleLabel: "English",
         noNodesFound: "Không tìm thấy thành phần mã nào khớp với bộ lọc và tìm kiếm hiện tại.",
@@ -218,11 +291,11 @@ const translations = {
         driftAuditNoIssues: "0 phát hiện",
         driftAuditIssues: "phát hiện",
         docStatHealth: "Sức khỏe",
-        docStatHealthDesc: "Tỷ lệ liên kết hai chiều (Double-binding rate) của tài liệu này",
-        docStatAnchors: "Độ phủ neo",
-        docStatAnchorsDesc: "Số cấu phần mã được neo trực tiếp trong tài liệu này",
-        docStatComments: "Comment code",
-        docStatCommentsDesc: "Số cấu phần mã chứa comment trỏ ngược lại tài liệu này",
+        docStatHealthDesc: "Tỷ lệ liên kết hai chiều (Docs ↔ Code) của tài liệu này",
+        docStatAnchors: "CSA trên Docs",
+        docStatAnchorsDesc: "Số cấu phần mã được liên kết xuôi từ tài liệu (CSA trên Docs)",
+        docStatComments: "CSA trên Code",
+        docStatCommentsDesc: "Số cấu phần mã chứa comment liên kết ngược trong code (CSA trên Code)",
         docStatEntities: "Cấu phần",
         docStatEntitiesDesc: "Tổng số cấu phần mã liên quan đến tài liệu này",
         metadataTitle: "Thông tin tài liệu",
@@ -302,8 +375,9 @@ const translations = {
         filterCritical: "Critical (Weight 5)",
         filterMedium: "Medium",
         filterUnlinked: "Unlinked",
-        filterUnlinkedDocs: "Docs ➔ Code Unlinked",
-        filterUnlinkedCode: "Code ➔ Docs Unlinked",
+        filterUnlinkedDocs: "CSA on Docs Unlinked",
+        filterUnlinkedCode: "CSA on Code Unlinked",
+        filterDangling: "Dangling CSA Links",
         filterUnenriched: "Unenriched",
         filterNoOwner: "No Owner",
         badgeNoOwner: "No Owner",
@@ -320,17 +394,17 @@ const translations = {
         thWeightDegree: "Weight / Degree",
         thBlastRadius: "Blast Radius",
         thDocLinks: "Doc Links (docAnchors)",
-        thDocLinksDocs: "Docs ➔ Code (Neo)",
-        thDocLinksCode: "Code ➔ Docs (Cmt)",
+        thDocLinksDocs: "CSA on Docs",
+        thDocLinksCode: "CSA on Code",
         thDescription: "Description / System Semantics",
         hotspotsTitle: "⚠️ Priority Hotspots",
         hotspotsSubtitle: "High-impact components lacking docs",
         badgeStale: "Stale / Outdated",
-        badgeLinkedDocs: "Docs",
-        badgeUnlinkedDocs: "Unanchored",
-        badgeLinkedCode: "Comment",
-        badgeUnlinkedCode: "Uncmt",
-        calibrationVerifyComments: "Verify code comment references (Code ➔ Docs)",
+        badgeLinkedDocs: "Anchored (Docs)",
+        badgeUnlinkedDocs: "Unanchored (Docs)",
+        badgeLinkedCode: "Commented (Code)",
+        badgeUnlinkedCode: "Uncommented (Code)",
+        calibrationVerifyComments: "Verify code comment references (CSA on Code)",
         calibrationVerifyCommentsDesc: "Require <code>// @para-doc [file.md#anchor]</code> comments in code to refer to documentation.",
         langToggleLabel: "Tiếng Việt",
         noNodesFound: "No code entities found matching the current filter and search.",
@@ -370,11 +444,11 @@ const translations = {
         driftAuditNoIssues: "0 issues",
         driftAuditIssues: "findings",
         docStatHealth: "Health",
-        docStatHealthDesc: "Double-binding rate of this document",
-        docStatAnchors: "Doc Anchors",
-        docStatAnchorsDesc: "Number of code entities anchored in this document",
-        docStatComments: "Code Comments",
-        docStatCommentsDesc: "Number of code entities containing comments pointing to this document",
+        docStatHealthDesc: "Double-binding rate (Docs ↔ Code) of this document",
+        docStatAnchors: "CSA on Docs",
+        docStatAnchorsDesc: "Number of code entities linked from document (CSA on Docs)",
+        docStatComments: "CSA on Code",
+        docStatCommentsDesc: "Number of code entities containing backward comments in code (CSA on Code)",
         docStatEntities: "Entities",
         docStatEntitiesDesc: "Total code entities associated with this document",
         metadataTitle: "Document Metadata",
@@ -804,10 +878,10 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
             nodesListMarkdown += `| :--- | :--- | :--- | :---: | :--- |\n`;
             
             for (const nodeId of linkedNodeIds) {
-                let node = graphNodesMap[nodeId];
+                const cleanId = nodeId.startsWith('csa-') ? nodeId.substring(4) : nodeId;
+                let node = graphNodesMap[cleanId];
                 if (!node) {
-                    const cleanId = nodeId.startsWith('csa-') ? nodeId.substring(4) : nodeId;
-                    node = graphNodesMap[cleanId] || Object.values(graphNodesMap).find(n => n.name === cleanId || n.id === cleanId || n.id.endsWith('::' + cleanId));
+                    node = graphNodesMap[nodeId] || Object.values(graphNodesMap).find(n => n.name === cleanId || n.id === cleanId || n.id.endsWith('::' + cleanId));
                 }
                 if (node) {
                     const type = node.type || 'unknown';
@@ -1240,11 +1314,11 @@ function renderDirectory(srcDir, destDir, template) {
                 hasAnchor = true;
                 
                 if (hasGraph) {
-                    // Resolve anchorId to a node in the graph
-                    let targetNode = graphNodesMap[anchorId];
+                    // Resolve anchorId to a node in the graph (prioritize code entities over spec_anchor nodes)
+                    const cleanId = anchorId.startsWith('csa-') ? anchorId.substring(4) : anchorId;
+                    let targetNode = graphNodesMap[cleanId];
                     if (!targetNode) {
-                        const cleanId = anchorId.startsWith('csa-') ? anchorId.substring(4) : anchorId;
-                        targetNode = graphNodesMap[cleanId] || Object.values(graphNodesMap).find(n => n.name === cleanId || n.id === cleanId || n.id.endsWith('::' + cleanId));
+                        targetNode = graphNodesMap[anchorId] || Object.values(graphNodesMap).find(n => n.name === cleanId || n.id === cleanId || n.id.endsWith('::' + cleanId));
                     }
                     
                     if (targetNode) {
@@ -1290,7 +1364,9 @@ function renderDirectory(srcDir, destDir, template) {
     if (hasGraph) {
         enrichableNodes = graphNodes.filter(node => {
             const isTest = node.filePath && (node.filePath.startsWith('tests/') || node.filePath.includes('.test.'));
-            return !isTest;
+            const isSpecAnchor = node.type === 'spec_anchor';
+            const excluded = isExcluded(node.filePath);
+            return !isTest && !isSpecAnchor && !excluded;
         });
         
         linkedNodes = enrichableNodes.filter(node => {
@@ -1300,7 +1376,8 @@ function renderDirectory(srcDir, destDir, template) {
         });
         const enrichedNodes = enrichableNodes.filter(node => node.semantic && node.semantic.summary && node.semantic.summary.trim() !== '');
         
-        godNodes = enrichableNodes.filter(node => node.degree >= 20);
+        const godThreshold = projectCalibration.weights.god_node_degree_threshold ?? 20;
+        godNodes = enrichableNodes.filter(node => node.degree >= godThreshold);
         const documentedGodNodes = godNodes.filter(node => {
             const hasSemantic = node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0;
             const hasScanned = nodeToAnchorsMap[node.id] && nodeToAnchorsMap[node.id].size > 0;
@@ -1340,16 +1417,17 @@ function renderDirectory(srcDir, destDir, template) {
         }
 
         processedNodesData = enrichableNodes.map(node => {
-            let weight = 2; // medium default
+            const godThreshold = projectCalibration.weights.god_node_degree_threshold ?? 20;
+            const isCritical = node.degree >= godThreshold;
+            
+            let weight = projectCalibration.weights.medium ?? 2.0;
             let weightedClass = 'medium';
             
-            const isCritical = node.degree >= 20;
-            
             if (isCritical) {
-                weight = 5;
+                weight = projectCalibration.weights.critical ?? 5.0;
                 weightedClass = 'critical';
             } else if (node.type === 'variable') {
-                weight = 0.5;
+                weight = projectCalibration.weights.low ?? 0.5;
                 weightedClass = 'low';
             }
             
@@ -1453,6 +1531,32 @@ function renderDirectory(srcDir, destDir, template) {
         dashboardStats.linkedCodeNodes = codeLinkedNodes.length;
         dashboardStats.linkedDocsGodNodes = documentedGodNodesCount;
         dashboardStats.linkedCodeGodNodes = codeLinkedGodNodesCount;
+
+        const existingSpecAnchorIds = new Set();
+        graphNodes.forEach(n => {
+            if (n.type === 'spec_anchor') {
+                existingSpecAnchorIds.add(n.id);
+                if (n.id.includes('#')) {
+                    existingSpecAnchorIds.add(n.id.split('#')[1]);
+                }
+            }
+        });
+
+        let danglingLinksCount = 0;
+        processedNodesData.forEach(node => {
+            node.danglingDocs = [];
+            if (node.codeDocs && node.codeDocs.length > 0) {
+                node.codeDocs.forEach(doc => {
+                    const parts = doc.split('#');
+                    const anchorId = parts.length > 1 ? parts[1] : parts[0];
+                    if (!existingSpecAnchorIds.has(anchorId) && !existingSpecAnchorIds.has(doc)) {
+                        danglingLinksCount++;
+                        node.danglingDocs.push(doc);
+                    }
+                });
+            }
+        });
+        dashboardStats.danglingLinksCount = danglingLinksCount;
     }
 
 
@@ -1836,10 +1940,10 @@ function renderDirectory(srcDir, destDir, template) {
 |:--|:--|
 | Total docs | ${allMdFiles.length} |
 | Docs with graph anchors | ${docsWithAnchors} (${docsWithAnchorsPct}%) |
-| Graph nodes with docAnchors (Docs ➔ Code) | ${linkedNodes.length}/${enrichableNodes.length} enrichable (${linkedDocsPct}%) |
-| Graph nodes with para-doc (Code ➔ Docs) | ${codeLinkedNodes.length}/${enrichableNodes.length} enrichable (${linkedCodePct}%) |
-| God Nodes covered (Docs ➔ Code) | ${documentedGodNodesCount}/${godNodes.length} top-connected (${godDocsPct}%) |
-| God Nodes covered (Code ➔ Docs) | ${codeLinkedGodNodesCount}/${godNodes.length} top-connected (${godCodePct}%) |
+| Graph nodes with docAnchors (CSA trên Docs) | ${linkedNodes.length}/${enrichableNodes.length} enrichable (${linkedDocsPct}%) |
+| Graph nodes with para-doc (CSA trên Code) | ${codeLinkedNodes.length}/${enrichableNodes.length} enrichable (${linkedCodePct}%) |
+| God Nodes covered (CSA trên Docs) | ${documentedGodNodesCount}/${godNodes.length} top-connected (${godDocsPct}%) |
+| God Nodes covered (CSA trên Code) | ${codeLinkedGodNodesCount}/${godNodes.length} top-connected (${godCodePct}%) |
 | Weighted Graph Coverage | ${getFormattedVal(weightedHealthScore)}% |
 | Documentation Freshness/Sync Rate | ${getFormattedVal(serverHealthPct)}% |
 | Overall Health Status Score | ${getFormattedVal(overallHealthScore)}/100 |
@@ -1937,7 +2041,7 @@ function renderDirectory(srcDir, destDir, template) {
                 .replaceAll('/* RENDER_TIME */', renderTime)
                 .replaceAll('/* KERNEL_VERSION */', kernelVersion)
                 .replaceAll('<!-- DOCS_LIST_PLACEHOLDER -->', sidebarHtml)
-                .replace(/const dashboardStats = [^;]+;/, 'const dashboardStats = ' + JSON.stringify(dashboardStats, null, 2) + ';')
+                .replace(/const dashboardStats = [^;]+;/, 'window.PROJECT_CALIBRATION_CONFIG = ' + JSON.stringify(projectCalibration, null, 2) + ';\n                const dashboardStats = ' + JSON.stringify(dashboardStats, null, 2) + ';')
                 .replace(/const graphNodesData = [^;]+;/, 'const graphNodesData = ' + JSON.stringify(processedNodesData, null, 2) + ';')
                 .replace(/const allMarkdownFiles = [^;]+;/, 'const allMarkdownFiles = ' + JSON.stringify(allMdFilesRelative, null, 2) + ';')
                 .replace(/const alignmentData = [^;]+;/, 'const alignmentData = ' + JSON.stringify(alignmentData, null, 2) + ';');

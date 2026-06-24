@@ -124,6 +124,29 @@
             }
         }
 
+        .stats-grid-container {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            height: 100%;
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid-container {
+                grid-column: span 1 !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid-container {
+                grid-template-columns: 1fr !important;
+            }
+            .stats-grid-container > div {
+                grid-column: span 1 !important;
+            }
+        }
+
         /* Tabs Panel style */
         .tabs-container {
             display: flex;
@@ -816,6 +839,20 @@
             text-decoration: underline;
         }
 
+        .doc-link-item.link-dangling {
+            color: var(--danger-color, #ef4444) !important;
+            background-color: rgba(239, 68, 68, 0.05);
+            border: 1px dashed rgba(239, 68, 68, 0.25);
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .doc-link-item.link-dangling:hover {
+            color: #b91c1c !important;
+            background-color: rgba(239, 68, 68, 0.1);
+            text-decoration: underline;
+        }
+
         .node-summary {
             font-size: 12.5px;
             line-height: 1.5;
@@ -877,15 +914,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            flex-grow: 1;
-            max-width: 80px;
+            flex: 1 1 0%;
+            min-width: 0;
+            max-width: 100px;
             height: 100%;
             justify-content: flex-end;
             position: relative;
         }
 
         .bar-column {
-            width: 100%;
+            width: 48px;
             background: linear-gradient(180deg, var(--accent-color) 0%, rgba(35, 131, 226, 0.4) 100%);
             border-radius: 4px 4px 0 0;
             position: relative;
@@ -1459,23 +1497,19 @@
                             <span id="score-eval-label" class="score-evaluation">--</span>
                         </div>
                         
-                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 15px; display: flex; justify-content: space-around; width: 100%; border-top: 1px solid var(--border-color); padding-top: 12px; text-align: center;">
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 15px; display: flex; justify-content: center; width: 100%; border-top: 1px solid var(--border-color); padding-top: 12px; text-align: center;">
                             <div>
                                 <span style="display: block; font-size: 14px; font-weight: 700; color: var(--text-primary);" id="detail-weighted-coverage">0%</span>
                                 <span style="font-size: 10px;" data-i18n="weightedCoverageLabel">/* TRANSLATE:weightedCoverageLabel */</span>
                             </div>
-                            <div style="border-left: 1px solid var(--border-color); height: 25px; margin: auto 0;"></div>
-                            <div>
-                                <span style="display: block; font-size: 14px; font-weight: 700; color: var(--text-primary);" id="detail-sync-rate">0%</span>
-                                <span style="font-size: 10px;" data-i18n="syncRateLabel">/* TRANSLATE:syncRateLabel */</span>
-                            </div>
                         </div>
                     </div>
 
-                    <!-- Column 2: Stats Cards A (Total Docs & Graph Nodes) -->
-                    <div style="display: flex; flex-direction: column; gap: 16px; justify-content: space-between;">
+                    <!-- Column 2 & 3: Nested Stats Grid -->
+                    <div class="stats-grid-container">
                         
-                        <div class="stat-box box-blue" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                        <!-- Card 1: Total Docs -->
+                        <div class="stat-box box-blue" style="display: flex; flex-direction: column; justify-content: space-between;">
                             <div class="stat-box-header">
                                 <span class="stat-box-title" data-i18n="totalDocs">/* TRANSLATE:totalDocs */</span>
                                 <div class="stat-box-icon-wrapper theme-blue">
@@ -1491,7 +1525,8 @@
                             </div>
                         </div>
 
-                        <div class="stat-box box-indigo" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                        <!-- Card 2: Graph Nodes -->
+                        <div class="stat-box box-indigo" style="display: flex; flex-direction: column; justify-content: space-between;">
                             <div class="stat-box-header">
                                 <span class="stat-box-title" data-i18n="graphNodes">/* TRANSLATE:graphNodes */</span>
                                 <div class="stat-box-icon-wrapper theme-indigo">
@@ -1507,28 +1542,8 @@
                             </div>
                         </div>
 
-                    </div>
-
-                    <!-- Column 3: Stats Cards B (Business God Nodes & Health Sync Rate) -->
-                    <div style="display: flex; flex-direction: column; gap: 16px; justify-content: space-between;">
-                        
-                        <div class="stat-box box-gold" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
-                            <div class="stat-box-header">
-                                <span class="stat-box-title" data-i18n="businessGodNodes">/* TRANSLATE:businessGodNodes */</span>
-                                <div class="stat-box-icon-wrapper theme-gold">
-                                    <i data-lucide="crown"></i>
-                                </div>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
-                                <div style="display: flex; flex-direction: column; gap: 4px;">
-                                    <span class="stat-box-value" id="stat-god-nodes">0/0</span>
-                                    <span class="stat-box-sub" id="stat-god-nodes-sub">0</span>
-                                </div>
-                                <span id="stat-god-pct-badge" class="badge stat-badge">0%</span>
-                            </div>
-                        </div>
-
-                        <div class="stat-box box-success" id="box-stale-status" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                        <!-- Card 3: Outdated Documents -->
+                        <div class="stat-box box-success" id="box-stale-status" style="display: flex; flex-direction: column; justify-content: space-between;">
                             <div class="stat-box-header">
                                 <span class="stat-box-title" data-i18n="healthStatus">/* TRANSLATE:healthStatus */</span>
                                 <div class="stat-box-icon-wrapper theme-success" id="icon-stale-status">
@@ -1541,6 +1556,40 @@
                                     <span class="stat-box-sub" id="stat-stale-docs-sub">0</span>
                                 </div>
                                 <span id="stat-health-pct-badge" class="badge stat-badge">100%</span>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Dangling CSA Links -->
+                        <div class="stat-box box-red" id="box-dangling-status" style="display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid var(--danger-color, #ef4444); cursor: pointer;" onclick="setFilter('dangling')">
+                            <div class="stat-box-header">
+                                <span class="stat-box-title" data-i18n="danglingLinks">Dangling CSA Links</span>
+                                <div class="stat-box-icon-wrapper theme-red" style="background-color: rgba(239, 68, 68, 0.1); color: var(--danger-color, #ef4444); border-radius: 6px; padding: 4px;">
+                                    <i data-lucide="link-2-off" style="width: 16px; height: 16px;"></i>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+                                <div style="display: flex; flex-direction: column; gap: 4px;">
+                                    <span class="stat-box-value" id="stat-dangling-links" style="font-size: 20px; font-weight: 700;">0</span>
+                                    <span class="stat-box-sub" id="stat-dangling-links-sub" style="font-size: 10px; color: var(--text-secondary);">No dangling anchors</span>
+                                </div>
+                                <span id="stat-dangling-badge" class="badge stat-badge" style="padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600;">OK</span>
+                            </div>
+                        </div>
+
+                        <!-- Card 5: Business God Nodes (Spans 2 columns) -->
+                        <div class="stat-box box-gold" style="grid-column: span 2; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div class="stat-box-header">
+                                <span class="stat-box-title" data-i18n="businessGodNodes">/* TRANSLATE:businessGodNodes */</span>
+                                <div class="stat-box-icon-wrapper theme-gold">
+                                    <i data-lucide="crown"></i>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+                                <div style="display: flex; flex-direction: column; gap: 4px;">
+                                    <span class="stat-box-value" id="stat-god-nodes">0/0</span>
+                                    <span class="stat-box-sub" id="stat-god-nodes-sub">0</span>
+                                </div>
+                                <span id="stat-god-pct-badge" class="badge stat-badge">0%</span>
                             </div>
                         </div>
 
@@ -1712,6 +1761,7 @@
                         <button class="filter-btn" id="btn-filter-low" onclick="setFilter('low')"><span data-i18n="filterLow">/* TRANSLATE:filterLow */</span> <span id="count-low">0</span></button>
                         <button class="filter-btn" id="btn-filter-unlinked-docs" onclick="setFilter('unlinked-docs')"><i data-lucide="anchor" style="width: 12px; height: 12px; color: var(--danger-color);"></i> <span data-i18n="filterUnlinkedDocs">/* TRANSLATE:filterUnlinkedDocs */</span> <span id="count-unlinked-docs">0</span></button>
                         <button class="filter-btn" id="btn-filter-unlinked-code" onclick="setFilter('unlinked-code')"><i data-lucide="code" style="width: 12px; height: 12px; color: var(--danger-color);"></i> <span data-i18n="filterUnlinkedCode">/* TRANSLATE:filterUnlinkedCode */</span> <span id="count-unlinked-code">0</span></button>
+                        <button class="filter-btn" id="btn-filter-dangling" onclick="setFilter('dangling')"><i data-lucide="alert-circle" style="width: 12px; height: 12px; color: var(--danger-color);"></i> <span data-i18n="filterDangling">/* TRANSLATE:filterDangling */</span> <span id="count-dangling">0</span></button>
                         <button class="filter-btn" id="btn-filter-unenriched" onclick="setFilter('unenriched')"><span data-i18n="filterUnenriched">/* TRANSLATE:filterUnenriched */</span> <span id="count-unenriched">0</span></button>
                         <button class="filter-btn" id="btn-filter-no-owner" onclick="setFilter('no-owner')"><span data-i18n="filterNoOwner">/* TRANSLATE:filterNoOwner */</span> <span id="count-no-owner">0</span></button>
                     </div>
@@ -1751,12 +1801,16 @@
                                         <span class="dropdown-item-desc">Phân tích rủi ro để gán nhân sự phụ trách</span>
                                     </a>
                                     <a class="dropdown-item" onclick="copyBatchPrompt('link-graph-docs', event)">
-                                        <span class="dropdown-item-title">⚓ Gán neo đồ thị vào tài liệu (Docs ➔ Code)</span>
-                                        <span class="dropdown-item-desc">Đề xuất chèn thẻ &lt;!-- @graph-node --&gt; vào đặc tả Markdown</span>
+                                        <span class="dropdown-item-title">⚓ Gán neo đặc tả (CSA trên Docs)</span>
+                                        <span class="dropdown-item-desc">Đề xuất chèn thẻ &lt;span id="csa-..."&gt;&lt;/span&gt; vào đặc tả Markdown</span>
                                     </a>
                                     <a class="dropdown-item" onclick="copyBatchPrompt('link-code-docs', event)">
-                                        <span class="dropdown-item-title">💻 Chèn comment neo vào mã nguồn (Code ➔ Docs)</span>
-                                        <span class="dropdown-item-desc">Đề xuất comment // @para-doc [file.md#anchor] vào mã nguồn</span>
+                                        <span class="dropdown-item-title">💻 Chèn comment neo vào mã nguồn (CSA trên Code)</span>
+                                        <span class="dropdown-item-desc">Đề xuất comment // @para-doc [#anchor] vào mã nguồn</span>
+                                    </a>
+                                    <a class="dropdown-item" onclick="copyBatchPrompt('fix-dangling', event)">
+                                        <span class="dropdown-item-title">🚨 Sửa lỗi neo mồ côi (Fix Dangling CSA)</span>
+                                        <span class="dropdown-item-desc">Đề xuất tạo các anchor đặc tả bị thiếu hoặc cập nhật đường dẫn chính xác</span>
                                     </a>
                                     <a class="dropdown-item" onclick="copyBatchPrompt('risk-analysis', event)">
                                         <span class="dropdown-item-title">⚠️ Đánh giá rủi ro thiết kế</span>
@@ -1826,13 +1880,16 @@
         const SVG_X_CIRCLE = '<svg class="lucide lucide-x-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 10px; height: 10px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"></svg>';
         const SVG_LINK = '<svg class="lucide lucide-link" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 10px; height: 10px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></svg>';
 
-        // Calibration state loaded from localStorage or defaults
-        let activeWeights = {
+        // Calibration state loaded from window config, localStorage or defaults
+        const defaultWeights = (window.PROJECT_CALIBRATION_CONFIG && window.PROJECT_CALIBRATION_CONFIG.weights) || {
             critical: 5.0,
             medium: 2.0,
             low: 0.5
         };
-        let activeExclusions = ['researches', 'explorations']; // Defaults
+        const defaultExclusions = (window.PROJECT_CALIBRATION_CONFIG && window.PROJECT_CALIBRATION_CONFIG.exclude_folders) || ['researches', 'explorations'];
+
+        let activeWeights = { ...defaultWeights };
+        let activeExclusions = [...defaultExclusions];
         let verifyComments = true; // Default to true
 
         try {
@@ -1948,8 +2005,9 @@
                 filterMedium: "Trung bình",
                 filterLow: "Bổ trợ",
                 filterUnlinked: "Chưa gắn link",
-                filterUnlinkedDocs: "Chưa neo (Docs ➔ Code)",
-                filterUnlinkedCode: "Chưa cmt (Code ➔ Docs)",
+                filterUnlinkedDocs: "Chưa neo (CSA trên Docs)",
+                filterUnlinkedCode: "Chưa cmt (CSA trên Code)",
+                filterDangling: "Neo mồ côi (Dangling)",
                 filterUnenriched: "Chưa mô tả AI",
                 filterNoOwner: "Chưa gán người phụ trách",
                 badgeNoOwner: "Chưa gán người phụ trách",
@@ -1966,17 +2024,17 @@
                 thWeightDegree: "Trọng số / Độ kết nối (Degree)",
                 thBlastRadius: "Bán kính ảnh hưởng (Blast Radius)",
                 thDocLinks: "Liên kết Tài liệu",
-                thDocLinksDocs: "Docs ➔ Code (Neo)",
-                thDocLinksCode: "Code ➔ Docs (Comment)",
+                thDocLinksDocs: "CSA trên Docs",
+                thDocLinksCode: "CSA trên Code",
                 thDescription: "Mô tả / Ngữ nghĩa Hệ thống",
                 hotspotsTitle: "⚠️ Điểm nóng ưu tiên",
                 hotspotsSubtitle: "Thành phần ảnh hưởng lớn cần viết tài liệu",
                 badgeStale: "Cần cập nhật",
-                badgeLinkedDocs: "Tài liệu",
-                badgeUnlinkedDocs: "Chưa neo",
-                badgeLinkedCode: "Comment",
-                badgeUnlinkedCode: "Chưa cmt",
-                calibrationVerifyComments: "Kiểm tra comment neo trong mã nguồn (Code ➔ Docs)",
+                badgeLinkedDocs: "Đã neo (Docs)",
+                badgeUnlinkedDocs: "Chưa neo (Docs)",
+                badgeLinkedCode: "Đã cmt (Code)",
+                badgeUnlinkedCode: "Chưa cmt (Code)",
+                calibrationVerifyComments: "Kiểm tra comment neo trong mã nguồn (CSA trên Code)",
                 calibrationVerifyCommentsDesc: "Yêu cầu có comment <code>// @para-doc [file.md#anchor]</code> trong code để tham chiếu tới tài liệu.",
                 alignmentTitle: "Đối soát Đặc tả & Mã nguồn (Docs-Code Alignment Audit)",
                 alignmentDocLabel: "Đặc tả:",
@@ -1996,7 +2054,7 @@
                 linkedNodesSub: (linked, total, pct) => `${linked}/${total} cấu phần được gán neo`,
                 godNodesSub: (pct) => `Bao phủ cấu phần lõi sản xuất`,
                 staleDocsSubWarning: (count) => `⚠️ ${count} tài liệu hết hạn, cần đồng bộ lại`,
-                staleDocsSubClean: 'Đồng bộ hoàn toàn với code',
+                staleDocsSubClean: 'Không có tài liệu cũ hay lệch so với code',
                 staleDocsDefaultSub: 'Tài liệu bị cũ (Code thay đổi chữ ký hàm/lớp)',
                 scoreGold: 'Xuất sắc (Tiêu chuẩn Vàng)',
                 scoreGood: 'Đạt yêu cầu',
@@ -2063,8 +2121,9 @@
                 filterMedium: "Medium",
                 filterLow: "Low",
                 filterUnlinked: "Unlinked",
-                filterUnlinkedDocs: "Docs ➔ Code Unlinked",
-                filterUnlinkedCode: "Code ➔ Docs Unlinked",
+                filterUnlinkedDocs: "CSA on Docs Unlinked",
+                filterUnlinkedCode: "CSA on Code Unlinked",
+                filterDangling: "Dangling CSA Links",
                 filterUnenriched: "Unenriched",
                 filterNoOwner: "No Owner",
                 badgeNoOwner: "No Owner",
@@ -2081,17 +2140,17 @@
                 thWeightDegree: "Weight / Degree",
                 thBlastRadius: "Blast Radius",
                 thDocLinks: "Doc Links (docAnchors)",
-                thDocLinksDocs: "Docs ➔ Code (Anchor)",
-                thDocLinksCode: "Code ➔ Docs (Comment)",
+                thDocLinksDocs: "CSA on Docs",
+                thDocLinksCode: "CSA on Code",
                 thDescription: "Description / System Semantics",
                 hotspotsTitle: "⚠️ Priority Hotspots",
                 hotspotsSubtitle: "High-impact components lacking docs",
                 badgeStale: "Stale / Outdated",
-                badgeLinkedDocs: "Docs",
-                badgeUnlinkedDocs: "Unanchored",
-                badgeLinkedCode: "Comment",
-                badgeUnlinkedCode: "Uncmt",
-                calibrationVerifyComments: "Verify code comment references (Code ➔ Docs)",
+                badgeLinkedDocs: "Anchored (Docs)",
+                badgeUnlinkedDocs: "Unanchored (Docs)",
+                badgeLinkedCode: "Commented (Code)",
+                badgeUnlinkedCode: "Uncommented (Code)",
+                calibrationVerifyComments: "Verify code comment references (CSA on Code)",
                 calibrationVerifyCommentsDesc: "Require <code>// @para-doc [file.md#anchor]</code> comments in code to refer to documentation.",
                 alignmentTitle: "Docs-Code Alignment Audit",
                 alignmentDocLabel: "Spec Document:",
@@ -2111,7 +2170,7 @@
                 linkedNodesSub: (linked, total, pct) => `${linked}/${total} nodes with docAnchors`,
                 godNodesSub: (pct) => `Production God Nodes coverage`,
                 staleDocsSubWarning: (count) => `⚠️ ${count} stale docs, re-sync needed`,
-                staleDocsSubClean: 'Fully synced with code',
+                staleDocsSubClean: 'No outdated or drifted documents',
                 staleDocsDefaultSub: 'Stale documents (code signature changed)',
                 scoreGold: 'Excellent (Gold standard)',
                 scoreGood: 'Acceptable (Good)',
@@ -2208,9 +2267,9 @@
             const folders = new Set();
             if (typeof allMarkdownFiles !== 'undefined' && Array.isArray(allMarkdownFiles)) {
                 allMarkdownFiles.forEach(file => {
-                    const slashIdx = file.indexOf('/');
-                    if (slashIdx !== -1) {
-                        folders.add(file.substring(0, slashIdx));
+                    const parts = file.split('/');
+                    for (let i = 1; i < parts.length; i++) {
+                        folders.add(parts.slice(0, i).join('/'));
                     }
                 });
             }
@@ -2237,6 +2296,7 @@
                     <input type="checkbox" ${!isExcluded ? 'checked' : ''} onchange="toggleFolderExclusion('${folder}', this.checked)">
                     <span>📁 docs/<b>${folder}</b>/</span>
                 `;
+                label.appendChild(document.createTextNode(''));
                 listEl.appendChild(label);
             });
         }
@@ -2356,6 +2416,9 @@
 
         function getAnchorFolder(anchor) {
             let clean = anchor;
+            if (clean.includes('#')) {
+                clean = clean.split('#')[0];
+            }
             if (clean.startsWith('docs/')) {
                 clean = clean.substring(5);
             } else {
@@ -2364,36 +2427,60 @@
                     clean = match[1];
                 }
             }
-            const slashIdx = clean.indexOf('/');
+            clean = clean.replace(/\\/g, '/');
+            const slashIdx = clean.lastIndexOf('/');
             if (slashIdx !== -1) {
                 return clean.substring(0, slashIdx);
             }
             return '';
         }
 
+        function isFolderExcluded(folder) {
+            if (!folder) return false;
+            const parts = folder.split('/');
+            for (let i = 1; i <= parts.length; i++) {
+                const parentDir = parts.slice(0, i).join('/');
+                if (activeExclusions.includes(parentDir)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         function getActiveCodeDocs(node) {
             if (!node.codeDocs || node.codeDocs.length === 0) return [];
             return node.codeDocs.filter(doc => {
                 const folder = getAnchorFolder(doc);
-                return !activeExclusions.includes(folder);
+                return !isFolderExcluded(folder);
             });
         }
 
         function recalculateMetrics() {
             const activeDocs = allMarkdownFiles.filter(file => {
-                const slashIdx = file.indexOf('/');
-                const folder = slashIdx !== -1 ? file.substring(0, slashIdx) : '';
-                return !activeExclusions.includes(folder);
+                const folder = getAnchorFolder(file);
+                return !isFolderExcluded(folder);
             });
 
+            const existingSpecAnchorIds = new Set();
+            graphNodesData.forEach(n => {
+                if (n.type === 'spec_anchor') {
+                    existingSpecAnchorIds.add(n.id);
+                    if (n.id.includes('#')) {
+                        existingSpecAnchorIds.add(n.id.split('#')[1]);
+                    }
+                }
+            });
+
+            let danglingLinksCount = 0;
             const activeDocsWithAnchors = new Set();
             graphNodesData.forEach(node => {
                 node.isLinkedActive = false;
                 node.activeAnchors = [];
+                node.danglingDocs = [];
                 if (node.docAnchors && node.docAnchors.length > 0) {
                     node.activeAnchors = node.docAnchors.filter(anchor => {
                         const folder = getAnchorFolder(anchor);
-                        return !activeExclusions.includes(folder);
+                        return !isFolderExcluded(folder);
                     });
                     node.isLinkedActive = node.activeAnchors.length > 0;
                     
@@ -2415,6 +2502,17 @@
                 node.hasCodeDocActive = false;
                 node.activeCodeDocs = getActiveCodeDocs(node);
                 node.hasCodeDocActive = node.activeCodeDocs.length > 0;
+                
+                if (node.hasCodeDocActive && node.activeCodeDocs) {
+                    node.activeCodeDocs.forEach(doc => {
+                        const parts = doc.split('#');
+                        const anchorId = parts.length > 1 ? parts[1] : parts[0];
+                        if (!existingSpecAnchorIds.has(anchorId) && !existingSpecAnchorIds.has(doc)) {
+                            danglingLinksCount++;
+                            node.danglingDocs.push(doc);
+                        }
+                    });
+                }
                 
                 let weight = activeWeights.medium;
                 if (node.weightedClass === 'critical') {
@@ -2527,7 +2625,7 @@
             }
             document.getElementById('stat-total-nodes').textContent = graphNodesData.length;
             if (verifyComments) {
-                document.getElementById('stat-linked-nodes-sub').innerHTML = `⚓ Neo: <strong>${linkedActiveNodes}</strong>/${graphNodesData.length} | 💻 Comment: <strong>${codeLinkedActiveNodes}</strong>/${graphNodesData.length}`;
+                document.getElementById('stat-linked-nodes-sub').innerHTML = `⚓ ${t.thDocLinksDocs}: <strong>${linkedActiveNodes}</strong>/${graphNodesData.length} | 💻 ${t.thDocLinksCode}: <strong>${codeLinkedActiveNodes}</strong>/${graphNodesData.length}`;
             } else {
                 document.getElementById('stat-linked-nodes-sub').textContent = t.linkedNodesSub(linkedActiveNodes, graphNodesData.length, nodesPct);
             }
@@ -2550,7 +2648,7 @@
             }
             document.getElementById('stat-god-nodes').textContent = `${documentedGod}/${totalGod}`;
             if (verifyComments) {
-                document.getElementById('stat-god-nodes-sub').innerHTML = `⚓ Neo: <strong>${documentedGod}</strong> | 💻 Comment: <strong>${codeLinkedGod}</strong>`;
+                document.getElementById('stat-god-nodes-sub').innerHTML = `⚓ ${t.thDocLinksDocs}: <strong>${documentedGod}</strong> | 💻 ${t.thDocLinksCode}: <strong>${codeLinkedGod}</strong>`;
             } else {
                 document.getElementById('stat-god-nodes-sub').textContent = t.godNodesSub(godPct);
             }
@@ -2585,8 +2683,9 @@
             });
 
             let healthPct;
+            let unhealthyDocsCount = 0;
             if (activeDocs.length > 0) {
-                const unhealthyDocsCount = activeDocs.filter(doc => {
+                unhealthyDocsCount = activeDocs.filter(doc => {
                     const isDocStale = staleDocs.has(doc);
                     const alignment = alignmentData[doc];
                     const hasDrifts = alignment && alignment.auditReports && alignment.auditReports.length > 0;
@@ -2602,8 +2701,11 @@
             } else {
                 healthPct = 100;
             }
-            document.getElementById('stat-stale-docs').textContent = healthPct + '%';
-            document.getElementById('detail-sync-rate').textContent = healthPct + '%';
+            document.getElementById('stat-stale-docs').textContent = unhealthyDocsCount;
+            const syncRateEl = document.getElementById('detail-sync-rate');
+            if (syncRateEl) {
+                syncRateEl.textContent = healthPct + '%';
+            }
 
             // Calculate Overall Health Score
             const overallScoreVal = weightedCoverageVal * (healthPct / 100);
@@ -2665,12 +2767,51 @@
                   }
               }
 
+              // Update Dangling CSA Links box
+              const danglingBox = document.getElementById('box-dangling-status');
+              const danglingLinksEl = document.getElementById('stat-dangling-links');
+              const danglingLinksSubEl = document.getElementById('stat-dangling-links-sub');
+              const danglingBadge = document.getElementById('stat-dangling-badge');
+
+              if (danglingLinksEl) danglingLinksEl.textContent = danglingLinksCount;
+              if (danglingLinksCount > 0) {
+                  if (danglingBox) danglingBox.className = 'stat-box box-danger';
+                  if (danglingLinksEl) danglingLinksEl.style.color = 'var(--danger-color)';
+                  if (danglingLinksSubEl) {
+                      danglingLinksSubEl.textContent = lang === 'vi' 
+                          ? `⚠️ Phát hiện ${danglingLinksCount} neo mồ côi` 
+                          : `⚠️ Detected ${danglingLinksCount} dangling links`;
+                  }
+                  if (danglingBadge) {
+                      danglingBadge.textContent = 'ERROR';
+                      danglingBadge.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                      danglingBadge.style.color = 'var(--danger-color)';
+                      danglingBadge.style.borderColor = 'rgba(239, 68, 68, 0.2)';
+                  }
+              } else {
+                  if (danglingBox) danglingBox.className = 'stat-box box-success';
+                  if (danglingLinksEl) danglingLinksEl.style.color = 'var(--success-color)';
+                  if (danglingLinksSubEl) {
+                      danglingLinksSubEl.textContent = lang === 'vi' ? 'Không phát hiện neo mồ côi' : 'No dangling anchors';
+                  }
+                  if (danglingBadge) {
+                      danglingBadge.textContent = 'OK';
+                      danglingBadge.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+                      danglingBadge.style.color = 'var(--success-color)';
+                      danglingBadge.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+                  }
+              }
+
               document.getElementById('count-all').textContent = graphNodesData.length;
               document.getElementById('count-critical').textContent = graphNodesData.filter(n => n.weightedClass === 'critical').length;
               document.getElementById('count-medium').textContent = graphNodesData.filter(n => n.weightedClass === 'medium').length;
               document.getElementById('count-low').textContent = graphNodesData.filter(n => n.weightedClass === 'low').length;
               document.getElementById('count-unlinked-docs').textContent = graphNodesData.filter(n => !n.isLinkedActive).length;
               document.getElementById('count-unlinked-code').textContent = graphNodesData.filter(n => !n.hasCodeDocActive).length;
+              const countDanglingEl = document.getElementById('count-dangling');
+              if (countDanglingEl) {
+                  countDanglingEl.textContent = graphNodesData.filter(n => n.danglingDocs && n.danglingDocs.length > 0).length;
+              }
               document.getElementById('count-unenriched').textContent = graphNodesData.filter(n => !n.isEnriched).length;
               const countNoOwnerEl = document.getElementById('count-no-owner');
               if (countNoOwnerEl) {
@@ -3101,11 +3242,11 @@
                             </div>
                             <div style="background: var(--bg-primary); border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
                                 <div style="font-size: 18px; font-weight: 700; color: var(--warning-color);">${stats.docsToCode}</div>
-                                <div style="font-size: 9.5px; color: var(--text-secondary); margin-top: 4px; font-weight: 600;">⚓ ${lang === 'vi' ? 'DOCS ➔ CODE' : 'DOCS ➔ CODE'}</div>
+                                <div style="font-size: 9.5px; color: var(--text-secondary); margin-top: 4px; font-weight: 600;">⚓ ${lang === 'vi' ? 'CSA TRÊN DOCS' : 'CSA ON DOCS'}</div>
                             </div>
                             <div style="background: var(--bg-primary); border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
                                 <div style="font-size: 18px; font-weight: 700; color: var(--info-color, #3182ce);">${stats.codeToDocs}</div>
-                                <div style="font-size: 9.5px; color: var(--text-secondary); margin-top: 4px; font-weight: 600;">💻 ${lang === 'vi' ? 'CODE ➔ DOCS' : 'CODE ➔ DOCS'}</div>
+                                <div style="font-size: 9.5px; color: var(--text-secondary); margin-top: 4px; font-weight: 600;">💻 ${lang === 'vi' ? 'CSA TRÊN CODE' : 'CSA ON CODE'}</div>
                             </div>
                         </div>
                     `;
@@ -3451,6 +3592,7 @@
                 if (currentFilter === 'low') return node.weightedClass === 'low';
                 if (currentFilter === 'unlinked-docs') return !node.isLinkedActive;
                 if (currentFilter === 'unlinked-code') return !node.hasCodeDocActive;
+                if (currentFilter === 'dangling') return node.danglingDocs && node.danglingDocs.length > 0;
                 if (currentFilter === 'unenriched') return !node.isEnriched;
                 if (currentFilter === 'no-owner') {
                     const owner = node.owner || (node.semantic && node.semantic.owner);
@@ -3587,15 +3729,15 @@
                 
                 // 1. Anchor Status Badge (⚓ Tài liệu / Docs)
                 const anchorStatusBadge = node.isLinkedActive 
-                    ? `<span class="badge badge-status-linked">${SVG_CHECK_CIRCLE} ⚓ ${t.badgeLinkedDocs}</span>`
-                    : `<span class="badge badge-status-unlinked">${SVG_X_CIRCLE} ⚓ ${t.badgeUnlinkedDocs}</span>`;
+                    ? `<span class="badge badge-status-linked" title="${lang === 'vi' ? 'Đã có thẻ neo <span id=&quot;csa-' + node.name + '&quot;> trong tài liệu.' : 'CSA anchor tag <span id=&quot;csa-' + node.name + '&quot;> exists in document.'}">${SVG_CHECK_CIRCLE} ⚓ ${t.badgeLinkedDocs}</span>`
+                    : `<span class="badge badge-status-unlinked" title="${lang === 'vi' ? 'Thiếu thẻ neo HTML <span id=&quot;csa-' + node.name + '&quot;></span> trong tài liệu. Hãy chèn thẻ này vào file .md để thiết lập liên kết Docs.' : 'Missing CSA anchor tag <span id=&quot;csa-' + node.name + '&quot;> in document. Add it to the .md file to establish Docs link.'}">${SVG_X_CIRCLE} ⚓ ${t.badgeUnlinkedDocs}</span>`;
                 
                 // 2. Code Reference Status Badge (💻 Comment)
                 let codeStatusBadge = '';
                 if (verifyComments) {
                     codeStatusBadge = node.hasCodeDocActive
-                        ? `<span class="badge badge-status-linked">${SVG_CHECK_CIRCLE} 💻 ${t.badgeLinkedCode}</span>`
-                        : `<span class="badge badge-status-unlinked">${SVG_X_CIRCLE} 💻 ${t.badgeUnlinkedCode}</span>`;
+                        ? `<span class="badge badge-status-linked" title="${lang === 'vi' ? 'Đã có chú thích comment // @para-doc trong code.' : 'Code comment // @para-doc exists in source file.'}">${SVG_CHECK_CIRCLE} 💻 ${t.badgeLinkedCode}</span>`
+                        : `<span class="badge badge-status-unlinked" title="${lang === 'vi' ? 'Thiếu chú thích comment // @para-doc [tài-liệu.md#csa-' + node.name + '] phía trên định nghĩa cấu phần trong file code.' : 'Missing comment // @para-doc [doc-path.md#csa-' + node.name + '] above the entity definition in code.'}">${SVG_X_CIRCLE} 💻 ${t.badgeUnlinkedCode}</span>`;
                 } else {
                     codeStatusBadge = `<span class="badge" style="opacity: 0.4; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-secondary); font-size: 10.5px; display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px;">💻 ${t.badgeLinkedCode}</span>`;
                 }
@@ -3605,19 +3747,32 @@
                 if (node.docAnchors && node.docAnchors.length > 0) {
                     node.docAnchors.forEach(anchor => {
                         const parts = anchor.split('#');
-                        let docPath = parts[0];
-                        if (docPath.startsWith('docs/')) {
-                            docPath = docPath.substring(5);
+                        let docPath = parts[0].replace(/\\/g, '/');
+                        if (docPath.startsWith('artifacts/specs/')) {
+                            docPath = 'specs/' + docPath.substring(16);
+                        } else if (docPath.startsWith('artifacts/sysdesigns/')) {
+                            docPath = 'sysdesigns/' + docPath.substring(21);
+                        } else if (docPath.startsWith('artifacts/writings/')) {
+                            docPath = 'writings/' + docPath.substring(19);
+                        } else if (docPath.startsWith('writings/') || docPath.startsWith('specs/') || docPath.startsWith('sysdesigns/') || docPath.startsWith('docs/')) {
+                            // Keep as-is
                         } else {
-                            const match = docPath.match(/Projects\/[^\/]+\/docs\/(.+)/);
-                            if (match) docPath = match[1];
+                            const docsIdx = docPath.indexOf('docs/');
+                            if (docsIdx !== -1) {
+                                docPath = docPath.substring(docsIdx);
+                            } else {
+                                const match = docPath.match(/Projects\/[^\/]+\/docs\/(.+)/);
+                                if (match) {
+                                    docPath = 'docs/' + match[1];
+                                }
+                            }
                         }
                         const htmlPath = docPath.replace(/\.md$/, '.html');
                         const displayName = docPath.split('/').pop();
                         const hrefUrl = htmlPath + (parts[1] ? '#' + parts[1] : '');
                         
                         const folder = getAnchorFolder(anchor);
-                        const isExcluded = activeExclusions.includes(folder);
+                        const isExcluded = isFolderExcluded(folder);
                         const excludedClass = isExcluded ? ' link-excluded' : '';
                         
                         docAnchorsHtml += `<a href="${hrefUrl}" class="doc-link-item${excludedClass}" style="margin-top: 3px;" onclick="event.stopPropagation(); event.preventDefault(); if(!${isExcluded}) { window.parent.postMessage({ type: 'navigate', href: '${hrefUrl}', baseUrl: window.location.href }, '*'); }">${SVG_LINK} ⚓ ${displayName}${parts[1] ? '#' + parts[1] : ''}</a>`;
@@ -3629,24 +3784,46 @@
                 if (node.codeDocs && node.codeDocs.length > 0) {
                     node.codeDocs.forEach(codeDoc => {
                         const parts = codeDoc.split('#');
-                        let docPath = parts[0];
-                        if (docPath.startsWith('docs/')) {
-                            docPath = docPath.substring(5);
+                        let docPath = parts[0].replace(/\\/g, '/');
+                        if (docPath.startsWith('artifacts/specs/')) {
+                            docPath = 'specs/' + docPath.substring(16);
+                        } else if (docPath.startsWith('artifacts/sysdesigns/')) {
+                            docPath = 'sysdesigns/' + docPath.substring(21);
+                        } else if (docPath.startsWith('artifacts/writings/')) {
+                            docPath = 'writings/' + docPath.substring(19);
+                        } else if (docPath.startsWith('writings/') || docPath.startsWith('specs/') || docPath.startsWith('sysdesigns/') || docPath.startsWith('docs/')) {
+                            // Keep as-is
                         } else {
-                            const match = docPath.match(/Projects\/[^\/]+\/docs\/(.+)/);
-                            if (match) docPath = match[1];
+                            const docsIdx = docPath.indexOf('docs/');
+                            if (docsIdx !== -1) {
+                                docPath = docPath.substring(docsIdx);
+                            } else {
+                                const match = docPath.match(/Projects\/[^\/]+\/docs\/(.+)/);
+                                if (match) {
+                                    docPath = 'docs/' + match[1];
+                                }
+                            }
                         }
                         const htmlPath = docPath.replace(/\.md$/, '.html');
                         const displayName = docPath.split('/').pop();
                         const hrefUrl = htmlPath + (parts[1] ? '#' + parts[1] : '');
                         
                         const folder = getAnchorFolder(codeDoc);
-                        const isExcluded = activeExclusions.includes(folder);
+                        const isExcluded = isFolderExcluded(folder);
                         const excludedClass = isExcluded ? ' link-excluded' : '';
                         
                         const disabledStyle = !verifyComments ? ' opacity: 0.4; pointer-events: none;' : '';
                         
-                        codeDocsHtml += `<a href="${hrefUrl}" class="doc-link-item${excludedClass}" style="margin-top: 3px;${disabledStyle}" onclick="event.stopPropagation(); event.preventDefault(); if(!${isExcluded} && ${verifyComments}) { window.parent.postMessage({ type: 'navigate', href: '${hrefUrl}', baseUrl: window.location.href }, '*'); }">${SVG_LINK} 💻 ${displayName}${parts[1] ? '#' + parts[1] : ''}</a>`;
+                        const isDangling = node.danglingDocs && node.danglingDocs.includes(codeDoc);
+                        const danglingClass = isDangling ? ' link-dangling' : '';
+                        const linkIcon = isDangling ? SVG_ALERT_CIRCLE : SVG_LINK;
+                        const linkTitle = isDangling 
+                            ? (lang === 'vi' 
+                                ? 'Neo CSA này bị mồ côi (không tồn tại trong tài liệu hoặc spec).' 
+                                : 'This CSA anchor is dangling (does not exist in spec/document).')
+                            : '';
+                        
+                        codeDocsHtml += `<a href="${hrefUrl}" class="doc-link-item${excludedClass}${danglingClass}" style="margin-top: 3px;${disabledStyle}" title="${linkTitle}" onclick="event.stopPropagation(); event.preventDefault(); if(!${isExcluded} && ${verifyComments}) { window.parent.postMessage({ type: 'navigate', href: '${hrefUrl}', baseUrl: window.location.href }, '*'); }">${linkIcon} 💻 ${displayName}${parts[1] ? '#' + parts[1] : ''}</a>`;
                     });
                 }
                 
@@ -3955,9 +4132,18 @@
                     ? `Đang chọn cấu phần <code>${node.name}</code> (${node.type}). Click để copy prompt rà soát chi tiết cấu phần này.`
                     : `Selected component <code>${node.name}</code> (${node.type}). Click to copy the review prompt.`;
                 
+                const hasDangling = node.danglingDocs && node.danglingDocs.length > 0;
+                let danglingPromptSection = '';
+                if (hasDangling) {
+                    const danglingList = node.danglingDocs.map(d => `\`${d}\``).join(', ');
+                    danglingPromptSection = lang === 'vi'
+                        ? `\n- ⚠️ **CẢNH BÁO NEO MỒ CÔI (Dangling CSA)**: Cấu phần này chứa comment neo CSA chỉ tới các tài liệu/anchor không tồn tại hoặc bị thiếu: ${danglingList}. Hãy kiểm tra xem file tài liệu đặc tả tương ứng đã có thẻ neo \\\`<span id="csa-tên-neo"></span>\\\` chưa, hoặc cập nhật lại comment neo trong code cho đúng.`
+                        : `\n- ⚠️ **DANGLING CSA WARNING**: This component contains CSA reference comments pointing to non-existent or missing document anchors: ${danglingList}. Please check if the corresponding specification document has the HTML anchor tag \\\`<span id="csa-anchor-id"></span>\\\`, or update the code comment reference to the correct path/anchor.`;
+                }
+                
                 promptText = lang === 'vi'
-                    ? `Hãy phân tích và rà soát cấu phần mã nguồn \`${node.name}\` (Loại: ${node.type}, tệp: \`${node.filePath}\`):\n- Tóm tắt nghiệp vụ: ${summary}\n- Người phụ trách: ${owner}\n- Degree: ${node.degree || 0} (In: ${node.indegree || 0} | Out: ${node.outdegree || 0})\n- Blast Radius: ${node.blastRadius || 0}\n\nHãy đối chiếu cấu phần này với tài liệu đặc tả \`${selectedAlignmentDoc}\`, kiểm tra tính toàn vẹn của logic, sự bao phủ của unit test và đảm bảo các neo chú thích 2 chiều (double-binding) được viết chính xác.`
-                    : `Please analyze and review the code component \`${node.name}\` (Type: ${node.type}, file: \`${node.filePath}\`):\n- Semantic Summary: ${summary}\n- Owner: ${owner}\n- Degree: ${node.degree || 0} (In: ${node.indegree || 0} | Out: ${node.outdegree || 0})\n- Blast Radius: ${node.blastRadius || 0}\n\nReconcile this component with the specification \`${selectedAlignmentDoc}\`, verify logic coverage, check unit tests, and ensure double-binding comments are correctly implemented.`;
+                    ? `Hãy phân tích và rà soát cấu phần mã nguồn \`${node.name}\` (Loại: ${node.type}, tệp: \`${node.filePath}\`):\n- Tóm tắt nghiệp vụ: ${summary}\n- Người phụ trách: ${owner}\n- Degree: ${node.degree || 0} (In: ${node.indegree || 0} | Out: ${node.outdegree || 0})\n- Blast Radius: ${node.blastRadius || 0}${danglingPromptSection}\n\nHãy đối chiếu cấu phần này với tài liệu đặc tả \`${selectedAlignmentDoc}\`, kiểm tra tính toàn vẹn của logic, sự bao phủ của unit test và đảm bảo các neo chú thích 2 chiều (double-binding) được viết chính xác. Nếu cấu phần này chưa có tóm tắt AI (Unenriched), hãy tự động phân tích logic hoạt động và gọi công cụ MCP \`graph_enrich\` để làm giàu thông tin semantic cho nó.`
+                    : `Please analyze and review the code component \`${node.name}\` (Type: ${node.type}, file: \`${node.filePath}\`):\n- Semantic Summary: ${summary}\n- Owner: ${owner}\n- Degree: ${node.degree || 0} (In: ${node.indegree || 0} | Out: ${node.outdegree || 0})\n- Blast Radius: ${node.blastRadius || 0}${danglingPromptSection}\n\nReconcile this component with the specification \`${selectedAlignmentDoc}\`, verify logic coverage, check unit tests, and ensure double-binding comments are correctly implemented. If this component is unenriched, automatically analyze its logic and call the MCP tool \`graph_enrich\` to enrich its semantic details.`;
             } else {
                 title = lang === 'vi' ? `Rà soát nhóm ${count} cấu phần đã chọn` : `Review Selected Group (${count} Components)`;
                 desc = lang === 'vi'
@@ -4022,20 +4208,25 @@
                 promptText = `Các cấu phần sau đây trong hệ thống được đánh dấu là có tài liệu bị lỗi thời (stale), không khớp với logic code thực tế:\n\n${nodeDetailsText}Hãy giúp tôi rà soát, viết prompt hoặc cập nhật lại tài liệu đặc tả của chúng để đảm bảo tính đồng bộ hoàn toàn với logic mã nguồn hiện tại.`;
             } else if (promptType === 'write-summary') {
                 promptName = 'Viết mô tả AI';
-                promptText = `Hãy phân tích logic hoạt động của các cấu phần mã nguồn sau đây và viết một đoạn tóm tắt nghiệp vụ ngắn gọn (semantic summary) khoảng 2-3 câu bằng tiếng Việt giải thích chức năng, mục tiêu của cấu phần đó:\n\n${nodeDetailsText}Đảm bảo các tóm tắt rõ ràng, súc tích và tập trung vào khía cạnh nghiệp vụ thực tế của cấu phần để nạp vào metadata đồ thị code.`;
+                promptText = `Hãy phân tích logic hoạt động của các cấu phần mã nguồn sau đây, viết một đoạn tóm tắt nghiệp vụ ngắn gọn (semantic summary) khoảng 2-3 câu bằng tiếng Việt giải thích chức năng, mục tiêu của cấu phần đó, và trực tiếp gọi công cụ MCP \`graph_enrich\` để làm giàu thông tin semantic này cho từng cấu phần tương ứng trong đồ thị tri thức của dự án:\n\n${nodeDetailsText}Đảm bảo các tóm tắt rõ ràng, súc tích, tập trung vào khía cạnh nghiệp vụ thực tế của cấu phần và được nạp đầy đủ vào đồ thị code bằng công cụ \`graph_enrich\`.`;
             } else if (promptType === 'assign-owner') {
                 promptName = 'Đề xuất phân công (Owner)';
                 promptText = `Dựa trên dữ liệu phân tích tầm ảnh hưởng (Blast Radius, Degree) và thông tin đường dẫn file của các cấu phần sau đây:\n\n${nodeDetailsText}Hãy phân tích mức độ phức tạp, tầm quan trọng và đề xuất phân công nhân sự (gán Owner) phù hợp cho từng cấu phần. Giải thích rõ lý do đề xuất dựa trên mức độ ảnh hưởng của chúng đối với hệ thống.`;
             } else if (promptType === 'link-graph-docs') {
-                promptName = lang === 'vi' ? 'Gán neo đồ thị (Docs ➔ Code)' : 'Link Graph Anchoring (Docs ➔ Code)';
+                promptName = lang === 'vi' ? 'Gán neo đặc tả (CSA trên Docs)' : 'Link Spec Anchoring (CSA on Docs)';
                 promptText = lang === 'vi' 
-                    ? `Tôi muốn liên kết tài liệu đặc tả (Markdown) với các cấu phần mã nguồn (Code Entities) tương ứng bằng cách sử dụng cú pháp neo đồ thị \`<!-- @graph-node: nodeId -->\` (lưu ý: neo đồ thị chỉ ghi nhận trên tài liệu docs, KHÔNG ghi vào file mã nguồn code):\n\n${nodeDetailsText}Hãy đề xuất file tài liệu nào (ví dụ: docs/specs/xxx.md hoặc docs/README.md) phù hợp nhất cho từng cấu phần và chỉ rõ vị trí + cách thức chèn đoạn comment HTML \`<!-- @graph-node: nodeId -->\` tương ứng vào trong file tài liệu đó để xây dựng liên kết xuôi (Docs ➔ Code). TUYỆT ĐỐI KHÔNG sửa đổi hay thêm comment vào bất kỳ file mã nguồn (code) nào.`
-                    : `I want to link my specification documents (Markdown) with the corresponding code entities using the graph anchoring syntax \`<!-- @graph-node: nodeId -->\` (note: anchors are only recorded in documentation files, NOT in the source code files):\n\n${nodeDetailsText}Please suggest which documentation file (e.g. docs/specs/xxx.md or docs/README.md) is best suited for each entity and specify the exact location + format of the HTML comment \`<!-- @graph-node: nodeId -->\` to establish the forward link (Docs ➔ Code). DO NOT modify or insert comments into any source code files.`;
+                    ? `Tôi muốn liên kết tài liệu đặc tả (Markdown) với các cấu phần mã nguồn (Code Entities) tương ứng bằng cách sử dụng thẻ neo HTML \`<span id="csa-nodeId"></span>\` (lưu ý: thẻ neo này chỉ chèn vào tài liệu docs hoặc specs, KHÔNG ghi vào file mã nguồn code):\n\n${nodeDetailsText}Hãy đề xuất file tài liệu nào (ví dụ: docs/specs/xxx.md, docs/references/xxx.md hoặc docs/README.md) phù hợp nhất cho từng cấu phần và chỉ rõ vị trí + cách thức chèn thẻ neo HTML \`<span id="csa-nodeId"></span>\` tương ứng vào trong file tài liệu đó để xây dựng liên kết xuôi (CSA trên Docs). TUYỆT ĐỐI KHÔNG sửa đổi hay thêm comment vào bất kỳ file mã nguồn (code) nào.`
+                    : `I want to link my specification documents (Markdown) with the corresponding code entities using the HTML anchor tag \`<span id="csa-nodeId"></span>\` (note: anchors are only recorded in documentation or spec files, NOT in the source code files):\n\n${nodeDetailsText}Please suggest which documentation file (e.g. docs/specs/xxx.md, docs/references/xxx.md or docs/README.md) is best suited for each entity and specify the exact location + format of the HTML anchor tag \`<span id="csa-nodeId"></span>\` to establish the forward link (CSA on Docs). DO NOT modify or insert comments into any source code files.`;
             } else if (promptType === 'link-code-docs') {
-                promptName = lang === 'vi' ? 'Chèn comment neo (Code ➔ Docs)' : 'Insert Code References (Code ➔ Docs)';
+                promptName = lang === 'vi' ? 'Chèn comment neo (CSA trên Code)' : 'Insert Code References (CSA on Code)';
                 promptText = lang === 'vi' 
-                    ? `Tôi muốn liên kết các cấu phần mã nguồn với tài liệu đặc tả của chúng bằng cách chèn các comment neo \`// @para-doc [file.md#anchor]\` vào trong mã nguồn:\n\n${nodeDetailsText}Hãy hướng dẫn tôi cách chèn comment \`// @para-doc [đường_dẫn_tài_liệu.md#neo]\` chuẩn xác ngay trên dòng định nghĩa của từng cấu phần trong file mã nguồn. Đề xuất cụ thể đường dẫn tài liệu (file.md) và anchor (#neo) phù hợp nhất cho mỗi cấu phần để thiết lập liên kết ngược (Code ➔ Docs).`
-                    : `I want to link my source code entities back to their specification documents by inserting code reference comments \`// @para-doc [file.md#anchor]\` directly into the source code:\n\n${nodeDetailsText}Please guide me on how to insert the comment \`// @para-doc [path_to_doc.md#anchor]\` accurately right above the definition of each component in the source code. Suggest the best documentation file path and anchor (#anchor) for each entity to establish the backward link (Code ➔ Docs).`;
+                    ? `Tôi muốn liên kết các cấu phần mã nguồn với tài liệu đặc tả của chúng bằng cách chèn các comment neo \`// @para-doc [#anchor]\` vào trong mã nguồn:\n\n${nodeDetailsText}Hãy hướng dẫn tôi cách chèn comment \`// @para-doc [#neo]\` chuẩn xác ngay trên dòng định nghĩa của từng cấu phần trong file mã nguồn. Đề xuất cụ thể anchor (#neo) phù hợp nhất cho mỗi cấu phần để thiết lập liên kết ngược (CSA trên Code).`
+                    : `I want to link my source code entities back to their specification documents by inserting code reference comments \`// @para-doc [#anchor]\` directly into the source code:\n\n${nodeDetailsText}Please guide me on how to insert the comment \`// @para-doc [#anchor]\` accurately right above the definition of each component in the source code. Suggest the best anchor (#anchor) for each entity to establish the backward link (CSA on Code).`;
+            } else if (promptType === 'fix-dangling') {
+                promptName = lang === 'vi' ? 'Sửa lỗi neo mồ côi (Fix Dangling CSA)' : 'Fix Dangling CSA Links';
+                promptText = lang === 'vi'
+                    ? `Các cấu phần sau đây chứa các chú thích neo CSA bị mồ côi (dangling), tức là đường dẫn tài liệu hoặc ID neo trong code không tương ứng với bất kỳ tài liệu hay neo thực tế nào trong thư mục tài liệu/đặc tả:\n\n${nodeDetailsText}Hãy giúp tôi rà soát các file code của cấu phần trên, xác định các comment neo CSA bị lỗi (ví dụ: chỉ sai tệp đặc tả, sai anchor ID), đối chiếu với danh mục tài liệu đặc tả hiện có và viết hướng dẫn hoặc thực hiện cập nhật mã nguồn để sửa/thay thế các comment neo bị sai này.`
+                    : `The following components contain dangling CSA reference comments (the document path or anchor ID in code does not map to any actual document/anchor in the documentation/spec folder):\n\n${nodeDetailsText}Please review the source code of the above components, locate the incorrect CSA comment references, reconcile them with the existing specification documents, and output instructions or perform code updates to fix/replace these incorrect reference comments.`;
             } else if (promptType === 'risk-analysis') {
                 promptName = 'Đánh giá rủi ro thiết kế';
                 promptText = `Tôi đang có kế hoạch refactor hoặc sửa đổi các cấu phần sau đây:\n\n${nodeDetailsText}Vì các cấu phần này có thể có tầm ảnh hưởng lớn (Blast Radius cao) hoặc độ liên kết phức tạp (Degree cao), hãy thực hiện đánh giá rủi ro thiết kế hệ thống chi tiết. Nêu rõ các module hạ nguồn có khả năng bị ảnh hưởng, các kịch bản lỗi có thể xảy ra và đề xuất phương án giảm thiểu rủi ro (mitigation plan).`;

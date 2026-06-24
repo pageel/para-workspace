@@ -715,7 +715,7 @@
                         <div class="glossary-card" style="gap: 16px;">
                             <div>
                                 <span class="badge badge-info" id="trace-completed-title" style="background-color: rgba(15, 157, 88, 0.08); color: var(--success-color); margin-bottom: 6px;"><i data-lucide="check-circle" style="width: 10px; height: 10px;"></i> Đạt chuẩn / Đầy đủ (Completed)</span>
-                                <p class="glossary-desc" id="trace-completed-desc">Thành phần mã nguồn đã được định vị qua comment neo <code>&lt;!-- @graph-node --&gt;</code> trong tài liệu VÀ đã được AI Agent tóm tắt ngữ nghĩa thành công.</p>
+                                <p class="glossary-desc" id="trace-completed-desc">Thành phần mã nguồn đã được định vị qua thẻ neo <code>&lt;span id="csa-..."&gt;&lt;/span&gt;</code> trong tài liệu VÀ đã được AI Agent tóm tắt ngữ nghĩa thành công.</p>
                             </div>
                             <div style="border-top: 1px solid var(--border-color); padding-top: 12px;">
                                 <span class="badge badge-info" id="trace-unlinked-title" style="background-color: rgba(235, 87, 87, 0.08); color: var(--danger-color); margin-bottom: 6px;"><i data-lucide="x-circle" style="width: 10px; height: 10px;"></i> Chưa gán link (Unlinked)</span>
@@ -1050,7 +1050,7 @@
 
                 // Translate Traceability Status Card
                 document.getElementById('trace-completed-title').innerHTML = '<i data-lucide="check-circle" style="width: 10px; height: 10px;"></i> Completed (Full)';
-                document.getElementById('trace-completed-desc').innerHTML = 'The code component has been mapped with a <code>&lt;!-- @graph-node --&gt;</code> anchor in the documentation AND has been successfully summarized by the AI Agent.';
+                document.getElementById('trace-completed-desc').innerHTML = 'The code component has been mapped with a <code>&lt;span id="csa-..."&gt;&lt;/span&gt;</code> anchor in the documentation AND has been successfully summarized by the AI Agent.';
                 document.getElementById('trace-unlinked-title').innerHTML = '<i data-lucide="x-circle" style="width: 10px; height: 10px;"></i> Unlinked';
                 document.getElementById('trace-unlinked-desc').innerHTML = 'The code component has not been linked to any technical documentation page under the <code>docs/</code> folder.';
                 document.getElementById('trace-unenriched-title').innerHTML = '<i data-lucide="alert-circle" style="width: 10px; height: 10px;"></i> Unenriched';
@@ -1170,7 +1170,7 @@
                 document.getElementById('term-drift-desc').textContent = 'Sự sai lệch giữa đặc tả nghiệp vụ (Spec/Requirements) được tài liệu hóa và logic thực tế được triển khai trong mã nguồn. Hệ thống tự động phân tích và đối chiếu Bảng Quyết Định (Decision Table) trong Đặc tả với mã nguồn để phát hiện ra các điều kiện nhánh logic bị thiếu hoặc triển khai sai.';
 
                 document.getElementById('trace-completed-title').innerHTML = '<i data-lucide="check-circle" style="width: 10px; height: 10px;"></i> Đạt chuẩn / Đầy đủ (Completed)';
-                document.getElementById('trace-completed-desc').innerHTML = 'Thành phần mã nguồn đã được định vị qua comment neo <code>&lt;!-- @graph-node --&gt;</code> trong tài liệu VÀ đã được AI Agent tóm tắt ngữ nghĩa thành công.';
+                document.getElementById('trace-completed-desc').innerHTML = 'Thành phần mã nguồn đã được định vị qua thẻ neo <code>&lt;span id="csa-..."&gt;&lt;/span&gt;</code> trong tài liệu VÀ đã được AI Agent tóm tắt ngữ nghĩa thành công.';
                 document.getElementById('trace-unlinked-title').innerHTML = '<i data-lucide="x-circle" style="width: 10px; height: 10px;"></i> Chưa gán link (Unlinked)';
                 document.getElementById('trace-unlinked-desc').innerHTML = 'Thành phần mã nguồn chưa được liên kết đến bất kỳ mục tài liệu kỹ thuật nào trong thư mục <code>docs/</code>.';
                 document.getElementById('trace-unenriched-title').innerHTML = '<i data-lucide="alert-circle" style="width: 10px; height: 10px;"></i> Chưa mô tả AI (Unenriched)';

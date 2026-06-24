@@ -1125,6 +1125,13 @@
                             <pre class="code-signature" id="node-signature">normalize_path() {</pre>
                         </div>
 
+                        <div class="detail-card" id="card-doc-anchors" style="display: none;">
+                            <h4><i data-lucide="book-open" style="width: 12px; height: 12px;"></i> /* TRANSLATE:docAnchors */</h4>
+                            <div id="node-doc-anchors-list" style="display: flex; flex-direction: column; gap: 8px;">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+
                         <div class="detail-card" id="card-summary">
                             <h4><i data-lucide="align-left" style="width: 12px; height: 12px;"></i> /* TRANSLATE:aiSummary */</h4>
                             <div style="line-height: 1.5;" id="node-summary">Validates paths.</div>
@@ -1801,7 +1808,7 @@
                 compBadge.style.display = 'none';
             }
 
-            // VSCode Link
+             // VSCode Link
             const vscodeLink = document.getElementById('node-editor-link');
             if (node.filePath) {
                 const absPath = `${PROJECT_ROOT}/${node.filePath}`;
@@ -1810,6 +1817,94 @@
                 vscodeLink.style.display = 'inline-flex';
             } else {
                 vscodeLink.style.display = 'none';
+            }
+
+            // Build documentation and spec links
+            const docAnchorsList = [];
+            
+            // 1. Get from relation edges (DOCUMENTED_BY)
+            GRAPH_DATA.links.forEach(link => {
+                const sourceId = (typeof link.source === 'object') ? link.source.id : link.source;
+                const targetId = (typeof link.target === 'object') ? link.target.id : link.target;
+                
+                if (sourceId === node.id && link.relation === 'DOCUMENTED_BY') {
+                    const targetNode = GRAPH_DATA.nodes.find(n => n.id === targetId);
+                    if (targetNode && targetNode.type === 'spec_anchor') {
+                        docAnchorsList.push({
+                            id: targetNode.id,
+                            filePath: targetNode.filePath,
+                            startLine: targetNode.startLine,
+                            title: targetNode.signature || targetNode.id,
+                            type: 'spec_anchor'
+                        });
+                    }
+                }
+            });
+            
+            // 2. Get from legacy semantic.docAnchors (if any, avoid duplicates)
+            const legacyAnchors = node.docAnchors || (node.semantic && node.semantic.docAnchors) || [];
+            legacyAnchors.forEach(anchorStr => {
+                const hashIndex = anchorStr.indexOf('#');
+                const filePath = hashIndex !== -1 ? anchorStr.substring(0, hashIndex) : anchorStr;
+                
+                if (!docAnchorsList.some(item => item.filePath === filePath)) {
+                    docAnchorsList.push({
+                        id: anchorStr,
+                        filePath: filePath,
+                        startLine: null,
+                        title: filePath,
+                        type: 'legacy'
+                    });
+                }
+            });
+
+            const anchorsCard = document.getElementById('card-doc-anchors');
+            const anchorsListEl = document.getElementById('node-doc-anchors-list');
+            
+            if (docAnchorsList.length > 0) {
+                anchorsCard.style.display = 'block';
+                anchorsListEl.innerHTML = '';
+                
+                docAnchorsList.forEach(item => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'doc-anchor-item';
+                    itemEl.style.cssText = 'padding: 8px; border-radius: 4px; background-color: var(--code-bg); border: 1px solid var(--border-color); font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;';
+                    
+                    let htmlLink = '';
+                    let isDoc = item.filePath.startsWith('docs/');
+                    if (isDoc) {
+                        const relativeHtml = item.filePath.replace(/^docs\//, '').replace(/\.md$/, '.html');
+                        htmlLink = `../../docs/.html/${relativeHtml}`;
+                    }
+                    
+                    const titleText = item.title;
+                    const pathText = item.filePath + (item.startLine ? ` : L${item.startLine}` : '');
+                    const absPath = `${PROJECT_ROOT}/${item.filePath}`;
+                    const editorLink = `vscode://file${absPath}${item.startLine ? ':' + item.startLine : ''}`;
+                    
+                    itemEl.innerHTML = `
+                        <div style="font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+                            <i data-lucide="file-text" style="width: 12px; height: 12px; color: var(--accent-color); flex-shrink: 0;"></i>
+                            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${titleText}</span>
+                        </div>
+                        <div style="color: var(--text-secondary); font-size: 0.68rem; margin-bottom: 4px; word-break: break-all;">
+                            ${pathText}
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center; margin-top: 2px;">
+                            ${isDoc ? `
+                            <a href="${htmlLink}" target="_blank" style="color: var(--accent-color); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 3px; font-size: 0.7rem;">
+                                <i data-lucide="eye" style="width: 10px; height: 10px;"></i> /* TRANSLATE:viewHtml */
+                            </a>` : ''}
+                            <a href="${editorLink}" style="color: var(--text-secondary); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 3px; font-size: 0.7rem;">
+                                <i data-lucide="external-link" style="width: 10px; height: 10px;"></i> /* TRANSLATE:openEditor */
+                            </a>
+                        </div>
+                    `;
+                    anchorsListEl.appendChild(itemEl);
+                });
+                lucide.createIcons();
+            } else {
+                anchorsCard.style.display = 'none';
             }
             
             // Trigger Graph Highlights (deep = true to run BFS Change Impact analysis)
