@@ -1,11 +1,3 @@
----
-description: Graph-first codebase investigation policy using para-graph MCP tools
-trigger: always_on
-glob:
----
-
-<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->
-
 # Rule: Graph-First Investigation Policy
 
 > Agent MUST prioritize graph-based code analysis using `para-graph` MCP tools before performing direct file I/O operations or assuming architecture flow.
@@ -38,8 +30,8 @@ Agent MUST follow this priority order when investigating code:
 
 | Priority | Tool | When to use |
 |:--|:--|:--|
-| 🥇 1st | `graph_query` + `graph_edges` | Locate entities, map dependencies, understand call graph |
-| 🥈 2nd | `graph_context_bundle` | Get full context (source + callers + callees + tests) for a specific entity |
+| 🥇 1st | `graph_query` + `graph_edges` + `graph_god_nodes` | Locate entities, map dependencies, or identify core central entrypoints (God Nodes) |
+| 🥈 2nd | `graph_context_bundle` + `graph_expand_node` | Retrieve full details, adjacent entities, callers, callees, or specs for a specific node |
 | 🥉 3rd | `view_file` | Read exact implementation AFTER graph has identified the target |
 | 4th | `grep_search` | Only when entity is not in graph (new/unindexed code) |
 
@@ -56,6 +48,8 @@ Agent MUST follow this priority order when investigating code:
 - Before creating a plan (`/plan`), designing a specification (`/spec`), evaluating options (`/brainstorm`), or executing code refactoring/bug fixes (`/vibecode` or general coding), Agent **MUST** run `insight_search` and `memory_search` using keywords related to the affected components and tech stack (e.g., `d1`, `sqlite`, `transaction`, `auth`, `migration`, `sepay`).
 - **Purpose:** Search for historically archived lessons (`lesson`), risks (`risk`), decisions (`decision`), gotchas (`gotcha`), and design patterns (`pattern`) to apply or avoid repeating past mistakes.
 - Agent **MUST NOT** design new solutions or modify code related to database structures, API routes, or core logic without executing this knowledge query step first.
+- At the end of a plan phase or coding session, Agent **MUST** actively review completed tasks to extract new reusable insights (lessons, gotchas, or decisions) and use the `insight_push` tool to save them in the project graph database.
+- Agent **SHOULD** use the `insight_validate` tool to verify the semantic consistency and format of the insights before saving.
 
 ### 4. Transparency
 
@@ -66,6 +60,21 @@ Agent MUST follow this priority order when investigating code:
 
 - If the MCP server is unavailable or graph data is stale (`metadata.json` older than 7 days), Agent **MAY** fall back to standard file I/O with a warning to the user.
 - Agent **SHOULD** suggest running `/para-graph build` to refresh the graph after the task is complete.
+
+### 6. Mandatory CSA Compliance Verification
+
+- Before submitting code changes or completing a plan phase, Agent **MUST** run `npx para-graph audit csa --project .` to verify that code-specification double-binding coverage is >= 90.0% and no dangling spec links exist.
+- If the audit fails, Agent **MUST** run `npx para-graph fix csa --project .` (or use the `graph_fix_csa` MCP tool) to auto-heal references before proceeding.
+
+### 7. Mandatory Physical Drift & Junk File Verification
+
+- Before proposing or executing a git commit or staging files, the Agent **MUST** verify the physical integrity of the project directory structure using the `project_snapshot` and `project_diff` MCP tools.
+- Agent **MUST** compare the list of physical file modifications/additions against the active Plan File Inventory.
+- Any file detected in the diff that is not registered in the active Plan phase's file inventory or covered by `.gitignore` **MUST NOT** be ignored:
+  - **Temporary/Scratch Files**: Propose deleting them immediately (e.g., helper scripts, logs).
+  - **Personal Configs/States**: Propose adding them to `.gitignore`.
+  - **Missing Planned Entities**: Halt the commit process, report the omission, and update the plan file first before proceeding.
+- Agent **MUST** obtain explicit user confirmation before bypass or proceeding with the git commit.
 
 ## Related
 

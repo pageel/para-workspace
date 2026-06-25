@@ -119,3 +119,16 @@ PR:      propose → user approves → create PR
 Merge:   user merges on GitHub (not local)
 Tag:     user tests → propose tag → user approves
 ```
+
+### 7. Physical Drift & Junk File Control (v1.9.0)
+
+Before proposing or executing a git commit or staging files, the Agent MUST verify the physical integrity of the project directory structure to prevent untracked junk files, temporary test logs, or scratch scripts from being committed or leaking sensitive environment data:
+
+1. **Mandatory Physical Check**: If the active project supports physical snapshot/diff mechanisms (such as the `project_snapshot` / `project_diff` MCP tools or custom CLI equivalent):
+   - The Agent **MUST** capture a project snapshot and run a diff before staging or committing changes.
+   - The Agent **MUST** compare the list of physical file modifications/additions against the active Plan File Inventory.
+2. **Junk File Handling**: Any file detected in the diff that is not registered in the active Plan phase's file inventory or covered by `.gitignore` MUST be explicitly handled:
+   - **Temporary/Scratch Files**: Propose deleting them immediately (e.g., helper scripts, logs).
+   - **Personal Configs/States**: Propose adding them to `.gitignore`.
+   - **Missing Planned Entities**: Halt the commit process, report the omission, and update the plan file first before proceeding.
+3. **No Silent Bypass**: The Agent **MUST NOT** silently ignore or bypass any unregistered file. Git operations are blocked until the repository directory structure is fully reconciled with the active plan and verified by the user.

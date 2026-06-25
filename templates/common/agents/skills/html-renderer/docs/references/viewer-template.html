@@ -2390,8 +2390,8 @@
 
 Yêu cầu cụ thể:
 1. Đọc và phân tích kỹ từng lỗi/cảnh báo trong danh sách chi tiết dưới đây.
-2. TUYỆT ĐỐI KHÔNG sửa đổi, thêm hoặc xóa comment/code trong bất kỳ file mã nguồn (code) nào. Việc khắc phục sai lệch chỉ được thực hiện bằng cách cập nhật tài liệu spec/tài liệu hướng dẫn tại @[${path}] để đồng bộ 100% với code.
-3. Giải quyết dứt điểm các neo bị thiếu/hỏng bằng cách chèn thẻ neo HTML \`<span id="csa-nodeId"></span>\` tại vị trí phù hợp trong file tài liệu Markdown.
+2. Đồng bộ hai chiều (Double-Binding): Rà soát tài liệu và chú thích trong mã nguồn. Việc khắc phục sai lệch có thể thực hiện bằng cách thêm thẻ neo HTML dạng \`<span id="csa-nodeId"></span>\` trong tài liệu hoặc cập nhật/chuẩn hóa chú thích neo trong code (ví dụ: chuyển từ ID tiếng Việt sang ID tiếng Anh chuẩn hóa).
+3. Đảm bảo tất cả các ID neo kỹ thuật phải viết bằng tiếng Anh, viết thường, ngăn cách bằng dấu gạch ngang và có tiền tố "csa-".
 
 Chi tiết báo cáo sai lệch phát hiện được (Drift Audit Details):
 /* AUDIT_DETAILS_PLACEHOLDER */`,
@@ -2406,8 +2406,8 @@ Chi tiết báo cáo sai lệch phát hiện được (Drift Audit Details):
 
 Specific Requirements:
 1. Carefully read and analyze each error/warning in the detailed list below.
-2. ABSOLUTELY DO NOT modify, add, or delete any comments or code in any source files. Resolving drift must only be done by updating the documentation at @[${path}] to ensure 100% alignment with the code.
-3. Completely resolve broken or missing anchors by inserting \`<span id="csa-nodeId"></span>\` anchor tags in the target sections of the Markdown document.
+2. Double-Binding alignment: Review both the documentation and the codebase comments. Resolving drift can be achieved by either adding explicit HTML anchor tags \`<span id="csa-nodeId"></span>\` in the document, or updating/normalizing code comments (e.g. converting Vietnamese/legacy anchor IDs to clean English ones).
+3. Ensure all technical anchor IDs are written in English, lowercase, separated by hyphens, and prefixed with "csa-".
 
 Drift Audit Details:
 /* AUDIT_DETAILS_PLACEHOLDER */`,

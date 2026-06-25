@@ -141,31 +141,20 @@ bash .agents/skills/vibecode/scripts/session-manager.sh stop
 
 > **Ecosystem skip (v1.6.0+):** If project `type: ecosystem`, skip git-related suggestions (no repo to commit). Focus on plan progress and backlog updates only.
 
-### 3.6. Task State Snapshot (Graph Memory)
-
-// turbo
+### 3.6. State Cache Sync & Task Snapshot (L3 Experiment)
 
 > **Gate:** Only trigger if project has `.beads/graph/` directory.
-> **Purpose:** Push structured JSON snapshot of current tasks to avoid bash truncation in `/open`.
+> **Purpose:** Cache the latest project state in SQLite and record structural snapshot events.
 
 1. **IF graph exists:**
-   - Compile line counts for verification using `wc` and `grep`:
-     ```bash
-     wc -l Projects/[project-name]/artifacts/tasks/sprint-current.md 2>/dev/null
-     grep -c "ToDo\|In Progress" Projects/[project-name]/artifacts/tasks/backlog.md 2>/dev/null
-     ```
-   - Compose snapshot from current `backlog.md` and `sprint-current.md`:
-   - **kind:** `task-state-snapshot`
-   - **content:** "Backlog: [X] active ([H] High, [M] Med, [L] Low). Hot Lane: [Y] pending."
-   - **sessionId:** `YYYY-MM-DD-end-tasks`
-   - **metadata:** 
-     ```json
-     {
-       "sprint_current_lines": [count],
-       "backlog_active_lines": [count]
-     }
-     ```
-   - Agent calls `memory_push(projectName, kind, content, sessionId, metadata)`.
+   a. Call MCP tool `project_state_sync(projectName)` to sync all task changes from physical files to SQLite Cache.
+   b. Call MCP tool `project_state_get(projectName)` to retrieve the synced data.
+   c. Push the task snapshot event to SQLite Memory:
+      - **kind:** `task-state-snapshot`
+      - **content:** Read info from synced cache: "Backlog: [X] active ([H] High, [M] Med, [L] Low). Hot Lane: [Y] pending."
+      - **sessionId:** `YYYY-MM-DD-end-tasks`
+      - **metadata:** Attach the JSON structural parameters directly from the cache (Backlog stats, Sprint stats).
+      - Agent calls `memory_push(projectName, kind, content, sessionId, metadata)`.
 
 ### 3.2. Strategy/Roadmap Change Detection
 

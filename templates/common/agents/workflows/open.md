@@ -211,33 +211,26 @@ test -f "Projects/[project-name]/.beads/graph/[project-name].db" || test -f "Pro
   1. Use `insight_search` with `category: "risk"` or empty query `""` to retrieve outstanding project risks, gotchas, or decisions. Print them to the session context so the Agent is aware of architectural warnings (e.g., audit drift).
   2. Run `npx para-graph audit csa --project Projects/[project-name]` (or use the `graph_audit_csa` MCP tool) to show the current CSA coverage rate and list any dangling spec links.
 
-### 4. Read task context — Memory-First (Anti-Truncation)
+### 4. Read task context — State Cache (L3 Experiment)
 
-> ⚠️ **Anti-Truncation Architecture:** Read task state from Graph Memory first to avoid bash output truncation. Fallback to file reading only if memory is stale or missing.
+> ⚠️ **State Cache Architecture (v0.17.5+):** Use SQLite State Cache to optimize tokens and file read performance.
 
-**Step 4a: Memory Search (MCP)**
-1. Call MCP tool `memory_search(projectName, "task-state-snapshot", limit=1)`.
-2. **IF snapshot found:** Use `content` and `metadata` for the report. Proceed to Step 4b for verification.
-3. **IF NOT found:** Proceed to Step 4c (Fallback File Read).
+**Step 4a: Read from State Cache (MCP)**
+1. Call MCP tool `project_state_get(projectName)`.
+2. **IF cache hit (`stale: false` and data found):**
+   - Use configuration and task counts directly from cache values for Startup Report.
+   - Skip Step 4c (no physical file reads).
+3. **IF cache miss (`stale: true` or no data found):**
+   - Proceed to Step 4b to synchronize.
 
-**Step 4b: Lightweight Verification (Bash)**
-
-//turbo
-
-If memory snapshot was found, verify it hasn't become stale:
-```bash
-wc -l Projects/[project-name]/artifacts/tasks/sprint-current.md 2>/dev/null
-grep -c "ToDo\|In Progress" Projects/[project-name]/artifacts/tasks/backlog.md 2>/dev/null
-```
-- Compare actual line counts vs `metadata.sprint_current_lines` and `metadata.backlog_active_lines` from the snapshot.
-- **IF mismatch (delta > 3):** Discard memory, proceed to Step 4c.
-- **IF match:** Skip Step 4c.
+**Step 4b: Synchronize Cache (MCP)**
+1. Call MCP tool `project_state_sync(projectName)` to scan physical files (`project.md`, `backlog.md`, `sprint-current.md`) and update SQLite Cache.
+2. Re-read the newly updated cache values for Startup Report.
+3. If sync fails or parser error occurs, proceed to Step 4c as fallback.
 
 **Step 4c: Fallback File Read (Legacy)**
 
-//turbo
-
-Only if memory was missing or stale:
+Only if SQLite is unavailable or sync fails:
 ```bash
 grep -A 10 "Summary" Projects/[project-name]/artifacts/tasks/backlog.md 2>/dev/null
 grep -E "ToDo|In Progress" Projects/[project-name]/artifacts/tasks/backlog.md 2>/dev/null | head -5

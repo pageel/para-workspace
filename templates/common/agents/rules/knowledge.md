@@ -54,9 +54,10 @@ glob: .para/knowledge/*
 
 ### KR6. System KI Governed Lifecycle (v1.7.1)
 
-- System KIs **MUST** ship from `repo/templates/knowledge/` (source of truth).
-- `./para update` **SHOULD** sync system KIs via `/para-knowledge system update` logic.
-- `./para install` **SHOULD** init system KI defaults from templates.
+- Core workspace System KIs **MUST** ship from workspace kernel templates, while tool-specific System KIs **MUST** ship from their respective tool repo templates (e.g., `repo/templates/knowledge/`).
+- `./para update` **SHOULD** only sync core workspace system KIs (e.g., `para_workspace_*`) via `/para-knowledge system update` logic.
+- Tool-specific system KIs (e.g., `para_graph_*`) **MUST NOT** be synchronized via `./para update`. Instead, they **MUST** be synchronized using the tool's own update command: `para install-tool <tool-name> --update` (or `--sync` during local development).
+- `./para install` **SHOULD** only init core workspace system KI defaults.
 - System KI update **MUST** use merge strategy: template wins, user refs preserved.
 - System KI archive **MUST** only occur when deprecated by template removal.
 
@@ -74,6 +75,11 @@ glob: .para/knowledge/*
   - Source code files (`src/`, `repo/`) with stable paths
   - `conversation_id` references (platform-managed)
 - **Rationale:** Ephemeral refs become `BROKEN_REF` when source files are archived, degrading KI health scores and traceability.
+
+### KR8. Template Sync on Change
+
+- **MANDATORY**: When making changes to the API interfaces, directory structures, MCP tools, or system workflows, the Agent **MUST** synchronize and update the corresponding source knowledge templates (located in `repo/templates/knowledge/` or `repo/templates/`) before concluding the development plan (last Phase).
+- **Rationale**: Prevents Agent knowledge from becoming stale or out-of-sync with tool changes, ensuring the subsequent session loads the correct context without requiring manual user reminders.
 
 ## Access Control Matrix
 

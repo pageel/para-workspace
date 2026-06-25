@@ -67,13 +67,24 @@ SPECIFY ──→ USER APPROVAL ──→ SAVE SPEC
 
 > ⚠️ **Proactive Context & Trigger Check:** BEFORE writing any spec, YOU MUST:
 > 1. Read the project's own domain skill at `Projects/[project-name]/.agents/skills/[project-name]/SKILL.md` (if it exists) to understand project-specific rules.
-> 2. Scan workspace index triggers based on the intended target of your discussion.
+> 2. Read the Global CSA Skill at `.agents/skills/csa/SKILL.md` to ensure design decisions match G1, G2, G3 micro-anchoring guidelines.
+> 3. Read specific skills related to the project's tech stack (detect stack via `project.md` tags/goal, `package.json`, or config files, and load relevant skills such as `wrangler`, `cloudflare`, `firebase-firestore`, etc., from `.agents/skills/` or plugins).
+> 4. Scan workspace index triggers based on the intended target of your discussion.
 
 ```bash
 # Context & Trigger Load (Anti-Cognitive-Bypass)
 echo ""
 echo "> ⚠️ Loading Project Skill: Projects/[project-name]/.agents/skills/[project-name]/SKILL.md"
 cat Projects/[project-name]/.agents/skills/[project-name]/SKILL.md 2>/dev/null || echo "No project specific skill found."
+echo ""
+echo "> ⚠️ Loading Global CSA Skill: .agents/skills/csa/SKILL.md"
+cat .agents/skills/csa/SKILL.md 2>/dev/null || echo "No global CSA skill found."
+echo ""
+echo "> ⚠️ Detecting and loading tech stack skills..."
+# Load wrangler/cloudflare skill if tags match wrangler/cloudflare
+grep -q -i -E "wrangler|cloudflare|worker" Projects/[project-name]/project.md 2>/dev/null && cat .agents/skills/wrangler/SKILL.md 2>/dev/null || true
+# Load firebase/firestore skill if tags match firebase
+grep -q -i -E "firebase|firestore" Projects/[project-name]/project.md 2>/dev/null && cat ~/.gemini/config/plugins/firebase/skills/firebase_firestore/SKILL.md 2>/dev/null || true
 echo ""
 echo "> ⚠️ Proactive Trigger Scan: .agents/rules.md & .agents/skills.md"
 cat .agents/rules.md 2>/dev/null | head -n 30
@@ -141,6 +152,8 @@ ASSUMPTIONS I'M MAKING:
 
 > 🧩 **Sidecar Skill:** Load the spec template from `.agents/skills/spec/`.
 > Read `SKILL.md` for the Router Table, then load `references/templates/feature-spec.md`.
+> 
+> 🛡️ **CSA Anchoring Standard:** When writing success criteria, database tables, or functional requirements, you MUST follow the Micro-Anchoring guidelines (G1, G2, G3) of the `csa` skill loaded during Pre-flight. Ensure each testable requirement has an inline HTML anchor (e.g., `<span id="csa-..."></span>`). DO NOT use aggregate blanket anchors.
 
 Write the spec covering the core areas, inheriting from the system design:
 - **System Design Inheritance:**
@@ -177,17 +190,33 @@ Open Questions: [N]
 
 Agent MUST NOT proceed to saving until user explicitly approves (A).
 
-#### 5. Save Spec File
+#### 5. Save Spec File & Platform Pointer Mirroring
 
-// turbo
-
-Save the spec to:
-
+Save the spec file:
 ```bash
 mkdir -p Projects/[project-name]/artifacts/specs
 ```
-
 **Naming convention:** `spec-[YYYY-MM-DD]-[topic-slug].md`
+
+**Platform Tracking Pointer:** Once saved, the Agent **MUST overwrite and truncate** the platform files (`brain/implementation_plan.md`, `brain/task.md`, and `brain/walkthrough.md`), leaving **ONLY** the direct markdown link to the project spec file (`[spec-name](file:///Projects/[project-name]/artifacts/specs/spec-[YYYY-MM-DD]-[topic-slug].md)`) and the specific `TRACKER (link-only)` file guard comment at the bottom:
+- In `brain/implementation_plan.md`:
+  ```markdown
+  [spec-name](file:///Projects/[project-name]/artifacts/specs/spec-[YYYY-MM-DD]-[topic-slug].md)
+
+  <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project spec above. -->
+  ```
+- In `brain/task.md`:
+  ```markdown
+  - [ ] Spec is defined in [spec-name](file:///Projects/[project-name]/artifacts/specs/spec-[YYYY-MM-DD]-[topic-slug].md)
+
+  <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project spec above. -->
+  ```
+- In `brain/walkthrough.md`:
+  ```markdown
+  Spec details are defined in [spec-name](file:///Projects/[project-name]/artifacts/specs/spec-[YYYY-MM-DD]-[topic-slug].md)
+
+  <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project spec above. -->
+  ```
 
 #### 6. Choose Next Action
 
@@ -198,15 +227,18 @@ mkdir -p Projects/[project-name]/artifacts/specs
    Status: Approved
 
 💡 NEXT STEPS:
-   A. 📐 /plan [project-name] — Create formal implementation plan from this spec (RECOMMENDED)
-   B. 📥 /backlog [project-name] — Add tasks to backlog directly
-   C. 📄 Keep as reference — Save but don't act yet
+   A. 🔍 Review & CSA Audit — Run audit on the spec (using the `csa` skill) to check, validate, and attach appropriate micro-anchors (e.g. <span id="csa-...">) before proceeding (RECOMMENDED)
+   B. 📐 /plan [project-name] — Create formal implementation plan (Agent MUST ask user to choose template: detail-plan.md, detail-plan-tdd.md, or detail-plan-hardened.md)
+   C. 📥 /backlog [project-name] — Add tasks to backlog directly
+   D. 📄 Keep as reference — Save but don't act yet
 
 ❓ Which option?
 ```
 
-**Option A (Recommended):** Instruct the user to run `/plan [project-name]`.
-**Option B:** Recommend using `/backlog` to manage simple changes.
+**Option A (Recommended):** Perform a spec review and CSA audit. Reload/read `.agents/skills/csa/SKILL.md` if not already in context. Scan the spec for core design requirements, verify granularity (G1, G2, G3), and ensure they are wrapped in CSA anchor spans (e.g., `<span id="csa-statement-1">...</span>`) to prepare the spec for downstream code-graph binding.
+**Option B:** Recommend the user to run `/plan [project-name]`. **Important:** The Agent MUST NOT auto-select or write the plan file. The Agent MUST ask the user to explicitly choose a plan template (e.g., `detail-plan.md`, `detail-plan-tdd.md`, `detail-plan-hardened.md`) in the chat and wait for confirmation.
+**Option C:** Recommend using `/backlog` to manage simple changes.
+**Option D:** Keep as a static reference document.
 
 #### 7. Log in Session
 

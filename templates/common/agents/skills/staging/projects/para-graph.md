@@ -18,8 +18,9 @@ TEMPLATE_ROOT = repo/templates/agents
 | `.agents/workflows/para-graph.md` | `workflows/para-graph.md` | No (single file) |
 | `.agents/rules/graph-first-policy.md` | `rules/graph-first-policy.md` | No (single file) |
 | `.agents/skills/para-graph/` | `skills/para-graph/` | Yes (full directory) |
+| `.agents/skills/csa/` | `skills/csa/` | Yes (full directory) |
 
-> **Note:** para-graph only stages its OWN project-specific artifacts, not the full workspace library.
+> **Note:** para-graph stages its own project-specific artifacts and the csa skill template.
 
 ## Exclusions
 

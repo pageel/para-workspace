@@ -106,7 +106,6 @@ Carry the Execution Ownership icon from the Implementation Plan.]
 [ ] 0.3 🤖 **MCP Project Directory Snapshot** (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool to capture the baseline configuration, rules, and workspace knowledge)
 [ ] 0.4 🤖 **Project Directory Junk Audit** (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool with `auditJunk: true` to check for physical junk files before starting work)
 [ ] 0.5 🤖 **Session Context Compaction** (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to capture and write all rules, skills, and project contract to Vibecode Session KI)
-
 - [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x], run the MCP tool `project_session_compact` to update session memory, read the updated `session.md` using `view_file` to reload context, and obtain explicit User approval in the chat to transition to Phase 1.
 
 ---
@@ -115,7 +114,7 @@ Carry the Execution Ownership icon from the Implementation Plan.]
 
 <!-- ⚠️ MANDATORY: Agent MUST reload .agents/rules.md + .agents/skills.md BEFORE modifying files or executing git commands -->
 
-> ⛔ **MANDATORY:** Re-read `.agents/rules.md` + `.agents/skills.md` BEFORE modifying files.
+> ⛔ **MANDATORY:** View details of specific rules, skills, agents.md, or project.md in the KI necessary for this phase BEFORE modifying files.
 
 > 🧪 **Testing Requirement:** If this Phase involves writing or executing tests, Agent MUST explicitly load and apply `.agents/skills/tdd/SKILL.md` (TDD Governance) before running test commands.
 
@@ -170,7 +169,7 @@ git push origin main
 [ ] 1.N-1 🤖 **Pre-commit Gate:** Run project's linter/compiler/tests (e.g., `npm run lint`, `npm test`) and resolve any problems. (If running tests, MUST use TDD skill).
 [ ] 1.N 👤 **Git Checkpoint:** Commit changes with message `[feat/fix/chore]([scope]): [short description]`.
 
-- [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Receive explicit user approval before committing and proceeding to the next Phase.
+- [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Run the MCP tool `project_session_compact` to update session memory -> Read the updated `session.md` using `view_file` to reload context -> Obtain explicit User approval in the chat to transition to the next Phase.
       [ ] 1.N+1 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
       [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Agent MUST ask User for confirmation BEFORE pushing.
       [ ] 1.N+2 👤 Git push origin main.

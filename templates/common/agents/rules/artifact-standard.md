@@ -24,6 +24,8 @@ glob: artifacts/*
   - **Technical Plan**: Step-by-step breakdown of actions.
   - **Verification Checklist**: Specific tests to confirm success.
   - **Rollback Strategy**: Instructions to revert changes if needed.
+- **No Template Auto-Selection**: Agent **MUST NOT** auto-select a plan template or plan type. Agent **MUST** stop at the designated interactive checkpoints to ask and obtain the user's explicit choice before generating any content.
+- **Mandatory Post-Draft Audit Gate**: The Post-Draft Audit Gate is a non-skippable quality control step. Agent **MUST** ask the user for approval before running the audit process on the raw draft plan and embedding the audit results. Bypassing the audit gate is a severe workflow violation, but the audit execution and file modification must be explicitly confirmed by the user.
 
 ### 2. Walkthroughs (Evidence)
 

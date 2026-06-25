@@ -10,7 +10,7 @@
 | STATUS GATE | `<!-- ⚠️ STATUS GATE: ... -->` | Plan file header (after frontmatter) | Block Phase execution while plan Status is `📝 Draft` |
 | MANDATORY | `<!-- ⚠️ MANDATORY: ... -->` | First line after Phase heading | Force Agent to reload rules/skills indices before any side-effect |
 | HARNESS GUARD | `<!-- ⚠️ HARNESS GUARD (Risk): ... -->` | After MANDATORY, before Implementation Plan | Warn about specific risk mapped from Risks & Mitigations table |
-| CHECKPOINT | `⛔ CHECKPOINT: [action]` | Inside Task List, before git/status tasks | Break momentum bias — force Agent to execute checkpoint action before continuing. For phase transitions, MUST explicitly demand checking all previous tasks (e.g., "Agent MUST verify ALL tasks in Phase N are checked [x] AND get explicit User approval before proceeding"). |
+| CHECKPOINT | `⛔ CHECKPOINT: [action]` | Inside Task List, before git/status tasks | Break momentum bias — force Agent to execute checkpoint action before continuing. For phase transitions, MUST explicitly demand running the MCP tool `project_session_compact`, reading the updated `session.md` using `view_file` to reload context, and obtaining explicit User approval. If graph/mcp is enabled, pre-commit safety checkpoints MUST also explicitly dictate running `project_snapshot`, `project_diff`, and `graph_audit_csa` tools. |
 | FILE GUARD | `<!-- ⚠️ [TYPE] — [constraint] -->` | After file title or YAML frontmatter | Protect file integrity (APPEND-ONLY, HOT LANE, READ-ONLY, etc.) |
 | WORKFLOW GATE | `<!-- ⚠️ WORKFLOW GATE: ... -->` | Before a critical workflow step | Prevent Agent from skipping an important step |
 | CONTEXT RECOVERY | `<!-- ⚠️ CONTEXT RECOVERY: ... -->` | End of long artifacts (>500 lines) | Remind Agent to reload context if attention has decayed |
@@ -27,7 +27,7 @@
 | KERNEL | `<!-- ⚠️ READ-ONLY SNAPSHOT — Do NOT modify (I9) -->` | `kernel/`, `Resources/ai-agents/kernel/` |
 | GOVERNED | `<!-- ⚠️ GOVERNED — /para-rule only. Overwritten by para update -->` | `.agents/rules/` |
 | WORKSPACE | `<!-- ⚠️ APPEND-ONLY — via /end only -->` | `Areas/Workspace/` |
-| TRACKER (link-only) | `<!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->` | `brain/implementation_plan.md`, `brain/task.md` |
+| TRACKER (link-only) | `<!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->` | `brain/implementation_plan.md`, `brain/task.md`, `brain/walkthrough.md` |
 
 ## Placement Convention
 
@@ -55,6 +55,7 @@
     - Add an inline HARNESS GUARD in Execution Phases before modifying critical code: `<!-- ⚠️ HARNESS GUARD (Graph-First Policy): Agent MUST call mcp_para-graph_graph_context_bundle for node [NodeID] BEFORE modifying the code to understand its full dependencies. -->`
 11. **Graph Knowledge Preparation:** Agent MUST explicitly list "Graph Knowledge Preparation" as a required Phase 0 task in all detail plans if the project supports Graph.
 12. **TDD Strict Cycle:** If the plan uses TDD, Agent MUST enforce the "TDD Strict Cycle" using `tdd-test.sh` to record evidence before every commit.
+13. **Post-Draft Audit Checkpoint:** When a detail plan is created, Agent MUST stop at the checkpoint immediately after writing the Draft file (with review counters initialized to `0` and date as `—`) and explicitly ask the User for permission to run the Quality Audit and edit the draft plan. Agent MUST NOT auto-run the audit or write `Passed` / `Count: 1` before receiving explicit confirmation.
 
 ## Dual-Format Convention (v1.7.16)
 

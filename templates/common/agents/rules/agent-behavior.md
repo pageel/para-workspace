@@ -70,12 +70,20 @@ Applies to **all** workflows and tasks:
 
 When context appears incomplete (cannot recall loaded rules, received truncation/checkpoint notice, or conversation has been very long):
 
-1. **MUST** re-read `.agents/rules.md` (workspace rules index) before performing any side-effect.
-2. **MUST** re-read `.agents/skills.md` (workspace skills index, v1.6.2+) before performing any side-effect.
-3. **MUST** re-read project `.agents/rules.md` (if exists) before project-specific actions.
-4. **MUST** re-read project `.agents/skills.md` (if exists) before project-specific actions.
-5. **MUST** check for and read `Projects/<project-name>/.agents/AGENTS.md` (or any variation like `agents.md`, `.agents/agents.md`, or `AGENTS.md`/`agents.md` in the project root) if it exists, to load project-specific instructions and developer guidelines.
-6. **SHOULD** inform user: "Context recovery — re-loaded rules, skills, and project guidelines."
+1. **PRIORITY 1: Vibecode Session Memory (MANDATORY)**
+   - Agent **MUST** check for and read `knowledge/para_vibecode_session/artifacts/session.md` using the `view_file` tool if the project uses a code graph and has session memory available.
+   - Reading `session.md` yields a compacted summary of Workspace & Project Rules, Skills, and Contract, instantly restoring context in one single read call (significant token optimization).
+   - If `session.md` exists and is successfully read, Agent **MAY** skip reading the individual rule and skill index files below unless a specific detail file is required.
+
+2. **PRIORITY 2: Fallback Index Loading**
+   - If `session.md` is not present, Agent **MUST** load context step-by-step:
+     a. **MUST** re-read `.agents/rules.md` (workspace rules index) before performing any side-effect.
+     b. **MUST** re-read `.agents/skills.md` (workspace skills index, v1.6.2+) before performing any side-effect.
+     c. **MUST** re-read project `.agents/rules.md` (if exists) before project-specific actions.
+     d. **MUST** re-read project `.agents/skills.md` (if exists) before project-specific actions.
+     e. **MUST** check for and read `Projects/<project-name>/.agents/AGENTS.md` (or any variation like `agents.md`, `.agents/agents.md`, or `AGENTS.md`/`agents.md` in the project root) if it exists, to load project-specific instructions and developer guidelines.
+
+3. **SHOULD** inform user: "Context recovery — loaded compacted session memory." (or re-loaded individual rules/skills).
 
 **Proactive Trigger Check (v1.6.2+):**
 

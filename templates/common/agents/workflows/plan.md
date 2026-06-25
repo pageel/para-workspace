@@ -41,6 +41,8 @@ Create, review, or update a phased implementation plan for a PARA project.
 | `--phase` | Default for `dev`. Strictly execute the plan phase by phase, verifying task completion before moving to the next phase |
 | `--tdd` | Force strict Test-Driven Development mode. Agent MUST use `detail-plan-tdd.md` template for creation and load `.agents/skills/tdd/SKILL.md` during execution |
 | `--hardened` | Hardened Plan mode. Agent uses `detail-plan-hardened.md` template, runs mandatory Post-Draft Audit Gate (logic, security, governance), classifies tasks for selective TDD injection, and presents audit results before activation |
+| `--report` | Generate a comprehensive dev session report (Token/Performance, CSA, Snapshot, TDD, Session KI, Tools) in chat at plan completion |
+| `--report-focus` | Specific dimension (csa, tdd, perf, drift, tools, session) to deep-dive into inside the report |
 
 ---
 
@@ -430,6 +432,20 @@ Map each High/Medium priority backlog item to the phase where it will be impleme
    - If purely R&D, speculative, or undefined scope: use wildcard (e.g., `1.x.x`).
    - Otherwise, calculate exact target version to include in the plan's filename logic (Step 9).
 
+#### 8.7. CSA Spec Anchor Scaffolding
+
+// turbo
+
+> ⚗️ **Opt-in Check:** Only execute if `csa.spec_threshold` in `project.md` is non-zero (CSA is enabled) AND this plan corresponds to a new spec file.
+
+1. Scan `Projects/[project-name]/artifacts/specs/` for spec files matching the target version/topic (e.g. `spec-*[topic]*.md`).
+2. Read the spec file and extract all spec anchors defined as `<span id="csa-..."></span>` or `#csa-...`.
+3. For each extracted anchor ID:
+   a. Identify the target class/function/file name from the anchor's title or surrounding text.
+   b. Proactively inject a sub-task into the plan phases (Phase 1 or 2) requiring the Agent to bind this spec anchor to its matching code entity using a `@para-doc` comment:
+      ` - [ ] Bind spec anchor 'csa-[anchor-id]' to code declaration with @para-doc comment.`
+4. Log: `📐 CSA Spec Scaffolding: Injected [N] spec anchor tasks into Phase [X]`
+
 #### 9. Write Plan File
 
 // turbo
@@ -663,16 +679,26 @@ Summarize an existing plan with status updates, using `done.md` for accurate pro
 
 // turbo
 
-1. Read `active_plan` field from `Projects/[project-name]/project.md` to locate the plan file.
+#### 1. Read Active Plan
+
+Read `active_plan` field from `Projects/[project-name]/project.md` to locate the plan file.
 
 **Resolve plan path (v1.6.3):**
 
 Resolve `active_plan` from `project.md` (IF starts with `@` → cross-project: `Projects/{ecosystem}/artifacts/{path}`, ELSE → local: `Projects/[project-name]/artifacts/{value}`).
 The resolved path points to the plan file to read.
 
-2. Read `Projects/[project-name]/artifacts/tasks/done.md` to get the list of completed task IDs with dates.
-3. Cross-reference `done.md` completed IDs with the plan's **Backlog → Phase Mapping** table.
-4. Display summary:
+#### 2. Read Task Progress (done.md)
+
+Read `Projects/[project-name]/artifacts/tasks/done.md` to get the list of completed task IDs with dates.
+
+#### 3. Cross-reference Backlog
+
+Cross-reference `done.md` completed IDs with the plan's **Backlog → Phase Mapping** table.
+
+#### 4. Display Progress Summary
+
+Display summary:
 
 ```
 📋 PLAN REVIEW: [plan-name]
@@ -686,23 +712,28 @@ The resolved path points to the plan file to read.
 Overall: 40% complete | Deadline: YYYY-MM-DD
 ```
 
-5. If a phase reaches 100% → suggest running `/retro` for phase review.
-6. If ALL phases reach 100% → generate review + archive the plan:
-   a. Move plan file to `artifacts/plans/done/[plan-name].md`
-   b. **Create completion review** at `artifacts/plans/done/[plan-name]-review.md`:
-   - Task-by-task completion status (verified against `done.md`)
-   - Phase summary with dates
-   - Items deferred or skipped (with reason)
-   - Bonus work done outside plan scope
-     c. Remove `active_plan` field from `project.md`
-     d. Suggest running `/retro` for full project retrospective
-     e. Log: `Plan [plan-name] archived to plans/done/ (with review)`
+#### 5. Phase Retro Trigger
+
+If a phase reaches 100% → suggest running `/retro` for phase review.
+
+#### 6. Archive Completed Plan (if 100%)
+
+If ALL phases reach 100% → generate review + archive the plan:
+a. Move plan file to `artifacts/plans/done/[plan-name].md`
+b. **Create completion review** at `artifacts/plans/done/[plan-name]-review.md`:
+- Task-by-task completion status (verified against `done.md`)
+- Phase summary with dates
+- Items deferred or skipped (with reason)
+- Bonus work done outside plan scope
+c. Remove `active_plan` field from `project.md`
+d. Suggest running `/retro` for full project retrospective
+e. Log: `Plan [plan-name] archived to plans/done/ (with review)`
 
 > **Why review in `done/`?** Keeps plan + evidence together. `/retro` only needs to read one directory. Review lives in the project (not conversation brain) so it persists across sessions.
 
 > **Why archive?** Completed plans in `artifacts/plans/` waste tokens when agents scan the directory. Moving to `done/` keeps the active plans directory lean.
 
-**Step 6.5 — Roadmap Lifecycle (v1.6.3 — field-gated):**
+#### 6.5. Roadmap Lifecycle Update (v1.6.3 — field-gated)
 
 After archiving a completed plan (Step 6):
 
@@ -740,14 +771,25 @@ Modify an existing plan (add phases, update status, revise timeline).
 
 If the `--graph` flag is provided, execute the same Graph Pipeline (Build → God Nodes → Enrich) as defined in the `create` action to refresh architectural context before modifying the plan.
 
-1. Read `active_plan` from `project.md` to locate the plan file.
-2. Ask user what to update:
-   - Add/remove/reorder phases
-   - Update task status within a phase
-   - Revise timeline estimates
-   - Add new code reuse discoveries
-3. Apply changes and increment the plan version (e.g., `1.0` → `1.1`).
-4. Log the update in the current session.
+#### 1. Read Active Plan
+
+Read `active_plan` from `project.md` to locate the plan file.
+
+#### 2. Prompt User for Updates
+
+Ask user what to update:
+- Add/remove/reorder phases
+- Update task status within a phase
+- Revise timeline estimates
+- Add new code reuse discoveries
+
+#### 3. Apply Changes & Version Bump
+
+Apply changes and increment the plan version (e.g., `1.0` → `1.1`).
+
+#### 4. Log Update in Session
+
+Log the update in the current session.
 
 ---
 
@@ -757,68 +799,88 @@ Start or continue executing the active plan in the project.
 
 ### Steps
 
-1. **Locate Plan:** Read `project.md` to find `active_plan` or search `artifacts/plans/` for the latest plan file.
-   - IF the found plan is a Draft (`Status: 📝 Draft`): Automatically update its Status to `🔨 Active`, set `active_plan` in `project.md` to point to it, run `/backlog sync` (if not exempted), and proceed with execution. As part of this activation, the Agent **MUST overwrite and truncate** the platform files (`brain/implementation_plan.md`, `brain/task.md`, and `brain/walkthrough.md`), leaving **ONLY** the direct markdown link to the newly activated plan file and the specific `TRACKER (link-only)` file guard comment at the bottom, using the exact format:
-     * In `brain/implementation_plan.md`:
-       ```markdown
-       [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
+#### 1. Locate & Activate Plan
 
-       <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
-       ```
-     * In `brain/task.md`:
-       ```markdown
-       - [ ] Tasks are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md#walkthrough-completion-gate)
+Read `project.md` to find `active_plan` or search `artifacts/plans/` for the latest plan file.
+- IF the found plan is a Draft (`Status: 📝 Draft`): Automatically update its Status to `🔨 Active`, set `active_plan` in `project.md` to point to it, run `/backlog sync` (if not exempted), and proceed with execution. As part of this activation, the Agent **MUST overwrite and truncate** the platform files (`brain/implementation_plan.md`, `brain/task.md`, and `brain/walkthrough.md`), leaving **ONLY** the direct markdown link to the newly activated plan file and the specific `TRACKER (link-only)` file guard comment at the bottom, using the exact format:
+  * In `brain/implementation_plan.md`:
+    ```markdown
+    [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
 
-       <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
-       ```
-     * In `brain/walkthrough.md`:
-       ```markdown
-       Walkthrough details are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md#walkthrough-completion-gate)
+    <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+    ```
+  * In `brain/task.md`:
+    ```markdown
+    - [ ] Tasks are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md#walkthrough-completion-gate)
 
-       <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
-       ```
-     - **Platform Tracker Exemption (v1.9.2):** If the plan name contains `roadmap`, `strategy`, `spec`, or `brainstorm`, skip the creation/sync of platform-level `task.md`, `implementation_plan.md`, or `walkthrough.md` in the brain folder.
-     - **Cross-project (v1.6.0+):** If plan file is in an ecosystem meta-project (`@{ecosystem}/plans/...`), set `active_plan` as a cross-project reference:
-       ```yaml
-       active_plan: "@{ecosystem}/plans/[plan-name].md"
-       ```
-     - **Roadmap sync (v1.6.3):** After activation, check `roadmap` field in `project.md`. If set, find the matching phase row and update Status → `🔨 Active` + link to plan file (see Step 10 Roadmap auto-update in create action for details).
-   - IF the found plan is already Active (`Status: 🔨 Active`) or does not require activation: Load the plan and proceed. Even when loading an already active plan, the Agent **MUST ensure** the platform files (`brain/implementation_plan.md`, `brain/task.md`, and `brain/walkthrough.md`) are cleared and contain **only the markdown link** and the specific `TRACKER (link-only)` file guard comment at the bottom, using the exact format:
-     * In `brain/implementation_plan.md`:
-       ```markdown
-       [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
+    <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+    ```
+  * In `brain/walkthrough.md`:
+    ```markdown
+    Walkthrough details are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md#walkthrough-completion-gate)
 
-       <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
-       ```
-     * In `brain/task.md`:
-       ```markdown
-       - [ ] Tasks are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md#walkthrough-completion-gate)
+    <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+    ```
+  - **Platform Tracker Exemption (v1.9.2):** If the plan name contains `roadmap`, `strategy`, `spec`, or `brainstorm`, skip the creation/sync of platform-level `task.md`, `implementation_plan.md`, or `walkthrough.md` in the brain folder.
+  - **Cross-project (v1.6.0+):** If plan file is in an ecosystem meta-project (`@{ecosystem}/plans/...`), set `active_plan` as a cross-project reference:
+    ```yaml
+    active_plan: "@{ecosystem}/plans/[plan-name].md"
+    ```
+  - **Roadmap sync (v1.6.3):** After activation, check `roadmap` field in `project.md`. If set, find the matching phase row and update Status → `🔨 Active` + link to plan file (see Step 10 Roadmap auto-update in create action for details).
+- IF the found plan is already Active (`Status: 🔨 Active`) or does not require activation: Load the plan and proceed. Even when loading an already active plan, the Agent **MUST ensure** the platform files (`brain/implementation_plan.md`, `brain/task.md`, and `brain/walkthrough.md`) are cleared and contain **only the markdown link** and the specific `TRACKER (link-only)` file guard comment at the bottom, using the exact format:
+  * In `brain/implementation_plan.md`:
+    ```markdown
+    [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md)
 
-       <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
-       ```
-     * In `brain/walkthrough.md`:
-       ```markdown
-       Walkthrough details are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md#walkthrough-completion-gate)
+    <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+    ```
+  * In `brain/task.md`:
+    ```markdown
+    - [ ] Tasks are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md#walkthrough-completion-gate)
 
-       <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
-       ```
+    <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+    ```
+  * In `brain/walkthrough.md`:
+    ```markdown
+    Walkthrough details are defined in [plan-name](file:///Projects/[project-name]/artifacts/plans/[plan-name].md#walkthrough-completion-gate)
 
-2. **Session Context Compaction (MANDATORY):** Before executing any task, if the project has a code graph available (e.g., `Projects/[project-name]/.beads/graph/` directory exists), the Agent **MUST** run the MCP tool `project_session_compact(projectName: "[project-name]")` for the project to compile, compress, and write all workspace and project rules, skills, contract, and guidelines into the Vibecode Session KI (`session.md`). This ensures the Session KI is updated with the latest context for JIT Context Recovery. If the project does not support graphs, skip this step gracefully.
+    <!-- ⚠️ FILE GUARD — Do not write any other content here. Focus only on reading and updating the linked project plan above. -->
+    ```
 
-3. **Load Plan Methodology Skills:** Scan the loaded plan file. Check the `Methodology` or `Required Skill` blockquotes. If the plan specifies a specific methodology (e.g., Strict TDD), or if a flag like `--tdd` is passed, the Agent MUST load the corresponding `.agents/skills/[skill-name]/SKILL.md` into context before executing any code.
+#### 2. Session Context Compaction & Baseline Snapshot (MANDATORY)
 
-4. **Phase Execution:** If `--phase` flag is present (which is default for this action), execute the plan strictly phase by phase.
+Before executing any task, if the project has a code graph available (e.g., `Projects/[project-name]/.beads/graph/` directory exists), the Agent **MUST**:
+1. Run the MCP tool `project_snapshot(projectName: "[project-name]")` to capture the project's baseline directory structure and verify protected files.
+2. Run the MCP tool `project_session_compact(projectName: "[project-name]")` for the project to compile, compress, and write all workspace and project rules, skills, contract, and guidelines into the Vibecode Session KI (`session.md`). This ensures the Session KI is updated with the latest context for JIT Context Recovery.
+If the project does not support graphs, skip these steps gracefully.
 
-5. **Task Verification & Checkpoints:** The Agent MUST read and obey inline `⛔ CHECKPOINT` guards. When transitioning phases, the Agent CANNOT move to the next phase unless ALL tasks in the current phase are actually marked as completed `[x]`, OR the user explicitly grants permission to skip the remaining tasks. Do not auto-assume tasks are done.
+#### 3. Load Plan Methodology Skills
 
-6. **Execution:** Proceed with performing the coding or related operations defined in the current pending tasks.
+Scan the loaded plan file. Check the `Methodology` or `Required Skill` blockquotes. If the plan specifies a specific methodology (e.g., Strict TDD), or if a flag like `--tdd` is passed, the Agent MUST load the corresponding `.agents/skills/[skill-name]/SKILL.md` into context before executing any code.
 
-7. **Strict TDD & Commit Gate Protocol (MANDATORY):** If the plan employs TDD (Test-Driven Development) methodology or has tasks classified as `🧪 TDD`, the Agent **MUST** strictly follow this execution order before proposing any `git commit` or `git push`:
-   a. **Log Evidence:** Run test files using the TDD evidence logger script (`tdd-test.sh`). Confirm that `artifacts/tests/tdd-evidence.log` contains a `status: FAIL` entry before the `status: PASS` entry for the respective test file.
-   b. **Checkbox Update:** Check off (`[x]`) the completed tasks in the active plan file of the project (no need to update the platform's system `task.md` since it only holds the plan link under the OSS-first model).
-   c. **Type Safety:** Run `npx astro check` (or language-equivalent static type analysis) and resolve all type errors (0 Errors).
-   d. **Build Test:** Run `npm run build` and ensure the project builds successfully.
-   e. **Commit Trigger:** Propose a `git commit` ONLY after steps (a) through (d) are successfully completed. Triggering or proposing a commit without satisfying all these conditions is a workflow violation.
+#### 4. Phase Execution
+
+If `--phase` flag is present (which is default for this action), execute the plan strictly phase by phase.
+
+#### 5. Task Verification & Checkpoints (CSA & Snapshot Gates)
+
+The Agent MUST read and obey inline `⛔ CHECKPOINT` guards. When transitioning phases, the Agent CANNOT move to the next phase unless:
+1. ALL tasks in the current phase are actually marked as completed `[x]`, OR the user explicitly grants permission to skip the remaining tasks. Do not auto-assume tasks are done.
+2. **CSA Compliance Gate:** If the project has CSA enabled (`project.md` has `csa` configuration map), the Agent **MUST** run the MCP tool `graph_audit_csa(projectName: "[project-name]")` (or run CLI `npx para-graph audit csa`). The weighted spec coverage **MUST** meet the threshold (default 90%). If below threshold, Agent MUST STOP, resolve all missing `@para-doc` comments or spec anchors, and run the audit again.
+3. **Physical Drift Gate:** The Agent **MUST** run the MCP tool `project_snapshot(projectName: "[project-name]")` followed by `project_diff` to verify physical directory structure changes. Agent MUST present the list of added, modified, or deleted files to the User, verifying that they match the Approved File Inventory for the Phase and no protected files (`project_protected_files`) are modified outside the approved scope.
+
+#### 6. Task Implementation
+
+Proceed with performing the coding or related operations defined in the current pending tasks.
+
+#### 7. Strict TDD & Commit Gate Protocol (MANDATORY)
+
+If the plan employs TDD (Test-Driven Development) methodology or has tasks classified as `🧪 TDD`, the Agent **MUST** strictly follow this execution order before proposing any `git commit` or `git push`:
+a. **Log Evidence:** Run test files using the TDD evidence logger script (`tdd-test.sh`). Confirm that `artifacts/tests/tdd-evidence.log` contains a `status: FAIL` entry before the `status: PASS` entry for the respective test file.
+b. **Checkbox Update:** Check off (`[x]`) the completed tasks in the active plan file of the project (no need to update the platform's system `task.md` since it only holds the plan link under the OSS-first model).
+c. **Type Safety:** Run `npx astro check` (or language-equivalent static type analysis) and resolve all type errors (0 Errors).
+d. **Build Test:** Run `npm run build` and ensure the project builds successfully.
+e. **Commit Trigger:** Propose a `git commit` ONLY after steps (a) through (d) are successfully completed. Triggering or proposing a commit without satisfying all these conditions is a workflow violation.
 
 ---
 
@@ -828,47 +890,92 @@ Finalize the active plan by performing a strict completion audit, syncing backlo
 
 ### Steps
 
-1. **Phase Completion Check:** Verify that all tasks across all phases of the plan are marked as completed `[x]`.
-2. **Walkthrough Checklist Check:** Ensure all items in the Walkthrough Completion Gate are checked off.
-3. **Backlog Sync & Clean (MANDATORY):** The Agent MUST proactively execute the logic of `/backlog sync` and `/backlog clean` to update the operational authority BEFORE archiving:
-   - Append the completed plan and its tasks to `artifacts/tasks/done.md`.
-   - Update `artifacts/tasks/backlog.md`: Compress the plan into the `✅ Completed (Archived)` section, remove any mapped Active/Bug IDs from the upper tables, and update the Summary counts.
-4. **User Approval:** Present the completion status and ask for explicit approval to transition the plan to `✅ Done` and clear `active_plan` in `project.md`.
-5. **Archive (Post-Approval):** AFTER user approval, the Agent MUST:
-   a. Change plan `Status` to `✅ Done`.
-   b. Move the plan file to `artifacts/plans/done/`.
-   c. Remove the `active_plan` field from `project.md`.
-   d. Suggest reviewing and updating the project's (or meta-project's) roadmap (if one exists) to reflect the newly completed plan.
-6. **Quarantine Test Evidence & TDD Logs:**
-   // turbo
-   ```bash
-   # Archive TDD evidence log (rename with plan version before quarantine)
-   # TDD Skill spec: artifacts/tests/tdd-evidence.log → tdd-evidence-<version>.log
-   PLAN_VER=$(grep -oE 'v[0-9]+\.[0-9]+[0-9.]*' "$(ls artifacts/plans/done/*-$(date +%Y-%m-%d)*.md 2>/dev/null | head -1)" 2>/dev/null | head -1)
-   if [[ -f "artifacts/tests/tdd-evidence.log" ]]; then
-     SUFFIX="${PLAN_VER:-$(date +%Y-%m-%d)}"
-     mv "artifacts/tests/tdd-evidence.log" "artifacts/tests/tdd-evidence-${SUFFIX}.log"
-     echo "📋 TDD evidence archived as tdd-evidence-${SUFFIX}.log"
-   fi
-   # Also check .beads/ (legacy location — some projects wrote here by mistake)
-   if [[ -f ".beads/tdd-evidence.log" ]]; then
-     mkdir -p artifacts/tests
-     mv ".beads/tdd-evidence.log" "artifacts/tests/tdd-evidence-${PLAN_VER:-legacy}.log"
-     echo "📋 Migrated .beads/tdd-evidence.log → artifacts/tests/"
-   fi
-   # Quarantine all test artifacts to tmp/
-   if [[ -d "artifacts/tests" ]]; then mkdir -p artifacts/tests/tmp; for f in artifacts/tests/*; do if [[ -e "$f" && "$f" != "artifacts/tests/tmp" ]]; then mv "$f" "artifacts/tests/tmp/$(basename "$f")" 2>/dev/null || true; fi; done; echo "🧹 Test artifacts quarantined"; fi
-   ```
-7. **Graph Build, Enrichment & Insight Curation (MANDATORY INSIGHT GATE):**
-   If the project uses `para-graph`, execute `/para-graph build [project-name]` to update the structural Code-Knowledge Graph with the new features, and use `graph_enrich` to update semantic summaries of modified nodes.
-   
-   **Insight Curation (Replacing general /learn recommendation):**
-   At the end of the plan, the Agent MUST actively review the session history to identify any newly resolved bugs, lessons, or gotchas.
-   - Propose 1-2 structured insights (lessons, gotchas, or risks) to the user.
-   - Offer the following options to store the insights:
-     1. **Store to Code-Graph:** Use MCP `insight_push` to save directly to the project's knowledge database (if `para-graph` is available).
-     2. **Store to Local Files (Fallback):** Append to `.beads/seeds.md` or create a new file in `docs/researches/` (if `para-graph` is not available).
-     3. **Ignore:** If no new reusable insights were discovered.
+#### 1. Phase Completion Check
+
+Verify that all tasks across all phases of the plan are marked as completed `[x]`.
+
+#### 2. Walkthrough Checklist Check
+
+Ensure all items in the Walkthrough Completion Gate are checked off.
+
+#### 3. Backlog Sync & Clean (MANDATORY)
+
+The Agent MUST proactively execute the logic of `/backlog sync` and `/backlog clean` to update the operational authority BEFORE archiving:
+- Append the completed plan and its tasks to `artifacts/tasks/done.md`.
+- Update `artifacts/tasks/backlog.md`: Compress the plan into the `✅ Completed (Archived)` section, remove any mapped Active/Bug IDs from the upper tables, and update the Summary counts.
+
+#### 4. User Approval
+
+Present the completion status and ask for explicit approval to transition the plan to `✅ Done` and clear `active_plan` in `project.md`.
+
+#### 5. Archive Completed Plan
+
+AFTER user approval, the Agent MUST:
+a. Change plan `Status` to `✅ Done`.
+b. Move the plan file to `artifacts/plans/done/`.
+c. Remove the `active_plan` field from `project.md`.
+d. Suggest reviewing and updating the project's (or meta-project's) roadmap (if one exists) to reflect the newly completed plan.
+
+#### 6. Archive Test Evidence & Quarantine Logs
+
+// turbo
+
+```bash
+# Archive TDD evidence log (rename with plan version before quarantine)
+# TDD Skill spec: artifacts/tests/tdd-evidence.log → tdd-evidence-<version>.log
+PLAN_VER=$(grep -oE 'v[0-9]+\.[0-9]+[0-9.]*' "$(ls artifacts/plans/done/*-$(date +%Y-%m-%d)*.md 2>/dev/null | head -1)" 2>/dev/null | head -1)
+if [[ -f "artifacts/tests/tdd-evidence.log" ]]; then
+  SUFFIX="${PLAN_VER:-$(date +%Y-%m-%d)}"
+  mv "artifacts/tests/tdd-evidence.log" "artifacts/tests/tdd-evidence-${SUFFIX}.log"
+  echo "📋 TDD evidence archived as tdd-evidence-${SUFFIX}.log"
+fi
+# Also check .beads/ (legacy location — some projects wrote here by mistake)
+if [[ -f ".beads/tdd-evidence.log" ]]; then
+  mkdir -p artifacts/tests
+  mv ".beads/tdd-evidence.log" "artifacts/tests/tdd-evidence-${PLAN_VER:-legacy}.log"
+  echo "📋 Migrated .beads/tdd-evidence.log → artifacts/tests/"
+fi
+# Quarantine all test artifacts to tmp/
+if [[ -d "artifacts/tests" ]]; then mkdir -p artifacts/tests/tmp; for f in artifacts/tests/*; do if [[ -e "$f" && "$f" != "artifacts/tests/tmp" ]]; then mv "$f" "artifacts/tests/tmp/$(basename "$f")" 2>/dev/null || true; fi; done; echo "🧹 Test artifacts quarantined"; fi
+```
+
+#### 7. Graph Build & Insight Curation (MANDATORY)
+
+If the project uses `para-graph`, the Agent **MUST**:
+1. Run the MCP tool `project_snapshot(projectName: "[project-name]")` to capture the final project directory structure.
+2. Execute `/para-graph build [project-name]` to update the structural Code-Knowledge Graph with the new features, and use `graph_enrich` to update semantic summaries of modified nodes.
+
+**Insight Curation (Replacing general /learn recommendation):**
+At the end of the plan, the Agent MUST actively review the session history to identify any newly resolved bugs, lessons, or gotchas.
+- Propose 1-2 structured insights (lessons, gotchas, or risks) to the user.
+- Offer the following options to store the insights:
+  1. **Store to Code-Graph:** Use MCP `insight_push` to save directly to the project's knowledge database (if `para-graph` is available).
+  2. **Store to Local Files (Fallback):** Append to `.beads/seeds.md` or create a new file in `docs/researches/` (if `para-graph` is not available).
+  3. **Ignore:** If no new reusable insights were discovered.
+
+#### 8. Comprehensive Session Report (if --report)
+
+If the `--report` flag is provided, the Agent **MUST** load the `report` skill (`.agents/skills/report/SKILL.md`) and generate a comprehensive development session report directly in the chat window based on the `dev-session-report-template.md` template.
+
+The report **MUST** include:
+1. **General Overview:** Brief summary of accomplishments, code quality evaluation, strengths, and remaining risks.
+2. **Session Statistics:**
+   - **Token & Performance:** Estimated token usage and latency.
+   - **CSA Compliance:** Summary of final coverage, spec anchors bound, and edge verification.
+   - **Snapshot & Drift:** Physical files modified vs plan inventory, protected files state.
+   - **TDD Execution:** TDD evidence log summary (status count, fail/pass sequences) based on `artifacts/tests/tdd-evidence.log`.
+   - **Session KI Usage:** Status of Vibecode Session compaction (`session.md`), rule/skill reload stats.
+   - **Tool & Terminal Usage:** Detailed statistics on Native tools, Bash commands, and MCP tools invoked.
+3. **Deep-Dive Focus Area:** A detailed, deep-dive section focusing on a specific dimension chosen by the user (either via the `--report-focus` flag or requested dynamically at runtime).
+   - If `--report-focus` option is not provided, the Agent **MUST** prompt the user to choose their preferred dimension (e.g. CSA, TDD, Performance, Snapshot/Drift, Tools, or Session KI).
+   - Once chosen, the Agent performs a detailed analysis of that area, listing specific files, errors resolved, or metrics.
+
+**Report Format Requirements:**
+- **Log Process:** Chronological steps of tool/test/git executions during the session.
+- **Summary & Assessment:** Evaluation of code quality, strengths, and remaining risks.
+- **Deep-Dive Focus Section:** Detailed analysis on the selected focus dimension.
+- **Storage Proposal:** Formally prompt the user to save the generated report to `Projects/[project-name]/artifacts/reports/dev/report-[plan-name]-[date].md`.
+- **Next Steps:** Actionable next steps based on the report findings.
 
 ---
 

@@ -1439,18 +1439,16 @@ function renderDirectory(srcDir, destDir, template) {
         });
         
         linkedNodes = enrichableNodes.filter(node => {
-            const hasSemantic = node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0;
             const hasScanned = nodeToAnchorsMap[node.id] && nodeToAnchorsMap[node.id].size > 0;
-            return hasSemantic || hasScanned;
+            return hasScanned;
         });
         const enrichedNodes = enrichableNodes.filter(node => node.semantic && node.semantic.summary && node.semantic.summary.trim() !== '');
         
         const godThreshold = projectCalibration.weights.god_node_degree_threshold ?? 20;
         godNodes = enrichableNodes.filter(node => node.degree >= godThreshold);
         const documentedGodNodes = godNodes.filter(node => {
-            const hasSemantic = node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0;
             const hasScanned = nodeToAnchorsMap[node.id] && nodeToAnchorsMap[node.id].size > 0;
-            return hasSemantic || hasScanned;
+            return hasScanned;
         });
         staleNodes = enrichableNodes.filter(node => node.staleSince && node.staleSince !== null);
         
@@ -1500,19 +1498,7 @@ function renderDirectory(srcDir, destDir, template) {
                 weightedClass = 'low';
             }
             
-            const finalDocAnchors = (() => {
-                const scanned = nodeToAnchorsMap[node.id] ? Array.from(nodeToAnchorsMap[node.id]) : [];
-                const standard = (node.semantic && node.semantic.docAnchors) || [];
-                const finalAnchors = [...scanned];
-                standard.forEach(std => {
-                    const stdFile = std.split('#')[0].replace(/\\/g, '/');
-                    const alreadyHas = finalAnchors.some(sa => sa.split('#')[0].replace(/\\/g, '/') === stdFile);
-                    if (!alreadyHas) {
-                        finalAnchors.push(std);
-                    }
-                });
-                return finalAnchors;
-            })();
+            const finalDocAnchors = nodeToAnchorsMap[node.id] ? Array.from(nodeToAnchorsMap[node.id]) : [];
             
             const isLinked = finalDocAnchors.length > 0;
             const isEnriched = node.semantic && node.semantic.summary && node.semantic.summary.trim() !== '';
@@ -1581,9 +1567,8 @@ function renderDirectory(srcDir, destDir, template) {
             }
         });
         documentedGodNodesCount = godNodes.filter(node => {
-            const hasSemantic = node.semantic && node.semantic.docAnchors && node.semantic.docAnchors.length > 0;
             const hasScanned = nodeToAnchorsMap[node.id] && nodeToAnchorsMap[node.id].size > 0;
-            return hasSemantic || hasScanned;
+            return hasScanned;
         }).length;
         codeLinkedGodNodesCount = godNodes.filter(node => {
             const absPath = path.resolve(projectDir, 'repo', node.filePath || '');
@@ -1765,8 +1750,8 @@ function renderDirectory(srcDir, destDir, template) {
                                     ? `Cấu phần liên kết tới neo \`#${anchorName}\` nhưng tiêu đề này không tồn tại trong tài liệu spec.`
                                     : `Node linked to anchor \`#${anchorName}\` but this header was not found in the spec file.`,
                                 solution: fileLang === 'vi'
-                                    ? `Cập nhật lại tiêu đề spec hoặc sửa chú thích neo trong code thành: ${headers.slice(0, 3).map(h => '`#' + h + '`').join(', ')}.`
-                                    : `Update the spec header or correct the comment link to valid headers: ${headers.slice(0, 3).map(h => '`#' + h + '`').join(', ')}.`
+                                    ? `Thêm thẻ neo \`<span id="${anchorName.startsWith('csa-') ? anchorName : 'csa-' + anchorName}"></span>\` vào vị trí phù hợp trong tài liệu, hoặc cập nhật chú thích neo trong code để tham chiếu tới một neo tiếng Anh hợp lệ.`
+                                    : `Add the anchor tag \`<span id="${anchorName.startsWith('csa-') ? anchorName : 'csa-' + anchorName}"></span>\` to the matching section, or update the code comment to link to a valid English anchor.`
                             });
                         }
                     }
@@ -1953,7 +1938,7 @@ function renderDirectory(srcDir, destDir, template) {
     // Calculate server-side healthPct (Documentation Freshness/Sync Rate)
     const staleDocPaths = new Set();
     staleNodes.forEach(node => {
-        const anchors = (node.semantic && node.semantic.docAnchors) || [];
+        const anchors = nodeToAnchorsMap[node.id] ? Array.from(nodeToAnchorsMap[node.id]) : [];
         anchors.forEach(a => {
             const docPath = a.split('#')[0];
             let cleanDocPath = docPath.replace(/\\/g, '/');

@@ -51,6 +51,7 @@
 
 | Scope       | File / Index               | Purpose                                                   | Path                                                              |
 | :---------- | :------------------------- | :-------------------------------------------------------- | :---------------------------------------------------------------- |
+| Session Memory | `session.md`             | Compacted session rules, skills, and contract (Priority)  | [session.md](~/.gemini/antigravity-ide/knowledge/para_vibecode_session/artifacts/session.md) |
 | Workspace   | `.agents/rules.md`         | Workspace-level rules index (Trigger scan)                | [rules.md](file:///absolute/path/to/workspace/.agents/rules.md)   |
 | Workspace   | `.agents/skills.md`        | Workspace-level skills index (Trigger scan)               | [skills.md](file:///absolute/path/to/workspace/.agents/skills.md) |
 | Project     | `project.md`               | Project Contract (Version, status, roadmap tracker)       | [project.md](file:///absolute/path/to/project/project.md)         |
@@ -96,6 +97,7 @@
 | **Risk Coverage** — Every risk in Risks table has a corresponding Harness Guard                                  | ⬜     |       |
 | **Brainstorm Sync** — Plan matches the target files, risks, and TDD proposals from brainstorm                    | ⬜     |       |
 | **Brainstorm & Spec Scope Check** — Propose if any task/phase needs separate brainstorm or spec to ensure safety | ⬜     |       |
+| **Harness Alignment** — Does the generated draft plan exactly match the required checkpoints and guards (MANDATORY, VCS inline commit/push guards) from the template plan and Harness Guard Catalog? | ⬜     |       |
 | **CSA Spec Audit** — If CSA is enabled and plan follows brainstorm, warn to write spec via `/spec` workflow      | ⬜     |       |
 
 ### Project Governance Reload
@@ -167,7 +169,7 @@ Reloaded Skills:
 
 <!-- ⚠️ MANDATORY: Agent MUST read project.md and reload .agents/rules.md + .agents/skills.md BEFORE executing any tasks here -->
 
-> ⛔ **MANDATORY:** Re-read `project.md`, `.agents/rules.md`, `.agents/skills.md` BEFORE executing.
+> ⛔ **MANDATORY:** View details of specific rules, skills, agents.md, or project.md in the KI necessary for this phase BEFORE executing.
 
 #### Implementation Plan
 
@@ -190,14 +192,13 @@ Reloaded Skills:
 - [ ] 0.5 🤖 **TDD Repo Before Snapshot** (run `git status --ignored --porcelain` & `git log -n 1 --oneline` and save to `artifacts/tests/tdd-repo-before-[date].log`)
 - [ ] 0.6 🤖 **Session Context Compaction** (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to capture and write all rules, skills, and project contract to Vibecode Session KI)
 - [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x], run the MCP tool `project_session_compact` to update session memory, read the updated `session.md` using `view_file` to reload context, and obtain explicit User approval in the chat to transition to Phase 1.
-
 ---
 
 ### Phase 1. [Core Feature] ⚙️ `Difficulty: [🟢 Low | 🟡 Medium | 🔴 High]`
 
 <!-- ⚠️ MANDATORY: Agent MUST reload .agents/rules.md + .agents/skills.md BEFORE modifying files or executing git commands -->
 
-> ⛔ **MANDATORY:** Re-read `.agents/rules.md` + `.agents/skills.md` BEFORE modifying files.
+> ⛔ **MANDATORY:** View details of specific rules, skills, agents.md, or project.md in the KI necessary for this phase BEFORE modifying files.
 
 > 🧪 **Testing Requirement:** If this Phase contains tasks classified as 🧪 TDD,
 > Agent MUST load `.agents/skills/tdd/SKILL.md` and follow Red-Green-Refactor cycle.
@@ -284,9 +285,9 @@ git push origin main
 - [ ] 🤖 **Compare Git Drift:** Compare current repo state with `artifacts/tests/tdd-repo-before-[date].log` to identify newly generated untracked or ignored files in this phase.
 - [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
 - [ ] 1.N-1 🤖 **Pre-commit Gate:** Run project's linter/compiler/tests and resolve any problems.
-- [ ] 🤖 **Compare Git Drift (Pre-commit):** Compare final changes against snapshot before commit to prevent committing junk.
+- [ ] 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to compare changes against baseline snapshot to detect physical drift), and `graph_audit_csa` (to verify spec coverage meets the project's configured threshold and bind introduced code entities).
 - [ ] 1.N 👤 **Git Checkpoint:** Commit changes with message `[feat/fix/chore]([scope]): [short description]`.
-- [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Receive explicit user approval before committing and proceeding to the next Phase.
+- [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Run the MCP tool `project_session_compact` to update session memory -> Read the updated `session.md` using `view_file` to reload context -> Obtain explicit User approval in the chat to transition to the next Phase.
 - [ ] 1.N+1 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
 - [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Agent MUST ask User for confirmation BEFORE pushing.
 - [ ] 1.N+2 👤 Git push origin main.
@@ -329,8 +330,8 @@ git push origin main
 - [ ] Post-Draft Audit Gate completed with PASS result.
 - [ ] All 🧪 TDD tasks have evidence in `artifacts/tests/tdd-evidence.log`.
 - [ ] All tests pass with pristine output (no errors/warnings).
-- [ ] **CSA Quality Verification:** Run CSA compliance audit (invoke `graph_audit_csa` MCP tool or run `npx para-graph audit csa`) to verify Spec-to-Code coverage >= 90.0% and no dangling spec edges.
-- [ ] **MCP Snapshot Diff Evaluation:** Run `project_snapshot` (at completion) and `project_diff` MCP tools to evaluate physical directory drift and verify the integrity of protected files.
+- [ ] **CSA Quality Verification (MCP):** Run MCP tool `graph_audit_csa` (or CLI `npx para-graph audit csa` as fallback) to verify Spec-to-Code coverage meets the project's configured threshold and no dangling spec edges.
+- [ ] **MCP Snapshot Diff Evaluation (MCP):** Run MCP tools `project_snapshot` and `project_diff` to evaluate physical directory drift and verify the integrity of protected files.
 - [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `git status --ignored --porcelain` snapshot in `tdd-repo-before-[date].log` to identify newly generated untracked or ignored files. Agent MUST present the list to User and ask whether to delete them (if junk) or commit them (if missed in plan) before proceeding with cleanup.
 - [ ] [Project-specific checks: build pass, docs updated, governance rules...]
 - [ ] ⛔ CHECKPOINT (Walkthrough Completion): Agent MUST verify all above Walkthrough items are ticked [x] BEFORE proposing Status transition.
@@ -371,15 +372,15 @@ git push origin main
 ### Review & Audit Tracking
 
 > Counter table to assess plan health. Update after each working session.
-> **Note:** Initial audit count starts at 1 (from Post-Draft Audit Gate).
+> **Note:** Initial audit count starts at 0 (updates to 1 after running Post-Draft Audit Gate).
 
 | Criteria                                          | Count | Last reviewed |
 | :------------------------------------------------ | :---- | :------------ |
-| Logic review (Phase sequence, Task coverage)      | 1     | [audit-date]  |
-| Security review (context guards, published-only)  | 1     | [audit-date]  |
-| Checklist review (completeness, no missing files) | 1     | [audit-date]  |
+| Logic review (Phase sequence, Task coverage)      | 0     | —             |
+| Security review (context guards, published-only)  | 0     | —             |
+| Checklist review (completeness, no missing files) | 0     | —             |
 | Build/Test pass                                   | 0     | —             |
-| Project governance compliance (see below)         | 1     | [audit-date]  |
+| Project governance compliance (see below)         | 0     | —             |
 
 #### Project Governance Checklist
 

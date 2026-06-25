@@ -112,7 +112,7 @@
 
 <!-- ⚠️ MANDATORY: Agent MUST reload .agents/rules.md + .agents/skills.md BEFORE modifying files or executing git commands -->
 
-> ⛔ **MANDATORY:** Re-read `.agents/rules.md` + `.agents/skills.md` BEFORE modifying files.
+> ⛔ **MANDATORY:** View details of specific rules, skills, agents.md, or project.md in the KI necessary for this phase BEFORE modifying files.
 
 <!-- ⚠️ HARNESS GUARD (Phase 1 Risk): [Derived from Risks & Mitigations table. Leave empty if no risk mapped to this Phase.] -->
 
@@ -188,7 +188,7 @@
   - [ ] (If missing FAIL) 🛑 Revert code, rewrite RED test.
 - [ ] 5.5 🤖 **Pre-commit Gate:** Run project's linter/compiler (e.g., `npm run lint`) and resolve any type/lint problems.
 - [ ] 6. 👤 **Git Checkpoint:** Commit changes with message `tdd(scope): [Behavior]`.
-- [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Receive explicit user approval before committing and proceeding to the next Phase.
+- [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Run the MCP tool `project_session_compact` to update session memory -> Read the updated `session.md` using `view_file` to reload context -> Obtain explicit User approval in the chat to transition to the next Phase.
 - [ ] 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
 
 ---
@@ -197,7 +197,7 @@
 
 <!-- ⚠️ MANDATORY: Agent MUST reload .agents/rules.md + .agents/skills.md BEFORE modifying files or executing git commands -->
 
-> ⛔ **MANDATORY:** Re-read `.agents/rules.md` + `.agents/skills.md` BEFORE modifying files.
+> ⛔ **MANDATORY:** View details of specific rules, skills, agents.md, or project.md in the KI necessary for this phase BEFORE modifying files.
 
 <!-- ⚠️ HARNESS GUARD (Phase 2 Risk): [Derived from Risks & Mitigations table. Leave empty if no risk mapped to this Phase.] -->
 
@@ -209,7 +209,7 @@
 - [ ] 1. 🟣 **REFACTOR:** Clean up and restructure code.
 - [ ] 2. 🟢 **Verify PASS:** Re-run entire test suite (`bash .agents/skills/tdd/scripts/tdd-test.sh npm run test`) to ensure no regressions.
 - [ ] 3. 👤 **Git Checkpoint:** Commit changes with message `refactor: cleanup [Component] implementation`.
-- [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Receive explicit user approval before committing and proceeding to the next Phase.
+- [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Run the MCP tool `project_session_compact` to update session memory -> Read the updated `session.md` using `view_file` to reload context -> Obtain explicit User approval in the chat to transition to the next Phase.
 - [ ] 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
 
 ---

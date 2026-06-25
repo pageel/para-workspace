@@ -24,6 +24,7 @@ source: catalog
 |:--|:--|:--|
 | `references/detail-plan.md` | Step 9 — Plan Type = Detail Plan (code changes) | Document structure for implementation plans |
 | `references/detail-plan-docs.md` | Step 9 — Plan Type = Detail Plan (docs-only) | Document structure for documentation plans (no git, graph-first) |
+| `references/detail-plan-template.md` | Step 9 — Plan Type = Template Plan | Document structure for templates, workflows & skills |
 | `references/roadmap.md` | Step 9 — Plan Type = Roadmap | Document structure for multi-phase roadmaps |
 | `references/session-plan.md` | Step 9 — Plan Type = Session Plan (DSP) | Document structure for dynamic lightweight session plans |
 
@@ -40,6 +41,8 @@ source: catalog
 ```text
 IF plan type = Roadmap
   → load references/roadmap.md
+ELIF plan type = Template Plan
+  → load references/detail-plan-template.md
 ELIF plan type = Session Plan (DSP)
   → load references/session-plan.md
 ELIF plan scope is documentation-only

@@ -3553,11 +3553,9 @@
             const thCodeHeader = document.getElementById('th-doc-links-code');
             if (thCodeHeader) {
                 if (verifyComments) {
-                    thCodeHeader.style.opacity = '1';
-                    thCodeHeader.style.pointerEvents = 'auto';
+                    thCodeHeader.style.display = '';
                 } else {
-                    thCodeHeader.style.opacity = '0.4';
-                    thCodeHeader.style.pointerEvents = 'none';
+                    thCodeHeader.style.display = 'none';
                 }
             }
 
@@ -3856,7 +3854,9 @@
                 `;
                 
                 tr.appendChild(docsTd);
-                tr.appendChild(codeTd);
+                if (verifyComments) {
+                    tr.appendChild(codeTd);
+                }
 
                 const descTd = document.createElement('td');
                 const enrichedBadge = node.isEnriched
@@ -4215,13 +4215,13 @@
             } else if (promptType === 'link-graph-docs') {
                 promptName = lang === 'vi' ? 'Gán neo đặc tả (CSA trên Docs)' : 'Link Spec Anchoring (CSA on Docs)';
                 promptText = lang === 'vi' 
-                    ? `Tôi muốn liên kết tài liệu đặc tả (Markdown) với các cấu phần mã nguồn (Code Entities) tương ứng bằng cách sử dụng thẻ neo HTML \`<span id="csa-nodeId"></span>\` (lưu ý: thẻ neo này chỉ chèn vào tài liệu docs hoặc specs, KHÔNG ghi vào file mã nguồn code):\n\n${nodeDetailsText}Hãy đề xuất file tài liệu nào (ví dụ: docs/specs/xxx.md, docs/references/xxx.md hoặc docs/README.md) phù hợp nhất cho từng cấu phần và chỉ rõ vị trí + cách thức chèn thẻ neo HTML \`<span id="csa-nodeId"></span>\` tương ứng vào trong file tài liệu đó để xây dựng liên kết xuôi (CSA trên Docs). TUYỆT ĐỐI KHÔNG sửa đổi hay thêm comment vào bất kỳ file mã nguồn (code) nào.`
-                    : `I want to link my specification documents (Markdown) with the corresponding code entities using the HTML anchor tag \`<span id="csa-nodeId"></span>\` (note: anchors are only recorded in documentation or spec files, NOT in the source code files):\n\n${nodeDetailsText}Please suggest which documentation file (e.g. docs/specs/xxx.md, docs/references/xxx.md or docs/README.md) is best suited for each entity and specify the exact location + format of the HTML anchor tag \`<span id="csa-nodeId"></span>\` to establish the forward link (CSA on Docs). DO NOT modify or insert comments into any source code files.`;
+                    ? `Tôi muốn liên kết tài liệu đặc tả (Markdown) với các cấu phần mã nguồn (Code Entities) tương ứng bằng cách sử dụng thẻ neo HTML \`<span id="csa-nodeId"></span>\` (lưu ý: thẻ neo này chỉ chèn vào tài liệu docs hoặc specs, KHÔNG ghi vào file mã nguồn code):\n\n${nodeDetailsText}Hãy đề xuất file tài liệu nào (ví dụ: docs/specs/xxx.md, docs/references/xxx.md hoặc docs/README.md) phù hợp nhất cho từng cấu phần và chỉ rõ vị trí + cách thức chèn thẻ neo HTML \`<span id="csa-nodeId"></span>\` tương ứng vào trong file tài liệu đó để xây dựng liên kết xuôi (CSA trên Docs). TUYỆT ĐỐI KHÔNG sửa đổi hay thêm comment vào bất kỳ file mã nguồn (code) nào.\n\n**Quy tắc Micro-Anchoring (G1/G3):** Mỗi neo phải ánh xạ đúng 1 quyết định thiết kế. KHÔNG được đặt neo ở tiêu đề tổng hợp (H1/H2 chứa bảng/danh sách nhiều khái niệm). Nếu tiêu đề H2 chứa N quyết định, hãy tách thành N neo riêng tại H3/H4 hoặc inline.`
+                    : `I want to link my specification documents (Markdown) with the corresponding code entities using the HTML anchor tag \`<span id="csa-nodeId"></span>\` (note: anchors are only recorded in documentation or spec files, NOT in the source code files):\n\n${nodeDetailsText}Please suggest which documentation file (e.g. docs/specs/xxx.md, docs/references/xxx.md or docs/README.md) is best suited for each entity and specify the exact location + format of the HTML anchor tag \`<span id="csa-nodeId"></span>\` to establish the forward link (CSA on Docs). DO NOT modify or insert comments into any source code files.\n\n**Micro-Anchoring Rule (G1/G3):** Each anchor MUST map to exactly one design decision. Do NOT place anchors at aggregate-level headings (H1/H2 containing tables or lists of multiple concepts). If an H2 heading contains N decisions, decompose into N separate anchors at H3/H4 or inline level.`;
             } else if (promptType === 'link-code-docs') {
                 promptName = lang === 'vi' ? 'Chèn comment neo (CSA trên Code)' : 'Insert Code References (CSA on Code)';
                 promptText = lang === 'vi' 
-                    ? `Tôi muốn liên kết các cấu phần mã nguồn với tài liệu đặc tả của chúng bằng cách chèn các comment neo \`// @para-doc [#anchor]\` vào trong mã nguồn:\n\n${nodeDetailsText}Hãy hướng dẫn tôi cách chèn comment \`// @para-doc [#neo]\` chuẩn xác ngay trên dòng định nghĩa của từng cấu phần trong file mã nguồn. Đề xuất cụ thể anchor (#neo) phù hợp nhất cho mỗi cấu phần để thiết lập liên kết ngược (CSA trên Code).`
-                    : `I want to link my source code entities back to their specification documents by inserting code reference comments \`// @para-doc [#anchor]\` directly into the source code:\n\n${nodeDetailsText}Please guide me on how to insert the comment \`// @para-doc [#anchor]\` accurately right above the definition of each component in the source code. Suggest the best anchor (#anchor) for each entity to establish the backward link (CSA on Code).`;
+                    ? `Tôi muốn liên kết các cấu phần mã nguồn với tài liệu đặc tả của chúng bằng cách chèn các comment neo \`// @para-doc [#anchor]\` vào trong mã nguồn:\n\n${nodeDetailsText}Hãy hướng dẫn tôi cách chèn comment \`// @para-doc [#neo]\` chuẩn xác ngay trên dòng định nghĩa của từng cấu phần trong file mã nguồn. Đề xuất cụ thể anchor (#neo) phù hợp nhất cho mỗi cấu phần để thiết lập liên kết ngược (CSA trên Code). Lưu ý: Tên neo đề xuất phải viết bằng tiếng Anh chuẩn hoá (chữ thường, cách nhau bằng dấu \`-\`), bắt đầu bằng tiền tố \`csa-\` (ví dụ: \`csa-us-3-get-form-template\`), và phải khớp chính xác với neo HTML \`<span id="csa-xxx">\` tương ứng trong tài liệu đặc tả.\n\n**Quy tắc Micro-Anchoring (G2 — Reverse Validation):** Trước khi chèn comment, hãy tự kiểm tra: "Nếu tôi sửa file code này, liệu TOÀN BỘ nội dung mà neo csa-xxx mô tả có bị ảnh hưởng không?" Nếu chỉ một phần → cần phân rã neo thành neo nhỏ hơn (H3/H4 hoặc inline). KHÔNG chèn neo bao quát (blanket anchor) từ tiêu đề H1/H2 chứa nhiều khái niệm.`
+                    : `I want to link my source code entities back to their specification documents by inserting code reference comments \`// @para-doc [#anchor]\` directly into the source code:\n\n${nodeDetailsText}Please guide me on how to insert the comment \`// @para-doc [#anchor]\` directly above the definition of each component in the source code. Suggest the best anchor (#anchor) for each entity to establish the backward link (CSA on Code). Note: The suggested anchor name must follow standard English naming (lowercase, hyphen-separated), start with the prefix \`csa-\` (e.g., \`csa-us-3-get-form-template\`), and match the corresponding HTML anchor tag \`<span id="csa-xxx">\` in the specification documents.\n\n**Micro-Anchoring Rule (G2 — Reverse Validation):** Before inserting a comment, verify: "If I change this code file, would the ENTIRE content described by csa-xxx be affected?" If only partially → decompose the anchor to a more specific sub-section (H3/H4 or inline). Do NOT use blanket anchors from aggregate H1/H2 headings containing multiple concepts.`;
             } else if (promptType === 'fix-dangling') {
                 promptName = lang === 'vi' ? 'Sửa lỗi neo mồ côi (Fix Dangling CSA)' : 'Fix Dangling CSA Links';
                 promptText = lang === 'vi'

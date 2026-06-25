@@ -19,3 +19,5 @@ You are the Project Tech Lead. Your duty during a QA session is to ensure the pl
   - Does the plan intend to create or push files containing environment variables (`.env`, `*.pem`, `*.json` credentials) to Git? (Must verify `.gitignore` covers them).
 - **[GOV] Step-by-Step Feasibility:**
   - Are the plan's steps too broad? A single Task should not exceed 1 workday of effort (It should be broken down).
+- **[GOV] Harness & Checkpoint Alignment:**
+  - Does the plan copy the exact safety checkpoints and guards (MANDATORY, VCS inline commit/push guards) from the plan template and Harness Guard Catalog? Verify that phase transitions contain required context reloading commands (`project_session_compact`, `view_file` of `session.md`) and git commands are individually guarded.

@@ -20,15 +20,16 @@ glob:
 
 **MUST** load context in this sequence (highest priority first):
 
-1. **Project Contract**: `Projects/<project>/project.md`
-2. **Project Rules**: `Projects/<project>/.agents/rules/`
-3. **Project Skills**: `Projects/<project>/.agents/skills/` (v1.6.2+)
-4. **Workspace Rules**: `.agents/rules/`
-5. **Workspace Skills**: `.agents/skills/` (v1.6.2+)
-6. **Artifacts**: `Projects/<project>/artifacts/` (tasks, plans, walkthroughs)
-7. **Active Memory**: `Projects/<project>/.beads/`
-8. **Abstract Knowledge**: `Areas/`
-9. **Reference**: `Resources/`
+1. **Vibecode Session Memory**: `knowledge/para_vibecode_session/artifacts/session.md` (if available — provides compacted rules, skills, and contract in a single read)
+2. **Project Contract**: `Projects/<project>/project.md`
+3. **Project Rules**: `Projects/<project>/.agents/rules/`
+4. **Project Skills**: `Projects/<project>/.agents/skills/` (v1.6.2+)
+5. **Workspace Rules**: `.agents/rules/`
+6. **Workspace Skills**: `.agents/skills/` (v1.6.2+)
+7. **Artifacts**: `Projects/<project>/artifacts/` (tasks, plans, walkthroughs)
+8. **Active Memory**: `Projects/<project>/.beads/`
+9. **Abstract Knowledge**: `Areas/`
+10. **Reference**: `Resources/`
 
 ### 2. Isolation & Relevance
 

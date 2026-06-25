@@ -31,10 +31,10 @@ ELSE:
 
 ## References
 
-| Resource | Relative Path | Description |
-|:--|:--|:--|
-| TDD Compliance Template | `references/tdd-compliance.md` | Audit template for verifying Red-Green-Refactor order from conversation log and git history |
-| Transcript Parser | `scripts/parse-transcript.py` | Python script to parse Antigravity session transcript locally for tool counts, commands, and mutated files |
+| Resource                | Relative Path                  | Description                                                                                                |
+| :---------------------- | :----------------------------- | :--------------------------------------------------------------------------------------------------------- |
+| TDD Compliance Template | `references/tdd-compliance.md` | Audit template for verifying Red-Green-Refactor order from conversation log and git history                |
+| Transcript Parser       | `scripts/parse-transcript.py`  | Python script to parse Antigravity session transcript locally for tool counts, commands, and mutated files |
 
 ## Usage: Transcript Parser
 
@@ -52,8 +52,8 @@ python3 .agents/skills/logs/scripts/parse-transcript.py [path_to_transcript_or_d
 
 Future audit extensions can be added here following the same pattern:
 
-| Plan Methodology | Detection Marker | Template (planned) |
-|:--|:--|:--|
-| TDD | `🔴 RED` / `🟢 GREEN` markers in plan | ✅ `tdd-compliance.md` |
-| Spec-Driven | `/spec` reference in plan | ⏳ `spec-compliance.md` |
-| Security-First | `SECURITY` harness guards | ⏳ `security-audit.md` |
+| Plan Methodology | Detection Marker                      | Template (planned)      |
+| :--------------- | :------------------------------------ | :---------------------- |
+| TDD              | `🔴 RED` / `🟢 GREEN` markers in plan | ✅ `tdd-compliance.md`  |
+| Spec-Driven      | `/spec` reference in plan             | ⏳ `spec-compliance.md` |
+| Security-First   | `SECURITY` harness guards             | ⏳ `security-audit.md`  |

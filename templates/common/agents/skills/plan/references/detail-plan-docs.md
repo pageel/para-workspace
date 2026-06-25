@@ -97,7 +97,7 @@ Projects/[project-name]/docs/
 
 <!-- ⚠️ MANDATORY: Agent MUST reload .agents/rules.md + .agents/skills.md BEFORE writing docs -->
 
-> ⛔ **MANDATORY:** Re-read `.agents/rules.md` + `.agents/skills.md` BEFORE writing docs.
+> ⛔ **MANDATORY:** View details of specific rules, skills, agents.md, or project.md in the KI necessary for this phase BEFORE writing docs.
 
 > 💡 **Model Hint:** This phase is primarily documentation — consider switching to a lighter model to save costs.
 
@@ -130,7 +130,7 @@ N.2 🤖 **[doc-filename].md** — Load context for `[Component.tsx]` → write 
 
 - [ ] N.1 🤖 Create `[doc-filename].md`.
 - [ ] N.2 🤖 Create `[doc-filename].md`.
-- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase N are checked [x] AND get explicit User approval before proceeding to the next Phase.
+- [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in this Phase are checked [x], run the MCP tool `project_session_compact` to update session memory, read the updated `session.md` using `view_file` to reload context, and obtain explicit User approval in the chat to reload the KI session and transition to the next Phase.
 
 ---
 
