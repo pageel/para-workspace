@@ -57,6 +57,15 @@
 | Specific    | [Triggered Rules/Skills]   | List of specifically triggered rules/skills for this plan | (e.g., `agent-behavior.md`, `tool-routing.md`, `vcs.md`)          |
 | MCP / Tools | [MCP Server / Tool Schema] | Loaded MCP schemas to support tasks                       | (e.g., `para-graph` schemas)                                      |
 
+## CSA Spec Mapping Table
+
+> 💡 **OPTIONAL FOR CSA PROJECTS:** Map every Spec Anchor ID from the baseline spec file to its corresponding Phase, Task, and Target File.
+> This table is verified automatically by the Plan Dev Gate and Post-Draft Audit Gate.
+
+| Spec ID | Phase / Task | Target File | Note / Description |
+| :--- | :--- | :--- | :--- |
+| `csa-example-id` | Phase 1.1 | `src/example.ts` | Example implementation |
+
 ## Architecture Overview & Execution Logic
 
 [Component diagram + Tech stack table]
@@ -139,6 +148,7 @@ Carry the Execution Ownership icon from the Implementation Plan.]
   1.2 👤 **[Step name]** — [Detail: destructive/external operation, Agent proposes → User approves.]
 
   1.N-1 🤖 **Pre-commit Gate** — Run project's linter/compiler (e.g., `npm run lint`, `tsc`, `cargo check`) and resolve any type/lint problems before commit.
+  1.N-2 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to compare changes against baseline snapshot to detect physical drift / M9 compliance), and `graph_audit_csa` (to verify spec coverage meets the project's configured threshold and bind introduced code entities).
   1.N 👤 **Git checkpoint Phase 1 — Commit**
 
 ```bash
@@ -167,6 +177,7 @@ git push origin main
 [ ] 1.2 👤 [Task requiring user approval]
 [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
 [ ] 1.N-1 🤖 **Pre-commit Gate:** Run project's linter/compiler/tests (e.g., `npm run lint`, `npm test`) and resolve any problems. (If running tests, MUST use TDD skill).
+[ ] 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to compare changes against baseline snapshot to detect physical drift / M9 compliance), and `graph_audit_csa` (to verify spec coverage meets the project's configured threshold and bind introduced code entities).
 [ ] 1.N 👤 **Git Checkpoint:** Commit changes with message `[feat/fix/chore]([scope]): [short description]`.
 
 - [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Run the MCP tool `project_session_compact` to update session memory -> Read the updated `session.md` using `view_file` to reload context -> Obtain explicit User approval in the chat to transition to the next Phase.
@@ -212,6 +223,7 @@ git push origin main
 [ ] **CSA Quality Verification:** Run CSA compliance audit (invoke `graph_audit_csa` MCP tool or run `npx para-graph audit csa`) to verify Spec-to-Code coverage >= 90.0% and no dangling spec edges (if CSA is applicable).
 [ ] **MCP Snapshot Diff Evaluation:** Run `project_snapshot` (at completion) and `project_diff` MCP tools to evaluate physical directory drift and verify the integrity of protected files.
 [ ] [Project-specific checks: build pass, docs updated, governance rules...]
+[ ] **KI Template Sync (M7/KR8):** IF project has `repo/templates/knowledge/`, verify KI template content reflects current version changes. Check metadata.json has valid `version` + `para_version`. Run `ki sync` if updated.
 [ ] ⛔ CHECKPOINT (Walkthrough Completion): Agent MUST verify all above Walkthrough items are ticked [x] BEFORE proposing Status transition.
 [ ] ⛔ CHECKPOINT (C7 Status Transition): Agent MUST NOT change Status to "✅ Done" or clear `active_plan` without explicit user approval. Agent presents the completed Walkthrough checklist → User verifies → User approves transition. Only AFTER user confirms → Agent sets Status and clears `active_plan`.
 [ ] User approved Done transition.

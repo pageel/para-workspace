@@ -39,8 +39,9 @@ Create, review, or update a phased implementation plan for a PARA project.
 | `--graph` | Run Graph Pipeline (Build → God Nodes → Enrich) before planning to maximize architectural context |
 | `--project` | Default for `create`. Load project-level `.agents/rules/` and `.agents/skills/` context before planning to ensure governance-aware plan generation |
 | `--phase` | Default for `dev`. Strictly execute the plan phase by phase, verifying task completion before moving to the next phase |
-| `--tdd` | Force strict Test-Driven Development mode. Agent MUST use `detail-plan-tdd.md` template for creation and load `.agents/skills/tdd/SKILL.md` during execution |
-| `--hardened` | Hardened Plan mode. Agent uses `detail-plan-hardened.md` template, runs mandatory Post-Draft Audit Gate (logic, security, governance), classifies tasks for selective TDD injection, and presents audit results before activation |
+| `--tdd` | Force strict Test-Driven Development mode. Agent MUST use `detail-plan-tdd.md` or `detail-plan-hardened.md` template for creation and load `.agents/skills/tdd/SKILL.md` during execution |
+| `--csa` | Force strict Convergent Specification Architecture (CSA) compliance mode. Agent MUST load `.agents/skills/csa/SKILL.md` during execution and enforce spec/doc verification gates |
+| `--hardened` | Hardened Plan mode. Agent uses `detail-plan-hardened.md` template, runs mandatory Post-Draft Audit Gate (logic, security, governance), classifies tasks for selective TDD injection, and presents audit results. **Enables `--tdd` and `--csa` by default.** |
 | `--report` | Generate a comprehensive dev session report (Token/Performance, CSA, Snapshot, TDD, Session KI, Tools) in chat at plan completion |
 | `--report-focus` | Specific dimension (csa, tdd, perf, drift, tools, session) to deep-dive into inside the report |
 
@@ -519,6 +520,7 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
    - **Security:** Security controls in place? No hardcoded or leaked tokens?
    - **Governance:** Project maintenance rules satisfied? Version sync points covered?
      - **CSA Spec Warning:** If the project has a `csa:` configuration map in `project.md` (CSA is enabled) and this plan was created after a brainstorm session, the Agent **MUST** check if a specification has been created or proposed. If no spec exists, the Agent **MUST** trigger a warning advising the user to create a specification using the `/spec` workflow first to enable full CSA double-binding compliance.
+     - **CSA Spec Mapping Check (MANDATORY HARNESS):** If a baseline spec file is defined or referenced for this plan, the Agent **MUST** extract all Spec Anchor IDs from the spec file (scanning for HTML anchors like `id="csa-..."` or `name="csa-..."`) and verify that every spec anchor ID is mapped in the plan's CSA Spec Mapping table. If mapping is incomplete (less than 100% coverage), the Agent **MUST** fail the audit, report the list of missing spec anchor IDs to the User, and block plan activation until the mapping table is fully updated.
    - **Completeness:** All target files to be created/modified are accounted for?
    - **Risk Coverage:** High risks mapped to corresponding Harness Guards?
 
@@ -854,9 +856,14 @@ Before executing any task, if the project has a code graph available (e.g., `Pro
 2. Run the MCP tool `project_session_compact(projectName: "[project-name]")` for the project to compile, compress, and write all workspace and project rules, skills, contract, and guidelines into the Vibecode Session KI (`session.md`). This ensures the Session KI is updated with the latest context for JIT Context Recovery.
 If the project does not support graphs, skip these steps gracefully.
 
-#### 3. Load Plan Methodology Skills
+#### 3. Load Plan Methodology Skills & Plan Dev Gate
 
-Scan the loaded plan file. Check the `Methodology` or `Required Skill` blockquotes. If the plan specifies a specific methodology (e.g., Strict TDD), or if a flag like `--tdd` is passed, the Agent MUST load the corresponding `.agents/skills/[skill-name]/SKILL.md` into context before executing any code.
+1. **Load Skills:** Scan the loaded plan file. Check the `Methodology` or `Required Skill` blockquotes. If the plan specifies a specific methodology (e.g., Strict TDD, CSA Compliance), or if flags like `--tdd` or `--csa` are passed, the Agent MUST load the corresponding `.agents/skills/[skill-name]/SKILL.md` into context before executing any code. If `--hardened` is active, both `tdd` and `csa` skills MUST be loaded.
+2. **Plan Dev Gate (MANDATORY for CSA projects):** If the project has CSA enabled (`project.md` has `csa` configuration map), before starting or continuing plan execution, the Agent **MUST** execute the Plan Dev Gate:
+   - Locate the baseline specification file (typically found in `artifacts/specs/` or referenced in the plan).
+   - Extract all spec anchor IDs from the baseline spec file (scanning for HTML anchors like `id="csa-..."` or `name="csa-..."`).
+   - Scan the plan's CSA mapping table and verify that every spec anchor ID extracted from the baseline spec is mapped in the plan.
+   - **Gate Block:** If the number of mapped spec anchors in the plan is less than 100%, or if any spec anchor ID is missing from the plan's mapping table, the Agent **MUST block execution immediately**, output a detailed list of missing spec anchor IDs to the Chat UI, and instruct the user to update the plan's mapping table before starting development. Do NOT run any code modification or file writing commands.
 
 #### 4. Phase Execution
 

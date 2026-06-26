@@ -20,6 +20,7 @@ This skill provides the data structures, templates, and complex persona definiti
 | This file (§3) | Step 2 — Generate Questions | Dimension seed patterns (per tag) |
 | This file (§5) | Step 0.5 — Process Selection | Process selection logic & comparison matrix |
 | `stacks/[name].md` | Step 0 — Pre-flight | Stack-specific QA gotchas & Skill Router |
+| `domains/csa.md` | Step 0 — Pre-flight | CSA-specific QA checks & persona definition |
 | `references/process-full-plan.md` | Step 0.5 — Process = Full-Plan | Waterfall Gate process template |
 | `references/process-phase-loop.md` | Step 0.5 — Process = Phase-Loop | Iterative Gate process template |
 | `references/process-risk-driven.md` | Step 0.5 — Process = Risk-Driven | Pareto Gate process template |
@@ -179,7 +180,18 @@ When creating the QA Report at Step 0.5 (Pre-QA Strategy), the Agent MUST format
 - "The project has a build+test rule (M4) — does every Phase include build verification before commit?"
 - "Project distributes AI Intelligence via `tool.manifest.yml` — are `shipped_in` and template versions updated?"
 - "The `install-hooks.sh` pre/post lifecycle hooks — are they affected by this plan's changes?"
-- **Rule:** If a `🔴 Critical` governance or compliance violation is found, proactively suggest `@[/brainstorm]` to resolve the root cause systematically.
+- "Does the plan update corresponding knowledge templates, schema definitions, or documentation references to prevent knowledge drift when modifying API structures, configurations, or core features?"
+- "Does the plan evaluate if a formal release packaging and deployment step is required to distribute compiled binaries/assets to end-users instead of only pushing source code?"
+- **Rule:** If a `🔴 Critical` governance or compliance violation is found, proactively suggest `@[/brainstorm]` to explore multiple solution options before proposing a quick patch.
+
+### 📐 CSA Expert (`[CSA]`)
+
+- Does the plan allocate and map **every** HTML spec anchor from the baseline specification file into the plan's CSA mapping table?
+- Are there any new features in the plan that lack spec anchors?
+- Do the proposed anchor locations in the plan comply with micro-anchoring principles? (e.g., avoid clustering `@para-doc` comments; anchor comments must sit directly above the corresponding public entity declaration).
+- Do all suggested or existing spec anchor IDs follow the standard kebab-case naming convention with a `csa-` prefix (e.g., `csa-{module}-{name-slug}`)?
+- Does the plan include steps to verify the Post-Draft Audit and the Plan Dev Gate?
+- **Rule:** If a `🔴 Critical` CSA traceability gap is detected (e.g., missing mappings or incorrect anchoring), suggest resolving them before finalizing the review.
 
 ## 3. Dimension Seed Patterns
 
@@ -224,6 +236,8 @@ When creating the QA Report at Step 0.5 (Pre-QA Strategy), the Agent MUST format
 - "Maintenance rule M1 restricts `git add` to `repo/` only — are all git commands scoped correctly?"
 - "The plan bumps version but has no tarball/release step — is this a version bump orphan?"
 - "The project Governance Checklist has N items — does it cover ALL triggered rules?"
+- "Are corresponding knowledge templates or schemas synchronized in the release phase to prevent knowledge drift after API or tool logic changes?"
+- "Has the plan evaluated the necessity of a formal release packaging step to distribute binary assets or archives to users?"
 
 ## 4. Deep Review Aspects (Dual-Pass)
 

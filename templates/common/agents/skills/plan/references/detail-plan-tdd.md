@@ -67,6 +67,15 @@
 | Specific    | [Triggered Rules/Skills]   | List of specifically triggered rules/skills for this plan | (e.g., `agent-behavior.md`, `tool-routing.md`, `vcs.md`)          |
 | MCP / Tools | [MCP Server / Tool Schema] | Loaded MCP schemas to support tasks                       | (e.g., `para-graph` schemas)                                      |
 
+## CSA Spec Mapping Table
+
+> 💡 **OPTIONAL FOR CSA PROJECTS:** Map every Spec Anchor ID from the baseline spec file to its corresponding Phase, Task, and Target File.
+> This table is verified automatically by the Plan Dev Gate and Post-Draft Audit Gate.
+
+| Spec ID | Phase / Task | Target File | Note / Description |
+| :--- | :--- | :--- | :--- |
+| `csa-example-id` | Phase 1.1 | `src/example.ts` | Example implementation |
+
 **Execution Logic Map:**
 
 > ASCII flowchart showing Phase sequence, Guards, and Dependencies.
@@ -158,6 +167,7 @@
   - [ ] Log shows 🟢 PASS (Green state)
   - [ ] (If missing FAIL) 🛑 Revert code, rewrite RED test.
 - [ ] 5.5 🤖 **Pre-commit Gate:** Run project's linter/compiler (e.g., `npm run lint`) and resolve any type/lint problems.
+- [ ] 5.6 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to compare changes against baseline snapshot to detect physical drift / M9 compliance), and `graph_audit_csa` (to verify spec coverage meets the project's configured threshold and bind introduced code entities).
 - [ ] 6. 👤 **Git Checkpoint:** Commit changes with message `tdd(feature): [Behavior] — red-green verified`.
 - [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Receive explicit user approval before committing.
 - [ ] 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
@@ -187,6 +197,7 @@
   - [ ] Log shows 🟢 PASS (Green state)
   - [ ] (If missing FAIL) 🛑 Revert code, rewrite RED test.
 - [ ] 5.5 🤖 **Pre-commit Gate:** Run project's linter/compiler (e.g., `npm run lint`) and resolve any type/lint problems.
+- [ ] 5.6 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to compare changes against baseline snapshot to detect physical drift / M9 compliance), and `graph_audit_csa` (to verify spec coverage meets the project's configured threshold and bind introduced code entities).
 - [ ] 6. 👤 **Git Checkpoint:** Commit changes with message `tdd(scope): [Behavior]`.
 - [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Run the MCP tool `project_session_compact` to update session memory -> Read the updated `session.md` using `view_file` to reload context -> Obtain explicit User approval in the chat to transition to the next Phase.
 - [ ] 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
@@ -232,6 +243,7 @@
 - [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `git status --ignored --porcelain` snapshot in `tdd-repo-before-[date].log` to identify newly generated untracked or ignored files. Agent MUST present the list to User and ask whether to delete them (if junk) or commit them (if missed in plan) before proceeding with cleanup.
 - [ ] **Code-Graph Sync:** Cập nhật đồ thị mã nguồn bằng lệnh: `npx para-graph build <project-name>` (if --graph is enabled).
 - [ ] [Project-specific checks: build pass, docs updated, governance rules...]
+- [ ] **KI Template Sync (M7/KR8):** IF project has `repo/templates/knowledge/`, verify KI template content reflects current version changes. Check metadata.json has valid `version` + `para_version`. Run `ki sync` if updated.
 - [ ] ⛔ CHECKPOINT (Walkthrough Completion): Agent MUST verify all above Walkthrough items are ticked [x] BEFORE proposing Status transition.
 - [ ] ⛔ CHECKPOINT (C7 Status Transition): Agent MUST NOT change Status to "✅ Done" without user approval.
 - [ ] User approved Done transition.

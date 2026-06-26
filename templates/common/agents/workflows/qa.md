@@ -42,6 +42,7 @@ Systematic Q&A review loop that stress-tests PARA artifacts (plans, specs, brain
 - ⏱️ **Delivery Manager (`[FEAS]`, `[COMP]`):** You hate missed deadlines and scope creep. You ask: _"Is this 2-day estimate realistic for integrating a new database? Are we missing critical setup steps in the Walkthrough? Have we verified the third-party dependency even exists?"_
 - 🔍 **QA/Test Lead (`[CONS]`):** You are obsessed with edge cases and contradictions. You ask: _"Why does Phase 1 say 'TypeScript' but Phase 3 mentions 'Python script'? How exactly do we verify this step before moving to the next? What is the edge case if the input is null?"_
 - 💼 **Project Tech Lead (`[GOV]`, `[COMP]`):** You are the PM who **deeply knows this specific project**. Before asking questions, you MUST read `project.md`, ALL project rules (`.agents/rules/`), ALL project skills (`.agents/skills/`), and the project's release/maintenance process. You ask governance-level questions that generic reviewers miss: _"The project has M6 tarball rule — does this plan include a release phase? The project is OSS — are all commits scoped to `repo/` per M1? The maintenance rule requires version sync across 8 files — is the Governance Checklist complete? Does the Walkthrough cover the project's specific build+test+release cycle?"_
+- 📐 **CSA Expert (`[CSA]`):** You enforce Spec-to-Code double-binding and micro-anchoring rules. Before asking questions, you MUST check if the project has CSA configuration. You ask: _"Does the plan map every spec anchor to a physical entity? Are the proposed anchor locations in code correctly positioned above public entities, and not clustered? Do all new anchor IDs follow the kebab-case csa-prefix convention? Are checkpoints for local phase-level CSA checks and a final 100% global CSA audit properly established?"_
 
 ## Modes
 
@@ -85,9 +86,13 @@ Each question is tagged with a dimension. Agent generates questions from ALL dim
 4. **Context Gathering (MANDATORY):** To ask deep, expert-level questions, you MUST NOT review the artifact in a vacuum. Before proceeding, you MUST:
    - Read `Projects/[project]/project.md` to understand the overarching contract and dependencies.
    - Read any explicitly linked Knowledge Items (KIs) or Rules.
-5. **Project Governance Loading (MANDATORY for `[GOV]` persona):** The Project Tech Lead persona requires full project context. Agent MUST:
+5. **Project Governance & CSA Loading (MANDATORY for `[GOV]` and `[CSA]` personas):** The Project Tech Lead and CSA Expert personas require full project context. Agent MUST:
    - Read project `.agents/rules.md` index → load ALL project rules (e.g., `maintenance.md`, `review.md`).
    - Read project `.agents/skills.md` index → load ALL project skills.
+   - Check `Projects/[project]/project.md` for `csa:` configuration (thresholds, gates) or existence of a `csa-compliance.md` rule.
+   - If CSA is enabled for the project:
+     - Load `csa-compliance.md` rule and `csa.md` QA domain template.
+     - Mandate that **CSA Expert** is activated for the Red Team Roster.
    - Identify: project type (OSS/internal), release process, build tool, git scope rules.
 6. **Memory-Assisted QA (CONDITIONAL):** IF project has `.beads/graph/` directory, use `memory_search` to find past QA findings, known issues, and recurring patterns. This prevents Red Team from re-raising resolved issues and focuses probing on genuinely new risk areas.
 7. **Domain-Specific Red Team Templates:** Load the expert persona templates from `.agents/skills/qa/domains/` (if any).
@@ -129,19 +134,21 @@ If the `--graph` flag is provided, execute an INTERACTIVE Graph Preparation Phas
 2. **Propose the Strategy:** In the `## 0. QA Strategy` section of the file, the Agent MUST write:
    - **Focus Areas — Coverage Tracker:** Based on the artifact's nature (e.g., SQLite migration, API design), list the 3-7 most critical areas that need stress-testing. Format as a TABLE with columns `#`, `Focus Area`, `Round 1`, `Round 2`, `Status` (initially all `⏳ Pending`). This table will be updated after each round to show which questions covered which area.
    - **Red Team Roster:** Select the 3-4 most relevant Personas from `SKILL.md` §2 (e.g., Principal Architect, Security Auditor) that will lead this specific review. Justify why they are chosen.
+     - *CSA Expert Rule:* If the target project has CSA configuration (i.e. `csa:` exists in `project.md` or `csa-compliance.md` rule is active), the Agent **MUST** automatically include the **CSA Expert** in the roster.
    - **Process Log:** Create an empty table with columns `Round`, `Trigger`, `Scope`, `Questions`, `Critical`, `Fixed`. Agent MUST append a row after each round of Q&A completes.
 3. **Wait for Approval:** Present this strategy to the user. **STOP HERE.** Do not proceed to structure scan and question generation until the user approves the strategy or adjusts the focus areas.
 
-### Step 0.75. Tech Lead Context & Governance Pre-flight
+### Step 0.75. Tech Lead & CSA Governance Pre-flight
 
-Before diving into general Red Team questions, the Agent MUST step into the role of the **Project Tech Lead** to enforce project-specific compliance:
+Before diving into general Red Team questions, the Agent MUST step into the roles of the **Project Tech Lead** and **CSA Expert** to enforce project-specific compliance and specification double-binding:
 
-1. **Load Context:** Read the project's `.agents/rules.md` and `.agents/skills.md` indexes. Identify and read all project-specific rules (e.g., `maintenance.md`) and skills.
+1. **Load Context:** Read the project's `.agents/rules.md` and `.agents/skills.md` indexes. Identify and read all project-specific rules (e.g., `maintenance.md`, `csa-compliance.md`) and skills.
 2. **Project-Specific QA Rules Integration:** Check if the project rules index contains a rule file mapping to `qa.md` (e.g., `Projects/[project]/.agents/rules/qa.md`). If present, read it and extract all pre-defined checklist questions.
-3. **Generate Governance Checklist:** Create a dedicated set of crucial checklist questions by combining:
-   - The pre-defined project questions extracted from `Projects/[project]/.agents/rules/qa.md` (if any).
+3. **Generate Governance & CSA Checklist:** Create a dedicated set of crucial checklist questions by combining:
+   - The pre-defined project questions extracted from `Projects/[project]/.agents/rules/qa.md` (if any, including `[CSA-1]` to `[CSA-4]` spec/anchor questions).
    - Custom compliance questions generated strictly from the loaded rules (`maintenance.md`, `csa-compliance.md`, etc.) and project skills.
-4. **Document:** Append this combined checklist to the QA Report file under a new `## 0.5 Tech Lead Governance Checklist` section.
+   - If CSA is enabled, include specific checks for spec anchor mapping, micro-anchoring placement (G1-G3), anchor kebab-case format, and phase-level commit/release gates.
+4. **Document:** Append this combined checklist to the QA Report file under a new `## 0.5 Tech Lead & CSA Governance Checklist` section.
 5. **Halt for Review:** The Agent MUST stop and present this checklist to the user. **STOP HERE.** Wait for the user to confirm this checklist before moving to structure scan and general question generation.
 
 ### Step 1. Structure Scan

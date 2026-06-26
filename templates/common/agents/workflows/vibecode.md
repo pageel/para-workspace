@@ -492,11 +492,14 @@ bash .agents/skills/vibecode/scripts/session-manager.sh stop
 
 **Branch A — Topic-Based DSP** (`/vibecode session [topic]`):
 
-1. **Auto-Create DSP File:** Agent creates a dynamic session plan using **Template A**:
+1. **Auto-Create DSP File:** Agent creates a dynamic session plan using **Template A** with `Status: 📝 Draft`:
    `Projects/[project-name]/artifacts/plans/v1.x.x-[YYYY-MM-DD]-session-[topic].md` (or exact version if known).
-2. **Activate Immediately:** Save the file with `Status: 🔨 Active` (skipping the preliminary draft audit gate).
-3. **Queue Initial Milestone:** Identify the first task/milestone to complete and add it as `Phase 1` in the DSP file.
-4. → Proceed to **Step 2 (Quality Gate)** for Phase 1.
+2. **Session Post-Draft Audit Gate (MANDATORY):** Agent MUST execute a structural audit on the generated DSP file:
+   - Check structural completeness (Goals, Kickoff Report, Milestone Queue, Milestone Details, Completion & Teardown).
+   - Check mandatory baseline setup tasks in Phase 0 (`Phase.0a`, `Phase.0b`, `Phase.0c`).
+   - Check presence of `Pre-commit Physical Snapshot & CSA Compliance Gate` before Git checkpoint.
+3. **⛔ CHECKPOINT:** Present the generated DSP file structure and audit results to the User. Agent MUST STOP here and wait for User confirmation to activate the session plan (transition to `Status: 🔨 Active`). Do NOT perform any code modifications or phase execution tasks before approval.
+4. **Activate:** Upon user approval, set `Status: 🔨 Active` in the DSP file. Queue the first milestone as `Phase 1` and proceed to **Step 2 (Quality Gate)**.
 
 **Branch B — DSP Draft** (`/vibecode` or `/vibecode session`):
 
@@ -508,11 +511,11 @@ bash .agents/skills/vibecode/scripts/session-manager.sh stop
      | sort -n | tail -1
    # If empty → NN=01, else → NN = max + 1 (zero-padded)
    ```
-2. **Auto-Create DSP Draft:** Create file using **Template B**:
+2. **Auto-Create DSP Draft:** Create file using **Template B** with `Status: 📝 Draft`:
    `Projects/[project-name]/artifacts/plans/v1.x.x-session-[YYYY-MM-DD]-[NN].md`
-3. **Activate Immediately:** Save with `Status: 🔨 Active`, empty milestone queue.
-4. **Wait for User:** Agent announces session is ready and waits for user to request a specific goal.
-5. → Proceed to **Step 1b (Intent Detection)** to listen for goals.
+3. **Session Post-Draft Audit Gate (MANDATORY):** Agent MUST execute a structural audit on the generated DSP Draft file (checking baseline setup tasks and completion/teardown checklists).
+4. **⛔ CHECKPOINT:** Present the generated DSP Draft structure and audit results to the User. Agent MUST STOP here and wait for User confirmation to activate the session (transition to `Status: 🔨 Active`).
+5. **Activate & Wait:** Upon approval, set `Status: 🔨 Active` in the DSP Draft. Agent announces the session is ready and waits for the User to request a specific goal. Proceed to **Step 1b (Intent Detection)**.
 
 #### 1b. Intent Detection (Branch B only — JIT Phase Creation)
 

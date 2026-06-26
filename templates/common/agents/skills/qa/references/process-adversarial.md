@@ -9,7 +9,7 @@
 
 ```
 ┌──────────────────────────────────────────────┐
-│ 1. Kickoff: Full Red Team Roster (ALL 7      │
+│ 1. Kickoff: Full Red Team Roster (ALL 7-8    │
 │    personas activated simultaneously)         │
 │    + Focus Areas                             │
 ├──────────────────────────────────────────────┤
@@ -58,7 +58,7 @@
 |:--|:--|
 | **Scope per round** | Entire artifact (from multiple viewpoints) |
 | **Number of rounds** | 3 (Attack → Debate → Ruling) |
-| **Token cost** | 🔴 High (7 personas × full artifact × 3 rounds) |
+| **Token cost** | 🔴 High (7-8 personas × full artifact × 3 rounds) |
 | **Depth** | 🔴 Very High (adversarial + cross-validation) |
 | **Best token efficiency** | When cost of failure > cost of review |
 
@@ -94,7 +94,7 @@
 
 | Step | Who | Action |
 |:--|:--|:--|
-| Kickoff | Agent | Activate ALL 7 personas |
+| Kickoff | Agent | Activate ALL 7-8 personas |
 | Governance Audit | Agent (💼 Tech Lead) | Check project rules & skills compliance |
 | Round 1 | Agent (each Persona) | Independent attack questions |
 | Round 2 | Agent (cross-Persona) | Debate + counter-arguments |

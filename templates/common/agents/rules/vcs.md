@@ -120,7 +120,12 @@ Merge:   user merges on GitHub (not local)
 Tag:     user tests → propose tag → user approves
 ```
 
-### 7. Physical Drift & Junk File Control (v1.9.0)
+### 7. Plan Checklist Validation (v1.9.1)
+
+- **MUST** verify that all implemented tasks in the active plan/phase are marked as completed (`[x]`) BEFORE proposing or executing a git commit or push.
+- Proposing or executing a commit while leaving implemented tasks unchecked (`[ ]`) in the plan file is a workflow violation.
+
+### 8. Physical Drift & Junk File Control (v1.9.0)
 
 Before proposing or executing a git commit or staging files, the Agent MUST verify the physical integrity of the project directory structure to prevent untracked junk files, temporary test logs, or scratch scripts from being committed or leaking sensitive environment data:
 

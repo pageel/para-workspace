@@ -18,6 +18,7 @@ Write a structured specification before any implementation begins. The spec is t
 | `create` | Create a new spec for a feature, project, or significant change (default) |
 | `review` | Review and validate an existing spec against current state |
 | `update` | Update an existing spec when scope or decisions change |
+| `reverse` | Generate a spec backward from existing code analyzing the codebase structures |
 
 ## Options
 
@@ -171,15 +172,39 @@ Spec core areas:
 
 **Success Criteria** — Translate vague requirements into testable conditions.
 
+#### 3.5. CSA Spec Self-Audit (MANDATORY)
+
+> ⛔ **HARNESS GUARD:** Agent MUST complete this step BEFORE presenting the spec to the user for review. Skipping this step is a process violation.
+
+After writing the spec with CSA anchors, Agent MUST perform a **self-audit** to verify anchor quality:
+
+1. **Scan all anchors:** List every `<span id="csa-...">` in the spec draft.
+2. **G1 Check (One-to-One):** For each anchor, verify it maps to exactly ONE design decision or functional requirement. If an H2/H3 heading contains a table with N distinct items, verify N separate anchors exist.
+3. **G2 Check (Reverse Validation):** For each anchor that will bind to a code entity, ask: *"If I change this code file, would the ENTIRE content described by this anchor be affected?"* If only partially → flag for decomposition.
+4. **G3 Check (No Blanket Anchors):** Verify NO anchor is placed at an aggregate-level heading (H1/H2) covering multiple unrelated concepts. Anchors must be at H3/H4 or inline.
+5. **Present CSA Audit Summary** to user as part of the spec review:
+
+```
+🔍 CSA SELF-AUDIT:
+   Total anchors: [N]
+   G1 (One-to-One): [N/N] pass
+   G2 (Reverse Validation): [N/N] pass
+   G3 (No Blanket): [N/N] pass
+   Violations found: [N] — [list fixes applied or proposed]
+```
+
+6. **Fix violations** before presenting to user. If a fix changes the spec structure significantly, re-run the audit.
+
 #### 4. User Review & Save Gate
 
-Present the complete spec to the user and WAIT for approval.
+Present the complete spec AND CSA audit summary to the user and WAIT for approval.
 
 ```
 📋 SPEC DRAFT: [feature-name]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Assumptions: [N] listed — all confirmed?
 Core Areas:  6/6 covered
+CSA Anchors: [N] placed (G1/G2/G3 verified ✅)
 Open Questions: [N]
 
 ❓ Review the spec above.
@@ -225,20 +250,23 @@ mkdir -p Projects/[project-name]/artifacts/specs
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ Saved: artifacts/specs/spec-[YYYY-MM-DD]-[topic].md
    Status: Approved
+   CSA: [N] anchors verified (G1/G2/G3 ✅ in Step 3.5)
 
 💡 NEXT STEPS:
-   A. 🔍 Review & CSA Audit — Run audit on the spec (using the `csa` skill) to check, validate, and attach appropriate micro-anchors (e.g. <span id="csa-...">) before proceeding (RECOMMENDED)
-   B. 📐 /plan [project-name] — Create formal implementation plan (Agent MUST ask user to choose template: detail-plan.md, detail-plan-tdd.md, or detail-plan-hardened.md)
-   C. 📥 /backlog [project-name] — Add tasks to backlog directly
+   A. 📐 /plan [project-name] — Create formal implementation plan (Agent MUST ask user to choose template: detail-plan.md, detail-plan-tdd.md, or detail-plan-hardened.md) (RECOMMENDED)
+   B. 📥 /backlog [project-name] — Add tasks to backlog directly
+   C. 🌀 /brainstorm [project-name] — Explore open questions or ambiguous areas before planning
    D. 📄 Keep as reference — Save but don't act yet
 
 ❓ Which option?
 ```
 
-**Option A (Recommended):** Perform a spec review and CSA audit. Reload/read `.agents/skills/csa/SKILL.md` if not already in context. Scan the spec for core design requirements, verify granularity (G1, G2, G3), and ensure they are wrapped in CSA anchor spans (e.g., `<span id="csa-statement-1">...</span>`) to prepare the spec for downstream code-graph binding.
-**Option B:** Recommend the user to run `/plan [project-name]`. **Important:** The Agent MUST NOT auto-select or write the plan file. The Agent MUST ask the user to explicitly choose a plan template (e.g., `detail-plan.md`, `detail-plan-tdd.md`, `detail-plan-hardened.md`) in the chat and wait for confirmation.
-**Option C:** Recommend using `/backlog` to manage simple changes.
+**Option A (Recommended):** Recommend the user to run `/plan [project-name]`. **Important:** The Agent MUST NOT auto-select or write the plan file. The Agent MUST ask the user to explicitly choose a plan template (e.g., `detail-plan.md`, `detail-plan-tdd.md`, `detail-plan-hardened.md`) in the chat and wait for confirmation.
+**Option B:** Recommend using `/backlog` to manage simple changes.
+**Option C:** Recommend `/brainstorm` when the spec has unresolved Open Questions or ambiguous areas that need deeper exploration before committing to a plan.
 **Option D:** Keep as a static reference document.
+
+> **Note:** CSA Audit is no longer an option here — it was already performed as a mandatory gate in Step 3.5 before user review.
 
 #### 7. Log in Session
 
@@ -320,6 +348,53 @@ Update an existing spec when scope or decisions change.
 3. Update the spec document.
 4. Mark `Last Updated` with today's date.
 5. Log the update in the session.
+
+---
+
+## 📋 Action: reverse
+
+Generate a specification backward from an existing codebase by analyzing its structural components.
+
+### When to Use
+
+- Retrofitting an existing codebase that doesn't have spec coverage.
+- Restructuring a module and needing to document its baseline design first.
+
+### Steps
+
+#### 0. Pre-flight
+Perform pre-flight context checks. Load the CSA skill and relevant stack skills.
+
+#### 0.5 Graph Context Pipeline (MANDATORY)
+Run the graph pipeline to map the codebase. This is NOT optional for the reverse flow.
+1. Build graph: `/para-graph build [project-name]`
+2. Identify hot spots and target nodes using `graph_god_nodes` and `graph_query`.
+
+#### 1. Context Gathering
+Query details of the target module using `graph_context_bundle` and check for any overlap with existing specs.
+
+#### 1.5 Entity Triage (MANDATORY)
+1. Call `graph_spec_candidates` on the module/scope to obtain the spec candidates list.
+2. Present the triage blueprint (Category A, B, C candidates) to the user.
+3. ⛔ CHECKPOINT: Present the blueprint to the user in the chat and stop to await approval. Do not proceed to spec writing until the user confirms the candidates list.
+
+#### 2. Surface Assumptions
+Extract assumptions based on the existing code structure and design conventions.
+
+#### 3. Write Spec Document
+Write the spec file using the `reverse-spec.md` template. Populate the `## Reverse Adoption Context` section.
+
+#### 3.5 CSA Self-Audit
+Verify all anchors against the G1/G2/G3 rules.
+
+#### 4. User Review & Save Gate
+Present the spec and wait for approval.
+
+#### 5. Save Spec File & Platform Pointer Mirroring
+Save the spec into `Projects/[project-name]/artifacts/specs/archive/` (historical archive convention). Overwrite platform pointers with direct links.
+
+#### 6. Choose Next Action
+Suggest `/plan` or `/backlog` sync.
 
 ---
 

@@ -60,6 +60,15 @@
 | Specific    | [Triggered Rules/Skills]   | List of specifically triggered rules/skills for this plan | (e.g., `agent-behavior.md`, `tool-routing.md`, `vcs.md`)          |
 | MCP / Tools | [MCP Server / Tool Schema] | Loaded MCP schemas to support tasks                       | (e.g., `para-graph` schemas)                                      |
 
+## CSA Spec Mapping Table
+
+> ⛔ **MANDATORY FOR CSA PROJECTS:** Map every Spec Anchor ID from the baseline spec file to its corresponding Phase, Task, and Target File.
+> This table is verified automatically by the Plan Dev Gate and Post-Draft Audit Gate.
+
+| Spec ID | Phase / Task | Target File | Note / Description |
+| :--- | :--- | :--- | :--- |
+| `csa-example-id` | Phase 1.1 | `src/example.ts` | Example implementation |
+
 ## Architecture Overview & Execution Logic
 
 [Component diagram + Tech stack table]
@@ -99,6 +108,7 @@
 | **Brainstorm & Spec Scope Check** — Propose if any task/phase needs separate brainstorm or spec to ensure safety | ⬜     |       |
 | **Harness Alignment** — Does the generated draft plan exactly match the required checkpoints and guards (MANDATORY, VCS inline commit/push guards) from the template plan and Harness Guard Catalog? | ⬜     |       |
 | **CSA Spec Audit** — If CSA is enabled and plan follows brainstorm, warn to write spec via `/spec` workflow      | ⬜     |       |
+| **CSA Spec Mapping** — 100% Spec Anchor IDs mapped in Plan (blocking if incomplete)                              | ⬜     |       |
 
 ### Project Governance Reload
 
@@ -224,6 +234,7 @@ Reloaded Skills:
   1.2 👤 **[Step name]** — [Detail: destructive/external operation, Agent proposes → User approves.]
 
   1.N-1 🤖 **Pre-commit Gate** — Run project's linter/compiler (e.g., `npm run lint`, `tsc`, `cargo check`) and resolve any type/lint problems before commit.
+  1.N-2 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to compare changes against baseline snapshot to detect physical drift / M9 compliance), and `graph_audit_csa` (to verify spec coverage meets the project's configured threshold and bind introduced code entities).
   1.N 👤 **Git checkpoint Phase 1 — Commit**
 
 ```bash
@@ -334,6 +345,7 @@ git push origin main
 - [ ] **MCP Snapshot Diff Evaluation (MCP):** Run MCP tools `project_snapshot` and `project_diff` to evaluate physical directory drift and verify the integrity of protected files.
 - [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `git status --ignored --porcelain` snapshot in `tdd-repo-before-[date].log` to identify newly generated untracked or ignored files. Agent MUST present the list to User and ask whether to delete them (if junk) or commit them (if missed in plan) before proceeding with cleanup.
 - [ ] [Project-specific checks: build pass, docs updated, governance rules...]
+- [ ] **KI Template Sync (M7/KR8):** IF project has `repo/templates/knowledge/`, verify KI template content reflects current version changes. Check metadata.json has valid `version` + `para_version`. Run `ki sync` if updated.
 - [ ] ⛔ CHECKPOINT (Walkthrough Completion): Agent MUST verify all above Walkthrough items are ticked [x] BEFORE proposing Status transition.
 - [ ] ⛔ CHECKPOINT (C7 Status Transition): Agent MUST NOT change Status to "✅ Done" or clear `active_plan` without explicit user approval. Agent presents the completed Walkthrough checklist → User verifies → User approves transition. Only AFTER user confirms → Agent sets Status and clears `active_plan`.
 - [ ] User approved Done transition.

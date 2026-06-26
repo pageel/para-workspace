@@ -69,6 +69,12 @@
   - `path/to/file2`
 - **Blast Radius (Upstream/Downstream):** [List of affected nodes from Graph analysis, if --graph active]
 
+##### CSA Spec Mapping Table (Optional for CSA Projects)
+
+| Spec ID | Phase / Task | Target File | Note / Description |
+| :--- | :--- | :--- | :--- |
+| `csa-example-id` | Phase 1.1 | `src/example.ts` | Example implementation |
+
 #### ⚗️ Brainstorm Log (if --brainstorm active)
 - **Question:** [Quick discussion topic/question]
 - **Decision:** [Final decision reached]
@@ -79,7 +85,8 @@
 - [ ] 1.0c 🤖 **Session Context Compaction:** (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to capture and write all rules, skills, and project contract to Vibecode Session KI)
 - [ ] 1.1 🤖 **Step 1:** [Task description]
 - [ ] 1.2 🤖 **Step 2:** [Task description]
-- [ ] 1.N-1 🤖 **Pre-commit Gate:** Run tests & lints (`npm run build` and `npx vitest run` or equivalent verification commands).
+- [ ] 1.N-2 🤖 **Pre-commit Gate:** Run tests & lints (`npm run build` and `npx vitest run` or equivalent verification commands).
+- [ ] 1.N-1 🤖 **Pre-commit Physical Snapshot & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` and `project_diff` to detect physical drift against the baseline; and if CSA is enabled, run `graph_audit_csa` (or `npx para-graph audit csa` as fallback) to ensure compliance.
 - [ ] 1.N 👤 **Git Checkpoint:** Commit changes with message `session([topic]): [milestone goal]`.
 - [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Run the MCP tool `project_session_compact` to update session memory -> Read the updated `session.md` using `view_file` to reload context -> Obtain explicit User approval in the chat to transition to the next Phase.
 - [ ] 1.N+1 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
@@ -168,9 +175,13 @@ as specific tasks are identified during the conversation.
 > Each Phase starts with a Quality Gate (see `references/session-quality-gate.md`) and pre/post phase reports.
 >
 > **Mandatory Tasks for each dynamic Phase:**
+> - **CSA Spec Mapping:** If the project has CSA enabled, the Agent MUST map the active Spec IDs to the target files for this phase using a local mapping table.
 > - `[ ] Phase.0a 🤖 Project Directory Snapshot` (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool to capture baseline before changes)
 > - `[ ] Phase.0b 🤖 Project Directory Junk Audit` (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool with `auditJunk: true` to check for physical junk files before starting work)
 > - `[ ] Phase.0c 🤖 Session Context Compaction` (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to compile and write rules/skills/contract to the Vibecode Session KI)
+> - `[ ] Phase.N-2 🤖 Pre-commit Physical Snapshot & CSA Compliance Gate:` (if para-graph/mcp is available, invoke `project_snapshot` and `project_diff` to detect physical drift; and if CSA is enabled, run `graph_audit_csa` or `npx para-graph audit csa` to verify spec coverage)
+> - `[ ] Phase.N-1 🤖 Pre-commit Gate:` Run build, lints & tests
+> - `[ ] Phase.N 👤 Git Checkpoint:` Commit changes with message `session([topic]): [milestone goal]`
 
 ---
 
