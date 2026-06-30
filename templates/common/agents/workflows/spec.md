@@ -223,7 +223,13 @@ mkdir -p Projects/[project-name]/artifacts/specs
 ```
 **Naming convention:** `spec-[YYYY-MM-DD]-[topic-slug].md`
 
-**Platform Tracking Pointer:** Once saved, the Agent **MUST overwrite and truncate** the platform files (`brain/implementation_plan.md`, `brain/task.md`, and `brain/walkthrough.md`), leaving **ONLY** the direct markdown link to the project spec file (`[spec-name](file:///Projects/[project-name]/artifacts/specs/spec-[YYYY-MM-DD]-[topic-slug].md)`) and the specific `TRACKER (link-only)` file guard comment at the bottom:
+##### 5.1. Update Specification Index (README.md)
+Agent **MUST** register the newly created or updated spec file into the project's specification directory index at `Projects/[project-name]/artifacts/specs/README.md`:
+1. If the index `README.md` does not exist, initialize it by copying the reference template located at `.agents/skills/spec/references/templates/specs-index-readme.md`.
+2. Append or update the spec file entry in the registry table. Mark the CSA Status as `✅ CSA-ified` if the spec file contains CSA span anchors, or `⚠️ Uncurated` if it lacks anchors. In the `CSA Anchors` column, record only the count of spec anchors (e.g., `4 anchors`), do not list individual IDs.
+
+##### 5.2. Platform Tracking Pointer
+Once saved, the Agent **MUST overwrite and truncate** the platform files (`brain/implementation_plan.md`, `brain/task.md`, and `brain/walkthrough.md`), leaving **ONLY** the direct markdown link to the project spec file (`[spec-name](file:///Projects/[project-name]/artifacts/specs/spec-[YYYY-MM-DD]-[topic-slug].md)`) and the specific `TRACKER (link-only)` file guard comment at the bottom:
 - In `brain/implementation_plan.md`:
   ```markdown
   [spec-name](file:///Projects/[project-name]/artifacts/specs/spec-[YYYY-MM-DD]-[topic-slug].md)

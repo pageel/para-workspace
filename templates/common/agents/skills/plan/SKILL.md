@@ -30,6 +30,7 @@ source: catalog
 
 | `references/detail-plan-tdd.md` | Step 9 — Plan Type = Detail Plan (TDD mode) | Document structure for strict Test-Driven Development implementation |
 | `references/detail-plan-hardened.md` | Step 9 — Plan Type = Hardened Plan | Detail Plan + Mandatory Audit Gate + Selective TDD injection |
+| `references/detail-plan-csa-audit.md` | Step 9 — Plan Type = CSA Audit | Document structure for auditing legacy spec-to-code alignment |
 
 > **Convention:** Data files live in `references/` (not `templates/`).
 > This follows the Sidecar Skill convention formalized in v1.7.6.3.
@@ -52,6 +53,8 @@ ELIF user specifically requests strict TDD (Test-Driven Development)
   → load references/detail-plan-tdd.md
 ELIF user requests --hardened OR plan involves mixed code+docs with audit needs
   → load references/detail-plan-hardened.md
+ELIF user requests csa-audit OR plan is for CSA Spec-to-Code audit
+  → load references/detail-plan-csa-audit.md
 ELSE
   → load references/detail-plan.md
 ```

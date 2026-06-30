@@ -429,9 +429,11 @@ Map each High/Medium priority backlog item to the phase where it will be impleme
 #### 8.6. Determine Target Version
 
 1. Read `VERSION` file (if exists in repo) or `project.md` to get current project version.
-2. Determine if the plan warrants a PATCH, MINOR, or MAJOR bump based on scope.
-   - If purely R&D, speculative, or undefined scope: use wildcard (e.g., `1.x.x`).
-   - Otherwise, calculate exact target version to include in the plan's filename logic (Step 9).
+2. Determine target version based on **Plan Type / Template**:
+   - **IF plan type is `csa-audit` or `docs-plan` (Documentation/Audit only):** Keep (inherit) the current project version as the target version. Do NOT bump the software version.
+   - **IF plan type is `development` or `feature` (Logic code changes):**
+     - If purely R&D, speculative, or undefined scope: use wildcard (e.g., `1.x.x`).
+     - Otherwise, calculate exact target version bump (PATCH/MINOR/MAJOR) based on code change scope.
 
 #### 8.7. CSA Spec Anchor Scaffolding
 

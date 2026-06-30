@@ -1403,6 +1403,9 @@ function renderDirectory(srcDir, destDir, template) {
             
             while ((match = nodeRegex.exec(content)) !== null) {
                 const anchorId = match[1];
+                if (anchorId.includes('...')) {
+                    continue;
+                }
                 hasAnchor = true;
                 definedAnchorsMap[anchorId] = relativeMdPath;
             }
@@ -1414,6 +1417,9 @@ function renderDirectory(srcDir, destDir, template) {
                 const inheritsStr = inheritMatch[1];
                 const parts = inheritsStr.split(',').map(p => p.trim());
                 parts.forEach(part => {
+                    if (part.includes('...')) {
+                        return;
+                    }
                     if (!specToDocsMap[part]) {
                         specToDocsMap[part] = new Set();
                     }
@@ -1770,7 +1776,10 @@ function renderDirectory(srcDir, destDir, template) {
         const spanRegex = /<span\s+id=["'](csa-[a-zA-Z0-9.:\/_-]+)["'][^>]*><\/span>/g;
         let spanMatch;
         while ((spanMatch = spanRegex.exec(mdContent)) !== null) {
-            fileSpans.add(spanMatch[1]);
+            const anchorId = spanMatch[1];
+            if (!anchorId.includes('...')) {
+                fileSpans.add(anchorId);
+            }
         }
 
         const headers = [];
