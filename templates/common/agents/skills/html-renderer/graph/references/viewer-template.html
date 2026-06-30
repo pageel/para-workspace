@@ -1822,24 +1822,94 @@
             // Build documentation and spec links
             const docAnchorsList = [];
             
-            // 1. Get from relation edges (DOCUMENTED_BY)
-            GRAPH_DATA.links.forEach(link => {
-                const sourceId = (typeof link.source === 'object') ? link.source.id : link.source;
-                const targetId = (typeof link.target === 'object') ? link.target.id : link.target;
-                
-                if (sourceId === node.id && link.relation === 'DOCUMENTED_BY') {
-                    const targetNode = GRAPH_DATA.nodes.find(n => n.id === targetId);
-                    if (targetNode && targetNode.type === 'spec_anchor') {
-                        docAnchorsList.push({
-                            id: targetNode.id,
-                            filePath: targetNode.filePath,
-                            startLine: targetNode.startLine,
-                            title: targetNode.signature || targetNode.id,
-                            type: 'spec_anchor'
-                        });
+            // 1. Get from relation edges (DOCUMENTED_BY and DOCUMENTS)
+            if (node.type === 'spec_anchor') {
+                // If a Spec Anchor is selected, find implementing code and documenting docs
+                GRAPH_DATA.links.forEach(link => {
+                    const sourceId = (typeof link.source === 'object') ? link.source.id : link.source;
+                    const targetId = (typeof link.target === 'object') ? link.target.id : link.target;
+                    
+                    if (targetId === node.id) {
+                        const sourceNode = GRAPH_DATA.nodes.find(n => n.id === sourceId);
+                        if (sourceNode) {
+                            if (!docAnchorsList.some(item => item.id === sourceNode.id)) {
+                                docAnchorsList.push({
+                                    id: sourceNode.id,
+                                    filePath: sourceNode.filePath || '',
+                                    startLine: sourceNode.startLine || 1,
+                                    title: sourceNode.name || sourceNode.id,
+                                    type: link.relation === 'DOCUMENTED_BY' ? 'code' : 'doc'
+                                });
+                            }
+                        }
                     }
-                }
-            });
+                });
+            } else if (node.type === 'file') {
+                // If a Doc File is selected, find Spec Anchors it documents
+                GRAPH_DATA.links.forEach(link => {
+                    const sourceId = (typeof link.source === 'object') ? link.source.id : link.source;
+                    const targetId = (typeof link.target === 'object') ? link.target.id : link.target;
+                    
+                    if (sourceId === node.id && link.relation === 'DOCUMENTS') {
+                        const targetNode = GRAPH_DATA.nodes.find(n => n.id === targetId);
+                        if (targetNode && targetNode.type === 'spec_anchor') {
+                            if (!docAnchorsList.some(item => item.id === targetNode.id)) {
+                                docAnchorsList.push({
+                                    id: targetNode.id,
+                                    filePath: targetNode.filePath,
+                                    startLine: targetNode.startLine,
+                                    title: targetNode.signature || targetNode.id,
+                                    type: 'spec_anchor'
+                                });
+                            }
+                        }
+                    }
+                });
+            } else {
+                // If a Code Node is selected:
+                // Find Spec Anchors it documents directly: Code --[DOCUMENTED_BY]--> Spec Anchor
+                GRAPH_DATA.links.forEach(link => {
+                    const sourceId = (typeof link.source === 'object') ? link.source.id : link.source;
+                    const targetId = (typeof link.target === 'object') ? link.target.id : link.target;
+                    
+                    if (sourceId === node.id && link.relation === 'DOCUMENTED_BY') {
+                        const targetNode = GRAPH_DATA.nodes.find(n => n.id === targetId);
+                        if (targetNode && targetNode.type === 'spec_anchor') {
+                            // Add the Spec Anchor itself
+                            if (!docAnchorsList.some(a => a.id === targetNode.id)) {
+                                docAnchorsList.push({
+                                    id: targetNode.id,
+                                    filePath: targetNode.filePath,
+                                    startLine: targetNode.startLine,
+                                    title: targetNode.signature || targetNode.id,
+                                    type: 'spec_anchor'
+                                });
+                            }
+                            
+                            // Find all Doc Files documenting this Spec Anchor: Doc File --[DOCUMENTS]--> Spec Anchor
+                            GRAPH_DATA.links.forEach(subLink => {
+                                const subSourceId = (typeof subLink.source === 'object') ? subLink.source.id : subLink.source;
+                                const subTargetId = (typeof subLink.target === 'object') ? subLink.target.id : subLink.target;
+                                
+                                if (subTargetId === targetNode.id && subLink.relation === 'DOCUMENTS') {
+                                    const docNode = GRAPH_DATA.nodes.find(n => n.id === subSourceId);
+                                    if (docNode && docNode.type === 'file') {
+                                        if (!docAnchorsList.some(a => a.id === docNode.id)) {
+                                            docAnchorsList.push({
+                                                id: docNode.id,
+                                                filePath: docNode.filePath,
+                                                startLine: docNode.startLine || 1,
+                                                title: docNode.name || docNode.id,
+                                                type: 'doc_file'
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
             
             // 2. Get from legacy semantic.docAnchors (if any, avoid duplicates)
             const legacyAnchors = node.docAnchors || (node.semantic && node.semantic.docAnchors) || [];
@@ -1865,43 +1935,68 @@
                 anchorsCard.style.display = 'block';
                 anchorsListEl.innerHTML = '';
                 
-                docAnchorsList.forEach(item => {
-                    const itemEl = document.createElement('div');
-                    itemEl.className = 'doc-anchor-item';
-                    itemEl.style.cssText = 'padding: 8px; border-radius: 4px; background-color: var(--code-bg); border: 1px solid var(--border-color); font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;';
+                // Group by category
+                const specs = docAnchorsList.filter(item => item.type === 'spec_anchor' || item.filePath.startsWith('artifacts/specs/'));
+                const docs = docAnchorsList.filter(item => item.type === 'doc_file' || item.type === 'doc' || item.filePath.startsWith('docs/'));
+                const legacy = docAnchorsList.filter(item => !specs.includes(item) && !docs.includes(item));
+                
+                const renderGroup = (title, items, icon, color) => {
+                    if (items.length === 0) return;
                     
-                    let htmlLink = '';
-                    let isDoc = item.filePath.startsWith('docs/');
-                    if (isDoc) {
-                        const relativeHtml = item.filePath.replace(/^docs\//, '').replace(/\.md$/, '.html');
-                        htmlLink = `../../docs/.html/${relativeHtml}`;
-                    }
+                    const groupHeader = document.createElement('div');
+                    groupHeader.style.cssText = `font-size: 0.72rem; font-weight: 700; color: ${color}; margin-top: 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;`;
+                    groupHeader.innerHTML = `<i data-lucide="${icon}" style="width: 12px; height: 12px;"></i> <span>${title}</span>`;
+                    anchorsListEl.appendChild(groupHeader);
                     
-                    const titleText = item.title;
-                    const pathText = item.filePath + (item.startLine ? ` : L${item.startLine}` : '');
-                    const absPath = `${PROJECT_ROOT}/${item.filePath}`;
-                    const editorLink = `vscode://file${absPath}${item.startLine ? ':' + item.startLine : ''}`;
-                    
-                    itemEl.innerHTML = `
-                        <div style="font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
-                            <i data-lucide="file-text" style="width: 12px; height: 12px; color: var(--accent-color); flex-shrink: 0;"></i>
-                            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${titleText}</span>
-                        </div>
-                        <div style="color: var(--text-secondary); font-size: 0.68rem; margin-bottom: 4px; word-break: break-all;">
-                            ${pathText}
-                        </div>
-                        <div style="display: flex; gap: 10px; align-items: center; margin-top: 2px;">
-                            ${isDoc ? `
-                            <a href="${htmlLink}" target="_blank" style="color: var(--accent-color); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 3px; font-size: 0.7rem;">
-                                <i data-lucide="eye" style="width: 10px; height: 10px;"></i> /* TRANSLATE:viewHtml */
-                            </a>` : ''}
-                            <a href="${editorLink}" style="color: var(--text-secondary); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 3px; font-size: 0.7rem;">
-                                <i data-lucide="external-link" style="width: 10px; height: 10px;"></i> /* TRANSLATE:openEditor */
-                            </a>
-                        </div>
-                    `;
-                    anchorsListEl.appendChild(itemEl);
-                });
+                    items.forEach(item => {
+                        const itemEl = document.createElement('div');
+                        itemEl.className = 'doc-anchor-item';
+                        itemEl.style.cssText = 'padding: 8px; border-radius: 4px; background-color: var(--code-bg); border: 1px solid var(--border-color); font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px;';
+                        
+                        let htmlLink = '';
+                        let isDoc = item.filePath.startsWith('docs/');
+                        if (isDoc) {
+                            const relativeHtml = item.filePath.replace(/^docs\//, '').replace(/\.md$/, '.html');
+                            htmlLink = `../../docs/.html/${relativeHtml}`;
+                        }
+                        
+                        const titleText = item.title;
+                        const pathText = item.filePath + (item.startLine ? ` : L${item.startLine}` : '');
+                        const absPath = `${PROJECT_ROOT}/${item.filePath}`;
+                        const editorLink = `vscode://file${absPath}${item.startLine ? ':' + item.startLine : ''}`;
+                        
+                        itemEl.innerHTML = `
+                            <div style="font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+                                <i data-lucide="file-text" style="width: 11px; height: 11px; color: ${color}; flex-shrink: 0;"></i>
+                                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${titleText}</span>
+                            </div>
+                            <div style="color: var(--text-secondary); font-size: 0.68rem; margin-bottom: 4px; word-break: break-all;">
+                                ${pathText}
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center; margin-top: 2px;">
+                                ${isDoc ? `
+                                <a href="${htmlLink}" target="_blank" style="color: var(--accent-color); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 3px; font-size: 0.7rem;">
+                                    <i data-lucide="eye" style="width: 10px; height: 10px;"></i> /* TRANSLATE:viewHtml */
+                                </a>` : ''}
+                                <a href="${editorLink}" style="color: var(--text-secondary); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 3px; font-size: 0.7rem;">
+                                    <i data-lucide="external-link" style="width: 10px; height: 10px;"></i> /* TRANSLATE:openEditor */
+                                </a>
+                            </div>
+                        `;
+                        anchorsListEl.appendChild(itemEl);
+                    });
+                };
+                
+                // Translate group titles based on language
+                const isVi = (workspaceLang === 'vi');
+                const specTitle = isVi ? "Đặc tả Thiết kế (Specs)" : "Design Specs";
+                const docTitle = isVi ? "Tài liệu Hướng dẫn (Docs)" : "Guides & Docs";
+                const legacyTitle = isVi ? "Liên kết khác" : "Other Links";
+                
+                renderGroup(specTitle, specs, "shield-check", "var(--accent-color)");
+                renderGroup(docTitle, docs, "book-open", "var(--success-color, #10b981)");
+                renderGroup(legacyTitle, legacy, "link", "var(--text-secondary)");
+                
                 lucide.createIcons();
             } else {
                 anchorsCard.style.display = 'none';

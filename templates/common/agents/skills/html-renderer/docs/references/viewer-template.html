@@ -1168,6 +1168,300 @@
             background-color: var(--code-bg);
             color: var(--text-secondary);
         }
+
+        /* Smart PDF pagination rules */
+        @media print {
+            html, body {
+                height: auto !important;
+                overflow: visible !important;
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+                font-size: 11pt !important;
+                line-height: 1.6 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            /* Hide UI components, buttons, sidebars, headers, footers */
+            .sidebar, 
+            .docs-header, 
+            .header-actions, 
+            .docs-footer, 
+            .drift-audit-toggle-btn, 
+            .metadata-toggle-btn, 
+            .ai-prompts-toggle-btn, 
+            .copy-code-btn, 
+            .inline-feedback-copy-btn, 
+            .btn-submit, 
+            .btn-action, 
+            .zoom-action-btn, 
+            #toast-container, 
+            .breadcrumbs, 
+            #title-separator,
+            #right-sidebar-resize-handle,
+            .customizer-select,
+            #right-sidebar,
+            #right-resizer,
+            .pdf-modal-backdrop {
+                display: none !important;
+            }
+            
+            /* Expand content area to fill page and show all contents */
+            main, .content-wrapper, #content-container {
+                height: auto !important;
+                overflow: visible !important;
+                display: block !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-shadow: none !important;
+                background: transparent !important;
+            }
+
+            /* Print-only TOC style definition */
+            #print-toc {
+                display: none;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+            }
+
+            body.print-show-toc #print-toc {
+                display: block !important;
+                margin-bottom: 30pt !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            body.print-separate-toc #print-toc {
+                display: block !important;
+                margin-bottom: 0 !important;
+                page-break-after: always !important;
+                break-after: always !important;
+            }
+
+            #print-toc h2 {
+                font-size: 18pt !important;
+                margin-top: 0 !important;
+                margin-bottom: 15pt !important;
+                border-bottom: 1px solid #efefe8 !important;
+                padding-bottom: 6pt !important;
+                color: #000000 !important;
+            }
+
+            #print-toc ul {
+                list-style-type: none !important;
+                padding-left: 0 !important;
+            }
+
+            #print-toc li {
+                margin-bottom: 8pt !important;
+                font-size: 11pt !important;
+                line-height: 1.4 !important;
+            }
+
+            #print-toc li.toc-h1 {
+                font-weight: bold !important;
+                margin-top: 12pt !important;
+            }
+
+            #print-toc li.toc-h2 {
+                padding-left: 15pt !important;
+            }
+
+            #print-toc li.toc-h3 {
+                padding-left: 30pt !important;
+                font-size: 10pt !important;
+                color: #555555 !important;
+            }
+            
+            .markdown-body {
+                background: transparent !important;
+                color: #000000 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            
+            /* Prevent orphan headings */
+            h1, h2, h3, h4, h5, h6 {
+                page-break-after: avoid !important;
+                break-after: avoid !important;
+                color: #000000 !important;
+                margin-top: 20pt !important;
+                margin-bottom: 10pt !important;
+            }
+            
+            /* Prevent split-page block content */
+            pre, table, blockquote, img, .callout, .mermaid {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            
+            /* Smart line-wrap and styles for code blocks */
+            pre {
+                white-space: pre-wrap !important;
+                word-wrap: break-word !important;
+                background-color: #f7f6f3 !important;
+                border: 1px solid #efefe8 !important;
+                padding: 10px !important;
+                border-radius: 4px !important;
+            }
+            
+            code {
+                font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
+                font-size: 9pt !important;
+            }
+            
+            /* Print tables cleanly with borders */
+            table {
+                border-collapse: collapse !important;
+                width: 100% !important;
+                margin: 15pt 0 !important;
+            }
+            
+            th, td {
+                border: 1px solid #efefe8 !important;
+                padding: 6px 8px !important;
+                text-align: left !important;
+            }
+            
+            th {
+                background-color: #f7f6f3 !important;
+                font-weight: 600 !important;
+            }
+            
+            /* Callouts and blockquotes styling in print */
+            blockquote, .callout, .clean-callout {
+                background-color: #f7f6f3 !important;
+                padding: 10px 15px !important;
+                margin: 15pt 0 !important;
+                border-left: 4px solid #cccccc !important;
+            }
+
+            .alert-note { border-left-color: #2383e2 !important; }
+            .alert-tip { border-left-color: #10b981 !important; }
+            .alert-important { border-left-color: #ea580c !important; }
+            .alert-warning { border-left-color: #f59e0b !important; }
+            .alert-caution { border-left-color: #ef4444 !important; }
+            
+            /* Smart page widows/orphans */
+            p, li {
+                orphans: 3 !important;
+                widows: 3 !important;
+            }
+            
+            /* Render links in print */
+            a {
+                color: #2383e2 !important;
+                text-decoration: none !important;
+            }
+
+            #print-toc a {
+                color: inherit !important;
+                text-decoration: none !important;
+            }
+
+            /* Print Custom Header & Footer styling */
+            #print-custom-header {
+                display: none;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+                font-size: 8.5pt !important;
+                color: #777777 !important;
+                width: 100% !important;
+            }
+
+            #print-custom-footer {
+                display: none;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+                font-size: 8pt !important;
+                color: #888888 !important;
+                width: 100% !important;
+            }
+
+            body.print-show-header-footer #print-custom-header {
+                display: block !important;
+            }
+
+            body.print-show-header-footer #print-custom-footer {
+                display: block !important;
+            }
+            /* Print Cover Page Styling */
+            #print-cover-page {
+                display: none;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+            }
+
+            body.print-show-cover-page #print-cover-page {
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+                align-items: center !important;
+                min-height: 230mm !important;
+                page-break-after: always !important;
+                break-after: always !important;
+                box-sizing: border-box !important;
+                padding-top: 40mm !important;
+                padding-bottom: 40mm !important;
+            }
+
+            .cover-project-name {
+                font-size: 12pt !important;
+                text-transform: uppercase !important;
+                letter-spacing: 2px !important;
+                color: #888888 !important;
+                margin-bottom: 20pt !important;
+                font-weight: 500 !important;
+            }
+
+            .cover-title {
+                font-size: 30pt !important;
+                font-weight: 700 !important;
+                text-align: center !important;
+                color: #000000 !important;
+                margin-bottom: 20pt !important;
+                line-height: 1.25 !important;
+                border-bottom: none !important;
+                padding-bottom: 0 !important;
+            }
+
+            .cover-divider {
+                width: 50mm !important;
+                height: 3px !important;
+                background-color: #2383e2 !important;
+                margin-bottom: 30pt !important;
+            }
+
+            .cover-metadata {
+                width: 100% !important;
+                max-width: 120mm !important;
+                display: grid !important;
+                grid-template-columns: 40% 60% !important;
+                row-gap: 12pt !important;
+                font-size: 11pt !important;
+                border-top: 1px solid #efefe8 !important;
+                padding-top: 20pt !important;
+                margin-top: 10pt !important;
+            }
+
+            .cover-meta-key {
+                font-weight: 600 !important;
+                color: #666666 !important;
+            }
+
+            .cover-meta-val {
+                color: #000000 !important;
+            }
+            
+            body.print-show-cover-page blockquote.print-hide-doc-info {
+                display: none !important;
+            }
+            
+            @page {
+                size: A4;
+                margin: 20mm 15mm 20mm 15mm;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1182,28 +1476,6 @@
                     <span class="header-title" id="header-doc-title" style="font-weight: 600; font-size: 13.5px; color: var(--text-primary); white-space: normal; word-break: break-word;"></span>
                     <span id="font-size-indicator" style="display: none;">16px</span>
                     <span id="width-indicator" style="display: none;">720px</span>
-                </div>
-                <div class="header-actions">
-                    <!-- Typography adjustments -->
-                    <select class="customizer-select" id="font-select" onchange="changeFont(this.value)">
-                        <option value="inter">/* TRANSLATE:fontSelectInter */</option>
-                        <option value="outfit">/* TRANSLATE:fontSelectOutfit */</option>
-                        <option value="roboto">/* TRANSLATE:fontSelectRoboto */</option>
-                        <option value="georgia">/* TRANSLATE:fontSelectGeorgia */</option>
-                    </select>
-
-                    <button class="btn-action" onclick="changeFontSize(-1)"><i data-lucide="minus"></i></button>
-                    <button class="btn-action" onclick="changeFontSize(1)"><i data-lucide="plus"></i></button>
-
-                    <span style="border-left: 1px solid var(--border-color); height: 20px; margin: 0 2px;"></span>
-                    
-                    <!-- Page margins width control -->
-                    <button class="btn-action" onclick="changePageWidth(-50)"><i data-lucide="minimize-2"></i></button>
-                    <button class="btn-action" onclick="changePageWidth(50)"><i data-lucide="maximize-2"></i></button>
-
-                    <span style="border-left: 1px solid var(--border-color); height: 20px; margin: 0 2px;"></span>
-
-                    <button class="btn-action" onclick="toggleRightSidebar()" title="/* TRANSLATE:tocToggleTitle */"><i data-lucide="list"></i></button>
                 </div>
             </div>
         </header>
@@ -1304,9 +1576,166 @@
         </div>
     </div>
 
-    <!-- Toast notification -->
-    <div id="toast-notification">
-        <i data-lucide="check-circle"></i> <span id="toast-message">Copied!</span>
+    </div>
+
+    <!-- PDF Export Modal Backdrop -->
+    <div class="pdf-modal-backdrop" id="pdf-export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.5); z-index: 20000; align-items: center; justify-content: center;">
+        <div style="background-color: var(--bg-primary); border: 1px solid var(--border-color); width: 400px; padding: 24px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); font-family: var(--font-sans); color: var(--text-primary); display: flex; flex-direction: column; gap: 16px;">
+            <div style="font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                <i data-lucide="printer" style="width: 18px; height: 18px; color: var(--accent-color);"></i>
+                <span>/* TRANSLATE:pdfModalTitle */</span>
+            </div>
+            
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
+                /* TRANSLATE:pdfModalDesc */
+            </div>
+            
+            <!-- Selection options -->
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 13px; transition: background-color 0.2s;">
+                    <input type="radio" name="pdf-toc-option" value="no-toc" checked style="margin-top: 3px;">
+                    <div>
+                        <div style="font-weight: 600;">/* TRANSLATE:pdfOptionNoToc */</div>
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">/* TRANSLATE:pdfOptionNoTocDesc */</div>
+                    </div>
+                </label>
+                
+                <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 13px; transition: background-color 0.2s;">
+                    <input type="radio" name="pdf-toc-option" value="separate-page">
+                    <div>
+                        <div style="font-weight: 600;">/* TRANSLATE:pdfOptionSeparatePage */</div>
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">/* TRANSLATE:pdfOptionSeparatePageDesc */</div>
+                    </div>
+                </label>
+                
+                <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 13px; transition: background-color 0.2s;">
+                    <input type="radio" name="pdf-toc-option" value="inline">
+                    <div>
+                        <div style="font-weight: 600;">/* TRANSLATE:pdfOptionInline */</div>
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">/* TRANSLATE:pdfOptionInlineDesc */</div>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Header & Footer Options -->
+            <div style="display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; font-weight: 600; user-select: none;">
+                    <input type="checkbox" id="pdf-header-footer-checkbox" onchange="togglePdfHeaderFooterInputs(this.checked)">
+                    <span>/* TRANSLATE:pdfToggleHeaderFooter */</span>
+                </label>
+                
+                <div id="pdf-header-footer-customization" style="display: none; flex-direction: column; gap: 12px; padding-left: 20px;">
+                    <!-- Header Configuration -->
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <span style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">/* TRANSLATE:pdfHeaderSectionLabel */</span>
+                        <div style="display: flex; gap: 6px;">
+                            <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                                <span style="font-size: 10px; color: var(--text-secondary);">/* TRANSLATE:pdfLeftPos */</span>
+                                <select id="pdf-header-left" onchange="handleHeaderFooterSelectChange('header', 'left', this.value)" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 5px; border-radius: 4px; font-size: 11px; outline: none; width: 100%;">
+                                    <option value="none">/* TRANSLATE:pdfOptNone */</option>
+                                    <option value="doc-title" selected>/* TRANSLATE:pdfOptDocTitle */</option>
+                                    <option value="file-name">/* TRANSLATE:pdfOptFileName */</option>
+                                    <option value="file-path">/* TRANSLATE:pdfOptFilePath */</option>
+                                    <option value="date">/* TRANSLATE:pdfOptDate */</option>
+                                    <option value="version">/* TRANSLATE:pdfOptVersion */</option>
+                                    <option value="custom">/* TRANSLATE:pdfOptCustom */</option>
+                                </select>
+                            </div>
+                            <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                                <span style="font-size: 10px; color: var(--text-secondary);">/* TRANSLATE:pdfCenterPos */</span>
+                                <select id="pdf-header-center" onchange="handleHeaderFooterSelectChange('header', 'center', this.value)" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 5px; border-radius: 4px; font-size: 11px; outline: none; width: 100%;">
+                                    <option value="none" selected>/* TRANSLATE:pdfOptNone */</option>
+                                    <option value="doc-title">/* TRANSLATE:pdfOptDocTitle */</option>
+                                    <option value="file-name">/* TRANSLATE:pdfOptFileName */</option>
+                                    <option value="file-path">/* TRANSLATE:pdfOptFilePath */</option>
+                                    <option value="date">/* TRANSLATE:pdfOptDate */</option>
+                                    <option value="version">/* TRANSLATE:pdfOptVersion */</option>
+                                    <option value="custom">/* TRANSLATE:pdfOptCustom */</option>
+                                </select>
+                            </div>
+                            <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                                <span style="font-size: 10px; color: var(--text-secondary);">/* TRANSLATE:pdfRightPos */</span>
+                                <select id="pdf-header-right" onchange="handleHeaderFooterSelectChange('header', 'right', this.value)" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 5px; border-radius: 4px; font-size: 11px; outline: none; width: 100%;">
+                                    <option value="none">/* TRANSLATE:pdfOptNone */</option>
+                                    <option value="doc-title">/* TRANSLATE:pdfOptDocTitle */</option>
+                                    <option value="file-name" selected>/* TRANSLATE:pdfOptFileName */</option>
+                                    <option value="file-path">/* TRANSLATE:pdfOptFilePath */</option>
+                                    <option value="date">/* TRANSLATE:pdfOptDate */</option>
+                                    <option value="version">/* TRANSLATE:pdfOptVersion */</option>
+                                    <option value="custom">/* TRANSLATE:pdfOptCustom */</option>
+                                </select>
+                            </div>
+                        </div>
+                        <input type="text" id="pdf-custom-header-left-input" style="display: none; background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 6px; border-radius: 4px; font-size: 11px; outline: none; width: 100%; box-sizing: border-box; margin-top: 2px;" placeholder="/* TRANSLATE:pdfCustomPlaceholderPrefix *//* TRANSLATE:pdfLeftPos */...">
+                        <input type="text" id="pdf-custom-header-center-input" style="display: none; background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 6px; border-radius: 4px; font-size: 11px; outline: none; width: 100%; box-sizing: border-box; margin-top: 2px;" placeholder="/* TRANSLATE:pdfCustomPlaceholderPrefix *//* TRANSLATE:pdfCenterPos */...">
+                        <input type="text" id="pdf-custom-header-right-input" style="display: none; background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 6px; border-radius: 4px; font-size: 11px; outline: none; width: 100%; box-sizing: border-box; margin-top: 2px;" placeholder="/* TRANSLATE:pdfCustomPlaceholderPrefix *//* TRANSLATE:pdfRightPos */...">
+                    </div>
+
+                    <!-- Footer Configuration -->
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <span style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">/* TRANSLATE:pdfFooterSectionLabel */</span>
+                        <div style="display: flex; gap: 6px;">
+                            <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                                <span style="font-size: 10px; color: var(--text-secondary);">/* TRANSLATE:pdfLeftPos */</span>
+                                <select id="pdf-footer-left" onchange="handleHeaderFooterSelectChange('footer', 'left', this.value)" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 5px; border-radius: 4px; font-size: 11px; outline: none; width: 100%;">
+                                    <option value="none">/* TRANSLATE:pdfOptNone */</option>
+                                    <option value="doc-title">/* TRANSLATE:pdfOptDocTitle */</option>
+                                    <option value="file-name">/* TRANSLATE:pdfOptFileName */</option>
+                                    <option value="file-path">/* TRANSLATE:pdfOptFilePath */</option>
+                                    <option value="date" selected>/* TRANSLATE:pdfOptDate */</option>
+                                    <option value="version">/* TRANSLATE:pdfOptVersion */</option>
+                                    <option value="custom">/* TRANSLATE:pdfOptCustom */</option>
+                                </select>
+                            </div>
+                            <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                                <span style="font-size: 10px; color: var(--text-secondary);">/* TRANSLATE:pdfCenterPos */</span>
+                                <select id="pdf-footer-center" onchange="handleHeaderFooterSelectChange('footer', 'center', this.value)" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 5px; border-radius: 4px; font-size: 11px; outline: none; width: 100%;">
+                                    <option value="none" selected>/* TRANSLATE:pdfOptNone */</option>
+                                    <option value="doc-title">/* TRANSLATE:pdfOptDocTitle */</option>
+                                    <option value="file-name">/* TRANSLATE:pdfOptFileName */</option>
+                                    <option value="file-path">/* TRANSLATE:pdfOptFilePath */</option>
+                                    <option value="date">/* TRANSLATE:pdfOptDate */</option>
+                                    <option value="version">/* TRANSLATE:pdfOptVersion */</option>
+                                    <option value="custom">/* TRANSLATE:pdfOptCustom */</option>
+                                </select>
+                            </div>
+                            <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                                <span style="font-size: 10px; color: var(--text-secondary);">/* TRANSLATE:pdfRightPos */</span>
+                                <select id="pdf-footer-right" onchange="handleHeaderFooterSelectChange('footer', 'right', this.value)" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 5px; border-radius: 4px; font-size: 11px; outline: none; width: 100%;">
+                                    <option value="none">/* TRANSLATE:pdfOptNone */</option>
+                                    <option value="doc-title">/* TRANSLATE:pdfOptDocTitle */</option>
+                                    <option value="file-name">/* TRANSLATE:pdfOptFileName */</option>
+                                    <option value="file-path">/* TRANSLATE:pdfOptFilePath */</option>
+                                    <option value="date">/* TRANSLATE:pdfOptDate */</option>
+                                    <option value="version" selected>/* TRANSLATE:pdfOptVersion */</option>
+                                    <option value="custom">/* TRANSLATE:pdfOptCustom */</option>
+                                </select>
+                            </div>
+                        </div>
+                        <input type="text" id="pdf-custom-footer-left-input" style="display: none; background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 6px; border-radius: 4px; font-size: 11px; outline: none; width: 100%; box-sizing: border-box; margin-top: 2px;" placeholder="/* TRANSLATE:pdfCustomPlaceholderPrefix *//* TRANSLATE:pdfLeftPos */...">
+                        <input type="text" id="pdf-custom-footer-center-input" style="display: none; background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 6px; border-radius: 4px; font-size: 11px; outline: none; width: 100%; box-sizing: border-box; margin-top: 2px;" placeholder="/* TRANSLATE:pdfCustomPlaceholderPrefix *//* TRANSLATE:pdfCenterPos */...">
+                        <input type="text" id="pdf-custom-footer-right-input" style="display: none; background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 6px; border-radius: 4px; font-size: 11px; outline: none; width: 100%; box-sizing: border-box; margin-top: 2px;" placeholder="/* TRANSLATE:pdfCustomPlaceholderPrefix *//* TRANSLATE:pdfRightPos */...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cover Page Option -->
+            <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; font-weight: 600; user-select: none;">
+                    <input type="checkbox" id="pdf-cover-page-checkbox">
+                    <span>/* TRANSLATE:pdfToggleCoverPage */</span>
+                </label>
+                <div style="font-size: 11px; color: var(--text-secondary); padding-left: 20px; line-height: 1.3;">
+                    /* TRANSLATE:pdfCoverPageDesc */
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 14px; margin-top: 4px;">
+                <button onclick="closePdfModal()" style="background: none; border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 6px; font-size: 13px; cursor: pointer; color: var(--text-primary); font-weight: 500;">/* TRANSLATE:modalCancel */</button>
+                <button onclick="confirmPdfPrint()" style="background-color: var(--accent-color); border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; cursor: pointer; color: #ffffff; font-weight: 600;">/* TRANSLATE:pdfPrintBtn */</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1366,6 +1795,8 @@
                         changePageWidth(value);
                     } else if (action === 'toggle-right-sidebar') {
                         toggleRightSidebar();
+                    } else if (action === 'export-pdf') {
+                        exportToPDF();
                     }
                 }
             }
@@ -2426,6 +2857,293 @@ Drift Audit Details:
                 showToast('Failed to copy prompt', true);
             }
         }
+
+        function exportToPDF() {
+            const modal = document.getElementById('pdf-export-modal');
+            if (modal) {
+                modal.style.display = 'flex';
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            } else {
+                window.print();
+            }
+        }
+
+        function closePdfModal() {
+            const modal = document.getElementById('pdf-export-modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function handleHeaderFooterSelectChange(type, position, value) {
+            const customInput = document.getElementById(`pdf-custom-${type}-${position}-input`);
+            if (customInput) {
+                customInput.style.display = value === 'custom' ? 'block' : 'none';
+            }
+        }
+
+        function togglePdfHeaderFooterInputs(checked) {
+            const container = document.getElementById('pdf-header-footer-customization');
+            if (container) {
+                container.style.display = checked ? 'flex' : 'none';
+            }
+        }
+
+        function getPdfFieldValue(selectedValue, customInputValue) {
+            if (selectedValue === 'none') {
+                return '';
+            } else if (selectedValue === 'doc-title') {
+                return document.getElementById('header-doc-title').textContent;
+            } else if (selectedValue === 'file-name') {
+                return currentDocFile.split('/').pop();
+            } else if (selectedValue === 'file-path') {
+                return currentDocFile;
+            } else if (selectedValue === 'date') {
+                return new Date().toLocaleDateString();
+            } else if (selectedValue === 'version') {
+                return 'Kernel v1.9.0';
+            } else if (selectedValue === 'date-version') {
+                return `Rendered on ${new Date().toLocaleDateString()} | Kernel v1.9.0`;
+            } else if (selectedValue === 'custom') {
+                return customInputValue.trim();
+            }
+            return '';
+        }
+
+        function confirmPdfPrint() {
+            closePdfModal();
+            
+            const options = document.getElementsByName('pdf-toc-option');
+            let selectedValue = 'no-toc';
+            for (const option of options) {
+                if (option.checked) {
+                    selectedValue = option.value;
+                    break;
+                }
+            }
+
+            const showHeaderFooter = document.getElementById('pdf-header-footer-checkbox')?.checked || false;
+            const showCoverPage = document.getElementById('pdf-cover-page-checkbox')?.checked || false;
+            
+            document.body.classList.remove('print-show-toc', 'print-separate-toc', 'print-show-header-footer', 'print-show-cover-page');
+            
+            // Remove old elements and classes if they exist
+            document.querySelectorAll('blockquote.print-hide-doc-info').forEach(bq => {
+                bq.classList.remove('print-hide-doc-info');
+            });
+            const oldToc = document.getElementById('print-toc');
+            if (oldToc) oldToc.remove();
+            const oldHeader = document.getElementById('print-custom-header');
+            if (oldHeader) oldHeader.remove();
+            const oldFooter = document.getElementById('print-custom-footer');
+            if (oldFooter) oldFooter.remove();
+            const oldCover = document.getElementById('print-cover-page');
+            if (oldCover) oldCover.remove();
+            
+            // 1. Build Cover Page
+            if (showCoverPage) {
+                document.body.classList.add('print-show-cover-page');
+                
+                const coverPage = document.createElement('div');
+                coverPage.id = 'print-cover-page';
+                
+                const breadcrumbs = document.querySelectorAll('#breadcrumbs-container a');
+                const projectName = breadcrumbs.length > 0 ? breadcrumbs[0].textContent : 'WORKSPACE';
+                
+                const docTitle = document.getElementById('header-doc-title').textContent;
+                
+                const printedKeys = new Set();
+                let coverMetaHtml = '';
+                
+                // A. Parse frontmatter metadata
+                const metadataRows = document.querySelectorAll('.metadata-row');
+                metadataRows.forEach(row => {
+                    const keyEl = row.querySelector('.metadata-key');
+                    const key = keyEl ? keyEl.textContent.trim() : '';
+                    const valContainer = row.querySelector('.metadata-value-container');
+                    const val = valContainer ? valContainer.textContent.trim() : '';
+                    if (key && val) {
+                        const lowerKey = key.toLowerCase();
+                        if (!printedKeys.has(lowerKey)) {
+                            printedKeys.add(lowerKey);
+                            coverMetaHtml += `<div class="cover-meta-key">${key}</div><div class="cover-meta-val">${val}</div>`;
+                        }
+                    }
+                });
+                
+                // B. Parse Document Info blockquote
+                let docInfoBlockquote = null;
+                const firstBlockquotes = document.querySelectorAll('#content > blockquote');
+                for (const bq of firstBlockquotes) {
+                    const text = bq.textContent;
+                    if (/(version|reviewed|subject|scope|phiên bản|chủ đề|phạm vi|tác giả|author)/i.test(text)) {
+                        docInfoBlockquote = bq;
+                        break;
+                    }
+                }
+                
+                if (docInfoBlockquote) {
+                    docInfoBlockquote.classList.add('print-hide-doc-info');
+                    
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = docInfoBlockquote.innerHTML;
+                    
+                    const text = tempDiv.innerHTML
+                        .replace(/<br\s*\/?>/gi, '\n')
+                        .replace(/<\/p>/gi, '\n')
+                        .replace(/<p>/gi, '')
+                        .replace(/<[^>]+>/g, '');
+                        
+                    const lines = text.split('\n');
+                    lines.forEach(line => {
+                        if (!line.trim()) return;
+                        
+                        const parts = line.split('|');
+                        parts.forEach(part => {
+                            const colonIdx = part.indexOf(':');
+                            if (colonIdx > -1) {
+                                const rawKey = part.substring(0, colonIdx).trim();
+                                const rawVal = part.substring(colonIdx + 1).trim();
+                                const key = rawKey.replace(/\*\*|\*/g, '').trim();
+                                const val = rawVal.replace(/\*\*|\*/g, '').trim();
+                                if (key && val) {
+                                    const lowerKey = key.toLowerCase();
+                                    if (!printedKeys.has(lowerKey)) {
+                                        printedKeys.add(lowerKey);
+                                        coverMetaHtml += `<div class="cover-meta-key">${key}</div><div class="cover-meta-val">${val}</div>`;
+                                    }
+                                }
+                            }
+                        });
+                    });
+                }
+                
+                coverPage.innerHTML = `
+                    <div class="cover-project-name">${projectName}</div>
+                    <h1 class="cover-title">${docTitle}</h1>
+                    <div class="cover-divider"></div>
+                    <div class="cover-metadata">
+                        ${coverMetaHtml}
+                    </div>
+                `;
+                
+                const content = document.getElementById('content');
+                if (content) {
+                    content.insertBefore(coverPage, content.firstChild);
+                }
+            }
+
+            // 2. Build TOC
+            if (selectedValue !== 'no-toc') {
+                const printToc = document.createElement('div');
+                printToc.id = 'print-toc';
+                
+                const headings = document.querySelectorAll('#content h1, #content h2, #content h3');
+                if (headings.length > 0) {
+                    const tocTitle = '/* TRANSLATE:tocTitle */';
+                    let tocHtml = `<h2>${tocTitle}</h2><ul>`;
+                    headings.forEach((heading) => {
+                        const level = heading.tagName.toLowerCase();
+                        const id = heading.id;
+                        const text = heading.textContent.replace(/#+$/, '').trim();
+                        if (id) {
+                            tocHtml += `<li class="toc-${level}"><a href="#${id}">${text}</a></li>`;
+                        } else {
+                            tocHtml += `<li class="toc-${level}">${text}</li>`;
+                        }
+                    });
+                    tocHtml += '</ul>';
+                    printToc.innerHTML = tocHtml;
+                }
+                
+                const content = document.getElementById('content');
+                if (content) {
+                    const coverPage = document.getElementById('print-cover-page');
+                    if (coverPage && coverPage.nextSibling) {
+                        content.insertBefore(printToc, coverPage.nextSibling);
+                    } else if (coverPage) {
+                        content.appendChild(printToc);
+                    } else {
+                        content.insertBefore(printToc, content.firstChild);
+                    }
+                }
+            }
+
+            // 3. Build Header & Footer with 3 positions
+            if (showHeaderFooter) {
+                document.body.classList.add('print-show-header-footer');
+                
+                const leftSel = document.getElementById('pdf-header-left').value;
+                const centerSel = document.getElementById('pdf-header-center').value;
+                const rightSel = document.getElementById('pdf-header-right').value;
+                
+                const leftText = getPdfFieldValue(leftSel, document.getElementById('pdf-custom-header-left-input').value);
+                const centerText = getPdfFieldValue(centerSel, document.getElementById('pdf-custom-header-center-input').value);
+                const rightText = getPdfFieldValue(rightSel, document.getElementById('pdf-custom-header-right-input').value);
+                
+                const printHeader = document.createElement('div');
+                printHeader.id = 'print-custom-header';
+                printHeader.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 8.5pt; color: #777777; font-family: sans-serif;">
+                        <div style="flex: 1; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 8px;">${leftText}</div>
+                        <div style="flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 8px;">${centerText}</div>
+                        <div style="flex: 1; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 8px;">${rightText}</div>
+                    </div>
+                    <div style="border-bottom: 1px solid #efefe8; margin-top: 4px; margin-bottom: 15px; width: 100%;"></div>
+                `;
+                
+                const footerLeftSel = document.getElementById('pdf-footer-left').value;
+                const footerCenterSel = document.getElementById('pdf-footer-center').value;
+                const footerRightSel = document.getElementById('pdf-footer-right').value;
+                
+                const footerLeftText = getPdfFieldValue(footerLeftSel, document.getElementById('pdf-custom-footer-left-input').value);
+                const footerCenterText = getPdfFieldValue(footerCenterSel, document.getElementById('pdf-custom-footer-center-input').value);
+                const footerRightText = getPdfFieldValue(footerRightSel, document.getElementById('pdf-custom-footer-right-input').value);
+                
+                const printFooter = document.createElement('div');
+                printFooter.id = 'print-custom-footer';
+                printFooter.innerHTML = `
+                    <div style="border-top: 1px solid #efefe8; margin-top: 15px; margin-bottom: 4px; width: 100%;"></div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 8pt; color: #888888; font-family: sans-serif;">
+                        <div style="flex: 1; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 8px;">${footerLeftText}</div>
+                        <div style="flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 8px;">${footerCenterText}</div>
+                        <div style="flex: 1; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 8px;">${footerRightText}</div>
+                    </div>
+                `;
+                
+                const content = document.getElementById('content');
+                if (content) {
+                    const coverPage = document.getElementById('print-cover-page');
+                    const printToc = document.getElementById('print-toc');
+                    
+                    if (printToc) {
+                        content.insertBefore(printHeader, printToc);
+                    } else if (coverPage && coverPage.nextSibling) {
+                        content.insertBefore(printHeader, coverPage.nextSibling);
+                    } else if (coverPage) {
+                        content.appendChild(printHeader);
+                    } else {
+                        content.insertBefore(printHeader, content.firstChild);
+                    }
+                    
+                    content.appendChild(printFooter);
+                }
+            }
+            
+            if (selectedValue === 'separate-page') {
+                document.body.classList.add('print-separate-toc');
+            } else if (selectedValue === 'inline') {
+                document.body.classList.add('print-show-toc');
+            }
+            
+            setTimeout(() => {
+                window.print();
+            }, 150);
+        }
+
+
 
         renderMarkdown();
         renderBreadcrumbs();
