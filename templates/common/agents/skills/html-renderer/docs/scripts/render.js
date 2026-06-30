@@ -248,6 +248,7 @@ const translations = {
         thBlastRadius: "Bán kính ảnh hưởng (Blast Radius)",
         thDocLinks: "Liên kết Tài liệu",
         thDocLinksDocs: "CSA trên Docs",
+        thDocLinksSpecs: "CSA trên Specs",
         thDocLinksCode: "CSA trên Code",
         thDescription: "Mô tả / Ngữ nghĩa Hệ thống",
         hotspotsTitle: "⚠️ Điểm nóng ưu tiên",
@@ -427,6 +428,7 @@ const translations = {
         thBlastRadius: "Blast Radius",
         thDocLinks: "Doc Links (docAnchors)",
         thDocLinksDocs: "CSA on Docs",
+        thDocLinksSpecs: "CSA on Specs",
         thDocLinksCode: "CSA on Code",
         thDescription: "Description / System Semantics",
         hotspotsTitle: "⚠️ Priority Hotspots",
@@ -1383,6 +1385,8 @@ function renderDirectory(srcDir, destDir, template) {
     anchorToCodeNodesMap = {};
     const nodeToAnchorsMap = {}; // Maps node.id to Set of relativeMdPath#anchorId
     nodeToCodeDocsMap = {};
+    specToDocsMap = {};
+    docToSpecsMap = {};
     
     // Maps anchorId to its virtual relative markdown file path
     const definedAnchorsMap = {};
@@ -1401,6 +1405,25 @@ function renderDirectory(srcDir, destDir, template) {
                 const anchorId = match[1];
                 hasAnchor = true;
                 definedAnchorsMap[anchorId] = relativeMdPath;
+            }
+            
+            // Parse data-csa-inherits (Transitive CSA link)
+            const inheritRegex = /<span\s+data-csa-inherits=["'](csa-[a-zA-Z0-9.:\/_,\s-]+)["'][^>]*><\/span>/g;
+            let inheritMatch;
+            while ((inheritMatch = inheritRegex.exec(content)) !== null) {
+                const inheritsStr = inheritMatch[1];
+                const parts = inheritsStr.split(',').map(p => p.trim());
+                parts.forEach(part => {
+                    if (!specToDocsMap[part]) {
+                        specToDocsMap[part] = new Set();
+                    }
+                    specToDocsMap[part].add(relativeMdPath);
+                    
+                    if (!docToSpecsMap[relativeMdPath]) {
+                        docToSpecsMap[relativeMdPath] = new Set();
+                    }
+                    docToSpecsMap[relativeMdPath].add(part);
+                });
             }
             
             if (hasAnchor) {
@@ -1451,6 +1474,20 @@ function renderDirectory(srcDir, destDir, template) {
                                 }
                             }
                         }
+                    }
+                    if (rel.relation === 'DOCUMENTS' && rel.sourceId && rel.targetId) {
+                        const docPath = rel.sourceId.replace(/\\/g, '/');
+                        const specId = rel.targetId;
+                        
+                        if (!specToDocsMap[specId]) {
+                            specToDocsMap[specId] = new Set();
+                        }
+                        specToDocsMap[specId].add(docPath);
+                        
+                        if (!docToSpecsMap[docPath]) {
+                            docToSpecsMap[docPath] = new Set();
+                        }
+                        docToSpecsMap[docPath].add(specId);
                     }
                 }
             }
@@ -1535,6 +1572,16 @@ function renderDirectory(srcDir, destDir, template) {
             return comments;
         }
 
+        existingSpecAnchorIds.clear();
+        graphNodes.forEach(n => {
+            if (n.type === 'spec_anchor') {
+                existingSpecAnchorIds.add(n.id);
+                if (n.id.includes('#')) {
+                    existingSpecAnchorIds.add(n.id.split('#')[1]);
+                }
+            }
+        });
+
         processedNodesData = enrichableNodes.map(node => {
             const godThreshold = projectCalibration.weights.god_node_degree_threshold ?? 20;
             const isCritical = node.degree >= godThreshold;
@@ -1585,6 +1632,19 @@ function renderDirectory(srcDir, destDir, template) {
             }
             linkedWeight += weight * completionFactor;
             
+            let specId = '';
+            if (codeDocs && codeDocs.length > 0) {
+                const parts = codeDocs[0].split('#');
+                specId = parts[parts.length - 1];
+            } else if (finalDocAnchors && finalDocAnchors.length > 0) {
+                const parts = finalDocAnchors[0].split('#');
+                specId = parts[parts.length - 1];
+            }
+
+            const docsList = specId ? Array.from(specToDocsMap[specId] || []) : [];
+            const isDocLinked = docsList.length > 0;
+            const isSpecLinked = specId ? existingSpecAnchorIds.has(specId) : false;
+
             return {
                 id: node.id,
                 name: node.name,
@@ -1604,7 +1664,11 @@ function renderDirectory(srcDir, destDir, template) {
                 isEnriched: isEnriched,
                 docAnchors: finalDocAnchors,
                 codeDocs: codeDocs,
-                summary: (node.semantic && node.semantic.summary) || ''
+                summary: (node.semantic && node.semantic.summary) || '',
+                specId: specId,
+                isSpecLinked: isSpecLinked,
+                isDocLinked: isDocLinked,
+                linkedDocsList: docsList
             };
         });
         
@@ -1641,16 +1705,6 @@ function renderDirectory(srcDir, destDir, template) {
         dashboardStats.linkedCodeNodes = codeLinkedNodes.length;
         dashboardStats.linkedDocsGodNodes = documentedGodNodesCount;
         dashboardStats.linkedCodeGodNodes = codeLinkedGodNodesCount;
-
-        existingSpecAnchorIds.clear();
-        graphNodes.forEach(n => {
-            if (n.type === 'spec_anchor') {
-                existingSpecAnchorIds.add(n.id);
-                if (n.id.includes('#')) {
-                    existingSpecAnchorIds.add(n.id.split('#')[1]);
-                }
-            }
-        });
 
         let danglingLinksCount = 0;
         processedNodesData.forEach(node => {
@@ -1750,34 +1804,40 @@ function renderDirectory(srcDir, destDir, template) {
             return anchorSig === mdSig;
         };
 
+        const isSpecFile = relPath.startsWith('specs/') || relPath.includes('/specs/') || fileSpans.size > 0;
+        const docInherits = docToSpecsMap[relPath];
+        const hasInherits = docInherits && docInherits.size > 0;
+
         const docNodes = processedNodesData.filter(node => {
             return node.docAnchors.some(matchesDoc) || node.codeDocs.some(matchesDoc);
         });
         
-        if (docNodes.length === 0) continue;
+        if (docNodes.length === 0 && !isSpecFile && !hasInherits) continue;
         
         // Build Mermaid diagram
         let mermaid = 'graph TD\n';
-        const nodeIdsInDoc = new Set(docNodes.map(n => n.id));
-        
-        docNodes.forEach(n => {
-            const cleanId = n.id.replace(/[^a-zA-Z0-9]/g, '_');
-            const cleanName = n.name.replace(/["']/g, '');
-            mermaid += `    ${cleanId}["${n.type}: ${cleanName}"]\n`;
-        });
-        
-        let hasMermaidRelations = false;
-        for (const targetId in impactAdjacencyList) {
-            if (nodeIdsInDoc.has(targetId)) {
-                impactAdjacencyList[targetId].forEach(sourceId => {
-                    if (nodeIdsInDoc.has(sourceId)) {
-                        const srcClean = sourceId.replace(/[^a-zA-Z0-9]/g, '_');
-                        const tgtClean = targetId.replace(/[^a-zA-Z0-9]/g, '_');
-                        mermaid += `    ${srcClean} --> ${tgtClean}\n`;
-                        hasMermaidRelations = true;
-                    }
-                });
+        if (docNodes.length > 0) {
+            const nodeIdsInDoc = new Set(docNodes.map(n => n.id));
+            
+            docNodes.forEach(n => {
+                const cleanId = n.id.replace(/[^a-zA-Z0-9]/g, '_');
+                const cleanName = n.name.replace(/["']/g, '');
+                mermaid += `    ${cleanId}["${n.type}: ${cleanName}"]\n`;
+            });
+            
+            for (const targetId in impactAdjacencyList) {
+                if (nodeIdsInDoc.has(targetId)) {
+                    impactAdjacencyList[targetId].forEach(sourceId => {
+                        if (nodeIdsInDoc.has(sourceId)) {
+                            const srcClean = sourceId.replace(/[^a-zA-Z0-9]/g, '_');
+                            const tgtClean = targetId.replace(/[^a-zA-Z0-9]/g, '_');
+                            mermaid += `    ${srcClean} --> ${tgtClean}\n`;
+                        }
+                    });
+                }
             }
+        } else {
+            mermaid += `    no_nodes["${fileLang === 'vi' ? 'Không có cấu phần mã liên kết trực tiếp' : 'No directly linked code components'}"]\n`;
         }
         
         // Build Audit Reports
@@ -1848,6 +1908,88 @@ function renderDirectory(srcDir, destDir, template) {
             }
         }
         
+        // Transitive CSA Drift & Gap Audits
+        if (isSpecFile) {
+            // Audit defined spec anchors
+            fileSpans.forEach(specId => {
+                // 1. Spec-Code Gap
+                const codeNodes = anchorToCodeNodesMap[specId] || [];
+                if (codeNodes.length === 0) {
+                    auditReports.push({
+                        severity: 'medium',
+                        title: fileLang === 'vi' ? `GAP: Spec chưa có mã nguồn hiện thực` : `GAP: Spec unimplemented by source code`,
+                        description: fileLang === 'vi'
+                            ? `Đặc tả \`${specId}\` đã được định nghĩa nhưng chưa được liên kết đến bất kỳ hàm, lớp hay tệp code nào trong mã nguồn.`
+                            : `Specification anchor \`${specId}\` is defined but has no implementation binding in source code.`,
+                        solution: fileLang === 'vi'
+                            ? `Thêm chú thích comment \`// @para-doc [${specId}]\` trước hàm hoặc class hiện thực đặc tả này.`
+                            : `Add comment \`// @para-doc [${specId}]\` directly above the function or class implementing this spec.`
+                    });
+                }
+                
+                // 2. Spec-Docs Gap (Transitive documentation gap)
+                const otherDocsList = Array.from(specToDocsMap[specId] || []).filter(p => p !== relPath);
+                if (otherDocsList.length === 0) {
+                    auditReports.push({
+                        severity: 'low',
+                        title: fileLang === 'vi' ? `GAP: Spec chưa được tài liệu hóa` : `GAP: Spec undocumented in guides`,
+                        description: fileLang === 'vi'
+                            ? `Đặc tả \`${specId}\` đã được định nghĩa nhưng chưa được tài liệu hóa hay giải thích trong bất kỳ tệp hướng dẫn nào thuộc \`docs/\` hoặc kế hoạch \`plans/\`.`
+                            : `Specification \`${specId}\` is defined but has not been documented in any markdown user guides under \`docs/\` or plans under \`plans/\`.`,
+                        solution: fileLang === 'vi'
+                            ? `Tạo tệp tài liệu hướng dẫn trong \`docs/\` và chèn thẻ \`<span data-csa-inherits="${specId}"></span>\`.`
+                            : `Create a markdown document under \`docs/\` and insert \`<span data-csa-inherits="${specId}"></span>\`.`
+                    });
+                }
+            });
+        }
+        
+        // If this file inherits any spec anchors (acts as a doc or plan)
+        if (docInherits && docInherits.size > 0) {
+            docInherits.forEach(inheritId => {
+                // 3. Dangling Inherits Link
+                if (!definedAnchorsMap[inheritId]) {
+                    auditReports.push({
+                        severity: 'high',
+                        title: fileLang === 'vi' ? `Lỗi neo inherits hỏng (Dangling Inherits)` : `Dangling Inherits Reference`,
+                        description: fileLang === 'vi'
+                            ? `Tài liệu khai báo thừa kế đặc tả \`data-csa-inherits="${inheritId}"\` nhưng Spec ID này không tồn tại trong hệ thống.`
+                            : `Document inherits spec \`data-csa-inherits="${inheritId}"\` but this Spec ID does not exist in any spec files.`,
+                        solution: fileLang === 'vi'
+                            ? `Kiểm tra lại chính tả Spec ID, hoặc định nghĩa Spec Anchor này trong tệp spec tương ứng.`
+                            : `Double check the Spec ID spelling, or define this Spec Anchor inside the corresponding spec file.`
+                    });
+                } else {
+                    // 4. Outdated Doc (Timestamp check)
+                    const specRelPath = definedAnchorsMap[inheritId];
+                    if (specRelPath) {
+                        let specAbsPath = path.resolve(projectDir, specRelPath);
+                        if (!fs.existsSync(specAbsPath)) {
+                            if (specRelPath.startsWith('specs/')) {
+                                specAbsPath = path.resolve(projectDir, 'artifacts', specRelPath);
+                            }
+                        }
+                        if (fs.existsSync(specAbsPath)) {
+                            const docMtime = fs.statSync(mdFile).mtimeMs;
+                            const specMtime = fs.statSync(specAbsPath).mtimeMs;
+                            
+                            if (specMtime > docMtime) {
+                                auditReports.push({
+                                    severity: 'medium',
+                                    title: fileLang === 'vi' ? `Tài liệu bị cũ so với đặc tả (Outdated Docs)` : `Outdated Documentation`,
+                                    description: fileLang === 'vi'
+                                        ? `Tệp đặc tả \`${specRelPath}\` có thay đổi mới hơn tệp tài liệu này (neo thừa kế \`${inheritId}\`). Bản giải thích có thể đã lỗi thời.`
+                                        : `The spec file \`${specRelPath}\` is newer than this document (inherited anchor \`${inheritId}\`). The documentation may be outdated.`,
+                                    solution: fileLang === 'vi'
+                                        ? `Xem lại các thay đổi trong \`${specRelPath}\` và cập nhật lại nội dung hướng dẫn cho khớp.`
+                                        : `Review recent changes in \`${specRelPath}\` and update the guide content accordingly.`
+                                });
+                            }
+                        }
+                    }
+                }
+            });
+        }
 
 
         // Always calculate statistical indices for the document
@@ -2152,6 +2294,9 @@ function renderDirectory(srcDir, destDir, template) {
             
             const allMdFilesRelative = allMdFiles.map(filePath => getVirtualRelativePath(filePath, srcDir));
             
+            console.log('DEBUG: alignmentData keys count:', Object.keys(alignmentData).length);
+            console.log('DEBUG: first 3 keys of alignmentData:', Object.keys(alignmentData).slice(0, 3));
+            
             dashboardHtml = dashboardHtml
                 .replaceAll('/* WORKSPACE_LANG */', workspaceLang)
                 .replaceAll('/* README_RELATIVE_URL */', relativeReadmeFromTarget)
@@ -2163,7 +2308,8 @@ function renderDirectory(srcDir, destDir, template) {
                 .replace(/const graphNodesData = [^;]+;/, 'const graphNodesData = ' + JSON.stringify(processedNodesData, null, 2) + ';')
                 .replace(/const existingSpecAnchorIdsData = [^;]+;/, 'const existingSpecAnchorIdsData = ' + JSON.stringify(Array.from(existingSpecAnchorIds)) + ';')
                 .replace(/const allMarkdownFiles = [^;]+;/, 'const allMarkdownFiles = ' + JSON.stringify(allMdFilesRelative, null, 2) + ';')
-                .replace(/const alignmentData = [^;]+;/, 'const alignmentData = ' + JSON.stringify(alignmentData, null, 2) + ';');
+                .replace(/const alignmentData = [^;]+;/, 'const alignmentData = ' + JSON.stringify(alignmentData, null, 2) + ';')
+                .replace(/const definedAnchorsMapData = [^;]+;/, 'const definedAnchorsMapData = ' + JSON.stringify(definedAnchorsMap, null, 2) + ';');
                 
             fs.writeFileSync(path.join(destDir, 'dashboard.html'), dashboardHtml, 'utf8');
             console.log('📊 Compiled documentation quality Dashboard successfully.');

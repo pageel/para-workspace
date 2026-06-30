@@ -854,10 +854,10 @@
         }
 
         .node-summary {
-            font-size: 12.5px;
+            font-size: 14px;
             line-height: 1.5;
             color: var(--text-secondary);
-            max-width: 460px;
+            max-width: 330px;
         }
 
         /* Results fallback */
@@ -1819,13 +1819,14 @@
                             <thead>
                                 <tr>
                                     <th style="width: 40px; text-align: center;"><input type="checkbox" id="select-all-nodes-checkbox" onchange="toggleSelectAllNodes(this.checked)"></th>
-                                    <th class="sortable" style="width: 280px; cursor: pointer; user-select: none;" onclick="handleSort('name')"><span data-i18n="thNodeEntity">/* TRANSLATE:thNodeEntity */</span> <span id="sort-icon-name"></span></th>
+                                    <th class="sortable" style="width: 200px; cursor: pointer; user-select: none;" onclick="handleSort('name')"><span data-i18n="thNodeEntity">/* TRANSLATE:thNodeEntity */</span> <span id="sort-icon-name"></span></th>
                                     <th class="sortable" style="width: 100px; cursor: pointer; user-select: none;" onclick="handleSort('type')"><span data-i18n="thType">/* TRANSLATE:thType */</span> <span id="sort-icon-type"></span></th>
                                     <th class="sortable" style="width: 110px; cursor: pointer; user-select: none;" onclick="handleSort('degree')"><span data-i18n="thWeightDegree">/* TRANSLATE:thWeightDegree */</span> <span id="sort-icon-degree"></span></th>
                                     <th class="sortable" style="width: 110px; cursor: pointer; user-select: none;" onclick="handleSort('blastRadius')"><span data-i18n="thBlastRadius">/* TRANSLATE:thBlastRadius */</span> <span id="sort-icon-blastRadius"></span></th>
-                                    <th class="sortable" style="width: 160px; cursor: pointer; user-select: none;" onclick="handleSort('status')"><span data-i18n="thDocLinksDocs">/* TRANSLATE:thDocLinksDocs */</span> <span id="sort-icon-status"></span></th>
-                                    <th id="th-doc-links-code" class="sortable" style="width: 160px; cursor: pointer; user-select: none;" onclick="handleSort('codeStatus')"><span data-i18n="thDocLinksCode">/* TRANSLATE:thDocLinksCode */</span> <span id="sort-icon-codeStatus"></span></th>
-                                    <th data-i18n="thDescription">/* TRANSLATE:thDescription */</th>
+                                    <th id="th-doc-links-specs" class="sortable" style="width: 130px; cursor: pointer; user-select: none;" onclick="handleSort('specStatus')"><span data-i18n="thDocLinksSpecs">/* TRANSLATE:thDocLinksSpecs */</span> <span id="sort-icon-specStatus"></span></th>
+                                    <th id="th-doc-links-code" class="sortable" style="width: 130px; cursor: pointer; user-select: none;" onclick="handleSort('codeStatus')"><span data-i18n="thDocLinksCode">/* TRANSLATE:thDocLinksCode */</span> <span id="sort-icon-codeStatus"></span></th>
+                                    <th id="th-doc-links-docs" class="sortable" style="width: 130px; cursor: pointer; user-select: none;" onclick="handleSort('status')"><span data-i18n="thDocLinksDocs">/* TRANSLATE:thDocLinksDocs */</span> <span id="sort-icon-status"></span></th>
+                                    <th data-i18n="thDescription" style="width: 350px;">/* TRANSLATE:thDescription */</th>
                                 </tr>
                             </thead>
                             <tbody id="nodes-table-body">
@@ -1857,6 +1858,7 @@
         const graphNodesData = JSON.parse('[]');
         const existingSpecAnchorIdsData = [];
         const allMarkdownFiles = JSON.parse('[]');
+        const definedAnchorsMapData = JSON.parse('{}');
         const alignmentData = JSON.parse('{}');
 
         // Static SVG definitions to replace dynamic Lucide icons in table rendering loop
@@ -2013,6 +2015,7 @@
                 thBlastRadius: "Bán kính ảnh hưởng (Blast Radius)",
                 thDocLinks: "Liên kết Tài liệu",
                 thDocLinksDocs: "CSA trên Docs",
+                thDocLinksSpecs: "CSA trên Specs",
                 thDocLinksCode: "CSA trên Code",
                 thDescription: "Mô tả / Ngữ nghĩa Hệ thống",
                 hotspotsTitle: "⚠️ Điểm nóng ưu tiên",
@@ -2129,6 +2132,7 @@
                 thBlastRadius: "Blast Radius",
                 thDocLinks: "Doc Links (docAnchors)",
                 thDocLinksDocs: "CSA on Docs",
+                thDocLinksSpecs: "CSA on Specs",
                 thDocLinksCode: "CSA on Code",
                 thDescription: "Description / System Semantics",
                 hotspotsTitle: "⚠️ Priority Hotspots",
@@ -3722,141 +3726,117 @@
                 `;
                 tr.appendChild(blastRadiusTd);
 
-                const docsTd = document.createElement('td');
+                const specsTd = document.createElement('td');
                 const codeTd = document.createElement('td');
+                const docsTd = document.createElement('td');
                 
-                // 1. Anchor Status Badge (⚓ Tài liệu / Docs)
-                const anchorStatusBadge = node.isLinkedActive 
-                    ? `<span class="badge badge-status-linked" title="${lang === 'vi' ? 'Đã có thẻ neo <span id=&quot;csa-' + node.name + '&quot;> trong tài liệu.' : 'CSA anchor tag <span id=&quot;csa-' + node.name + '&quot;> exists in document.'}">${SVG_CHECK_CIRCLE} ⚓ ${t.badgeLinkedDocs}</span>`
-                    : `<span class="badge badge-status-unlinked" title="${lang === 'vi' ? 'Thiếu thẻ neo HTML <span id=&quot;csa-' + node.name + '&quot;></span> trong tài liệu. Hãy chèn thẻ này vào file .md để thiết lập liên kết Docs.' : 'Missing CSA anchor tag <span id=&quot;csa-' + node.name + '&quot;> in document. Add it to the .md file to establish Docs link.'}">${SVG_X_CIRCLE} ⚓ ${t.badgeUnlinkedDocs}</span>`;
-                
-                // 2. Code Reference Status Badge (💻 Comment)
-                let codeStatusBadge = '';
-                if (verifyComments) {
-                    codeStatusBadge = node.hasCodeDocActive
-                        ? `<span class="badge badge-status-linked" title="${lang === 'vi' ? 'Đã có chú thích comment // @para-doc trong code.' : 'Code comment // @para-doc exists in source file.'}">${SVG_CHECK_CIRCLE} 💻 ${t.badgeLinkedCode}</span>`
-                        : `<span class="badge badge-status-unlinked" title="${lang === 'vi' ? 'Thiếu chú thích comment // @para-doc [tài-liệu.md#csa-' + node.name + '] phía trên định nghĩa cấu phần trong file code.' : 'Missing comment // @para-doc [doc-path.md#csa-' + node.name + '] above the entity definition in code.'}">${SVG_X_CIRCLE} 💻 ${t.badgeUnlinkedCode}</span>`;
+                // 1. Column 1: Specs (CSA trên Specs)
+                let specsHtml = '';
+                if (node.specId) {
+                    const specRelPath = definedAnchorsMapData[node.specId];
+                    if (node.isSpecLinked && specRelPath) {
+                        const specHtmlPath = specRelPath.replace(/\.md$/, '.html');
+                        const hrefUrl = specHtmlPath + '#' + node.specId;
+                        const displayName = specRelPath.split('/').pop();
+                        specsHtml = `
+                            <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                                <span class="badge badge-status-linked" style="font-size: 11px; padding: 2px 6px;" title="${lang === 'vi' ? 'Đã liên kết với đặc tả hợp lệ.' : 'Linked to a valid spec anchor.'}">
+                                    ${SVG_CHECK_CIRCLE} ⚓ ${node.specId}
+                                </span>
+                                <a href="${hrefUrl}" class="doc-link-item" style="margin-top: 4px; font-size: 11px; word-break: break-all; white-space: normal;" onclick="event.stopPropagation(); event.preventDefault(); window.parent.postMessage({ type: 'navigate', href: '${hrefUrl}', baseUrl: window.location.href }, '*');">
+                                    ${SVG_LINK} Spec: ${displayName}
+                                </a>
+                            </div>
+                        `;
+                    } else {
+                        specsHtml = `
+                            <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                                <span class="badge badge-status-unlinked" style="font-size: 11px; padding: 2px 6px;" title="${lang === 'vi' ? 'Spec ID này không tồn tại trong bất kỳ spec nào của hệ thống.' : 'This Spec ID does not exist in any spec files.'}">
+                                    ${SVG_X_CIRCLE} 🚨 ${node.specId} (${lang === 'vi' ? 'Mồ côi' : 'Dangling'})
+                                </span>
+                            </div>
+                        `;
+                    }
                 } else {
-                    codeStatusBadge = `<span class="badge" style="opacity: 0.4; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-secondary); font-size: 10.5px; display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px;">💻 ${t.badgeLinkedCode}</span>`;
+                    specsHtml = `
+                        <span class="badge" style="opacity: 0.5; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-secondary); font-size: 11px; padding: 2px 6px;">
+                            ${lang === 'vi' ? 'Chưa liên kết Spec' : 'No Spec Link'}
+                        </span>
+                    `;
                 }
+                specsTd.innerHTML = specsHtml;
                 
-                let docAnchorsHtml = '';
-                // Render docAnchors (⚓ Docs -> Code)
-                if (node.docAnchors && node.docAnchors.length > 0) {
-                    node.docAnchors.forEach(anchor => {
-                        const parts = anchor.split('#');
-                        let docPath = parts[0].replace(/\\/g, '/');
-                        if (docPath.startsWith('artifacts/specs/')) {
-                            docPath = 'specs/' + docPath.substring(16);
-                        } else if (docPath.startsWith('artifacts/sysdesigns/')) {
-                            docPath = 'sysdesigns/' + docPath.substring(21);
-                        } else if (docPath.startsWith('artifacts/writings/')) {
-                            docPath = 'writings/' + docPath.substring(19);
-                        } else if (docPath.startsWith('writings/') || docPath.startsWith('specs/') || docPath.startsWith('sysdesigns/') || docPath.startsWith('docs/')) {
-                            // Keep as-is
-                        } else {
-                            const docsIdx = docPath.indexOf('docs/');
-                            if (docsIdx !== -1) {
-                                docPath = docPath.substring(docsIdx);
-                            } else {
-                                const match = docPath.match(/Projects\/[^\/]+\/docs\/(.+)/);
-                                if (match) {
-                                    docPath = 'docs/' + match[1];
-                                }
-                            }
-                        }
-                        const htmlPath = docPath.replace(/\.md$/, '.html');
-                        const displayName = docPath.split('/').pop();
-                        const hrefUrl = htmlPath + (parts[1] ? '#' + parts[1] : '');
-                        
-                        const folder = getAnchorFolder(anchor);
-                        const isExcluded = isFolderExcluded(folder);
-                        const excludedClass = isExcluded ? ' link-excluded' : '';
-                        
-                        docAnchorsHtml += `<a href="${hrefUrl}" class="doc-link-item${excludedClass}" style="margin-top: 3px;" onclick="event.stopPropagation(); event.preventDefault(); if(!${isExcluded}) { window.parent.postMessage({ type: 'navigate', href: '${hrefUrl}', baseUrl: window.location.href }, '*'); }">${SVG_LINK} ⚓ ${displayName}${parts[1] ? '#' + parts[1] : ''}</a>`;
-                    });
-                }
-                
-                let codeDocsHtml = '';
-                // Render codeDocs (💻 Code -> Docs)
-                if (node.codeDocs && node.codeDocs.length > 0) {
-                    node.codeDocs.forEach(codeDoc => {
-                        const parts = codeDoc.split('#');
-                        let docPath = parts[0].replace(/\\/g, '/');
-                        if (docPath.startsWith('artifacts/specs/')) {
-                            docPath = 'specs/' + docPath.substring(16);
-                        } else if (docPath.startsWith('artifacts/sysdesigns/')) {
-                            docPath = 'sysdesigns/' + docPath.substring(21);
-                        } else if (docPath.startsWith('artifacts/writings/')) {
-                            docPath = 'writings/' + docPath.substring(19);
-                        } else if (docPath.startsWith('writings/') || docPath.startsWith('specs/') || docPath.startsWith('sysdesigns/') || docPath.startsWith('docs/')) {
-                            // Keep as-is
-                        } else {
-                            const docsIdx = docPath.indexOf('docs/');
-                            if (docsIdx !== -1) {
-                                docPath = docPath.substring(docsIdx);
-                            } else {
-                                const match = docPath.match(/Projects\/[^\/]+\/docs\/(.+)/);
-                                if (match) {
-                                    docPath = 'docs/' + match[1];
-                                }
-                            }
-                        }
-                        const htmlPath = docPath.replace(/\.md$/, '.html');
-                        const displayName = docPath.split('/').pop();
-                        const hrefUrl = htmlPath + (parts[1] ? '#' + parts[1] : '');
-                        
-                        const folder = getAnchorFolder(codeDoc);
-                        const isExcluded = isFolderExcluded(folder);
-                        const excludedClass = isExcluded ? ' link-excluded' : '';
-                        
-                        const disabledStyle = !verifyComments ? ' opacity: 0.4; pointer-events: none;' : '';
-                        
-                        const isDangling = node.danglingDocs && node.danglingDocs.includes(codeDoc);
-                        const danglingClass = isDangling ? ' link-dangling' : '';
-                        const linkIcon = isDangling ? SVG_ALERT_CIRCLE : SVG_LINK;
-                        const linkTitle = isDangling 
-                            ? (lang === 'vi' 
-                                ? 'Neo CSA này bị mồ côi (không tồn tại trong tài liệu hoặc spec).' 
-                                : 'This CSA anchor is dangling (does not exist in spec/document).')
-                            : '';
-                        
-                        codeDocsHtml += `<a href="${hrefUrl}" class="doc-link-item${excludedClass}${danglingClass}" style="margin-top: 3px;${disabledStyle}" title="${linkTitle}" onclick="event.stopPropagation(); event.preventDefault(); if(!${isExcluded} && ${verifyComments}) { window.parent.postMessage({ type: 'navigate', href: '${hrefUrl}', baseUrl: window.location.href }, '*'); }">${linkIcon} 💻 ${displayName}${parts[1] ? '#' + parts[1] : ''}</a>`;
-                    });
-                }
-                
-                let anchorsContainerHtml = '';
-                if (docAnchorsHtml) {
-                    anchorsContainerHtml = `<div class="docs-links-container" style="margin-top: 6px; display: flex; flex-direction: column; gap: 4px;">${docAnchorsHtml}</div>`;
-                }
-                
-                let codeContainerHtml = '';
-                if (codeDocsHtml) {
-                    codeContainerHtml = `<div class="docs-links-container" style="margin-top: 6px; display: flex; flex-direction: column; gap: 4px;">${codeDocsHtml}</div>`;
-                }
-
-                docsTd.innerHTML = `
-                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                        <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 2px;">
-                            ${anchorStatusBadge}
-                        </div>
-                        ${anchorsContainerHtml}
-                    </div>
-                `;
-                
-                codeTd.innerHTML = `
-                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                        <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 2px;">
-                            ${codeStatusBadge}
-                        </div>
-                        ${codeContainerHtml}
-                    </div>
-                `;
-                
-                tr.appendChild(docsTd);
+                // 2. Column 2: Code (CSA trên Code)
+                let codeHtml = '';
                 if (verifyComments) {
-                    tr.appendChild(codeTd);
+                    const codeStatusBadge = node.hasCodeDocActive
+                        ? `<span class="badge badge-status-linked" style="font-size: 11px; padding: 2px 6px;" title="${lang === 'vi' ? 'Đã có comment // @para-doc trong code.' : 'Code comment // @para-doc exists.'}">${SVG_CHECK_CIRCLE} 💻 ${t.badgeLinkedCode}</span>`
+                        : `<span class="badge badge-status-unlinked" style="font-size: 11px; padding: 2px 6px;" title="${lang === 'vi' ? 'Thiếu comment // @para-doc [csa-id] phía trên định nghĩa cấu phần trong code.' : 'Missing // @para-doc [csa-id] above entity definition in code.'}">${SVG_X_CIRCLE} 💻 ${t.badgeUnlinkedCode}</span>`;
+                    
+                    let codeDocsHtml = '';
+                    if (node.codeDocs && node.codeDocs.length > 0) {
+                        node.codeDocs.forEach(codeDoc => {
+                            const parts = codeDoc.split('#');
+                            const displayName = parts[0].split('/').pop();
+                            const anchorId = parts[1] || '';
+                            const displayPath = anchorId ? `${displayName}#${anchorId}` : displayName;
+                            
+                            const specRelPath = anchorId ? definedAnchorsMapData[anchorId] : null;
+                            if (specRelPath) {
+                                const specHtmlPath = specRelPath.replace(/\.md$/, '.html');
+                                const hrefUrl = specHtmlPath + '#' + anchorId;
+                                codeDocsHtml += `<a href="${hrefUrl}" class="doc-link-item" style="margin-top: 4px; font-size: 10px; font-family: monospace; display: inline-flex; align-items: center; gap: 3px; word-break: break-all; white-space: normal;" title="${codeDoc}" onclick="event.stopPropagation(); event.preventDefault(); window.parent.postMessage({ type: 'navigate', href: '${hrefUrl}', baseUrl: window.location.href }, '*');">${SVG_LINK} ${displayPath}</a>`;
+                            } else {
+                                codeDocsHtml += `<div style="font-size: 10px; color: var(--text-secondary); margin-top: 4px; font-family: monospace; display: flex; align-items: center; gap: 3px; word-break: break-all; white-space: normal;" title="${codeDoc}">${SVG_LINK} ${displayPath}</div>`;
+                            }
+                        });
+                    }
+                    
+                    codeHtml = `
+                        <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                            ${codeStatusBadge}
+                            ${codeDocsHtml}
+                        </div>
+                    `;
+                } else {
+                    codeHtml = `<span class="badge" style="opacity: 0.4; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-secondary); font-size: 11px; padding: 2px 6px;">💻 ${t.badgeLinkedCode}</span>`;
                 }
+                codeTd.innerHTML = codeHtml;
+                
+                // 3. Column 3: Docs (CSA trên Docs)
+                let docsHtml = '';
+                if (node.isDocLinked && node.linkedDocsList) {
+                    const docsListHtml = node.linkedDocsList.map(docPath => {
+                        const htmlPath = docPath.replace(/\.md$/, '.html');
+                        const displayName = docPath.split('/').pop();
+                        const hrefUrl = htmlPath + (node.specId ? '#' + node.specId : '');
+                        return `<a href="${hrefUrl}" class="doc-link-item" style="margin-top: 4px; font-size: 11px; word-break: break-all; white-space: normal;" onclick="event.stopPropagation(); event.preventDefault(); window.parent.postMessage({ type: 'navigate', href: '${hrefUrl}', baseUrl: window.location.href }, '*');">${SVG_LINK} Doc: ${displayName}</a>`;
+                    }).join('');
+                    
+                    docsHtml = `
+                        <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                            <span class="badge badge-status-linked" style="font-size: 11px; padding: 2px 6px;" title="${lang === 'vi' ? 'Đã có tài liệu Docs kế thừa đặc tả này.' : 'This spec is documented in guides.'}">
+                                ${SVG_CHECK_CIRCLE} 📖 ${t.badgeLinkedDocs}
+                            </span>
+                            <div class="docs-links-container" style="display: flex; flex-direction: column; gap: 2px; width: 100%;">
+                                ${docsListHtml}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    docsHtml = `
+                        <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                            <span class="badge badge-status-unlinked" style="font-size: 11px; padding: 2px 6px;" title="${lang === 'vi' ? 'Không có tệp Docs/Plans nào trong docs/ kế thừa Spec ID này.' : 'No Docs/Plans inherit this Spec ID.'}">
+                                ${SVG_X_CIRCLE} 📖 ${t.badgeUnlinkedDocs}
+                            </span>
+                        </div>
+                    `;
+                }
+                docsTd.innerHTML = docsHtml;
+                
+                tr.appendChild(specsTd);
+                tr.appendChild(codeTd);
+                tr.appendChild(docsTd);
 
                 const descTd = document.createElement('td');
                 const enrichedBadge = node.isEnriched
