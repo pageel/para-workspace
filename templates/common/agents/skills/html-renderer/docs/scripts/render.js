@@ -1443,7 +1443,7 @@ function renderDirectory(srcDir, destDir, template) {
                     const rel = JSON.parse(line);
                     if (rel.relation === 'DOCUMENTED_BY' && rel.sourceId && rel.targetId) {
                         const sourceId = rel.sourceId;
-                        const targetId = rel.targetId;
+                        const targetId = rel.targetId.startsWith('#') ? rel.targetId.substring(1) : rel.targetId;
                         
                         const targetNode = graphNodesMap[targetId];
                         if (targetNode) {
@@ -1477,7 +1477,7 @@ function renderDirectory(srcDir, destDir, template) {
                     }
                     if (rel.relation === 'DOCUMENTS' && rel.sourceId && rel.targetId) {
                         const docPath = rel.sourceId.replace(/\\/g, '/');
-                        const specId = rel.targetId;
+                        const specId = rel.targetId.startsWith('#') ? rel.targetId.substring(1) : rel.targetId;
                         
                         if (!specToDocsMap[specId]) {
                             specToDocsMap[specId] = new Set();
@@ -1913,10 +1913,18 @@ function renderDirectory(srcDir, destDir, template) {
             // Audit defined spec anchors
             fileSpans.forEach(specId => {
                 // 1. Spec-Code Gap
-                const codeNodes = anchorToCodeNodesMap[specId] || [];
+                let codeNodes = anchorToCodeNodesMap[specId] || [];
+                if (codeNodes.length === 0) {
+                    const matchingKey = Object.keys(anchorToCodeNodesMap).find(k => k === specId || k.endsWith('#' + specId));
+                    if (matchingKey) {
+                        codeNodes = anchorToCodeNodesMap[matchingKey];
+                    }
+                }
+                
                 if (codeNodes.length === 0) {
                     auditReports.push({
                         severity: 'medium',
+                        anchorId: specId,
                         title: fileLang === 'vi' ? `GAP: Spec chưa có mã nguồn hiện thực` : `GAP: Spec unimplemented by source code`,
                         description: fileLang === 'vi'
                             ? `Đặc tả \`${specId}\` đã được định nghĩa nhưng chưa được liên kết đến bất kỳ hàm, lớp hay tệp code nào trong mã nguồn.`
@@ -1928,10 +1936,19 @@ function renderDirectory(srcDir, destDir, template) {
                 }
                 
                 // 2. Spec-Docs Gap (Transitive documentation gap)
-                const otherDocsList = Array.from(specToDocsMap[specId] || []).filter(p => p !== relPath);
+                let docsList = specToDocsMap[specId] || new Set();
+                if (docsList.size === 0) {
+                    const matchingKey = Object.keys(specToDocsMap).find(k => k === specId || k.endsWith('#' + specId));
+                    if (matchingKey) {
+                        docsList = specToDocsMap[matchingKey];
+                    }
+                }
+                
+                const otherDocsList = Array.from(docsList).filter(p => p !== relPath);
                 if (otherDocsList.length === 0) {
                     auditReports.push({
                         severity: 'low',
+                        anchorId: specId,
                         title: fileLang === 'vi' ? `GAP: Spec chưa được tài liệu hóa` : `GAP: Spec undocumented in guides`,
                         description: fileLang === 'vi'
                             ? `Đặc tả \`${specId}\` đã được định nghĩa nhưng chưa được tài liệu hóa hay giải thích trong bất kỳ tệp hướng dẫn nào thuộc \`docs/\` hoặc kế hoạch \`plans/\`.`
@@ -1951,6 +1968,7 @@ function renderDirectory(srcDir, destDir, template) {
                 if (!definedAnchorsMap[inheritId]) {
                     auditReports.push({
                         severity: 'high',
+                        anchorId: inheritId,
                         title: fileLang === 'vi' ? `Lỗi neo inherits hỏng (Dangling Inherits)` : `Dangling Inherits Reference`,
                         description: fileLang === 'vi'
                             ? `Tài liệu khai báo thừa kế đặc tả \`data-csa-inherits="${inheritId}"\` nhưng Spec ID này không tồn tại trong hệ thống.`
@@ -1976,6 +1994,7 @@ function renderDirectory(srcDir, destDir, template) {
                             if (specMtime > docMtime) {
                                 auditReports.push({
                                     severity: 'medium',
+                                    anchorId: inheritId,
                                     title: fileLang === 'vi' ? `Tài liệu bị cũ so với đặc tả (Outdated Docs)` : `Outdated Documentation`,
                                     description: fileLang === 'vi'
                                         ? `Tệp đặc tả \`${specRelPath}\` có thay đổi mới hơn tệp tài liệu này (neo thừa kế \`${inheritId}\`). Bản giải thích có thể đã lỗi thời.`

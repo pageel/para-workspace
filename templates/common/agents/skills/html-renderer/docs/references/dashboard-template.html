@@ -172,9 +172,19 @@
         }
         .tab-btn:hover {
             color: var(--text-primary);
+            background-color: var(--card-bg-hover);
         }
+
         .tab-btn.active {
             color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .hover-row {
+            transition: background-color 0.2s ease;
+        }
+        .hover-row:hover {
+            background-color: rgba(99, 102, 241, 0.05) !important;
         }
         .tab-btn.active::after {
             content: '';
@@ -1600,6 +1610,10 @@
                                 <i data-lucide="shield-alert" style="width: 13px; height: 13px; color: var(--danger-color);"></i>
                                 <span data-i18n="driftDocsTitle">/* TRANSLATE:driftDocsTitle */</span>
                             </button>
+                            <button class="tab-btn" onclick="switchTab('csa-audit')" id="tab-btn-csa-audit">
+                                <i data-lucide="clipboard-check" style="width: 13px; height: 13px; color: var(--accent-color);"></i>
+                                <span data-i18n="csaAuditTabTitle">/* TRANSLATE:csaAuditTabTitle */</span>
+                            </button>
                         </div>
 
                         <!-- Tab 1 content: Priority Hotspots -->
@@ -1616,6 +1630,57 @@
                             <ul id="drift-docs-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px; max-height: 180px; overflow-y: auto; padding-right: 4px;">
                                 <!-- Inject dynamically -->
                             </ul>
+                        </div>
+
+                        <!-- Tab 3 content: CSA Audit Summary -->
+                        <div id="tab-content-csa-audit" class="tab-content">
+                            <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 10px;" data-i18n="csaAuditTabSubtitle">/* TRANSLATE:csaAuditTabSubtitle */</p>
+                            <div class="csa-stats-table-wrapper" style="overflow-x: auto;">
+                                <table class="csa-stats-table" style="width: 100%; border-collapse: collapse; font-size: 12px; line-height: 1.6;">
+                                    <tbody>
+                                        <tr style="border-bottom: 1px solid var(--border-color);">
+                                            <td style="padding: 8px 4px; color: var(--text-secondary);" data-i18n="statTotalSpecAnchors">/* TRANSLATE:statTotalSpecAnchors */</td>
+                                            <td style="padding: 8px 4px; font-weight: 600; text-align: right;" id="csa-stat-total-anchors">0</td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid var(--border-color);">
+                                            <td style="padding: 8px 4px; color: var(--text-secondary);" data-i18n="statCodeImplemented">/* TRANSLATE:statCodeImplemented */</td>
+                                            <td style="padding: 8px 4px; font-weight: 600; text-align: right; color: var(--success-color);" id="csa-stat-code-impl">0</td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid var(--border-color);">
+                                            <td style="padding: 8px 4px; color: var(--text-secondary);" data-i18n="statDocsExplained">/* TRANSLATE:statDocsExplained */</td>
+                                            <td style="padding: 8px 4px; font-weight: 600; text-align: right; color: var(--success-color);" id="csa-stat-docs-expl">0</td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid var(--border-color); cursor: pointer;" onclick="applyCsaAuditFilter('gap-code')" class="hover-row">
+                                            <td style="padding: 8px 4px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">
+                                                <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: var(--warning-color);"></span>
+                                                <span data-i18n="statGapSpecCode">/* TRANSLATE:statGapSpecCode */</span>
+                                            </td>
+                                            <td style="padding: 8px 4px; font-weight: 600; text-align: right; color: var(--warning-color);" id="csa-stat-gap-code">0</td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid var(--border-color); cursor: pointer;" onclick="applyCsaAuditFilter('gap-docs')" class="hover-row">
+                                            <td style="padding: 8px 4px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">
+                                                <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: var(--warning-color);"></span>
+                                                <span data-i18n="statGapSpecDocs">/* TRANSLATE:statGapSpecDocs */</span>
+                                            </td>
+                                            <td style="padding: 8px 4px; font-weight: 600; text-align: right; color: var(--warning-color);" id="csa-stat-gap-docs">0</td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid var(--border-color); cursor: pointer;" onclick="applyCsaAuditFilter('dangling')" class="hover-row">
+                                            <td style="padding: 8px 4px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">
+                                                <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: var(--danger-color);"></span>
+                                                <span data-i18n="statDanglingInherits">/* TRANSLATE:statDanglingInherits */</span>
+                                            </td>
+                                            <td style="padding: 8px 4px; font-weight: 600; text-align: right; color: var(--danger-color);" id="csa-stat-dangling">0</td>
+                                        </tr>
+                                        <tr style="border-bottom: none; cursor: pointer;" onclick="applyCsaAuditFilter('outdated')" class="hover-row">
+                                            <td style="padding: 8px 4px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">
+                                                <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: var(--warning-color);"></span>
+                                                <span data-i18n="statOutdatedDocs">/* TRANSLATE:statOutdatedDocs */</span>
+                                            </td>
+                                            <td style="padding: 8px 4px; font-weight: 600; text-align: right; color: var(--warning-color);" id="csa-stat-outdated">0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
                     </div>
@@ -1787,13 +1852,17 @@
                                         <span class="dropdown-item-title">👥 Đề xuất phân công (Owner)</span>
                                         <span class="dropdown-item-desc">Phân tích rủi ro để gán nhân sự phụ trách</span>
                                     </a>
-                                    <a class="dropdown-item" onclick="copyBatchPrompt('link-graph-docs', event)">
-                                        <span class="dropdown-item-title">⚓ Gán neo đặc tả (CSA trên Docs)</span>
-                                        <span class="dropdown-item-desc">Đề xuất chèn thẻ &lt;span id="csa-..."&gt;&lt;/span&gt; vào đặc tả Markdown</span>
+                                    <a class="dropdown-item" onclick="copyBatchPrompt('link-specs', event)">
+                                        <span class="dropdown-item-title">⚓ Định nghĩa đặc tả (CSA trên Specs)</span>
+                                        <span class="dropdown-item-desc">Đề xuất chèn thẻ neo &lt;span id="csa-..."&gt;&lt;/span&gt; vào tệp đặc tả Spec/Plan</span>
                                     </a>
-                                    <a class="dropdown-item" onclick="copyBatchPrompt('link-code-docs', event)">
-                                        <span class="dropdown-item-title">💻 Chèn comment neo vào mã nguồn (CSA trên Code)</span>
-                                        <span class="dropdown-item-desc">Đề xuất comment // @para-doc [#anchor] vào mã nguồn</span>
+                                    <a class="dropdown-item" onclick="copyBatchPrompt('link-code', event)">
+                                        <span class="dropdown-item-title">💻 Hiện thực mã nguồn (CSA trên Code)</span>
+                                        <span class="dropdown-item-desc">Đề xuất comment rút gọn // @para-doc [#anchor] vào tệp mã nguồn</span>
+                                    </a>
+                                    <a class="dropdown-item" onclick="copyBatchPrompt('link-docs', event)">
+                                        <span class="dropdown-item-title">📖 Kế thừa tài liệu (CSA trên Docs/Plans)</span>
+                                        <span class="dropdown-item-desc">Đề xuất chèn thẻ thừa kế &lt;span data-csa-inherits="..."&gt;&lt;/span&gt; vào tài liệu hướng dẫn/kế hoạch</span>
                                     </a>
                                     <a class="dropdown-item" onclick="copyBatchPrompt('fix-dangling', event)">
                                         <span class="dropdown-item-title">🚨 Sửa lỗi neo mồ côi (Fix Dangling CSA)</span>
@@ -1949,17 +2018,24 @@
             // Buttons
             document.getElementById('tab-btn-hotspots').classList.remove('active');
             document.getElementById('tab-btn-drift').classList.remove('active');
+            const csaBtn = document.getElementById('tab-btn-csa-audit');
+            if (csaBtn) csaBtn.classList.remove('active');
             
             // Contents
             document.getElementById('tab-content-hotspots').classList.remove('active');
             document.getElementById('tab-content-drift').classList.remove('active');
+            const csaContent = document.getElementById('tab-content-csa-audit');
+            if (csaContent) csaContent.classList.remove('active');
             
             if (tabName === 'hotspots') {
                 document.getElementById('tab-btn-hotspots').classList.add('active');
                 document.getElementById('tab-content-hotspots').classList.add('active');
-            } else {
+            } else if (tabName === 'drift') {
                 document.getElementById('tab-btn-drift').classList.add('active');
                 document.getElementById('tab-content-drift').classList.add('active');
+            } else if (tabName === 'csa-audit') {
+                if (csaBtn) csaBtn.classList.add('active');
+                if (csaContent) csaContent.classList.add('active');
             }
         }
 
@@ -2035,6 +2111,15 @@
                 alignmentDriftAudit: "Báo cáo sai lệch & Gaps (Drift Audit)",
                 driftDocsTitle: "🔍 Tài liệu bị lệch (Drift)",
                 driftDocsSubtitle: "Tài liệu có neo liên kết hỏng hoặc sai lệch với mã nguồn",
+                csaAuditTabTitle: "📋 Kiểm toán CSA",
+                csaAuditTabSubtitle: "Báo cáo tóm tắt chỉ số đối soát chất lượng CSA nghiệp vụ",
+                statTotalSpecAnchors: "Tổng số đặc tả (Spec Anchors)",
+                statCodeImplemented: "Đã hiện thực bằng Code",
+                statDocsExplained: "Đã thuyết minh trong Docs",
+                statGapSpecCode: "Thiếu mã nguồn (Spec-Code GAP)",
+                statGapSpecDocs: "Thiếu thuyết minh (Spec-Docs GAP)",
+                statDanglingInherits: "Thừa kế hỏng (Dangling Inherits)",
+                statOutdatedDocs: "Tài liệu cũ (Outdated Docs)",
                 langToggleLabel: "English",
                 calibrationTitle: "Hiệu chỉnh Chỉ số",
                 calibrationFolders: "Loại trừ thư mục tài liệu",
@@ -2152,6 +2237,15 @@
                 alignmentDriftAudit: "Logic Drift & Gaps Audit",
                 driftDocsTitle: "🔍 Outdated Specs (Drift)",
                 driftDocsSubtitle: "Specs with broken anchor links or outdated code references",
+                csaAuditTabTitle: "📋 CSA Audit",
+                csaAuditTabSubtitle: "Summary report of business specification audit metrics",
+                statTotalSpecAnchors: "Total Spec Anchors",
+                statCodeImplemented: "Code Implemented",
+                statDocsExplained: "Docs Explained",
+                statGapSpecCode: "Spec-Code GAP",
+                statGapSpecDocs: "Spec-Docs GAP",
+                statDanglingInherits: "Dangling Inherits",
+                statOutdatedDocs: "Outdated Docs",
                 langToggleLabel: "Tiếng Việt",
                 calibrationTitle: "Calibration Settings",
                 calibrationFolders: "Exclude document folders",
@@ -2824,6 +2918,66 @@
                       return !owner || owner === 'unknown' || owner === 'unassigned' || owner === 'none';
                   }).length;
               }
+
+              // Populate CSA Audit Stats Tab (Calculated at Spec Anchor level for strict quality audit)
+              let gapSpecCodeCount = 0;
+              let gapSpecDocsCount = 0;
+              let danglingCount = 0;
+              let outdatedCount = 0;
+
+              const gapSpecCodeAnchors = new Set();
+              const gapSpecDocsAnchors = new Set();
+              const danglingAnchors = new Set();
+              const outdatedAnchors = new Set();
+
+              for (const path in alignmentData) {
+                  const fileAlignment = alignmentData[path];
+                  if (fileAlignment && fileAlignment.auditReports) {
+                      fileAlignment.auditReports.forEach(report => {
+                          const title = report.title || '';
+                          const anchorId = report.anchorId || '';
+                          if (title.includes('GAP: Spec chưa có mã nguồn hiện thực') || title.includes('GAP: Spec unimplemented')) {
+                              gapSpecCodeCount++;
+                              if (anchorId) gapSpecCodeAnchors.add(anchorId);
+                          } else if (title.includes('GAP: Spec chưa được tài liệu hóa') || title.includes('GAP: Spec undocumented')) {
+                              gapSpecDocsCount++;
+                              if (anchorId) gapSpecDocsAnchors.add(anchorId);
+                          } else if (title.includes('Dangling Inherits') || title.includes('neo inherits hỏng')) {
+                              danglingCount++;
+                              if (anchorId) danglingAnchors.add(anchorId);
+                          } else if (title.includes('Outdated Docs') || title.includes('Tài liệu bị cũ') || title.includes('Outdated Documentation')) {
+                              outdatedCount++;
+                              if (anchorId) outdatedAnchors.add(anchorId);
+                          }
+                      });
+                  }
+              }
+
+              // Store lists globally for modal selector
+              window.gapSpecCodeAnchorsList = Array.from(gapSpecCodeAnchors);
+              window.gapSpecDocsAnchorsList = Array.from(gapSpecDocsAnchors);
+              window.danglingAnchorsList = Array.from(danglingAnchors);
+              window.outdatedAnchorsList = Array.from(outdatedAnchors);
+
+              const totalSpecAnchors = existingSpecAnchorIdsData ? existingSpecAnchorIdsData.length : 0;
+              const codeImplCount = Math.max(0, totalSpecAnchors - gapSpecCodeCount);
+              const docsExplCount = Math.max(0, totalSpecAnchors - gapSpecDocsCount);
+
+              const elTotalAnchors = document.getElementById('csa-stat-total-anchors');
+              const elCodeImpl = document.getElementById('csa-stat-code-impl');
+              const elDocsExpl = document.getElementById('csa-stat-docs-expl');
+              const elGapCode = document.getElementById('csa-stat-gap-code');
+              const elGapDocs = document.getElementById('csa-stat-gap-docs');
+              const elDangling = document.getElementById('csa-stat-dangling');
+              const elOutdated = document.getElementById('csa-stat-outdated');
+
+              if (elTotalAnchors) elTotalAnchors.textContent = totalSpecAnchors;
+              if (elCodeImpl) elCodeImpl.textContent = `${codeImplCount} (${totalSpecAnchors > 0 ? ((codeImplCount / totalSpecAnchors) * 100).toFixed(1) : 0}%)`;
+              if (elDocsExpl) elDocsExpl.textContent = `${docsExplCount} (${totalSpecAnchors > 0 ? ((docsExplCount / totalSpecAnchors) * 100).toFixed(1) : 0}%)`;
+              if (elGapCode) elGapCode.textContent = gapSpecCodeCount;
+              if (elGapDocs) elGapDocs.textContent = gapSpecDocsCount;
+              if (elDangling) elDangling.textContent = danglingCount;
+              if (elOutdated) elOutdated.textContent = outdatedCount;
 
             const weightChartContainer = document.getElementById('node-weight-chart');
             if (weightChartContainer) {
@@ -3586,7 +3740,10 @@
                     const idMatch = node.id.toLowerCase().includes(searchQuery);
                     const fileMatch = node.filePath.toLowerCase().includes(searchQuery);
                     const summaryMatch = node.summary && node.summary.toLowerCase().includes(searchQuery);
-                    if (!nameMatch && !idMatch && !fileMatch && !summaryMatch) return false;
+                    const specMatch = node.specId && node.specId.toLowerCase().includes(searchQuery);
+                    const danglingMatch = node.danglingDocs && node.danglingDocs.some(d => d.toLowerCase().includes(searchQuery));
+                    const docListMatch = node.linkedDocsList && node.linkedDocsList.some(d => d.toLowerCase().includes(searchQuery));
+                    if (!nameMatch && !idMatch && !fileMatch && !summaryMatch && !specMatch && !danglingMatch && !docListMatch) return false;
                 }
 
                 if (currentFilter === 'critical') return node.weightedClass === 'critical';
@@ -4192,16 +4349,21 @@
             } else if (promptType === 'assign-owner') {
                 promptName = 'Đề xuất phân công (Owner)';
                 promptText = `Dựa trên dữ liệu phân tích tầm ảnh hưởng (Blast Radius, Degree) và thông tin đường dẫn file của các cấu phần sau đây:\n\n${nodeDetailsText}Hãy phân tích mức độ phức tạp, tầm quan trọng và đề xuất phân công nhân sự (gán Owner) phù hợp cho từng cấu phần. Giải thích rõ lý do đề xuất dựa trên mức độ ảnh hưởng của chúng đối với hệ thống.`;
-            } else if (promptType === 'link-graph-docs') {
-                promptName = lang === 'vi' ? 'Gán neo đặc tả (CSA trên Docs)' : 'Link Spec Anchoring (CSA on Docs)';
+            } else if (promptType === 'link-specs') {
+                promptName = lang === 'vi' ? 'Định nghĩa đặc tả (CSA trên Specs)' : 'Define Spec Anchors (CSA on Specs)';
+                promptText = lang === 'vi'
+                    ? `Tôi muốn định nghĩa neo đặc tả nghiệp vụ (Spec Anchors) cho các cấu phần sau đây bằng cách chèn thẻ neo HTML \`<span id="csa-anchor-name"></span>\` vào tệp đặc tả (nằm ở thư mục specs/ hoặc tệp kế hoạch trong artifacts/plans/):\n\n${nodeDetailsText}Hãy đề xuất tệp đặc tả phù hợp cho mỗi cấu phần và chỉ rõ vị trí + cách chèn thẻ neo HTML \`<span id="csa-xxx"></span>\` tương ứng vào vị trí phù hợp trong tệp đặc tả đó để thiết lập neo đặc tả nghiệp vụ (CSA trên Specs). Neo đặc tả đề xuất phải viết thường, kebab-case, bắt đầu bằng tiền tố \`csa-\` (ví dụ: \`csa-us-3-get-form-template\`).`
+                    : `I want to define business specification anchors (Spec Anchors) for the following components by inserting the HTML anchor tag \`<span id="csa-anchor-name"></span>\` into the spec file (under specs/ directory or plan file in artifacts/plans/):\n\n${nodeDetailsText}Please suggest the best spec file for each entity and specify the exact location + format of the HTML anchor tag \`<span id="csa-xxx"></span>\` to establish the Spec Anchor (CSA on Specs). The suggested anchor name must be lowercase kebab-case, prefixed with \`csa-\` (e.g., \`csa-us-3-get-form-template\`).`;
+            } else if (promptType === 'link-code') {
+                promptName = lang === 'vi' ? 'Hiện thực mã nguồn (CSA trên Code)' : 'Implement Code Binding (CSA on Code)';
                 promptText = lang === 'vi' 
-                    ? `Tôi muốn liên kết tài liệu đặc tả (Markdown) với các cấu phần mã nguồn (Code Entities) tương ứng bằng cách sử dụng thẻ neo HTML \`<span id="csa-nodeId"></span>\` (lưu ý: thẻ neo này chỉ chèn vào tài liệu docs hoặc specs, KHÔNG ghi vào file mã nguồn code):\n\n${nodeDetailsText}Hãy đề xuất file tài liệu nào (ví dụ: docs/specs/xxx.md, docs/references/xxx.md hoặc docs/README.md) phù hợp nhất cho từng cấu phần và chỉ rõ vị trí + cách thức chèn thẻ neo HTML \`<span id="csa-nodeId"></span>\` tương ứng vào trong file tài liệu đó để xây dựng liên kết xuôi (CSA trên Docs). TUYỆT ĐỐI KHÔNG sửa đổi hay thêm comment vào bất kỳ file mã nguồn (code) nào.\n\n**Quy tắc Micro-Anchoring (G1/G3):** Mỗi neo phải ánh xạ đúng 1 quyết định thiết kế. KHÔNG được đặt neo ở tiêu đề tổng hợp (H1/H2 chứa bảng/danh sách nhiều khái niệm). Nếu tiêu đề H2 chứa N quyết định, hãy tách thành N neo riêng tại H3/H4 hoặc inline.`
-                    : `I want to link my specification documents (Markdown) with the corresponding code entities using the HTML anchor tag \`<span id="csa-nodeId"></span>\` (note: anchors are only recorded in documentation or spec files, NOT in the source code files):\n\n${nodeDetailsText}Please suggest which documentation file (e.g. docs/specs/xxx.md, docs/references/xxx.md or docs/README.md) is best suited for each entity and specify the exact location + format of the HTML anchor tag \`<span id="csa-nodeId"></span>\` to establish the forward link (CSA on Docs). DO NOT modify or insert comments into any source code files.\n\n**Micro-Anchoring Rule (G1/G3):** Each anchor MUST map to exactly one design decision. Do NOT place anchors at aggregate-level headings (H1/H2 containing tables or lists of multiple concepts). If an H2 heading contains N decisions, decompose into N separate anchors at H3/H4 or inline level.`;
-            } else if (promptType === 'link-code-docs') {
-                promptName = lang === 'vi' ? 'Chèn comment neo (CSA trên Code)' : 'Insert Code References (CSA on Code)';
-                promptText = lang === 'vi' 
-                    ? `Tôi muốn liên kết các cấu phần mã nguồn với tài liệu đặc tả của chúng bằng cách chèn các comment neo \`// @para-doc [#anchor]\` vào trong mã nguồn:\n\n${nodeDetailsText}Hãy hướng dẫn tôi cách chèn comment \`// @para-doc [#neo]\` chuẩn xác ngay trên dòng định nghĩa của từng cấu phần trong file mã nguồn. Đề xuất cụ thể anchor (#neo) phù hợp nhất cho mỗi cấu phần để thiết lập liên kết ngược (CSA trên Code). Lưu ý: Tên neo đề xuất phải viết bằng tiếng Anh chuẩn hoá (chữ thường, cách nhau bằng dấu \`-\`), bắt đầu bằng tiền tố \`csa-\` (ví dụ: \`csa-us-3-get-form-template\`), và phải khớp chính xác với neo HTML \`<span id="csa-xxx">\` tương ứng trong tài liệu đặc tả.\n\n**Quy tắc Micro-Anchoring (G2 — Reverse Validation):** Trước khi chèn comment, hãy tự kiểm tra: "Nếu tôi sửa file code này, liệu TOÀN BỘ nội dung mà neo csa-xxx mô tả có bị ảnh hưởng không?" Nếu chỉ một phần → cần phân rã neo thành neo nhỏ hơn (H3/H4 hoặc inline). KHÔNG chèn neo bao quát (blanket anchor) từ tiêu đề H1/H2 chứa nhiều khái niệm.`
-                    : `I want to link my source code entities back to their specification documents by inserting code reference comments \`// @para-doc [#anchor]\` directly into the source code:\n\n${nodeDetailsText}Please guide me on how to insert the comment \`// @para-doc [#anchor]\` directly above the definition of each component in the source code. Suggest the best anchor (#anchor) for each entity to establish the backward link (CSA on Code). Note: The suggested anchor name must follow standard English naming (lowercase, hyphen-separated), start with the prefix \`csa-\` (e.g., \`csa-us-3-get-form-template\`), and match the corresponding HTML anchor tag \`<span id="csa-xxx">\` in the specification documents.\n\n**Micro-Anchoring Rule (G2 — Reverse Validation):** Before inserting a comment, verify: "If I change this code file, would the ENTIRE content described by csa-xxx be affected?" If only partially → decompose the anchor to a more specific sub-section (H3/H4 or inline). Do NOT use blanket anchors from aggregate H1/H2 headings containing multiple concepts.`;
+                    ? `Tôi muốn liên kết các cấu phần mã nguồn với neo đặc tả nghiệp vụ của chúng bằng cách chèn chú thích neo rút gọn \`// @para-doc [#csa-anchor-name]\` trực tiếp trong mã nguồn:\n\n${nodeDetailsText}Hãy hướng dẫn tôi cách chèn chú thích \`// @para-doc [#neo]\` chuẩn xác ngay trên dòng định nghĩa của từng cấu phần trong file mã nguồn. Đề xuất neo đặc tả (#neo) phù hợp nhất cho mỗi cấu phần để thiết lập liên kết ngược (CSA trên Code). Neo đặc tả đề xuất phải khớp chính xác với neo HTML \`<span id="csa-xxx">\` tương ứng trong tài liệu đặc tả.\n\n**Quy tắc Micro-Anchoring (G2 — Reverse Validation):** Trước khi chèn comment, hãy tự kiểm tra: "Nếu tôi sửa file code này, liệu TOÀN BỘ nội dung mà neo csa-xxx mô tả có bị ảnh hưởng không?" Nếu chỉ một phần → cần phân rã neo thành neo nhỏ hơn (H3/H4 hoặc inline). KHÔNG chèn neo bao quát (blanket anchor) từ tiêu đề H1/H2 chứa nhiều khái niệm.`
+                    : `I want to link my source code entities back to their specification anchors by inserting short-form code reference comments \`// @para-doc [#csa-anchor-name]\` directly into the source code:\n\n${nodeDetailsText}Please guide me on how to insert the comment \`// @para-doc [#anchor]\` directly above the definition of each component in the source code. Suggest the best anchor (#anchor) for each entity to establish the backward link (CSA on Code). Note: The suggested anchor must match the corresponding HTML anchor tag \`<span id="csa-xxx">\` in the specification documents.\n\n**Micro-Anchoring Rule (G2 — Reverse Validation):** Before inserting a comment, verify: "If I change this code file, would the ENTIRE content described by csa-xxx be affected?" If only partially → decompose the anchor to a more specific sub-section (H3/H4 or inline). Do NOT use blanket anchors from aggregate H1/H2 headings containing multiple concepts.`;
+            } else if (promptType === 'link-docs') {
+                promptName = lang === 'vi' ? 'Kế thừa tài liệu (CSA trên Docs/Plans)' : 'Link Spec Inheriting (CSA on Docs/Plans)';
+                promptText = lang === 'vi'
+                    ? `Tôi muốn tài liệu hóa và giải thích các đặc tả nghiệp vụ đã định nghĩa cho các cấu phần sau bằng cách chèn thẻ thừa kế \`<span data-csa-inherits="csa-anchor-name"></span>\` vào các tài liệu hướng dẫn kỹ thuật (guides/) hoặc kế hoạch thực thi (plans/):\n\n${nodeDetailsText}Hãy phân tích và đề xuất tệp tài liệu hướng dẫn (ví dụ: docs/guides/xxx.md hoặc docs/README.md) phù hợp nhất cho mỗi cấu phần và chỉ rõ vị trí + cách chèn thẻ thừa kế \`<span data-csa-inherits="csa-xxx"></span>\` tương ứng để liên kết giải thích đặc tả (CSA trên Docs/Plans). TUYỆT ĐỐI KHÔNG sửa đổi hay thêm comment vào bất kỳ file mã nguồn (code) nào.`
+                    : `I want to document and explain the defined specification anchors for the following components by inserting the inherit tag \`<span data-csa-inherits="csa-anchor-name"></span>\` into user guides (under guides/) or plan documents (under plans/):\n\n${nodeDetailsText}Please suggest which guide document (e.g. docs/guides/xxx.md or docs/README.md) is best suited for each entity and specify the exact location + format of the inherit tag \`<span data-csa-inherits="csa-xxx"></span>\` to establish the documentation link (CSA on Docs/Plans). DO NOT modify or insert comments into any source code files.`;
             } else if (promptType === 'fix-dangling') {
                 promptName = lang === 'vi' ? 'Sửa lỗi neo mồ côi (Fix Dangling CSA)' : 'Fix Dangling CSA Links';
                 promptText = lang === 'vi'
@@ -4803,6 +4965,117 @@
             }, '*');
         }
 
+        window.closeCsaModal = function() {
+            document.getElementById('csa-selector-modal').style.display = 'none';
+        };
+
+        window.applyCsaAuditFilter = function(type) {
+            let anchors = [];
+            let filterType = 'all';
+            let titleVi = '';
+            let titleEn = '';
+            let descVi = '';
+            let descEn = '';
+            
+            if (type === 'gap-code') {
+                anchors = window.gapSpecCodeAnchorsList || [];
+                filterType = 'unlinked-code';
+                titleVi = '⚓ Neo đặc tả thiếu Mã nguồn (Spec-Code GAP)';
+                titleEn = '⚓ Unimplemented Spec Anchors (Spec-Code GAP)';
+                descVi = 'Các đặc tả nghiệp vụ sau đây chưa có code hiện thực (thiếu comment <code>// @para-doc [#neo]</code>). Click vào neo để tự động lọc nhanh trong bảng Explorer bên dưới.';
+                descEn = 'The following specification anchors lack source code implementation (missing <code>// @para-doc [#neo]</code>). Click an anchor to automatically filter the Explorer table below.';
+            } else if (type === 'gap-docs') {
+                anchors = window.gapSpecDocsAnchorsList || [];
+                filterType = 'unlinked-docs';
+                titleVi = '📖 Neo đặc tả thiếu Thuyết minh (Spec-Docs GAP)';
+                titleEn = '📖 Undocumented Spec Anchors (Spec-Docs GAP)';
+                descVi = 'Các đặc tả nghiệp vụ sau đây chưa được giải thích/thuyết minh trong Guides hoặc Plans (thiếu thẻ <code>data-csa-inherits</code>). Click để lọc nhanh.';
+                descEn = 'The following specification anchors lack explanation in user guides or plans (missing <code>data-csa-inherits</code>). Click to filter.';
+            } else if (type === 'dangling') {
+                anchors = window.danglingAnchorsList || [];
+                filterType = 'dangling';
+                titleVi = '🚨 Thừa kế hỏng (Dangling Inherits)';
+                titleEn = '🚨 Dangling Inherits';
+                descVi = 'Các neo chú thích trong code hoặc docs trỏ tới neo đặc tả không tồn tại trong Spec. Click để lọc nhanh.';
+                descEn = 'Anchor references in code or docs pointing to non-existent spec anchors. Click to filter.';
+            } else if (type === 'outdated') {
+                anchors = window.outdatedAnchorsList || [];
+                filterType = 'all';
+                titleVi = '⚠️ Đặc tả cũ/hết hạn (Outdated Specs)';
+                titleEn = '⚠️ Outdated Specs';
+                descVi = 'Các neo đặc tả nghiệp vụ có tài liệu bị cũ hơn code hiện thực. Click để lọc nhanh.';
+                descEn = 'Spec anchors with outdated documentation relative to implementation. Click to filter.';
+            }
+
+            const title = lang === 'vi' ? titleVi : titleEn;
+            const desc = lang === 'vi' ? descVi : descEn;
+
+            document.getElementById('csa-modal-title').textContent = title;
+            document.getElementById('csa-modal-desc').innerHTML = desc;
+            document.getElementById('csa-modal-close-btn').textContent = lang === 'vi' ? 'Đóng' : 'Close';
+
+            const listEl = document.getElementById('csa-modal-list');
+            listEl.innerHTML = '';
+
+            if (anchors.length === 0) {
+                const emptyItem = document.createElement('div');
+                emptyItem.style.cssText = 'padding: 10px; text-align: center; color: var(--text-secondary); font-size: 11px;';
+                emptyItem.textContent = lang === 'vi' ? 'Không phát hiện lỗi nào.' : 'No audit issues found.';
+                listEl.appendChild(emptyItem);
+            } else {
+                anchors.forEach(anchor => {
+                    const row = document.createElement('div');
+                    row.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; background: var(--bg-secondary); border-radius: 4px; border: 1px solid var(--border-color);';
+                    
+                    const anchorSpan = document.createElement('span');
+                    anchorSpan.style.cssText = 'font-family: SFMono-Regular, Consolas, monospace; font-size: 11px; font-weight: 600; color: var(--accent-color); cursor: pointer; flex: 1;';
+                    anchorSpan.textContent = `#${anchor}`;
+                    anchorSpan.onclick = function() {
+                        document.getElementById('node-search').value = anchor;
+                        searchQuery = anchor.toLowerCase().trim();
+                        setFilter(filterType);
+                        closeCsaModal();
+                    };
+
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.style.cssText = 'display: flex; gap: 8px;';
+
+                    const filterBtn = document.createElement('button');
+                    filterBtn.className = 'filter-btn';
+                    filterBtn.style.cssText = 'padding: 2px 6px; font-size: 10px; cursor: pointer; border-radius: 3px; border: 1px solid var(--border-color); background: var(--card-bg);';
+                    filterBtn.textContent = lang === 'vi' ? 'Lọc' : 'Filter';
+                    filterBtn.onclick = function() {
+                        document.getElementById('node-search').value = anchor;
+                        searchQuery = anchor.toLowerCase().trim();
+                        setFilter(filterType);
+                        closeCsaModal();
+                    };
+
+                    const copyBtn = document.createElement('button');
+                    copyBtn.className = 'filter-btn';
+                    copyBtn.style.cssText = 'padding: 2px 6px; font-size: 10px; cursor: pointer; border-radius: 3px; border: 1px solid var(--border-color); background: var(--card-bg);';
+                    copyBtn.textContent = lang === 'vi' ? 'Copy' : 'Copy';
+                    copyBtn.onclick = function(e) {
+                        e.stopPropagation();
+                        navigator.clipboard.writeText(anchor).then(() => {
+                            showToast(`Đã copy #${anchor}`);
+                        });
+                    };
+
+                    actionsDiv.appendChild(filterBtn);
+                    actionsDiv.appendChild(copyBtn);
+                    row.appendChild(anchorSpan);
+                    row.appendChild(actionsDiv);
+                    listEl.appendChild(row);
+                });
+            }
+
+            document.getElementById('csa-selector-modal').style.display = 'flex';
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        };
+
         window.addEventListener('load', initializeDashboard);
     </script>
 
@@ -4836,6 +5109,25 @@
     <!-- Toast notification -->
     <div id="toast-notification">
         <i data-lucide="check-circle"></i> <span id="toast-message">Copied!</span>
+    </div>
+
+    <!-- CSA Audit Selector Modal -->
+    <div id="csa-selector-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="card" style="width: 480px; max-height: 80vh; display: flex; flex-direction: column; padding: 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 id="csa-modal-title" style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin: 0;">Danh sách Spec Anchors</h3>
+                <button onclick="closeCsaModal()" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                </button>
+            </div>
+            <p id="csa-modal-desc" style="font-size: 11px; color: var(--text-secondary); margin-top: 0; margin-bottom: 12px; line-height: 1.5;"></p>
+            <div id="csa-modal-list" style="overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; max-height: 50vh; padding-right: 4px; margin-bottom: 15px;">
+                <!-- Inject list items dynamically -->
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button onclick="closeCsaModal()" class="filter-btn" style="padding: 6px 12px; cursor: pointer; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg);" id="csa-modal-close-btn">Đóng</button>
+            </div>
+        </div>
     </div>
 
 
