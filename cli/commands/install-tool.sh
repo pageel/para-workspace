@@ -270,59 +270,40 @@ fetch_templates_from_git() {
 
   echo "  → Fetching templates from: $repo_slug (main branch)"
 
-  # Fetch templates/agents directory listing from GitHub Contents API
-  local api_url="https://api.github.com/repos/${repo_slug}/contents/templates/agents"
-  local listing_file="$tmp_dir/api_listing.json"
+  # Download repository archive tarball to avoid GitHub API rate limits
+  local tar_url="https://github.com/${repo_slug}/archive/refs/heads/main.tar.gz"
+  local tar_file="$tmp_dir/repo-main.tar.gz"
 
-  if ! curl -fsSL --max-time 30 "$api_url" -o "$listing_file" 2>/dev/null; then
-    echo "❌ Error: Failed to fetch template listing from GitHub API."
-    echo "   URL: $api_url"
+  echo "  → Downloading templates archive from GitHub..."
+  if ! curl -fsSL --max-time 60 "$tar_url" -o "$tar_file" 2>/dev/null; then
+    # Fallback to master branch
+    tar_url="https://github.com/${repo_slug}/archive/refs/heads/master.tar.gz"
+    if ! curl -fsSL --max-time 60 "$tar_url" -o "$tar_file" 2>/dev/null; then
+      echo "❌ Error: Failed to download repository templates archive from GitHub."
+      return 1
+    fi
+  fi
+
+  # Extract the tarball
+  local extract_dir="$tmp_dir/extracted"
+  mkdir -p "$extract_dir"
+  if ! tar -xzf "$tar_file" -C "$extract_dir" 2>/dev/null; then
+    echo "❌ Error: Failed to extract templates archive."
     return 1
   fi
 
-  # Parse JSON listing and download each subdirectory (workflows, skills, rules)
-  local subdir
-  for subdir in workflows skills rules; do
-    local subdir_url="${api_url}/${subdir}"
-    local subdir_listing="$tmp_dir/listing_${subdir}.json"
+  # Find the extracted folder (usually named <repo>-main or <repo>-master)
+  local repo_folder
+  repo_folder=$(find "$extract_dir" -maxdepth 1 -type d | grep -v "^$extract_dir$" | head -n 1)
 
-    if ! curl -fsSL --max-time 30 "$subdir_url" -o "$subdir_listing" 2>/dev/null; then
-      echo "  ⚠️  No templates/$subdir found on remote (skipping)"
-      continue
-    fi
+  if [ -z "$repo_folder" ] || [ ! -d "$repo_folder/templates/agents" ]; then
+    echo "❌ Error: templates/agents directory not found in repository archive."
+    return 1
+  fi
 
-    mkdir -p "$tmp_dir/templates/agents/$subdir"
-
-    # Extract download_url entries and fetch each file
-    # Using grep+sed for POSIX compat (no jq dependency)
-    grep '"download_url"' "$subdir_listing" | sed 's/.*"download_url": *"//; s/".*//' | while IFS= read -r dl_url; do
-      if [ -n "$dl_url" ] && [ "$dl_url" != "null" ]; then
-        local fname
-        fname=$(basename "$dl_url")
-        curl -fsSL --max-time 15 "$dl_url" -o "$tmp_dir/templates/agents/$subdir/$fname" 2>/dev/null
-      fi
-    done
-
-    # Handle nested directories (e.g., skills/para-graph/) — check for type: dir entries
-    grep '"type": *"dir"' "$subdir_listing" >/dev/null 2>&1 && {
-      # Extract dir names
-      awk -F'"' '/"name":/ {name=$4} /"type": *"dir"/ {print name}' "$subdir_listing" | while IFS= read -r dirname; do
-        local nested_url="${subdir_url}/${dirname}"
-        local nested_listing="$tmp_dir/listing_${subdir}_${dirname}.json"
-
-        if curl -fsSL --max-time 30 "$nested_url" -o "$nested_listing" 2>/dev/null; then
-          mkdir -p "$tmp_dir/templates/agents/$subdir/$dirname"
-          grep '"download_url"' "$nested_listing" | sed 's/.*"download_url": *"//; s/".*//' | while IFS= read -r nested_dl; do
-            if [ -n "$nested_dl" ] && [ "$nested_dl" != "null" ]; then
-              local nfname
-              nfname=$(basename "$nested_dl")
-              curl -fsSL --max-time 15 "$nested_dl" -o "$tmp_dir/templates/agents/$subdir/$dirname/$nfname" 2>/dev/null
-            fi
-          done
-        fi
-      done
-    }
-  done
+  # Copy templates/agents to target tmp_dir
+  mkdir -p "$tmp_dir/templates"
+  cp -r "$repo_folder/templates/agents" "$tmp_dir/templates/"
 
   echo "  ✅ Templates fetched successfully."
   return 0
