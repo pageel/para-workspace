@@ -67,6 +67,8 @@
               "source": { "type": "string", "description": "Directory path relative to tool root." },
               "target": { "type": "string", "description": "Directory name in .agents/skills/." },
               "version": { "type": "string", "description": "Semantic version of this skill." },
+              "name": { "type": "string", "description": "Human-readable skill name for indexing." },
+              "trigger": { "type": "string", "description": "Trigger description of when to load this skill." },
               "shipped_in": { "type": "string", "description": "Engine version when this artifact was last modified.", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
               "min_engine_version": { "type": "string", "description": "Minimum engine version required for this artifact.", "pattern": "^\\d+\\.\\d+\\.\\d+$" }
             }
@@ -81,6 +83,9 @@
               "source": { "type": "string", "description": "Path relative to tool root." },
               "target": { "type": "string", "description": "Filename in .agents/rules/." },
               "version": { "type": "string", "description": "Semantic version of this rule." },
+              "name": { "type": "string", "description": "Human-readable rule name for indexing." },
+              "trigger": { "type": "string", "description": "Trigger description of when to load this rule." },
+              "priority": { "type": "string", "description": "Rule priority emoji (e.g. 🔴, 🟡, 🟢)." },
               "shipped_in": { "type": "string", "description": "Engine version when this artifact was last modified.", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
               "min_engine_version": { "type": "string", "description": "Minimum engine version required for this artifact.", "pattern": "^\\d+\\.\\d+\\.\\d+$" }
             }

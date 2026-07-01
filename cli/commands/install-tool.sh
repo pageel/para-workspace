@@ -334,6 +334,9 @@ parse_manifest_agents() {
   AGENT_TARGETS=()
   AGENT_VERSIONS=()
   AGENT_TYPES=()
+  AGENT_NAMES=()
+  AGENT_TRIGGERS=()
+  AGENT_PRIORITIES=()
 
   local manifest="$MANIFEST_FILE"
   if [ ! -f "$manifest" ]; then
@@ -348,12 +351,22 @@ parse_manifest_agents() {
   fi
 
   local current_type=""
-  local item_source="" item_target="" item_version=""
+  local item_source="" item_target="" item_version="" item_name="" item_trigger="" item_priority=""
   local tmp_file
   tmp_file=$(mktemp)
 
+  write_item() {
+    if [ -n "$item_source" ]; then
+      item_name="${item_name:-}"
+      item_trigger="${item_trigger:-}"
+      item_priority="${item_priority:-}"
+      echo "${current_type}|${item_source}|${item_target}|${item_version}|${item_name}|${item_trigger}|${item_priority}" >> "$tmp_file"
+    fi
+  }
+
   # Read from agents: line to end, stop at next top-level key
-  tail -n +"$start_line" "$manifest" | {
+  # tr -d '\r' strips carriage returns for Windows compatibility
+  tail -n +"$start_line" "$manifest" | tr -d '\r' | {
     # Skip the "agents:" line itself
     read -r _header_line
 
@@ -366,14 +379,20 @@ parse_manifest_agents() {
 
       # Detect type section: "  workflows:", "  skills:", "  rules:"
       case "$line" in
-        "  workflows:"*) current_type="workflows"; continue ;;
-        "  skills:"*)    current_type="skills"; continue ;;
-        "  rules:"*)     current_type="rules"; continue ;;
+        "  workflows:"*) write_item; item_source=""; current_type="workflows"; continue ;;
+        "  skills:"*)    write_item; item_source=""; current_type="skills"; continue ;;
+        "  rules:"*)     write_item; item_source=""; current_type="rules"; continue ;;
       esac
 
       # Detect item start: "    - source:"
       if echo "$line" | grep -q "^    - source:"; then
+        write_item
         item_source=$(echo "$line" | sed 's/.*source: *//; s/^ *"//; s/" *$//')
+        item_target=""
+        item_version=""
+        item_name=""
+        item_trigger=""
+        item_priority=""
         continue
       fi
 
@@ -383,23 +402,43 @@ parse_manifest_agents() {
         continue
       fi
 
-      # Read version — completes the item
+      # Read version
       if echo "$line" | grep -q "^      version:"; then
         item_version=$(echo "$line" | sed 's/.*version: *//; s/^ *"//; s/" *$//')
-        echo "${current_type}|${item_source}|${item_target}|${item_version}" >> "$tmp_file"
-        item_source="" item_target="" item_version=""
+        continue
+      fi
+
+      # Read name (index sync metadata)
+      if echo "$line" | grep -q "^      name:"; then
+        item_name=$(echo "$line" | sed 's/.*name: *//; s/^ *"//; s/" *$//')
+        continue
+      fi
+
+      # Read trigger (index sync metadata)
+      if echo "$line" | grep -q "^      trigger:"; then
+        item_trigger=$(echo "$line" | sed 's/.*trigger: *//; s/^ *"//; s/" *$//')
+        continue
+      fi
+
+      # Read priority (index sync metadata)
+      if echo "$line" | grep -q "^      priority:"; then
+        item_priority=$(echo "$line" | sed 's/.*priority: *//; s/^ *"//; s/" *$//')
         continue
       fi
     done
+    write_item
   }
 
   # Read parsed items into arrays
   if [ -s "$tmp_file" ]; then
-    while IFS='|' read -r atype asource atarget aversion; do
+    while IFS='|' read -r atype asource atarget aversion aname atrigger apriority; do
       AGENT_TYPES+=("$atype")
       AGENT_SOURCES+=("$asource")
       AGENT_TARGETS+=("$atarget")
       AGENT_VERSIONS+=("$aversion")
+      AGENT_NAMES+=("$aname")
+      AGENT_TRIGGERS+=("$atrigger")
+      AGENT_PRIORITIES+=("$apriority")
     done < "$tmp_file"
   fi
   rm -f "$tmp_file"
@@ -536,9 +575,17 @@ copy_agents_recursive() {
 
   mkdir -p "$dst_dir"
 
+  # Find command resolution to avoid Windows System32 find.exe conflict
+  local find_cmd="find"
+  if [ -x "/usr/bin/find" ]; then
+    find_cmd="/usr/bin/find"
+  elif [ -x "/bin/find" ]; then
+    find_cmd="/bin/find"
+  fi
+
   # Find all files in src_dir relative to src_dir
   (
-    cd "$src_dir" && find . -type f
+    cd "$src_dir" && "$find_cmd" . -type f
   ) | while read -r rel_file; do
     rel_file="${rel_file#./}"
     src_file="$src_dir/$rel_file"
@@ -546,6 +593,81 @@ copy_agents_recursive() {
     rel_src_file="$rel_src_dir/$rel_file"
     copy_agent_file_safe "$src_file" "$dst_file" "$atype" "$atarget/$rel_file" "$rel_src_file"
   done
+}
+
+# Update rules/skills catalog index file (.agents/rules.md or .agents/skills.md)
+update_workspace_index() {
+  local atype="$1"
+  local atarget="$2"
+  local aname="$3"
+  local atrigger="$4"
+  local apriority="$5"
+
+  # We only register rules and skills
+  if [ "$atype" != "rules" ] && [ "$atype" != "skills" ]; then
+    return 0
+  fi
+
+  # Skip if name or trigger is empty (no index sync metadata declared)
+  if [ -z "$aname" ] || [ -z "$atrigger" ]; then
+    return 0
+  fi
+
+  local index_file=""
+  local relative_path=""
+  if [ "$atype" = "rules" ]; then
+    index_file="$AGENTS_DIR/rules.md"
+    relative_path="rules/$atarget"
+  else
+    index_file="$AGENTS_DIR/skills.md"
+    # Target can be a directory (skills/csa/) or a file
+    if echo "$atarget" | grep -q "/$"; then
+      relative_path="skills/${atarget}SKILL.md"
+    else
+      relative_path="skills/$atarget"
+    fi
+  fi
+
+  if [ ! -f "$index_file" ]; then
+    echo "  ⚠️  Index file not found: $index_file"
+    return 0
+  fi
+
+  # Escape variables for safe sed/regex usage (security mitigation against command injection)
+  local escaped_path
+  escaped_path=$(echo "$relative_path" | sed 's/\//\\\//g')
+  
+  # Escape / and & in replacement to avoid breaking sed syntax
+  local new_row
+  if [ "$atype" = "rules" ]; then
+    new_row="| $aname | $atrigger | rules/$atarget | $apriority |"
+  else
+    new_row="| $aname | $atrigger | $relative_path |"
+  fi
+  
+  local escaped_row
+  escaped_row=$(echo "$new_row" | sed 's/\//\\\//g; s/\&/\\\&/g')
+
+  # Check if this file/path already exists in the index table
+  if grep -q "|.*$relative_path" "$index_file"; then
+    echo "  🔄 Updating index for $relative_path in $index_file..."
+    local temp_index
+    temp_index=$(mktemp)
+    sed "s/.*$escaped_path.*/$escaped_row/" "$index_file" > "$temp_index"
+    
+    if [ -s "$temp_index" ]; then
+      mv "$temp_index" "$index_file"
+    else
+      rm -f "$temp_index"
+    fi
+  else
+    echo "  📝 Appending new index for $relative_path to $index_file..."
+    # Ensure there is a trailing newline in the file before appending (POSIX)
+    if [ -n "$(tail -c 1 "$index_file" 2>/dev/null)" ]; then
+      echo "" >> "$index_file"
+    fi
+    echo "$new_row" >> "$index_file"
+  fi
 }
 
 # Copy agent files from tool install dir to .agents/
@@ -556,6 +678,17 @@ install_agents() {
     local atype="${AGENT_TYPES[$i]}"
     local asource="${AGENT_SOURCES[$i]}"
     local atarget="${AGENT_TARGETS[$i]}"
+
+    # Path traversal protection
+    if echo "$asource" | grep -q '\.\./'; then
+      echo "❌ Security Error: Path traversal attempt detected in source: $asource"
+      exit 1
+    fi
+    if echo "$atarget" | grep -q '\.\./'; then
+      echo "❌ Security Error: Path traversal attempt detected in target: $atarget"
+      exit 1
+    fi
+
     local src_path="$src_base/$asource"
     local dst_dir="$AGENTS_DIR/$atype"
     local dst_path="$dst_dir/$atarget"
@@ -572,6 +705,9 @@ install_agents() {
         echo "  ⚠️  Source not found: $src_path (skipping)"
       fi
     fi
+
+    # Auto-sync index if name and trigger are provided in manifest
+    update_workspace_index "$atype" "$atarget" "${AGENT_NAMES[$i]}" "${AGENT_TRIGGERS[$i]}" "${AGENT_PRIORITIES[$i]}"
 
     i=$((i + 1))
   done
@@ -605,27 +741,60 @@ if [ "$AGENTS_ONLY" = true ]; then
   exit 0
 fi
 
-# === Handle --sync (fetch intelligence from GitHub without tarball) ===
+# === Handle --sync (fetch intelligence from GitHub or Local Dev without tarball) ===
+# @para-doc [csa-install-tool-sync-local]
+# @para-doc [csa-install-tool-sync-remote-manifest]
+# @para-doc [csa-install-tool-index-sync]
 if [ "$SYNC_MODE" = true ]; then
   if [ ! -d "$TOOL_INSTALL_DIR" ]; then
     echo "❌ Error: Tool '$PARA_TOOL_NAME' is not installed. Install it first."
     exit 1
   fi
-  if [ ! -f "$MANIFEST_FILE" ]; then
-    echo "❌ Error: tool.manifest.yml not found in $TOOL_INSTALL_DIR"
-    exit 1
+
+  # Check if there is a local project folder in WORKSPACE_ROOT/Projects/
+  LOCAL_PROJECT_DIR=""
+  if [ -d "$WORKSPACE_ROOT/Projects/$PARA_TOOL_NAME/repo" ]; then
+    LOCAL_PROJECT_DIR="$WORKSPACE_ROOT/Projects/$PARA_TOOL_NAME/repo"
+  elif [ -d "$WORKSPACE_ROOT/Projects/$TOOL_NAME/repo" ]; then
+    LOCAL_PROJECT_DIR="$WORKSPACE_ROOT/Projects/$TOOL_NAME/repo"
   fi
 
-  echo "🔄 Syncing AI intelligence for $PARA_TOOL_NAME from GitHub..."
-
-  # Create temp directory for downloads
   SYNC_TEMP="$(mktemp -d)"
 
-  # Fetch templates from GitHub
-  if ! fetch_templates_from_git "$MANIFEST_FILE" "$SYNC_TEMP"; then
-    echo "❌ Error: Failed to fetch templates from GitHub."
-    rm -rf "$SYNC_TEMP"
-    exit 1
+  if [ -n "$LOCAL_PROJECT_DIR" ]; then
+    echo "🔄 Syncing AI intelligence for $PARA_TOOL_NAME from local development project..."
+    if [ -f "$LOCAL_PROJECT_DIR/tool.manifest.yml" ]; then
+      # Overwrite manifest file with local manifest first (Source Manifest Overwrite)
+      cp "$LOCAL_PROJECT_DIR/tool.manifest.yml" "$MANIFEST_FILE"
+    fi
+    if [ -d "$LOCAL_PROJECT_DIR/templates/agents" ]; then
+      mkdir -p "$SYNC_TEMP/templates"
+      cp -r "$LOCAL_PROJECT_DIR/templates/agents" "$SYNC_TEMP/templates/"
+      echo "  ✅ Synced templates from local development project: $LOCAL_PROJECT_DIR"
+    else
+      echo "  ⚠️  Local project found but no templates/agents directory exists."
+    fi
+  else
+    echo "🔄 Syncing AI intelligence for $PARA_TOOL_NAME from GitHub..."
+    if [ ! -f "$MANIFEST_FILE" ]; then
+      echo "❌ Error: tool.manifest.yml not found in $TOOL_INSTALL_DIR"
+      rm -rf "$SYNC_TEMP"
+      exit 1
+    fi
+
+    # Fetch latest manifest from GitHub repo raw URL to avoid stale local manifest
+    if [ -n "$TOOL_REPO" ]; then
+      local raw_manifest_url="https://raw.githubusercontent.com/${TOOL_REPO}/main/tool.manifest.yml"
+      echo "  🔍 Fetching latest manifest from GitHub..."
+      curl -fsSL --max-time 15 "$raw_manifest_url" -o "$MANIFEST_FILE" 2>/dev/null || true
+    fi
+
+    # Fetch templates from GitHub
+    if ! fetch_templates_from_git "$MANIFEST_FILE" "$SYNC_TEMP"; then
+      echo "❌ Error: Failed to fetch templates from GitHub."
+      rm -rf "$SYNC_TEMP"
+      exit 1
+    fi
   fi
 
   # Source hooks if available (from installed tool, not remote)
@@ -661,7 +830,7 @@ if [ "$SYNC_MODE" = true ]; then
 
   rm -rf "$SYNC_TEMP"
   echo ""
-  echo "✅ AI intelligence synced from GitHub."
+  echo "✅ AI intelligence synced successfully."
   exit 0
 fi
 
