@@ -84,8 +84,19 @@ para config list
 Install a PARA tool plugin from the registry or local DEV path. Will prompt to install bundled AI intelligence (workflows, rules, skills) and configure IDE MCP settings if applicable.
 
 ```bash
-para install-tool <name> [--version=X.Y.Z] [--update] [--agents] [--no-agents] [--no-mcp]
+para install-tool <name> [--version=X.Y.Z] [--local=PATH] [--latest] [--update] [--agents] [--sync] [--no-agents] [--no-mcp]
 ```
+
+| Flag | Description |
+| -- | -- |
+| `--version` | Specific version to install |
+| `--local` | Path to local tool source directory for DEV mode |
+| `--latest` | Install the latest version from the registry |
+| `--update` | Upgrade an existing tool |
+| `--agents` | Install bundled AI agent templates (enabled by default) |
+| `--sync` | Sync AI intelligence templates. Supports **Local Sync** (directly copies templates from `Projects/<tool>/` development directory bypassing network) and **Index Auto-Sync** (registers rules/skills in `.agents/rules.md` and `.agents/skills.md` catalog tables automatically) |
+| `--no-agents` | Skip installing AI agent templates |
+| `--no-mcp` | Do not configure the MCP server for the IDE |
 
 ### `remove-tool`
 

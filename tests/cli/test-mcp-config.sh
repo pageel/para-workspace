@@ -169,7 +169,7 @@ fi
 echo ""
 echo "--- merge_mcp_config (jq required) ---"
 
-if command -v jq &> /dev/null; then
+if command -v jq &> /dev/null && command -v node &> /dev/null; then
   # Test 1: New file creation
   CONFIG_PATH="$TEST_TMP/new_config.json"
   snippet=$(generate_mcp_snippet "test-server" "node" "/test/cli.js" "serve" "/ws")
@@ -265,7 +265,7 @@ EOF
   unset NODE_OPTIONS
 
 else
-  echo "  ⏭️  Skipping merge tests — jq not installed"
+  echo "  ⏭️  Skipping merge tests — jq or node not installed"
 fi
 
 # ============================================================
@@ -323,9 +323,10 @@ fi
 echo ""
 echo "--- mcp-setup.sh integration tests ---"
 
-# Setup mock manifest
-mkdir -p "$WORKSPACE_ROOT/Projects/para-graph/repo"
-cat <<EOF > "$WORKSPACE_ROOT/Projects/para-graph/repo/tool.manifest.yml"
+if command -v node &> /dev/null; then
+  # Setup mock manifest
+  mkdir -p "$WORKSPACE_ROOT/Projects/para-graph/repo"
+  cat <<EOF > "$WORKSPACE_ROOT/Projects/para-graph/repo/tool.manifest.yml"
 runtime: node
 entry: dist/cli.js
 mcp:
@@ -335,50 +336,53 @@ mcp:
   description: "Test Server"
 EOF
 
-# Setup fake entry point
-mkdir -p "$WORKSPACE_ROOT/Projects/para-graph/repo/dist"
-echo "// fake" > "$WORKSPACE_ROOT/Projects/para-graph/repo/dist/cli.js"
+  # Setup fake entry point
+  mkdir -p "$WORKSPACE_ROOT/Projects/para-graph/repo/dist"
+  echo "// fake" > "$WORKSPACE_ROOT/Projects/para-graph/repo/dist/cli.js"
 
-TEST_HOME_SETUP="$TEST_TMP/fake_home_setup"
-mkdir -p "$TEST_HOME_SETUP"
-ORIG_HOME="$HOME"
-export HOME="$TEST_HOME_SETUP"
+  TEST_HOME_SETUP="$TEST_TMP/fake_home_setup"
+  mkdir -p "$TEST_HOME_SETUP"
+  ORIG_HOME="$HOME"
+  export HOME="$TEST_HOME_SETUP"
 
-# Test 1: Neither App Data folder exists -> Should fail because no IDE config is found/writable
-echo -n "  No App Data folders exists returns error... "
-if WORKSPACE_ROOT="$WORKSPACE_ROOT" bash "$REPO_ROOT/cli/commands/mcp-setup.sh" graph --ide=antigravity 2>/dev/null; then
-  echo "FAIL — should have failed"
-  FAIL=$((FAIL+1))
+  # Test 1: Neither App Data folder exists -> Should fail because no IDE config is found/writable
+  echo -n "  No App Data folders exists returns error... "
+  if WORKSPACE_ROOT="$WORKSPACE_ROOT" bash "$REPO_ROOT/cli/commands/mcp-setup.sh" graph --ide=antigravity 2>/dev/null; then
+    echo "FAIL — should have failed"
+    FAIL=$((FAIL+1))
+  else
+    echo "PASS"
+    PASS=$((PASS+1))
+  fi
+
+  # Test 2: Only 2.x App Data folder exists -> Only writes to 2.x config
+  mkdir -p "$HOME/.gemini/antigravity-ide"
+  WORKSPACE_ROOT="$WORKSPACE_ROOT" bash "$REPO_ROOT/cli/commands/mcp-setup.sh" graph --ide=antigravity >/dev/null
+
+  assert_file_exists "Config file 2.x created" "$HOME/.gemini/config/mcp_config.json"
+  assert_valid_json "Config file 2.x is valid" "$HOME/.gemini/config/mcp_config.json"
+
+  echo -n "  Config file 1.x is NOT created... "
+  if [ ! -f "$HOME/.gemini/antigravity/mcp_config.json" ]; then
+    echo "PASS"
+    PASS=$((PASS+1))
+  else
+    echo "FAIL — config file 1.x was created"
+    FAIL=$((FAIL+1))
+  fi
+
+  # Test 3: Both App Data folders exist -> Writes to both
+  mkdir -p "$HOME/.gemini/antigravity"
+  rm -f "$HOME/.gemini/config/mcp_config.json"
+  WORKSPACE_ROOT="$WORKSPACE_ROOT" bash "$REPO_ROOT/cli/commands/mcp-setup.sh" graph --ide=antigravity >/dev/null
+
+  assert_file_exists "Config file 2.x recreated" "$HOME/.gemini/config/mcp_config.json"
+  assert_file_exists "Config file 1.x created" "$HOME/.gemini/antigravity/mcp_config.json"
+
+  export HOME="$ORIG_HOME"
 else
-  echo "PASS"
-  PASS=$((PASS+1))
+  echo "  ⏭️  Skipping mcp-setup.sh integration tests — node not installed"
 fi
-
-# Test 2: Only 2.x App Data folder exists -> Only writes to 2.x config
-mkdir -p "$HOME/.gemini/antigravity-ide"
-WORKSPACE_ROOT="$WORKSPACE_ROOT" bash "$REPO_ROOT/cli/commands/mcp-setup.sh" graph --ide=antigravity >/dev/null
-
-assert_file_exists "Config file 2.x created" "$HOME/.gemini/config/mcp_config.json"
-assert_valid_json "Config file 2.x is valid" "$HOME/.gemini/config/mcp_config.json"
-
-echo -n "  Config file 1.x is NOT created... "
-if [ ! -f "$HOME/.gemini/antigravity/mcp_config.json" ]; then
-  echo "PASS"
-  PASS=$((PASS+1))
-else
-  echo "FAIL — config file 1.x was created"
-  FAIL=$((FAIL+1))
-fi
-
-# Test 3: Both App Data folders exist -> Writes to both
-mkdir -p "$HOME/.gemini/antigravity"
-rm -f "$HOME/.gemini/config/mcp_config.json"
-WORKSPACE_ROOT="$WORKSPACE_ROOT" bash "$REPO_ROOT/cli/commands/mcp-setup.sh" graph --ide=antigravity >/dev/null
-
-assert_file_exists "Config file 2.x recreated" "$HOME/.gemini/config/mcp_config.json"
-assert_file_exists "Config file 1.x created" "$HOME/.gemini/antigravity/mcp_config.json"
-
-export HOME="$ORIG_HOME"
 
 # ============================================================
 echo ""

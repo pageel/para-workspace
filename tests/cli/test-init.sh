@@ -10,6 +10,14 @@ echo "=== PARA CLI Init Tests ==="
 echo "Workspace: $WORKSPACE"
 echo ""
 
+# Clean up and initialize the test workspace to make test self-contained
+rm -rf "$WORKSPACE"
+mkdir -p "$WORKSPACE"
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+
+echo "Running init.sh..."
+bash "$REPO_ROOT/cli/commands/init.sh" --path="$WORKSPACE"
+
 PASS=0
 FAIL=0
 
@@ -71,4 +79,8 @@ check_file ".para-workspace.yml" ".para-workspace.yml"
 
 echo ""
 echo "=== Results: $PASS passed, $FAIL failed ==="
+
+# Clean up
+rm -rf "$WORKSPACE"
+
 exit $FAIL

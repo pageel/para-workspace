@@ -7,7 +7,7 @@
 **Workspace Framework cho Con người & AI Agent**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.9.2-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.9.4-blue.svg)](../../CHANGELOG.md)
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -809,4 +809,4 @@ Phân hệ quét và rà soát bảo mật `/scan-sec` (được quản lý theo
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.9.2_
+_Phiên bản: 1.9.4_

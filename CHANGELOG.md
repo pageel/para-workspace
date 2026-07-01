@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.9.4] - 2026-07-01
+
+Local Development Sync & AI Index Auto-Sync.
+
+- **Added**: Implemented local project fallback sync in `./para install-tool --sync`, checking for local repository folders under `Projects/` to bypass remote API latencies.
+- **Added**: Implemented Index Auto-Sync, automatically parsing rule/skill metadata (`name`, `trigger`, `priority`) from `tool.manifest.yml` and updating Markdown catalog tables (`.agents/rules.md` and `.agents/skills.md`) in-place without duplication.
+- **Added**: Packaged and officially released all 18 staged templates from previous iterations (Vibecode session integrations, harness tracker formats, and HTML renderer explorer upgrades).
+- **Changed**: Improved cross-platform compatibility: stripped Windows CRLF carriage returns, resolved POSIX `find` binary paths, and escaped replacement variables (`/` and `&`) in `sed` execution.
+- **Changed**: Enhanced security by implementing Path Traversal checks for source/target file copies.
+- **Changed**: Synced version to 1.9.4 across `VERSION`, `VERSIONS.yml`, `cli/para`, `project.md`, `README.md`, translation locales, and catalogs.
+
 ## [1.9.2] - 2026-06-12
 
 Staged Release & Roadmap Optimization.
