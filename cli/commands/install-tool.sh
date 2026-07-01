@@ -789,7 +789,7 @@ if [ "$SYNC_MODE" = true ]; then
 
     # Fetch latest manifest from GitHub repo raw URL to avoid stale local manifest
     if [ -n "$TOOL_REPO" ]; then
-      local raw_manifest_url="https://raw.githubusercontent.com/${TOOL_REPO}/main/tool.manifest.yml"
+      raw_manifest_url="https://raw.githubusercontent.com/${TOOL_REPO}/main/tool.manifest.yml"
       echo "  🔍 Fetching latest manifest from GitHub..."
       curl -fsSL --max-time 15 "$raw_manifest_url" -o "$MANIFEST_FILE" 2>/dev/null || true
     fi
