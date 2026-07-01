@@ -767,6 +767,11 @@ if [ "$SYNC_MODE" = true ]; then
       # Overwrite manifest file with local manifest first (Source Manifest Overwrite)
       cp "$LOCAL_PROJECT_DIR/tool.manifest.yml" "$MANIFEST_FILE"
     fi
+    if [ -f "$LOCAL_PROJECT_DIR/install-hooks.sh" ]; then
+      cp "$LOCAL_PROJECT_DIR/install-hooks.sh" "$TOOL_INSTALL_DIR/install-hooks.sh"
+      # Re-load HOOKS_FILE path to point to the newly copied hooks
+      HOOKS_FILE="$TOOL_INSTALL_DIR/install-hooks.sh"
+    fi
     if [ -d "$LOCAL_PROJECT_DIR/templates/agents" ]; then
       mkdir -p "$SYNC_TEMP/templates"
       cp -r "$LOCAL_PROJECT_DIR/templates/agents" "$SYNC_TEMP/templates/"
