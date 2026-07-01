@@ -502,6 +502,12 @@ copy_agent_file_safe() {
   if [ ! -e "$dst" ]; then
     mkdir -p "$(dirname "$dst")"
     cp "$src" "$dst"
+    # Save a backup of the unmodified template for future conflict detection (dirty check)
+    if [ -n "$TOOL_INSTALL_DIR" ]; then
+      local backup_dst="$TOOL_INSTALL_DIR/.templates_backup/$rel_src"
+      mkdir -p "$(dirname "$backup_dst")"
+      cp "$src" "$backup_dst"
+    fi
     echo "  ✅ $atype/$atarget installed."
     return 0
   fi
@@ -520,12 +526,25 @@ copy_agent_file_safe() {
   # If there is a backup of the old template, check if workspace matches it
   local old_src=""
   if [ -n "$OLD_INSTALL_DIR_BACKUP" ]; then
-    old_src="$OLD_INSTALL_DIR_BACKUP/$rel_src"
+    if [ -f "$OLD_INSTALL_DIR_BACKUP/.templates_backup/$rel_src" ]; then
+      old_src="$OLD_INSTALL_DIR_BACKUP/.templates_backup/$rel_src"
+    elif [ -f "$OLD_INSTALL_DIR_BACKUP/$rel_src" ]; then
+      old_src="$OLD_INSTALL_DIR_BACKUP/$rel_src"
+    fi
+  elif [ -n "$TOOL_INSTALL_DIR" ] && [ -f "$TOOL_INSTALL_DIR/.templates_backup/$rel_src" ]; then
+    # Fallback for --sync mode: compare with the last installed templates backup
+    old_src="$TOOL_INSTALL_DIR/.templates_backup/$rel_src"
   fi
 
   if [ -n "$old_src" ] && [ -f "$old_src" ] && cmp -s "$old_src" "$dst"; then
     # Unmodified by user -> auto-overwrite
     cp "$src" "$dst"
+    # Save a backup of the unmodified template for future conflict detection (dirty check)
+    if [ -n "$TOOL_INSTALL_DIR" ]; then
+      local backup_dst="$TOOL_INSTALL_DIR/.templates_backup/$rel_src"
+      mkdir -p "$(dirname "$backup_dst")"
+      cp "$src" "$backup_dst"
+    fi
     echo "  ✅ $atype/$atarget updated."
     return 0
   fi
@@ -558,6 +577,12 @@ copy_agent_file_safe() {
 
   if [ "$answer" = "y" ] || [ "$answer" = "Y" ]; then
     cp "$src" "$dst"
+    # Save a backup of the unmodified template for future conflict detection (dirty check)
+    if [ -n "$TOOL_INSTALL_DIR" ]; then
+      local backup_dst="$TOOL_INSTALL_DIR/.templates_backup/$rel_src"
+      mkdir -p "$(dirname "$backup_dst")"
+      cp "$src" "$backup_dst"
+    fi
     echo "  ✅ $atype/$atarget overwritten."
   else
     echo "  ⏭️  $atype/$atarget skipped (local customizations preserved)."
