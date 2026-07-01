@@ -13,6 +13,7 @@ Local Development Sync & AI Index Auto-Sync.
 - **Changed**: Improved cross-platform compatibility: stripped Windows CRLF carriage returns, resolved POSIX `find` binary paths, and escaped replacement variables (`/` and `&`) in `sed` execution.
 - **Changed**: Enhanced security by implementing Path Traversal checks for source/target file copies.
 - **Changed**: Synced version to 1.9.4 across `VERSION`, `VERSIONS.yml`, `cli/para`, `project.md`, `README.md`, translation locales, and catalogs.
+- **Changed**: Resolved conflict between lifecycle hooks (`install-hooks.sh`) and local sync/update flows by implementing a local `.templates_backup/` cache for robust 3-way dirty checking and overwrite conflict prevention.
 
 ## [1.9.2] - 2026-06-12
 
