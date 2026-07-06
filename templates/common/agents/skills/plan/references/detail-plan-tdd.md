@@ -156,6 +156,7 @@
   - Expected: FAIL due to missing code/logic. Evidence auto-logged to `artifacts/tests/tdd-evidence.log`.
 - [ ] 3. 🟢 **GREEN: Write Minimal Code**
   - Implement minimum required logic in `feature.ts` to pass the test above (No extra features).
+- [ ] 3.5 🤖 📐 **CSA Bind:** Add `// @para-doc [#csa-[anchor-id]]` comment directly above the declaration of the new class/function/endpoint.
 - [ ] 4. 🟢 **Verify PASS**
   ```bash
   bash .agents/skills/tdd/scripts/tdd-test.sh npm test exact/path/to/feature.test.ts
@@ -167,7 +168,7 @@
   - [ ] Log shows 🟢 PASS (Green state)
   - [ ] (If missing FAIL) 🛑 Revert code, rewrite RED test.
 - [ ] 5.5 🤖 **Pre-commit Gate:** Run project's linter/compiler (e.g., `npm run lint`) and resolve any type/lint problems.
-- [ ] 5.6 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to compare changes against baseline snapshot to detect physical drift / M9 compliance), and `graph_audit_csa` (to verify spec coverage meets the project's configured threshold and bind introduced code entities).
+- [ ] 5.6 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to detect physical drift), and `graph_audit_csa` (with `planScope: "[active-plan-path]"` to verify plan-scoped spec coverage is 100% and bind introduced code entities).
 - [ ] 6. 👤 **Git Checkpoint:** Commit changes with message `tdd(feature): [Behavior] — red-green verified`.
 - [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Receive explicit user approval before committing.
 - [ ] 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
@@ -238,10 +239,10 @@
 - [ ] All Task List items from Phase 0 → Phase N are ticked `[x]`.
 - [ ] Every new function/method has a corresponding test.
 - [ ] 100% tests pass with pristine output (no errors/warnings).
-- [ ] **CSA Quality Verification:** Run CSA compliance audit (invoke `graph_audit_csa` MCP tool or run `npx para-graph audit csa`) to verify Spec-to-Code coverage >= 90.0% and no dangling spec edges (if CSA is applicable).
+- [ ] **CSA Quality Verification:** Run the **Global** CSA compliance audit (invoke `graph_audit_csa` MCP tool without `planScope` or run `npx para-graph audit csa` without `--plan-scope`) to verify global Spec-to-Code coverage meets the project's configured threshold (csa.spec_threshold in project.md) and zero dangling spec edges (if CSA is applicable).
 - [ ] **MCP Snapshot Diff Evaluation:** Run `project_snapshot` (at completion) and `project_diff` MCP tools to evaluate physical directory drift and verify the integrity of protected files.
 - [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `git status --ignored --porcelain` snapshot in `tdd-repo-before-[date].log` to identify newly generated untracked or ignored files. Agent MUST present the list to User and ask whether to delete them (if junk) or commit them (if missed in plan) before proceeding with cleanup.
-- [ ] **Code-Graph Sync:** Cập nhật đồ thị mã nguồn bằng lệnh: `npx para-graph build <project-name>` (if --graph is enabled).
+- [ ] **Code-Graph Sync:** Update source code graph via command: `npx para-graph build <project-name>` (if --graph is enabled).
 - [ ] [Project-specific checks: build pass, docs updated, governance rules...]
 - [ ] **KI Template Sync (M7/KR8):** IF project has `repo/templates/knowledge/`, verify KI template content reflects current version changes. Check metadata.json has valid `version` + `para_version`. Run `ki sync` if updated.
 - [ ] ⛔ CHECKPOINT (Walkthrough Completion): Agent MUST verify all above Walkthrough items are ticked [x] BEFORE proposing Status transition.

@@ -81,18 +81,16 @@ done
 
 ### Step 2. Interactive Selection
 
-1. Present the diff results as a **Staging Manifest**:
+1. Present the diff results as a **Staging Manifest** using a compact markdown table format (without extra space padding in columns to keep columns narrow):
 
-```
+```markdown
 📦 STAGING MANIFEST: [project]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-| Type     | File              | Status       |
-| -------- | ----------------- | ------------ |
-| Workflow | qa.md             | 🔄 Modified  |
-| Skill    | qa/SKILL.md       | 🔄 Modified  |
-| Workflow | staging.md        | 🆕 New       |
-| Rule     | tool-routing.md   | ✅ In sync   |
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+| Type | File | Status | Description |
+| :--- | :--- | :--- | :--- |
+| Workflow | qa.md | 🔄 Modified | Environment audit updates |
+| Skill | qa/SKILL.md | 🔄 Modified | QA persona updates |
+| Rule | csa-compliance.md | ✅ In sync | No changes |
 ```
 
 2. **Ask user:** "Stage all modified/new items? Or select specific items? (all / pick / cancel)"

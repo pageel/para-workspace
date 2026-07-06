@@ -435,7 +435,7 @@ Map each High/Medium priority backlog item to the phase where it will be impleme
      - If purely R&D, speculative, or undefined scope: use wildcard (e.g., `1.x.x`).
      - Otherwise, calculate exact target version bump (PATCH/MINOR/MAJOR) based on code change scope.
 
-#### 8.7. CSA Spec Anchor Scaffolding
+#### 8.7. CSA Spec Anchor Scaffolding (Shift-Left CSA Tasks)
 
 // turbo
 
@@ -445,9 +445,9 @@ Map each High/Medium priority backlog item to the phase where it will be impleme
 2. Read the spec file and extract all spec anchors defined as `<span id="csa-..."></span>` or `#csa-...`.
 3. For each extracted anchor ID:
    a. Identify the target class/function/file name from the anchor's title or surrounding text.
-   b. Proactively inject a sub-task into the plan phases (Phase 1 or 2) requiring the Agent to bind this spec anchor to its matching code entity using a `@para-doc` comment:
-      ` - [ ] Bind spec anchor 'csa-[anchor-id]' to code declaration with @para-doc comment.`
-4. Log: `📐 CSA Spec Scaffolding: Injected [N] spec anchor tasks into Phase [X]`
+   b. **Shift-Left Binding Task:** In the generated plan's Task List, the Agent **MUST** inject a dedicated sub-task directly under the specific coding task in the phase implementing that code component. **DO NOT** bundle all binding tasks in a single phase or final checkpoint. Format:
+      ` - [ ] 📐 CSA Bind: Add '// @para-doc [#csa-[anchor-id]]' comment directly above the declaration of [class/function name].`
+4. Log: `📐 CSA Spec Scaffolding: Injected [N] spec anchor tasks directly into their respective Phase task lists`
 
 #### 9. Write Plan File
 
@@ -523,6 +523,8 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
    - **Governance:** Project maintenance rules satisfied? Version sync points covered?
      - **CSA Spec Warning:** If the project has a `csa:` configuration map in `project.md` (CSA is enabled) and this plan was created after a brainstorm session, the Agent **MUST** check if a specification has been created or proposed. If no spec exists, the Agent **MUST** trigger a warning advising the user to create a specification using the `/spec` workflow first to enable full CSA double-binding compliance.
      - **CSA Spec Mapping Check (MANDATORY HARNESS):** If a baseline spec file is defined or referenced for this plan, the Agent **MUST** extract all Spec Anchor IDs from the spec file (scanning for HTML anchors like `id="csa-..."` or `name="csa-..."`) and verify that every spec anchor ID is mapped in the plan's CSA Spec Mapping table. If mapping is incomplete (less than 100% coverage), the Agent **MUST** fail the audit, report the list of missing spec anchor IDs to the User, and block plan activation until the mapping table is fully updated.
+     - **CSA Anchor Mapping Conflict:** If the Agent encounters complex code structures, multiple overlapping requirements, or is uncertain how to map specific anchors to code components without violating the G1 (One-to-One) rule during plan creation:
+       - **Trigger:** The Agent MUST stop and suggest running `/brainstorm [project-name] csa-conflict-[component-name]` to evaluate alternatives before finishing the plan draft.
    - **Completeness:** All target files to be created/modified are accounted for?
    - **Risk Coverage:** High risks mapped to corresponding Harness Guards?
 
@@ -534,6 +536,12 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
    - Update checklist statuses in the `## Post-Draft Audit Gate` table from `⬜` to `✅ Passed`.
    - Update the `## TDD Task Classification` table.
    - Set `Audit Result` from `PENDING` to `PASSED` and increment the review counter by 1.
+
+6. **LINT (MANDATORY):** Run the Plan Linter script to verify the plan aligns structurally with the chosen template:
+   ```bash
+   export PATH="/home/tienle/.nvm/versions/node/v24.12.0/bin:$PATH" && node .agents/skills/plan/scripts/lint-plan.js Projects/[project-name]/artifacts/plans/[plan-name].md .agents/skills/plan/references/[template-name].md
+   ```
+   If the lint fails, the Agent MUST immediately fix the plan file's headings and structures before presenting the audited plan to the User.
 
 #### 9.7. Propose Audited Plan & Platform Mirroring
 
@@ -875,7 +883,12 @@ If `--phase` flag is present (which is default for this action), execute the pla
 
 The Agent MUST read and obey inline `⛔ CHECKPOINT` guards. When transitioning phases, the Agent CANNOT move to the next phase unless:
 1. ALL tasks in the current phase are actually marked as completed `[x]`, OR the user explicitly grants permission to skip the remaining tasks. Do not auto-assume tasks are done.
-2. **CSA Compliance Gate:** If the project has CSA enabled (`project.md` has `csa` configuration map), the Agent **MUST** run the MCP tool `graph_audit_csa(projectName: "[project-name]")` (or run CLI `npx para-graph audit csa`). The weighted spec coverage **MUST** meet the threshold (default 90%). If below threshold, Agent MUST STOP, resolve all missing `@para-doc` comments or spec anchors, and run the audit again.
+2. **CSA Compliance Gate (Double-Gate):** If the project has CSA enabled (`project.md` has `csa` configuration map):
+   - **Intermediate Phase Checkpoints (Phases 1 to N-1):** The Agent **MUST** run a Plan-Scoped compliance audit using the MCP tool `graph_audit_csa(projectName: "[project-name]", planScope: "[active-plan-path]")` (or CLI `npx para-graph audit csa --project . --plan-scope [active-plan-path]`). This excludes future planned spec anchors, focusing only on active requirements. The plan-scoped spec coverage **MUST** meet the threshold (default 100%).
+   - **Final Phase / Release Verification (Phase N):** The Agent **MUST** run a Global compliance audit using the MCP tool `graph_audit_csa(projectName: "[project-name]")` (or CLI `npx para-graph audit csa`). This ensures that no global regression, orphaned anchors, or broken references exist before shipping. Global spec coverage **MUST** meet the threshold (default 90% or 100%).
+   - If the audit fails, Agent MUST STOP, resolve all missing `@para-doc` comments or spec anchors, and run the audit again.
+   - **CSA Insertion Conflict Trigger:** If writing `@para-doc` comments into raw code files causes compiler errors, linter issues (Prettier/ESLint), or structural formatting problems:
+     - **Trigger:** The Agent MUST immediately stop code modifications to prevent syntax corruption, report the issue, and suggest running `/brainstorm [project-name] csa-conflict` to decide on an alternative anchor placement strategy.
 3. **Physical Drift Gate:** The Agent **MUST** run the MCP tool `project_snapshot(projectName: "[project-name]")` followed by `project_diff` to verify physical directory structure changes. Agent MUST present the list of added, modified, or deleted files to the User, verifying that they match the Approved File Inventory for the Phase and no protected files (`project_protected_files`) are modified outside the approved scope.
 
 #### 6. Task Implementation

@@ -161,6 +161,18 @@ export async function fetchUserProfile(userId: string): Promise<UserProfile> {
 
 ---
 
+## 8. Browser Sandbox, Transport & Path Safety
+
+> MANDATORY for features utilizing Cookie, Authentication, Session, cross-origin/subdomain API calls, or path parameters.
+
+*   **CORS Credentials configuration**: [e.g. fetch options must specify `credentials: 'include'`]
+*   **Cookie Security Attributes**: [e.g. session_cookie must specify HttpOnly, Secure, SameSite=Lax, Domain=.example.com]
+*   **Transport Mode & Context**: [e.g. Client-to-Edge-Server (browser fetch) vs Server-to-Server (direct backend request lacking browser cookies)]
+*   **Token/Session Mapping**: [e.g. how the server matches a decoupled token to a session in KV if cookies are absent]
+*   **Path Parameter Resolution Safety**: [MANDATORY for any CLI command or API parameter representing a file/directory path. Specify: Base Resolution: workspaceRoot | absolute-only | CWD (relative to process start CWD)]
+
+---
+
 ## Success Criteria
 
 > Specific, testable conditions — not vague goals.

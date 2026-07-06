@@ -234,7 +234,7 @@ Reloaded Skills:
   1.2 👤 **[Step name]** — [Detail: destructive/external operation, Agent proposes → User approves.]
 
   1.N-1 🤖 **Pre-commit Gate** — Run project's linter/compiler (e.g., `npm run lint`, `tsc`, `cargo check`) and resolve any type/lint problems before commit.
-  1.N-2 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to compare changes against baseline snapshot to detect physical drift / M9 compliance), and `graph_audit_csa` (to verify spec coverage meets the project's configured threshold and bind introduced code entities).
+  1.N-2 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to detect physical drift), and `graph_audit_csa` (with `planScope: "[active-plan-path]"` to verify plan-scoped spec coverage is 100% and bind introduced code entities).
   1.N 👤 **Git checkpoint Phase 1 — Commit**
 
 ```bash
@@ -274,6 +274,7 @@ git push origin main
   - Expected: FAIL due to missing code/logic. Evidence auto-logged to `artifacts/tests/tdd-evidence.log`.
 - [ ] 3. 🟢 **GREEN: Write Minimal Code**
   - Implement minimum required logic to pass the test above (No extra features).
+- [ ] 3.5 🤖 📐 **CSA Bind:** Add `// @para-doc [#csa-[anchor-id]]` comment directly above the declaration of the new class/function/endpoint.
 - [ ] 4. 🟢 **Verify PASS**
   ```bash
   bash .agents/skills/tdd/scripts/tdd-test.sh [test-command] [test-file]
@@ -291,12 +292,12 @@ git push origin main
 
 #### Task List
 
-- [ ] 1.1 [🧪/📝] [Task description]
-- [ ] 1.2 [🧪/📝] [Task description]
+- [ ] 1.1 [📝] [Specific implementation task — e.g. Write config files]
+- [ ] 1.2 [📝] 📐 **CSA Bind:** Add `// @para-doc [#csa-[anchor-id]]` comment directly above the declaration of the new class/function/endpoint.
 - [ ] 🤖 **Compare Git Drift:** Compare current repo state with `artifacts/tests/tdd-repo-before-[date].log` to identify newly generated untracked or ignored files in this phase.
 - [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
 - [ ] 1.N-1 🤖 **Pre-commit Gate:** Run project's linter/compiler/tests and resolve any problems.
-- [ ] 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to compare changes against baseline snapshot to detect physical drift), and `graph_audit_csa` (to verify spec coverage meets the project's configured threshold and bind introduced code entities).
+- [ ] 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to detect physical drift), and `graph_audit_csa` (with `planScope: "[active-plan-path]"` to verify plan-scoped spec coverage is 100% and bind introduced code entities).
 - [ ] 1.N 👤 **Git Checkpoint:** Commit changes with message `[feat/fix/chore]([scope]): [short description]`.
 - [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Run the MCP tool `project_session_compact` to update session memory -> Read the updated `session.md` using `view_file` to reload context -> Obtain explicit User approval in the chat to transition to the next Phase.
 - [ ] 1.N+1 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
@@ -341,7 +342,7 @@ git push origin main
 - [ ] Post-Draft Audit Gate completed with PASS result.
 - [ ] All 🧪 TDD tasks have evidence in `artifacts/tests/tdd-evidence.log`.
 - [ ] All tests pass with pristine output (no errors/warnings).
-- [ ] **CSA Quality Verification (MCP):** Run MCP tool `graph_audit_csa` (or CLI `npx para-graph audit csa` as fallback) to verify Spec-to-Code coverage meets the project's configured threshold and no dangling spec edges.
+- [ ] **CSA Quality Verification (MCP):** Run the **Global** CSA compliance audit (invoke `graph_audit_csa` MCP tool without `planScope` or run `npx para-graph audit csa` without `--plan-scope`) to verify global Spec-to-Code coverage meets the project's configured threshold (csa.spec_threshold in project.md) and zero dangling spec edges.
 - [ ] **MCP Snapshot Diff Evaluation (MCP):** Run MCP tools `project_snapshot` and `project_diff` to evaluate physical directory drift and verify the integrity of protected files.
 - [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `git status --ignored --porcelain` snapshot in `tdd-repo-before-[date].log` to identify newly generated untracked or ignored files. Agent MUST present the list to User and ask whether to delete them (if junk) or commit them (if missed in plan) before proceeding with cleanup.
 - [ ] [Project-specific checks: build pass, docs updated, governance rules...]

@@ -3,11 +3,11 @@ description: Systematic Q&A loop to stress-test plans, specs, and artifacts befo
 source: catalog
 ---
 
-# /qa [mode] [target] [--graph]
+# /qa <action> [target] [--graph] [--sys]
 
-> **Workspace Version:** 1.8.5 (Graph Intelligence)
+> **Workspace Version:** 1.9.4 (Spec-Audit Enhanced)
 
-Systematic Q&A review loop that stress-tests PARA artifacts (plans, specs, brainstorms, roadmaps) by generating probing questions across multiple dimensions. Catches logic errors, security gaps, and inconsistencies **before** activating expensive model execution.
+Systematic Q&A review and quality audit loop (Red Team) for PARA artifacts (plans, specs, brainstorms, roadmaps). Catches logic errors, security gaps, architectural drift, and CSA audit violations **before** starting code execution.
 
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to resolve the user's preferred language.
 > Resolution priority:
@@ -20,11 +20,23 @@ Systematic Q&A review loop that stress-tests PARA artifacts (plans, specs, brain
 > 4. Default ultimate fallback: "en"
 > All output (chat response) MUST be translated to the chat language, all internal reasoning (<thought>) MUST be written in the thinking language, and all generated files in artifacts/ (plans, tasks, qa) MUST follow the artifacts language.
 
+## Actions
+
+| Action | Description | When to use |
+|:--|:--|:--|
+| `plan` | Phase-by-phase Q&A loop on a Detail Plan | Before `/plan` activation (Draft → Active) |
+| `spec` | Section-by-section Q&A on a Spec and alignment check with Sysdesign | Before spec approval |
+| `audit` | Compliance-focused Q&A (guards, governance, VCS, CSA) | Post-review harness verification or pre-commit |
+| `generic` | Generic Q&A on other markdown artifacts (brainstorms, roadmaps) | Macro artifact evaluation |
+
 ## Options
 
 | Option | Description |
 |:--|:--|
 | `--graph` | Run Graph Pipeline (Build → Query → Bundles) to anchor Q&A in real codebase architecture |
+| `--sys` | Cross-validate Spec against the system design (Sysdesign) to detect structural drift (used in `spec` action only) |
+
+---
 
 ## Why This Workflow Exists
 
@@ -43,6 +55,7 @@ Systematic Q&A review loop that stress-tests PARA artifacts (plans, specs, brain
 - 🔍 **QA/Test Lead (`[CONS]`):** You are obsessed with edge cases and contradictions. You ask: _"Why does Phase 1 say 'TypeScript' but Phase 3 mentions 'Python script'? How exactly do we verify this step before moving to the next? What is the edge case if the input is null?"_
 - 💼 **Project Tech Lead (`[GOV]`, `[COMP]`):** You are the PM who **deeply knows this specific project**. Before asking questions, you MUST read `project.md`, ALL project rules (`.agents/rules/`), ALL project skills (`.agents/skills/`), and the project's release/maintenance process. You ask governance-level questions that generic reviewers miss: _"The project has M6 tarball rule — does this plan include a release phase? The project is OSS — are all commits scoped to `repo/` per M1? The maintenance rule requires version sync across 8 files — is the Governance Checklist complete? Does the Walkthrough cover the project's specific build+test+release cycle?"_
 - 📐 **CSA Expert (`[CSA]`):** You enforce Spec-to-Code double-binding and micro-anchoring rules. Before asking questions, you MUST check if the project has CSA configuration. You ask: _"Does the plan map every spec anchor to a physical entity? Are the proposed anchor locations in code correctly positioned above public entities, and not clustered? Do all new anchor IDs follow the kebab-case csa-prefix convention? Are checkpoints for local phase-level CSA checks and a final 100% global CSA audit properly established?"_
+- 💻 **Runtime Environment Auditor (`[ENV]`):** You hunt for implicit dependencies on execution context (CWD, environment variables, globally shared mutable state, or platform runtime differences). You ask: _"Does this implementation assume the process runs under a specific working directory? How does it resolve file paths under different runtime environments (CLI vs background daemon)? Are there any implicit assumptions about environment variables, permissions, or global process states?"_
 
 ## Modes
 
@@ -66,6 +79,7 @@ Each question is tagged with a dimension. Agent generates questions from ALL dim
 | **Consistency**  | `[CONS]`  | Mismatched numbers, names, refs across sections                       |
 | **Dependencies** | `[DEP]`   | Missing imports, unresolved cross-phase deps, version conflicts       |
 | **Governance**   | `[GOV]`   | Missing project rules compliance, release process gaps, checklist drift |
+| **Environment**  | `[ENV]`   | Implicit process state dependencies (CWD drift, global mutations, environment differences) |
 
 ---
 
@@ -94,7 +108,7 @@ Each question is tagged with a dimension. Agent generates questions from ALL dim
      - Load `csa-compliance.md` rule and `csa.md` QA domain template.
      - Mandate that **CSA Expert** is activated for the Red Team Roster.
    - Identify: project type (OSS/internal), release process, build tool, git scope rules.
-6. **Memory-Assisted QA (CONDITIONAL):** IF project has `.beads/graph/` directory, use `memory_search` to find past QA findings, known issues, and recurring patterns. This prevents Red Team from re-raising resolved issues and focuses probing on genuinely new risk areas.
+6. **Memory-Assisted QA (CONDITIONAL):** IF project has `.beads/graph/` directory, use `memory_search` to find past QA findings, known issues, and recurring patterns. Specifically, search for friction beads and past decisions related to the physical files specified in the target plan's inventory. This prevents Red Team from re-raising resolved issues, and allows them to ask historical questions based on past project quirks.
 7. **Domain-Specific Red Team Templates:** Load the expert persona templates from `.agents/skills/qa/domains/` (if any).
 
 ### Step 0.25. Graph Context Pipeline (if --graph)
@@ -181,7 +195,9 @@ For each section/phase in the artifact:
 
 1. **Context Recovery & Rule Check (MANDATORY):** Before generating questions for the current phase or section, Agent MUST actively re-read the project rules index (`.agents/rules.md`) and load any relevant rule files (e.g., `maintenance.md`) to verify if any specific checklists, caveats, or constraints apply to the current Phase's specific actions.
 2. **Phase-Specific Graph Context (if --graph AND phase-loop process):** Agent MUST execute the Graph Context Pipeline (Step 0.25) scoped specifically to the nodes modified or affected by this Phase. This ensures focused impact analysis.
-3. **Generate probing questions** based ONLY on the approved Focus Areas, Red Team Roster, and the actively recovered Rules context.
+3. **Generate probing questions** based on the approved Focus Areas, Red Team Roster, the actively recovered Rules context, and the **specific project domain context** (especially for `spec` mode):
+   - **Spec-to-Sysdesign Cross Analysis (MANDATORY for `spec` mode):** The Agent MUST NOT generate generic questions. Instead, it MUST analyze the target Spec alongside the active system design (`sysdesign-*.md`) and codebase structure to identify domain-specific risks (e.g., payload mismatch, concurrency bottlenecks, security loopholes like session management drift, database foreign key constraints conflict).
+   - **Dynamic Contextualization:** Draft questions that reference physical entities (API endpoints, database tables, specific modules) rather than abstract concepts. Use the persona templates in the QA Skill only as a baseline of *how* to question, but generate the *what* entirely based on the target artifact's technical details.
    - **No Arbitrary Limits:** Generate **as many questions as necessary** to fully stress-test the section.
    - Each question MUST be tagged with a dimension (`[LOGIC]`, `[SEC]`, etc.).
 3. **Do NOT answer them yet.**
@@ -352,7 +368,7 @@ If the Q&A generated ≥ 10 questions or found ≥ 3 issues:
 3. Format: full Q&A cards + summary table + fixes applied.
 4. **Link to Artifact:** Ngay sau khi lưu file QA, Agent BẮT BUỘC phải chèn một dòng `> **QA Report:** [qa-report-name.md](path/to/qa-report.md)` vào ngay bên dưới header/frontmatter của file mục tiêu (target artifact) để tạo bằng chứng Audit (Audit Trail).
 
-### Step 10.5. Graph Memory Push (CONDITIONAL)
+### Step 11. Graph Memory Push (CONDITIONAL)
 
 > **Gate:** Only trigger if project has `.beads/graph/` directory.
 
@@ -372,11 +388,42 @@ If the Q&A generated ≥ 10 questions or found ≥ 3 issues:
 
 4. **IF no graph** → Skip silently.
 
-### Step 11. Handover & Execution Guard
+### Step 12. Self-Improvement & Process Graduation (CONDITIONAL)
+
+> **Purpose:** Analyze resolved QA issues (`⚠️ Issue` or `❌ Fail` verdicts) to propose systemic process improvements (rules, workflows, templates).
+
+1. Review all QA questions in this review round that had a verdict of `⚠️ Issue` or `❌ Fail` (prior to resolution).
+2. If any of these issues represent systemic gaps (such as outdated templates, missing rules, or lack of automated tooling):
+   a. **Propose Rule/Workflow Graduation:** Suggest creating/updating a rule in `.agents/rules/agent-behavior.md` or a template in `.agents/workflows/`.
+   b. **Prompt for Consent:** Proactively present the proposal to the user in the chat and wait for confirmation before applying.
+
+### Step 13. Handover & Execution Guard
 
 **CRITICAL RULES:**
 1. **NO AUTO-EXECUTION:** After completing the QA review and activating the plan, the Agent **MUST NOT** perform any coding task or file modification.
-2. **HANDOVER REQUIREMENT:** The Agent **MUST** stop execution and instruct the user to run `/plan dev [project-name]` or `/vibecode loop` to begin coding. Self-triggering code implementation in the same session is a sovereignty violation.
+2. **HANDOVER REQUIREMENT:** The Agent **MUST** stop execution and explicitly recommend running the slash command `/plan [project-name] dev` to begin development. The Agent **MUST NOT** suggest manual file modifications or ad-hoc development commands before the `/plan dev` workflow is initiated (Mandatory per Rule 3d).
+
+## Spec Action — Additional Checks (Spec Audit)
+
+When running `/qa spec`, the Agent MUST perform these automated quality control steps:
+
+### 1. Spec Quality Checklist Audit
+
+> 🧩 **Spec Skill:** Load the Spec Governance Skill (located under `skills/spec/`) to retrieve all check items from the Spec Quality Checklist.
+
+The Agent matches the Specification against the verification check items retrieved from the Spec Governance Skill and aggregates the quality score (e.g., `[passed]/[total] Pass`).
+
+### 2. Sysdesign Alignment Check
+If the `--sys` option is enabled or a system design file exists under `artifacts/sysdesigns/`:
+*   **API Schema Check:** Compare the new/modified API endpoints in the Spec against the communication design in Sysdesign to detect payload, query params, or HTTP method drift.
+*   **Database Schema Check:** Compare SQL DDL statements, field types, foreign keys, and check constraints in the Spec Migration against the ERD of the Sysdesign. Detect logic errors (e.g., conflicting foreign key constraints or missing columns).
+*   **Structure Check:** Ensure the proposed file structure in the Spec conforms to the software architecture layout defined in the Sysdesign.
+
+### 3. CSA Anchors Audit
+*   **G1 (One-to-One):** Ensure each `<span id="csa-...">` anchor serves exactly one unique test verification or business requirement.
+*   **G2 (Reverse Validation):** Verify if changing the corresponding code file would invalidate the anchor description.
+*   **G3 (No Blanket):** Prohibit placing blanket anchors at the macro header level (H1/H2) without detail breakdown.
+*   **Format Check:** Ensure all anchor IDs start with `csa-` and use kebab-case format.
 
 ---
 
