@@ -292,6 +292,7 @@ git push origin main
 
 #### Task List
 
+- [ ] 1.0 **Pre-flight:** Read TDD Guidelines (skills/tdd/SKILL.md) and CSA Compliance (skills/csa/SKILL.md) to initialize the development cycle.
 - [ ] 1.1 [📝] [Specific implementation task — e.g. Write config files]
 - [ ] 1.2 [📝] 📐 **CSA Bind:** Add `// @para-doc [#csa-[anchor-id]]` comment directly above the declaration of the new class/function/endpoint.
 - [ ] 🤖 **Compare Git Drift:** Compare current repo state with `artifacts/tests/tdd-repo-before-[date].log` to identify newly generated untracked or ignored files in this phase.

@@ -172,6 +172,7 @@ git push origin main
 
 #### Task List
 
+[ ] 1.0 **Pre-flight:** Read TDD Guidelines (skills/tdd/SKILL.md) and CSA Compliance (skills/csa/SKILL.md) to initialize the development cycle.
 [ ] 1.1 🤖 [Specific implementation task — e.g. Write business logic]
 [ ] 1.2 🤖 📐 **CSA Bind:** Add `// @para-doc [#csa-[anchor-id]]` comment directly above the declaration of the new class/function/endpoint.
 [ ] 1.3 👤 [Task requiring user approval]

@@ -141,6 +141,7 @@
 
 **TDD Cycle:**
 
+- [ ] 1.0 **Pre-flight:** Read TDD Guidelines (skills/tdd/SKILL.md) and CSA Compliance (skills/csa/SKILL.md) to initialize the development cycle.
 - [ ] 1. 🔴 **RED: Write Failing Test**
   ```typescript
   // Example code block testing specific behavior
