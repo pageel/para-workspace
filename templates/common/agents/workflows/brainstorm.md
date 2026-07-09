@@ -204,8 +204,10 @@ mkdir -p Projects/[project-name]/artifacts/brainstorms
 - **Filename:** `brainstorm-[topic-slug].md` (prefix yes, date NO — living document)
 - **Template:** `brainstorm.md` from Sidecar Skill
 - **Append rule:** If a file with the same topic already exists, Agent MUST append a new `### YYYY-MM-DD` entry to the Running Log section instead of creating a new file. Agent SHOULD also update the Synthesis section.
-
-Save to `Projects/[project-name]/artifacts/brainstorms/brainstorm-[topic-slug].md`.
+- **Link-Only Pointer Specification (Platform Tracker Exemption):**
+  - Save the detailed brainstorm file directly inside the project directory: `Projects/[project-name]/artifacts/brainstorms/brainstorm-[topic-slug].md`.
+  - **MUST NOT** write detailed brainstorm contents directly into the platform-level artifact file in the `brain/` directory of the IDE.
+  - Instead, create the platform-level file (e.g. `brainstorm_[topic-slug].md`) as a **Link-Only Pointer** containing only the `<!-- TRACKER (link-only) -->` header comment and a clickable Markdown link pointing to the physical brainstorm file in the project. All other detailed sections MUST be omitted/deleted from the platform file to avoid content duplication and token bloat.
 
 #### Path B — Finalized Decision (frozen document)
 
@@ -216,8 +218,10 @@ mkdir -p Projects/[project-name]/artifacts/para-decisions
 - **Filename:** `brainstorm-[YYYY-MM-DD]-[topic-slug].md` (WITH date — backward compatible)
 - **Template:** `decision.md` from Sidecar Skill
 - **Cross-ref:** If this decision evolved from an Open brainstorm, add the brainstorm path in the header.
-
-Save to `Projects/[project-name]/artifacts/para-decisions/brainstorm-[YYYY-MM-DD]-[topic].md`.
+- **Link-Only Pointer Specification (Platform Tracker Exemption):**
+  - Save the detailed decision file directly inside the project directory: `Projects/[project-name]/artifacts/para-decisions/brainstorm-[YYYY-MM-DD]-[topic-slug].md`.
+  - **MUST NOT** write detailed decision contents directly into the platform-level artifact file in the `brain/` directory of the IDE.
+  - Instead, create the platform-level file (e.g. `brainstorm_[topic-slug].md`) as a **Link-Only Pointer** containing only the `<!-- TRACKER (link-only) -->` header comment and a clickable Markdown link pointing to the physical decision file in the project. All other detailed sections MUST be omitted/deleted from the platform file to avoid content duplication and token bloat.
 
 #### File 2 — Research (Extract Paradigm — user consent required)
 

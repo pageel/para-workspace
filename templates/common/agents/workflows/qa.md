@@ -367,8 +367,12 @@ If the Q&A generated ≥ 10 questions or found ≥ 3 issues:
    - Keep kebab-case, max 60 chars
    - If target is the active plan → use plan filename as slug
 
-3. Format: full Q&A cards + summary table + fixes applied.
-4. **Link to Artifact:** Ngay sau khi lưu file QA, Agent BẮT BUỘC phải chèn một dòng `> **QA Report:** [qa-report-name.md](path/to/qa-report.md)` vào ngay bên dưới header/frontmatter của file mục tiêu (target artifact) để tạo bằng chứng Audit (Audit Trail).
+3. **Link-Only Pointer Specification (Platform Tracker Exemption):**
+   - Save the full detailed QA report directly inside the project directory: `Projects/[project]/artifacts/qa/qa-[date]-[mode]-[target]-[seq].md` with the required format: **full Q&A cards + summary table + fixes applied**.
+   - **MUST NOT** write detailed QA contents directly into the platform-level artifact file in the `brain/` directory of the IDE.
+   - Instead, create the platform-level file (e.g. `qa_report_[target].md`) as a **Link-Only Pointer** containing only the `<!-- TRACKER (link-only) -->` header comment and a clickable Markdown link pointing to the physical QA report file in the project. All other detailed sections MUST be omitted/deleted from the platform file to avoid content duplication and token bloat.
+
+4. **Link to Artifact:** Immediately after saving the QA file, the Agent MUST insert a line `> **QA Report:** [qa-report-name.md](path/to/qa-report.md)` directly below the header/frontmatter of the target artifact to create an Audit Trail.
 
 ### Step 11. Graph Memory Push (CONDITIONAL)
 
