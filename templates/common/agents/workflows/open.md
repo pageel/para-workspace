@@ -5,7 +5,7 @@ source: catalog
 
 # /open [project-name]
 
-> **Workspace Version:** 1.6.3 (Central Gate)
+> **Workspace Version:** 1.9.5 (Graph Intelligence)
 
 Start a new working session with full context from previous sessions.
 
@@ -211,6 +211,17 @@ test -f "Projects/[project-name]/.beads/graph/[project-name].db" || test -f "Pro
   1. Use `insight_search` with `category: "risk"` or empty query `""` to retrieve outstanding project risks, gotchas, or decisions. Print them to the session context so the Agent is aware of architectural warnings (e.g., audit drift).
   2. Run `npx para-graph audit csa --project Projects/[project-name]` (or use the `graph_audit_csa` MCP tool) to show the current CSA coverage rate and list any dangling spec links.
 
+### 3.8. Check Unimplemented Specifications (v1.9.5+)
+
+// turbo
+
+Check if the specification index file `Projects/[project-name]/artifacts/specs/README.md` exists:
+
+1. **IF exists:**
+   - Scan the `Specification Registry` table to find any Spec with `Implementation` status = `⏳ Pending` or `Planned`.
+   - Store the list of pending specs for the report.
+2. **IF not exists** → Skip.
+
 ### 4. Read task context — State Cache (L3 Experiment)
 
 > ⚠️ **State Cache Architecture (v0.17.5+):** Use SQLite State Cache to optimize tokens and file read performance.
@@ -402,6 +413,10 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
    → Review and transition status to Active to execute
    (omit if no draft plans)
 
+📐 SPEC PENDING: [spec-name] (Implementation: ⏳ Pending)
+   → Create plan /plan to implement, or /backlog sync
+   (omit if no pending specs)
+
 💭 BRAINSTORM PENDING: [topic] (YYYY-MM-DD)
    → /brainstorm to continue, or /plan to formalize
    (omit if no pending brainstorms)
@@ -443,10 +458,11 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 > **Priority logic for Suggested Actions:**
 > 1. Active plan tasks (if any)
 > 2. 📝 Draft plan review (if draft plans detected)
-> 3. ⚠️ Strategy cascade / SYNC pending (if any)
-> 4. 💭 Pending brainstorms (if any)
-> 5. 📐 Roadmap next phase — only when no active plan (propose `/spec create` before `/plan create`)
-> 6. 🔥 Hot lane items
+> 3. 📐 Spec pending implementation (if pending specs detected)
+> 4. ⚠️ Strategy cascade / SYNC pending (if any)
+> 5. 💭 Pending brainstorms (if any)
+> 6. 📐 Roadmap next phase — only when no active plan (propose `/spec create` before `/plan create`)
+> 7. 🔥 Hot lane items
 >
 > 🔗 **Display constraint:** When suggesting an action that refers to a specific document (e.g., a detail plan, brainstorm file, roadmap, or hot lane file), **MUST** include a clickable markdown file link to that document so the user can open it instantly. (Format: `[filename](file:///absolute/path/to/file)`)
 

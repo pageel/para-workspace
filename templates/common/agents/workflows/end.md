@@ -215,6 +215,26 @@ bash .agents/skills/vibecode/scripts/session-manager.sh stop
       ```
 3. **IF no brainstorm in session** → Skip silently
 
+### 3.4. Spec Change & Implementation Status Sync (v1.9.5+)
+
+// turbo
+
+Check if the specification index file `Projects/[project-name]/artifacts/specs/README.md` exists:
+
+1. **IF exists:**
+   - Scan the git status and session log for any created or modified spec files under `Projects/[project-name]/artifacts/specs/spec-*.md`.
+   - **IF any spec changes detected:**
+     a. Ensure the specs are registered in the `specs/README.md` table.
+     b. Prompt the user to update or set the `Implementation` status of these specs (e.g. `⏳ Pending` or `✅ Done`).
+     c. **IF a spec implementation status changes to `✅ Done`:**
+        - Push a graph memory event using `memory_push` with:
+          - **kind:** `spec-implemented`
+          - **content:** `Spec [Key]: [Spec Name] has been fully implemented.`
+          - **sessionId:** `YYYY-MM-DD-end-specs`
+          - **metadata:** `{ "spec_file": "artifacts/specs/spec-xxx.md", "status": "Done" }`
+        - Curate memory immediately after pushing.
+2. **IF not exists** → Skip.
+
 ### 4. Check Plan Phase Progress (if active)
 
 // turbo

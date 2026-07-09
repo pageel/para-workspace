@@ -4,7 +4,7 @@ description: >
   Companion skill for the /open workflow. Automates workspace diagnostic steps when starting
   a new session on a project. Collects active session status, project contracts, active task metrics, 
   compact memory presence, roadmap phases, pending brainstorms, and git status.
-version: "1.0.0"
+version: "1.9.5"
 ---
 
 # Open Skill
@@ -47,6 +47,7 @@ Compact memory: Present
 Sprint-current lines: 12
 Active backlog tasks: 0
 Git status: Modified files ...
+Pending Specifications: spec-2026-07-09-debug-observability-convention.md (⏳ Pending)
 ==========================================
 ```
 

@@ -103,4 +103,12 @@ else
     echo "  Not a git repository"
 fi
 
+# 10. Check Unimplemented Specifications (v1.9.5+)
+echo "Pending Specifications:"
+if [ -f "${PROJECT_DIR}/artifacts/specs/README.md" ]; then
+    grep -E '⏳ Pending|Planned' "${PROJECT_DIR}/artifacts/specs/README.md" 2>/dev/null || echo "  None"
+else
+    echo "  None (Specs Index Missing)"
+fi
+
 echo "==========================================="
