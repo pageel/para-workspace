@@ -390,7 +390,7 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 
 🗺️ ROADMAP: [name] ([N] phases: [done]✅ [active]🔨 [planned]📋)
    Current: Phase [N]: [Name] (vX.Y)
-   Next:    Phase [N+1]: [Name] — [has plan / needs /plan create]
+   Next:    Phase [N+1]: [Name] — [has plan / needs /spec create]
    ⚠️ Strategy updated after roadmap — needs review?
    (omit if no roadmap)
 
@@ -435,7 +435,7 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 💡 SUGGESTED ACTIONS:
 1. [Priority 1 — from active plan current phase]
 2. [Priority 2 — brainstorm pending / strategy cascade / sync]
-3. [Priority 3 — roadmap next phase if plan nearly done]
+3. [Priority 3 — roadmap next phase (propose /spec create before /plan create)]
 
 ❓ What would you like to work on?
 ```
@@ -445,7 +445,7 @@ cd Projects/[project-name]/repo && git status --short && git log -n 1 --oneline
 > 2. 📝 Draft plan review (if draft plans detected)
 > 3. ⚠️ Strategy cascade / SYNC pending (if any)
 > 4. 💭 Pending brainstorms (if any)
-> 5. 📐 Roadmap next phase — only when no active plan
+> 5. 📐 Roadmap next phase — only when no active plan (propose `/spec create` before `/plan create`)
 > 6. 🔥 Hot lane items
 >
 > 🔗 **Display constraint:** When suggesting an action that refers to a specific document (e.g., a detail plan, brainstorm file, roadmap, or hot lane file), **MUST** include a clickable markdown file link to that document so the user can open it instantly. (Format: `[filename](file:///absolute/path/to/file)`)

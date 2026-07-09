@@ -66,6 +66,21 @@ Applies to **all** workflows and tasks:
 - The `/open` workflow is strictly read-only and designed to gather context, check workspace diagnostics, and present the startup report.
 - The Agent **MUST** only report discovered issues (such as backlog bugs, configuration drift, or outdated items) as Suggested Actions, and **MUST** wait for the user's explicit command/request before making any edits.
 
+#### 3d. Plan QA Transition
+
+Applies when concluding the QA review of an implementation plan (such as `/qa plan` or post-plan-draft audits):
+
+- **MUST** explicitly recommend running the slash command `/plan [project-name] dev` to begin development.
+- **MUST NOT** suggest manual file modifications or ad-hoc development commands before the `/plan dev` workflow is initiated.
+
+#### 3e. Process Improvement Reflection
+
+Applies when concluding a plan/spec QA audit or running the `/end` workflow:
+
+- **MUST** analyze whether any resolved QA issues (`⚠️ Issue` or `❌ Fail` verdicts) or telemetry-recorded friction beads represent systemic process gaps (such as outdated templates, missing rules, or lack of automated tooling).
+- **SHOULD** proactively propose concrete process improvements (such as creating a new rule, updating a workflow template, or configuring new skill scripts) to the user.
+- **MUST NOT** auto-apply these process changes silently. Agent must ask the user: *"I detected a systemic issue with [topic]. Would you like me to create a rule/workflow change to address this permanently? (y/n)"* and wait for confirmation.
+
 ### 4. Context Recovery
 
 When context appears incomplete (cannot recall loaded rules, received truncation/checkpoint notice, or conversation has been very long):
@@ -167,5 +182,11 @@ To prevent the Agent from bypassing critical decision checkpoints, the following
 - **Alignment Verification:** If the target `[version]` matches a pending phase (`📋 Planned` or `⏳ Pending`) on the Roadmap, the Agent **MUST** display the phase details and ask the user to explicitly select a plan template:
   `"Roadmap phase detected: Phase [N]: [Phase Name] (v[Version]). Which plan template would you like to use? (e.g. detail-plan.md, detail-plan-tdd.md, detail-plan-hardened.md)"`
   The Agent **MUST NOT** generate or write any plan file until the user explicitly selects a template.
+
+#### 7c. Plan Integrity Linter Gate (v1.9.0)
+- Whenever a plan (Roadmap, Detail Plan, Session Plan, or Hardened Plan) is created or modified, the Agent **MUST** run the Plan Linter script against its base template:
+  `node .agents/skills/plan/scripts/lint-plan.js <path-to-plan> <path-to-template>`
+- The Agent **MUST NOT** present any plan draft to the user as "Audited & Verified" or update its Status unless the linter script returns exit code 0.
+- If the linter fails, the Agent **MUST** report the missing headings/structures and immediately apply edits to fix the plan file before proceeding.
 
 

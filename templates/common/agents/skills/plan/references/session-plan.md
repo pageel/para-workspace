@@ -40,6 +40,19 @@
   - **Session Compaction:** Run MCP tool `project_session_compact` to build the Vibecode Session KI context.
   - Confirm active quality tools: [TDD, --graph, --hardened, etc.]
 
+### Context Files & Indices Loaded
+
+> ⛔ **MANDATORY CONTEXT BINDING:** Before executing this plan, the Agent MUST read/reload all index rules and configuration files below to ensure full context alignment and prevent workflow drift.
+
+| Scope | File / Index | Purpose | Path |
+| :--- | :--- | :--- | :--- |
+| Session Memory | `session.md` | Compacted session rules and context memory (Priority) | [session.md](file://[absolute_path_to_workspace]/.gemini/antigravity-ide/knowledge/para_vibecode_session/artifacts/session.md) |
+| Workspace | `.agents/rules.md` | Workspace-level rules index (Trigger scan) | [rules.md](file://[absolute_path_to_workspace]/.agents/rules.md) |
+| Workspace | `.agents/skills.md` | Workspace-level skills index (Trigger scan) | [skills.md](file://[absolute_path_to_workspace]/.agents/skills.md) |
+| Project | `project.md` | Project Contract (Version, status, roadmap) | [project.md](file://[absolute_path_to_project]/project.md) |
+| Project | `.agents/rules.md` | Project-level rules index (if exists) | [rules.md](file://[absolute_path_to_project]/.agents/rules.md) |
+| Project | `.agents/skills.md` | Project-level skills index (if exists) | [skills.md](file://[absolute_path_to_project]/.agents/skills.md) |
+
 ---
 
 ## 📋 Dynamic Milestone Queue
@@ -84,6 +97,9 @@
 - [ ] 1.0b 🤖 **Project Directory Junk Audit:** (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool with `auditJunk: true` to check for physical junk files before starting work)
 - [ ] 1.0c 🤖 **Session Context Compaction:** (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to capture and write all rules, skills, and project contract to Vibecode Session KI)
 - [ ] 1.0d **Pre-flight:** Read TDD Guidelines (skills/tdd/SKILL.md) and CSA Compliance (skills/csa/SKILL.md) to initialize the development cycle.
+- [ ] 1.0e 🔍 **Debug Infrastructure Check:** (if Spec has §9 Diagnostics Design: verify structured logging is in place for the components being modified. Add observable checkpoints if missing.)
+- [ ] 1.0f 🤖 **Establish Link Pointers:** Create link-only pointer files `brain/implementation_plan.md`, `brain/task.md`, and `brain/walkthrough.md` in the brain directory pointing to this local plan.
+- [ ] ⛔ CHECKPOINT (Interactive Pause): You MUST run the command `/plan [project-name] dev` in the chat to transition into Coding mode. The Agent is strictly prohibited from modifying code before this step.
 - [ ] 1.1 🤖 **Step 1:** [Task description]
 - [ ] 1.2 🤖 **Step 2:** [Task description]
 - [ ] 1.N-2 🤖 **Pre-commit Gate:** Run tests & lints (`npm run build` and `npx vitest run` or equivalent verification commands).
@@ -160,6 +176,19 @@ as specific tasks are identified during the conversation.
   - **Session Compaction:** Run MCP tool `project_session_compact` to build the Vibecode Session KI context.
   - Confirm active quality tools.
 
+### Context Files & Indices Loaded
+
+> ⛔ **MANDATORY CONTEXT BINDING:** Before executing this plan, the Agent MUST read/reload all index rules and configuration files below to ensure full context alignment and prevent workflow drift.
+
+| Scope | File / Index | Purpose | Path |
+| :--- | :--- | :--- | :--- |
+| Session Memory | `session.md` | Compacted session rules and context memory (Priority) | [session.md](file://[absolute_path_to_workspace]/.gemini/antigravity-ide/knowledge/para_vibecode_session/artifacts/session.md) |
+| Workspace | `.agents/rules.md` | Workspace-level rules index (Trigger scan) | [rules.md](file://[absolute_path_to_workspace]/.agents/rules.md) |
+| Workspace | `.agents/skills.md` | Workspace-level skills index (Trigger scan) | [skills.md](file://[absolute_path_to_workspace]/.agents/skills.md) |
+| Project | `project.md` | Project Contract (Version, status, roadmap) | [project.md](file://[absolute_path_to_project]/project.md) |
+| Project | `.agents/rules.md` | Project-level rules index (if exists) | [rules.md](file://[absolute_path_to_project]/.agents/rules.md) |
+| Project | `.agents/skills.md` | Project-level skills index (if exists) | [skills.md](file://[absolute_path_to_project]/.agents/skills.md) |
+
 ---
 
 ## 📋 Dynamic Milestone Queue
@@ -181,6 +210,8 @@ as specific tasks are identified during the conversation.
 > - `[ ] Phase.0b 🤖 Project Directory Junk Audit` (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool with `auditJunk: true` to check for physical junk files before starting work)
 > - `[ ] Phase.0c 🤖 Session Context Compaction` (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to compile and write rules/skills/contract to the Vibecode Session KI)
 > - `[ ] Phase.0d **Pre-flight:** Read TDD Guidelines (skills/tdd/SKILL.md) and CSA Compliance (skills/csa/SKILL.md) to initialize the development cycle.`
+> - `[ ] Phase.0e 🤖 **Establish Link Pointers:** Create link-only pointer files brain/implementation_plan.md, brain/task.md, and brain/walkthrough.md pointing to this local plan.`
+> - `[ ] ⛔ CHECKPOINT (Interactive Pause): You MUST run the command /plan [project-name] dev in the chat to transition into Coding mode. The Agent is strictly prohibited from modifying code before this step.`
 > - `[ ] Phase.N-2 🤖 Pre-commit Physical Snapshot & CSA Compliance Gate:` (if para-graph/mcp is available, invoke `project_snapshot` and `project_diff` to detect physical drift; and if CSA is enabled, run `graph_audit_csa` or `npx para-graph audit csa` to verify spec coverage)
 > - `[ ] Phase.N-1 🤖 Pre-commit Gate:` Run build, lints & tests
 > - `[ ] Phase.N 👤 Git Checkpoint:` Commit changes with message `session([topic]): [milestone goal]`

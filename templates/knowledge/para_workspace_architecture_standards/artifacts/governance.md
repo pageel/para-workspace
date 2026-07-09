@@ -93,7 +93,7 @@ To prevent confusion between platform-generated state and workspace operational 
 - **Platform Isolation:** The AI Agent **MUST NOT** align its code logic, goals, or checklists with ephemeral IDE artifacts located in the brain/history directory (e.g., `~/.gemini/antigravity-ide/brain/<conversation-id>/task.md` or `walkthrough.md`). These brain artifacts are purely for platform sync/telemetry and have NO authority over the project's codebase.
 
 
-## 5. Rules Library (14 workspace rules)
+## 5. Rules Library (15 workspace rules)
 
 Rule                    | Trigger                              | Priority
 :-----------------------|:-------------------------------------|:--------
@@ -106,20 +106,21 @@ Context Rules           | Loading context, starting session    | 🟡 Med
 Agent Behavior          | Communication, formatting, recovery  | 🟡 Med
 PARA Discipline         | Creating/moving files, organizing    | 🟡 Med
 Agent Persona           | Custom conversational style, persona | 🟡 Med
+Diagnostics Debug       | Troubleshoot issues, diagnose drift  | 🟡 Med
 Artifact Standard       | Creating/editing artifacts, plans    | 🟢 Low
 Naming                  | Creating files, directories, branches| 🟢 Low
 Versioning              | Version bumps, changelog updates     | 🟢 Low
 Exports Data            | Exporting data, sharing externally   | 🟢 Low
 Tool Routing            | Heuristic routing: API vs Bash vs MCP| 🟢 Low
 
-## 6. Skills Library (20 skills, v1.8.11+)
+## 6. Skills Library (23 skills, v1.9.5)
 
 Skills are folder-based, English-first instruction sets (either Standalone or Sidecar to workflows):
 
 Category   | Core Skills
 :----------|:----------------------------------------------------------------------
-Standalone | PARA Kit, Formatting, Page Map, TDD Guidelines, HTML Renderer, Sidecar Skill Governance
-Sidecar    | PARA Skill, Plan, Docs, Brainstorm, Write, Harness, Spec, QA, Logs, New Project, Staging Templates, Vibecode Execution Templates, Vulnerability Scanner Templates, Resource Study Templates
+Standalone | PARA Kit, Formatting, Page Map, TDD Guidelines, HTML Renderer, Sidecar Skill Governance, Self-Improvement, Report Engine
+Sidecar    | PARA Skill, Plan, Docs, Brainstorm, Write, Harness, Spec, QA, Logs, New Project, Staging Templates, Vibecode Execution Templates, Vulnerability Scanner Templates, Resource Study Templates, Remote References
 
 Skills are loaded on demand based on the proactive trigger indexes (`rules.md` and `skills.md`). Users may also define project-specific rules and skills under `Projects/<project>/.agents/`.
 

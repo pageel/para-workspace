@@ -1440,6 +1440,18 @@
                                     <span data-i18n="calibrationVerifyComments">/* TRANSLATE:calibrationVerifyComments */</span>
                                 </label>
                                 <span style="font-size: 11px; color: var(--text-secondary); margin-left: 22px;" data-i18n="calibrationVerifyCommentsDesc">/* TRANSLATE:calibrationVerifyCommentsDesc */</span>
+
+                                <label class="folder-check-item" style="font-weight: 600; font-size: 12.5px; margin-top: 4px;">
+                                    <input type="checkbox" id="calib-exclude-low-checkbox" onchange="toggleExcludeLow(this.checked)">
+                                    <span data-i18n="calibrationExcludeLow">/* TRANSLATE:calibrationExcludeLow */</span>
+                                </label>
+                                <span style="font-size: 11px; color: var(--text-secondary); margin-left: 22px;" data-i18n="calibrationExcludeLowDesc">/* TRANSLATE:calibrationExcludeLowDesc */</span>
+
+                                <label class="folder-check-item" style="font-weight: 600; font-size: 12.5px; margin-top: 4px;">
+                                    <input type="checkbox" id="calib-disable-stale-penalty-checkbox" onchange="toggleDisableStalePenalty(this.checked)">
+                                    <span data-i18n="calibrationDisableStalePenalty">/* TRANSLATE:calibrationDisableStalePenalty */</span>
+                                </label>
+                                <span style="font-size: 11px; color: var(--text-secondary); margin-left: 22px;" data-i18n="calibrationDisableStalePenaltyDesc">/* TRANSLATE:calibrationDisableStalePenaltyDesc */</span>
                             </div>
                         </div>
 
@@ -1507,14 +1519,18 @@
                             <span id="score-eval-label" class="score-evaluation">--</span>
                         </div>
                         
-                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 15px; display: flex; justify-content: space-around; width: 100%; border-top: 1px solid var(--border-color); padding-top: 12px; text-align: center;">
-                            <div>
-                                <span style="display: block; font-size: 14px; font-weight: 700; color: var(--text-primary);" id="detail-weighted-coverage">0%</span>
-                                <span style="font-size: 10px;" data-i18n="weightedCoverageLabel">/* TRANSLATE:weightedCoverageLabel */</span>
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 15px; display: flex; justify-content: space-around; width: 100%; border-top: 1px solid var(--border-color); padding-top: 12px; text-align: center; gap: 4px;">
+                            <div style="flex: 1;">
+                                <span style="display: block; font-size: 13px; font-weight: 700; color: var(--text-primary);" id="detail-specs-coverage">0%</span>
+                                <span style="font-size: 9px;" data-i18n="specCoverageLabel">/* TRANSLATE:specCoverageLabel */</span>
                             </div>
-                            <div style="border-left: 1px solid var(--border-color); padding-left: 15px;">
-                                <span style="display: block; font-size: 14px; font-weight: 700; color: var(--text-primary);" id="detail-total-docs">0</span>
-                                <span style="font-size: 10px;" data-i18n="totalDocs">/* TRANSLATE:totalDocs */</span>
+                            <div style="border-left: 1px solid var(--border-color); padding-left: 4px; flex: 1;">
+                                <span style="display: block; font-size: 13px; font-weight: 700; color: var(--text-primary);" id="detail-docs-coverage">0%</span>
+                                <span style="font-size: 9px;" data-i18n="docCoverageLabel">/* TRANSLATE:docCoverageLabel */</span>
+                            </div>
+                            <div style="border-left: 1px solid var(--border-color); padding-left: 4px; flex: 1;">
+                                <span style="display: block; font-size: 13px; font-weight: 700; color: var(--text-primary);" id="detail-weighted-coverage">0%</span>
+                                <span style="font-size: 9px;" data-i18n="weightedCoverageLabel">/* TRANSLATE:weightedCoverageLabel */</span>
                             </div>
                         </div>
                     </div>
@@ -1811,6 +1827,7 @@
                         <button class="filter-btn" id="btn-filter-critical" onclick="setFilter('critical')"><i data-lucide="zap" style="width: 12px; height: 12px; color: var(--danger-color); fill: var(--danger-color); fill-opacity: 0.15;"></i> <span data-i18n="filterCritical">/* TRANSLATE:filterCritical */</span> <span id="count-critical">0</span></button>
                         <button class="filter-btn" id="btn-filter-medium" onclick="setFilter('medium')"><span data-i18n="filterMedium">/* TRANSLATE:filterMedium */</span> <span id="count-medium">0</span></button>
                         <button class="filter-btn" id="btn-filter-low" onclick="setFilter('low')"><span data-i18n="filterLow">/* TRANSLATE:filterLow */</span> <span id="count-low">0</span></button>
+                        <button class="filter-btn" id="btn-filter-unlinked-specs" onclick="setFilter('unlinked-specs')"><i data-lucide="file-text" style="width: 12px; height: 12px; color: var(--danger-color);"></i> <span data-i18n="filterUnlinkedSpecs">/* TRANSLATE:filterUnlinkedSpecs */</span> <span id="count-unlinked-specs">0</span></button>
                         <button class="filter-btn" id="btn-filter-unlinked-docs" onclick="setFilter('unlinked-docs')"><i data-lucide="anchor" style="width: 12px; height: 12px; color: var(--danger-color);"></i> <span data-i18n="filterUnlinkedDocs">/* TRANSLATE:filterUnlinkedDocs */</span> <span id="count-unlinked-docs">0</span></button>
                         <button class="filter-btn" id="btn-filter-unlinked-code" onclick="setFilter('unlinked-code')"><i data-lucide="code" style="width: 12px; height: 12px; color: var(--danger-color);"></i> <span data-i18n="filterUnlinkedCode">/* TRANSLATE:filterUnlinkedCode */</span> <span id="count-unlinked-code">0</span></button>
                         <button class="filter-btn" id="btn-filter-dangling" onclick="setFilter('dangling')"><i data-lucide="alert-circle" style="width: 12px; height: 12px; color: var(--danger-color);"></i> <span data-i18n="filterDangling">/* TRANSLATE:filterDangling */</span> <span id="count-dangling">0</span></button>
@@ -1950,6 +1967,8 @@
         let activeWeights = { ...defaultWeights };
         let activeExclusions = [...defaultExclusions];
         let verifyComments = true; // Default to true
+        let excludeLowPriority = false; // Default to false
+        let disableStalePenalty = false; // Default to false
 
         try {
             const savedWeights = localStorage.getItem('calib_weights');
@@ -1958,6 +1977,10 @@
             if (savedExclusions) activeExclusions = JSON.parse(savedExclusions);
             const savedVerifyComments = localStorage.getItem('calib_verify_comments');
             if (savedVerifyComments !== null) verifyComments = JSON.parse(savedVerifyComments);
+            const savedExcludeLow = localStorage.getItem('calib_exclude_low');
+            if (savedExcludeLow !== null) excludeLowPriority = JSON.parse(savedExcludeLow);
+            const savedStalePenalty = localStorage.getItem('calib_disable_stale_penalty');
+            if (savedStalePenalty !== null) disableStalePenalty = JSON.parse(savedStalePenalty);
         } catch (e) {
             console.error('Failed to load calibration state:', e);
         }
@@ -2058,7 +2081,12 @@
                 businessGodNodes: "Thành phần Lõi Nghiệp vụ (God Nodes)",
                 healthStatus: "Độ đồng bộ tài liệu",
                 weightedCoverageLabel: "Độ bao phủ Đồ thị",
-                syncRateLabel: "Độ đồng bộ tài liệu",
+                specCoverageLabel: "Tier 1: Đặc tả (Specs)",
+                docCoverageLabel: "Tier 2: Tài liệu (Docs)",
+                calibrationExcludeLow: "Bỏ qua cấu phần Bổ trợ (Low-priority variables)",
+                calibrationExcludeLowDesc: "Loại bỏ hoàn toàn các biến/hằng số phụ trợ khỏi phép tính độ bao phủ đồ thị.",
+                calibrationDisableStalePenalty: "Bỏ qua phạt tệp trễ hạn (Disable stale penalty)",
+                calibrationDisableStalePenaltyDesc: "Xem như tài liệu luôn đồng bộ 100% (không sụt giảm Sức khỏe tổng thể khi có file stale/drift).",
                 entityTypeDistribution: "Phân bố theo Loại Cấu phần",
                 weightDistribution: "Phân loại theo Trọng số Đồ thị",
                 legendCompleted: "Đạt chuẩn (Đầy đủ)",
@@ -2071,8 +2099,9 @@
                 filterMedium: "Trung bình",
                 filterLow: "Bổ trợ",
                 filterUnlinked: "Chưa gắn link",
-                filterUnlinkedDocs: "Chưa neo (CSA trên Docs)",
-                filterUnlinkedCode: "Chưa cmt (CSA trên Code)",
+                filterUnlinkedSpecs: "Chưa liên kết (Specs)",
+                filterUnlinkedDocs: "Chưa neo (Docs)",
+                filterUnlinkedCode: "Chưa cmt (Code)",
                 filterDangling: "Neo mồ côi (Dangling)",
                 filterUnenriched: "Chưa mô tả AI",
                 filterNoOwner: "Chưa gán người phụ trách",
@@ -2168,7 +2197,10 @@
                 tooltipNodesPct: 'Tỷ lệ các thành phần mã nguồn (hàm, lớp, file) đã được liên kết với tài liệu thuyết minh',
                 tooltipGodPct: 'Tỷ lệ phủ tài liệu đối với các cấu phần lõi quan trọng nhất (ảnh hưởng trực tiếp đến nghiệp vụ sản xuất)',
                 tooltipHealthPct: 'Tỷ lệ đồng bộ của tài liệu so với code (100% nghĩa là không có tài liệu nào bị hết hạn)',
-                tooltipHealthScore: 'Điểm số chất lượng tài liệu được tính toán dựa trên trọng số liên kết đồ thị (docAnchor). Các thành phần lõi có độ ảnh hưởng cao đóng góp trọng số lớn hơn (5x) so với các biến thông thường (0.5x), phản ánh độ bao phủ thực tế của tài liệu kỹ thuật đối với hệ thống.',
+                tooltipHealthScore: 'Chỉ số Sức khỏe tổng thể = Độ bao phủ Đồ thị * (Độ đồng bộ tài liệu / 100). Điểm số này đo lường tính hoàn thiện và độ mới của tài liệu kỹ thuật so với mã nguồn thực tế.',
+                tooltipSpecsCoverage: 'Tier 1 Specs: Tỷ lệ bao phủ các neo đặc tả cứng nằm trong artifacts/specs/. Yêu cầu kiểm toán đạt 100% để vượt qua Hard Gate.',
+                tooltipDocsCoverage: 'Tier 2 Docs: Tỷ lệ bao phủ các neo tài liệu hướng dẫn nằm trong docs/. Yêu cầu kiểm toán đạt 50% để vượt qua Soft Gate.',
+                tooltipWeightedCoverage: 'Độ bao phủ Đồ thị: Tỷ lệ tổng trọng số cấu phần được gắn tài liệu. Cấu phần lõi (Cốt lõi) đóng góp nhiều điểm hơn.',
                 focusedPromptSectionTitle: "Tác vụ AI cho Thành phần đang Chọn",
                 focusedPromptClose: "Đóng",
                 focusedPromptCopyBtnText: "Sao chép Prompt Tác vụ",
@@ -2184,7 +2216,12 @@
                 businessGodNodes: "Business God Nodes",
                 healthStatus: "Doc Sync Rate",
                 weightedCoverageLabel: "Weighted Graph Coverage",
-                syncRateLabel: "Doc Sync Rate",
+                specCoverageLabel: "Tier 1: Specs",
+                docCoverageLabel: "Tier 2: Docs",
+                calibrationExcludeLow: "Exclude Low-priority entities",
+                calibrationExcludeLowDesc: "Completely remove auxiliary variables/constants from weighted graph coverage calculation.",
+                calibrationDisableStalePenalty: "Disable stale/drift penalty",
+                calibrationDisableStalePenaltyDesc: "Assume 100% document synchronization rate (disables penalty on Overall Health score).",
                 entityTypeDistribution: "Entity Type Distribution",
                 weightDistribution: "Weight Distribution",
                 legendCompleted: "Completed (Full)",
@@ -2197,6 +2234,7 @@
                 filterMedium: "Medium",
                 filterLow: "Low",
                 filterUnlinked: "Unlinked",
+                filterUnlinkedSpecs: "Specs Unlinked",
                 filterUnlinkedDocs: "CSA on Docs Unlinked",
                 filterUnlinkedCode: "CSA on Code Unlinked",
                 filterDangling: "Dangling CSA Links",
@@ -2294,7 +2332,10 @@
                 tooltipNodesPct: 'Percentage of enrichable code entities linked to explanation docs',
                 tooltipGodPct: 'Documentation coverage of critical business God Nodes',
                 tooltipHealthPct: 'Documentation synchronization rate (100% means zero stale documents)',
-                tooltipHealthScore: 'Weighted health score based on code graph traceabilities. High-impact core components (God Nodes) contribute much more weight (5x) than standard variables (0.5x), reflecting the actual coverage of system architecture documentation.',
+                tooltipHealthScore: 'Overall Health Status = Weighted Graph Coverage * (Doc Sync Rate / 100). Measures completeness and freshness of documentation relative to the source code.',
+                tooltipSpecsCoverage: 'Tier 1 Specs: Coverage rate of hard spec anchors in artifacts/specs/. Reaching 100% is required to pass the Hard Gate.',
+                tooltipDocsCoverage: 'Tier 2 Docs: Coverage rate of soft documentation anchors in docs/. Reaching 50% is required to pass the Soft Gate.',
+                tooltipWeightedCoverage: 'Weighted Graph Coverage: Total weight of documented entities / total weight of all entities. Critical components contribute more weight.',
                 focusedPromptSectionTitle: "AI Task for Selected Component",
                 focusedPromptClose: "Close",
                 focusedPromptCopyBtnText: "Copy Task Prompt",
@@ -2437,6 +2478,13 @@
               // Update tooltips dynamically
               const scoreCard = document.querySelector('.score-card');
               if (scoreCard) scoreCard.title = t.tooltipHealthScore;
+              
+              const specsCol = document.getElementById('detail-specs-coverage') ? document.getElementById('detail-specs-coverage').parentElement : null;
+              if (specsCol) specsCol.title = t.tooltipSpecsCoverage;
+              const docsCol = document.getElementById('detail-docs-coverage') ? document.getElementById('detail-docs-coverage').parentElement : null;
+              if (docsCol) docsCol.title = t.tooltipDocsCoverage;
+              const weightedCol = document.getElementById('detail-weighted-coverage') ? document.getElementById('detail-weighted-coverage').parentElement : null;
+              if (weightedCol) weightedCol.title = t.tooltipWeightedCoverage;
 
               const docsBadge = document.getElementById('stat-docs-pct-badge');
               if (docsBadge) docsBadge.title = t.tooltipDocsPct;
@@ -2473,6 +2521,24 @@
               renderTable();
           };
 
+          window.toggleExcludeLow = function(checked) {
+              excludeLowPriority = checked;
+              try {
+                  localStorage.setItem('calib_exclude_low', JSON.stringify(excludeLowPriority));
+              } catch (e) {}
+              recalculateMetrics();
+              renderTable();
+          };
+
+          window.toggleDisableStalePenalty = function(checked) {
+              disableStalePenalty = checked;
+              try {
+                  localStorage.setItem('calib_disable_stale_penalty', JSON.stringify(disableStalePenalty));
+              } catch (e) {}
+              recalculateMetrics();
+              renderTable();
+          };
+
           function resetCalibration() {
               activeWeights = {
                   critical: 5.0,
@@ -2481,11 +2547,15 @@
               };
               activeExclusions = ['researches', 'explorations'];
               verifyComments = true;
+              excludeLowPriority = false;
+              disableStalePenalty = false;
               
               try {
                   localStorage.setItem('calib_weights', JSON.stringify(activeWeights));
                   localStorage.setItem('calib_exclusions', JSON.stringify(activeExclusions));
                   localStorage.setItem('calib_verify_comments', JSON.stringify(verifyComments));
+                  localStorage.setItem('calib_exclude_low', JSON.stringify(excludeLowPriority));
+                  localStorage.setItem('calib_disable_stale_penalty', JSON.stringify(disableStalePenalty));
               } catch (e) {}
               
               for (const type of ['critical', 'medium', 'low']) {
@@ -2495,6 +2565,10 @@
               
               const verifyCheckbox = document.getElementById('calib-verify-comments-checkbox');
               if (verifyCheckbox) verifyCheckbox.checked = true;
+              const excludeLowCheckbox = document.getElementById('calib-exclude-low-checkbox');
+              if (excludeLowCheckbox) excludeLowCheckbox.checked = false;
+              const stalePenaltyCheckbox = document.getElementById('calib-disable-stale-penalty-checkbox');
+              if (stalePenaltyCheckbox) stalePenaltyCheckbox.checked = false;
               
               renderFolderExclusionUI();
               recalculateMetrics();
@@ -2607,7 +2681,7 @@
                 if (node.weightedClass === 'critical') {
                     weight = activeWeights.critical;
                 } else if (node.weightedClass === 'low') {
-                    weight = activeWeights.low;
+                    weight = excludeLowPriority ? 0 : activeWeights.low;
                 }
                 node.activeWeight = weight;
             });
@@ -2650,6 +2724,15 @@
             }
 
             document.getElementById('detail-weighted-coverage').textContent = weightedCoverageStr + '%';
+            
+            const detailSpecsEl = document.getElementById('detail-specs-coverage');
+            if (detailSpecsEl) {
+                detailSpecsEl.textContent = (dashboardStats.specCoverageRate || 0).toFixed(1) + '%';
+            }
+            const detailDocsEl = document.getElementById('detail-docs-coverage');
+            if (detailDocsEl) {
+                detailDocsEl.textContent = (dashboardStats.docCoverageRate || 0).toFixed(1) + '%';
+            }
 
             function updateBadge(badgeId, percentage, type = 'progress') {
                 const el = document.getElementById(badgeId);
@@ -2791,6 +2874,9 @@
             } else {
                 healthPct = 100;
             }
+            if (disableStalePenalty) {
+                healthPct = 100;
+            }
             const healthyDocsCount = activeDocs.length - unhealthyDocsCount;
             document.getElementById('stat-stale-docs').textContent = `${healthyDocsCount}/${activeDocs.length}`;
             const syncRateEl = document.getElementById('detail-sync-rate');
@@ -2906,6 +2992,7 @@
               document.getElementById('count-low').textContent = graphNodesData.filter(n => n.weightedClass === 'low').length;
               document.getElementById('count-unlinked-docs').textContent = graphNodesData.filter(n => !n.isLinkedActive).length;
               document.getElementById('count-unlinked-code').textContent = graphNodesData.filter(n => !n.hasCodeDocActive).length;
+              document.getElementById('count-unlinked-specs').textContent = graphNodesData.filter(n => !n.specId).length;
               const countDanglingEl = document.getElementById('count-dangling');
               if (countDanglingEl) {
                   countDanglingEl.textContent = graphNodesData.filter(n => n.danglingDocs && n.danglingDocs.length > 0).length;
@@ -3749,6 +3836,7 @@
                 if (currentFilter === 'critical') return node.weightedClass === 'critical';
                 if (currentFilter === 'medium') return node.weightedClass === 'medium';
                 if (currentFilter === 'low') return node.weightedClass === 'low';
+                if (currentFilter === 'unlinked-specs') return !node.specId;
                 if (currentFilter === 'unlinked-docs') return !node.isLinkedActive;
                 if (currentFilter === 'unlinked-code') return !node.hasCodeDocActive;
                 if (currentFilter === 'dangling') return node.danglingDocs && node.danglingDocs.length > 0;
@@ -3784,6 +3872,8 @@
                     comparison = (a.isLinkedActive ? 1 : 0) - (b.isLinkedActive ? 1 : 0);
                 } else if (sortKey === 'codeStatus') {
                     comparison = (a.hasCodeDocActive ? 1 : 0) - (b.hasCodeDocActive ? 1 : 0);
+                } else if (sortKey === 'specStatus') {
+                    comparison = (a.specId ? 1 : 0) - (b.specId ? 1 : 0);
                 }
                 
                 return sortDirection === 'asc' ? comparison : -comparison;

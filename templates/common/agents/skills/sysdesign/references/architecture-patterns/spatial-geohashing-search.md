@@ -1,3 +1,10 @@
+---
+tags: [geolocation, spatial, postgis, geohashing, location-based]
+stack: [postgres, postgis, redis]
+scale: [medium, large]
+complexity: advanced
+---
+
 # Reference Architecture: Spatial Search & Geohashing (Location-Based Services)
 
 ## 1. Topology

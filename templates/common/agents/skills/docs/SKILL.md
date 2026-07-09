@@ -87,7 +87,7 @@ Agent MUST check for docs staleness when ANY of these changes occur:
 ## Source Verification Protocol
 
 > ⛔ **Anti-Hallucination Guard (v1.8.6):** Every generated doc MUST pass source
-> verification before it is considered complete. This is enforced in workflow Step 6.5.
+> verification before it is considered complete. This is enforced in workflow Step 10.2.
 
 ### Guard Header Template
 
@@ -122,30 +122,28 @@ The guard header serves as:
 | 3 | All env vars exist in config or code | `grep` in `wrangler.jsonc` + source files |
 | 4 | No feature described as "active" without code | `grep` binding name in `src/` — zero results = `[Planned]` |
 
-## Graph-Anchoring Protocol
+## Unified CSA Documentation Gating (Tier 2)
 
-> ⛔ **Traceability Guard (v1.8.11):** Every architecture/feature doc
-> SHOULD include `<!-- @graph-node: nodeId -->` anchors for key code
-> entities it describes.
+> 🛡️ **Traceability Guard (v1.9.0):** The legacy `graph-node` comment tags (`<!-- @graph-node: nodeId -->`) and the `graph_link_docs` tool are **deprecated and disabled** (since v0.17.4). Documentation files in the `docs/` directory are now integrated directly into the **Unified CSA (Tier 2) Gating** framework.
 
-### Anchor Placement Rules
+### Binding Protocols
 
-| Doc Type | Anchor Density | Example |
-|:--|:--|:--|
-| Architecture | 1 anchor per component/class | `<!-- @graph-node: src/graph/CodeGraph.ts::CodeGraph -->` |
-| Feature | 1 anchor per key function | `<!-- @graph-node: src/mcp/tools.ts::graph_enrich -->` |
-| Reference/Schema | 1 anchor per type/interface | `<!-- @graph-node: src/types.ts::GraphNode -->` |
-| Guide/Workflow | Optional — only for implementation refs | — |
+To establish traceability between code, specifications, and documentation, choose one of the following methods:
 
-### Linking Workflow
+| Method | Syntax in Doc File | Syntax in Code File | Use Case |
+|:---|:---|:---|:---|
+| **Spec-to-Doc Inheritance** | `<span data-csa-inherits="csa-spec-id"></span>` | `// @para-doc [#csa-spec-id]` | When the document section explains a business requirement defined in a Spec. |
+| **Doc-Specific Binding** | `<span id="csa-doc-anchor"></span>` | `// @para-doc [docs/path.md#csa-doc-anchor]` | When documenting a technical component or API not covered by a Spec. |
 
-1. Write doc content (Step 6 for `new`, Step 4 for `update`)
-2. Insert `<!-- @graph-node: nodeId -->` anchors at relevant sections
-3. After Source Verification (Step 6.5), run `graph_link_docs` (Step 6.8 / Step 4.5)
-4. Verify link result: `linked > 0`, `skipped = 0`, `errors = []`
+### Verification Workflow
 
-> **v0.16.1+ Engine Change:** `linkDocs` auto-initializes `semantic: {}` for non-enriched nodes.
-> All anchors link successfully regardless of enrichment status — no pre-enrichment needed.
+1. Write or update document content.
+2. Insert the appropriate `<span data-csa-inherits="..."></span>` or `<span id="..."></span>` anchors on the headings.
+3. If using Doc-Specific Binding, add the corresponding `// @para-doc` comment to the source code entity.
+4. Run `para-graph build [project-name]` to update the graph database.
+5. Run `npx para-graph audit csa --project .` to verify compliance.
+
+> **Engine Behavior:** The AST parser automatically resolves these relationships during build. No manual link command or secondary linking tool is required.
 
 ## Index Statistics Convention
 

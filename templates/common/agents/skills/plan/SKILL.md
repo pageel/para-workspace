@@ -99,6 +99,7 @@ After loading project governance, read `project.md` and adapt the chosen templat
 | Project distributes templates (tool.manifest.yml) | Apply Template-First flow: edit `repo/templates/` BEFORE workspace copies |
 | Project has release process | Include release Phase (build + tarball + gh release) per project rules |
 | Risks & Mitigations table has entries | Add `<!-- ⚠️ HARNESS GUARD (Phase N Risk): ... -->` comment to each mapped Phase |
+| Spec has `## 9. Diagnostics Design` AND plan involves runtime code | Include `🔍 Debug Infrastructure Setup` task in Phase 0 (structured logger, error taxonomy constants, observable checkpoint stubs). In Hardened Plans, also add `Diagnostics Coverage` dimension to Post-Draft Audit and `🔍 Debug` type to TDD Classification. Add `Diagnostics Design Verification` to Walkthrough. |
 
 > **Principle:** Template = clean skeleton. Adaptation = Skill responsibility.
 > **Status lifecycle:** 📝 Draft → 🔨 Active → ✅ Done. Transition from Draft → Active requires explicit user approval at `/plan create` Step 10 or `/plan update`.

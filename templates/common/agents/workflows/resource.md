@@ -24,7 +24,7 @@ source: custom
 /resource add <url>          # Clone repo -> Build Graph -> Generate README
 /resource init <namespace>   # Build Graph -> Generate README (for already cloned repo)
 /resource update <namespace> # Sync repo -> Rebuild Graph -> Update README
-/resource study <namespace> [--deep] [--target <project>] [--extract-prompts] [--dx-teardown] [--anti-patterns] [--compare <other_namespace>] [--extract-tools] [--extract-skills] [--extract-workflows] [--extract-rules] [--extract-plugins] [--extract-hooks]
+/resource study <namespace> [--deep] [--target <project>] [--extract-prompts] [--dx-teardown] [--anti-patterns] [--compare <other_namespace>] [--extract-tools] [--extract-skills] [--extract-workflows] [--extract-rules] [--extract-plugins] [--extract-hooks] [--extract-architecture]
 /resource audit              # Scan resources and generate Audit Dashboard
 /resource objective add ".." # Define a cross-resource study objective
 /resource objective list     # List active study objectives
@@ -128,6 +128,31 @@ This action focuses on understanding the resource's codebase and extracting valu
    - **Step 5.3:** Generate the document following the template and translating the output to the workspace language.
    - **Step 5.4:** Save the generated document in the appropriate category folder under `Areas/Learning/Resources/[namespace]/` (e.g., `extracted_prompts/`, `dx_teardowns/`, `extracted_skills/`, `extracted_workflows/`, `extracted_rules/`, `extracted_plugins/`, `extracted_hooks/`, etc.).
    - **Step 5.5:** Skip the standard "Documentation Generation" steps below.
+
+6. **Architecture Pattern Extraction Mode (`--extract-architecture`):**
+   - This mode extracts a reusable architecture pattern from the resource and formats it as a draft sysdesign pattern.
+   - **Step 6.1:** Load `extracted-architecture-template.md` from the Resource Sidecar Skill.
+   - **Step 6.2:** Use graph tools to map the resource's architecture:
+     - `graph_god_nodes` → identify core architectural components
+     - `graph_edges` → map dependency relationships between modules
+     - `graph_query` → find route handlers, DB schemas, middleware, config files
+   - **Step 6.3:** Use native tools to extract concrete code patterns:
+     - Scan for `Dockerfile`, `docker-compose.yml`, `wrangler.toml`, `vercel.json`, `netlify.toml` → Topology
+     - Scan for route/controller files → API Design
+     - Scan for schema/migration/model files → Database Architecture
+     - Scan for auth middleware, CORS config → Security Patterns
+     - Scan for logging config, health endpoints → Observability Patterns
+   - **Step 6.4:** Generate YAML frontmatter tags by analyzing `package.json`, `pyproject.toml`, or equivalent:
+     - `tags`: extracted from detected architectural characteristics
+     - `stack`: extracted from runtime/framework dependencies
+     - `scale`: estimated from architectural complexity
+   - **Step 6.5:** Fill in all 6 domains of the template and score the Quality Assessment.
+   - **Step 6.6:** Save draft to `Areas/Learning/Resources/[namespace]/extracted_architecture/pattern-draft.md`.
+   - **Step 6.7:** Evaluate Promotion Recommendation:
+     - **IF PROMOTABLE:** Present to user with the next step command:
+       `"📐 Pattern is PROMOTABLE. To standardize with internet research, run: /sysdesign learn [pattern-slug] --source [namespace]"`
+     - **IF NOT RECOMMENDED:** Explain why and suggest alternatives (e.g., merge insights into existing pattern).
+   - **Step 6.8:** Skip the standard "Documentation Generation" steps below.
 
 **[Phase 3] Post-Study (Enrichment & Documentation):**
 

@@ -1,3 +1,10 @@
+---
+tags: [cqrs, read-write-separation, cdc, eventual-consistency]
+stack: [postgres, elasticsearch, redis, debezium]
+scale: [large, enterprise]
+complexity: advanced
+---
+
 # Reference Architecture: CQRS & Read-Write Separation
 
 ## 1. Topology

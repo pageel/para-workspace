@@ -113,6 +113,7 @@
 - [ ] 0.4 🤖 **Project Directory Junk Audit** (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool with `auditJunk: true` to check for physical junk files before starting work)
 - [ ] 0.5 🤖 **TDD Repo Before Snapshot** (run `git status --ignored --porcelain` & `git log -n 1 --oneline` and save to `artifacts/tests/tdd-repo-before-[date].log`)
 - [ ] 0.6 🤖 **Session Context Compaction** (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to capture and write all rules, skills, and project contract to Vibecode Session KI)
+- [ ] 0.7 🔍 **Debug Infrastructure Setup** (if Spec has §9 Diagnostics Design: implement structured logger, error taxonomy constants, and observable checkpoint stubs. Skip if project already has compliant logging system.)
 - [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x], run the MCP tool `project_session_compact` to update session memory, read the updated `session.md` using `view_file` to reload context, and obtain explicit User approval in the chat to transition to Phase 1.
 
 ---
@@ -244,6 +245,7 @@
 - [ ] **MCP Snapshot Diff Evaluation:** Run `project_snapshot` (at completion) and `project_diff` MCP tools to evaluate physical directory drift and verify the integrity of protected files.
 - [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `git status --ignored --porcelain` snapshot in `tdd-repo-before-[date].log` to identify newly generated untracked or ignored files. Agent MUST present the list to User and ask whether to delete them (if junk) or commit them (if missed in plan) before proceeding with cleanup.
 - [ ] **Code-Graph Sync:** Update source code graph via command: `npx para-graph build <project-name>` (if --graph is enabled).
+- [ ] **Diagnostics Design Verification:** If Spec has §9, all Observable Checkpoints are implemented and Error Taxonomy codes are used consistently.
 - [ ] [Project-specific checks: build pass, docs updated, governance rules...]
 - [ ] **KI Template Sync (M7/KR8):** IF project has `repo/templates/knowledge/`, verify KI template content reflects current version changes. Check metadata.json has valid `version` + `para_version`. Run `ki sync` if updated.
 - [ ] ⛔ CHECKPOINT (Walkthrough Completion): Agent MUST verify all above Walkthrough items are ticked [x] BEFORE proposing Status transition.
@@ -285,6 +287,8 @@
 | Checklist review (completeness, no missing files) | 0     | —             |
 | Build/Test pass                                   | 0     | —             |
 | Project governance compliance (see below)         | 0     | —             |
+| Version decision (version naming consistency)     | 0     | —             |
+
 
 #### Project Governance Checklist
 

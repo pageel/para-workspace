@@ -68,12 +68,10 @@ Khi mã nguồn có thay đổi ảnh hưởng đến các giao diện công kha
     *   Nếu một cấu hình được khai báo nhưng mã nguồn chưa triển khai, bắt buộc phải ghi rõ: `[Planned — Not yet implemented in source]`.
     *   Nếu tính năng đã bị xóa khỏi code, tài liệu tương ứng phải được xóa hoặc cập nhật ngay lập tức.
 
-### 🔴 Quy tắc 3: Neo liên kết đồ thị (Graph-Anchoring Protocol)
-Mỗi tệp tài liệu kiến trúc hoặc tính năng phải được liên kết trực tiếp với các nút trong Đồ thị mã nguồn thông qua cú pháp neo:
-```markdown
-<!-- @graph-node: [nodeId_hoặc_file_path] -->
-```
-Sau đó, chạy công cụ liên kết `graph_link_docs` để ghi nhận mối quan hệ hai chiều vào cơ sở dữ liệu graph, từ đó tự động tính toán điểm **Docs Health Score** và phát hiện các tài liệu bị lỗi thời (**Stale Docs**).
+### 🔴 Quy tắc 3: Thiết lập Kiểm toán Hai chiều (Unified CSA Protocol)
+Mỗi tệp tài liệu kiến trúc hoặc tính năng phải được liên kết trực tiếp với các nút trong Đồ thị mã nguồn thông qua cú pháp neo Markdown hoặc định danh `@para-doc` trong code.
+*   **Thực thi:** Trình biên dịch đồ thị `para-graph build` sẽ tự động quét toàn bộ mã nguồn và thư mục tài liệu để xây dựng bản đồ liên kết hai chiều Unified CSA (Tier 2).
+*   *Lưu ý:* Các công cụ liên kết thủ công cũ như `graph_link_docs` và câu lệnh `para-graph link` đã được bãi bỏ (deprecated & disabled) kể từ phiên bản v0.17.4 để chuyển sang tự động hóa hoàn toàn qua kiểm toán tĩnh.
 
 ---
 

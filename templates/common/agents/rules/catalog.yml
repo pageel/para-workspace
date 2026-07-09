@@ -143,4 +143,15 @@ items:
   - tools
   - routing
   - heuristics
+- id: diagnostics-debug
+  name: Diagnostics Debug
+  kernel_min: 1.9.4
+  kernel_max: 1.x
+  entrypoint: diagnostics-debug.md
+  description: Rules and checklists for structural diagnostics and debugging within the workspace.
+  tags:
+  - diagnostics
+  - debug
+  - troubleshooting
+
 

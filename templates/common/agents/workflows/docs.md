@@ -110,15 +110,16 @@ Analyze the project and create documentation appropriate to its type and complex
 
 ### Steps
 
-#### 0. Agent Indices Pre-flight (all actions)
+#### Step 1: Agent Indices Pre-flight (All Actions)
 
 // turbo
 
 > **Layer 3 defense:** Re-read indices to guard against attention decay.
 
-> ⚠️ **Proactive Context & Trigger Check:** BEFORE generating any docs, YOU MUST:
+> ⚠️ **Proactive Context & Trigger Check:** BEFORE generating or reviewing any docs, YOU MUST:
 > 1. Read the project's own domain skill at `Projects/[project-name]/.agents/skills/[project-name]/SKILL.md` (if it exists) to understand project-specific rules and conventions.
-> 2. Scan workspace index triggers based on the intended target.
+> 2. Read the global CSA skill at `.agents/skills/csa/SKILL.md` if `csa` is enabled in `project.md` to understand the double-binding, inheritance (`data-csa-inherits`), and verification protocols.
+> 3. Scan workspace index triggers based on the intended target.
 
 ```bash
 # Context & Trigger Load (Anti-Cognitive-Bypass)
@@ -133,7 +134,7 @@ cat .agents/skills.md 2>/dev/null | head -n 30
 
 3. Check `project.md` for `agent.rules` / `agent.skills` — if true, re-read project indices too
 
-#### 0.5. Graph Context Pipeline (if --graph)
+#### Step 2: Graph Context Pipeline (if --graph)
 
 // turbo
 
@@ -147,7 +148,7 @@ If the `--graph` flag is provided, execute the graph intelligence pipeline BEFOR
 6. **Inject Context:** Keep this enriched graph and grep intelligence in memory to ground the documentation in the actual codebase structure, preventing hallucinations and ensuring accuracy.
 
 
-#### 1. Read Project Contract
+#### Step 3: Read Project Contract
 
 // turbo
 
@@ -158,7 +159,19 @@ Read `Projects/[project-name]/project.md` to extract:
 - **Status** (active, dormant, completed)
 - **Definition of Done**
 
-#### 2. Analyze Source Code
+#### Step 4: Analyze Design Specifications (Sysdesign & Spec)
+
+// turbo
+
+Identify and scan design specifications to determine the documentation structure and needs:
+1. Scan for existing system design files in `Projects/[project-name]/artifacts/sysdesigns/`.
+2. Scan for existing feature spec files in `Projects/[project-name]/artifacts/specs/`.
+3. If design specifications exist, read their contents or summaries to identify:
+   - System domains, components, and APIs that need to be documented.
+   - The quantity and layout of technical documentation pages required (e.g., if there are multiple specs, separate guides may be needed for each major feature area, or a centralized reference mapping).
+   - Any design constraints or security topologies that must be included in `architecture.md`.
+
+#### Step 5: Analyze Source Code
 
 // turbo
 
@@ -180,7 +193,7 @@ Extract:
 - **Config files** (package.json, astro.config, tsconfig, etc.)
 - **Internal libraries** (lib/, utils/, helpers/)
 
-#### 3. Classify Project Type
+#### Step 6: Classify Project Type
 
 Determine what documentation this project needs (all created in `docs/`):
 
@@ -195,7 +208,7 @@ Determine what documentation this project needs (all created in `docs/`):
 
 > **Rule:** Do NOT create all possible docs. Only create what the project type requires.
 
-#### 3.5. Strategy Docs Check
+#### Step 7: Strategy Docs Check (Conditional)
 
 // turbo
 
@@ -240,7 +253,7 @@ When user confirms creation (y):
 > `docs/strategy/` instead of `docs/`. Logic lives HERE — `/brainstorm`
 > itself does NOT change.
 
-#### 4. Read Doc Index (if exists)
+#### Step 8: Read Doc Index (If Exists)
 
 // turbo
 
@@ -249,7 +262,7 @@ When user confirms creation (y):
 - **Index exists** → extract the table to know what docs are already covered. Skip those.
 - **Index does not exist** → fresh project, all docs are new. Step 7 will auto-create the index.
 
-#### 5. Present Doc Plan
+#### Step 9: Present Doc Plan
 
 Before writing, present a plan to the user:
 
@@ -258,21 +271,23 @@ Before writing, present a plan to the user:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📂 Project Type: [CLI Tool / Web App / Library / Website]
+📐 Designed Systems: [N] sysdesigns detected (e.g., edge-sso)
+📋 Designed Features: [M] specs detected (e.g., portal-ui)
 📁 Location: Projects/[project-name]/docs/ (internal)
 
-📝 Docs to create:
-  1. 🆕 architecture.md — System overview & component diagram
+📝 Docs to create/update:
+  1. 🆕 architecture.md — System overview & component diagram (derived from sysdesign [sysdesign-name])
   2. 🆕 cli.md — Command reference and usage
   3. ⏭️ roadmap.md — Already exists, skipping
 
-� Tip: Use `/docs publish` later to promote to repo/docs/
+💡 Tip: Use `/docs publish` later to promote to repo/docs/
 
 ❓ Create these docs? (y/n, or specify numbers)
 ```
 
 Wait for user confirmation before proceeding.
 
-#### 6. Generate Documentation
+#### Step 10: Generate Documentation & Bind Graph
 
 // turbo
 
@@ -286,16 +301,16 @@ Create each approved document using the appropriate template from Section "Doc T
 4. Save to `Projects/[project-name]/docs/[doc-name].md`
 5. **Git Guard**: DO NOT run `git commit` for files created in `docs/` (internal docs are not git-tracked).
 
-#### 6.1. Auto-Insert Graph Anchors (MANDATORY)
+#### Step 10.1: Unified CSA Alignment (Tier 2)
 
-When generating or updating any documentation sections (e.g. classes, functions, files, schemas, APIs):
-1. **Identify Node IDs:** The Agent MUST identify the corresponding code entities (functions, classes, schemas, config files) that are referenced or explained in each section using Code-Graph queries.
-2. **Inject Anchors:** The Agent MUST automatically insert the HTML comment annotation `<!-- @graph-node: nodeId -->` immediately before the section heading (H2 or H3).
-3. **No Ceremony:** Do NOT wait for user instructions to do this — it is a default requirement for codebase traceability.
+When writing or updating documentation headings, the Agent MUST:
+1. **Spec-to-Doc Inheritance:** If the section describes a requirement already defined in a Spec, do NOT define a new `csa-doc-` anchor. Instead, append `<span data-csa-inherits="csa-spec-anchor-id"></span>` to the document heading to inherit the Spec's anchor.
+2. **Doc-Specific Binding:** If documenting a technical component not covered by a Spec, define a doc anchor `<span id="csa-doc-anchor-name"></span>` and add the corresponding `// @para-doc [docs/relative-path.md#csa-doc-anchor-name]` comment in the source code file.
+3. **No Reverse-Binding:** Always adhere to the unidirectional flow of Spec ➔ Code ➔ Docs. Do not link code to doc files unless using Doc-Specific Binding with the proper relative path.
 
-#### 6.2. Source Verification Gate
+#### Step 10.2: Source Verification Gate
 
-> ⛔ CHECKPOINT: Agent MUST NOT proceed to Step 7 until verification is complete.
+> ⛔ CHECKPOINT: Agent MUST NOT proceed to Step 11 until verification is complete.
 
 For EVERY doc created in Step 6, perform anti-hallucination verification:
 
@@ -316,25 +331,25 @@ done
 
 If any `🔴 MISSING` is found → fix the doc before proceeding.
 
-#### 6.3. Anchor Linking
+#### Step 10.3: Graph Verification (Rebuild)
 
 // turbo
 
 > **Gate:** Only runs if the project graph is available (`Projects/[project-name]/.beads/graph/` exists).
 
-1. Scan the newly created Markdown document for anchor annotations `<!-- @graph-node: nodeId -->`.
-2. If found, call the MCP tool `graph_link_docs` with the parameters:
-   - `projectName`: Name of the project
-   - `docPath`: Relative path to the document file (e.g., `docs/architecture.md`)
-3. This command parses all anchors in the file, links them to the corresponding code entities, and updates the `docAnchors` attribute on the graph.
+Rebuild the AST graph to resolve the new Spec-to-Doc inheritances and Doc-Specific bindings:
+```bash
+# Rebuild the graph to sync all anchors and relationships
+PATH="[preferences.node_path from .para-workspace.yml]:$PATH" npx tsx Projects/para-graph/repo/src/cli.ts build [project-name]
+```
 
-#### 7. Create or Update Doc Index
+#### Step 11: Create or Update Doc Index
 
 // turbo
 
 Create or update `Projects/[project-name]/docs/README.md` using the template from the **Doc Index** section above. Add a row for each doc created in Step 6.
 
-#### 8. Log in Session
+#### Step 12: Log in Session & Push Graph Memory
 
 // turbo
 
@@ -348,7 +363,7 @@ Append to current session log:
 - **Location**: `Projects/[project-name]/docs/`
 ```
 
-#### 8.5. Graph Memory Push (CONDITIONAL)
+#### Step 12.1: Graph Memory Push (Conditional)
 
 > **Gate:** Only trigger if project has `.beads/graph/` directory.
 
@@ -368,7 +383,7 @@ Append to current session log:
 
 4. **IF no graph** → Skip silently.
 
-#### 9. HTML Compilation & Live Watch
+#### Step 13: HTML Compilation & Live Watch
 
 // turbo
 
@@ -399,6 +414,7 @@ Audit existing documentation for completeness, accuracy, and freshness.
    - **Index Drift Check**: Cross-check the list of physical files in `docs/` against the inventory declared in the Doc Index table (ignore historical log folders like `docs/researches/` or daily `sessions/` data).
    - If files exist in the folder (excluding ignored ones) but are missing from the Doc Index, report them as `⚠️ Index Drift` to avoid orphan documentation.
 2. **Traceability & Staleness check**: If the graph is available, perform codebase-to-docs checks:
+   - **CSA Compliance Audit**: Call the `graph_audit_csa` MCP tool to fetch the current Spec-to-Code double-binding coverage. If the score is below the threshold defined in `project.md` (default 90%), flag it.
    - **Undocumented God Nodes**: Invoke `graph_god_nodes` to fetch the top-connected core components. Cross-check these God Nodes against their documentation status (where `docAnchors` is empty or missing).
    - **Unenriched God Nodes**: For documented (linked) God Nodes, check if their nodes in the graph database contain a non-empty `semantic.description`. If a God Node is documented but not enriched, flag it.
    - **Stale linked nodes**: Use `graph_query` to find stale nodes (where `staleSince` is not null). Correlate with the time when code signatures were changed.
@@ -414,9 +430,15 @@ Audit existing documentation for completeness, accuracy, and freshness.
 ```
 Configure review report:
 
-📖 Docs Audit: [Project Name]
+📖 Docs & CSA Audit: [Project Name]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+🛡️ CSA Spec-to-Code Coverage: [Score]% (Threshold: [Threshold]%)
+| Component / File | Status | Issue |
+|:--|:--|:--|
+| [Spec-name].md | [✅ Pass / 🔴 Fail] | [Coverage details / missing anchors] |
+
+📝 Documentation Quality:
 | Document | Status | Issue |
 |:--|:--|:--|
 | architecture.md | ✅ OK | — |
@@ -438,6 +460,7 @@ Configure review report:
   3. Document core component `[nodeId]` in architecture.md or target guides.
   4. Register `[doc-name].md` in the README.md index.
   5. Run `/para-graph enrich` to add semantic descriptions to unenriched God Nodes.
+  6. Run `graph_fix_csa` to auto-resolve missing CSA anchors.
 
 ❓ Fix these issues now?
 ```
@@ -451,9 +474,9 @@ Update specific documentation to reflect current project state.
 
 ### Steps
 
-#### 1. User specifies which doc to update (or "all").
+#### Step 1: User Input & Scope Definition
 
-#### 1.5. Index-Driven File List
+#### Step 2: Index-Driven File List Verification
 
 // turbo
 
@@ -468,21 +491,22 @@ Update specific documentation to reflect current project state.
 
 > **Anti-drift guard:** If a file exists in `docs/` but is NOT in the index, report it to the user and suggest adding it.
 
-#### 2. Re-read the relevant source code.
+#### Step 3: Re-read Source Code
 
-#### 3. Diff current doc against actual code to find discrepancies.
+#### Step 4: Diff Current Doc Against Actual Code
 
-#### 4. Update the doc and bump "last reviewed" date.
+#### Step 5: Update Doc & Bump Date
 
-#### 4.5. Re-Link Anchors
+#### Step 5.5: Refresh Code Graph (Rebuild)
 
-If the graph is available, re-run `graph_link_docs(projectName, links)` for the updated document file to reset the `staleSince` state and refresh graph linkages.
+If the graph is available, rebuild the AST graph to refresh relationships and clear the `staleSince` state of linked nodes:
+```bash
+PATH="[preferences.node_path from .para-workspace.yml]:$PATH" npx tsx Projects/para-graph/repo/src/cli.ts build [project-name]
+```
 
-> **v0.16.1+:** `linkDocs` now auto-initializes `semantic: {}` for non-enriched nodes — all anchors will link successfully regardless of enrichment status.
+#### Step 6: Log in Session
 
-#### 5. Log in session.
-
-#### 5.5. Update Index Statistics (if --graph)
+#### Step 6.5: Update Index Statistics (Conditional)
 
 // turbo
 
@@ -522,7 +546,7 @@ If stale docs are found, append a table:
 | architecture.md | 2026-05-20 | `CodeGraph`, `AstStore` |
 ```
 
-#### 6. **HTML Compilation & Watch (Optional)**:
+#### Step 7: HTML Compilation & Live Watch (Optional)
    // turbo
    
    Compile the updated Markdown documents:
@@ -537,7 +561,7 @@ If stale docs are found, append a table:
 
    After compilation, the agent MUST print the clickable `file://` URL of the generated `README.html` (using absolute workspace path) and guide the user on how to open it.
    
-#### 7. **Git Guard**: DO NOT run `git commit` or `git add` for files in `docs/` (internal docs are not git-tracked).
+#### Step 8: Git Safety Guard: DO NOT run `git commit` or `git add` for files in `docs/` (internal docs are not git-tracked).
 
 ---
 
@@ -547,13 +571,13 @@ Copy selected docs from `docs/` (internal) to `repo/docs/` (ship with code).
 
 ### Steps
 
-#### 1. Read Doc Index
+#### Step 1: Read Doc Index
 
 // turbo
 
 Read `Projects/[project-name]/docs/README.md` to list available docs.
 
-#### 2. User selects which docs to publish
+#### Step 2: User Selection
 
 Present the list and let the user choose:
 
@@ -569,7 +593,7 @@ Available in docs/:
 ❓ Which docs to publish? (numbers, or "all")
 ```
 
-#### 3. Adapt for repo audience
+#### Step 3: Adapt for Repository Audience
 
 Before copying, adapt the doc to match the repo's standards:
 
@@ -580,7 +604,7 @@ Before copying, adapt the doc to match the repo's standards:
 
 > **Ask the user**: _"Should this doc be condensed for the repo, or published in full?"_
 
-#### 4. Copy to repo/docs/
+#### Step 4: Copy to Target Folder
 
 // turbo
 
@@ -589,7 +613,7 @@ mkdir -p Projects/[project-name]/repo/docs/
 cp Projects/[project-name]/docs/[selected].md Projects/[project-name]/repo/docs/
 ```
 
-#### 5. Log in session
+#### Step 5: Log in Session
 
 // turbo
 

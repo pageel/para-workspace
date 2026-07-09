@@ -1,3 +1,10 @@
+---
+tags: [fintech, payment, ledger, idempotency, reconciliation]
+stack: [postgres, redis, stripe]
+scale: [medium, large, enterprise]
+complexity: advanced
+---
+
 # Reference Architecture: Fintech Payment & Transactional Ledger
 
 ## 1. Topology

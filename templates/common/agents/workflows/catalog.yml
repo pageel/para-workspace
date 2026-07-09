@@ -360,3 +360,26 @@ items:
   - resource
   - learning
   - pattern
+- id: remote
+  name: Remote Repo Manager
+  kernel_min: 1.9.4
+  kernel_max: 1.x
+  entrypoint: remote.md
+  description: Workflow for remote repository synchronization, listing, and cloning.
+  tags:
+  - remote
+  - repository
+  - git
+  - sync
+- id: research
+  name: Research Case Study
+  kernel_min: 1.9.4
+  kernel_max: 1.x
+  entrypoint: research.md
+  description: Document research case studies, development timelines, and process telemetry.
+  tags:
+  - research
+  - telemetry
+  - documentation
+  - post-mortem
+

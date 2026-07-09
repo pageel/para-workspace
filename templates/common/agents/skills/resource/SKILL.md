@@ -21,4 +21,5 @@ This skill provides sidecar templates for the `/resource` workflow to standardiz
 - `references/extracted-rules-template.md`: Template for extracting agent behavior rules and governance (`extracted_rules/`).
 - `references/extracted-plugins-template.md`: Template for extracting plugin configurations (`extracted_plugins/`).
 - `references/extracted-hooks-template.md`: Template for extracting lifecycle hooks (`extracted_hooks/`).
+- `references/extracted-architecture-template.md`: Template for extracting reusable architecture patterns (`extracted_architecture/`). Bridges with `/sysdesign learn` for catalog promotion.
 - `references/audit-dashboard-template.md`: Template for generating the central Resource Audit Dashboard (`README.md`).

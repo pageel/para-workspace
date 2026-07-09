@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.9.5] - 2026-07-09
+
+Template Consolidation & Release.
+
+- **Added**: Registered new rule `diagnostics-debug` for troubleshooting and workspace diagnostics.
+- **Added**: Registered new skills `self-improvement` (continuous test failure recovery), `remote` (remote repository helper), and `report` (modular report compiler).
+- **Added**: Registered new workflows `/remote` (remote repo controller) and `/research` (telemetry case studies).
+- **Added**: Implemented Open Source Audit gate in `qa.md` workflow, automatically adding the `Open Source Maintainer` red team role for OSS repositories to enforce English-first compliance.
+- **Changed**: Synced version to 1.9.5 across `VERSION`, `VERSIONS.yml`, `cli/para`, `project.md`, `README.md`, translation locales, and catalogs.
+- **Changed**: Updated and versioned System KI templates (`governance.md`, `overview.md`, `metadata.json` of `para_workspace_architecture_standards`) to `1.9.5`.
+
 ## [1.9.4] - 2026-07-01
 
 Local Development Sync & AI Index Auto-Sync.
@@ -14,6 +25,14 @@ Local Development Sync & AI Index Auto-Sync.
 - **Changed**: Enhanced security by implementing Path Traversal checks for source/target file copies.
 - **Changed**: Synced version to 1.9.4 across `VERSION`, `VERSIONS.yml`, `cli/para`, `project.md`, `README.md`, translation locales, and catalogs.
 - **Changed**: Resolved conflict between lifecycle hooks (`install-hooks.sh`) and local sync/update flows by implementing a local `.templates_backup/` cache for robust 3-way dirty checking and overwrite conflict prevention.
+
+## [1.9.3] - 2026-06-30
+
+Unified CSA HTML-Renderer Upgrade.
+
+- **Added**: Upgraded workspace-level `html-renderer` skill (specifically `render.js` compiler and `viewer-template.html`) to support the new Unified CSA v0.17.2+ standard.
+- **Changed**: Replaced old comment-based matching `<!-- @graph-node -->` with new HTML `<span id="csa-nodeId"></span>` anchors, eliminating redundant comment blocks in source and documents.
+- **Changed**: Updated regex parsers and health-score calculation algorithm in `render.js` to align with Unified CSA specifications.
 
 ## [1.9.2] - 2026-06-12
 

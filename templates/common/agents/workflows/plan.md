@@ -539,7 +539,7 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 
 6. **LINT (MANDATORY):** Run the Plan Linter script to verify the plan aligns structurally with the chosen template:
    ```bash
-   export PATH="/home/tienle/.nvm/versions/node/v24.12.0/bin:$PATH" && node .agents/skills/plan/scripts/lint-plan.js Projects/[project-name]/artifacts/plans/[plan-name].md .agents/skills/plan/references/[template-name].md
+    export PATH="$HOME/.nvm/versions/node/v24.12.0/bin:$PATH" && node .agents/skills/plan/scripts/lint-plan.js Projects/[project-name]/artifacts/plans/[plan-name].md .agents/skills/plan/references/[template-name].md
    ```
    If the lint fails, the Agent MUST immediately fix the plan file's headings and structures before presenting the audited plan to the User.
 

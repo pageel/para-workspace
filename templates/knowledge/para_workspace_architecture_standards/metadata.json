@@ -6,7 +6,7 @@
   "domain": "workspace",
   "purpose": "context",
   "owner": "para",
-  "para_version": "1.9.2",
+  "para_version": "1.9.5",
   "tags": [
     "architecture",
     "governance",
@@ -113,6 +113,30 @@
     {
       "type": "file",
       "value": ".agents/skills/vibecode/references/session-quality-gate.md"
+    },
+    {
+      "type": "file",
+      "value": ".agents/rules/diagnostics-debug.md"
+    },
+    {
+      "type": "file",
+      "value": ".agents/skills/self-improvement/SKILL.md"
+    },
+    {
+      "type": "file",
+      "value": ".agents/skills/remote/SKILL.md"
+    },
+    {
+      "type": "file",
+      "value": ".agents/skills/report/SKILL.md"
+    },
+    {
+      "type": "file",
+      "value": ".agents/workflows/remote.md"
+    },
+    {
+      "type": "file",
+      "value": ".agents/workflows/research.md"
     }
   ],
   "relates_to": [],
@@ -148,7 +172,13 @@
     "cli/commands/mcp-list.sh",
     "cli/commands/mcp-remove.sh",
     "cli/lib/mcp-config.sh",
-    "templates/common/agents/skills/vibecode/references/session-quality-gate.md"
+    "templates/common/agents/skills/vibecode/references/session-quality-gate.md",
+    "templates/common/agents/rules/diagnostics-debug.md",
+    "templates/common/agents/skills/self-improvement/SKILL.md",
+    "templates/common/agents/skills/remote/SKILL.md",
+    "templates/common/agents/skills/report/SKILL.md",
+    "templates/common/agents/workflows/remote.md",
+    "templates/common/agents/workflows/research.md"
   ],
   "concepts": [
     "PARA methodology",

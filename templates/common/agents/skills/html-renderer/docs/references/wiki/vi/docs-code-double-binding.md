@@ -37,7 +37,7 @@ Chiều liên kết này được thiết lập thủ công bằng cách chèn m
 
 ### 📊 Lợi ích
 *   **Xác định độ phủ tài liệu (Documentation Coverage)**: Đồ thị biết chính xác bao nhiêu phần trăm mã nguồn quan trọng đã được viết tài liệu.
-*   **Tính điểm sức khỏe (Docs Health Score)**: Điểm số sức khỏe tài liệu trên Dashboard được tính dựa trên số lượng nút cốt lõi (God Nodes) đã được gán neo thành công.
+*   **Tính điểm sức khỏe (Docs Health Score)**: Đóng góp một phần thông qua mức độ gán neo các cấu phần mã nguồn quan trọng (xem chi tiết ở mục 3).
 
 ---
 
@@ -45,20 +45,23 @@ Chiều liên kết này được thiết lập thủ công bằng cách chèn m
 
 **Ý nghĩa:** Từ một file code cụ thể, xác định xem nó đang được giải nghĩa bởi những tài liệu nào, hoặc liệu nó có đang bị bỏ quên hay không.
 
-### 🔗 Cơ chế neo ngược từ Code (para-doc)
-Bên cạnh neo từ phía tài liệu, Double-Binding yêu cầu thiết lập neo ngược từ phía mã nguồn thông qua cú pháp chú thích đặc biệt `@para-doc`. Lập trình viên đặt comment này ngay trước dòng khai báo hàm, lớp hoặc ở đầu tệp tin:
+Bên cạnh neo từ phía tài liệu, Double-Binding yêu cầu thiết lập neo ngược từ phía mã nguồn thông qua cú pháp chú thích đặc biệt `@para-doc`.
 
+### 🔗 Cú pháp rút gọn (Short-form Reference) — Khuyến nghị & Bắt buộc từ v0.17.4
+Để tránh hỏng liên kết khi đổi tên hoặc di chuyển tệp tài liệu, lập trình viên chỉ cần sử dụng định danh CSA ID duy nhất được tiền tố bởi dấu `#` (hệ thống sẽ tự động quét đối chiếu động qua cơ sở dữ liệu SQLite):
 ```typescript
-// @para-doc [ten_file_tai_lieu.md#neo_anchor]
+// @para-doc [#csa-verify-session]
+export function verifySessionCookie(cookie: string) {
+    // logic xác thực cookie...
+}
 ```
 
-*   **Ví dụ thực tế**:
-    ```typescript
-    // @para-doc [auth-spec.md#verify-session]
-    export function verifySessionCookie(cookie: string) {
-        // logic xác thực cookie...
-    }
-    ```
+### ⚠️ Cú pháp đầy đủ (Long-form Reference) — Đã bãi bỏ (Deprecated)
+Hạn chế tối đa việc sử dụng cú pháp đầy đủ chứa đường dẫn vật lý:
+```typescript
+// @para-doc [doc-auth.md#csa-verify-session]
+```
+*Lý do*: Cách này gây liên kết cứng (coupling), dễ dẫn đến lỗi mồ côi (broken link) khi cấu trúc thư mục tài liệu thay đổi hoặc đổi tên tệp.
 
 Khi chạy phân tích đồ thị, hệ thống sẽ đối chiếu song song:
 1. Neo `<!-- @graph-node -->` trong tài liệu trỏ tới code.
@@ -71,6 +74,34 @@ Khi bạn chạy công cụ đồ thị (`para-graph build`), hệ thống sẽ 
 *   **Phát hiện Code chưa được tài liệu hóa (Unlinked Code)**: Hệ thống tự động liệt kê các tệp tin hoặc các God Nodes quan trọng chưa hề được liên kết đến bất kỳ tệp Markdown nào.
 *   **Phát hiện Tài liệu lỗi thời (Stale Nodes)**: Nếu một hàm bị đổi tên, đổi tham số, hoặc file code bị xóa nhưng neo trong tài liệu vẫn trỏ tới thông tin cũ, hệ thống sẽ đánh dấu nút đó bị **Stale** (lỗi thời) và cảnh báo trên Dashboard.
 *   **AI Context Bundling**: AI Agent có thể lấy ra toàn bộ các đoạn code liên quan đến một bài viết tài liệu cụ thể để tự động cập nhật nội dung một cách chính xác mà không bị ảo tưởng (Anti-Hallucination).
+
+---
+
+## 3. 📊 Cách tính Điểm số Sức khỏe (Docs Health Score Calculation)
+
+Điểm số Sức khỏe tổng thể (Overall Health Status Score) hiển thị trên Dashboard phản ánh độ hoàn thiện, mức độ bao phủ và tính đồng bộ thực tế của tài liệu kỹ thuật so với mã nguồn thực tế.
+
+### 🧮 Công thức tính toán
+$$\text{Sức khỏe tổng thể} = \text{Độ bao phủ Đồ thị} \times \left(\frac{\text{Độ đồng bộ tài liệu}}{100}\right)$$
+
+Trong đó:
+1. **Độ bao phủ Đồ thị (Weighted Graph Coverage)**: 
+   * Đo lường tỷ lệ bao phủ tài liệu của các cấu phần mã nguồn chính được định cấp độ quan trọng (trọng số mặc định: Cốt lõi/Critical = `5.0`, Trung bình = `2.0`, Bổ trợ = `0.5`).
+   * Một cấu phần mã nguồn được cộng 100% trọng số nếu đạt chuẩn Double-Binding (vừa có neo `@graph-node` trong Markdown vừa có comment `@para-doc` trong code). Nếu chỉ có 1 trong 2 chiều liên kết, cấu phần đó chỉ đóng góp 50% trọng số.
+2. **Độ đồng bộ tài liệu (Doc Sync Rate)**:
+   * Tỷ lệ các tệp tài liệu khỏe mạnh (không chứa lỗi sai lệch/drift audit và không bị lỗi thời/stale) trên tổng số tài liệu của dự án.
+
+### ⚙️ Các tùy chọn Hiệu chỉnh Chỉ số (Calibration Options)
+Trong cửa sổ **Hiệu chỉnh chỉ số**, bạn có thể tùy chọn thay đổi các thành phần điểm số này:
+* **Trọng số cấu phần**: Thay đổi trọng số (slider) để tăng mức đóng góp của cấu phần lõi hoặc giảm cấu phần phụ.
+* **Kiểm tra comment neo**: Tắt tùy chọn này sẽ bỏ qua chiều liên kết ngược từ mã nguồn (`@para-doc`), cấu phần chỉ cần có neo tài liệu là nhận đủ 100% trọng số.
+* **Bỏ qua cấu phần Bổ trợ**: Loại bỏ hoàn toàn các biến/hằng số phụ trợ (Low priority) ra khỏi tổng số trọng số cần bao phủ (giúp tăng điểm khi bỏ qua biến phụ).
+* **Bỏ qua phạt tệp trễ hạn**: Bỏ qua hình phạt sụt giảm điểm số khi có tài liệu stale/drift, giữ hệ số độ đồng bộ luôn bằng 100%.
+
+### 🛡️ Chỉ số phụ kiểm toán CSA Audit
+Bảng điều khiển hiển thị thêm hai chỉ số kiểm toán quan trọng tương ứng với bộ quy tắc chốt chặn của CLI:
+* **Tier 1 Specs Coverage (Hard Gate)**: Tỷ lệ bao phủ các neo đặc tả cứng nằm trong `artifacts/specs/`. Yêu cầu kiểm toán CLI đạt 100% để cho phép commit code.
+* **Tier 2 Docs Coverage (Soft Gate)**: Tỷ lệ bao phủ các neo tài liệu hướng dẫn mềm nằm trong `docs/`. Yêu cầu đạt 50% để vượt qua.
 
 ---
 

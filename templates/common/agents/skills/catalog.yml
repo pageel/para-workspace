@@ -243,5 +243,37 @@ items:
   - learning
   - templates
   - sidecar
+- id: self-improvement
+  name: Self-Improvement
+  kernel_min: 1.9.4
+  kernel_max: 1.x
+  entrypoint: self-improvement/SKILL.md
+  description: Skill for automated recovery and continuous learning from test failures and syntax errors.
+  tags:
+  - self-improvement
+  - telemetry
+  - diagnostics
+- id: remote
+  name: Remote References
+  kernel_min: 1.9.4
+  kernel_max: 1.x
+  entrypoint: remote/SKILL.md
+  description: Sidecar skill for /remote workflow. Defines repository naming patterns and remote sync presets.
+  tags:
+  - remote
+  - repository
+  - git
+  - sidecar
+- id: report
+  name: Report Engine
+  kernel_min: 1.9.4
+  kernel_max: 1.x
+  entrypoint: report/SKILL.md
+  description: Central reporting engine for compiling verification summaries and compliance reports.
+  tags:
+  - report
+  - metrics
+  - output
+
 
 

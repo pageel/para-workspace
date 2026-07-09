@@ -15,7 +15,8 @@ source: catalog
 ## When to Load
 
 - `/brainstorm` → Step 4 (Open brainstorm): load `references/templates/brainstorm.md`
-- `/brainstorm` → Step 4 (Finalized decision): load `references/templates/decision.md`
+- `/brainstorm` → Step 4 (Finalized decision - General): load `references/templates/decision.md`
+- `/brainstorm` → Step 4 (Finalized decision - Architectural/ADR): load `references/templates/adr.md`
 - `/brainstorm` → Step 4 (Research extraction): load `references/templates/research.md` (if user consents)
 - Steps 1-3 → NOT needed (no templates)
 - Step 5 → NOT needed (no templates)
@@ -25,7 +26,8 @@ source: catalog
 | File | When | Purpose |
 |:--|:--|:--|
 | `references/templates/brainstorm.md` | Step 4 — Open exploration | Living document for ongoing research, appendable across sessions |
-| `references/templates/decision.md` | Step 4 — Finalized decision | Frozen document for concluded brainstorms with chosen option |
+| `references/templates/decision.md` | Step 4 — Finalized decision | Frozen document for concluded general brainstorms with chosen option |
+| `references/templates/adr.md` | Step 4 — Finalized ADR | Frozen document for concluded architectural brainstorms (ADR) |
 | `references/templates/research.md` | Step 4 — File 2 (user consent) | Document structure for extracted research |
 
 > **Convention:** Data files live in `references/` (not `templates/` at skill root).

@@ -68,12 +68,10 @@ To ensure the Agent does not document non-existent features, every generated doc
     *   If a config is declared but not yet used in code, it must be marked: `[Planned — Not yet implemented in source]`.
     *   If a feature is removed from the code, it must be updated or deleted from the docs immediately.
 
-### 🔴 Rule 3: Graph-Anchoring Protocol
-Every architecture or feature document must link directly to the codebase via graph anchors:
-```markdown
-<!-- @graph-node: [nodeId_or_file_path] -->
-```
-Then, run the `graph_link_docs` utility to register this relationship in the graph database. This is used to calculate the **Docs Health Score** and detect **Stale Docs** dynamically.
+### 🔴 Rule 3: Unified CSA Protocol (Two-Way Audit)
+Every architecture or feature document must link directly to the codebase via graph anchors (Markdown annotations or code `@para-doc` comments).
+*   **Execution:** The `para-graph build` compiler automatically scans the codebase and document directories to compile the two-way Unified CSA (Tier 2) mapping.
+*   *Note:* Legacy manual linking utilities such as `graph_link_docs` and the `para-graph link` CLI command are deprecated & disabled as of v0.17.4 to favor fully automated static analysis audits.
 
 ---
 

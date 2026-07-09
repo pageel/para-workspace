@@ -381,6 +381,8 @@ Sidecar skills (`plan`, `docs`, `brainstorm`, `spec`) reference the centralized 
 | 1.8.14 | Release | Fix BUG-37: convert RUNTIME_CMD via cygpath -m on Windows for MCP setups, defensive .exe check, and plan workflow auto-activation with Suggested Next Steps template updates |
 | 1.8.15 | Release | Vibecode DSP (Dynamic Session Plan) enhancements including JIT Phase creation for DSP Draft mode, mandatory Pre-code Phase-level Quality Gate (brainstorm, qa, TDD, --graph, --hardened), automated Context Reload at Phase start via Sidecar Skill mapping, Intent Detection, and sequential session naming convention |
 | 1.9.1 | Release | Shortened para_workspace_architecture_standards KI summary, updated plan workflows to support platform task tracking and audit runs in Draft state, and injected task/rule template guards |
+| 1.9.4 | Sync | Tool local synchronization and auto-sync indexes (`install-tool --sync`). |
+| 1.9.5 | Release | Template consolidation and release. Registered new rule `diagnostics-debug`, new skills (`self-improvement`, `remote`, `report`), and new workflows (`remote`, `research`). Updated Red Team roles selector for OSS repositories. |
 
 
 ## 16. Dynamic Tool System (v1.8.0)

@@ -37,7 +37,7 @@ This link is established manually by inserting a special HTML comment anchor imm
 
 ### 📊 Key Benefits
 *   **Documentation Coverage Metrics**: The Code-Graph engine knows exactly what percentage of critical source files have been documented.
-*   **Weighted Health Score**: The Docs Health Score on the Quality Dashboard is calculated using the relative importance (weights) of successfully anchored God Nodes.
+*   **Weighted Health Score**: Contributes to the Overall Health score based on successfully anchored entities (see Section 3 for calculation details).
 
 ---
 
@@ -45,20 +45,23 @@ This link is established manually by inserting a special HTML comment anchor imm
 
 **Meaning:** From a specific source code file, identifying which technical documents explain it, or whether it has been completely missed.
 
-### 🔗 Code-to-Docs Back-Anchoring (para-doc)
-In addition to anchoring from the document side, Double-Binding requires establishing backward links from the source code side using a special comment syntax `@para-doc`. Developers place this comment immediately before the declaration of a function, class, or at the top of a file:
+Along with document-side anchors, Double-Binding mandates backward links from the codebase using the `@para-doc` comment syntax.
 
+### 🔗 Short-form Reference — Recommended & Mandated since v0.17.4
+To prevent broken links when renaming or moving document files, developers only need to specify the unique CSA ID prefixed with `#` (resolved dynamically via the SQLite database):
 ```typescript
-// @para-doc [document_filename.md#neo_anchor]
+// @para-doc [#csa-verify-session]
+export function verifySessionCookie(cookie: string) {
+    // cookie verification logic...
+}
 ```
 
-*   **Concrete Example**:
-    ```typescript
-    // @para-doc [auth-spec.md#verify-session]
-    export function verifySessionCookie(cookie: string) {
-        // cookie verification logic...
-    }
-    ```
+### ⚠️ Long-form Reference — Deprecated
+Avoid using long-form comments containing physical file paths:
+```typescript
+// @para-doc [doc-auth.md#csa-verify-session]
+```
+*Why*: This introduces coupling and leads to broken links (dangling edges) whenever documentation files are reorganized or renamed.
 
 When parsing the graph, the system audits both directions in parallel:
 1. Markdown `<!-- @graph-node -->` tags pointing to code.
@@ -71,6 +74,34 @@ When you build the project graph database (`para-graph build`), the static analy
 *   **Detecting Unlinked Code**: The system automatically lists important files or God Nodes that are not yet referenced by any Markdown file.
 *   **Detecting Stale Nodes**: If a function is renamed, parameters change, or a source file is deleted while the documentation anchor still points to the old signature, the system marks the node as **Stale** and displays warnings on the Quality Dashboard.
 *   **AI Context Bundling**: AI Agents can fetch all source declarations matching a specific document header to automatically write updates without hallucinating (Anti-Hallucination).
+
+---
+
+## 3. 📊 Docs Health Score Calculation
+
+The Overall Health Status Score displayed on the Dashboard reflects the completeness, coverage, and synchronization of technical documentation relative to the source code.
+
+### 🧮 Formula
+$$\text{Overall Health Score} = \text{Weighted Graph Coverage} \times \left(\frac{\text{Doc Sync Rate}}{100}\right)$$
+
+Where:
+1. **Weighted Graph Coverage**:
+   * Measures the documentation rate of code entities categorized by priority (default weights: Critical = `5.0`, Medium = `2.0`, Low = `0.5`).
+   * A code entity awards 100% of its weight if it passes Double-Binding (has both a Markdown `@graph-node` anchor and a `@para-doc` code comment). If it has only one direction, it contributes 50%.
+2. **Doc Sync Rate (Freshness)**:
+   * The percentage of healthy documents (those without drift audit mismatches and not marked as stale) out of all documents.
+
+### ⚙️ Calibration Options
+In the **Calibration Settings** panel, you can customize these calculations dynamically:
+* **Entity Weights**: Adjust the weight sliders to change the relative importance of Critical, Medium, and Low-priority entities.
+* **Verify Code Comment Anchors**: If unchecked, back-anchors (`@para-doc` comments) are skipped, and nodes with only doc anchors receive 100% weight.
+* **Exclude Low-priority entities**: Completely removes Low-priority variables and constants from the coverage formula (improving the score if minor variables lack documentation).
+* **Disable stale/drift penalty**: Stops documentation drift and stale files from penalizing the Overall Health Score (forces Doc Sync Rate to 100% in the calculation).
+
+### 🛡️ CSA Audit Sub-metrics
+The dashboard also shows the two gatekeeping tiers that govern Git workflows:
+* **Tier 1 Specs Coverage (Hard Gate)**: Coverage of hard specification anchors in `artifacts/specs/`. The CLI audit requires 100% to allow commits.
+* **Tier 2 Docs Coverage (Soft Gate)**: Coverage of soft documentation guides in `docs/`. The CLI audit requires 50% to pass.
 
 ---
 

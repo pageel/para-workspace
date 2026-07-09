@@ -109,6 +109,9 @@
 | **Harness Alignment** — Does the generated draft plan exactly match the required checkpoints and guards (MANDATORY, VCS inline commit/push guards) from the template plan and Harness Guard Catalog? | ⬜     |       |
 | **CSA Spec Audit** — If CSA is enabled and plan follows brainstorm, warn to write spec via `/spec` workflow      | ⬜     |       |
 | **CSA Spec Mapping** — 100% Spec Anchor IDs mapped in Plan (blocking if incomplete)                              | ⬜     |       |
+| **Version Decision** — Evaluate plan's target version decision and version naming consistency                    | ⬜     |       |
+| **Diagnostics Coverage** — Observable checkpoints exist for every runtime path identified in Spec §9 Diagnostics Design | ⬜     |       |
+
 
 ### Project Governance Reload
 
@@ -149,6 +152,7 @@ Reloaded Skills:
 | Type        | Icon | When to apply                                                                              |
 | :---------- | :--- | :----------------------------------------------------------------------------------------- |
 | 🧪 TDD      | `🧪` | Logic changes, algorithms, data transforms, bug fixes, security-critical code, API changes |
+| 🔍 Debug    | `🔍` | Structured logging, observable checkpoints, error taxonomy implementation, environment parity mocks |
 | 📝 Standard | `📝` | Documentation, config changes, version bumps, changelog, formatting, git operations        |
 
 ### Task Classification Table
@@ -200,7 +204,8 @@ Reloaded Skills:
 - [ ] 0.3 🤖 **MCP Project Directory Snapshot** (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool to capture the baseline configuration, rules, and workspace knowledge)
 - [ ] 0.4 🤖 **Project Directory Junk Audit** (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool with `auditJunk: true` to check for physical junk files before starting work)
 - [ ] 0.5 🤖 **TDD Repo Before Snapshot** (run `git status --ignored --porcelain` & `git log -n 1 --oneline` and save to `artifacts/tests/tdd-repo-before-[date].log`)
-- [ ] 0.6 🤖 **Session Context Compaction** (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to capture and write all rules, skills, and project contract to Vibecode Session KI)
+- [ ] 0.6 🔍 **Debug Infrastructure Setup** (if Spec has §9 Diagnostics Design: implement structured logger utility, error taxonomy constants, and observable checkpoint stubs. If project already has logging system, verify it meets the Spec's log format requirements.)
+- [ ] 0.7 🤖 **Session Context Compaction** (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to capture and write all rules, skills, and project contract to Vibecode Session KI)
 - [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x], run the MCP tool `project_session_compact` to update session memory, read the updated `session.md` using `view_file` to reload context, and obtain explicit User approval in the chat to transition to Phase 1.
 ---
 
@@ -346,6 +351,7 @@ git push origin main
 - [ ] **CSA Quality Verification (MCP):** Run the **Global** CSA compliance audit (invoke `graph_audit_csa` MCP tool without `planScope` or run `npx para-graph audit csa` without `--plan-scope`) to verify global Spec-to-Code coverage meets the project's configured threshold (csa.spec_threshold in project.md) and zero dangling spec edges.
 - [ ] **MCP Snapshot Diff Evaluation (MCP):** Run MCP tools `project_snapshot` and `project_diff` to evaluate physical directory drift and verify the integrity of protected files.
 - [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `git status --ignored --porcelain` snapshot in `tdd-repo-before-[date].log` to identify newly generated untracked or ignored files. Agent MUST present the list to User and ask whether to delete them (if junk) or commit them (if missed in plan) before proceeding with cleanup.
+- [ ] **Diagnostics Design Verification:** All Observable Checkpoints from Spec §9 are implemented in code (structured logging at defined boundaries). Error Taxonomy error codes are used consistently.
 - [ ] [Project-specific checks: build pass, docs updated, governance rules...]
 - [ ] **KI Template Sync (M7/KR8):** IF project has `repo/templates/knowledge/`, verify KI template content reflects current version changes. Check metadata.json has valid `version` + `para_version`. Run `ki sync` if updated.
 - [ ] ⛔ CHECKPOINT (Walkthrough Completion): Agent MUST verify all above Walkthrough items are ticked [x] BEFORE proposing Status transition.

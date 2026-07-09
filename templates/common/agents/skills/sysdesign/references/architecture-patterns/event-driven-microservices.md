@@ -1,3 +1,10 @@
+---
+tags: [async, pub-sub, saga, message-broker, event-sourcing]
+stack: [kafka, rabbitmq, kubernetes, docker]
+scale: [large, enterprise]
+complexity: advanced
+---
+
 # Reference Architecture: Event-Driven Microservices (Pub-Sub / Saga)
 
 ## 1. Topology

@@ -42,14 +42,14 @@ To bring the stale node count back to $0$ and fully align your documentation:
 ### Step 1: Commit Local Changes (Git Commit)
 Before cleaning up the graph, ensure all local code modifications are verified by tests and committed to Git. This fixes the MD5 hashes of the files.
 
-### Step 2: Relink Documentation (Link Docs)
-Run the link command to map document anchors back to the updated code positions:
+### Step 2: Rebuild the Code Graph (Rebuild Graph)
+Run the graph rebuild command to automatically scan the codebase and update the anchors:
 ```bash
-./para para-graph link [project-name]
+./para para-graph build [project-name]
 # Or run directly via Node
-node Projects/para-graph/repo/dist/cli.js link [project-name]
+node Projects/para-graph/repo/dist/cli.js build [project-name]
 ```
-This scans all `<!-- @graph-node -->` comments in the Markdown documents, matches them with code, and clears outdated stale references.
+This scans all `<!-- @graph-node -->` comments in the Markdown documents, matches them with code, and updates the graph relationship references.
 
 ### Step 3: Semantic Re-Enrichment (graph_enrich)
 For high-impact God Nodes that are stale, trigger semantic re-enrichment so that the AI analyzes the new code and writes an updated summary:
@@ -76,9 +76,9 @@ Here are some useful prompts and commands to resolve stale nodes and synchronize
     ```text
     /docs [project-name] update --graph
     ```
-*   **Relink shifted document anchors**:
+*   **Rebuild the graph to update anchors**:
     ```text
-    /para para-graph link [project-name]
+    /para para-graph build [project-name]
     ```
 *   **Trigger semantic enrichment for stale nodes**:
     Use the `graph_enrich` MCP tool, or ask in chat:

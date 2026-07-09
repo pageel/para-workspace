@@ -39,7 +39,7 @@ target_version: "0.0.0"
 | Scope | File / Index | Purpose | Path |
 | :--- | :--- | :--- | :--- |
 | Session Memory | `session.md` | Compacted session rules, skills, and contract | [session.md](~/.gemini/antigravity-ide/knowledge/para_vibecode_session/artifacts/session.md) |
-| Workspace Rules | `.agents/rules.md` | Workspace-level rules index | [.agents/rules.md](file:///media/tienle/DATA/WORKSPACE/para/.agents/rules.md) |
+| Workspace Rules | `.agents/rules.md` | Workspace-level rules index | [.agents/rules.md](file:///absolute/path/to/workspace/.agents/rules.md) |
 | Project Contract | `project.md` | Project contract and thresholds | [project.md](file:///absolute/path/to/project/project.md) |
 | Project Rules | `.agents/rules/csa-compliance.md` | Project-specific CSA rules | [csa-compliance.md](file:///absolute/path/to/project/.agents/rules/csa-compliance.md) |
 
@@ -96,6 +96,10 @@ target_version: "0.0.0"
   - Code logic has changed (e.g., param updates, algorithm shifts) but the Spec remains outdated.
   - Spec details edge cases or requirements that are not covered in the active codebase or unit tests.
   - `@para-doc` markers are misplaced or formatted incorrectly.
+- [ ] **3.3. Diagnostics Design Coverage Audit:** For Specs with §9 Diagnostics Design:
+  - Verify that Observable Checkpoints defined in Spec are implemented in code (structured logging exists at documented boundaries).
+  - Verify Error Taxonomy codes from Spec are used consistently in error responses.
+  - Flag any Environment Parity Risks not covered by test mocks.
 
 ---
 

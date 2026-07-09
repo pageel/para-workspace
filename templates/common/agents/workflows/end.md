@@ -15,6 +15,9 @@ source: catalog
 > 3. If `language` is undefined, look for `preferences.language` (legacy)
 > 4. Default ultimate fallback: "en"
 > All output (chat response) MUST be translated to the chat language, all internal reasoning (<thought>) MUST be written in the thinking language, and all generated files in artifacts/ (plans, tasks, qa) MUST follow the artifacts language.
+>
+> > **Constraint 2 (Workflow Order & UX Integrity):**
+> > Agent MUST execute and complete ALL technical write/sync steps (Step 1 through Step 5: writing the session log, updating the master index, syncing backlog, clearing hot lane, and pushing graph memories/insights) BEFORE proposing process improvements, presenting insights, or pausing to ask the user for feedback in the chat. Avoid premature pauses that leave technical workflow steps unexecuted.
 
 Summarize accomplishments and log them to the correct context (Project vs. Workspace).
 
@@ -317,6 +320,21 @@ After reporting phase status:
    ```
 
 5. **IF no graph** → Skip silently.
+
+### 4.9. Self-Improvement & Process Reflection (L3 Experiment)
+
+> **Gate:** Only trigger if project has `.beads/graph/` directory (graph is built).
+> **Purpose:** Analyze session errors, test failures, and QA issues to propose systemic process improvements (rules, workflows, templates).
+
+1. **IF graph exists:**
+   - Follow `self-improvement` skill Step 3 & 4.
+   - Call `session_telemetry_query` to fetch recent session telemetry.
+   - Group and analyze errors. If the same error or workflow issue (like QA plan gaps) occurs $\ge 2$ times across sessions:
+     a. **Propose Rule/Workflow Graduation:** Suggest creating/updating a rule in `.agents/rules/agent-behavior.md` or a template in `.agents/workflows/`.
+     b. **Push Insight:** Call `insight_push` with kind `pattern-lesson` to persist the resolution.
+     c. **Curate:** Call `memory_curate(projectName)`.
+2. **IF no graph** → Skip silently.
+
 
 
 ### 5. Update Master Index

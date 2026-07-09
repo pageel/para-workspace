@@ -218,16 +218,16 @@ const translations = {
         businessGodNodes: "Thành phần Lõi Nghiệp vụ (God Nodes)",
         healthStatus: "Độ đồng bộ tài liệu",
         entityTypeDistribution: "Phân bố theo Loại Cấu phần",
-        weightDistribution: "Phân loại theo Trọng số Đồ thị",
-        legendCompleted: "Đạt chuẩn (Đầy đủ)",
-        legendUnlinked: "Chưa liên kết",
-        legendUnenriched: "Chưa mô tả AI",
+        weightedCoverageLabel: "Độ bao phủ Đồ thị",
+        specCoverageLabel: "Tier 1: Đặc tả (Specs)",
+        docCoverageLabel: "Tier 2: Tài liệu (Docs)",
         explorerTitle: "Trình duyệt Đồ thị Mã & Neo tài liệu",
         searchPlaceholderNodes: "Tìm kiếm node theo tên, file...",
         filterAll: "Tất cả",
         filterCritical: "Cốt lõi (Trọng số 5)",
         filterMedium: "Trung bình",
         filterUnlinked: "Chưa gắn link",
+        filterUnlinkedSpecs: "Chưa liên kết (Specs)",
         filterUnlinkedDocs: "Chưa neo (CSA trên Docs)",
         filterUnlinkedCode: "Chưa cmt (CSA trên Code)",
         filterDangling: "Neo mồ côi (Dangling)",
@@ -282,7 +282,7 @@ const translations = {
         alignmentDriftAudit: "Báo cáo sai lệch & Gaps (Drift Audit)",
         driftDocsTitle: "🔍 Tài liệu bị lệch (Drift)",
         driftDocsSubtitle: "Tài liệu có neo liên kết hỏng hoặc sai lệch với mã nguồn",
-        calibrationDesc: "Trọng số đại diện cho độ quan trọng tương đối của từng cấu phần mã:<br/>• <b>Cốt lõi:</b> Các cấu phần lõi ảnh hưởng lớn (Cấu phần Siêu kết nối, độ kết nối >= 20).<br/>• <b>Trung bình:</b> Hàm, lớp, tệp tin tiêu chuẩn.<br/>• <b>Bổ trợ:</b> Các biến và hằng số phụ trợ.<br/>Tài liệu hóa phần Cốt lõi đóng góp điểm số cao hơn.",
+        calibrationDesc: "Trọng số đại diện cho độ quan trọng tương đối của từng cấu phần mã để tính toán Sức khỏe tổng thể:<br/>• <b>Sức khỏe tổng thể = Độ bao phủ Đồ thị * (Độ đồng bộ tài liệu / 100)</b>.<br/>• <b>Độ bao phủ Đồ thị:</b> Tính bằng tổng trọng số các cấu phần được viết tài liệu / tổng trọng số tất cả cấu phần (Cốt lõi: 5.0, Trung bình: 2.0, Bổ trợ: 0.5). Mỗi cấu phần có cả comment code và neo tài liệu được tính 100% trọng số, nếu chỉ có 1 trong 2 được tính 50%.<br/>• <b>Độ đồng bộ tài liệu:</b> Tỷ lệ tệp tài liệu khỏe mạnh (không lỗi thời, không drift) trên tổng số tài liệu.<br/>• <b>Tier 1 Specs & Tier 2 Docs:</b> Đo lường tỷ lệ bao phủ của các neo đặc tả cứng (Tier 1) và neo tài liệu hướng dẫn mềm (Tier 2).",
         navHome: "Tài liệu chính (README)",
         navBack: "Trở lại",
         navForward: "Tiến tới",
@@ -400,14 +400,16 @@ const translations = {
         entityTypeDistribution: "Entity Type Distribution",
         weightDistribution: "Weight Distribution",
         legendCompleted: "Completed (Full)",
-        legendUnlinked: "Unlinked",
-        legendUnenriched: "Unenriched",
+        weightedCoverageLabel: "Weighted Graph Coverage",
+        specCoverageLabel: "Tier 1: Specs",
+        docCoverageLabel: "Tier 2: Docs",
         explorerTitle: "Code Graph & Doc Anchors Explorer",
         searchPlaceholderNodes: "Search nodes by name, file...",
         filterAll: "All",
         filterCritical: "Critical (Weight 5)",
         filterMedium: "Medium",
         filterUnlinked: "Unlinked",
+        filterUnlinkedSpecs: "Specs Unlinked",
         filterUnlinkedDocs: "CSA on Docs Unlinked",
         filterUnlinkedCode: "CSA on Code Unlinked",
         filterDangling: "Dangling CSA Links",
@@ -462,7 +464,7 @@ const translations = {
         alignmentDriftAudit: "Logic Drift & Gaps Audit",
         driftDocsTitle: "🔍 Outdated Specs (Drift)",
         driftDocsSubtitle: "Specs with broken anchor links or outdated code references",
-        calibrationDesc: "Weights represent the relative priority of each individual code entity:<br/>• <b>Critical:</b> High-impact core components (God Nodes, degree >= 20).<br/>• <b>Medium:</b> Standard functions, classes, and source files.<br/>• <b>Low:</b> Auxiliary variables and constants.<br/>Documenting Critical components contributes more to the overall health score.",
+        calibrationDesc: "Weights represent the relative priority of each code entity to compute Overall Health:<br/>• <b>Overall Health = Weighted Graph Coverage * (Doc Sync Rate / 100)</b>.<br/>• <b>Weighted Graph Coverage:</b> Total weight of documented entities / total weight of all entities (Critical: 5.0, Medium: 2.0, Low: 0.5). Full binding (both code comment & doc anchor) counts 100% weight, partial counts 50%.<br/>• <b>Doc Sync Rate (Freshness):</b> Percentage of healthy, non-stale/non-drifted document files.<br/>• <b>Tier 1 Specs & Tier 2 Docs:</b> Measure coverage rate on Spec anchors (Tier 1 Hard Gate) and Doc anchors (Tier 2 Soft Gate).",
         navHome: "Main Documentation (README)",
         navBack: "Go Back",
         navForward: "Go Forward",
@@ -1529,8 +1531,9 @@ function renderDirectory(srcDir, destDir, template) {
         enrichableNodes = graphNodes.filter(node => {
             const isTest = node.filePath && (node.filePath.startsWith('tests/') || node.filePath.includes('.test.'));
             const isSpecAnchor = node.type === 'spec_anchor';
+            const isDocOrSpecFile = node.filePath && (node.filePath.startsWith('docs/') || node.filePath.startsWith('artifacts/'));
             const excluded = isExcluded(node.filePath);
-            return !isTest && !isSpecAnchor && !excluded;
+            return !isTest && !isSpecAnchor && !isDocOrSpecFile && !excluded;
         });
         
         linkedNodes = enrichableNodes.filter(node => {
@@ -1698,6 +1701,39 @@ function renderDirectory(srcDir, destDir, template) {
             return fileComments.some(c => c.line >= (node.startLine || 1) - 4 && c.line <= (node.startLine || 1));
         }).length;
         
+        let totalSpecAnchors = 0;
+        let coveredSpecAnchors = 0;
+        let totalDocAnchors = 0;
+        let coveredDocAnchors = 0;
+
+        graphNodes.forEach(node => {
+            if (node.type === 'spec_anchor') {
+                const isSpec = node.filePath && (node.filePath.startsWith('artifacts/specs/') || node.filePath.startsWith('specs/'));
+                const isDoc = node.filePath && (node.filePath.startsWith('docs/') || node.filePath.startsWith('artifacts/sysdesigns/'));
+                
+                const codeNodes = anchorToCodeNodesMap[node.id] || [];
+                const hasCode = codeNodes.length > 0;
+                const docs = specToDocsMap[node.id] || new Set();
+                const hasDoc = docs.size > 0;
+                const isCovered = hasCode || hasDoc;
+                
+                if (isSpec) {
+                    totalSpecAnchors++;
+                    if (isCovered) coveredSpecAnchors++;
+                } else if (isDoc) {
+                    totalDocAnchors++;
+                    if (isCovered) coveredDocAnchors++;
+                }
+            }
+        });
+
+        dashboardStats.specCoverageRate = totalSpecAnchors > 0 ? (coveredSpecAnchors / totalSpecAnchors) * 100 : 100;
+        dashboardStats.docCoverageRate = totalDocAnchors > 0 ? (coveredDocAnchors / totalDocAnchors) * 100 : 100;
+        dashboardStats.totalSpecAnchors = totalSpecAnchors;
+        dashboardStats.coveredSpecAnchors = coveredSpecAnchors;
+        dashboardStats.totalDocAnchors = totalDocAnchors;
+        dashboardStats.coveredDocAnchors = coveredDocAnchors;
+
         dashboardStats.enrichableNodes = enrichableNodes.length;
         dashboardStats.linkedNodes = linkedNodes.length;
         dashboardStats.enrichedNodes = enrichedNodes.length;
@@ -2235,6 +2271,8 @@ function renderDirectory(srcDir, destDir, template) {
 | Weighted Graph Coverage | ${getFormattedVal(weightedHealthScore)}% |
 | Documentation Freshness/Sync Rate | ${getFormattedVal(serverHealthPct)}% |
 | Overall Health Status Score | ${getFormattedVal(overallHealthScore)}/100 |
+| CSA Tier 1: Specs Coverage (Hard Gate) | ${dashboardStats.coveredSpecAnchors}/${dashboardStats.totalSpecAnchors} (${getFormattedVal(dashboardStats.specCoverageRate)}%) |
+| CSA Tier 2: Docs Coverage (Soft Gate) | ${dashboardStats.coveredDocAnchors}/${dashboardStats.totalDocAnchors} (${getFormattedVal(dashboardStats.docCoverageRate)}%) |
 | Stale docs (code changed) | ${staleNodes.length} |
 `;
             const regex = /## Graph Traceability[\s\S]*/;

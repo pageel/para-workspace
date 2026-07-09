@@ -149,6 +149,7 @@ If the `--graph` flag is provided, execute an INTERACTIVE Graph Preparation Phas
    - **Focus Areas — Coverage Tracker:** Based on the artifact's nature (e.g., SQLite migration, API design), list the 3-7 most critical areas that need stress-testing. Format as a TABLE with columns `#`, `Focus Area`, `Round 1`, `Round 2`, `Status` (initially all `⏳ Pending`). This table will be updated after each round to show which questions covered which area.
    - **Red Team Roster:** Select the 3-4 most relevant Personas from `SKILL.md` §2 (e.g., Principal Architect, Security Auditor) that will lead this specific review. Justify why they are chosen.
      - *CSA Expert Rule:* If the target project has CSA configuration (i.e. `csa:` exists in `project.md` or `csa-compliance.md` rule is active), the Agent **MUST** automatically include the **CSA Expert** in the roster.
+     - *OSS Expert Rule:* If the target project is an open-source project (i.e., `tags` in `project.md` contains `oss`), the Agent **MUST** automatically include the **Open Source Maintainer** in the roster.
    - **Process Log:** Create an empty table with columns `Round`, `Trigger`, `Scope`, `Questions`, `Critical`, `Fixed`. Agent MUST append a row after each round of Q&A completes.
 3. **Wait for Approval:** Present this strategy to the user. **STOP HERE.** Do not proceed to structure scan and question generation until the user approves the strategy or adjusts the focus areas.
 
@@ -193,6 +194,7 @@ Git Operations: N commits + N pushes
 
 For each section/phase in the artifact:
 
+0. **All-Phases Coverage Enforcer (MANDATORY):** If the process is phase-loop or risk-driven, the Agent **MUST NOT** skip or orphan any phase defined in the Structure Map. The QA questions and audit rounds **MUST** cover 100% of the phases/sections. If the Agent splits the QA process into consecutive rounds/vessels, the Agent **MUST** explicitly track which phases are pending, and **MUST** proceed to the next round until all phases from the Structure Map are audited.
 1. **Context Recovery & Rule Check (MANDATORY):** Before generating questions for the current phase or section, Agent MUST actively re-read the project rules index (`.agents/rules.md`) and load any relevant rule files (e.g., `maintenance.md`) to verify if any specific checklists, caveats, or constraints apply to the current Phase's specific actions.
 2. **Phase-Specific Graph Context (if --graph AND phase-loop process):** Agent MUST execute the Graph Context Pipeline (Step 0.25) scoped specifically to the nodes modified or affected by this Phase. This ensures focused impact analysis.
 3. **Generate probing questions** based on the approved Focus Areas, Red Team Roster, the actively recovered Rules context, and the **specific project domain context** (especially for `spec` mode):
@@ -400,8 +402,11 @@ If the Q&A generated ≥ 10 questions or found ≥ 3 issues:
 ### Step 13. Handover & Execution Guard
 
 **CRITICAL RULES:**
-1. **NO AUTO-EXECUTION:** After completing the QA review and activating the plan, the Agent **MUST NOT** perform any coding task or file modification.
-2. **HANDOVER REQUIREMENT:** The Agent **MUST** stop execution and explicitly recommend running the slash command `/plan [project-name] dev` to begin development. The Agent **MUST NOT** suggest manual file modifications or ad-hoc development commands before the `/plan dev` workflow is initiated (Mandatory per Rule 3d).
+1. **NO AUTO-EXECUTION:** After completing the QA review, the Agent **MUST NOT** perform any coding task or file modification.
+2. **HANDOVER REQUIREMENT:** The Agent **MUST** stop execution and recommend the next action based on the QA mode:
+   - **IF mode = plan:** If all phases/tasks in the target plan have been fully reviewed, the Agent **MUST** explicitly recommend running the slash command `/plan [project-name] dev` to begin development. Otherwise (e.g., in phase-loop or risk-driven mode with pending phases), the Agent **MUST** propose the next Q&A review round for the remaining phases and **MUST NOT** suggest development execution. The Agent **MUST NOT** suggest manual file modifications before the `/plan dev` workflow is initiated (Mandatory per Rule 3d).
+   - **IF mode = spec:** The Agent **MUST** return to the parent `/spec` workflow context, present the finalized specification (with all QA fixes integrated), and request the user's final approval (Gate 1). The Agent **MUST NOT** suggest creating a new spec or starting a plan before the user explicitly approves the current specification.
+   - **RECOMMENDATION CONTEXT RULE:** Across all modes, when presenting next steps, the Agent **MUST** explicitly recommend exactly one option as the primary choice and write a clear, context-specific rationale explaining *why* the user should choose it based on the current state of the codebase, backlog, and spec compliance.
 
 ## Spec Action — Additional Checks (Spec Audit)
 
@@ -413,11 +418,12 @@ When running `/qa spec`, the Agent MUST perform these automated quality control 
 
 The Agent matches the Specification against the verification check items retrieved from the Spec Governance Skill and aggregates the quality score (e.g., `[passed]/[total] Pass`).
 
-### 2. Sysdesign Alignment Check
+### 2. Sysdesign Alignment & Spec Overlap Check
 If the `--sys` option is enabled or a system design file exists under `artifacts/sysdesigns/`:
 *   **API Schema Check:** Compare the new/modified API endpoints in the Spec against the communication design in Sysdesign to detect payload, query params, or HTTP method drift.
 *   **Database Schema Check:** Compare SQL DDL statements, field types, foreign keys, and check constraints in the Spec Migration against the ERD of the Sysdesign. Detect logic errors (e.g., conflicting foreign key constraints or missing columns).
 *   **Structure Check:** Ensure the proposed file structure in the Spec conforms to the software architecture layout defined in the Sysdesign.
+*   **Spec Overlap Check:** Scan the existing specs in `artifacts/specs/` to verify that the target Spec documents boundaries clearly when overlapping with existing Specs, preventing duplicate requirements or conflicting definitions.
 
 ### 3. CSA Anchors Audit
 *   **G1 (One-to-One):** Ensure each `<span id="csa-...">` anchor serves exactly one unique test verification or business requirement.
