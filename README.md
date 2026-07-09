@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./docs/assets/logo.svg" width="120" alt="PARA Workspace Logo">
+<img src="docs/assets/logo.svg" width="120" alt="PARA Workspace Logo">
 
 # PARA Workspace
 
@@ -776,34 +776,40 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Central Gate — project.md as single source for context loading _(shipped in v1.6.3)_
 - [x] Para-Kit Skill v1.1.0, Recursive Sync & Git Hash Detection _(shipped in v1.6.4)_
 - [x] Update Flow Fix — Version Direction Detection & Migration History _(shipped in v1.6.5)_
-- [x] **Knowledge System — KI schema, /knowledge workflow, graph-ready taxonomy** _(shipped in v1.7.0)_
-- [x] **System KI Governed Lifecycle — namespace guard, template sync, CLI hooks** _(shipped in v1.7.1)_
-- [x] **KI Index Schema Upgrade, Workflow Simplification & Knowledge Graph Seed** _(shipped in v1.7.2)_
-- [x] **Agent Path Convention Fix (BUG-28) & Rule Frontmatter** _(shipped in v1.7.3)_
-- [x] **Repo Path Standardization, Pending TODO Fix & Project Profile Skill** _(shipped in v1.7.4)_
-- [x] **KR7 Ephemeral Ban & /knowledge → /para-knowledge Rename** _(shipped in v1.7.5)_
-- [x] **Skill Catalog Architecture & Meta-Project Type** _(shipped in v1.7.6)_
-- [x] **Brainstorm Consolidation, Sidecar Skill & /docs** _(shipped in v1.7.7-1.7.8)_
-- [x] **Proactive Trigger Check & Cognitive Bypass Fix** _(shipped in v1.7.9-1.7.10)_
-- [x] **Backlog Governance & Extract Paradigm** _(shipped in v1.7.11-1.7.12)_
-- [x] **VERSIONS.yml Migration & Anti-Token Decay** _(shipped in v1.7.13)_
-- [x] **Content Authoring Ecosystem & Session Telemetry** _(shipped in v1.7.14)_
-- [x] **Harness Skill, Plan Status Gate & Roadmap Prefix Convention** _(shipped in v1.7.15)_
-- [x] **Spec Workflow, Dual-Format Guards & CLI Fixes** _(shipped in v1.7.16)_
-- [x] **Dynamic Tool System & para-graph integration** _(shipped in v1.8.0)_
-- [x] **Tool Intelligence Installer & manifest-declared AI intelligence** _(shipped in v1.8.1)_
-- [x] **MCP Auto-Setup — `mcp-setup`, `mcp-list`, `mcp-remove` CLI commands** _(shipped in v1.8.2)_
-- [x] **QA Governance Workflow & Sidecar Skill Integration** _(shipped in v1.8.6)_
-- [x] **TDD Governance Workflow** _(shipped in v1.8.7)_
-- [x] **Ecosystem-wide Para-Graph MCP Integration — Memory Ops lifecycle, Project Sidecar Skill, 43% workflow coverage** _(shipped in v1.8.9)_
-- [x] **Release Hardening, HTML Renderer Integration, Spec Rules & TDD Gate** _(shipped in v1.8.10)_
-- [x] **Release Hardening: dirty-check template override prompts in install-tool CLI, conflict diff detection, and staging/scan-sec/vibecode/resource workflows catalog integration** _(shipped in v1.8.11)_
-- [x] **Antigravity IDE 2.x and v1.x Config Migration & TDD hardening** _(shipped in v1.8.12)_
-- [x] **Node Path Resolution (NVM/fnm/Volta) & Rule/KI Artifact Authority improvements** _(shipped in v1.8.13)_
-- [x] **MCP Windows Path Conversion (BUG-37) & Plan Auto-Activation** _(shipped in v1.8.14)_
-- [x] **Vibecode DSP & Template Consolidation** _(shipped in v1.8.15)_
-- [ ] Department System _(v1.9.0 — planned)_
-- [ ] Community & Trust Boundary _(v1.10.0 — planned)_
+- [x] Knowledge System — KI schema, /knowledge workflow, graph-ready taxonomy _(shipped in v1.7.0)_
+- [x] System KI Governed Lifecycle — namespace guard, template sync, CLI hooks _(shipped in v1.7.1)_
+- [x] KI Index Schema Upgrade, Workflow Simplification & Knowledge Graph Seed _(shipped in v1.7.2)_
+- [x] Agent Path Convention Fix (BUG-28) & Rule Frontmatter _(shipped in v1.7.3)_
+- [x] Repo Path Standardization, Pending TODO Fix & Project Profile Skill _(shipped in v1.7.4)_
+- [x] KR7 Ephemeral Ban & /knowledge → /para-knowledge Rename _(shipped in v1.7.5)_
+- [x] Skill Catalog Architecture & Meta-Project Type _(shipped in v1.7.6)_
+- [x] Brainstorm Consolidation, Sidecar Skill & /docs _(shipped in v1.7.7-1.7.8)_
+- [x] Proactive Trigger Check & Cognitive Bypass Fix _(shipped in v1.7.9-1.7.10)_
+- [x] Backlog Governance & Extract Paradigm _(shipped in v1.7.11-1.7.12)_
+- [x] VERSIONS.yml Migration & Anti-Token Decay _(shipped in v1.7.13)_
+- [x] Content Authoring Ecosystem & Session Telemetry _(shipped in v1.7.14)_
+- [x] Harness Skill, Plan Status Gate & Roadmap Prefix Convention _(shipped in v1.7.15)_
+- [x] Spec Workflow, Dual-Format Guards & CLI Fixes _(shipped in v1.7.16)_
+- [x] Dynamic Tool System & para-graph integration _(shipped in v1.8.0)_
+- [x] Tool Intelligence Installer & manifest-declared AI intelligence _(shipped in v1.8.1)_
+- [x] MCP Auto-Setup — `mcp-setup`, `mcp-list`, `mcp-remove` CLI commands _(shipped in v1.8.2)_
+- [x] QA Governance Workflow & Sidecar Skill Integration _(shipped in v1.8.6)_
+- [x] TDD Governance Workflow _(shipped in v1.8.7)_
+- [x] Ecosystem-wide Para-Graph MCP Integration — Memory Ops lifecycle, Project Sidecar Skill, 43% workflow coverage _(shipped in v1.8.9)_
+- [x] Release Hardening, HTML Renderer Integration, Spec Rules & TDD Gate _(shipped in v1.8.10)_
+- [x] Release Hardening: dirty-check template override prompts in install-tool CLI, conflict diff detection, and staging/scan-sec/vibecode/resource workflows catalog integration _(shipped in v1.8.11)_
+- [x] Antigravity IDE 2.x and v1.x Config Migration & TDD hardening _(shipped in v1.8.12)_
+- [x] Node Path Resolution (NVM/fnm/Volta) & Rule/KI Artifact Authority improvements _(shipped in v1.8.13)_
+- [x] MCP Windows Path Conversion (BUG-37) & Plan Auto-Activation _(shipped in v1.8.14)_
+- [x] Vibecode DSP & Template Consolidation _(shipped in v1.8.15)_
+- [x] Platform Tracker Exemption & Decoupled Project Plans _(shipped in v1.9.0)_
+- [x] Plan/Session-Plan Templates & Dual-Format Guards _(shipped in v1.9.1)_
+- [x] Standards & Roadmaps Optimization _(shipped in v1.9.2)_
+- [x] Unified CSA HTML-Renderer Upgrade _(shipped in v1.9.3)_
+- [x] Local Development Sync & AI Index Auto-Sync _(shipped in v1.9.4)_
+- [x] Template Consolidation & Release (Diagnostics Debug, Self-Improvement, Remote, Report, Research) _(shipped in v1.9.5)_
+- [ ] **Plugin Hooks & vibecode_session extensions** _(v1.10.0 — planned)_
+- [ ] **Department System** _(v1.x.x — planned)_
 
 ---
 

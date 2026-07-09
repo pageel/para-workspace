@@ -340,7 +340,7 @@ agents:
 ## 🗺️ 路线图
 
 当前版本为 **1.9.5** (模板整合与发布)。
-未来规划包含 **v1.9.0** (Department 系统) 及 **v1.10.0** (社区与信任边界)。
+未来规划包含 **v1.10.0** (Plugin Hooks 与 vibecode_session 扩展) 及 **v1.x.x** (Department 系统)。
 
 ---
 

@@ -305,7 +305,7 @@ Una vez que se estandaricen nuevos workflows, correcciones en kernel el comando 
 ## 🗺️ Hoja de Ruta
 
 Versión actual: **1.9.5** (Consolidación de plantillas y lanzamiento).
-Próximos lanzamientos vislumbrados: **v1.9.0** (Sistemas por Departamento) y **v1.10.0** (Fronteras Comunitarias & Confianza).
+Próximos lanzamientos vislumbrados: **v1.10.0** (Ganchos de Plugin & Extensiones de vibecode_session) y **v1.x.x** (Sistemas por Departamento).
 
 ---
 
