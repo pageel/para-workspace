@@ -177,9 +177,10 @@ git push origin main
 [ ] 1.1 🤖 [Specific implementation task — e.g. Write business logic]
 [ ] 1.2 🤖 📐 **CSA Bind:** Add `// @para-doc [#csa-[anchor-id]]` comment directly above the declaration of the new class/function/endpoint.
 [ ] 1.3 👤 [Task requiring user approval]
-[ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
-[ ] 1.N-1 🤖 **Pre-commit Gate:** Run project's linter/compiler/tests (e.g., `npm run lint`, `npm test`) and resolve any problems. (If running tests, MUST use TDD skill).
+[ ] 1.N-2 🤖 **Type/Lint Check:** Run project's static check/typecheck (e.g., `npx tsc --noEmit` or `npm run lint`) to ensure zero compilation or syntax errors.
+[ ] 1.N-1 🤖 **Pre-commit Gate:** Run project's tests (e.g., `npm test`) and resolve any problems. (If running tests, MUST use TDD skill).
 [ ] 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to detect physical drift), and `graph_audit_csa` (with `planScope: "[active-plan-path]"` to verify plan-scoped spec coverage is 100% and bind introduced code entities).
+[ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
 [ ] 1.N 👤 **Git Checkpoint:** Commit changes with message `[feat/fix/chore]([scope]): [short description]`.
 
 - [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Run the MCP tool `project_session_compact` to update session memory -> Read the updated `session.md` using `view_file` to reload context -> Obtain explicit User approval in the chat to transition to the next Phase.

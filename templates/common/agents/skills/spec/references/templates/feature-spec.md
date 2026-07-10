@@ -29,6 +29,17 @@
 
 ---
 
+## Architectural Alignment
+
+> [!NOTE]
+> Evaluation of alignment with the system design (Sysdesign) and other existing specifications (Specs) to prevent architectural drift or duplication.
+
+*   **Sysdesign Reference:** [e.g., [sysdesign-core-architecture.md](file:///Projects/project-name/artifacts/sysdesigns/sysdesign-core-architecture.md)]
+*   **Alignment Evaluation:** [Describe how this spec aligns with the Sysdesign, e.g., inherits SQLite storage layout, Node.js API endpoints conventions, etc.]
+*   **Overlap with other Specs:** [List any related specs, e.g., [spec-2026-07-06-csa-plan-scoped-audit.md](file:///Projects/project-name/artifacts/specs/spec-2026-07-06-csa-plan-scoped-audit.md), and clarify boundaries/relationships to avoid overlap.]
+
+---
+
 ## 1. Objective
 
 **What:** [What we're building — one paragraph]
@@ -161,15 +172,63 @@ export async function fetchUserProfile(userId: string): Promise<UserProfile> {
 
 ---
 
-## 8. Browser Sandbox, Transport & Path Safety
+## 8. Browser Sandbox, Transport, Path & Data Safety
 
-> MANDATORY for features utilizing Cookie, Authentication, Session, cross-origin/subdomain API calls, or path parameters.
+> MANDATORY for features utilizing Cookie, Authentication, Session, cross-origin/subdomain API calls, path parameters, or database mutations.
 
 *   **CORS Credentials configuration**: [e.g. fetch options must specify `credentials: 'include'`]
 *   **Cookie Security Attributes**: [e.g. session_cookie must specify HttpOnly, Secure, SameSite=Lax, Domain=.example.com]
 *   **Transport Mode & Context**: [e.g. Client-to-Edge-Server (browser fetch) vs Server-to-Server (direct backend request lacking browser cookies)]
 *   **Token/Session Mapping**: [e.g. how the server matches a decoupled token to a session in KV if cookies are absent]
 *   **Path Parameter Resolution Safety**: [MANDATORY for any CLI command or API parameter representing a file/directory path. Specify: Base Resolution: workspaceRoot | absolute-only | CWD (relative to process start CWD)]
+*   **Data Cardinality & Conflict Handling**: [MANDATORY for any database mutation API (POST/PUT/DELETE): Define exact entity cardinality constraints (e.g. 1:1 vs 1:N mapping). Detail HTTP error status codes (e.g. 409 Conflict, 400 Bad Request) and response payloads when constraints are violated. Silent overwriting (e.g. blind `INSERT OR REPLACE` or unvalidated updates) is strictly prohibited unless explicitly justified.]
+
+---
+
+## 9. Diagnostics Design
+
+> ⚠️ **MANDATORY for ALL specs.** Content varies by domain — Agent MUST adapt sub-sections based on the spec's primary domain.
+>
+> **Purpose:** Define how errors will be identified, logged, and diagnosed BEFORE writing implementation code.
+> When a bug occurs in production, this section provides the "debug map" — telling the developer exactly where to look and what data to collect.
+
+<!-- Domain Routing Guide (Agent instruction — do NOT include in output):
+  - Security / Auth    → Focus: Error codes, token validation state, cookie lifecycle, session transitions
+  - API / Integration  → Focus: Request/Response tracking, timeout & retry, upstream health
+  - UI / UX            → Focus: User action trace, component state snapshot, rendering errors
+  - Data / Schema      → Focus: Validation failures, migration drift, data integrity checks
+  - Performance        → Focus: Timing breakdown, resource bottleneck, LCP/TTFB, memory profile
+  - Infrastructure     → Focus: Environment parity, config drift, runtime version differences
+  Agent SHOULD combine multiple domains if the spec crosses boundaries (e.g., Auth + API).
+-->
+
+### Error Taxonomy
+
+> Classify expected error scenarios with structured error codes.
+
+| Error Code | Trigger Condition | Log Level | User-Facing Message |
+|:--|:--|:--|:--|
+| `[MODULE]_[ERROR_TYPE]` | [When this error occurs] | [ERROR / WARN / INFO] | [What the user sees] |
+
+### Observable Checkpoints
+
+> Define where structured logging MUST be placed in the implementation.
+
+- [ ] [Checkpoint 1]: Log at [location/boundary] with data: [fields]
+- [ ] [Checkpoint 2]: Log at [location/boundary] with data: [fields]
+
+**Log Format Requirements:**
+- All logs MUST be structured JSON (not free-text `console.log`)
+- Required fields: `timestamp`, `request_id`, `error_code`, `component`
+- Sensitive data (tokens, passwords) MUST be redacted or hashed
+
+### Environment Parity Risks
+
+> Document known behavioral differences between local dev and production.
+
+| Behavior | Local (Dev Server) | Production (Target Runtime) | Mitigation |
+|:--|:--|:--|:--|
+| [e.g., Cookie encoding] | [Local behavior] | [Production behavior] | [How to handle the difference] |
 
 ---
 

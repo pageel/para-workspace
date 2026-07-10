@@ -28,6 +28,8 @@
 | C4 | **Code Style** | MUST include at least 1 real code snippet showing conventions |
 | C5 | **Testing Strategy** | MUST define framework, locations, coverage, and test levels |
 | C6 | **Boundaries** | MUST define all three tiers: Always / Ask First / Never |
+| C7 | **Browser Sandbox** | MUST define CORS credentials and cookie attributes if session/auth is involved |
+| C8 | **Architectural Alignment** | MUST evaluate alignment with Sysdesign and detail overlap with other existing Specs |
 
 ---
 
@@ -91,10 +93,10 @@ Run the full checklist on an existing spec. Report results:
 ```
 SPEC VALIDATION: [name]
 A1-A5: Assumptions     — 5/5
-C1-C6: Core Areas      — 6/6
+C1-C8: Core Areas      — 8/8
 S1-S4: Success Criteria — 3/4 (S2: no measurable targets)
 B1-B5: Boundaries      — 5/5
 D1-D5: Document        — 4/5 (D5: missing change log)
 G1-G4: Gates           — 4/4
-Result: 27/29 pass | 2 warnings
+Result: 29/30 pass | 1 warning
 ```

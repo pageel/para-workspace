@@ -1,8 +1,13 @@
+---
+Topic: "[Topic Title]"
+Date: "YYYY-MM-DD"
+Status: "Open"
+contributes_to: []
+---
+
 # Brainstorm: [Topic]
 
 > **Project:** [project-name]
-> **Status:** Open
-> **Created:** YYYY-MM-DD
 
 ## Context
 

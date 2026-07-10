@@ -2,22 +2,22 @@
 description: Create research case studies documenting agent processes, development timelines, and architecture analysis
 ---
 
-# /research [project-name] [type]
+# /research [project-name] [type] [--brainstorm-sync]
 
-> **Workspace Version:** 1.7.2
+> **Workspace Kernel Version:** 1.7.3 (Brainstorm Integration)
 
 Create structured research documents that capture real-world processes, agent behavior, architecture decisions, and development timelines. Research docs are **internal-only** — never published via `/docs publish`.
 
 ## Research Types
 
-| Type          | Slug      | Mô tả                                                        |
+| Type          | Slug      | Description                                                   |
 | :------------ | :-------- | :------------------------------------------------------------ |
-| Agent Process | `process` | Suy nghĩ, hành động, ra quyết định của agent (default)       |
-| Dev Chronicle | `chronicle` | Lịch sử phát triển feature/system qua nhiều phiên            |
-| Architecture  | `analysis` | Deep dive vào kiến trúc, patterns, trade-offs                |
-| Comparison    | `compare` | So sánh approaches, tools, hoặc design options               |
+| Agent Process | `process` | Agent thoughts, actions, and decision making (default)        |
+| Dev Chronicle | `chronicle` | Development history of a feature/system across multiple sessions |
+| Architecture  | `analysis` | Deep dive into system architecture, patterns, and trade-offs  |
+| Comparison    | `compare` | Comparison of approaches, tools, or design options            |
 
-> **Default:** Nếu user không chỉ định type → dùng `process`.
+> **Default:** If user does not specify type → use `process`.
 
 ---
 
@@ -25,20 +25,20 @@ Create structured research documents that capture real-world processes, agent be
 
 > 🛡️ **Constraint:** Read `preferences.language` from `.para-workspace.yml`. All research MUST use this language. Default: `vi`.
 
-1. **Evidence-based.** Mọi nhận định phải có bằng chứng (tool calls, git commits, file paths).
-2. **Chronological.** Sắp xếp theo thứ tự thời gian xảy ra.
-3. **Transparent.** Ghi cả thất bại (tool errors, wrong assumptions), không chỉ thành công.
-4. **Reproducible.** Người đọc phải hiểu đủ để reproduce quy trình.
-5. **Internal-only.** Research là `docs/researches/` — KHÔNG bao giờ publish ra `repo/docs/`.
+1. **Evidence-based.** Every claim must be backed by evidence (tool calls, git commits, file paths).
+2. **Chronological.** Organized in chronological order.
+3. **Transparent.** Document failures (tool errors, wrong assumptions), not just successes.
+4. **Reproducible.** The reader must understand enough to reproduce the process.
+5. **Internal-only.** Research is stored in `docs/researches/` — NEVER publish to `repo/docs/`.
 
 ## Location
 
 ```text
 Projects/[project-name]/docs/researches/
-├── README.md                                     ← Index phân loại tự động
-└── [category]/research-[YYYY-MM-DD]-[topic].md   ← Research file (category tự định nghĩa)
+├── README.md                                     ← Auto-categorized index
+└── [category]/research-[YYYY-MM-DD]-[topic].md   ← Research file (user-defined category)
 ```
-> **Note:** Thư mục `[category]/` là do người dùng tự định nghĩa dựa trên mục đích lưu trữ (vd: `process/`, `architecture/`, `history/`, `compare/`, v.v.). Các `slug` ở phần Type đóng vai trò là category mặc định nếu user không chỉ định.
+> **Note:** The `[category]/` directory is user-defined based on storage purpose (e.g., `process/`, `architecture/`, `history/`, `compare/`, etc.). The slugs in Research Types act as default categories if not specified.
 
 ---
 
@@ -59,21 +59,21 @@ Determine:
 - **Project**: From user input or active document context
 - **Type**: From user input, or infer from request keywords:
 
-| Keywords trong request                        | Type suy luận |
-| :-------------------------------------------- | :------------ |
-| "suy nghĩ", "agent", "tool calls", "quyết định", "process" | `process`    |
-| "quá trình", "lịch sử", "timeline", "phát triển"          | `chronicle`  |
-| "kiến trúc", "architecture", "patterns", "deep dive"       | `analysis`   |
-| "so sánh", "compare", "options", "trade-offs"              | `compare`    |
+| Request keywords                                              | Inferred type |
+| :------------------------------------------------------------ | :------------ |
+| "suy nghĩ", "agent", "tool calls", "quyết định", "process", "thoughts", "decisions" | `process`     |
+| "quá trình", "lịch sử", "timeline", "phát triển", "history"    | `chronicle`   |
+| "kiến trúc", "architecture", "patterns", "deep dive"          | `analysis`    |
+| "so sánh", "compare", "options", "trade-offs"                 | `compare`     |
 
-- **Topic**: Chủ đề cụ thể (e.g., "knowledge-system-merge", "v1.7.2-workflow-simplification")
-- **Scope**: Phiên hiện tại only, hay nhiều phiên (cross-session)?
+- **Topic**: Specific topic (e.g., "knowledge-system-merge", "v1.7.2-workflow-simplification")
+- **Scope**: Current session only, or cross-session?
 
 ### 2. Gather Evidence
 
 // turbo
 
-Thu thập dữ liệu theo type:
+Gather evidence based on type:
 
 **For ALL types:**
 
@@ -131,7 +131,7 @@ ls Projects/[project-name]/docs/architecture/ 2>/dev/null
 
 📂 Project: [project-name]
 🏷️ Type: [process / chronicle / analysis / compare]
-📅 Scope: [phiên hiện tại / cross-session / date range]
+📅 Scope: [current session / cross-session / date range]
 
 📋 Sections planned:
   1. [Section name] — [brief description]
@@ -149,7 +149,7 @@ ls Projects/[project-name]/docs/architecture/ 2>/dev/null
 
 Wait for user confirmation.
 
-### 4. Generate Research Document
+### 4. Generate & Integrate Research Document
 
 // turbo
 
@@ -157,12 +157,24 @@ Use the appropriate template from **Research Templates** section below.
 
 Write to `Projects/[project-name]/docs/researches/research-[YYYY-MM-DD]-[topic].md`.
 
+> 🔄 **Brainstorm Integration Protocol (v1.7.3):**
+> *   If the `--brainstorm-sync` flag is enabled or during Research document creation/update, the Agent **MUST** scan all files in the project's `artifacts/para-decisions/` and `artifacts/brainstorms/` directories to find brainstorms that contain this research file path within their `contributes_to` array field.
+> *   Sort these brainstorms in ascending chronological order.
+> *   Instead of just listing raw links in the Mapping section, the Agent **MUST integrate the detailed analysis** of each brainstorm into the Research document, structured into two core sections:
+>     1. **Chronological Discussion Log:** List each brainstorm sequentially. For each brainstorm, Agent **MUST** explicitly document:
+>        - The options considered (Options Evaluated).
+>        - The chosen option (Chosen Option).
+>        - A detailed breakdown of the chosen option and its rationale.
+>        - A direct clickable file link to the original brainstorm file in the project.
+>     2. **Unified Technical Analysis:** Consolidate and merge all detailed technical analyses, ASCII/Mermaid diagrams, JSON schemas, trade-offs, and general evaluations from all brainstorms into a unified, coherent, and highly-detailed section in the main body of the Research document. Do not omit any technical detail or hide them in collapsible elements in this section.
+> *   This creates a seamless knowledge flow, making the Research document the most comprehensive and detailed study of that topic.
+
 ### 5. Update Doc Index
 
 // turbo
 
 Add entry to `Projects/[project-name]/docs/researches/README.md` under the appropriate **[Category]** section:
-*(Nếu Category chưa tồn tại, Agent tự tạo thêm Header H2 mới trong file README.md)*
+*(If the Category does not exist, the Agent automatically creates a new H2 header in the README.md file)*
 
 ```markdown
 | [topic-title][res-NN]  | [1-line description] | YYYY-MM-DD |
@@ -192,20 +204,20 @@ Saved: docs/researches/research-[date]-[topic].md
 
 ### 📡 Type: `process` — Agent Process Case Study
 
-> Ghi lại quá trình suy nghĩ, hành động, và ra quyết định của agent. **Mỗi request của user là một case study.**
+> Record agent thoughts, actions, and decisions. **Each user request is a case study.**
 
 ```markdown
 # [Topic] — Agent Process Case Study
 
 > **Version**: 1.0 | **Last reviewed**: YYYY-MM-DD
-> **Subject**: [Mô tả 1 dòng]
+> **Subject**: [1-line description]
 > **Session**: YYYY-MM-DD, conversation `[conversation-id]`
 
 ---
 
-## 1. Bối cảnh phiên
+## 1. Session Context
 
-| Thuộc tính | Giá trị |
+| Attribute | Value |
 |:--|:--|
 | Conversation ID | `[id]` |
 | Project | [project-name] |
@@ -217,53 +229,53 @@ Saved: docs/researches/research-[date]-[topic].md
 
 ## 2. Request Log
 
-### Request [N]: "[Trích nguyên văn user request]"
+### Request [N]: "[Exact user request]"
 
-**Thời gian:** ~HH:MM
+**Timestamp:** ~HH:MM
 
-**Context nhận được từ platform:**
-- Active document: `[path]` (cursor dòng [N])
+**Context received from platform:**
+- Active document: `[path]` (cursor line [N])
 - Open documents: [list relevant ones]
 - KI injected: [list]
 - Workflow injected: [if @mention]
 
-#### Bước 1: [Tên bước] — **[Mục đích]**
+#### Step 1: [Step name] — **[Purpose]**
 
-> ⚠️ **LUẬT CHỐNG ẢO GIÁC (ANTI-HALLUCINATION):**
-> Phần log quá trình này bắt buộc phải phản ánh **TRUNG THỰC 100%** suy nghĩ nội bộ (internal thoughts) và quyết định hành động của chính Agent trong quá trình chạy Tool Calls (bao gồm cả sai lầm, nhảy cóc, và khắc phục lỗi). TUYỆT ĐỐI KHÔNG sáng tạo văn vẻ hay thêm thắt các bước không có thật để tô vẽ sự hoàn hảo.
-
-```text
-Suy nghĩ nội bộ (Internal Monologue):
-  - [Dữ liệu context nhặt được thực thiệp từ tool trước đó là gì?]
-  - [IF/ELSE reasoning trees - Cân nhắc giữa các lựa chọn như thế nào?]
-  - [Có nhầm lẫn hay nhận thức nào bị hổng không?]
-
-Quyết định hành động (Action):
-  - [Kết luận chọn tool gọi/lệnh gì và giải thích ngắn gọn tại sao]
-```
-
-#### Bước 2: Thu thập dữ liệu — **[N] tool calls**
+> ⚠️ **ANTI-HALLUCINATION RULE:**
+> This process log section MUST reflect **100% TRUTHFULLY** the internal thoughts and action decisions of the Agent during tool executions (including errors, leaps, and recoveries). ABSOLUTELY DO NOT embellish or add non-existent steps to paint a perfect picture.
 
 ```text
-BATCH [N] (song song / tuần tự):
-  ├── [tool_name]([params])    ← [mục đích]
-  └── [tool_name]([params])    ← [mục đích]
+Internal Monologue:
+  - [What context data was actually gathered from the previous tool?]
+  - [How were choices weighed in the IF/ELSE reasoning trees?]
+  - [Were there any misunderstandings or gaps in perception?]
 
-Tại sao [song song/tuần tự]? [lý do dependency]
+Action Decision:
+  - [Conclusion on which tool/command to call and a brief explanation why]
 ```
 
-#### Bước [N]: [Tên bước]
+#### Step 2: Data Gathering — **[N] tool calls**
 
-[Tiếp tục pattern trên cho mỗi bước...]
+```text
+BATCH [N] (parallel / sequential):
+  ├── [tool_name]([params])    ← [purpose]
+  └── [tool_name]([params])    ← [purpose]
 
-#### Tổng kết Request [N]
+Why [parallel/sequential]? [dependency rationale]
+```
+
+#### Step [N]: [Step name]
+
+[Repeat pattern...]
+
+#### Summary of Request [N]
 
 ```text
 Tool calls:   [N] ([breakdown by tool type])
 Batches:      [N] ([N] parallel + [N] sequential)
-Thời gian:    ~[N] phút
-Quyết định:   [N] ([list key decisions])
-Token ước lượng:
+Execution:    ~[N] minutes
+Key Decisions: [N] ([list key decisions])
+Token Est:
   Input:      ~[N] tokens ([N] files × avg [N] lines)
   Output:     ~[N] tokens ([N] lines generated)
 Code changed: [N] files, +[N] / -[N] lines
@@ -271,11 +283,11 @@ Code changed: [N] files, +[N] / -[N] lines
 
 ---
 
-## 3. Thống kê tổng hợp
+## 3. Aggregate Statistics
 
 ### Tool Calls
 
-| Tool | Count | Mục đích chính |
+| Tool | Count | Primary Purpose |
 |:--|:--|:--|
 | `view_file` | [N] | [purpose] |
 | `run_command` | [N] | [purpose] |
@@ -285,20 +297,20 @@ Code changed: [N] files, +[N] / -[N] lines
 
 ### Impact Metrics
 
-**Token ước lượng (toàn phiên):**
+**Estimated Tokens (full session):**
 
-| Loại | Ước lượng | Ghi chú |
-|:-----|:----------|:--------|
-| Input (files đọc) | ~[N] tokens | [N] files × avg [M] lines, ~4 tokens/line |
+| Type | Estimate | Notes |
+|:-----|:---------|:------|
+| Input (read files) | ~[N] tokens | [N] files × avg [M] lines, ~4 tokens/line |
 | Input (user requests) | ~[N] tokens | [N] requests |
 | Input (platform inject) | ~[N] tokens | KI summaries + metadata |
 | Output (text responses) | ~[N] tokens | [N] responses |
 | Output (code generated) | ~[N] tokens | [N] files written/edited |
 | **Subtotal** | **~[N] tokens** | |
 
-> **Quy tắc ước lượng:** 1 dòng code ≈ 4 tokens (trung bình). 1 dòng prose ≈ 8 tokens. JSON/YAML ≈ 6 tokens/line. Batch song song không cộng thêm token nhưng giảm latency.
+> **Estimation Rule:** 1 code line ≈ 4 tokens (average). 1 prose line ≈ 8 tokens. JSON/YAML ≈ 6 tokens/line. Parallel batching does not add tokens but reduces latency.
 
-**Code impact (files thay đổi):**
+**Code Impact (modified files):**
 
 | File | Action | +Lines | -Lines | Net |
 |:-----|:-------|:-------|:-------|:----|
@@ -306,72 +318,72 @@ Code changed: [N] files, +[N] / -[N] lines
 | `[path/to/file]` | created/edited | +[N] | -[N] | +[N] |
 | **Total** | | **+[N]** | **-[N]** | **+[N]** |
 
-### Quyết định quan trọng
+### Key Decisions
 
-| # | Quyết định | Dữ liệu quyết định | Kết quả |
-|:--|:--|:--|:--|
+| # | Decision | Decision Data | Outcome |
+|:--|:---------|:--------------|:--------|
 | 1 | [decision] | [evidence] | [outcome] |
 
 ---
 
-## 4. Dấu hiệu & Patterns (Khách quan)
+## 4. Indicators & Patterns (Objective)
 
-> ⚠️ **LUẬT KHÁCH QUAN:** Chỉ ghi nhận các hành vi lặp lại (patterns) hoặc dấu hiệu từ log. KHÔNG suy diễn thành "Bài học rút ra" (lessons learned) hay kết luận chủ quan.
+> ⚠️ **OBJECTIVE RULE:** Only record repeating behaviors (patterns) or facts from the log. DO NOT extrapolate into subjective conclusions or lessons learned.
 
-### 4.1. [Tên Pattern / Dấu hiệu]
+### 4.1. [Pattern / Indicator Name]
 
-[Mô tả pattern + bằng chứng/ví dụ từ phiên, không kèm nhận xét đúng/sai hay bài học]
+[Describe pattern + evidence/examples from session, without subjective feedback]
 
-### 4.2. [Tên Pattern / Dấu hiệu]
+### 4.2. [Pattern / Indicator Name]
 
-[Mô tả pattern + bằng chứng/ví dụ từ phiên]
+[Describe pattern + evidence/examples from session]
 
 ---
 
-_Tài liệu nội bộ — YYYY-MM-DD_
-_Nguồn: conversation memory, [other sources]_
+_Internal Document — YYYY-MM-DD_
+_Source: conversation memory, [other sources]_
 ```
 
 ---
 
 ### 📜 Type: `chronicle` — Development Chronicle
 
-> Lịch sử diễn biến quá trình phát triển qua nhiều phiên.
+> Development history of a feature/system across multiple sessions.
 
 ```markdown
 # [Feature/System Name] — Development Chronicle
 
 > **Version**: 1.0 | **Last reviewed**: YYYY-MM-DD
-> **Subject**: [Mô tả 1 dòng]
+> **Subject**: [1-line description]
 > **Period**: YYYY-MM-DD → YYYY-MM-DD
 > **Conversations**: [list conversation IDs]
 
 ---
 
-## 1. Bối cảnh
+## 1. Context
 
-### Vấn đề cần giải quyết
+### Problem to Solve
 
-[2-3 đoạn mô tả WHY]
+[2-3 paragraphs describing WHY]
 
-### Giải pháp đề xuất
+### Proposed Solution
 
-[Mô tả WHAT ở level cao]
+[High-level description of WHAT]
 
 ---
 
 ## 2. Timeline
 
-### Phase [N]: [Tên] (YYYY-MM-DD — Conv [short-id])
+### Phase [N]: [Name] (YYYY-MM-DD — Conv [short-id])
 
-**Objective**: [1 dòng]
+**Objective**: [1 line]
 
-| Bước | Hành động | Kết quả |
-|:-----|:----------|:--------|
+| Step | Action | Result |
+|:-----|:-------|:-------|
 | 1 | [action] | [result] |
 | 2 | [action] | [result] |
 
-**Quyết định quan trọng:**
+**Key Decisions:**
 - [decision + rationale]
 
 **Git evidence:**
@@ -381,39 +393,39 @@ _Nguồn: conversation memory, [other sources]_
 [hash] [date] [commit message]
 ```
 
-### Phase [N+1]: [Tên] (YYYY-MM-DD — Conv [short-id])
+### Phase [N+1]: [Name] (YYYY-MM-DD — Conv [short-id])
 
 [Repeat pattern...]
 
 ---
 
-## 3. Artifacts tạo ra
+## 3. Artifacts Created
 
-| Artifact | Loại | Đường dẫn |
-|:---------|:-----|:----------|
+| Artifact | Type | Path |
+|:---------|:-----|:-----|
 | [name] | brainstorm | [path] |
 | [name] | plan | [path] |
 | [name] | code | [path] |
 
 ---
 
-## 4. Nhận diện Sự kiện/Dấu hiệu (Khách quan)
+## 4. Identify Events/Indicators (Objective)
 
-> ⚠️ **LUẬT KHÁCH QUAN:** Chỉ tổng hợp các sự kiện, dấu hiệu hoặc facts thực tế thu thập từ log/commit. KHÔNG suy diễn thành bài học.
+> ⚠️ **OBJECTIVE RULE:** Only aggregate events, indicators, or facts collected from logs/commits. DO NOT extrapolate into lessons.
 
-### 4.1. [Tên Sự kiện / Dấu hiệu]
+### 4.1. [Event / Indicator Name]
 
-[Mô tả fact/event + evidence]
+[Describe fact/event + evidence]
 
 ---
 
-## 5. Trạng thái sau cùng
+## 5. Final State
 
 | Component | Status | Files |
 |:----------|:-------|:------|
 | [component] | ✅/🔴/🟡 | [files] |
 
-### Tồn đọng
+### Backlog
 
 | # | Item | Priority | Target |
 |:--|:-----|:---------|:-------|
@@ -431,28 +443,28 @@ v[X]          v[Y]          v[Z]
 
 ---
 
-_Tài liệu nội bộ — YYYY-MM-DD_
-_Nguồn: [list sources]_
+_Internal Document — YYYY-MM-DD_
+_Source: [list sources]_
 ```
 
 ---
 
 ### 🔍 Type: `analysis` — Architecture Analysis
 
-> Deep dive vào kiến trúc hệ thống, patterns, và trade-offs.
+> Deep dive into system architecture, patterns, and trade-offs.
 
 ```markdown
 # [System Name] — Architecture Analysis
 
 > **Version**: 1.0 | **Last reviewed**: YYYY-MM-DD
-> **Subject**: [Mô tả 1 dòng]
+> **Subject**: [1-line description]
 > **Scope**: [component / subsystem / full system]
 
 ---
 
-## 1. Tổng quan hệ thống
+## 1. System Overview
 
-[2-3 đoạn mô tả system ở level cao]
+[2-3 paragraphs describing the system at a high level]
 
 ### System Diagram
 
@@ -462,20 +474,20 @@ _Nguồn: [list sources]_
 
 ---
 
-## 2. Thành phần cốt lõi
+## 2. Core Components
 
 ### [Component 1]
 
-| Thuộc tính | Giá trị |
+| Attribute | Value |
 |:--|:--|
 | Location | `[path]` |
 | Purpose | [what it does] |
 | Dependencies | [list] |
 | Consumers | [who uses it] |
 
-**Cách hoạt động:**
+**How it works:**
 
-[Chi tiết implementation, data flow, edge cases]
+[Details on implementation, data flow, edge cases]
 
 ### [Component 2]
 
@@ -483,67 +495,67 @@ _Nguồn: [list sources]_
 
 ---
 
-## 3. Design Patterns nhận diện
+## 3. Identified Design Patterns
 
-| # | Pattern | Nơi áp dụng | Lý do |
-|:--|:--------|:-------------|:------|
+| # | Pattern | Location | Rationale |
+|:--|:--------|:---------|:----------|
 | 1 | [pattern] | [where] | [why] |
 
 ---
 
 ## 4. Trade-offs & Constraints
 
-| Quyết định | Được gì | Mất gì | Alternatives xem xét |
-|:-----------|:--------|:-------|:---------------------|
+| Decision | Gains | Losses | Alternatives Considered |
+|:---------|:------|:-------|:------------------------|
 | [decision] | [gain] | [loss] | [alternatives] |
 
 ---
 
-## 5. Rủi ro & Giải pháp
+## 5. Risks & Mitigations
 
-| Rủi ro | Mức | Mitigation |
-|:-------|:----|:-----------|
+| Risk | Level | Mitigation |
+|:-----|:------|:-----------|
 | [risk] | 🔴/🟡/🟢 | [mitigation] |
 
 ---
 
-## 6. Đề xuất cải thiện
+## 6. Improvement Proposals
 
-| # | Đề xuất | Priority | Effort | Impact |
-|:--|:--------|:---------|:-------|:-------|
+| # | Proposal | Priority | Effort | Impact |
+|:--|:---------|:---------|:-------|:-------|
 | 1 | [proposal] | [emoji] | [estimate] | [impact] |
 
 ---
 
-_Tài liệu nội bộ — YYYY-MM-DD_
-_Nguồn: [source code, docs, KI artifacts]_
+_Internal Document — YYYY-MM-DD_
+_Source: [source code, docs, KI artifacts]_
 ```
 
 ---
 
 ### ⚖️ Type: `compare` — Comparison Study
 
-> So sánh approaches, tools, options.
+> Compare approaches, tools, options.
 
 ```markdown
 # [Topic] — Comparison Study
 
 > **Version**: 1.0 | **Last reviewed**: YYYY-MM-DD
-> **Subject**: [Mô tả 1 dòng]
+> **Subject**: [1-line description]
 > **Decision owner**: [user / team]
 
 ---
 
-## 1. Bối cảnh
+## 1. Context
 
-### Vấn đề cần giải quyết
+### Problem to Solve
 
 [WHY we need to decide]
 
-### Tiêu chí đánh giá
+### Evaluation Criteria
 
-| # | Tiêu chí | Weight | Mô tả |
-|:--|:---------|:-------|:------|
+| # | Criteria | Weight | Description |
+|:--|:---------|:-------|:------------|
 | 1 | [criteria] | 🔴 Must | [description] |
 | 2 | [criteria] | 🟡 Should | [description] |
 | 3 | [criteria] | 🟢 Nice | [description] |
@@ -554,7 +566,7 @@ _Nguồn: [source code, docs, KI artifacts]_
 
 ### Option [A]: [Name]
 
-**Concept:** [2-3 câu]
+**Concept:** [2-3 sentences]
 
 **Pros:**
 - [pro 1]
@@ -572,24 +584,24 @@ _Nguồn: [source code, docs, KI artifacts]_
 
 ---
 
-## 3. So sánh tổng hợp
+## 3. Summary Comparison
 
-| Tiêu chí | Option A | Option B | Option C |
+| Criteria | Option A | Option B | Option C |
 |:---------|:---------|:---------|:---------|
 | [criteria 1] | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌/⚠️ |
 | [criteria 2] | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌/⚠️ |
 
 ---
 
-## 4. Quyết định
+## 4. Decision
 
-**Chọn: Option [X]**
+**Selected: Option [X]**
 
-**Lý do:**
+**Rationale:**
 1. [reason 1]
 2. [reason 2]
 
-**Mitigations cho cons:**
+**Mitigations for cons:**
 - [mitigation]
 
 ---
@@ -600,8 +612,8 @@ _Nguồn: [source code, docs, KI artifacts]_
 
 ---
 
-_Tài liệu nội bộ — YYYY-MM-DD_
-_Nguồn: [brainstorm artifacts, code analysis, external research]_
+_Internal Document — YYYY-MM-DD_
+_Source: [brainstorm artifacts, code analysis, external research]_
 ```
 
 ---

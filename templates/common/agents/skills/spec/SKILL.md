@@ -10,14 +10,14 @@ description: >
 license: Apache-2.0
 metadata:
   author: para-workspace
-  version: "1.0.0"
+  version: "1.0.1"
   inspired-by: addyosmani/agent-skills (spec-driven-development)
 compatibility: Any PARA Workspace project with artifacts/ directory
 ---
 
 # Spec-Driven Development — Governance & Templates
 
-> **Version:** 1.0.0 | **Kernel min:** 1.7.15 | **Type:** Sidecar Skill
+> **Version:** 1.0.1 | **Kernel min:** 1.7.15 | **Type:** Sidecar Skill
 > **Companion workflow:** `/spec` (`workflows/spec.md`)
 
 This skill governs the quality standards, assumption surfacing rules, and
@@ -113,6 +113,58 @@ BEFORE each implementation task:
 **Anti-pattern:** "I already read the spec earlier" — earlier context may be
 truncated or decayed. Re-read is cheap insurance.
 
+### 1.6 Browser Sandbox & Transport Verification (SSO & Integration Guard)
+
+When specifying or implementing features involving authentication, sessions, cookies, or cross-origin/subdomain API communication, Agent MUST enforce strict compliance with browser sandbox policies and network boundary rules:
+
+1. **CORS Credentials Check:** If a frontend application (e.g. `app.example.com` or `cms.example.com`) calls a separate API origin (e.g. `api.example.com` or a different port), the request options MUST explicitly include `credentials: 'include'` to allow the browser to transmit and receive cookies.
+2. **Cookie Security Attributes:** All cookies used for authentication/session MUST be specified with exact attributes:
+   - `HttpOnly`: Block client-side JavaScript access (prevent XSS token theft).
+   - `Secure`: Transmit only over HTTPS.
+   - `SameSite`: Control cross-site transmission (`Lax` for SSO redirect endpoints, `Strict` for API endpoints).
+   - `Domain`: Define the exact sharing scope (e.g., `.example.com` to share across subdomains, or omit for same-origin restriction).
+3. **Transport Context Resolution (Client vs Server):**
+   - **Client-to-Server**: Standard browser request. Assumes browser cookies are available.
+   - **Server-to-Server**: Server-side fetch (SSR) or Service Binding call. **Does not carry browser cookies**.
+   - **Rule:** If a workflow/spec triggers a server-to-server call to a cookie-based endpoint, Agent MUST redesign the flow to either use a browser redirect (carrying cookies natively) or introduce secure API tokens (exchanged and validated via request payloads/Authorization headers).
+
+### 1.7 Architectural Alignment Check (Sysdesign & Spec Coherence)
+
+When creating or updating any specification, the Agent MUST explicitly document how the feature aligns with the overarching System Design (Sysdesign) and other existing specs:
+- **Mandatory Alignment Evaluation:** The spec MUST contain an `## Architectural Alignment` section mapping its design decisions directly to the relevant Sysdesign components (e.g. database schema inheritance, API patterns, or latency budgets).
+- **Collision & Overlap Check:** The Agent MUST scan `artifacts/specs/` to ensure the new spec does not duplicate or conflict with existing specs. The boundaries between overlapping specs MUST be clearly defined.
+
+### 1.8 Diagnostics Design (Debug-by-Design Guard)
+
+Every specification MUST include a `## 9. Diagnostics Design` section that defines
+how errors will be identified, logged, and diagnosed BEFORE implementation begins.
+
+**Agent MUST:**
+- Adapt Diagnostics Design content to the spec's primary domain (see rule `diagnostics-debug.md` DR1 for domain taxonomy)
+- Include at minimum: **Error Taxonomy**, **Observable Checkpoints**, and **Environment Parity Risks** sub-sections
+- Combine multiple domains if the spec crosses boundaries (e.g., Auth + API)
+
+**Agent MUST NOT:**
+- Skip Diagnostics Design even for "simple" specs — every runtime feature can produce unexpected errors
+- Use `console.log` as the logging strategy — require structured JSON logging with error codes
+
+**Why this matters:** The Logout CSRF Bug case study (pageel-cms v2.3.0) demonstrated
+that a fully-approved spec (QA 10/10) can still lead to 4+ debug sessions if no
+diagnostics strategy is designed upfront. Pre-designing Observable Checkpoints reduces
+debug-to-resolution time from multiple sessions to ~1 session.
+
+### 1.9 Spec Modification Integrity (Preservation Guard) (v1.0.1)
+
+When modifying or updating an existing specification, the Agent **MUST NOT** truncate, delete, or over-simplify existing detailed requirements, context, edge cases, or diagnostics designs unless they are explicitly deprecated by the new scope.
+
+**Agent MUST:**
+- **Preserve Context:** Ensure that all detailed technical context (e.g., Astro redirection cookie-dropping issues, server-side cleanup endpoints) is preserved alongside the new multi-mode descriptions.
+- **Merge Strategy:** Merge the new requirements into the existing detailed text instead of replacing complex spec requirements with concise new summaries.
+- **Change Log Sync:** Every modification to a spec file MUST be logged in the spec's `## Change Log` section, specifying the exact changes made and the version bump (e.g., v1.0.3 -> v1.0.4).
+- **Proactive Verification:** Before saving the updated spec, the Agent **MUST** review the diff to verify that no valuable technical context or Acceptance Criteria details from the previous version were silently deleted.
+
+> **Rationale:** In long coding sessions or when requirements evolve, there is a risk of over-simplifying specifications to fit a new feature, which silently erases past debugging details or edge cases that are still active and valuable.
+
 ## 2. Resource Router
 
 > Agent reads this table to locate data files needed by the `/spec` workflow.
@@ -173,6 +225,27 @@ Before presenting a spec for user review (Gate 1), Agent MUST self-check:
 - [ ] Vague requirements have been reframed into concrete conditions
 
 > Load `references/spec-quality-checklist.md` for the full validation checklist.
+
+## 4.5. Three-Point Sync & Decomposition Protocol (v1.9.4)
+
+When a spec is created via decomposition of a System Design (Sysdesign):
+
+1. **Inheritance & Scope Mapping**:
+   - The spec con MUST inherit the DDL database schema and API payloads defined in the parent Sysdesign.
+   - It only specifies business logic, detailed field validations, and specific UI states.
+2. **Spec Index Sync**:
+   - MUST register the spec in `artifacts/specs/README.md` index.
+3. **Sysdesign Specs Table Sync**:
+   - MUST update the corresponding spec entry in the `## 🔗 Specs Mapping` table of the parent Sysdesign file from `Planned` to `Active` with a link.
+4. **Sysdesign Diagram Sync**:
+   - MUST add an interactive link (`click Component "file:///..."`) in the Sysdesign's Mermaid diagram pointing to this spec.
+
+## 4.6. Automated QA Quality Audit (--qa) (v1.9.4)
+
+When the `--qa` option is specified:
+1. **Auditing Engine**: Agent MUST evaluate the active spec against the 29 checkpoints in `references/spec-quality-checklist.md`.
+2. **CSA Standard Validation**: Validate anchors strictly against G1, G2, and G3 criteria.
+3. **Structured Reporting**: Agent MUST output a detailed compliance table in the chat, listing scores for each category and specific, actionable recommendations for any failing or weak items (e.g. UC/SC lacking measurable targets).
 
 ## 5. Anti-Patterns
 

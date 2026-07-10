@@ -3,9 +3,9 @@ description: Brainstorm context, issues, and solutions before formal planning
 source: catalog
 ---
 
-# /brainstorm [project-name] [topic] [--graph]
+# /brainstorm [project-name] [topic] [--graph] [--contributes-to [paths]]
 
-> **Workspace Version:** 1.8.5 (Graph Intelligence)
+> **Workspace Version:** 1.8.7 (Generalized Traceability Integration)
 
 Collaborative troubleshooting and ideation for a project. Use this workflow to explore problem spaces, evaluate potential solutions, and clarify thinking before committing to a formal implementation plan (`/plan`).
 
@@ -14,6 +14,7 @@ Collaborative troubleshooting and ideation for a project. Use this workflow to e
 | Option | Description |
 |:--|:--|
 | `--graph` | Run Graph Pipeline (Build → Query → Bundles) to anchor brainstorm in real codebase architecture |
+| `--contributes-to [paths]` | Link this brainstorm to destination documents (e.g., specs, sysdesigns, researches). Automatically updates the target files with the detailed analysis and diagrams. |
 
 ## Steps
 
@@ -194,6 +195,14 @@ Collaborate with the user to evaluate the options:
 > ⚠️ **Status Check:** Agent MUST determine or ask the user:
 > - **Open**: An ongoing exploration — findings will accumulate over time.
 > - **Decided**: A final choice is made — the brainstorm is concluded.
+
+> 🛠️ **Ecosystem Traceability & Integration Rule (v1.8.7):**
+> 1. **YAML Metadata:** In the brainstorm file's YAML frontmatter, the Agent **MUST** record the `contributes_to: [ "relative/path/to/target1.md", "relative/path/to/target2.md" ]` array field if run with the `--contributes-to [paths]` flag or if related specifications, system designs, or research documents are detected.
+> 2. **Sequential Integration into Targets:** If target links are identified in `contributes_to`:
+>    - The Agent **MUST** read the target files.
+>    - For Research, Specs, or Sysdesigns, insert a new sequential detail section: `### Brainstorm: [Topic Name] (YYYY-MM-DD)` into the corresponding section (e.g. ## Diagnostics Design in Specs, ## Observability in Sysdesigns, or before the Conclusion).
+>    - The inserted content MUST be **highly detailed**, including: the problem context of the discussion, the Options & Trade-offs considered, **all ASCII/Mermaid diagrams generated in the session**, and the finalized Decision.
+>    - This ensures the target files act as unified knowledge entities, containing the complete and detailed contribution process of all brainstorms.
 
 #### Path A — Open Brainstorm (living document)
 

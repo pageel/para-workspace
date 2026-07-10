@@ -32,6 +32,7 @@ Establish or update the system design for a project or subsystem. Runs before `/
 | Option | Description |
 | :-- | :-- |
 | `--graph` | Run Graph Pipeline (Build → Query → Blast Radius Analysis) to anchor design in the active codebase |
+| `--source-context [paths]` | Specify absolute or relative paths to core source files (comma-separated) that the Agent MUST read before designing |
 | `--update` | Used with report action: Automatically apply remediation recommendations back to the system design file in one go |
 
 ---
@@ -51,6 +52,10 @@ Agent MUST query the workspace/project SQLite store using `insight_search` and `
 If `--graph` is specified:
 1. Run `/para-graph build [project-name]` to sync code graph.
 2. Run `graph_impact_analysis` to identify dependencies and blast radius of the topic.
+3. Automatically run `graph_query` to identify related code components, and use `view_file` to read the key file definitions.
+
+If `--source-context [paths]` is specified:
+1. The Agent MUST use the `view_file` tool to read the contents of each file specified in the comma-separated `[paths]` array before starting the constraint definition or writing steps. This provides a direct, concrete view of the active implementation.
 
 > ⛔ **HARNESS GUARD (Avoid Sysdesign Duplicates):** Before creating a new sysdesign file, Agent MUST list existing sysdesign files (`ls -t Projects/[project-name]/artifacts/sysdesigns/sysdesign-*.md 2>/dev/null`).
 > - **IF a sysdesign file for this topic/subsystem already exists:** Agent MUST abort the `create` action, notify the user, and propose running `/sysdesign [project] update` on the existing file instead.
@@ -283,7 +288,10 @@ Read the target sysdesign file. Extract:
 3. Use `graph_edges` to map actual dependency relationships.
 4. Use `graph_god_nodes` to identify architectural hot spots.
 
-**If no graph:**
+If `--source-context [paths]` is specified:
+- In addition to general scanning, the Agent MUST read the files specified in `[paths]` using the `view_file` tool to confirm implementation details.
+
+**If no graph & no source-context:**
 1. Scan `repo/` for route definitions, DB schemas, and folder structure using `grep_search` and `list_dir`.
 2. Compare manually against the sysdesign declarations.
 
@@ -355,8 +363,12 @@ Read the target sysdesign file. Parse each section.
 **If `--graph` is specified:**
 1. Run `graph_impact_analysis` on the changed component to identify blast radius.
 2. Determine which sysdesign sections are affected (API, DB, Topology, Security, Observability).
+3. Automatically run `graph_query` and read the relevant source code files using `view_file` to verify how the code implementation changed.
 
-**If no graph:**
+**If `--source-context [paths]` is specified:**
+1. The Agent MUST read the target files in the comma-separated `[paths]` list using the `view_file` tool to align the architectural update with the exact code change.
+
+**If no graph & no source-context:**
 Ask the user: "Which sections have changed? (1: Infra, 2: API, 3: DB, 4: Topology, 5: Security, 6: Observability)"
 
 #### U3. Merge Strategy

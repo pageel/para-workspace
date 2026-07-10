@@ -24,6 +24,10 @@ Execution mode controller that defines HOW the Agent approaches code work. Each 
 
 Append `--sandbox` to ANY mode to redirect all writes to `Projects/_playground/vibecode-sandbox/`. After success, user explicitly chooses to apply results or discard.
 
+### Global Flag: `--platform`
+
+Append `--platform` to execution modes (like `session`) to create and execute plans directly on the platform-level `brain/implementation_plan.md` and `brain/task.md` instead of generating a durable plan file inside the project (`Projects/<project-name>/artifacts/plans/`). Useful for ad-hoc changes or experimental workspace edits where no specific project plan is needed.
+
 | Command | Behavior |
 | :-- | :-- |
 | `loop Phase 0` | Iterative on real project (max 5) |
@@ -36,6 +40,7 @@ Append `--sandbox` to ANY mode to redirect all writes to `Projects/_playground/v
 | `review plan.md --sandbox --max 5` | Review+fix with custom max iterations |
 | `session topic` | Start dynamic session plan & execute in milestones |
 | `session topic --tdd` | Start dynamic session with forced TDD mode |
+| `session topic --platform` | Start DSP directly on platform trackers (no project plan files) |
 | `session` | Start DSP Draft (no topic) — phases added JIT as user requests goals |
 | `session --graph` | Start DSP Draft with graph-aware phases |
 | `session --hardened` | Start DSP Draft with auto-detect + forced TDD on sensitive code |
@@ -517,6 +522,16 @@ bash .agents/skills/vibecode/scripts/session-manager.sh stop
 4. **⛔ CHECKPOINT:** Present the generated DSP Draft structure and audit results to the User. Agent MUST STOP here and wait for User confirmation to activate the session (transition to `Status: 🔨 Active`).
 5. **Activate & Wait:** Upon approval, set `Status: 🔨 Active` in the DSP Draft. Agent announces the session is ready and waits for the User to request a specific goal. Proceed to **Step 1b (Intent Detection)**.
 
+**Branch C — Platform-Based DSP** (`--platform` flag):
+
+1. **Auto-Create Platform DSP:** Instead of creating a durable file inside the project, Agent writes the dynamic session plan directly to the platform-level tracker `brain/implementation_plan.md` with `Status: 📝 Draft`.
+2. **Setup Tasks Checklist:** Initialize the platform-level task checklist in `brain/task.md` with the Phase 0 tasks.
+3. **Session Post-Draft Audit Gate (MANDATORY):** Agent MUST execute a structural audit on the generated platform plan:
+   - Check structural completeness (Goals, Kickoff Report, Milestone Queue, Milestone Details, Completion & Teardown).
+   - Check mandatory baseline setup tasks in Phase 0.
+4. **⛔ CHECKPOINT:** Present the generated platform plan structure to the User. Agent MUST STOP here and wait for User confirmation to activate the session plan (transition to `Status: 🔨 Active`). Do NOT perform any code modifications or phase execution tasks before approval.
+5. **Activate:** Upon user approval, set `Status: 🔨 Active` in the platform plan `brain/implementation_plan.md` and proceed to **Step 2 (Quality Gate)**.
+
 #### 1b. Intent Detection (Branch B only — JIT Phase Creation)
 
 When running in DSP Draft mode, Agent actively listens for action intent in user messages.
@@ -655,9 +670,11 @@ Upon running `/end` or declaring the session finished, Agent MUST NOT perform te
 4. **PROHIBITED:** Syncing tasks to `done.md`, archiving the plan file (DSP), or clearing the active plan in `project.md` before the User explicitly approves ending the vibecode session (e.g. by confirming or running `/plan [project-name] end`) is strictly forbidden.
 
 Once approved:
-1. **Compress & Sync:** Extract all completed phases and append them to `artifacts/tasks/done.md` with the `#session` tag and the recorded Commit SHAs.
-2. **Archive:** Move the DSP file to `artifacts/plans/done/`.
-3. **Graph Update:** Rebuild code graph using `/para-graph build` and run `graph_enrich` to document the newly introduced code nodes.
+1. **Compress & Sync:** Extract all completed phases and append them to the project's `artifacts/tasks/done.md` (if applicable) with the `#session` tag and Commit SHAs.
+2. **Archive:** 
+   - **Normal DSP:** Move the DSP file to `artifacts/plans/done/`.
+   - **Platform-Based DSP:** Skip archiving to project. Clean up the platform trackers (`brain/implementation_plan.md` and `brain/task.md`) by clearing or archiving them according to platform lifecycle.
+3. **Graph Update:** Rebuild code graph using `/para-graph build` and run `graph_enrich` to document the newly introduced code nodes (if project graph is enabled).
 
 ---
 

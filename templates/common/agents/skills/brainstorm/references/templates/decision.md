@@ -1,8 +1,14 @@
+---
+Topic: "[Topic Title]"
+Date: "YYYY-MM-DD"
+Status: "Approved"
+contributes_to: []
+---
+
 # Brainstorm: [Topic]
 
-> **Date:** YYYY-MM-DD | **Project:** [project-name]
+> **Project:** [project-name]
 > **Brainstorm:** `brainstorms/[topic].md` ← (if evolved from open brainstorm)
-> **Research:** `docs/researches/[topic]-[YYYY-MM-DD].md` ← (only if Research extracted)
 
 ## Problem
 

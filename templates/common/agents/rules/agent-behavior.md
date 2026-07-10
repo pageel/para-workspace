@@ -48,6 +48,7 @@ Agent **MUST** read the `language` map in `.para-workspace.yml` and apply each k
 Applies **only** when Agent has made source code changes (created, edited, or deleted code files):
 
 - **MUST** perform a project-appropriate verification step (e.g., build or test command resolved from the project contract `project.md`, project rules in `.agents/rules/` like `maintenance.md`, or package manifests like `package.json`, `Cargo.toml`, etc.) after every code change, unless the user explicitly requests `--quick`.
+- **MUST** configure a project-appropriate static code check command (e.g., `npx tsc --noEmit`, `npm run lint`, or equivalent) in `project.md` or package manifests, and **MUST** execute it as a mandatory pre-commit task in every plan Phase to prevent compiling or runtime issues.
 - **MUST** check the build result before reporting "Done".
 - **MUST NOT** `git commit` or `git push` without user confirmation, unless explicitly running a trusted workflow (`/push`, `/release`).
 

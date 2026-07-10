@@ -9,6 +9,7 @@ supersedes: null
 superseded_by: null
 related_specs: []
 related_adrs: []
+contributes_to: []
 ---
 
 # Architecture Decision Record (ADR): [Topic/Title]

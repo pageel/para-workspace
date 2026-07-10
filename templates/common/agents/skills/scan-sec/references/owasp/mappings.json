@@ -1,135 +1,149 @@
 {
-  "OWASP_VERSION": "2021",
+  "OWASP_VERSION": "2025",
   "mappings": {
     "HARDCODED-SECRET": [
       {
-        "owasp_id": "A02",
+        "owasp_id": "A04",
         "owasp_title": "Cryptographic Failures",
-        "local_path": "references/owasp/2021/en/a02-cryptographic-failures.md"
+        "local_path": "references/owasp/2025/en/A04_2025-Cryptographic_Failures.md"
       },
       {
-        "owasp_id": "A05",
+        "owasp_id": "A02",
         "owasp_title": "Security Misconfiguration",
-        "local_path": "references/owasp/2021/en/a05-security-misconfiguration.md"
+        "local_path": "references/owasp/2025/en/A02_2025-Security_Misconfiguraton.md"
       }
     ],
     "SQL-INJECTION": [
       {
-        "owasp_id": "A03",
+        "owasp_id": "A05",
         "owasp_title": "Injection",
-        "local_path": "references/owasp/2021/en/a03-injection.md"
+        "local_path": "references/owasp/2025/en/A05_2025-Injection.md"
       }
     ],
     "XSS": [
       {
-        "owasp_id": "A03",
+        "owasp_id": "A05",
         "owasp_title": "Injection",
-        "local_path": "references/owasp/2021/en/a03-injection.md"
+        "local_path": "references/owasp/2025/en/A05_2025-Injection.md"
       }
     ],
     "IDOR": [
       {
         "owasp_id": "A01",
         "owasp_title": "Broken Access Control",
-        "local_path": "references/owasp/2021/en/a01-broken-access-control.md"
+        "local_path": "references/owasp/2025/en/A01_2025-Broken_Access_Control.md"
       }
     ],
     "BROKEN-ACCESS-CONTROL": [
       {
         "owasp_id": "A01",
         "owasp_title": "Broken Access Control",
-        "local_path": "references/owasp/2021/en/a01-broken-access-control.md"
+        "local_path": "references/owasp/2025/en/A01_2025-Broken_Access_Control.md"
       }
     ],
     "CSRF": [
       {
         "owasp_id": "A01",
         "owasp_title": "Broken Access Control",
-        "local_path": "references/owasp/2021/en/a01-broken-access-control.md"
+        "local_path": "references/owasp/2025/en/A01_2025-Broken_Access_Control.md"
       }
     ],
     "WEAK-PASSWORD-HASHING": [
       {
-        "owasp_id": "A02",
+        "owasp_id": "A04",
         "owasp_title": "Cryptographic Failures",
-        "local_path": "references/owasp/2021/en/a02-cryptographic-failures.md"
+        "local_path": "references/owasp/2025/en/A04_2025-Cryptographic_Failures.md"
       }
     ],
     "JWT-NONE-ALGORITHM": [
       {
-        "owasp_id": "A02",
+        "owasp_id": "A04",
         "owasp_title": "Cryptographic Failures",
-        "local_path": "references/owasp/2021/en/a02-cryptographic-failures.md"
+        "local_path": "references/owasp/2025/en/A04_2025-Cryptographic_Failures.md"
       }
     ],
     "SSRF": [
       {
-        "owasp_id": "A10",
-        "owasp_title": "Server-Side Request Forgery (SSRF)",
-        "local_path": "references/owasp/2021/en/a10-server-side-request-forgery-(ssrf).md"
+        "owasp_id": "A01",
+        "owasp_title": "Broken Access Control",
+        "local_path": "references/owasp/2025/en/A01_2025-Broken_Access_Control.md"
       }
     ],
     "PATH-TRAVERSAL": [
       {
         "owasp_id": "A01",
         "owasp_title": "Broken Access Control",
-        "local_path": "references/owasp/2021/en/a01-broken-access-control.md"
+        "local_path": "references/owasp/2025/en/A01_2025-Broken_Access_Control.md"
       }
     ],
     "CORS-MISCONFIG": [
       {
-        "owasp_id": "A05",
+        "owasp_id": "A02",
         "owasp_title": "Security Misconfiguration",
-        "local_path": "references/owasp/2021/en/a05-security-misconfiguration.md"
+        "local_path": "references/owasp/2025/en/A02_2025-Security_Misconfiguraton.md"
       }
     ],
     "VERBOSE-ERROR-DEBUG-MODE": [
       {
-        "owasp_id": "A05",
-        "owasp_title": "Security Misconfiguration",
-        "local_path": "references/owasp/2021/en/a05-security-misconfiguration.md"
+        "owasp_id": "A10",
+        "owasp_title": "Mishandling of Exceptional Conditions",
+        "local_path": "references/owasp/2025/en/A10_2025-Mishandling_of_Exceptional_Conditions.md"
       }
     ],
     "INSECURE-DESERIALIZATION": [
       {
         "owasp_id": "A08",
-        "owasp_title": "Software and Data Integrity Failures",
-        "local_path": "references/owasp/2021/en/a08-software-and-data-integrity-failures.md"
+        "owasp_title": "Software or Data Integrity Failures",
+        "local_path": "references/owasp/2025/en/A08_2025-Software_or_Data_Integrity_Failures.md"
       }
     ],
     "OUTDATED-DEPENDENCY": [
       {
-        "owasp_id": "A06",
-        "owasp_title": "Vulnerable and Outdated Components",
-        "local_path": "references/owasp/2021/en/a06-vulnerable-and-outdated-components.md"
+        "owasp_id": "A03",
+        "owasp_title": "Software Supply Chain Failures",
+        "local_path": "references/owasp/2025/en/A03_2025-Software_Supply_Chain_Failures.md"
       }
     ],
     "COMMAND-INJECTION": [
       {
-        "owasp_id": "A03",
+        "owasp_id": "A05",
         "owasp_title": "Injection",
-        "local_path": "references/owasp/2021/en/a03-injection.md"
+        "local_path": "references/owasp/2025/en/A05_2025-Injection.md"
       }
     ],
     "SLOPSQUATTING": [
       {
-        "owasp_id": "A06",
-        "owasp_title": "Vulnerable and Outdated Components",
-        "local_path": "references/owasp/2021/en/a06-vulnerable-and-outdated-components.md"
+        "owasp_id": "A03",
+        "owasp_title": "Software Supply Chain Failures",
+        "local_path": "references/owasp/2025/en/A03_2025-Software_Supply_Chain_Failures.md"
       }
     ],
     "MISSING-RATE-LIMIT": [
       {
-        "owasp_id": "A05",
+        "owasp_id": "A02",
         "owasp_title": "Security Misconfiguration",
-        "local_path": "references/owasp/2021/en/a05-security-misconfiguration.md"
+        "local_path": "references/owasp/2025/en/A02_2025-Security_Misconfiguraton.md"
       }
     ],
     "RACE-CONDITION": [
       {
-        "owasp_id": "A04",
+        "owasp_id": "A06",
         "owasp_title": "Insecure Design",
-        "local_path": "references/owasp/2021/en/a04-insecure-design.md"
+        "local_path": "references/owasp/2025/en/A06_2025-Insecure_Design.md"
+      }
+    ],
+    "EMPTY-CATCH-BLOCK": [
+      {
+        "owasp_id": "A10",
+        "owasp_title": "Mishandling of Exceptional Conditions",
+        "local_path": "references/owasp/2025/en/A10_2025-Mishandling_of_Exceptional_Conditions.md"
+      }
+    ],
+    "UNTRUSTED-BUILD-DEPENDENCY": [
+      {
+        "owasp_id": "A03",
+        "owasp_title": "Software Supply Chain Failures",
+        "local_path": "references/owasp/2025/en/A03_2025-Software_Supply_Chain_Failures.md"
       }
     ]
   }

@@ -49,25 +49,25 @@
 
 > ⛔ **MANDATORY CONTEXT BINDING:** Before executing this plan, Agent MUST read/reload all listed files to ensure full context and prevent workflow drift.
 
-| Scope       | File / Index               | Purpose                                                   | Path                                                              |
-| :---------- | :------------------------- | :-------------------------------------------------------- | :---------------------------------------------------------------- |
-| Session Memory | `session.md`             | Compacted session rules, skills, and contract (Priority)  | [session.md](~/.gemini/antigravity-ide/knowledge/para_vibecode_session/artifacts/session.md) |
-| Workspace   | `.agents/rules.md`         | Workspace-level rules index (Trigger scan)                | [rules.md](file:///absolute/path/to/workspace/.agents/rules.md)   |
-| Workspace   | `.agents/skills.md`        | Workspace-level skills index (Trigger scan)               | [skills.md](file:///absolute/path/to/workspace/.agents/skills.md) |
-| Project     | `project.md`               | Project Contract (Version, status, roadmap tracker)       | [project.md](file:///absolute/path/to/project/project.md)         |
-| Project     | `.agents/rules.md`         | Project-level rules index (if exists)                     | [rules.md](file:///absolute/path/to/project/.agents/rules.md)     |
-| Project     | `.agents/skills.md`        | Project-level skills index (if exists)                    | [skills.md](file:///absolute/path/to/project/.agents/skills.md)   |
-| Specific    | [Triggered Rules/Skills]   | List of specifically triggered rules/skills for this plan | (e.g., `agent-behavior.md`, `tool-routing.md`, `vcs.md`)          |
-| MCP / Tools | [MCP Server / Tool Schema] | Loaded MCP schemas to support tasks                       | (e.g., `para-graph` schemas)                                      |
+| Scope          | File / Index               | Purpose                                                   | Path                                                                                         |
+| :------------- | :------------------------- | :-------------------------------------------------------- | :------------------------------------------------------------------------------------------- |
+| Session Memory | `session.md`               | Compacted session rules, skills, and contract (Priority)  | [session.md](~/.gemini/antigravity-ide/knowledge/para_vibecode_session/artifacts/session.md) |
+| Workspace      | `.agents/rules.md`         | Workspace-level rules index (Trigger scan)                | [rules.md](file:///absolute/path/to/workspace/.agents/rules.md)                              |
+| Workspace      | `.agents/skills.md`        | Workspace-level skills index (Trigger scan)               | [skills.md](file:///absolute/path/to/workspace/.agents/skills.md)                            |
+| Project        | `project.md`               | Project Contract (Version, status, roadmap tracker)       | [project.md](file:///absolute/path/to/project/project.md)                                    |
+| Project        | `.agents/rules.md`         | Project-level rules index (if exists)                     | [rules.md](file:///absolute/path/to/project/.agents/rules.md)                                |
+| Project        | `.agents/skills.md`        | Project-level skills index (if exists)                    | [skills.md](file:///absolute/path/to/project/.agents/skills.md)                              |
+| Specific       | [Triggered Rules/Skills]   | List of specifically triggered rules/skills for this plan | (e.g., `agent-behavior.md`, `tool-routing.md`, `vcs.md`)                                     |
+| MCP / Tools    | [MCP Server / Tool Schema] | Loaded MCP schemas to support tasks                       | (e.g., `para-graph` schemas)                                                                 |
 
 ## CSA Spec Mapping Table
 
 > ⛔ **MANDATORY FOR CSA PROJECTS:** Map every Spec Anchor ID from the baseline spec file to its corresponding Phase, Task, and Target File.
 > This table is verified automatically by the Plan Dev Gate and Post-Draft Audit Gate.
 
-| Spec ID | Phase / Task | Target File | Note / Description |
-| :--- | :--- | :--- | :--- |
-| `csa-example-id` | Phase 1.1 | `src/example.ts` | Example implementation |
+| Spec ID          | Phase / Task | Target File      | Note / Description     |
+| :--------------- | :----------- | :--------------- | :--------------------- |
+| `csa-example-id` | Phase 1.1    | `src/example.ts` | Example implementation |
 
 ## Architecture Overview & Execution Logic
 
@@ -97,21 +97,20 @@
 
 ### Audit Checklist
 
-| Dimension                                                                                                        | Status | Notes |
-| :--------------------------------------------------------------------------------------------------------------- | :----- | :---- |
-| **Logic Review** — Phase sequence makes sense, no circular dependencies                                          | ⬜     |       |
-| **Security Review** — Context guards, no exposed secrets, published-only data                                    | ⬜     |       |
-| **Governance Compliance** — Project maintenance rules, version sync, release process                             | ⬜     |       |
-| **Completeness** — All target files accounted for, no orphan steps                                               | ⬜     |       |
-| **Risk Coverage** — Every risk in Risks table has a corresponding Harness Guard                                  | ⬜     |       |
-| **Brainstorm Sync** — Plan matches the target files, risks, and TDD proposals from brainstorm                    | ⬜     |       |
-| **Brainstorm & Spec Scope Check** — Propose if any task/phase needs separate brainstorm or spec to ensure safety | ⬜     |       |
+| Dimension                                                                                                                                                                                            | Status | Notes |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----- | :---- |
+| **Logic Review** — Phase sequence makes sense, no circular dependencies                                                                                                                              | ⬜     |       |
+| **Security Review** — Context guards, no exposed secrets, published-only data                                                                                                                        | ⬜     |       |
+| **Governance Compliance** — Project maintenance rules, version sync, release process                                                                                                                 | ⬜     |       |
+| **Completeness** — All target files accounted for, no orphan steps                                                                                                                                   | ⬜     |       |
+| **Risk Coverage** — Every risk in Risks table has a corresponding Harness Guard                                                                                                                      | ⬜     |       |
+| **Brainstorm Sync** — Plan matches the target files, risks, and TDD proposals from brainstorm                                                                                                        | ⬜     |       |
+| **Brainstorm & Spec Scope Check** — Propose if any task/phase needs separate brainstorm or spec to ensure safety                                                                                     | ⬜     |       |
 | **Harness Alignment** — Does the generated draft plan exactly match the required checkpoints and guards (MANDATORY, VCS inline commit/push guards) from the template plan and Harness Guard Catalog? | ⬜     |       |
-| **CSA Spec Audit** — If CSA is enabled and plan follows brainstorm, warn to write spec via `/spec` workflow      | ⬜     |       |
-| **CSA Spec Mapping** — 100% Spec Anchor IDs mapped in Plan (blocking if incomplete)                              | ⬜     |       |
-| **Version Decision** — Evaluate plan's target version decision and version naming consistency                    | ⬜     |       |
-| **Diagnostics Coverage** — Observable checkpoints exist for every runtime path identified in Spec §9 Diagnostics Design | ⬜     |       |
-
+| **CSA Spec Audit** — If CSA is enabled and plan follows brainstorm, warn to write spec via `/spec` workflow                                                                                          | ⬜     |       |
+| **CSA Spec Mapping** — 100% Spec Anchor IDs mapped in Plan (blocking if incomplete)                                                                                                                  | ⬜     |       |
+| **Version Decision** — Evaluate plan's target version decision and version naming consistency                                                                                                        | ⬜     |       |
+| **Diagnostics Coverage** — Observable checkpoints exist for every runtime path identified in Spec §9 Diagnostics Design                                                                              | ⬜     |       |
 
 ### Project Governance Reload
 
@@ -149,11 +148,11 @@ Reloaded Skills:
 
 ### Classification Criteria
 
-| Type        | Icon | When to apply                                                                              |
-| :---------- | :--- | :----------------------------------------------------------------------------------------- |
-| 🧪 TDD      | `🧪` | Logic changes, algorithms, data transforms, bug fixes, security-critical code, API changes |
+| Type        | Icon | When to apply                                                                                       |
+| :---------- | :--- | :-------------------------------------------------------------------------------------------------- |
+| 🧪 TDD      | `🧪` | Logic changes, algorithms, data transforms, bug fixes, security-critical code, API changes          |
 | 🔍 Debug    | `🔍` | Structured logging, observable checkpoints, error taxonomy implementation, environment parity mocks |
-| 📝 Standard | `📝` | Documentation, config changes, version bumps, changelog, formatting, git operations        |
+| 📝 Standard | `📝` | Documentation, config changes, version bumps, changelog, formatting, git operations                 |
 
 ### Task Classification Table
 
@@ -207,6 +206,7 @@ Reloaded Skills:
 - [ ] 0.6 🔍 **Debug Infrastructure Setup** (if Spec has §9 Diagnostics Design: implement structured logger utility, error taxonomy constants, and observable checkpoint stubs. If project already has logging system, verify it meets the Spec's log format requirements.)
 - [ ] 0.7 🤖 **Session Context Compaction** (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to capture and write all rules, skills, and project contract to Vibecode Session KI)
 - [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x], run the MCP tool `project_session_compact` to update session memory, read the updated `session.md` using `view_file` to reload context, and obtain explicit User approval in the chat to transition to Phase 1.
+
 ---
 
 ### Phase 1. [Core Feature] ⚙️ `Difficulty: [🟢 Low | 🟡 Medium | 🔴 High]`
@@ -272,20 +272,24 @@ git push origin main
   // Test code targeting specific behavior
   ```
 - [ ] 2. 🔴 **Verify FAIL**
+
   ```bash
   bash .agents/skills/tdd/scripts/tdd-test.sh [test-command] [test-file]
   ```
 
   - Expected: FAIL due to missing code/logic. Evidence auto-logged to `artifacts/tests/tdd-evidence.log`.
+
 - [ ] 3. 🟢 **GREEN: Write Minimal Code**
   - Implement minimum required logic to pass the test above (No extra features).
 - [ ] 3.5 🤖 📐 **CSA Bind:** Add `// @para-doc [#csa-[anchor-id]]` comment directly above the declaration of the new class/function/endpoint.
 - [ ] 4. 🟢 **Verify PASS**
+
   ```bash
   bash .agents/skills/tdd/scripts/tdd-test.sh [test-command] [test-file]
   ```
 
   - Expected: PASS without warnings. Evidence auto-logged.
+
 - [ ] 5. 🤖 **TDD Gate:** Recheck `tdd-evidence.log`
   - [ ] Log shows 🔴 FAIL (Logic error, not syntax)
   - [ ] Log shows 🟢 PASS (Green state)
@@ -301,9 +305,10 @@ git push origin main
 - [ ] 1.1 [📝] [Specific implementation task — e.g. Write config files]
 - [ ] 1.2 [📝] 📐 **CSA Bind:** Add `// @para-doc [#csa-[anchor-id]]` comment directly above the declaration of the new class/function/endpoint.
 - [ ] 🤖 **Compare Git Drift:** Compare current repo state with `artifacts/tests/tdd-repo-before-[date].log` to identify newly generated untracked or ignored files in this phase.
-- [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
-- [ ] 1.N-1 🤖 **Pre-commit Gate:** Run project's linter/compiler/tests and resolve any problems.
+- [ ] 1.N-2 🤖 **Type/Lint Check:** Run project's static check/typecheck (e.g., `npx tsc --noEmit` or `npm run lint`) to ensure zero compilation or syntax errors.
+- [ ] 1.N-1 🤖 **Pre-commit Gate:** Run project's tests and resolve any problems.
 - [ ] 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to detect physical drift), and `graph_audit_csa` (with `planScope: "[active-plan-path]"` to verify plan-scoped spec coverage is 100% and bind introduced code entities).
+- [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
 - [ ] 1.N 👤 **Git Checkpoint:** Commit changes with message `[feat/fix/chore]([scope]): [short description]`.
 - [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Run the MCP tool `project_session_compact` to update session memory -> Read the updated `session.md` using `view_file` to reload context -> Obtain explicit User approval in the chat to transition to the next Phase.
 - [ ] 1.N+1 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
