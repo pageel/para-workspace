@@ -192,7 +192,7 @@ Refer to template in [`references/output-format.md`](references/output-format.md
 **OWASP Mapping & Packaged References:**
 - For each finding, read `references/owasp/mappings.json` to resolve its corresponding OWASP Top 10 category.
 - Display the resolved OWASP category tag next to the rule name (e.g., `HARDCODED-SECRET [OWASP A02/A05]`).
-- Provide local relative/absolute `file:///` links to the local markdown documents packaged under `references/owasp/2021/en/` so users can read the detailed official guides offline.
+- Provide local relative/absolute `file:///` links to the local markdown documents packaged under `references/owasp/2025/en/` so users can read the detailed official guides offline.
 
 **Graph Blast Radius & Remediation (if `--graph`):**
 - Display `Caller Count: N` next to the finding file path.

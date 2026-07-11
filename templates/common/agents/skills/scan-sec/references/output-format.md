@@ -62,7 +62,7 @@ Purpose: A non-tech user reading a CRITICAL finding should understand the impact
 
 **{header_why_dangerous}**
 
-This is the number one vulnerability in web history. An attacker only needs to input a few characters into the URL/form to: dump all users/passwords, delete the database, or deploy backdoors to compromise the server. OWASP classifies SQL injection as A03 in the Top 10 (2021). Over the past 5 years, the largest data leaks (Equifax, LinkedIn, Yahoo) all involved SQL injection.
+This is the number one vulnerability in web history. An attacker only needs to input a few characters into the URL/form to: dump all users/passwords, delete the database, or deploy backdoors to compromise the server. OWASP classifies SQL injection as A05 in the Top 10 (2025). Over the past 5 years, the largest data leaks (Equifax, LinkedIn, Yahoo) all involved SQL injection.
 
 **{header_attack_scenario}**
 
@@ -88,7 +88,7 @@ db.query('SELECT * FROM users WHERE id = ?', [id])  // ? is placeholder, DB engi
 const user = await User.findOne({ where: { id } })
 \```
 
-**{header_read_more}:** [Rule detail](skills/scan-sec/rules/generic/02-sql-injection.md) · [OWASP A03 Injection](https://owasp.org/Top10/A03_2021-Injection/)
+**{header_read_more}:** [Rule detail](skills/scan-sec/rules/generic/02-sql-injection.md) · [OWASP A05 Injection](https://owasp.org/Top10/A05_2025-Injection/)
 
 ---
 
@@ -195,7 +195,7 @@ const hash = await argon2.hash(password)
 
 ---
 
-🤖 {footer_generated_by} [OWASP Top 10:2021]({footer_repo})
+🤖 {footer_generated_by} [OWASP Top 10:2025]({footer_repo})
 
 📄 **{msg_report_saved}:** `reports/security/scan-2026-05-13-143022.md`
 
@@ -263,7 +263,7 @@ const hash = await argon2.hash(password)
 
 ---
 
-🤖 {footer_generated_by} [OWASP Top 10:2021]({footer_repo})
+🤖 {footer_generated_by} [OWASP Top 10:2025]({footer_repo})
 
 > {footer_disclaimer}
 
