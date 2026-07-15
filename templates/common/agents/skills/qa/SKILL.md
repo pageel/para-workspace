@@ -213,6 +213,24 @@ When creating the QA Report at Step 0.5 (Pre-QA Strategy), the Agent MUST format
 - Does the plan include steps to verify the Post-Draft Audit and the Plan Dev Gate?
 - **Rule:** If a `🔴 Critical` CSA traceability gap is detected (e.g., missing mappings or incorrect anchoring), suggest resolving them before finalizing the review.
 
+### 📊 Graph Impact Integration (v1.1.0+)
+
+When running `/qa` on a plan or spec, the Agent MUST check if a Graph Impact Report exists for the target phases (e.g., `artifacts/reports/graph/graph-impact-phase-[N].md`).
+IF a report exists, the Red Team Personas MUST read and incorporate its findings:
+
+1. **🏗️ Principal Architect:**
+   - Proactively target files with a high **Blast Radius** or deep dependencies.
+   - Challenge the integration points of modified functions with their transitive callers.
+   - Ask: *"The Graph Impact Report shows that [caller] transitively calls [modified node]. How will we verify that [caller] behaves correctly under the new logic?"*
+
+2. **🛡️ Security Auditor / AI Security Expert:**
+   - Focus on security contexts touched by the changes (e.g., authentication, DB transaction managers, cookie parsers).
+   - Ask: *"Since [modified node] is called by [auth-related module], does this change introduce any access bypass risks?"*
+
+3. **💼 Project Tech Lead:**
+   - Challenge why the plan doesn't include specific checkpoint gates or regression tests for components identified with a high risk assessment in the Graph Impact Report.
+   - Ask: *"The report flags [file] as High Risk. Why does Phase [N] lack an explicit Checkpoint Gate or validation task before committing?"*
+
 ## 3. Dimension Seed Patterns
 
 > Quick-reference seed patterns per dimension tag. Agent uses these alongside

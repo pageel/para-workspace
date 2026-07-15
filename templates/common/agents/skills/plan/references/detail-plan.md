@@ -40,6 +40,11 @@
 
 > **Pre-requisite:** Before drafting this plan, Agent MUST read the related brainstorm decision file listed in B1.
 >
+> ⛔ **MANDATORY PRE-PLANNING READ:** Agent MUST explicitly load and read the full contents of the following core skills using the `view_file` tool BEFORE generating this plan (Do NOT read only small chunks):
+> - **CSA Compliance Skill:** [.agents/skills/csa/SKILL.md](file://[absolute_path_to_workspace]/.agents/skills/csa/SKILL.md)
+> - **TDD Guidelines Skill:** [.agents/skills/tdd/SKILL.md](file://[absolute_path_to_workspace]/.agents/skills/tdd/SKILL.md)
+> - **Harness Guards Skill (Snapshot):** [.agents/skills/harness/SKILL.md](file://[absolute_path_to_workspace]/.agents/skills/harness/SKILL.md)
+>
 > **Target Files & Blast Radius:** (Inherited from `decision.md` §2)
 > **Testing Strategy & Mocking:** (Inherited from `decision.md` §4)
 
@@ -216,6 +221,79 @@ git push origin main
 > - **Execution Order**: Explicit dependency chain of tasks.
 > - **Impact Analysis**: Blast radius across systems/workflows.
 > - **Version Decision**: Justification for version bump level.
+
+## Post-Draft Audit Gate
+
+<!-- ⚠️ MANDATORY AUDIT: Agent MUST complete this audit BEFORE activating the plan.
+     This gate is triggered automatically after Step 9 (plan creation).
+     Agent MUST NOT skip this section. -->
+
+> ⛔ **MANDATORY AUDIT:** After writing the Draft, Agent MUST:
+>
+> 1. Announce to User that Draft is ready and audit is required.
+>    - **MANDATORY:** In the chat prompt asking for audit approval, Agent MUST summarize key takeaways and design rules read in detail from `.agents/skills/csa/SKILL.md`, `.agents/skills/tdd/SKILL.md`, and `.agents/skills/harness/SKILL.md` (to verify full reading of these skills, avoiding partial/bypass read errors).
+> 2. Wait for User confirmation before proceeding.
+>    - **Audit Gate Initiation:** Propose starting the formal post-draft audit process once user approves.
+> 3. Reload ALL project rules + skills (full scan, not just triggered).
+> 4. Execute the audit checklist below.
+> 5. Classify tasks for TDD injection.
+> 6. Present final plan with audit results to User.
+
+### Audit Checklist
+
+| Dimension | Status | Notes |
+| :--- | :--- | :--- |
+| **Logic Review** — Phase sequence makes sense, no circular dependencies | ⬜ | |
+| **Security Review** — Context guards, no exposed secrets, published-only data | ⬜ | |
+| **Governance Compliance** — Project maintenance rules, version sync, release process | ⬜ | |
+| **Completeness** — All target files accounted for, no orphan steps | ⬜ | |
+| **Risk Coverage** — Every risk in Risks table has a corresponding Harness Guard | ⬜ | |
+| **Brainstorm Sync** — Plan matches the target files, risks, and TDD proposals from brainstorm | ⬜ | |
+| **Brainstorm & Spec Scope Check** — Propose if any task/phase needs separate brainstorm or spec to ensure safety | ⬜ | |
+| **Harness Alignment** — Does the generated draft plan exactly match the required checkpoints and guards (MANDATORY, VCS inline commit/push guards) from the template plan and Harness Guard Catalog? | ⬜ | |
+| **CSA Spec Audit** — If CSA is enabled and plan follows brainstorm, warn to write spec via `/spec` workflow | ⬜ | |
+| **CSA Spec Mapping** — 100% Spec Anchor IDs mapped in Plan (blocking if incomplete) | ⬜ | |
+| **Version Decision** — Evaluate plan's target version decision and version naming consistency | ⬜ | |
+| **Diagnostics Coverage** — Observable checkpoints exist for every runtime path identified in Spec §9 Diagnostics Design | ⬜ | |
+
+### Project Governance Reload
+
+> Agent MUST list which rules and skills were reloaded during audit:
+
+```markdown
+Reloaded Rules:
+
+- [ ] [rule-name]: [key finding or "compliant"]
+
+Reloaded Skills:
+
+- [ ] [skill-name]: [key finding or "compliant"]
+```
+
+### Audit Result
+
+> Agent writes a brief summary of findings here after completing the audit.
+
+**Result:** [PASS / PASS WITH NOTES / FAIL — requires plan revision]
+**Notes:** [Brief audit findings, if any]
+
+---
+
+## TDD Task Classification
+
+<!-- ⚠️ MANDATORY: Agent MUST classify ALL implementation tasks BEFORE activation.
+     Tasks classified as 🧪 TDD will have Red-Green-Refactor cycles injected.
+     Tasks classified as 📝 Standard follow normal Detail Plan flow. -->
+
+> ⛔ **MANDATORY:** Agent MUST present this classification table to User for approval BEFORE injecting TDD cycles into the plan.
+
+### Task Classification Table
+
+| Task ID | Task Name | Type | Rationale |
+| :--- | :--- | :--- | :--- |
+| [1.1] | [Task description] | [🧪 / 📝] | [Why this classification - mapping back to brainstorm proposal] |
+
+---
 
 ## Walkthrough (Completion Gate)
 

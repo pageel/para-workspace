@@ -24,6 +24,13 @@
 
 ---
 
+> ⛔ **MANDATORY PRE-PLANNING READ:** Agent MUST explicitly load and read the full contents of the following core skills using the `view_file` tool BEFORE generating or executing this plan (Do NOT read only small chunks):
+> - **CSA Compliance Skill:** [.agents/skills/csa/SKILL.md](file://[absolute_path_to_workspace]/.agents/skills/csa/SKILL.md)
+> - **TDD Guidelines Skill:** [.agents/skills/tdd/SKILL.md](file://[absolute_path_to_workspace]/.agents/skills/tdd/SKILL.md)
+> - **Harness Guards Skill (Snapshot):** [.agents/skills/harness/SKILL.md](file://[absolute_path_to_workspace]/.agents/skills/harness/SKILL.md)
+>
+> ⛔ **LOG-FIRST RULE:** Any code modification request from the user (including ad-hoc requests) MUST be registered as plan tasks before execution.
+
 ## ⚡ Session Goals
 
 [1-2 sentences describing the core objective of this coding session]
@@ -46,7 +53,7 @@
 
 | Scope | File / Index | Purpose | Path |
 | :--- | :--- | :--- | :--- |
-| Session Memory | `session.md` | Compacted session rules and context memory (Priority) | [session.md](file://[absolute_path_to_workspace]/.gemini/antigravity-ide/knowledge/para_vibecode_session/artifacts/session.md) |
+| Session Memory | session.md | Compacted session rules and context memory (Priority) | [session.md](file://[app_data_dir]/knowledge/para_vibecode_session/artifacts/session.md) |
 | Workspace | `.agents/rules.md` | Workspace-level rules index (Trigger scan) | [rules.md](file://[absolute_path_to_workspace]/.agents/rules.md) |
 | Workspace | `.agents/skills.md` | Workspace-level skills index (Trigger scan) | [skills.md](file://[absolute_path_to_workspace]/.agents/skills.md) |
 | Project | `project.md` | Project Contract (Version, status, roadmap) | [project.md](file://[absolute_path_to_project]/project.md) |
@@ -68,13 +75,14 @@
 
 ### Phase 1: [Milestone Name] ⚙️ `Difficulty: [🟢 Low | 🟡 Medium | 🔴 High]`
 
-> **Quality Tools:** `[--tdd, --graph, --brainstorm, --qa, --hardened]`
+#### 📊 Phase Reports & Artifact Links
+- **Pre-execution Repo Log:** `artifacts/tests/tdd-repo-before-[date].log`
+- **Pre-execution Test Log:** `artifacts/tests/tdd-evidence.log`
+- **Post-execution Repo Log:** `artifacts/tests/tdd-repo-after-[date].log`
+- **Post-execution Test Log:** `artifacts/tests/tdd-evidence.log`
+- **Associated Specs/Docs Links:** [spec-file](file:///...) | [doc-file](file:///...)
 
-#### 📊 Pre-Phase 1 Report
-- **Reference Repo Log:** `artifacts/tests/tdd-repo-before-[date].log`
-- **Reference Test Log:** `artifacts/tests/tdd-evidence.log`
-- **Pre-execution Status:**
-  - [Describe codebase state, bugs to fix or logic to add]
+> **Quality Tools:** `[--tdd, --graph, --brainstorm, --qa, --hardened]`
 
 #### 🗺️ Blast Radius & Context Lock
 - **Target Files:**
@@ -96,10 +104,12 @@
 - [ ] 1.0a 🤖 **Project Directory Snapshot:** (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool to capture the baseline configuration, rules, and workspace knowledge)
 - [ ] 1.0b 🤖 **Project Directory Junk Audit:** (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool with `auditJunk: true` to check for physical junk files before starting work)
 - [ ] 1.0c 🤖 **Session Context Compaction:** (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to capture and write all rules, skills, and project contract to Vibecode Session KI)
-- [ ] 1.0d **Pre-flight:** Read TDD Guidelines (skills/tdd/SKILL.md) and CSA Compliance (skills/csa/SKILL.md) to initialize the development cycle.
+- [ ] 1.0d **Pre-flight:** Read TDD Guidelines (.agents/skills/tdd/SKILL.md) and CSA Compliance (.agents/skills/csa/SKILL.md) to initialize the development cycle.
 - [ ] 1.0e 🔍 **Debug Infrastructure Check:** (if Spec has §9 Diagnostics Design: verify structured logging is in place for the components being modified. Add observable checkpoints if missing.)
 - [ ] 1.0f 🤖 **Establish Link Pointers:** Create link-only pointer files `brain/implementation_plan.md`, `brain/task.md`, and `brain/walkthrough.md` in the brain directory pointing to this local plan.
-- [ ] ⛔ CHECKPOINT (Interactive Pause): You MUST run the command `/plan [project-name] dev` in the chat to transition into Coding mode. The Agent is strictly prohibited from modifying code before this step.
+- [ ] 1.0g ⛔ **MANDATORY PHASE AUDIT GATE:** Before starting this Phase, Agent MUST present a checkpoint proposing whether to run the audit according to a QA process (`/qa spec` or `/qa plan`) or a brainstorm process (`/brainstorm`) to clarify design. Agent MUST ask the User: "Do you want to run `/qa` or `/brainstorm` for this Phase? (qa/brainstorm/none)" and wait for response.
+- [ ] 1.0h ⛔ **LOG-FIRST CHECK:** Ensure all requested ad-hoc or standard code modifications are registered as plan tasks before coding.
+- [ ] ⛔ CHECKPOINT (Interactive Pause): Agent is strictly prohibited from writing code or executing tasks for this Phase. Agent MUST wait until the User explicitly issues the command "/plan dev" or "/vibecode dev" in the chat. Do NOT proceed to execution before receiving this explicit command. **MANDATORY:** In the chat prompt asking for dev transition, Agent MUST summarize key takeaways and design rules read in detail from `.agents/skills/csa/SKILL.md`, `.agents/skills/tdd/SKILL.md`, and `.agents/skills/harness/SKILL.md` (to verify full reading of these skills).
 - [ ] 1.1 🤖 **Step 1:** [Task description]
 - [ ] 1.2 🤖 **Step 2:** [Task description]
 - [ ] 1.N-2 🤖 **Pre-commit Gate:** Run tests & lints (`npm run build` and `npx vitest run` or equivalent verification commands).
@@ -159,6 +169,13 @@
 
 ---
 
+> ⛔ **MANDATORY PRE-PLANNING READ:** Agent MUST explicitly load and read the full contents of the following core skills using the `view_file` tool BEFORE generating or executing this plan (Do NOT read only small chunks):
+> - **CSA Compliance Skill:** [.agents/skills/csa/SKILL.md](file://[absolute_path_to_workspace]/.agents/skills/csa/SKILL.md)
+> - **TDD Guidelines Skill:** [.agents/skills/tdd/SKILL.md](file://[absolute_path_to_workspace]/.agents/skills/tdd/SKILL.md)
+> - **Harness Guards Skill (Snapshot):** [.agents/skills/harness/SKILL.md](file://[absolute_path_to_workspace]/.agents/skills/harness/SKILL.md)
+>
+> ⛔ **LOG-FIRST RULE:** Any code modification request from the user (including ad-hoc requests) MUST be registered as plan tasks before execution.
+
 ## ⚡ Session Goals
 
 Free coding session — phases will be created dynamically
@@ -182,7 +199,7 @@ as specific tasks are identified during the conversation.
 
 | Scope | File / Index | Purpose | Path |
 | :--- | :--- | :--- | :--- |
-| Session Memory | `session.md` | Compacted session rules and context memory (Priority) | [session.md](file://[absolute_path_to_workspace]/.gemini/antigravity-ide/knowledge/para_vibecode_session/artifacts/session.md) |
+| Session Memory | session.md | Compacted session rules and context memory (Priority) | [session.md](file://[app_data_dir]/knowledge/para_vibecode_session/artifacts/session.md) |
 | Workspace | `.agents/rules.md` | Workspace-level rules index (Trigger scan) | [rules.md](file://[absolute_path_to_workspace]/.agents/rules.md) |
 | Workspace | `.agents/skills.md` | Workspace-level skills index (Trigger scan) | [skills.md](file://[absolute_path_to_workspace]/.agents/skills.md) |
 | Project | `project.md` | Project Contract (Version, status, roadmap) | [project.md](file://[absolute_path_to_project]/project.md) |
@@ -205,13 +222,21 @@ as specific tasks are identified during the conversation.
 > Each Phase starts with a Quality Gate (see `references/session-quality-gate.md`) and pre/post phase reports.
 >
 > **Mandatory Tasks for each dynamic Phase:**
+> - **Phase Reports & Artifact Links (at top of Phase):**
+>   - Pre-execution Repo Log: `artifacts/tests/tdd-repo-before-[date].log`
+>   - Pre-execution Test Log: `artifacts/tests/tdd-evidence.log`
+>   - Post-execution Repo Log: `artifacts/tests/tdd-repo-after-[date].log`
+>   - Post-execution Test Log: `artifacts/tests/tdd-evidence.log`
+>   - Associated Specs/Docs Links: [spec-file](file:///...)
 > - **CSA Spec Mapping:** If the project has CSA enabled, the Agent MUST map the active Spec IDs to the target files for this phase using a local mapping table.
 > - `[ ] Phase.0a 🤖 Project Directory Snapshot` (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool to capture baseline before changes)
 > - `[ ] Phase.0b 🤖 Project Directory Junk Audit` (if para-graph/mcp is available, invoke the `project_snapshot` MCP tool with `auditJunk: true` to check for physical junk files before starting work)
 > - `[ ] Phase.0c 🤖 Session Context Compaction` (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to compile and write rules/skills/contract to the Vibecode Session KI)
-> - `[ ] Phase.0d **Pre-flight:** Read TDD Guidelines (skills/tdd/SKILL.md) and CSA Compliance (skills/csa/SKILL.md) to initialize the development cycle.`
+> - `[ ] Phase.0d **Pre-flight:** Read TDD Guidelines (.agents/skills/tdd/SKILL.md) and CSA Compliance (.agents/skills/csa/SKILL.md) to initialize the development cycle.`
 > - `[ ] Phase.0e 🤖 **Establish Link Pointers:** Create link-only pointer files brain/implementation_plan.md, brain/task.md, and brain/walkthrough.md pointing to this local plan.`
-> - `[ ] ⛔ CHECKPOINT (Interactive Pause): You MUST run the command /plan [project-name] dev in the chat to transition into Coding mode. The Agent is strictly prohibited from modifying code before this step.`
+> - `[ ] Phase.0f ⛔ **MANDATORY PHASE AUDIT GATE:** Before starting this Phase, Agent MUST present a checkpoint proposing whether to run the audit according to a QA process (/qa spec or /qa plan) or a brainstorm process (/brainstorm) to clarify design. Agent MUST ask the User: "Do you want to run /qa or /brainstorm for this Phase? (qa/brainstorm/none)" and wait for response.`
+> - `[ ] Phase.0g ⛔ **LOG-FIRST CHECK:** Ensure all requested ad-hoc or standard code modifications are registered as plan tasks before coding.`
+> - `[ ] Phase.0h ⛔ CHECKPOINT (Interactive Pause):` Agent is strictly prohibited from writing code or executing tasks for this Phase. Agent MUST wait until the User explicitly issues the command "/plan dev" or "/vibecode dev" in the chat. Do NOT proceed to execution before receiving this explicit command. **MANDATORY:** In the chat prompt asking for dev transition, Agent MUST summarize key takeaways and design rules read in detail from `.agents/skills/csa/SKILL.md`, `.agents/skills/tdd/SKILL.md`, and `.agents/skills/harness/SKILL.md` (to verify full reading of these skills).
 > - `[ ] Phase.N-2 🤖 Pre-commit Physical Snapshot & CSA Compliance Gate:` (if para-graph/mcp is available, invoke `project_snapshot` and `project_diff` to detect physical drift; and if CSA is enabled, run `graph_audit_csa` or `npx para-graph audit csa` to verify spec coverage)
 > - `[ ] Phase.N-1 🤖 Pre-commit Gate:` Run build, lints & tests
 > - `[ ] Phase.N 👤 Git Checkpoint:` Commit changes with message `session([topic]): [milestone goal]`

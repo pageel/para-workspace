@@ -497,10 +497,14 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 **Protocol:**
 
 1. ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here, present the raw draft plan link to the User, and ask for permission to run the Quality Audit process and modify the draft plan file.
+   - **MANDATORY PRE-REQUISITE:** Agent MUST load and read the full contents of `.agents/skills/csa/SKILL.md`, `.agents/skills/tdd/SKILL.md`, and `.agents/skills/harness/SKILL.md` using the `view_file` tool before presenting this question.
+   - **MANDATORY PROMPT REQUIREMENT:** In the chat presentation, Agent **MUST** provide a detailed summary of the core rules and design directives read from these three skills to prove a complete (non-partial) read, and then explicitly propose initiating the Post-Draft Quality Audit Gate process.
    ```
    📐 DRAFT PLAN GENERATED: [plan-name]
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    File: [path]
+
+   [Detailed Summary of CSA, TDD, and Harness Skills Key Takeaways]
 
    ❓ Do you approve running the Post-Draft Quality Audit and embedding the results into the plan file?
       Y → Run Quality Audit (proceed to Step 2)

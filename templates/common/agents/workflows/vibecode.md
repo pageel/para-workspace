@@ -581,6 +581,8 @@ Create Phase [N] for this goal? (y/n/refine)
 
 **2c. Present Quality Gate:**
 
+- **MANDATORY AUDIT GATE PROPOSAL:** At this phase boundary, Agent MUST actively ask the User: "Would you like to initiate a structured design audit before coding? I can run /qa plan (to stress-test requirements) or /brainstorm (to clarify architecture details) for Phase [N]."
+
 ```
 📋 PHASE [N] QUALITY GATE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -598,7 +600,7 @@ Proposed quality tools for this phase:
   🔒 --hardened    → [✅ Recommended | ⚪ Optional] — [Reason]
 
 💡 Recommended flow: brainstorm → QA stress-test → then code with TDD + --graph
-Select tools to activate: (all / pick / none)
+Select tools to activate: (all / pick / none / run qa / run brainstorm)
 ```
 
 **2d. Auto-recommend logic** (from `references/session-quality-gate.md`):
@@ -617,9 +619,9 @@ Select tools to activate: (all / pick / none)
 **2f. ⛔ PRE-CODE CHECKPOINT (MANDATORY):**
 Before writing any code or making any file modifications for Phase N, Agent MUST:
 1. Present the detailed `Proposed Changes` and the checklist of tasks for Phase N.
-2. Suggest and confirm with the User to use the workflow `/plan [project-name] dev` to formally transition/continue the plan execution.
-3. Specifically wait for the User's explicit confirmation and approval to begin coding.
-4. **CRITICAL:** Do NOT run any code modification or file writing commands until the User explicitly confirms they want to proceed with coding (e.g. by approving this checkpoint or running `/plan [project-name] dev`). Writing code before this checkpoint is strictly prohibited.
+2. Propose to the User to transition into coding mode using `/plan [project-name] dev` or `/vibecode dev`.
+3. Specifically wait for the User to issue the command `/plan dev` or `/vibecode dev` (or equivalent dev instruction) in the chat.
+4. **CRITICAL:** Agent is strictly prohibited from writing code or executing tasks for this Phase. Do NOT run any code modification or file writing commands until the User explicitly issues the command "/plan dev" or "/vibecode dev". Proceeding before this command is a strict workflow violation.
 
 **User has final say — Agent only recommends, never forces.**
 
@@ -628,6 +630,7 @@ Before writing any code or making any file modifications for Phase N, Agent MUST
 For each milestone (Phase N) in the session plan:
 
 **3a. Boundary-Locked Code Work:**
+- **MANDATORY LOG-FIRST POLICY:** Any code modification request from the user (including ad-hoc requests) MUST be registered as plan tasks in the Task List of the plan file before the Agent performs the implementation. The Agent MUST NOT modify any code file without first logging the task in the plan.
 - Agent locks scope: performs coding changes only within target files designated for the current milestone. Do NOT bleed changes into unrelated components.
 - If TDD is active: Follow RED → GREEN → REFACTOR cycle (load `.agents/skills/tdd/SKILL.md`).
 - If `--graph` is active: Use `graph_context_bundle` for upstream/downstream awareness.

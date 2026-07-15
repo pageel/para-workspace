@@ -16,11 +16,8 @@ version: 1.0.0
 - Triggered when the user runs any workflow with the `--report` flag (e.g., `/plan end --report`, `/verify --report`).
 - Loaded by Agent to format and populate objective summaries at session completion or verification phases.
 
-## References
-
-| File | When | Purpose |
-|:--|:--|:--|
 | `references/dev-session-report-template.md` | Called during plan closure (`/plan end --report`) | Standard structure for comprehensive dev session reports |
+| `references/graph-impact-report-template.md` | Called during plan graph analysis (`/para-graph --report plan`) | Template for Graph Impact Analysis reports |
 
 ## Data Collection & Analysis Instructions
 

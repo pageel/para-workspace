@@ -42,6 +42,11 @@
 
 > **Pre-requisite:** Before drafting this plan, Agent MUST read the related brainstorm decision file listed in B1.
 >
+> ⛔ **MANDATORY PRE-PLANNING READ:** Agent MUST explicitly load and read the full contents of the following core skills using the `view_file` tool BEFORE generating this plan (Do NOT read only small chunks):
+> - **CSA Compliance Skill:** [.agents/skills/csa/SKILL.md](file://[absolute_path_to_workspace]/.agents/skills/csa/SKILL.md)
+> - **TDD Guidelines Skill:** [.agents/skills/tdd/SKILL.md](file://[absolute_path_to_workspace]/.agents/skills/tdd/SKILL.md)
+> - **Harness Guards Skill (Snapshot):** [.agents/skills/harness/SKILL.md](file://[absolute_path_to_workspace]/.agents/skills/harness/SKILL.md)
+>
 > **Target Files & Blast Radius:** (Inherited from `decision.md` §2)
 > **Testing Strategy & Mocking:** (Inherited from `decision.md` §4)
 
@@ -51,7 +56,7 @@
 
 | Scope          | File / Index               | Purpose                                                   | Path                                                                                         |
 | :------------- | :------------------------- | :-------------------------------------------------------- | :------------------------------------------------------------------------------------------- |
-| Session Memory | `session.md`               | Compacted session rules, skills, and contract (Priority)  | [session.md](~/.gemini/antigravity-ide/knowledge/para_vibecode_session/artifacts/session.md) |
+| Session Memory | `session.md`               | Compacted session rules, skills, and contract (Priority)  | [session.md](file://[app_data_dir]/knowledge/para_vibecode_session/artifacts/session.md) |
 | Workspace      | `.agents/rules.md`         | Workspace-level rules index (Trigger scan)                | [rules.md](file:///absolute/path/to/workspace/.agents/rules.md)                              |
 | Workspace      | `.agents/skills.md`        | Workspace-level skills index (Trigger scan)               | [skills.md](file:///absolute/path/to/workspace/.agents/skills.md)                            |
 | Project        | `project.md`               | Project Contract (Version, status, roadmap tracker)       | [project.md](file:///absolute/path/to/project/project.md)                                    |
@@ -89,7 +94,9 @@
 > ⛔ **MANDATORY AUDIT:** After writing the Draft, Agent MUST:
 >
 > 1. Announce to User that Draft is ready and audit is required.
+>    - **MANDATORY:** In the chat prompt asking for audit approval, Agent MUST summarize key takeaways and design rules read in detail from `.agents/skills/csa/SKILL.md`, `.agents/skills/tdd/SKILL.md`, and `.agents/skills/harness/SKILL.md` (to verify full reading of these skills, avoiding partial/bypass read errors).
 > 2. Wait for User confirmation before proceeding.
+>    - **Audit Gate Initiation:** Propose starting the formal post-draft audit process once user approves.
 > 3. Reload ALL project rules + skills (full scan, not just triggered).
 > 4. Execute the audit checklist below.
 > 5. Classify tasks for TDD injection.
