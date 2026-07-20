@@ -66,6 +66,11 @@ Write a test for the _exact_ behavior you are about to implement.
 - **The Error:** Saying "I am done coding, now I will write tests."
 - **The Fix:** Testing is not an optional follow-up. It is the implementation vehicle. Use the Red-Green-Refactor cycle.
 
+### Anti-Pattern E: Bypassing TDD for Ad-Hoc Tasks
+
+- **The Error:** "This is just a quick edge-case I found while coding, I'll just write the code."
+- **The Fix:** Strict Scope Expansion Guard. When adding a new task dynamically (e.g., in a `vibecode` session or `sprint-current.md`), the Agent MUST halt, explicitly define a new failing test case (RED phase) for the newly discovered scope, present it to the user, and only write the code after the test is written and fails.
+
 ## 4. Execution Checkpoints
 
 When acting as an implementing Agent, you MUST:

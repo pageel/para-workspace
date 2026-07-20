@@ -176,7 +176,11 @@
   - [ ] (If missing FAIL) 🛑 Revert code, rewrite RED test.
 - [ ] 5.5 🤖 **Type/Lint Check:** Run project's static check/typecheck (e.g., `npx tsc --noEmit` or `npm run lint`) to ensure zero compilation or syntax errors.
 - [ ] 5.6 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to detect physical drift), and `graph_audit_csa` (with `planScope: "[active-plan-path]"` to verify plan-scoped spec coverage is 100% and bind introduced code entities).
+- [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Verify that all implemented tasks in the active plan/phase are marked as completed (`[x]`) in this plan file BEFORE committing or proposing git. Commit #N/M — DO NOT push.
+<!-- ⚠️ HARNESS GUARD (VCS — Commit #N/M [Local]): Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit. -->
+> ⛔ **HARNESS GUARD (VCS):** Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit.
 - [ ] 6. 👤 **Git Checkpoint:** Commit changes with message `tdd(feature): [Behavior] — red-green verified`.
+
 - [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Receive explicit user approval before committing.
 - [ ] 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
 
@@ -206,8 +210,11 @@
   - [ ] (If missing FAIL) 🛑 Revert code, rewrite RED test.
 - [ ] 5.5 🤖 **Type/Lint Check:** Run project's static check/typecheck (e.g., `npx tsc --noEmit` or `npm run lint`) to ensure zero compilation or syntax errors.
 - [ ] 5.6 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to compare changes against baseline snapshot to detect physical drift / M9 compliance), and `graph_audit_csa` (to verify spec coverage meets the project's configured threshold and bind introduced code entities).
-- [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Commit #N/M — DO NOT push.
+- [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Verify that all implemented tasks in the active plan/phase are marked as completed (`[x]`) in this plan file BEFORE committing or proposing git. Commit #N/M — DO NOT push.
+<!-- ⚠️ HARNESS GUARD (VCS — Commit #N/M [Local]): Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit. -->
+> ⛔ **HARNESS GUARD (VCS):** Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit.
 - [ ] 6. 👤 **Git Checkpoint:** Commit changes with message `tdd(scope): [Behavior]`.
+
 - [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Run the MCP tool `project_session_compact` to update session memory -> Read the updated `session.md` using `view_file` to reload context -> Obtain explicit User approval in the chat to transition to the next Phase.
 - [ ] 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
 
@@ -227,8 +234,12 @@
 #### Task 2.1: Refactor [Component]
 
 - [ ] 1. 🟣 **REFACTOR:** Clean up and restructure code.
-- [ ] 2. 🟢 **Verify PASS:** Re-run entire test suite (`bash .agents/skills/tdd/scripts/tdd-test.sh npm run test`) to ensure no regressions.
+- [ ] 2.5 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to detect physical drift), and `graph_audit_csa` (with `planScope: "[active-plan-path]"` to verify plan-scoped spec coverage is 100% and bind introduced code entities).
+- [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Verify that all implemented tasks in the active plan/phase are marked as completed (`[x]`) in this plan file BEFORE committing or proposing git. Commit #N/M — DO NOT push.
+<!-- ⚠️ HARNESS GUARD (VCS — Commit #N/M [Local]): Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit. -->
+> ⛔ **HARNESS GUARD (VCS):** Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit.
 - [ ] 3. 👤 **Git Checkpoint:** Commit changes with message `refactor: cleanup [Component] implementation`.
+
 - [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Run the MCP tool `project_session_compact` to update session memory -> Read the updated `session.md` using `view_file` to reload context -> Obtain explicit User approval in the chat to transition to the next Phase.
 - [ ] 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
 

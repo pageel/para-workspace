@@ -10,7 +10,7 @@
 | STATUS GATE | `<!-- ⚠️ STATUS GATE: ... -->` | Plan file header (after frontmatter) | Block Phase execution while plan Status is `📝 Draft` |
 | MANDATORY | `<!-- ⚠️ MANDATORY: ... -->` | First line after Phase heading | Force Agent to reload rules/skills indices before any side-effect |
 | HARNESS GUARD | `<!-- ⚠️ HARNESS GUARD (Risk): ... -->` | After MANDATORY, before Implementation Plan | Warn about specific risk mapped from Risks & Mitigations table |
-| CHECKPOINT | `⛔ CHECKPOINT: [action]` | Inside Task List, before git/status tasks | Break momentum bias — force Agent to execute checkpoint action before continuing. For phase transitions, MUST explicitly demand running the MCP tool `project_session_compact`, reading the updated `session.md` using `view_file` to reload context, and obtaining explicit User approval. If graph/mcp is enabled, pre-commit safety checkpoints MUST also explicitly dictate running `project_snapshot`, `project_diff`, and `graph_audit_csa` tools. |
+| CHECKPOINT | `⛔ CHECKPOINT: [action]` | Inside Task List, before git/status tasks | Break momentum bias — force Agent to execute checkpoint action before continuing. For phase transitions, MUST explicitly demand running the MCP tool `project_session_compact`, reading the updated `session.md` using `view_file` to reload context, and obtaining explicit User approval. Pre-commit safety checkpoints MUST also explicitly dictate verifying that all implemented tasks in the active plan/phase are marked as completed (`[x]`) in the plan file, and (if graph/mcp is enabled) running `project_snapshot`, `project_diff`, and `graph_audit_csa` tools. |
 | FILE GUARD | `<!-- ⚠️ [TYPE] — [constraint] -->` | After file title or YAML frontmatter | Protect file integrity (APPEND-ONLY, HOT LANE, READ-ONLY, etc.) |
 | WORKFLOW GATE | `<!-- ⚠️ WORKFLOW GATE: ... -->` | Before a critical workflow step | Prevent Agent from skipping an important step |
 | CONTEXT RECOVERY | `<!-- ⚠️ CONTEXT RECOVERY: ... -->` | End of long artifacts (>500 lines) | Remind Agent to reload context if attention has decayed |
@@ -44,7 +44,7 @@
 4. FILE GUARD content MUST reference the specific rule constraint (e.g., C1, C2, I9).
 5. Guards are HTML comments — invisible to readers but visible to Agent context window.
 6. **VCS inline guards:** Every task item containing `git commit` or `git push` MUST have a HARNESS GUARD on the line immediately above it. Format:
-   - Commit: `<!-- ⚠️ HARNESS GUARD (VCS — Commit #N/M [Scope]): Agent MUST re-read rules/vcs.md. [Local/Remote] commit. -->`
+   - Commit: `<!-- ⚠️ HARNESS GUARD (VCS — Commit #N/M [Scope]): Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit. -->`
    - Push: `<!-- ⚠️ HARNESS GUARD (VCS — Push Remote): 🛑 STOP HERE. Agent MUST ask User confirmation. -->`
 7. `git commit` and `git push` MUST be **separate task items** — never combined into one task. This ensures each operation has its own guard and can be individually approved.
 8. **Status transition guard:** Walkthrough section MUST enforce that all tasks are completed BEFORE proposing completion. Agent MUST NOT propose or change plan Status to `✅ Done` or clear `active_plan` without explicit user approval after Walkthrough is fully checked. Format:

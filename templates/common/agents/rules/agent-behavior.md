@@ -27,6 +27,7 @@ Agent **MUST** read the `language` map in `.para-workspace.yml` and apply each k
 | `sysdesigns` | Language for project system designs (sysdesigns) | **SHOULD** use first listed language as primary; second as fallback or bilingual |
 | `thinking` | Language for internal reasoning and chain-of-thought | **MUST** use this language for thinking, not just visible output |
 | `chat` | Language for chat responses to the user | **MUST** reply in this language unless user switches mid-conversation |
+| `code` | Language for source code comments, JSDoc/TSDoc, SQL comments, log messages, and error strings | **MUST** write all code comments and inline documentation in this language. Default: `en`. Does NOT affect user-facing UI strings (those follow business domain language). |
 | `docs` | Language for documentation and artifacts | **SHOULD** use first listed language as primary; second as fallback or bilingual |
 
 **Defaults & constraints:**

@@ -42,8 +42,13 @@
 │    └────────────────────────────────────┘     │
 │    ↓ (repeat per Phase)                       │
 ├──────────────────────────────────────────────┤
-│ 4. Cross-Phase Consistency Check             │
+│ 4. Cross-Phase Consistency Check (MANDATORY) │
 │    → Verify consistency across all Phases    │
+│    → Verify God Nodes touched by 2+ Phases   │
+│    → Verify shared helpers referenced correct│
+│    → Update Focus Areas & Process Log tables │
+│    → Verify Governance Checklist (§0.5) ✅/❌ │
+│    → Update Verdict in Report Header         │
 ├──────────────────────────────────────────────┤
 │ 5. Final Verdict → Recommend Activate/Block  │
 └──────────────────────────────────────────────┘
@@ -58,6 +63,18 @@
 | **Token cost** | 🟢 Low per round (total may be 🟡 Medium) |
 | **Depth** | 🔴 High (deep focus on each Phase) |
 | **Best token efficiency** | Plans ≥ 5 phases or TDD plans |
+| **Phase merge** | Adjacent phases MAY be merged (see Phase Merge Rule below) |
+
+### Phase Merge Rule
+
+Agent MAY merge 2 adjacent phases into a single QA round when:
+- Phase 0 (Setup/Scaffold) contains only configuration tasks with no business logic
+- Two adjacent phases operate on the same domain (e.g., both are CRUD endpoints)
+
+**Constraints:**
+- Agent MUST explicitly document the merge decision in the Process Log: `"Merged Phase X + Phase Y — Reason: [justification]"`
+- Agent MUST NOT merge phases that touch different security boundaries (e.g., auth + data access)
+- Merged rounds MUST still cover all Focus Areas from both phases
 
 ## When to Suggest
 
@@ -89,7 +106,35 @@ Compared to `full-plan`, this process enables:
 - **Incremental fix:** Fix immediately within the Phase, no scrolling through long fix lists
 - **Context budget friendly:** Each round is lightweight, suitable for model token limits
 
+## Step 4: Cross-Phase Consistency Check (MANDATORY)
+
+After completing all Phase rounds, Agent MUST perform a mandatory Cross-Phase Consistency Check before issuing the Final Verdict. This step catches cumulative errors that only emerge when combining multiple phases.
+
+### 4a. Structural Consistency
+
+| Check | What to verify |
+|:--|:--|
+| **God Node conflicts** | If a file (e.g., `index.ts`) is modified in 2+ phases, verify no merge conflicts between local commits |
+| **Shared helper references** | If Phase N creates a helper (e.g., `auth.ts`), verify all subsequent phases reference it correctly |
+| **Config accumulation** | If `wrangler.toml` or `package.json` is modified across phases, verify final state is consistent |
+| **Import/export chain** | Verify that cross-phase imports resolve correctly (no circular dependencies introduced) |
+
+### 4b. Report Housekeeping (MANDATORY)
+
+Agent MUST update ALL tracking sections in the QA Report:
+
+1. **Focus Areas (§0.2):** Update every row's Status from `⏳ Pending` → `✅ Covered` (with round reference)
+2. **Process Log (§0.3):** Append one row per completed round with actual question/fix counts
+3. **Governance Checklist (§0.5):** Revisit every GOV/CSA item and update from `⏳ Pending` → `✅ Pass` or `❌ Fail`
+4. **Verdict Header:** Update the Report Header `Verdict` field from `[Pending]` → final verdict (e.g., `✅ PASS (16 Questions — 6 Issues Fixed — 3 Rounds)`)
+
+> [!WARNING]
+> Leaving Focus Areas, Process Log, or Governance Checklist in `⏳ Pending` state at the end of the QA process is a **process violation**. These tables exist for auditability and MUST reflect the actual final state.
+
 ## Anti-patterns
 
 - ❌ Do not use for artifacts with < 3 phases (overhead of too many rounds)
 - ❌ Do not use for specs/brainstorms (no Phase structure to iterate over)
+- ❌ Do not skip Step 4 (Cross-Phase Consistency) — cumulative errors are the #1 missed category
+- ❌ Do not leave Governance Checklist or Focus Areas in Pending state after final round
+- ❌ Do not merge phases silently — always document merge rationale in Process Log

@@ -56,6 +56,13 @@ Recommended chains:
   Hardened:     session --hardened (auto-detect + forced TDD on sensitive code)
 ```
 
+## Scope Expansion Guard (Dynamic Task Addition)
+
+During a `vibecode` session (especially in `loop` or `auto` mode), if the Agent discovers a missing requirement or edge case and creates a new ad-hoc task, it **MUST**:
+1. Check if the current session or active plan enforces **CSA** or **TDD** (by reading `.para-workspace.yml`, `project.md`, or active memory).
+2. If CSA/TDD is active, the Agent **MUST HALT** and ask the user: "This new task requires a Spec update (CSA) and/or Test Case (TDD). Shall I propose the spec/test changes first?"
+3. Only after the Spec/Test is updated and approved (or if the user explicitly overrides), may the Agent proceed to implement the production code.
+
 ## Phase Context Reload (Session Mode)
 
 At the **start of every Phase** in session mode, Agent MUST reload context

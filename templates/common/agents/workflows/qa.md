@@ -272,6 +272,8 @@ Q1 [LOGIC]: [Question]
 
 After all sections are reviewed, perform cross-cutting checks:
 
+> **Process-Specific Enforcement:** If the selected process is `phase-loop`, Agent MUST also execute the **Step 4: Cross-Phase Consistency Check** defined in `references/process-phase-loop.md` (God Node conflicts, shared helper references, config accumulation). This step is MANDATORY and MUST NOT be skipped.
+
 | Check                    | What to verify                                                       |
 | :----------------------- | :------------------------------------------------------------------- |
 | **Task numbering**       | Are task numbers sequential and non-duplicated?                      |
@@ -309,10 +311,11 @@ VERDICT: ✅ Ready for activation | ⚠️ Fix N issues first | 🔴 BLOCKED
 **After writing the summary, Agent MUST:**
 
 1. **Update Coverage Tracker:** Go back to `## 0. QA Strategy` and update the Focus Areas table — mark each area's Status as `✅ Covered` or `⏳ Pending` based on which questions touched it. Map each Q# to the corresponding Focus Area rows.
-2. **Update Process Log:** Append a new row to the Process Log table with the round number, trigger command, scope, question range, critical count, and fix count.
+2. **Update Process Log (MANDATORY):** Append a new row to the Process Log table (§0.3) with the round number, trigger command, scope, question range, critical count, and fix count. **This MUST be done after EVERY round, not just at the end.** The Process Log is the single source of truth for QA progress tracking — data MUST NOT be fragmented across multiple report sections.
 3. **Generate Next Steps Menu:** At the bottom of the Strategy section, write a `### 🚀 Next Steps` subsection using the decision table from `SKILL.md` §1 (QA Report Template → Next Steps section).
-4. **Update Header Verdict:** Change the Report Header's `Verdict` field from `[Pending]` to the final verdict (e.g., `✅ PASSED (12/12 Questions Resolved — 2 Rounds)`).
-5. **Present the Next Steps** to the user in the chat and wait for their decision.
+4. **Update Header Verdict (MANDATORY):** Change the Report Header's `Verdict` field from `[Pending]` to the final verdict (e.g., `✅ PASSED (12/12 Questions Resolved — 2 Rounds)`). **Leaving Verdict as `[Pending]` after the final round is a process violation.**
+5. **Verify Governance Checklist (MANDATORY for `phase-loop`):** If the process is `phase-loop`, revisit the `## 0.5 Tech Lead & CSA Governance Checklist` section and update **every** item from `⏳ Pending` → `✅ Pass` or `❌ Fail` based on the cumulative QA findings. This MUST be completed before presenting the Final Verdict to the user.
+6. **Present the Next Steps** to the user in the chat and wait for their decision.
 
 
 ### Step 8. Fix Loop & Post-Fix Re-Audit

@@ -799,6 +799,12 @@ Ask user what to update:
 - Revise timeline estimates
 - Add new code reuse discoveries
 
+#### 2.5. Dynamic Task Guard (Double-Binding Integrity)
+
+If the user adds or expands tasks during the update, the Agent **MUST** check the active plan's configuration (`--csa`, `--tdd`, or `--hardened`).
+- **If CSA is active:** Agent MUST halt, read `.agents/skills/csa/SKILL.md`, and ask the user if the new task requires a new `csa-id` and a Spec update BEFORE writing the code.
+- **If TDD is active:** Agent MUST halt, read `.agents/skills/tdd/SKILL.md`, and classify the new task. The new task MUST start with a failing test case (RED phase).
+
 #### 3. Apply Changes & Version Bump
 
 Apply changes and increment the plan version (e.g., `1.0` → `1.1`).

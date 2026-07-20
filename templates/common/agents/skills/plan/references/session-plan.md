@@ -114,7 +114,11 @@
 - [ ] 1.2 🤖 **Step 2:** [Task description]
 - [ ] 1.N-2 🤖 **Pre-commit Gate:** Run tests & lints (`npm run build` and `npx vitest run` or equivalent verification commands).
 - [ ] 1.N-1 🤖 **Pre-commit Physical Snapshot & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` and `project_diff` to detect physical drift against the baseline; and if CSA is enabled, run `graph_audit_csa` (or `npx para-graph audit csa` as fallback) to ensure compliance.
+- [ ] ⛔ CHECKPOINT: Verify that all implemented tasks in the active plan/phase are marked as completed (`[x]`) in this plan file BEFORE committing or proposing git.
+<!-- ⚠️ HARNESS GUARD (VCS — Commit #N/M [Local]): Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit. -->
+> ⛔ **HARNESS GUARD (VCS):** Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit.
 - [ ] 1.N 👤 **Git Checkpoint:** Commit changes with message `session([topic]): [milestone goal]`.
+
 - [ ] ⛔ CHECKPOINT: Agent verification pass -> Verify that all previous tasks are successfully marked as done [x] in both this plan file and task.md (State Synchronization) -> Present the git diff & test results to the User (clearly stating: "I have completed [action, log files]. In addition, I have verified and marked all previous tasks as done. I propose that you approve running the commit command...") -> Run the MCP tool `project_session_compact` to update session memory -> Read the updated `session.md` using `view_file` to reload context -> Obtain explicit User approval in the chat to transition to the next Phase.
 - [ ] 1.N+1 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
 
@@ -239,7 +243,9 @@ as specific tasks are identified during the conversation.
 > - `[ ] Phase.0h ⛔ CHECKPOINT (Interactive Pause):` Agent is strictly prohibited from writing code or executing tasks for this Phase. Agent MUST wait until the User explicitly issues the command "/plan dev" or "/vibecode dev" in the chat. Do NOT proceed to execution before receiving this explicit command. **MANDATORY:** In the chat prompt asking for dev transition, Agent MUST summarize key takeaways and design rules read in detail from `.agents/skills/csa/SKILL.md`, `.agents/skills/tdd/SKILL.md`, and `.agents/skills/harness/SKILL.md` (to verify full reading of these skills).
 > - `[ ] Phase.N-2 🤖 Pre-commit Physical Snapshot & CSA Compliance Gate:` (if para-graph/mcp is available, invoke `project_snapshot` and `project_diff` to detect physical drift; and if CSA is enabled, run `graph_audit_csa` or `npx para-graph audit csa` to verify spec coverage)
 > - `[ ] Phase.N-1 🤖 Pre-commit Gate:` Run build, lints & tests
+> - `[ ] Phase.N-0.5 ⛔ CHECKPOINT: Verify that all implemented tasks in the active plan/phase are marked as completed ([x]) in this plan file BEFORE committing or proposing git.`
 > - `[ ] Phase.N 👤 Git Checkpoint:` Commit changes with message `session([topic]): [milestone goal]`
+
 
 ---
 
