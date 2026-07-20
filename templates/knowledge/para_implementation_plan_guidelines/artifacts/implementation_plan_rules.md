@@ -43,4 +43,12 @@ This document outlines the strict boundary and operational guidelines distinguis
 4.  **Plan Creation & Tracker Setup:**
     *   Immediately upon creating or activating a plan, the Agent **MUST** initialize the temporary platform tracker files (`brain/implementation_plan.md` and `brain/task.md`) by writing **ONLY** the single absolute Markdown link pointing directly to the durable Project Plan. 
     *   No duplicate details, checklists, or other task contents should ever be written to these temporary files from the very beginning of the plan execution.
+5.  **Plan Adherence & Dynamic Task Guard (v1.9.x):**
+    *   **Checklist Validation BEFORE Git Operations:** Before proposing or executing any Git commit or push, the Agent **MUST** verify that all implemented tasks in the active plan/phase are marked as completed (`[x]`). Proposing commits with unchecked tasks is a workflow violation.
+    *   **Physical Drift & Junk File Control:** The Agent **MUST** compare physical file modifications against the active Plan File Inventory before committing. Unregistered files (temporary scripts, test logs) must be deleted or added to `.gitignore`.
+    *   **Dynamic Task Guard (Halt-on-Expansion):** If a new ad-hoc task is discovered during active plan execution or a coding session:
+        *   The Agent **MUST** halt and propose necessary updates.
+        *   If **CSA** is active, propose updates to the Spec (e.g., adding CSA IDs/cases).
+        *   If **TDD** is active, propose new test cases (RED phase).
+        *   Update the Plan File Inventory and get explicit user approval before writing any implementation code.
 
