@@ -5,7 +5,7 @@ source: catalog
 
 # /plan [project-name] [action] [--graph] [--project]
 
-> **Workspace Version:** 1.9.2 (Graph Intelligence + Project Context)
+> **Workspace Version:** 1.9.5 (Version Evaluation & Roadmap Template Alignment)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to resolve the user's preferred language.
 > Resolution priority:
 > 1. If `language` is a map: 
@@ -51,9 +51,26 @@ Create, review, or update a phased implementation plan for a PARA project.
 
 Generate a comprehensive implementation plan based on the project contract, backlog, and optional reference projects.
 
+> ⛔ **CHECKPOINT SUMMARY — Agent MUST read this table BEFORE starting any step.**
+> This workflow has **3 mandatory interactive pauses** (up to 4 if `--graph` is used).
+> Agent MUST STOP at each checkpoint and wait for explicit user response in chat.
+> Skipping any checkpoint is a **sovereignty violation**.
+
+| # | Step | Gate Name | What Agent MUST Do | What Agent Waits For |
+| :--- | :--- | :--- | :--- | :--- |
+| **CP-1** | 2 | **Graph Context** *(only if `--graph`)* | Present impact analysis report and template suggestion. | User confirms context is sufficient AND selects template. |
+| **CP-2** | 7 | **Plan Type & Target Version Selection** | Evaluate project contract, roadmap & scope to recommend Target Version + Plan Filename draft, alongside Plan Type/Template options. | User confirms/adjusts Target Version & Plan Filename AND selects plan template. |
+| **CP-3** | 15 | **Post-Draft Audit Gate** | Write draft plan file → Run Plan Linter (7c) → Present draft link + skill summaries (CSA/TDD/Harness) → Ask permission to run Quality Audit. | User approves audit (Y) or requests layout changes (N). |
+| **CP-4** | 17 | **Plan Completion** | Present audited plan summary + next step options (`/plan dev`, `/qa plan`, `/vibecode loop`). | User chooses next action. |
+
+> **Execution Rule:** After each CP, Agent MUST end its turn (stop calling tools) and yield control to the user.
+> **Anti-Pattern:** Writing the plan file AND running linter AND presenting next steps all in one turn = CP-3 violation.
+
 ### Steps
 
-#### 0. Agent Indices Pre-flight
+> **Phase A: Context Gathering (Steps 1–8)**
+
+#### 1. Agent Indices Pre-flight
 
 // turbo
 
@@ -75,7 +92,7 @@ cat Projects/[project-name]/.agents/rules.md 2>/dev/null | head -n 30
 cat Projects/[project-name]/.agents/skills.md 2>/dev/null | head -n 30
 ```
 
-#### 0.5. Graph Context Pipeline (if --graph)
+#### 2. Graph Context Pipeline (if --graph)
 
 // turbo
 
@@ -91,21 +108,35 @@ If the `--graph` flag is provided, execute an INTERACTIVE Graph Preparation Phas
      - `detail-plan-tdd.md`: Strongly suggest if the changes involve heavy logic, complex impact radius, or core mechanics.
      - `detail-plan.md`: Suggest for standard UI, configuration, or simple features.
      - `detail-plan-docs.md`: Suggest if the changes are purely documentation.
-5. ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here. The Agent **MUST NOT** auto-select any template or proceed with file generation. ONLY AFTER the user confirms the context is sufficient and explicitly selects a template in the chat, Agent may proceed to Step 1 to generate the plan file. Auto-generating the plan without explicit user consent is a severe violation.
+5. ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here. The Agent **MUST NOT** auto-select any template or proceed with file generation. ONLY AFTER the user confirms the context is sufficient and explicitly selects a template in the chat, Agent may proceed to Step 3 to generate the plan file. Auto-generating the plan without explicit user consent is a severe violation.
 
-#### 1. Read Project Contract
+#### 3. Read Project Contract
 
 // turbo
 
 Read `Projects/[project-name]/project.md` to extract:
 
-- **Goal** (from YAML frontmatter `goal`)
+**Frontmatter (YAML):**
+
+- **Version** (from `version`) — ⚠️ Agent MUST memorize this value for plan file naming at Step 13/14. Do NOT use template defaults (e.g., `v1.0.0`).
+- **Status** (from `status`) — verify project is `active` before creating plan.
+- **Goal** (from `goal`)
 - **Deadline** (from `deadline`)
 - **Definition of Done** (from `dod` list)
-- **Dependencies** (from body section)
-- **Key Decisions** (from body section)
+- **Tags** (from `tags`) — determines tech stack, runtime, and build tooling (e.g., `astro` → Node.js/Astro → `npm run build`; `rust` → `cargo build`). Agent MUST use tags to select appropriate linter/build/test commands in Phase task lists.
+- **CSA Config** (from `csa`) — if present, CSA is enabled for this project. Store `spec_threshold`, `doc_threshold`, `doc_gate` for Step 13c (CSA Spec Anchor Scaffolding) and Post-Draft Audit.
+- **Roadmap** (from `roadmap`) — path to roadmap file for Step 7 (Plan Type Selection / Roadmap Sync Gate) and version conflict detection.
+- **Active Plan** (from `active_plan`) — if non-empty, another plan is already active. Agent MUST warn user about potential conflict before creating a new plan.
+- **Agent Config** (from `agent`) — determines if project has rules/skills (flows into Step 4).
+- **Downstream** (from `downstream`) — dependent projects that may be impacted.
 
-#### 1.5. Load Project Context (default for create, or if --project)
+**Body sections:**
+
+- **Scope** (In-Scope / Out-of-Scope) — guards against scope creep in Phase definition.
+- **Dependencies** — external dependencies or reference projects.
+- **Key Decisions** — architectural decisions already made.
+
+#### 4. Load Project Context (default for create, or if --project)
 
 // turbo
 
@@ -113,12 +144,12 @@ Read `Projects/[project-name]/project.md` to extract:
 > Loading them early (before architecture/phase design) prevents creating plans that
 > violate project governance or miss available tooling.
 
-From Step 1, check `project.md` for `agent` map:
+From Step 3, check `project.md` for `agent` map:
 
 1. **IF `agent.rules: true`** (or legacy `has_rules: true`):
    - Read `Projects/[project-name]/.agents/rules.md` (project rules index, ~5-10 lines).
    - **MANDATORY DETAIL READ:** For each triggered rule matching the plan scope, the Agent MUST explicitly use the `view_file` tool to read the full content of the rule file (e.g., `.agents/rules/maintenance.md`). Do NOT guess or hallucinate the rule content based on the filename.
-   - Store as **hard constraints** for Phase definition (Step 6) and Risk section (Step 9).
+   - Store as **hard constraints** for Phase definition (Step 11) and Risk section.
    - Example: If `maintenance.md` specifies "Tarball release requires tool.manifest.yml version bump", the plan MUST explicitly include a task to update `tool.manifest.yml`.
 
 2. **IF `agent.skills: true`**:
@@ -127,14 +158,14 @@ From Step 1, check `project.md` for `agent` map:
    - If relevant skills are found and read → note them in the plan as **available tooling** (e.g., Harness Guards).
 
 3. **Store results** as constraints that flow into:
-   - Step 5 (Design Architecture) — respect existing patterns
-   - Step 6 (Define Phases) — include governance tasks per rule requirements
-   - Step 9 (Risk & Mitigations) — flag missing guards
+   - Step 10 (Design Architecture) — respect existing patterns
+   - Step 11 (Define Phases) — include governance tasks per rule requirements
+   - Risk & Mitigations section — flag missing guards
 
-> **Convention:** This step replaces the previous Phase D (Rules Constraints) in Step 2.7.
+> **Convention:** This step replaces the previous Phase D (Rules Constraints) in Step 6c.
 > By loading project context immediately after the contract, plan design is governance-aware from the start.
 
-#### 2. Read Backlog
+#### 5. Read Backlog
 
 // turbo
 
@@ -144,7 +175,11 @@ Read `Projects/[project-name]/artifacts/tasks/backlog.md` to understand:
 - Known bugs or constraints
 - Total item count and status distribution
 
-#### 2.5. Check for Brainstorm Context (if exists)
+#### 6. Gather Heritage Context
+
+> Consolidates brainstorm decisions, lessons learned, and project knowledge base into planning context.
+
+##### 6a. Check for Brainstorm Context (if exists)
 
 // turbo
 
@@ -158,7 +193,7 @@ ls -t Projects/[project-name]/artifacts/para-decisions/brainstorm-*.md 2>/dev/nu
 
 - **If brainstorm file found:**
   1. Extract brainstorm date from filename (YYYY-MM-DD)
-  2. Check `strategy` field from `project.md` (already loaded in Step 1):
+  2. Check `strategy` field from `project.md` (already loaded in Step 3):
      - **IF strategy has value:**
        - Resolve path (IF starts with `@` → cross-project: `Projects/{ecosystem}/...`, ELSE → local)
        - Extract strategy "Last reviewed" date
@@ -169,7 +204,7 @@ ls -t Projects/[project-name]/artifacts/para-decisions/brainstorm-*.md 2>/dev/nu
      - **IF strategy is null/empty** → Read brainstorm (current behavior)
 - **If none found** → Skip. Zero overhead.
 
-#### 2.6. Scan Learnings Index (Lessons Learned)
+##### 6b. Scan Learnings Index (Lessons Learned)
 
 // turbo
 
@@ -180,12 +215,12 @@ ls -t Projects/[project-name]/artifacts/para-decisions/brainstorm-*.md 2>/dev/nu
 3. **If matches found** (e.g., project uses Bash CLI → lessons on `cross-platform-bash`, `bash-cli-gotchas` are relevant):
    - Read only the matched learning files (max 3 files to limit tokens).
    - Extract **Key Learnings** and **Checklists** from each.
-   - Store these as constraints for the Risk section in Step 9.
+   - Store these as constraints for the Risk section.
 4. **If no matches** → Skip. No overhead.
 
 > **Convention:** This step bridges `/learn` (captures lessons) with `/plan` (applies them). The goal is to prevent repeating past mistakes, not to read the entire knowledge base.
 
-#### 2.7. Scan Project Knowledge Base
+##### 6c. Scan Project Knowledge Base
 
 // turbo
 
@@ -196,8 +231,8 @@ ls -t Projects/[project-name]/artifacts/para-decisions/brainstorm-*.md 2>/dev/nu
 Check if `Projects/[project-name]/docs/README.md` exists:
 
 - **If exists** → Read it (~80 lines). Extract:
-  - Architecture docs list → store as "existing architecture" (for Step 5)
-  - RFCs list with status → store as "active constraints" (for Step 6, 9)
+  - Architecture docs list → store as "existing architecture" (for Step 10)
+  - RFCs list with status → store as "active constraints" (for Step 11, Risks)
   - Guides list → store as "established patterns" (avoid re-inventing)
 - **If not exists** → Skip. Zero overhead.
 
@@ -207,111 +242,95 @@ From Phase A, identify RFCs with status `✅ Implemented` or `📋 Planned`:
 
 - Read max 2 most relevant RFCs (based on plan scope match).
 - Extract **constraints** and **decisions** that affect plan design.
-- Store as hard constraints for Phase definition (Step 6) and Risk section (Step 9).
+- Store as hard constraints for Phase definition (Step 11) and Risk section.
 
 > **Rule:** Never design a plan phase that contradicts an Implemented RFC.
 
 **Phase C: Architecture Overview** (read IF Phase A found architecture docs)
 
 From Phase A, if architecture docs exist:
+- Read the **overview** doc only. Extract component diagram, tech stack, data flow.
+- Use as baseline for Step 10 (Design Architecture) — **EXTEND, don't replace**.
 
-- Read the **overview** doc only (1 file, ~60 lines).
-- Extract: component diagram, tech stack, data flow.
-- Use as baseline for Step 5 (Design Architecture) — **EXTEND, don't replace**.
+**Phase D: Rules Constraints** (Reference)
+> **v1.8.6:** Project rules and skills loading has been promoted to **Step 4** (Load Project Context).
+> This ensures governance constraints are available BEFORE architecture design.
 
-> **Convention:** This step ensures `/plan` builds on existing project knowledge rather than re-designing from scratch. It bridges `docs/` (captures decisions) with `/plan` (applies them).
+**Phase E: Knowledge Items** (platform-injected)
+- Cross-reference with plan scope: `pitfall` KIs → Risks; `playbook` KIs → tasks.
 
-**Phase D: Rules Constraints** (Promoted to Step 1.5)
+#### 7. Plan Type & Target Version Selection
 
-> **v1.8.6:** Project rules and skills loading has been promoted to **Step 1.5** (Load Project Context).
-> This ensures governance constraints are available BEFORE architecture design, not buried deep in the knowledge scan.
->
-> **D1 (Workspace Rules)** is still handled by Step 0 (Pre-flight).
-> **D2 (Project Rules)** and **D3 (Project Skills)** are now handled by Step 1.5.
->
-> **Rule:** Both workspace and project rules/skills can impose constraints on plan phases. Always check before designing.
+> 🛡️ **Generic:** Applies to ALL projects.
 
-**Phase E: Knowledge Items** (platform-injected — no file I/O)
+##### 7a. Target Version & Plan Filename Evaluation
 
-From platform-injected KI summaries, cross-reference with plan scope:
-- `pitfall` KIs → add to Risks section (Step 9)
-- `playbook` KIs → reference in relevant Phase tasks
-- Note matched KI slugs for traceability (`Based on KI: [slug]`)
+// turbo
 
-#### 2.8. Plan Type Selection
+Before presenting choices to the user, Agent MUST evaluate project context, contract, and roadmap to calculate the proposed Target Version and Plan Filename draft:
 
-> 🛡️ **Generic:** Applies to ALL projects, not just ecosystem.
+1. **Read Current Version:** Read `VERSION` file (repo root) or `version` field from `project.md` (Step 3).
+2. **Roadmap Alignment Check:** Check `roadmap` field in `project.md`:
+   - **IF `roadmap` exists:** Read roadmap file. Check if target feature scope matches a pending phase (`📋 Planned` / `⏳ Pending`). If matched, extract Phase number, Phase name, and Phase target version (e.g., `Phase 2: Authentication System (v1.8.0)`).
+   - **Conflict Check:** If target version is already marked `✅ Done` on Roadmap or exists in `plans/done/`, abort with warning/error per Roadmap Sync Gate (7b).
+3. **Evaluate Scope & Version Bump Type:**
+   - **CSA Audit / Docs Plan:** Version remains identical to current project version (inherit, no bump). Proposed filename: `v[ver]-[YYYY-MM-DD]-[topic].md` or `detail-plan-docs.md`.
+   - **Speculative / R&D Scope:** Propose wildcard version `v1.x.x` (or `v[major].x.x`). Proposed filename: `v[X.X.X]-[YYYY-MM-DD]-[topic].md`.
+   - **Standard Feature / Logic Change:** Propose exact version bump (PATCH for bugfix, MINOR for feature, MAJOR for breaking change) or Phase target version from Roadmap. Proposed filename: `v[ver]-[YYYY-MM-DD]-[topic].md`.
+   - **Roadmap Plan:** Proposed filename: `roadmap-[topic].md`.
+   - **Session Plan (DSP):** Proposed filename: `v[ver]-[YYYY-MM-DD]-session-[topic].md`.
 
-**Auto-detect context (v1.6.3 — field-gated):**
+##### 7b. Interactive Pause & Unified Proposal (CP-2)
 
-1. Check `roadmap` field from `project.md` (already loaded in Step 1):
-   - **IF has value** → Resolve path (IF starts with `@` → cross-project: `Projects/{ecosystem}/...`, ELSE → local). Roadmap exists, suggest Detail Plan for next phase.
-   - **IF null/empty** → Both options open
-
-2. Check `strategy` field from `project.md`:
-   - **IF has value** → Note: "Strategy docs found, plan should align"
-   - **IF null/empty** → Skip
-
-3. Count active plans:
-   ```bash
-   ls Projects/[project-name]/artifacts/plans/*.md 2>/dev/null \
-     | grep -v roadmap | grep -v done | wc -l
-   ```
-
-**Present choice:**
+Present a unified interactive prompt in chat containing BOTH the Evaluated Version & Filename Recommendation AND the Plan Type / Template options:
 
 ```text
-📐 What type of plan to create?
+📐 Target Version & Plan Template Selection
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-1. 🗺️ Roadmap — Phases + timeline overview (multi-version/feature index)
-2. 📋 Detail Plan — Tasks + implementation details (1 version/feature)
-3. 📋 Detail Plan (Hardened) — Detail Plan + Mandatory Audit + Selective TDD
-4. ⚡ Session Plan (DSP) — Dynamic lightweight session plan for fast coding (vibecode) with auto-commits
+🎯 Target Version & Plan Filename Evaluation:
+   - Current Project Version: [vX.Y.Z]
+   - Roadmap Status: [Aligned with Phase N: Name (vX.Y.Z) / Standalone feature / None]
+   - Recommended Target Version: [vX.Y.Z] (Reason: Roadmap Phase target / Minor bump / Docs inherit)
+   - Proposed Plan Filename: [vX.Y.Z-YYYY-MM-DD-topic.md]
+
+📐 Select Plan Type & Template:
+   1. 📋 Detail Plan (detail-plan.md) — Standard tasks & implementation details
+   2. 📋 Detail Plan Hardened (detail-plan-hardened.md) — Detail Plan + Mandatory Audit Gate + Selective TDD + CSA Gates
+   3. 🧪 Detail Plan TDD (detail-plan-tdd.md) — Strict Test-Driven Development focus
+   4. 📚 Detail Plan Docs (detail-plan-docs.md) — Documentation-only / Graph-first
+   5. 🗺️ Roadmap (roadmap.md) — Multi-phase timeline overview
+   6. ⚡ Session Plan (session-plan.md) — Dynamic lightweight session plan
 
 Context:
   📄 Strategy: [exists: N files / none]
   🗺️ Roadmap: [exists: X phases, Y done / none]
   📋 Detail Plans: [N active, M archived]
+
+❓ Please confirm:
+   1. Target Version & Filename: Confirm proposed [vX.Y.Z-YYYY-MM-DD-topic.md] or provide custom
+   2. Plan Template: Select template (1–6 or template filename)
 ```
 
-> ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here and ask the user which plan type to create. Do NOT guess or proceed to generating the plan until the user responds. The Agent **MUST NOT** auto-select the plan type or template under any circumstances unless explicitly configured via CLI flags (`--tdd` or `--hardened`).
-
-**If roadmap exists → Smart Suggest Hardening:**
-
-The Agent **MUST** follow these steps to map roadmap phase and template before proceeding:
-1. Load the roadmap file and check if the target plan version/name has already been implemented (i.e. has `✅ Done` status on Roadmap, or exists in `artifacts/plans/done/`). If it exists, the Agent **MUST** print a conflict error, abort the process, and stop to await instructions.
-2. If the version matches a pending phase (e.g. `📋 Planned` or `⏳ Pending`), the Agent **MUST** print the phase detail and prompt the user to explicitly select a plan template:
-   ```text
-   📐 Smart Suggest: Roadmap phase detected.
-   Found Phase [N]: [Phase Title] (v[Version]) — 📋 Planned
-
-   ❓ Which plan template would you like to use for Phase [N]?
-      1. detail-plan.md (Standard Detail Plan)
-      2. detail-plan-tdd.md (Strict TDD Plan)
-      3. detail-plan-hardened.md (Hardened Plan - Recommended)
-      4. detail-plan-docs.md (Documentation Only)
-   ```
-3. ⛔ **CHECKPOINT (Interactive Pause):** The Agent **MUST** stop here. The Agent is strictly prohibited from writing or generating the plan file until the user explicitly responds in the chat and selects a template.
+> ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here. The Agent **MUST NOT** auto-select target version, plan filename, or template under any circumstances. Wait for explicit user confirmation and template selection in chat.
 
 > **Roadmap naming convention:** `roadmap-[scope].md`. Never `active_plan`.
 > **Detail plan:** Standard `*.md` (non-roadmap). IS `active_plan`, archived to `plans/done/` when done.
 
-#### 2.9. Strategy & Roadmap Context Loading
+#### 8. Strategy & Roadmap Context Loading
 
 // turbo
 
-> ⚗️ **Only runs when Step 2.8 chose "Detail Plan" AND roadmap/strategy fields have values.**
+> ⚗️ **Only runs when Step 7 chose "Detail Plan" AND roadmap/strategy fields have values.**
 
 **A. Roadmap phase context** (if `roadmap` field has value):
 
-1. Resolve roadmap path from `roadmap` field (IF starts with `@` → cross-project: `Projects/{ecosystem}/...`, ELSE → local)
-2. Extract target phase row:
    ```bash
    grep -A 2 "Phase [N]" [resolved-roadmap-path]
    ```
-3. Store: phase scope, version, deliverables → baseline for Step 6
+3. Store: phase scope, version, deliverables → baseline for Step 11
 
-**B. Strategy context** (if `strategy` field has value AND not loaded by Step 2.5):
+**B. Strategy context** (if `strategy` field has value AND not loaded by Step 6a):
 
 1. Resolve strategy path from `strategy` field
 2. Extract strategy link from roadmap header:
@@ -319,9 +338,9 @@ The Agent **MUST** follow these steps to map roadmap phase and template before p
    grep "Strategy:" [resolved-roadmap-path]
    ```
 3. IF link found → grep summary (~2 lines header + blockquote)
-4. Store as design constraint for Step 5 (Architecture)
+4. Store as design constraint for Step 10 (Architecture)
 
-#### 3. Analyze Reference Projects (Optional)
+#### 9. Analyze Reference Projects (Optional)
 
 If the project contract references another project (in Dependencies or Key Decisions), analyze its codebase:
 
@@ -331,7 +350,9 @@ If the project contract references another project (in Dependencies or Key Decis
 
 > **Convention:** Only analyze references explicitly mentioned in the project contract. Do NOT auto-discover unrelated projects.
 
-#### 4. Design Data Schema
+#### 10. Design Architecture & Data Schema
+
+##### 10a. Design Data Schema
 
 If the project involves data storage (database, JSON files, APIs), define:
 
@@ -341,7 +362,7 @@ If the project involves data storage (database, JSON files, APIs), define:
 
 > Use code blocks with `jsonc` language tag for schemas with comments.
 
-#### 5. Design Architecture
+##### 10b. Design Architecture
 
 Create an architecture overview:
 
@@ -349,11 +370,11 @@ Create an architecture overview:
 - **Technology stack table** (Component | Technology | Deploy Target)
 - **Data flow** between components
 
-> 🛡️ **Architecture Baseline:** If Step 2.7 Phase C found an existing architecture overview, **EXTEND** it rather than creating from scratch. Reference the existing diagram and add new components/flows as needed. If no existing architecture was found, create a new one.
+> 🛡️ **Architecture Baseline:** If Step 6c found an existing architecture overview, **EXTEND** it rather than creating from scratch. Reference the existing diagram and add new components/flows as needed. If no existing architecture was found, create a new one.
 
 > 🛡️ **Progressive Disclosure:** You may selectively read specific files in `Resources/ai-agents/kernel/` (e.g., `invariants.md`, `heuristics.md`) if you need strict architectural guidance for this step. Do NOT scan the entire kernel directory at once.
 
-#### 6. Define Phases
+#### 11. Define Phases
 
 Break the project into sequential phases. Each phase should:
 
@@ -372,9 +393,11 @@ Break the project into sequential phases. Each phase should:
 
 > **Guideline:** Aim for 4-7 phases total. Each phase should be completable in 1-2 days.
 
-#### 7. Map Code Reuse
+#### 12. Cross-reference & Code Reuse
 
-If reference projects were analyzed (Step 3), create a **Code Reuse Table**:
+##### 12a. Map Code Reuse
+
+If reference projects were analyzed (Step 9), create a **Code Reuse Table**:
 
 ```markdown
 ## 📦 Code Reuse from [reference-project]
@@ -385,7 +408,7 @@ If reference projects were analyzed (Step 3), create a **Code Reuse Table**:
 | `path/to/other.ts` | `ClassName` | Modify | Remove KV dependency |
 ```
 
-#### 8. Cross-reference Backlog
+##### 12b. Cross-reference Backlog
 
 Map each High/Medium priority backlog item to the phase where it will be implemented:
 
@@ -398,7 +421,9 @@ Map each High/Medium priority backlog item to the phase where it will be impleme
 | Admin Dashboard | High | Phase 3 |
 ```
 
-#### 8.5. Rule Impact Check
+#### 13. Version, Rules & CSA Scaffolding
+
+##### 13a. Rule Impact Check
 
 // turbo
 
@@ -426,16 +451,12 @@ Map each High/Medium priority backlog item to the phase where it will be impleme
 
 > **Why:** Rule changes in repo templates must be synced to workspace. Missing this step causes agent behavior drift.
 
-#### 8.6. Determine Target Version
+##### 13b. Finalize Target Version & Plan Naming
 
-1. Read `VERSION` file (if exists in repo) or `project.md` to get current project version.
-2. Determine target version based on **Plan Type / Template**:
-   - **IF plan type is `csa-audit` or `docs-plan` (Documentation/Audit only):** Keep (inherit) the current project version as the target version. Do NOT bump the software version.
-   - **IF plan type is `development` or `feature` (Logic code changes):**
-     - If purely R&D, speculative, or undefined scope: use wildcard (e.g., `1.x.x`).
-     - Otherwise, calculate exact target version bump (PATCH/MINOR/MAJOR) based on code change scope.
+1. Re-verify the Target Version and Plan Filename determined during Step 7 (CP-2) and confirmed by the user.
+2. Ensure the plan document header, frontmatter, and file save path use the finalized Target Version and Filename.
 
-#### 8.7. CSA Spec Anchor Scaffolding (Shift-Left CSA Tasks)
+##### 13c. CSA Spec Anchor Scaffolding (Shift-Left CSA Tasks)
 
 // turbo
 
@@ -449,7 +470,9 @@ Map each High/Medium priority backlog item to the phase where it will be impleme
       ` - [ ] 📐 CSA Bind: Add '// @para-doc [#csa-[anchor-id]]' comment directly above the declaration of [class/function name].`
 4. Log: `📐 CSA Spec Scaffolding: Injected [N] spec anchor tasks directly into their respective Phase task lists`
 
-#### 9. Write Plan File
+> **Phase C: Plan Output (Steps 14–17)**
+
+#### 14. Write Plan File
 
 // turbo
 
@@ -471,26 +494,33 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 > - **Detail Plan** → read `.agents/skills/plan/references/detail-plan.md`
 > - **Roadmap** → read `.agents/skills/plan/references/roadmap.md`
 >
-> Use the template as the document structure. Fill in each section with data gathered from Steps 1-8.
+> Use the template as the document structure. Fill in each section with data gathered from Steps 1–13.
 
 > ⚠️ **Status Gate:** New plans MUST be created with `Status: 📝 Draft` (Except Session Plans, which are created directly with `Status: 🔨 Active`).
 > Agent MUST NOT execute any Phase tasks nor modify project files while Status is Draft (except for active Session Plans).
-> Status transitions to `🔨 Active` ONLY at Step 10 after explicit user approval.
+> Status transitions to `🔨 Active` ONLY at Step 17 after explicit user approval.
 
-#### 9.5. Pre-Checklist Context Reload (Staged Drill-down)
+> ⛔ **CP-3 CHECKPOINT (Interactive Pause / Hard Barrier):** 
+> Immediately after calling `write_to_file` to save the draft plan at Step 14, the Agent **MUST STOP EXECUTING TOOLS IMMEDIATELY**.
+> The Agent **MUST NOT** auto-proceed to Step 15 (audit/linter/updates) within the same turn.
+> The Agent **MUST** yield control, present the raw draft plan link to the user in chat, and ask for explicit permission before running the Post-Draft Quality Audit (Step 15).
+
+#### 15. Post-Draft Audit Gate
+
+##### 15a. Pre-Checklist Context Reload (Staged Drill-down)
 
 // turbo
 
 > 🛡️ **Layer 4 defense (Anti-Token-Decay):** Before writing the final Checklist, force reload context to avoid losing mandatory governance tasks (like Version Bump or Sync) due to context truncation.
 
 **Execute these sub-steps sequentially:**
-1. **A. Reload Indices (Soft Dump):** Run the `cat` commands from Step 0 to dump workspace + project Index tables into memory.
+1. **A. Reload Indices (Soft Dump):** Run the `cat` commands from Step 1 to dump workspace + project Index tables into memory.
 2. **B. Drill-down Project Rules:** If Step A triggers any project-specific rules, read them.
 3. **C. Drill-down Project Skills:** If Step A triggers any project-specific skills, read them.
 4. **D. Run Plan Review Protocols:** Explicitly analyze checklist dependencies from governance files (e.g. `maintenance.md`).
-5. **E. Re-read Plan References:** Re-read the brainstorm files loaded in Step 2.5 to ensure the plan structure doesn't contradict past brainstorm decisions.
+5. **E. Re-read Plan References:** Re-read the brainstorm files loaded in Step 6a to ensure the plan structure doesn't contradict past brainstorm decisions.
 
-#### 9.6. Post-Draft Audit Gate (MANDATORY)
+##### 15b. Post-Draft Audit Gate (MANDATORY)
 
 **Purpose:** Force a comprehensive quality audit of the generated draft plan before presenting it to the User. This is a mandatory checkpoint that CANNOT be bypassed, but execution requires user confirmation.
 
@@ -507,10 +537,10 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
    [Detailed Summary of CSA, TDD, and Harness Skills Key Takeaways]
 
    ❓ Do you approve running the Post-Draft Quality Audit and embedding the results into the plan file?
-      Y → Run Quality Audit (proceed to Step 2)
+      Y → Run Quality Audit (proceed to Step 15b.2)
       N → Stop and wait for layout refinement
    ```
-   If User confirms (Y), proceed to Step 2. If the User provides feedback, modify the draft plan and present again.
+   If User confirms (Y), proceed to Step 15b.2. If the User provides feedback, modify the draft plan and present again.
 
 2. **RELOAD:** Reload ALL project rules + skills (full scan):
    ```bash
@@ -547,7 +577,7 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
    ```
    If the lint fails, the Agent MUST immediately fix the plan file's headings and structures before presenting the audited plan to the User.
 
-#### 9.7. Propose Audited Plan & Platform Mirroring
+#### 16. Propose Audited Plan & Platform Mirroring
 
 **Protocol:**
 1. **Present Audited Draft:** Agent presents the audited draft plan summary of the newly created plan to the User for review (including phases, timeline, newly created/modified target files, audit outcomes, and TDD/Standard classifications).
@@ -579,16 +609,16 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
    Phases: [N] | Tasks: [N] | File: [path]
 
    ❓ Do you approve this audited draft plan? If approved, I will write the plan's markdown link to platform trackers (unless exempted) and prepare for execution.
-      Y → Plan approved, proceed to Step 10
+       Y → Plan approved, proceed to Step 17
       N → Refine the draft based on feedback
 
    ❓ [CSA Integration Prompt] Apply CSA integration checkpoints to this plan?
       - Yes (recommended if project.md has csa map) → Inject automated csa compliance checks (graph_audit_csa / project_snapshot) at phase transitions.
       - No → Keep plan with standard tasks.
    ```
-4. **Response:** Only proceed to Step 10 if User confirms (Y). If the User provides feedback, modify the draft plan, re-run audit, and present again.
+4. **Response:** Only proceed to Step 17 if User confirms (Y). If the User provides feedback, modify the draft plan, re-run audit, and present again.
 
-#### 10. Complete Plan Creation
+#### 17. Complete Plan Creation
 
 Present the plan creation summary and next step options to the User:
 
@@ -637,7 +667,7 @@ After setting `active_plan`, check the `roadmap` field from `project.md`:
 
 **NEW — Roadmap field lifecycle (v1.6.3):**
 
-When creating a NEW roadmap (Step 2.8 chose "Roadmap"):
+When creating a NEW roadmap (Step 7 chose "Roadmap"):
 
 1. After saving the roadmap file, set `roadmap` field in `project.md`:
    ```yaml
@@ -649,7 +679,11 @@ When creating a NEW roadmap (Step 2.8 chose "Roadmap"):
    ```
 3. Log: `📐 roadmap field set in project.md`
 
-#### 11. Log in Session
+> **Phase D: Session Logging (Step 18)**
+
+#### 18. Log in Session & Graph Memory
+
+##### 18a. Log in Session
 
 // turbo
 
@@ -665,7 +699,7 @@ Append to the current session log at `Projects/[project-name]/sessions/YYYY-MM-D
 - **Next**: Run `/backlog sync` to map phases (if activated)
 ```
 
-#### 11.5. Graph Memory Push (CONDITIONAL)
+##### 18b. Graph Memory Push (CONDITIONAL)
 
 > **Gate:** Only trigger if project has `.beads/graph/` directory.
 
@@ -751,7 +785,7 @@ e. Log: `Plan [plan-name] archived to plans/done/ (with review)`
 
 #### 6.5. Roadmap Lifecycle Update (v1.6.3 — field-gated)
 
-After archiving a completed plan (Step 6):
+After archiving a completed plan (Step 6 of review action):
 
 1. Check `roadmap` field from `project.md`:
 2. **IF has value:**
@@ -848,7 +882,7 @@ Read `project.md` to find `active_plan` or search `artifacts/plans/` for the lat
     ```yaml
     active_plan: "@{ecosystem}/plans/[plan-name].md"
     ```
-  - **Roadmap sync (v1.6.3):** After activation, check `roadmap` field in `project.md`. If set, find the matching phase row and update Status → `🔨 Active` + link to plan file (see Step 10 Roadmap auto-update in create action for details).
+  - **Roadmap sync (v1.6.3):** After activation, check `roadmap` field in `project.md`. If set, find the matching phase row and update Status → `🔨 Active` + link to plan file (see Step 17 Roadmap auto-update in create action for details).
 - IF the found plan is already Active (`Status: 🔨 Active`) or does not require activation: Load the plan and proceed. Even when loading an already active plan, the Agent **MUST ensure** the platform files (`brain/implementation_plan.md`, `brain/task.md`, and `brain/walkthrough.md`) are cleared and contain **only the markdown link** and the specific `TRACKER (link-only)` file guard comment at the bottom, using the exact format:
   * In `brain/implementation_plan.md`:
     ```markdown
@@ -1032,8 +1066,8 @@ The report **MUST** include:
 
 ## Related
 
-- `/brainstorm` — Explore ideas before planning (auto-discovered by Step 2.5)
-- `/docs` — Strategy documents feed planning context (Step 2.9)
+- `/brainstorm` — Explore ideas before planning (auto-discovered by Step 6a)
+- `/docs` — Strategy documents feed planning context (Step 8)
 - `/new-project` — Initialize project (run before `/plan`)
 - `/backlog` — Manage features and bugs
 - `/open` — Start session with context loading

@@ -50,6 +50,21 @@
 > **Target Files & Blast Radius:** (Inherited from `decision.md` §2)
 > **Testing Strategy & Mocking:** (Inherited from `decision.md` §4)
 
+## Secrets & Fallback Strategy (Environment Variables & Observability)
+
+> ⛔ **SECURITY & OBSERVABILITY RULE (`security-observability.md`):**
+> 1. **No Production Secrets in Git:** NEVER hardcode production keys, passwords, or private emails in source files. Use generic mock placeholders (`info@example.com`, `example.com`).
+> 2. **Environment Variable & Secret Isolation:** Populate secrets via server environment variables (`env.*` / `secrets`) or D1 database settings.
+> 3. **Fallback Observability:** If a key falls back to default placeholder, log explicit `console.warn` explaining the fallback.
+
+| Variable / Secret | Scope | Purpose | Fallback / Default | Warning Log Location |
+| :--- | :--- | :--- | :--- | :--- |
+| `[ENV_VAR_NAME]` | Worker / App | [Purpose of variable] | `[placeholder]` | `[file.ts:line]` |
+
+**User Env Setup Checklist:**
+- [ ] **`.env.example` / `env.example.txt` Sync:** Update environment example file with new keys (with generic placeholder values, NO real secrets).
+- [ ] **User Setup Instructions (Production Secrets):** Provide clear instructions in chat & README for setting production secrets (e.g., `npx wrangler secret put <KEY>` for Cloudflare Workers, or Cloudflare Dashboard / Vercel Env Vars).
+
 ## Context Files & Indices Loaded
 
 > ⛔ **MANDATORY CONTEXT BINDING:** Before executing this plan, Agent MUST read/reload all listed files to ensure full context and prevent workflow drift.
@@ -212,6 +227,7 @@ Reloaded Skills:
 - [ ] 0.5 🤖 **TDD Repo Before Snapshot** (run `git status --ignored --porcelain` & `git log -n 1 --oneline` and save to `artifacts/tests/tdd-repo-before-[date].log`)
 - [ ] 0.6 🔍 **Debug Infrastructure Setup** (if Spec has §9 Diagnostics Design: implement structured logger utility, error taxonomy constants, and observable checkpoint stubs. If project already has logging system, verify it meets the Spec's log format requirements.)
 - [ ] 0.7 🤖 **Session Context Compaction** (if para-graph/mcp is available, invoke the `project_session_compact` MCP tool to capture and write all rules, skills, and project contract to Vibecode Session KI)
+- [ ] 0.8 🔑 **Pre-Plan Dev & Env Setup Readiness Gate:** Verify project environment variables, sync `.env.example` / `env.example.txt` with generic placeholders, and present Production Secret setup commands (`npx wrangler secret put <KEY>` / Cloudflare Dashboard / Vercel) directly to User in Chat.
 - [ ] ⛔ CHECKPOINT: Agent MUST verify ALL tasks in Phase 0 are checked [x], run the MCP tool `project_session_compact` to update session memory, read the updated `session.md` using `view_file` to reload context, and obtain explicit User approval in the chat to transition to Phase 1.
 
 ---
@@ -323,8 +339,10 @@ git push origin main
 - [ ] 1.N+1 🤖 **Graph & Insight Update (if --graph):** Run `graph_enrich` for modified/new class/function nodes; and consider saving gotchas/lessons/decisions to the graph via `insight_push` (especially for feat or fix bug tasks).
 - [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Verify that all implemented tasks in the active plan/phase are marked as completed (`[x]`) in this plan file BEFORE proposing git push. Agent MUST ask User for confirmation BEFORE pushing.
 <!-- ⚠️ HARNESS GUARD (VCS — Push Remote): 🛑 STOP HERE. Agent MUST ask User confirmation. -->
-> ⛔ **HARNESS GUARD (VCS):** 🛑 STOP HERE. Agent MUST ask User confirmation.
 - [ ] 1.N+2 👤 Git push origin main.
+- [ ] 1.N+3 🚀 **Live Deployment Gate (if project has live deployment config):** Deploy updated code/services to live platform (e.g. `npx wrangler deploy`, `vercel --prod`, `npm publish`).
+<!-- ⚠️ HARNESS GUARD (DEPLOY): 🛑 STOP HERE. Agent MUST execute live deployment command and verify status before transition to Done. -->
+> ⛔ **HARNESS GUARD (DEPLOY):** Agent MUST ask User confirmation, execute deployment command, and verify live status.
 
 
 ---
@@ -369,6 +387,7 @@ git push origin main
 - [ ] **MCP Snapshot Diff Evaluation (MCP):** Run MCP tools `project_snapshot` and `project_diff` to evaluate physical directory drift and verify the integrity of protected files.
 - [ ] **TDD Drift Verification & Cleanup:** Compare current repo state with `git status --ignored --porcelain` snapshot in `tdd-repo-before-[date].log` to identify newly generated untracked or ignored files. Agent MUST present the list to User and ask whether to delete them (if junk) or commit them (if missed in plan) before proceeding with cleanup.
 - [ ] **Diagnostics Design Verification:** All Observable Checkpoints from Spec §9 are implemented in code (structured logging at defined boundaries). Error Taxonomy error codes are used consistently.
+- [ ] **Full-Stack Live Deployment Gate:** For projects with multiple deployment targets (e.g. Cloudflare Worker API + Cloudflare Pages / Vercel), verify ALL target deployments are executed successfully.
 - [ ] [Project-specific checks: build pass, docs updated, governance rules...]
 - [ ] **KI Template Sync (M7/KR8):** IF project has `repo/templates/knowledge/`, verify KI template content reflects current version changes. Check metadata.json has valid `version` + `para_version`. Run `ki sync` if updated.
 - [ ] ⛔ CHECKPOINT (Walkthrough Completion): Agent MUST verify all above Walkthrough items are ticked [x] BEFORE proposing Status transition.

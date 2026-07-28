@@ -58,6 +58,21 @@
 
 > ⛔ **MANDATORY NVM PATH GUARD:** Due to the Headless Bash environment, `node` and `npm` are NOT in the default `$PATH`. Agent MUST read the `node_path` value from the workspace root `.para-workspace.yml` and prepend `export PATH="<node_path_value>:$PATH" && ` before running ANY `npm` or `node` command in this plan.
 
+## Secrets & Fallback Strategy (Environment Variables & Observability)
+
+> ⛔ **SECURITY & OBSERVABILITY RULE (`security-observability.md`):**
+> 1. **No Production Secrets in Git:** NEVER hardcode production keys, passwords, or private emails in source files. Use generic mock placeholders (`info@example.com`, `example.com`).
+> 2. **Environment Variable & Secret Isolation:** Populate secrets via server environment variables (`env.*` / `secrets`) or D1 database settings.
+> 3. **Fallback Observability:** If a key falls back to default placeholder, log explicit `console.warn` explaining the fallback.
+
+| Variable / Secret | Scope | Purpose | Fallback / Default | Warning Log Location |
+| :--- | :--- | :--- | :--- | :--- |
+| `[ENV_VAR_NAME]` | Worker / App | [Purpose of variable] | `[placeholder]` | `[file.ts:line]` |
+
+**User Env Setup Checklist:**
+- [ ] **`.env.example` / `env.example.txt` Sync:** Update environment example file with new keys (with generic placeholder values, NO real secrets).
+- [ ] **User Setup Instructions (Production Secrets):** Provide clear instructions in chat & README for setting production secrets (e.g., `npx wrangler secret put <KEY>` for Cloudflare Workers, or Cloudflare Dashboard / Vercel Env Vars).
+
 ## Context Files & Indices Loaded
 
 > ⛔ **MANDATORY CONTEXT BINDING:** Before executing this plan, Agent MUST read/reload all listed files to ensure full context and prevent workflow drift.
@@ -351,6 +366,7 @@ Reloaded Skills:
 | :-- | :----------- | :--------- | :-------- | :----------------------------------- |
 | 1   | `git commit` | 1.1        | 🟢 Local  | HARNESS GUARD (VCS — Commit #1/N)    |
 | N   | `git push`   | [last].N+1 | 🔴 Remote | HARNESS GUARD (VCS — Push Remote) 🛑 |
+| N+1 | `deploy`     | [last].N+2 | 🔴 Live   | HARNESS GUARD (DEPLOY — Live Deploy) |
 
 ## Risks & Mitigations
 

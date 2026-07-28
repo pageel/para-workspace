@@ -31,6 +31,7 @@ source: catalog
 | `references/detail-plan-tdd.md` | Step 9 — Plan Type = Detail Plan (TDD mode) | Document structure for strict Test-Driven Development implementation |
 | `references/detail-plan-hardened.md` | Step 9 — Plan Type = Hardened Plan | Detail Plan + Mandatory Audit Gate + Selective TDD injection |
 | `references/detail-plan-csa-audit.md` | Step 9 — Plan Type = CSA Audit | Document structure for auditing legacy spec-to-code alignment |
+| `domains/[stack].md` | Step 0 — Pre-flight (Techstack detected: cloudflare, etc.) | Techstack-specific plan rules (Turnstile pairing, D1 synchronicity, wrangler secrets) |
 
 > **Convention:** Data files live in `references/` (not `templates/`).
 > This follows the Sidecar Skill convention formalized in v1.7.6.3.
@@ -63,7 +64,18 @@ ELSE
 
 When generating a plan, Agent MUST load context in this order:
 
-### Pre-requisite: Project Governance & Roadmap Loading
+### ⛔ Log-First & Pre-Execution Skill Binding Protocol (`hybrid-3-file-integrity.md` C1 & `context-rules.md`)
+
+> 1. **Log Before Act (Plan Task Registration):** When the User reports a bug, gap, or requests a UI/code fix during plan execution or review, Agent **MUST update/append the Task List in the Active Plan file (`artifacts/plans/*.md`) FIRST** (log-first principle) BEFORE making code changes.
+> 2. **Pre-Execution Context & Skill Binding:** BEFORE executing any registered task or ad-hoc fix, Agent **MUST scan project/workspace `skills.md` & `rules.md` trigger tables and read all relevant skills** (e.g. `tdd`, `csa`, `page-map`, `harness`) using `view_file`.
+> 3. **Post-Execution Task & Phase Append Protocol:** Small bugs/gaps in scope ➔ Append `Phase N+1` (e.g. `Phase N+1: Post-Execution Fixes & Polish`) directly under active plan file FIRST (Log-First) with complete 5-step Post-Task Cascade Protocol (`Code fix` ➔ `tsc typecheck` ➔ `npm test` ➔ `git commit/push` ➔ `Full-Stack Live Deployment Gate: npx wrangler deploy & npm run deploy`).
+> 4. **Anti-Overreach User Proposal Gate (+ask):** When bugs or new gaps occur, Agent MUST NOT modify any code file directly. Agent MUST draft the proposed diagnosis & task list in Chat, register the task in the plan, and obtain explicit user confirmation (`+ask`) BEFORE making any source code modifications.
+> 5. **No Silent Code Modifications:** Modifying source files without registering an explicit task item in the active plan AND reading triggered skills is a severe workflow violation.
+
+### ☁️ Techstack Domain Rules & Stack Routing
+> When drafting or executing plans for specific technology stacks (Cloudflare, Firebase, Android, etc.), Agent MUST load the corresponding stack domain file from `domains/[stack].md` (e.g. `domains/cloudflare.md`) listed in the References table.
+
+### Pre-requisite: Project Governance, Roadmap & Spec Baseline Loading
 
 > ⛔ **MANDATORY — Before writing ANY plan content:**
 >
@@ -74,12 +86,16 @@ When generating a plan, Agent MUST load context in this order:
 > - IF `agent.rules: true` → read project `.agents/rules.md` index → load ALL triggered rules
 > - IF `agent.skills: true` → read project `.agents/skills.md` index → load ALL triggered skills
 >
+> 3. **Spec Baseline Evaluation:** Agent MUST check `artifacts/specs/` or project `specs/` for baseline specification files (`spec-*.md`).
+> - IF baseline specs exist → Agent MUST read the target spec file BEFORE drafting or updating plan tasks to evaluate functional scope, acceptance criteria, and CSA double-binding anchors.
+>
 > This step ensures the plan respects project-specific governance:
 > - Maintenance rules (git scope, template-first flow, release process)
+> - Spec acceptance criteria & CSA double-binding integrity
 > - Review checklists (plan review §7, ecosystem integration)
 > - Naming conventions, documentation flow, quality standards
 >
-> **Failure to load project rules/skills → plan WILL miss critical steps.**
+> **Failure to load project rules/skills/specs → plan WILL miss critical steps.**
 
 ### Adaptation Table
 
@@ -90,10 +106,12 @@ After loading project governance, read `project.md` and adapt the chosen templat
 | Plan Status is `📝 Draft` | Agent MUST NOT execute Phase tasks. Only review/edit the plan content. |
 | Plan Status is `🔨 Active` | Agent MAY execute Phase tasks following the plan sequence. |
 | Plan Type is Session Plan | Set status directly to `🔨 Active`, skip setup Phase 0, define milestones with activated options. |
+| Project has Baseline Specs (`artifacts/specs/spec-*.md`) | **Spec Evaluation & CSA Double-Binding:** Agent MUST evaluate plan against Baseline Spec acceptance criteria and include Spec Anchors (`[#csa-*]`) in task lists and code stubs. |
 | Project has no `repo/` | Omit Git checkpoint steps and Git items in Walkthrough |
 | Project has no build tool | Omit `Build/Test pass` from Audit Tracking |
 | Project is not bilingual | Omit 1:N EN/VI task expansion pattern |
 | Project has `agent.rules: true` | Keep `<!-- ⚠️ MANDATORY -->` guards in every Phase |
+| Project has Live Infrastructure (e.g. `wrangler.toml`, `vercel.json`, `Dockerfile`, `package.json` with publish scripts) | **Techstack & Deployment Resolver:** Automatically detect live deployment config and append Task `7.N [🚀] Live Deployment Gate` (e.g., `npx wrangler deploy`, `vercel --prod`, `npm publish`) in Phase 7 along with `<!-- ⚠️ HARNESS GUARD (DEPLOY): Agent MUST execute live deployment command and verify status before Done -->` |
 | Plan scope is documentation-only | Use `detail-plan-docs.md` template (no git, graph-first enrichment pipeline) |
 | Project has `.beads/graph/` | Read `para-graph §4.3.1` for Phase 0 context. Agent MUST also keep `**Graph Impact**` sections and add `Graph Update` steps in Phase N. |
 | Project distributes templates (tool.manifest.yml) | Apply Template-First flow: edit `repo/templates/` BEFORE workspace copies |
@@ -103,6 +121,13 @@ After loading project governance, read `project.md` and adapt the chosen templat
 
 > **Principle:** Template = clean skeleton. Adaptation = Skill responsibility.
 > **Status lifecycle:** 📝 Draft → 🔨 Active → ✅ Done. Transition from Draft → Active requires explicit user approval at `/plan create` Step 10 or `/plan update`.
+
+### ⛔ Post-Draft Audit Gate & Interactive Pause Protocol (CP-3)
+
+> ⛔ **CP-3 CHECKPOINT (Hard Barrier):**
+> 1. **Immediate Execution Stop:** After writing the draft plan file using `write_to_file` (Step 14), Agent **MUST STOP tool execution immediately**.
+> 2. **No Auto-Audit in Same Turn:** Agent MUST NOT auto-run the post-draft audit or modify the draft plan within the same tool turn.
+> 3. **Ask Permission First:** Agent MUST present the raw draft plan link to User in chat and ask permission (`Y/N`) before initiating the Post-Draft Quality Audit (Step 15).
 
 ### Difficulty Rating & Model Switching (v0.8.2+)
 

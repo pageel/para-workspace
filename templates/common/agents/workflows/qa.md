@@ -53,7 +53,7 @@ Systematic Q&A review and quality audit loop (Red Team) for PARA artifacts (plan
 - 🌍 **Open Source Maintainer (`[OSS]`, `[CONS]`):** You enforce English-First governance, licensing, and clean room design. You ask: _"Are there any hardcoded local absolute paths? Does this architecture violate our OSS copyright constraints? Are these documentation blocks compliant with our English-First global contributor standards?"_
 - ⏱️ **Delivery Manager (`[FEAS]`, `[COMP]`):** You hate missed deadlines and scope creep. You ask: _"Is this 2-day estimate realistic for integrating a new database? Are we missing critical setup steps in the Walkthrough? Have we verified the third-party dependency even exists?"_
 - 🔍 **QA/Test Lead (`[CONS]`):** You are obsessed with edge cases and contradictions. You ask: _"Why does Phase 1 say 'TypeScript' but Phase 3 mentions 'Python script'? How exactly do we verify this step before moving to the next? What is the edge case if the input is null?"_
-- 💼 **Project Tech Lead (`[GOV]`, `[COMP]`):** You are the PM who **deeply knows this specific project**. Before asking questions, you MUST read `project.md`, ALL project rules (`.agents/rules/`), ALL project skills (`.agents/skills/`), and the project's release/maintenance process. You ask governance-level questions that generic reviewers miss: _"The project has M6 tarball rule — does this plan include a release phase? The project is OSS — are all commits scoped to `repo/` per M1? The maintenance rule requires version sync across 8 files — is the Governance Checklist complete? Does the Walkthrough cover the project's specific build+test+release cycle?"_
+- 💼 **Project Tech Lead (`[GOV]`, `[COMP]`):** You are the PM who **deeply knows this specific project**. Before asking questions, you MUST read `project.md`, ALL project rules (`.agents/rules/`), ALL project skills (`.agents/skills/`), and the project's release/maintenance process. You ask governance-level questions that generic reviewers miss: _"The project has M6 tarball rule — does this plan include a release phase? The project is OSS — are all commits scoped to `repo/` per M1? Does the project have live deployment configs (wrangler.toml, vercel.json, Dockerfile)? IF YES, does Phase 7 include a Live Deployment Gate (npx wrangler deploy / vercel --prod)? IF MISSING, mark FAIL to force adding the deployment task before plan activation. Which environment variables (env.*) does it touch, and is there a Production Playbook?"_
 - 📐 **CSA Expert (`[CSA]`):** You enforce Spec-to-Code double-binding and micro-anchoring rules. Before asking questions, you MUST check if the project has CSA configuration. You ask: _"Does the plan map every spec anchor to a physical entity? Are the proposed anchor locations in code correctly positioned above public entities, and not clustered? Do all new anchor IDs follow the kebab-case csa-prefix convention? Are checkpoints for local phase-level CSA checks and a final 100% global CSA audit properly established?"_
 - 💻 **Runtime Environment Auditor (`[ENV]`):** You hunt for implicit dependencies on execution context (CWD, environment variables, globally shared mutable state, or platform runtime differences). You ask: _"Does this implementation assume the process runs under a specific working directory? How does it resolve file paths under different runtime environments (CLI vs background daemon)? Are there any implicit assumptions about environment variables, permissions, or global process states?"_
 
@@ -109,7 +109,7 @@ Each question is tagged with a dimension. Agent generates questions from ALL dim
      - Mandate that **CSA Expert** is activated for the Red Team Roster.
    - Identify: project type (OSS/internal), release process, build tool, git scope rules.
 6. **Memory-Assisted QA (CONDITIONAL):** IF project has `.beads/graph/` directory, use `memory_search` to find past QA findings, known issues, and recurring patterns. Specifically, search for friction beads and past decisions related to the physical files specified in the target plan's inventory. This prevents Red Team from re-raising resolved issues, and allows them to ask historical questions based on past project quirks.
-7. **Domain-Specific Red Team Templates:** Load the expert persona templates from `.agents/skills/qa/domains/` (if any).
+7. **Tech Stack Domain Question Banks:** Read project tech stack from `project.md` and load relevant question bank templates from `.agents/skills/qa/domains/*.md` (e.g., `cloudflare.md`, `governance.md`, `csa.md`, `security.md`).
 
 ### Step 0.25. Graph Context Pipeline (if --graph)
 
@@ -219,6 +219,8 @@ For each section/phase in the artifact:
 
 ### Step 3. Interactive Iteration Loop
 
+> ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here. The Agent MUST NOT answer questions or proceed to Phase 2 (Execution & Answering) in the same turn. Agent MUST present the question list, suggest deep review options, and wait for explicit user approval or input in the chat. Auto-answering questions without user approval is a severe workflow violation.
+
 1. Present the generated Question List to the user in the chat.
 2. **Agent Suggestion:** Proactively suggest 1-2 areas where deeper questions could be asked.
 3. **Ask user:** "Do you approve this question list? You can add your own questions, ask me to re-roll, or type `deep [aspect]` to add deep source-code level questions (e.g. `deep logic`, `deep sec`)."
@@ -227,6 +229,8 @@ For each section/phase in the artifact:
    🚀 Deep Review Options: To run a deep source-level review, type:
    - `deep`       : Comprehensive review (Line-by-line).
    - `deep logic` : Focus on algorithm logic and Edge cases.
+   - `deep ui`    : Audit layout consistency, Tailwind CSS classes, responsive breakpoints, and visual hierarchy.
+   - `deep ux`    : Audit user touch targets (>=44px), navigation flows, mobile accessibility (a11y), and usability.
    - `deep sec`   : Hunt for hidden security vulnerabilities.
    - `deep perf`  : Analyze performance, bottlenecks, memory leaks.
    - `deep int`   : Verify cross-file Data Payload and API Contracts.
@@ -237,7 +241,7 @@ For each section/phase in the artifact:
    - Generate the new questions.
    - Append them to the QA file.
    - Present again.
-6. **Wait for final approval.** **STOP HERE.** Do not proceed to Phase 2 until approved.
+6. ⛔ **CHECKPOINT (Interactive Pause):** Wait for final user approval. STOP HERE. Do NOT proceed to Phase 2 until approved.
 
 ---
 

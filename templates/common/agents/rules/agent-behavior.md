@@ -191,4 +191,9 @@ To prevent the Agent from bypassing critical decision checkpoints, the following
 - The Agent **MUST NOT** present any plan draft to the user as "Audited & Verified" or update its Status unless the linter script returns exit code 0.
 - If the linter fails, the Agent **MUST** report the missing headings/structures and immediately apply edits to fix the plan file before proceeding.
 
+#### 7d. Anti-Overreach User Proposal Gate (+ask) (v1.9.3)
+- Whenever a bug, error (e.g. Turnstile 400020), or new task is identified during or post plan execution, the Agent **MUST NOT** edit any source code file directly.
+- The Agent **MUST** first present a detailed diagnosis & proposed resolution plan in Chat, append/register the task in the active plan (`artifacts/plans/*.md`), and ask for explicit user confirmation (`+ask`).
+- Only AFTER receiving explicit user confirmation (`y` / `ok`) is the Agent authorized to modify source code files.
+
 

@@ -153,7 +153,8 @@ When creating the QA Report at Step 0.5 (Pre-QA Strategy), the Agent MUST format
 - **[Spec]** How are sensitive parameters (passwords, tokens) handled in transit, storage, and in logging?
 - **[Spec]** Does the spec address protection against common vulnerabilities (e.g., CSRF, IDOR, path traversal, injection)?
 - **[Spec]** If the spec uses JWT or session tokens with an expiration claim (`exp`), is the verification logic for `exp` explicitly defined? (e.g., a missing or incorrect `exp` check means tokens never expire — a critical vulnerability.)
-- **[Spec]** Is password/secret comparison performed using constant-time comparison or hash-then-compare to prevent timing attacks?
+- **[Spec/Plan]** Is password/secret comparison performed using constant-time comparison or hash-then-compare to prevent timing attacks?
+- **[Domain Stack Gotchas]** For techstack-specific checks (e.g. Cloudflare, Firebase, Android), dynamically load and execute domain checks from `domains/[stack].md` based on the project's techstack.
 
 ### 🤖 AI Security & Boundary Expert (`[SEC]`, `[LOGIC]`)
 
@@ -207,6 +208,8 @@ When creating the QA Report at Step 0.5 (Pre-QA Strategy), the Agent MUST format
 - "Does the plan update corresponding knowledge templates, schema definitions, or documentation references to prevent knowledge drift when modifying API structures, configurations, or core features?"
 - "Does the plan evaluate if a formal release packaging and deployment step is required to distribute compiled binaries/assets to end-users instead of only pushing source code?"
 - "If the plan applies database migrations (e.g., Cloudflare D1 migrations), does it explicitly include the corresponding application/backend code deployment task (e.g., `wrangler deploy`) in the same Phase to prevent runtime API route mismatches?"
+- **[MANDATORY Tech Lead QA 1]** *"Does this plan perform a `git push` or deploy any service/worker to production, and at what specific phase and step?"* (Agent MUST verify git push and deploy commands are guarded with `> ⛔ HARNESS GUARD` and isolated to the final Phase).
+- **[MANDATORY Tech Lead QA 2]** *"Which environment variables (`env.*`) or secrets does this plan introduce/modify, and is there a step-by-step Production Playbook instructing how to configure them in production?"* (Agent MUST verify secret keys are never hardcoded in git and CLI/Console deployment steps are documented).
 - **Rule:** If a `🔴 Critical` governance or compliance violation is found, proactively suggest `@[/brainstorm]` to explore multiple solution options before proposing a quick patch.
 
 ### 📐 CSA Expert (`[CSA]`)

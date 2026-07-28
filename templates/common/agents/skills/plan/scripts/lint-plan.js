@@ -143,15 +143,40 @@ function main() {
 
   const missing = matchHeadings(templateHeadings, planHeadings);
 
+  // Content Inspection 1: Secrets & Fallback Strategy Placeholder Check
+  if (templateContent.includes('Secrets & Fallback Strategy')) {
+    if (!planContent.includes('Secrets & Fallback Strategy')) {
+      missing.push('## Secrets & Fallback Strategy (Environment Variables & Observability)');
+    } else {
+      const secretsSection = planContent.split(/##\s+Secrets/i)[1]?.split(/##\s+/)[0] || '';
+      if (secretsSection.includes('[ENV_VAR_NAME]')) {
+        missing.push('## Secrets & Fallback Strategy: Contains unreplaced template placeholders ([ENV_VAR_NAME]). Agent MUST analyze and list real project env variables or explicit "None".');
+      }
+    }
+  }
+
+  // Content Inspection 2: Techstack Live Deployment Task Check
+  const planDir = path.dirname(planPath);
+  const projectDir = path.dirname(planDir);
+  const hasWrangler = fs.existsSync(path.join(projectDir, 'wrangler.toml')) || 
+                      fs.existsSync(path.join(projectDir, 'repo/wrangler.toml')) || 
+                      fs.existsSync(path.join(projectDir, 'repo/worker/wrangler.toml'));
+  const hasVercel = fs.existsSync(path.join(projectDir, 'vercel.json')) || 
+                    fs.existsSync(path.join(projectDir, 'repo/vercel.json'));
+
+  if ((hasWrangler || hasVercel) && !planContent.toLowerCase().includes('deploy')) {
+    missing.push('Phase 7: Missing Live Deployment Gate task! (Project contains wrangler.toml/vercel.json live deployment config but plan lacks deployment task)');
+  }
+
   if (missing.length > 0) {
-    console.error('\n❌ Plan Structural Lint Failed!');
-    console.error('The following headings are missing or mismatch against the template:');
+    console.error('\n❌ Plan Structural & Content Lint Failed!');
+    console.error('The following issues were detected against template & project rules:');
     missing.forEach(h => console.error(`  - ${h}`));
-    console.error('\nPlease restore these sections to align with the template rules.\n');
+    console.error('\nPlease resolve these issues to align with project governance rules.\n');
     process.exit(1);
   }
 
-  console.log('\n✅ Plan Structural Lint Passed! All mandatory template headings are present.');
+  console.log('\n✅ Plan Structural & Content Lint Passed! All mandatory template headings and env/deployment rules are verified.');
   process.exit(0);
 }
 

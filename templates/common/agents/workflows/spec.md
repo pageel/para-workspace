@@ -27,6 +27,7 @@ Write a structured specification before any implementation begins. The spec is t
 | `--graph` | Run Graph Pipeline (Build → Query → Impact Analysis) before spec writing to anchor scope and boundaries in the real codebase |
 | `--sys` | Inherit and decompose a System Design (Sysdesign) from artifacts/sysdesigns/ into this spec |
 | `--qa` | Run an automated quality audit checking spec checklist compliance and CSA anchor standards |
+| `--sec` | Load scan-sec skill to perform a dedicated security audit checking input validation, auth, rate limiting, and transport security for the spec |
 
 ---
 
@@ -88,6 +89,8 @@ echo "> ⚠️ Detecting and loading tech stack skills..."
 grep -q -i -E "wrangler|cloudflare|worker" Projects/[project-name]/project.md 2>/dev/null && cat .agents/skills/wrangler/SKILL.md 2>/dev/null || true
 # Load firebase/firestore skill if tags match firebase
 grep -q -i -E "firebase|firestore" Projects/[project-name]/project.md 2>/dev/null && cat ~/.gemini/config/plugins/firebase/skills/firebase_firestore/SKILL.md 2>/dev/null || true
+# Load scan-sec security skill if --sec flag is active
+grep -q -i "\-\-sec" <<< "$*" 2>/dev/null && cat .agents/skills/scan-sec/SKILL.md 2>/dev/null || true
 echo ""
 echo "> ⚠️ Proactive Trigger Scan: .agents/rules.md & .agents/skills.md"
 cat .agents/rules.md 2>/dev/null | head -n 30
@@ -102,9 +105,11 @@ If the `--graph` flag is provided, execute the graph intelligence pipeline BEFOR
 
 1. **Build Graph:** Run `/para-graph build [project-name]` to ensure graph data is up-to-date.
 2. **Identify Target Nodes:** Use MCP tools `graph_query` and `graph_god_nodes` to locate architectural nodes and hot spots related to the spec topic.
-3. **Deep Context:** Use MCP tools `graph_context_bundle` and `graph_edges` on the identified nodes to gather callers, callees, dependencies, and structural relationships.
+3. **Deep Context & Env Mapping:** Use MCP tools `graph_context_bundle` and `graph_edges` on the identified nodes to gather callers, callees, environment variable bindings (`env.*`), and structural relationships.
 4. **Impact Analysis:** Use `graph_impact_analysis` on relevant nodes to map upstream/downstream dependencies — essential for defining accurate scope boundaries and risk assessment.
 5. **Inject Context:** Keep this graph intelligence in memory to ground the spec in the actual codebase structure, preventing scope creep and ensuring boundary definitions are architecturally sound.
+
+---
 
 #### 1. Context Gathering (Phase: SPECIFY)
 
@@ -134,7 +139,12 @@ ls -t Projects/[project-name]/artifacts/sysdesigns/sysdesign-*.md 2>/dev/null | 
 
 # Backlog context
 grep -E "ToDo|In Progress|\- \[ \]" Projects/[project-name]/artifacts/tasks/backlog.md | head -10
+
+# Ground Truth Audit (Read actual config and route code)
+grep -E "env\.[A-Z0-9_]+" Projects/[project-name]/repo/worker/src/**/*.ts Projects/[project-name]/repo/src/**/*.ts 2>/dev/null | head -15 || true
 ```
+
+> 🔎 **Ground Truth Code Audit (v1.9.5):** Before writing any spec section touching Auth, Security, Config, or APIs, the Agent **MUST** run a code search (`grep_search` or `view_file`) on the target source/config files to verify exact environment variable names (`env.*`), database schemas, and existing route contracts. Relying solely on generic rule templates without checking codebase reality is strictly prohibited.
 
 > ⛔ **HARNESS GUARD (Avoid Spec Duplicates):** After listing existing specs, Agent MUST check if a spec file covering the requested feature already exists in the list or the directory.
 > - **IF a spec for this feature exists:** Agent MUST abort the `create` action, notify the user, and propose running `/spec [project] update` on the existing spec file instead.
@@ -158,6 +168,7 @@ ASSUMPTIONS I'M MAKING:
 
 **Rules:**
 - Pull assumptions from `project.md` context (tech stack, dependencies) and the inherited `sysdesign-*.md`
+- **No-Hardcoded-Env-Assumptions (v1.9.5):** Any identity, credential, or configuration parameter sourced from environment variables (e.g. `env.ADMIN_USERNAME`, `env.JWT_SECRET`, `env.ALLOWED_ORIGIN`) MUST be specified as a dynamic environment binding in the spec. The Agent MUST NOT hardcode static string assumptions for dynamic environment variables in security rules or boundaries.
 - Flag any ambiguous requirement with a concrete default
 - WAIT for user confirmation before proceeding
 
@@ -197,14 +208,14 @@ Spec core areas:
 > `"We have encountered feature-level options with trade-offs. Would you like to run a quick /brainstorm to choose the path?"`
 > If approved → run `/brainstorm` → save decision to `para-decisions/` and reference it in the spec's frontmatter.
 
-#### 3.5. CSA Spec & Quality Self-Audit (MANDATORY, Enhanced by --qa)
+#### 3.5. CSA Spec, Quality & Security Self-Audit (MANDATORY, Enhanced by --qa & --sec)
 
 > ⛔ **HARNESS GUARD:** Agent MUST complete this step BEFORE presenting the spec to the user for review. Skipping this step is a process violation.
 
-After writing the spec, Agent MUST perform a **self-audit** to verify anchor quality and spec checklist compliance:
+After writing or updating the spec, Agent MUST perform a **self-audit** to verify anchor quality, spec checklist compliance, and security threat standards:
 
-1. **Load Skills**: Agent MUST load `.agents/skills/csa/SKILL.md` and `.agents/skills/spec/references/spec-quality-checklist.md`.
-2. **Scan all anchors:** List every `<span id="csa-...">` in the spec draft.
+1. **Load Skills**: Agent MUST load `.agents/skills/csa/SKILL.md`, `.agents/skills/spec/references/spec-quality-checklist.md`, and if `--sec` is active, load `.agents/skills/scan-sec/SKILL.md`.
+2. **Scan all anchors:** List every `<span id="csa-...">` in the spec draft or updated sections.
 3. **CSA Verification (G1/G2/G3)**:
    - **G1 Check (One-to-One):** For each anchor, verify it maps to exactly ONE design decision or functional requirement.
    - **G2 Check (Reverse Validation):** Verify that if the bound code entity changes, the ENTIRE anchor description is affected.
@@ -212,17 +223,24 @@ After writing the spec, Agent MUST perform a **self-audit** to verify anchor qua
 4. **Spec Quality Checklist (if `--qa` option is enabled)**:
    - Evaluates the 29 checks across the 6 areas defined in `spec-quality-checklist.md` (Assumptions, Core Areas, Success Criteria, Boundaries, Document Structure, Gate Compliance).
    - Generates a structured Markdown table summarizing the score of each category and any warning items.
-5. **Present CSA & Quality Audit Summary** to user as part of the spec review:
+5. **Security Audit Checklist (if `--sec` option is enabled)**:
+   - Reads `.agents/skills/scan-sec/SKILL.md` and checks the spec (or updated sections) against key security rules and data flow levels (L1 User Input → L2 Processed → L3 Storage/Internal):
+     - **Input Validation & Sanitization:** XSS (HTML escaping), SQL Injection (prepared statements), CSV Injection (formula filtering), Path Traversal.
+     - **Auth & Access Control:** Authentication gates, HttpOnly Cookie, JWT rotation, Re-auth, CORS credential safety.
+     - **Rate Limiting & Anti-Spam:** Backend Worker Rate Limit, Client-side Button Locking, Cooldown 60s, Turnstile CAPTCHA.
+     - **Sensitive Data & Environment:** No hardcoded secrets, dynamic environment variable bindings (`env.*`).
+   - Evaluates Data Flow Classification (L1–L4) for API payloads and parameters specified in the spec.
+6. **Present CSA, Quality & Security Audit Summary** to user as part of the spec review:
 
 ```
-🔍 CSA & SPEC QUALITY AUDIT REPORT:
+🔍 CSA, SPEC QUALITY & SECURITY AUDIT REPORT:
 ----------------------------------------
 CSA Anchors: [N] placed
 - G1 (One-to-One): [N/N] pass
 - G2 (Reverse Validation): [N/N] pass
 - G3 (No Blanket): [N/N] pass
 
-Spec Quality Checklist (spec-quality-checklist.md):
+Spec Quality Checklist (spec-quality-checklist.md, if --qa enabled):
 - I. Assumptions (A1-A5): [N]/5
 - II. Core Areas (C1-C6): [N]/6
 - III. Success Criteria (S1-S4): [N]/4
@@ -231,11 +249,17 @@ Spec Quality Checklist (spec-quality-checklist.md):
 - VI. Gate Compliance (G1-G4): [N]/4
 Total: [N]/29 Passed
 
+Security Audit Summary (if --sec enabled):
+- Input Validation & Sanitization: [PASS / WARN] (L1 input escaping, XSS/CSV/SQLi protection)
+- Auth & Access Control: [PASS / WARN] (JWT, Cookie attributes, CORS credentials)
+- Rate Limiting & Anti-Spam: [PASS / WARN] (Backend Worker rate limit, Client-side Locking & Cooldown)
+- Data Flow Classification: [L1-L4 mapped] (No untrusted L1 data rendered/stored unsanitized)
+
 Warnings/Improvements:
-- [List any warning or recommended improvement, e.g., "S2: success criteria UC-1 lacks latency numbers"]
+- [List any warning or recommended improvement]
 ```
 
-6. **Fix violations** before presenting to user. If a fix changes the spec structure significantly, re-run the audit.
+7. **Fix violations** before presenting to user. If a fix changes the spec structure significantly, re-run the audit.
 
 #### 4. User Review & Save Gate
 
@@ -302,7 +326,7 @@ Once saved, the Agent **MUST overwrite and truncate** the platform files (`brain
    CSA: [N] anchors verified (G1/G2/G3 ✅ in Step 3.5)
 
 💡 NEXT STEPS:
-   A. 📐 /plan [project-name] — Create formal implementation plan (Agent MUST ask user to choose template: detail-plan.md, detail-plan-tdd.md, or detail-plan-hardened.md) (RECOMMENDED)
+   A. 📐 /plan [project-name] create — Create formal implementation plan (Agent MUST ask user to choose template: detail-plan.md, detail-plan-tdd.md, or detail-plan-hardened.md) (RECOMMENDED)
    B. 📥 /backlog [project-name] — Add tasks to backlog directly
    C. 🌀 /brainstorm [project-name] — Explore open questions or ambiguous areas before planning
    D. 📄 Keep as reference — Save but don't act yet
@@ -310,7 +334,7 @@ Once saved, the Agent **MUST overwrite and truncate** the platform files (`brain
 ❓ Which option?
 ```
 
-**Option A (Recommended):** Recommend the user to run `/plan [project-name]`. **Important:** The Agent MUST NOT auto-select or write the plan file. The Agent MUST ask the user to explicitly choose a plan template (e.g., `detail-plan.md`, `detail-plan-tdd.md`, `detail-plan-hardened.md`) in the chat and wait for confirmation.
+**Option A (Recommended):** Recommend the user to run `/plan [project-name] create`. **Important:** The Agent MUST NOT auto-select or write the plan file. The Agent MUST NOT recommend `/plan dev` (which executes an existing plan) — the correct downstream action from `/spec` is always `/plan create`. The Agent MUST ask the user to explicitly choose a plan template (e.g., `detail-plan.md`, `detail-plan-tdd.md`, `detail-plan-hardened.md`) in the chat and wait for confirmation.
 **RECOMMENDATION CONTEXT RULE:** When presenting next steps, the Agent **MUST** explicitly recommend exactly one option as the primary choice and write a clear, context-specific rationale explaining *why* the user should choose it based on the current state of the codebase, backlog, and spec compliance.
 **Option B:** Recommend using `/backlog` to manage simple changes.
 **Option C:** Recommend `/brainstorm` when the spec has unresolved Open Questions or ambiguous areas that need deeper exploration before committing to a plan.
@@ -388,16 +412,20 @@ Recommendation: [Continue | Update spec | Spec complete]
 
 Update an existing spec when scope or decisions change.
 
+### Options Support
+Supports `--graph`, `--qa`, and `--sec`. When `--sec` is passed, the security audit in Step 3.5 focuses specifically on the updated sections and new requirements to ensure no security regressions or missing controls.
+
 ### Steps
 
 1. Read the existing spec file.
 2. Ask what changed:
    - Scope added/removed?
    - Assumptions invalidated?
-   - New constraints?
+   - New constraints or security requirements?
 3. Update the spec document.
-4. Mark `Last Updated` with today's date.
-5. Log the update in the session.
+4. Run Step 3.5 CSA, Quality & Security Self-Audit (evaluating updated sections against `scan-sec` if `--sec` is active).
+5. Mark `Last Updated` with today's date.
+6. Log the update in the session.
 
 ---
 
