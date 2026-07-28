@@ -985,11 +985,12 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
             modifiedMarkdown += nodesListMarkdown;
         }
 
-        // Escape special chars to prevent breaking JS template literals
+        // Escape special chars to prevent breaking JS template literals and premature HTML script closing tags
         const escapedMarkdown = modifiedMarkdown
             .replace(/\\/g, '\\\\')
             .replace(/`/g, '\\`')
-            .replace(/\${/g, '\\${');
+            .replace(/\${/g, '\\${')
+            .replace(/<\/script/gi, '<\\/script');
 
         // Build detailed audit text for AI prompt suggestions
         const auditDetailsText = auditReports && auditReports.length > 0 ? auditReports.map((r, idx) => {
@@ -1159,20 +1160,20 @@ function renderSingleFile(sourceFile, targetFile, treeRoot, rootDir, rootOutputD
         const relativeSearchIndexFromTarget = path.relative(path.dirname(targetFile), path.join(rootOutputDir, 'search-index.js'));
         const relativeSearchIndexUrl = relativeSearchIndexFromTarget.replace(/\\/g, '/');
         
-        // Replace structural data placeholders
+        // Replace structural data placeholders using replacer functions to avoid JS string replacement pattern corruption ($`, $&, $')
         html = html
-            .replaceAll('/* MARKDOWN_CONTENT_PLACEHOLDER */', escapedMarkdown)
-            .replaceAll('/* AUDIT_DETAILS_PLACEHOLDER */', escapedAuditDetails)
-            .replaceAll('/* SOURCE_MD_PATH */', relativeSourcePath)
-            .replaceAll('/* SOURCE_MD_ABS_PATH */', absoluteSourcePath)
-            .replaceAll('/* CURRENT_DOC_NAME */', docCleanName)
-            .replaceAll('/* README_RELATIVE_URL */', relativeReadmeUrl)
-            .replaceAll('/* SEARCH_INDEX_RELATIVE_URL */', relativeSearchIndexUrl)
-            .replaceAll('/* RENDER_TIME */', renderTime)
-            .replaceAll('/* KERNEL_VERSION */', kernelVersion)
-            .replaceAll('<!-- DOC_METADATA_PLACEHOLDER -->', metadataHtml)
-            .replaceAll('<!-- STATS_PANEL_PLACEHOLDER -->', statsPanelHtml)
-            .replaceAll('<!-- DRIFT_AUDIT_PLACEHOLDER -->', driftAuditHtml)
+            .replaceAll('/* MARKDOWN_CONTENT_PLACEHOLDER */', () => escapedMarkdown)
+            .replaceAll('/* AUDIT_DETAILS_PLACEHOLDER */', () => escapedAuditDetails)
+            .replaceAll('/* SOURCE_MD_PATH */', () => relativeSourcePath)
+            .replaceAll('/* SOURCE_MD_ABS_PATH */', () => absoluteSourcePath)
+            .replaceAll('/* CURRENT_DOC_NAME */', () => docCleanName)
+            .replaceAll('/* README_RELATIVE_URL */', () => relativeReadmeUrl)
+            .replaceAll('/* SEARCH_INDEX_RELATIVE_URL */', () => relativeSearchIndexUrl)
+            .replaceAll('/* RENDER_TIME */', () => renderTime)
+            .replaceAll('/* KERNEL_VERSION */', () => kernelVersion)
+            .replaceAll('<!-- DOC_METADATA_PLACEHOLDER -->', () => metadataHtml)
+            .replaceAll('<!-- STATS_PANEL_PLACEHOLDER -->', () => statsPanelHtml)
+            .replaceAll('<!-- DRIFT_AUDIT_PLACEHOLDER -->', () => driftAuditHtml)
             .replaceAll('<!-- AI_PROMPTS_PLACEHOLDER -->', aiPromptsHtml)
             .replaceAll('<!-- DOCS_LIST_PLACEHOLDER -->', sidebarHtml);
             
@@ -2150,7 +2151,7 @@ function renderDirectory(srcDir, destDir, template) {
                     }
                 } else {
                     // Shortened anchor ID match check
-                    const currentFileRel = path.relative(rootDir, mdFile).replace(/\\/g, '/');
+                    const currentFileRel = path.relative(srcDir, mdFile).replace(/\\/g, '/');
                     const matchesDoc = node.docAnchors.some(a => {
                         const relA = a.replace(/\\/g, '/');
                         return relA === currentFileRel || relA.endsWith('/' + currentFileRel) || currentFileRel.endsWith('/' + relA);
@@ -2468,6 +2469,17 @@ function renderDirectory(srcDir, destDir, template) {
     } catch (e) {
         console.error('Error writing search-index.js:', e.message);
     }
+
+    // Auto-create root alias symlinks to eliminate 404 errors for short links in Sidebar/Portal
+    ['specs', 'sysdesigns', 'plans', 'reports'].forEach(folder => {
+        const targetPath = path.join(destDir, 'docs/artifacts', folder);
+        const linkPath = path.join(destDir, folder);
+        if (fs.existsSync(targetPath) && !fs.existsSync(linkPath)) {
+            try {
+                fs.symlinkSync(path.join('docs/artifacts', folder), linkPath, 'dir');
+            } catch (e) {}
+        }
+    });
     
     lastBuildTimestamp = Date.now();
     console.log(`🎉 Compiled ${allMdFiles.length} documentation files into separate target directory:`);

@@ -172,15 +172,19 @@
             color: var(--text-secondary);
         }
 
+        .folder-toggle svg:not(.chevron-icon-container svg),
         .folder-toggle svg.lucide-folder {
             color: #f59e0b;
             fill: #f59e0b;
             fill-opacity: 0.15;
             width: 14px;
             height: 14px;
+            flex-shrink: 0;
         }
 
-        .menu-link svg {
+        .tree-list svg,
+        .menu-link svg,
+        .folder-content svg:not(.chevron-icon-container svg) {
             width: 14px;
             height: 14px;
             flex-shrink: 0;
