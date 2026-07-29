@@ -127,6 +127,7 @@ The agent will read `.agents/workflows/[name].md` and apply fixes for each item:
 | 6 | **Catalog Paths** | Reference governed catalog, NOT legacy `Resources/ai-agents/` |
 | 7 | **Turbo Annotations** | Mark safe-to-autorun steps with `// turbo` |
 | 8 | **No Duplicate Scope** | Don't duplicate logic that belongs to `/install` or `/para` |
+| 9 | **Numbered Headings** | Steps and sub-sections MUST use consistent, hierarchical numerical prefixes (e.g. `## 1.`, `### 1.1.`, `## 2.`) |
 
 ### Legacy Path Migration Table
 

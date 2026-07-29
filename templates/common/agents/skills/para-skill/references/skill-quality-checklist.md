@@ -55,6 +55,7 @@ description: "Skill about project conventions"
 | C2 | **Progressive Disclosure** | MUST organize in 3 tiers: (1) Frontmatter ~100 words, (2) SKILL.md body <500 lines, (3) references/ when needed |
 | C3 | **Clear references** | If `references/` exists, MUST document in SKILL.md: when to read which file |
 | C4 | **Table of Contents** | If references/ > 300 lines, SHOULD include a TOC at file top |
+| C5 | **Numbered Headings** | MUST use consistent, hierarchical numerical prefixes for sections and sub-sections (e.g. `## 1.`, `### 1.1.`, `## 2.`, `### 2.1.`) to ensure clear navigation |
 
 ---
 

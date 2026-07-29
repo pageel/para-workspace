@@ -113,6 +113,7 @@ Upgrade an existing rule to v1.4.1 standards.
 | 3 | **Affirmative Language** | Use Must/Should/Must Not (not vague suggestions) |
 | 4 | **Agent Guidance** | Rules must provide clear, actionable instructions for the AI |
 | 5 | **No Conflicts** | Must not contradict `para-discipline.md` |
+| 6 | **Numbered Headings** | MUST use consistent, hierarchical numerical prefixes for sections and sub-sections (e.g. `## 1.`, `### 1.1.`, `## 2.`) |
 
 ---
 

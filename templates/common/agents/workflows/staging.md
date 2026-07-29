@@ -104,7 +104,8 @@ For each approved item:
    - **Do NOT** use `rm -rf` to clear target directories, as it violates safety invariants. Copy directly using `cp -r` or `cp -a` to overwrite or add files.
    - Workflows: `.agents/workflows/[name].md` → `Projects/[project]/repo/templates/common/agents/workflows/[name].md`
    - Rules: `.agents/rules/[name].md` → `Projects/[project]/repo/templates/common/agents/rules/[name].md`
-   - Skills: `.agents/skills/[name]/` → `Projects/[project]/repo/templates/common/agents/skills/[name]/` (recursive copy via `cp -r` or `cp -a` without removing destination folder first)
+   - Skills: `.agents/skills/[name]/` → `Projects/[project]/repo/templates/common/agents/skills/[name]/` (MUST use `cp -a .agents/skills/[name]/. Projects/[project]/.../skills/[name]/` with trailing `/.` to prevent nested folder creation `[name]/[name]` when destination directory already exists).
+
 
 2. **Preserve catalog files:** Do NOT overwrite `catalog.yml` — catalog updates are a separate, versioned operation handled during the project's release plan.
 
