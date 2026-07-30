@@ -56,18 +56,19 @@ When beginning work on a project (via `/open` or context detection):
 - Agent memorizes trigger tables and loads specific files **on demand**.
 - **MUST NOT** skip — global rules and skills apply to ALL projects.
 
-**Tier 2: Project Indices (CONDITIONAL)**
+**Tier 2: Project Contract & Rules (MANDATORY)**
 
+- **MUST** read `Projects/<project>/project.md` BEFORE planning (`/plan`), designing (`/sysdesign`, `/spec`), auditing (`/qa`), or executing (`/vibecode`).
 - Check `project.md` for `agent` map (v1.6.2+) or `has_rules` (legacy):
   ```
-  IF agent.rules: true  → read project .agents/rules.md
-  ELIF has_rules: true  → read project .agents/rules.md (backward compat)
-  IF agent.skills: true → read project .agents/skills.md
+  IF agent.rules: true OR .agents/rules/ directory exists:
+    → MUST scan and read ALL files in Projects/<project>/.agents/rules/*.md
+      (or run `node .agents/skills/plan/scripts/scan-project-rules.js Projects/<project>`)
+  IF agent.skills: true OR .agents/skills/ directory exists:
+    → MUST scan and read ALL files in Projects/<project>/.agents/skills/*.md
   ```
-- **If index exists:**
-  - Read the index file (~5–10 lines) to learn triggers.
-  - Load a specific file **ONLY WHEN** the current action matches its trigger.
-  - **MUST NOT** read all files upfront — load on demand.
+- **CRITICAL:** Do NOT assume `rules.md` is a single file — projects split rules into `Projects/<project>/.agents/rules/*.md` (e.g., `maintenance.md`, `qa.md`). Agent **MUST** read all rule files in `.agents/rules/` to load operational constraints (e.g. M1-M7).
+
 - **If index does not exist:**
   - Check if directory has files. If so, list names and load when relevant.
   - If empty or missing — skip entirely.

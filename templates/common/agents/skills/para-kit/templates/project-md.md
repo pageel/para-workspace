@@ -23,6 +23,11 @@ agent:
   rules: false              # ✅ true if .agents/rules/ exists with project rules
   skills: false             # ✅ true if .agents/skills/ exists with project skills
 
+compliance:                 # Compliance mapping (v1.9.6+ — explicit rules enforcement)
+  rules_dir: ".agents/rules/" # Directory or file path containing project-specific rules
+  mandatory_modules: []      # Array of mandatory rule module IDs (e.g. [{id: "M1", name: "Git Scope"}])
+
+
 # Ecosystem (v1.6.0+)
 # type: standard            # standard (default) | ecosystem
 # ecosystem: ""             # Parent ecosystem slug (for satellite projects)

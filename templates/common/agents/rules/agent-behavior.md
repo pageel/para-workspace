@@ -196,4 +196,9 @@ To prevent the Agent from bypassing critical decision checkpoints, the following
 - The Agent **MUST** first present a detailed diagnosis & proposed resolution plan in Chat, append/register the task in the active plan (`artifacts/plans/*.md`), and ask for explicit user confirmation (`+ask`).
 - Only AFTER receiving explicit user confirmation (`y` / `ok`) is the Agent authorized to modify source code files.
 
+#### 7e. Project Contract & Rules Mandatory Reading Gate (v1.9.6)
+- Before creating a plan (`/plan create`), writing a spec (`/spec`), designing an architecture (`/sysdesign`), running a quality audit (`/qa`), or executing code (`/vibecode`), the Agent **MUST** explicitly read `Projects/<project>/project.md` AND scan/read ALL rule files in `Projects/<project>/.agents/rules/*.md` (or run `node .agents/skills/plan/scripts/scan-project-rules.js Projects/<project>`).
+- **Prohibition:** The Agent **MUST NOT** assume `rules.md` is a single file, nor assume a project has no operational rules without inspecting the `.agents/rules/` directory. Skipping this project contract and rules reading step is a **governance violation**.
+
+
 

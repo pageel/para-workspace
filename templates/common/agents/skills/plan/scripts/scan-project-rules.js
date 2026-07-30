@@ -130,10 +130,21 @@ function scanProjectRules(projectPath) {
     }
   }
 
+  // Check if project.md has compliance: schema
+  const projectMdPath = path.join(absProjectRoot, 'project.md');
+  let hasComplianceSchema = false;
+  if (fs.existsSync(projectMdPath)) {
+    const content = fs.readFileSync(projectMdPath, 'utf-8');
+    if (content.includes('compliance:')) {
+      hasComplianceSchema = true;
+    }
+  }
+
   return {
     projectRoot: absProjectRoot,
     projectName: path.basename(absProjectRoot),
     ruleCount: allRules.length,
+    hasComplianceSchema,
     rules: allRules
   };
 }
@@ -164,8 +175,14 @@ if (require.main === module) {
       }
       console.log('');
     }
+
+    if (!result.hasComplianceSchema) {
+      console.log(`💡 SUGGESTION: 'project.md' is missing the 'compliance:' schema mapping.`);
+      console.log(`   Consider adding 'compliance.rules_dir' and 'compliance.mandatory_modules' to project.md for explicit rule enforcement.\n`);
+    }
   }
 }
+
 
 module.exports = {
   scanProjectRules,

@@ -15,10 +15,17 @@ csa:
   doc_threshold: 50
   doc_gate: soft
 has_rules: false  # DEPRECATED v1.6.2 — kept for backward compat
+agent:
+  rules: true
+  skills: true
+compliance:
+  rules_dir: ".agents/rules/"
+  mandatory_modules: []
 last_reviewed: ""
 tags: []
 milestones: []
 ---
+
 
 # Project: <project-name>
 

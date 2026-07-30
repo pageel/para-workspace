@@ -1,6 +1,7 @@
 # PARA Workspace v1.9.x Architecture Standards
 
-The v1.9.x generation builds on v1.8.x with the **Platform-Separation Architecture** and strict Hybrid 3-File safety guards. It also includes the Knowledge System, ecosystem coordination, governed library catalogs, and token optimization patterns.
+The v1.9.x generation builds on v1.8.x with the **Platform-Separation Architecture**, strict Hybrid 3-File safety guards, and **3-Layer Systemic Project Rules Enforcement (v1.9.6)** (`scan-project-rules.js`, `lint-plan.js` v2.0, Section 7e Mandatory Reading Gate, and `compliance:` schema in `project.md`). It also includes the Knowledge System, ecosystem coordination, governed library catalogs, and token optimization patterns.
+
 
 ## 1. Core Structural Integrity: Pillar Purity
 
