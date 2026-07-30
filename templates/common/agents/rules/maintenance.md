@@ -28,7 +28,7 @@ glob: templates/*, repo/*, catalog.yml, VERSION
   1. `repo/VERSION`
   2. `repo/VERSIONS.yml` (`workspace:` key)
   3. `repo/cli/para` (`# Version:`)
-  4. `project.md` and `.para-workspace.yml` (`version:` and `kernel_version:`)
+  4. `project.md` (`version:` field; note: live `.para-workspace.yml` `kernel_version` is updated post-release via `./para update`)
   5. `repo/README.md` (version badge & footer version)
   6. `repo/docs/locales/vi-VN.md` (version badge & footer version)
 
