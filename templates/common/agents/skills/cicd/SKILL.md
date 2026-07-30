@@ -96,9 +96,11 @@ jobs:
           node-version: '22'
           cache: 'npm'
       - run: npm ci
+      - run: npm run version:check --if-present
       - run: npm run build:packages --if-present
       - run: npx astro sync --if-present
       - run: npx tsc --noEmit
+
 
   test:
     name: Unit & Integration Tests
@@ -161,20 +163,35 @@ jobs:
 
 ---
 
-## 4. Quality Gate Checklist
+## 4. Helper Automation Scripts
+
+The CI/CD skill includes generalized monorepo version synchronization scripts located under `scripts/`:
+
+- **`scripts/check-version-sync.mjs`**: Audits root `package.json` vs sub-packages (`packages/*/package.json`), `project.md`, and `CHANGELOG.md`. Fails CI if versions are misaligned.
+- **`scripts/sync-package-versions.mjs`**: Automatically updates all sub-package manifests and `project.md` to match root `package.json` version.
+
+When scaffolding CI/CD for a new monorepo project:
+1. Copy `scripts/check-version-sync.mjs` and `scripts/sync-package-versions.mjs` to target `scripts/` folder.
+2. Register `"version:check": "node scripts/check-version-sync.mjs"` and `"version:sync": "node scripts/sync-package-versions.mjs"` in target `package.json`.
+3. Add `npm run version:check --if-present` to the CI `typecheck` job.
+
+---
+
+## 5. Quality Gate Checklist
 
 - [ ] Node.js version matches project requirements (`node-version: '22'`).
 - [ ] Working paths do NOT include leading `repo/` in workflow files.
-- [ ] Pre-commit gates execute `npx tsc --noEmit` & `npx vitest run`.
+- [ ] Pre-commit gates execute `npm run version:check --if-present`, `npx tsc --noEmit` & `npx vitest run`.
 - [ ] Dependabot PRs use Feature Branch + Auto-Merge protocol.
 
 ---
 
-## 5. Reference Catalog
+## 6. Reference Catalog
 
-### 5.1. Reference Files Index
+### 6.1. Reference Files Index
 
 For detailed pattern breakdowns and reusable copy-paste recipes, consult:
 - **Astro Monorepo Pattern:** [`references/patterns/astro-monorepo.md`](file:///.agents/skills/cicd/references/patterns/astro-monorepo.md)
 - **Dependabot Auto-Merge Recipe:** [`references/recipes/dependabot-auto-merge.md`](file:///.agents/skills/cicd/references/recipes/dependabot-auto-merge.md)
 - **OSS PR Template Recipe:** [`references/recipes/pr-template-oss.md`](file:///.agents/skills/cicd/references/recipes/pr-template-oss.md)
+

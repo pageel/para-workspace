@@ -21,6 +21,7 @@ This skill provides the data structures, templates, and complex persona definiti
 | This file (§5) | Step 0.5 — Process Selection | Process selection logic & comparison matrix |
 | `stacks/[name].md` | Step 0 — Pre-flight | Stack-specific QA gotchas & Skill Router |
 | `domains/csa.md` | Step 0 — Pre-flight | CSA-specific QA checks & persona definition |
+| `scripts/lint-qa.js` | Step 10 — Save Report | QA Report structural & housekeeping linter |
 | `references/process-full-plan.md` | Step 0.5 — Process = Full-Plan | Waterfall Gate process template |
 | `references/process-phase-loop.md` | Step 0.5 — Process = Phase-Loop | Iterative Gate process template |
 | `references/process-risk-driven.md` | Step 0.5 — Process = Risk-Driven | Pareto Gate process template |

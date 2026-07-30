@@ -365,12 +365,14 @@ Update the target artifact's **Review & Audit Tracking** table (if present) by m
 3. Add or update the summary row `Q&A review ([mode])` to include the total statistics (e.g., `Total: X | ✅ Y | ⚠️ Z | 🔴 W`) and increment its `Count`.
 4. **Check off Governance Checklist:** If the Tech Lead Governance pre-flight passed, tick the checkboxes `[x]` for the triggered rules in the Plan's `Project Governance Checklist` section.
 
-### Step 10. Save Report (Optional)
+### Step 10. Save Report & Structural Lint (Mandatory)
 
-If the Q&A generated ≥ 10 questions or found ≥ 3 issues:
+1. Save the QA report file to `Projects/[project]/artifacts/qa/qa-[date]-[mode]-[target]-[seq].md`.
+2. **QA Report Linter Gate (Mandatory):** Agent MUST run the structural linter on the generated report:
+   `node .agents/skills/qa/scripts/lint-qa.js Projects/[project]/artifacts/qa/qa-[date]-[mode]-[target]-[seq].md`
+   Verify that `lint-qa.js` returns exit code 0. If it fails due to unclosed `⏳ Pending` states or missing mandatory sections, fix the QA report file before proceeding.
+3. Save with **collision-safe naming**:
 
-1. **Ask user:** "Save Q&A report as artifact? (y/n)"
-2. If yes → save with **collision-safe naming**:
 
    **Filename pattern:** `qa-[date]-[mode]-[target]-[seq].md`
 
