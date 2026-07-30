@@ -164,21 +164,24 @@ ls -t Projects/[project-name]/sessions/*.md | head -3
 
 Read the latest session log for context on previous work.
 
-### 3.5. Check Pending Brainstorms
+### 3.5. Check Pending Brainstorms & Incubating Seeds
 
 // turbo
 
-> ⚗️ **Token budget:** 1 grep, ~20 tokens max (D8).
+> ⚗️ **Token budget:** 1-2 greps, ~30 tokens max (D8).
 
-1. Check for brainstorms with pending decisions:
+1. Check for brainstorms with pending decisions and incubating seeds:
    ```bash
-   grep -l "Decision.*Pending\|Decision: Pending" Projects/[project-name]/artifacts/para-decisions/brainstorm-*.md 2>/dev/null
+   grep -l -i -E "Decision.*Pending|Brainstorm.*Pending|Status.*Open|Incubating" \
+     Projects/[project-name]/artifacts/para-decisions/*.md \
+     Projects/[project-name]/artifacts/brainstorms/*.md \
+     Projects/[project-name]/.beads/seeds.md 2>/dev/null
    ```
 
 2. **IF found:**
-   - Extract filename → topic + date
+   - Extract filename → topic + date (or topic from `.beads/seeds.md`)
    - Store for report (Step 8):
-     `💭 BRAINSTORM PENDING: [topic] (YYYY-MM-DD)`
+     `💭 BRAINSTORM PENDING: [topic] (YYYY-MM-DD)` or `🌱 INCUBATING SEED: [topic]`
 
 3. **IF not found** → Skip
 
