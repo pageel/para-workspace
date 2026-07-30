@@ -2,7 +2,28 @@ version: 1
 library: skills
 description: Reusable skill building blocks used by workflows and agents.
 items:
+- id: cicd
+  name: Automated CI/CD Pipeline Scaffolding
+  kernel_min: 1.8.0
+  kernel_max: 1.x
+  entrypoint: cicd/SKILL.md
+  description: CI/CD pipeline scaffolding, quality gates, and automated release workflows.
+  tags:
+  - cicd
+  - automation
+  - github-actions
+- id: mobile-responsive
+  name: Mobile Responsive Design Guidelines
+  kernel_min: 1.8.0
+  kernel_max: 1.x
+  entrypoint: mobile-responsive/SKILL.md
+  description: Mobile-first responsive layouts, viewport breakpoints, and touch UX standards.
+  tags:
+  - mobile
+  - responsive
+  - css
 - id: para-kit
+
   name: PARA Kit
   kernel_min: 1.6.4
   kernel_max: 1.x
