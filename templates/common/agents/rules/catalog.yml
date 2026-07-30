@@ -2,7 +2,19 @@ version: 1
 library: rules
 description: Governance rule library applied to agent runtime.
 items:
+- id: maintenance
+  name: Project Maintenance & Release Integrity
+  kernel_min: 1.8.0
+  kernel_max: 1.x
+  entrypoint: maintenance.md
+  description: Operational rules for template staging, catalog declaration, version sync, and release verification.
+  tags:
+  - maintenance
+  - catalog
+  - release
+  - versioning
 - id: security-observability
+
   name: Security & Observability
   kernel_min: 1.8.0
   kernel_max: 1.x
