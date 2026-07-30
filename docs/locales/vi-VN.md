@@ -7,7 +7,8 @@
 **Workspace Framework cho Con người & AI Agent**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.9.5-blue.svg)](../../CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.9.6-blue.svg)](../../CHANGELOG.md)
+
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -774,6 +775,7 @@ Nếu workspace của bạn quá cũ (v1.3.x) hoặc đã bị bạn chỉnh s�
 - [x] **Nâng cấp Unified CSA HTML-Renderer** _(phát hành v1.9.3)_
 - [x] **Đồng bộ Phát triển cục bộ & Tự động đồng bộ AI Index** _(phát hành v1.9.4)_
 - [x] **Hợp nhất bản mẫu & Phát hành (Diagnostics Debug, Self-Improvement, Remote, Report, Research)** _(phát hành v1.9.5)_
+- [x] **Bắt buộc áp dụng Quy tắc dự án 3 lớp (`scan-project-rules`, `lint-plan v2.0`, QA Pre-flight Gate)** _(phát hành v1.9.6)_
 - [ ] **Plugin Hooks & vibecode_session extensions** _(v1.10.0 — lên kế hoạch)_
 - [ ] **Department System** _(v1.x.x — lên kế hoạch)_
 
@@ -815,4 +817,5 @@ Phân hệ quét và rà soát bảo mật `/scan-sec` (được quản lý theo
 
 Xây dựng với ❤️ bởi **Pageel**. Chuẩn hoá tương lai của PKM Agent.
 
-_Phiên bản: 1.9.5_
+_Phiên bản: 1.9.6_
+

@@ -3,9 +3,10 @@ description: Write a structured specification before coding — surface assumpti
 source: user
 ---
 
-# /spec [project-name] [action] [--graph]
+# /spec [project-name] [action] [--graph] [--deep]
 
 > **Workspace Version:** 1.9.3 (Architecture-Inherited)
+> 🧠 **DEEP REASONING (CoT) GUARD:** IF `--deep` or `--cot` flag is provided, Agent MUST load `.agents/skills/deep-reasoning/SKILL.md` and execute the 4-Phase CoT Protocol with Multi-Dimensional Scoring Matrix before finalizing feature boundaries, assumptions, and spec requirements.
 
 Write a structured specification before any implementation begins. The spec is the shared source of truth between Agent and Developer — it defines what we're building, why, and how we'll know it's done.
 
@@ -25,6 +26,7 @@ Write a structured specification before any implementation begins. The spec is t
 | Option | Description |
 |:--|:--|
 | `--graph` | Run Graph Pipeline (Build → Query → Impact Analysis) before spec writing to anchor scope and boundaries in the real codebase |
+| `--deep` | Activate Deep Reasoning Protocol (`deep-reasoning` skill) for 4-phase CoT analysis when writing or reviewing specs |
 | `--sys` | Inherit and decompose a System Design (Sysdesign) from artifacts/sysdesigns/ into this spec |
 | `--qa` | Run an automated quality audit checking spec checklist compliance and CSA anchor standards |
 | `--sec` | Load scan-sec skill to perform a dedicated security audit checking input validation, auth, rate limiting, and transport security for the spec |

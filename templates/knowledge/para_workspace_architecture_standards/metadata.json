@@ -6,7 +6,8 @@
   "domain": "workspace",
   "purpose": "context",
   "owner": "para",
-  "para_version": "1.9.5",
+  "para_version": "1.9.6",
+
   "tags": [
     "architecture",
     "governance",

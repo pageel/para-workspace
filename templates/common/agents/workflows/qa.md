@@ -111,6 +111,18 @@ Each question is tagged with a dimension. Agent generates questions from ALL dim
 6. **Memory-Assisted QA (CONDITIONAL):** IF project has `.beads/graph/` directory, use `memory_search` to find past QA findings, known issues, and recurring patterns. Specifically, search for friction beads and past decisions related to the physical files specified in the target plan's inventory. This prevents Red Team from re-raising resolved issues, and allows them to ask historical questions based on past project quirks.
 7. **Tech Stack Domain Question Banks:** Read project tech stack from `project.md` and load relevant question bank templates from `.agents/skills/qa/domains/*.md` (e.g., `cloudflare.md`, `governance.md`, `csa.md`, `security.md`).
 
+### Step 0.3. Project Rules Pre-flight Gate (Un-bypassable Governance Audit)
+
+// turbo
+
+1. Run project rule scanner script:
+   `node .agents/skills/plan/scripts/scan-project-rules.js Projects/[project]`
+2. Extract all defined project rules (`### M[N]`).
+3. Cross-check each rule ID and required keywords against the plan content.
+4. Render the **Project Rule Audit Matrix** table in the output.
+5. **Hard Gate:** If any mandatory project rule item (e.g. M5 Staging, M6 Tarball Dry-run, M7 KI Sync) shows `❌ MISSING`, the Agent **MUST** automatically set the overall QA verdict to `❌ FAIL` and require updating the plan file before proceeding.
+
+
 ### Step 0.25. Graph Context Pipeline (if --graph)
 
 If the `--graph` flag is provided, execute an INTERACTIVE Graph Preparation Phase BEFORE creating the QA Strategy:

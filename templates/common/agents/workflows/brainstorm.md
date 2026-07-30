@@ -14,6 +14,7 @@ Collaborative troubleshooting and ideation for a project. Use this workflow to e
 | Option | Description |
 |:--|:--|
 | `--graph` | Run Graph Pipeline (Build → Query → Bundles) to anchor brainstorm in real codebase architecture |
+| `--deep` | Activate Deep Reasoning Protocol (`deep-reasoning` skill) for 4-phase CoT analysis |
 | `--contributes-to [paths]` | Link this brainstorm to destination documents (e.g., specs, sysdesigns, researches). Automatically updates the target files with the detailed analysis and diagrams. |
 
 ## Steps
@@ -145,6 +146,9 @@ cat .agents/skills/csa/SKILL.md 2>/dev/null | head -60
 - _Wait for user input if needed before proceeding._
 
 ### 4. Ideation & Exploration
+
+> 🧠 **Deep Reasoning Protocol Check:** IF `--deep` flag is present OR topic touches core architecture, security, or breaking changes:
+> Agent MUST load `.agents/skills/deep-reasoning/SKILL.md` and execute the 4-phase CoT reasoning cycle (Decompose ➔ Diverge ➔ Red-Team ➔ Converge) before generating options.
 
 Generate 3-5 distinct perspectives, solutions, or root causes related to the topic. For each option, concisely outline:
 

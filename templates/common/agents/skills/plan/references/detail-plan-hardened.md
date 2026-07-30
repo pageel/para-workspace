@@ -261,7 +261,7 @@ Reloaded Skills:
   1.1 🤖 **[Step name]** — [Detail: file path, line number, operation, source reference if applicable.]
   1.2 👤 **[Step name]** — [Detail: destructive/external operation, Agent proposes → User approves.]
 
-  1.N-1 🤖 **Pre-commit Gate** — Run project's linter/compiler (e.g., `npm run lint`, `tsc`, `cargo check`) and resolve any type/lint problems before commit.
+  1.N-1 🤖 **Pre-commit Gate** — Run project's static code check command per project contract (`project.md`) or maintenance rule (`maintenance.md` §1) (e.g., `npx astro sync && npx tsc --noEmit` for Astro, `npm run lint`, `tsc`, `cargo check`) and resolve any type/lint problems before commit.
   1.N-2 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to detect physical drift), and `graph_audit_csa` (with `planScope: "[active-plan-path]"` to verify plan-scoped spec coverage is 100% and bind introduced code entities).
   1.N 👤 **Git checkpoint Phase 1 — Commit**
 
@@ -271,10 +271,20 @@ git commit -m "[conventional commit message]"
 ```
 ````
 
-1.N+1 👤 **Git push** (only at last Phase or when remote sync is needed)
+1.N+1 👤 **Git Push / PR Gate** (only at last Phase or when remote sync is needed)
 
 ```bash
+# Option A: Direct Push (if main branch is unlocked and personal repo)
 git push origin main
+
+# Option B: OSS PR Protocol (if main branch is protected per maintenance.md §3)
+# Clean Branch Reset (Conflict Prevention): BEFORE creating a new feature branch, ALWAYS switch to main and reset to latest origin/main:
+git checkout main
+git fetch origin main
+git reset --hard origin/main
+git checkout -b feature/[plan-slug] origin/main
+git push -u origin feature/[plan-slug]
+gh pr create --title "[PR title]" --body "[PR description]" --auto --squash
 ```
 
 > **Execution Ownership Legend:**
@@ -345,8 +355,6 @@ git push origin main
 > ⛔ **HARNESS GUARD (DEPLOY):** Agent MUST ask User confirmation, execute deployment command, and verify live status.
 
 
----
-
 ### Phase 2. [Next Feature / Refactoring] ⚙️ `Difficulty: [🟢 Low | 🟡 Medium | 🔴 High]`
 
 [Repeat structure: MANDATORY + HARNESS GUARD + Implementation Plan + Task List + Git checkpoint]
@@ -361,7 +369,35 @@ git push origin main
 
 ---
 
+### Phase [N]. Release Packaging, Documentation Sync & Release Execution ⚙️ `Difficulty: 🟢 Low`
+
+#### Implementation Plan
+Package release tarball (if applicable), sync version badges & feature highlights across READMEs/docs, and execute remote git push and release tag workflows.
+
+**Files:**
+- `package.json` / `project.md`
+- `README.md` / `docs/locales/`
+- Release artifact tarball (if applicable)
+
+> 💡 **Naming Precedence Note:** Always check project rules (`.agents/rules/maintenance.md` or `project.md`) for project-specific release artifact naming conventions first. If the project specifies its own convention (e.g. `release-v{VERSION}.tar.gz` or `[custom-name]-v{VERSION}.tar.gz`), use that explicitly. If no project-specific rule exists, fall back to default `[project-name]-v[X.Y.Z].tar.gz`.
+
+#### Task List
+
+- [ ] [N].1 🤖 Package release tarball: `cd repo && tar -czf [project-name]-v[X.Y.Z].tar.gz ...` (N/A if internal project without release tarball distribution)
+- [ ] [N].2 🤖 Verify tarball integrity (Dry-run): `tar -tzf repo/[project-name]-v[X.Y.Z].tar.gz` (ensures required files exist without extracting to workspace)
+- [ ] [N].3 🤖 Sync version badges & feature highlights in `README.md` and localized docs (`docs/locales/`)
+- [ ] [N].3b 🤖 Verify & Stage Agent Intelligence templates into `repo/templates/agents/` (`/staging` workflow — N/A if no agent workflows/skills/rules were modified)
+
+
+- [ ] [N].4 🤖 Propose and execute Git commit & push: `/push` (requires user confirmation)
+- [ ] [N].5 🤖 Propose and execute GitHub Release tag & publishing: `gh release create v[X.Y.Z] [project-name]-v[X.Y.Z].tar.gz` (N/A if internal repo without GitHub release tags)
+
+
+
+---
+
 ## Backlog → Phase Mapping
+
 
 | Backlog Item | Priority | Phase   |
 | :----------- | :------- | :------ |

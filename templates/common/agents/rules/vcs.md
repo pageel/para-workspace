@@ -88,11 +88,13 @@ When running `/push` or `/release`, **MUST**:
 
 ### 6. Branch & Merge Safety
 
-#### 6a. Branch Creation
+#### 6a. Branch Creation & Reset Protocol
 
 - **MUST** propose branch creation and get user approval before executing.
 - **MUST NOT** auto-create branches — branching is a user decision.
-- **Example**: "Tôi đề xuất tạo branch `feature/xyz`, bạn đồng ý không?"
+- **MUST** switch to `main` and pull/reset to latest `origin/main` BEFORE creating any new feature branch to prevent Squash & Merge history divergence (`git checkout main && git fetch origin main && git reset --hard origin/main && git checkout -b feature/xyz origin/main`).
+- **MUST NOT** create a new feature branch while standing on an unmerged or old feature branch.
+- **Example**: "I propose creating branch `feature/xyz` from the latest `origin/main`, do you agree?"
 
 #### 6b. Merge Prohibition
 

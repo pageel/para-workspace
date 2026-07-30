@@ -3,9 +3,10 @@ description: Design system architecture, data models, APIs, and infra before spe
 source: user
 ---
 
-# /sysdesign [project-name] [action] [topic] [--graph]
+# /sysdesign [project-name] [action] [topic] [--graph] [--deep]
 
 > ⚠️ **HARNESS GUARD (MANDATORY SKILL LOADING):** Before executing any sysdesign action, Agent MUST load `.agents/skills/sysdesign/SKILL.md` and its base template `references/templates/sysdesign.md` to ensure correct architectural standards are applied.
+> 🧠 **DEEP REASONING (CoT) GUARD:** IF `--deep` or `--cot` flag is provided, Agent MUST load `.agents/skills/deep-reasoning/SKILL.md` and execute the 4-Phase CoT Protocol with Multi-Dimensional Scoring Matrix before producing architectural designs.
 
 > **Workspace Version:** 1.9.4 (Architecture-First — Full Actions)
 

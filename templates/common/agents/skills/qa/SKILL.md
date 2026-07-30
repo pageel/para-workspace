@@ -207,10 +207,14 @@ When creating the QA Report at Step 0.5 (Pre-QA Strategy), the Agent MUST format
 - "The `install-hooks.sh` pre/post lifecycle hooks — are they affected by this plan's changes?"
 - "Does the plan update corresponding knowledge templates, schema definitions, or documentation references to prevent knowledge drift when modifying API structures, configurations, or core features?"
 - "Does the plan evaluate if a formal release packaging and deployment step is required to distribute compiled binaries/assets to end-users instead of only pushing source code?"
+- "If the plan bumps version, does the plan include a Phase N for Release Packaging & Docs Sync, updating `package.json`, `project.md`, `README.md` version badge + feature highlights (in all supported locales, e.g. `README.md`, `docs/locales/vi-VN.md`)?"
+- "Does the plan include explicit tasks for Git commit & push (`/push`) and GitHub Release tag creation (`/release`) or explicitly mark them `N/A` if internal project without release distribution?"
 - "If the plan applies database migrations (e.g., Cloudflare D1 migrations), does it explicitly include the corresponding application/backend code deployment task (e.g., `wrangler deploy`) in the same Phase to prevent runtime API route mismatches?"
+- **[MANDATORY Tech Lead QA 0]** *"Has the plan passed the Project Rule Audit Matrix scan (via `scan-project-rules.js`), ensuring all mandatory project rules (M1-M7) are explicitly mapped to tasks?"* (Agent MUST run `scan-project-rules.js Projects/[project]` during Pre-flight Step 0.3 and print the Project Rule Audit Matrix table).
 - **[MANDATORY Tech Lead QA 1]** *"Does this plan perform a `git push` or deploy any service/worker to production, and at what specific phase and step?"* (Agent MUST verify git push and deploy commands are guarded with `> ⛔ HARNESS GUARD` and isolated to the final Phase).
 - **[MANDATORY Tech Lead QA 2]** *"Which environment variables (`env.*`) or secrets does this plan introduce/modify, and is there a step-by-step Production Playbook instructing how to configure them in production?"* (Agent MUST verify secret keys are never hardcoded in git and CLI/Console deployment steps are documented).
 - **Rule:** If a `🔴 Critical` governance or compliance violation is found, proactively suggest `@[/brainstorm]` to explore multiple solution options before proposing a quick patch.
+
 
 ### 📐 CSA Expert (`[CSA]`)
 

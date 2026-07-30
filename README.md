@@ -7,7 +7,8 @@
 **The Workspace Framework for Humans & AI Agents**
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.9.5-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.9.6-blue.svg)](./CHANGELOG.md)
+
 ![Type](https://img.shields.io/badge/type-workspace_framework-blueviolet.svg)
 [![Antigravity](https://img.shields.io/badge/Antigravity-verified-E37400?logo=google&logoColor=white)](https://antigravity.google/)
 
@@ -808,6 +809,7 @@ If your workspace is very old (v1.3.x) or has been heavily customized, start fre
 - [x] Unified CSA HTML-Renderer Upgrade _(shipped in v1.9.3)_
 - [x] Local Development Sync & AI Index Auto-Sync _(shipped in v1.9.4)_
 - [x] Template Consolidation & Release (Diagnostics Debug, Self-Improvement, Remote, Report, Research) _(shipped in v1.9.5)_
+- [x] Systemic Enforcement of Project-Specific Rules (`scan-project-rules`, `lint-plan v2.0`, QA Pre-flight Gate) _(shipped in v1.9.6)_
 - [ ] **Plugin Hooks & vibecode_session extensions** _(v1.10.0 — planned)_
 - [ ] **Department System** _(v1.x.x — planned)_
 
@@ -849,4 +851,5 @@ The `/scan-sec` security audit module (governed under [scan-sec SKILL.md](./temp
 
 Built with ❤️ by **Pageel**. Standardizing the future of Agentic PKM.
 
-_Version: 1.9.5_
+_Version: 1.9.6_
+

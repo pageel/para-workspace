@@ -2,7 +2,18 @@ version: 1
 library: rules
 description: Governance rule library applied to agent runtime.
 items:
+- id: security-observability
+  name: Security & Observability
+  kernel_min: 1.8.0
+  kernel_max: 1.x
+  entrypoint: security-observability.md
+  description: Cloud security headers, rate limiting, logging, and observability standards.
+  tags:
+  - security
+  - observability
+  - cloud
 - id: agent-behavior
+
   name: Agent Behavior
   kernel_min: 1.6.2
   kernel_max: 1.x

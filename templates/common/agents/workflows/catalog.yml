@@ -2,7 +2,18 @@ version: 1
 library: workflows
 description: Stateless workflow library for PARA Workspace agents.
 items:
+- id: fix
+  name: Structured Bug Diagnosis
+  kernel_min: 1.8.0
+  kernel_max: 1.x
+  entrypoint: fix.md
+  description: Structured bug diagnosis using Spec, CSA, and Graph Intelligence.
+  tags:
+  - debugging
+  - diagnosis
+  - csa
 - id: backlog
+
   name: Backlog Controller
   kernel_min: 1.6.2
   kernel_max: 1.x

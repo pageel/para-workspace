@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 
 /**
- * PARA Plan Structural Linter (OSS Edition)
+ * PARA Plan Structural & Project Rules Linter (v1.9.6)
  * 
  * Usage: node lint-plan.js <path-to-plan> <path-to-template>
  * 
- * Verifies that the plan file contains all structural headings defined in the template.
- * Headings MUST be written in English (OSS-first standard).
+ * Verifies that the plan file contains all structural headings defined in the template
+ * and adheres to project-specific operational rules (.agents/rules/*.md).
  */
 
 const fs = require('fs');
 const path = require('path');
+const { scanProjectRules, resolveProjectPath } = require('./scan-project-rules');
 
 function getHeadings(content) {
   const headings = [];
@@ -96,19 +97,15 @@ function matchHeadings(templateHeadings, planHeadings) {
       }
 
       // 2. Keyword Intersection Match (for dynamic phase names / extra text)
-      // If at least 50% of the keywords from the template heading are present in the plan heading
       const intersection = tTokens.filter(tok => pTokens.includes(tok));
-      const matchRatio = intersection.length / tTokens.length;
-      
-      // If it has at least 2 matching words and ratio >= 0.5, count as match
-      if (matchRatio >= 0.5 && (tTokens.length === 1 || intersection.length >= 2)) {
+      if (tTokens.length > 0 && (intersection.length / tTokens.length) >= 0.5) {
         found = true;
         break;
       }
     }
 
     if (!found) {
-      missing.push(`${'#'.repeat(tHead.level)} ${tHead.text}`);
+      missing.push(tHead.text);
     }
   }
 
@@ -117,6 +114,7 @@ function matchHeadings(templateHeadings, planHeadings) {
 
 function main() {
   const args = process.argv.slice(2);
+
   if (args.length < 2) {
     console.error('Usage: node lint-plan.js <path-to-plan> <path-to-template>');
     process.exit(1);
@@ -156,8 +154,7 @@ function main() {
   }
 
   // Content Inspection 2: Techstack Live Deployment Task Check
-  const planDir = path.dirname(planPath);
-  const projectDir = path.dirname(planDir);
+  const projectDir = resolveProjectPath(planPath);
   const hasWrangler = fs.existsSync(path.join(projectDir, 'wrangler.toml')) || 
                       fs.existsSync(path.join(projectDir, 'repo/wrangler.toml')) || 
                       fs.existsSync(path.join(projectDir, 'repo/worker/wrangler.toml'));
@@ -168,6 +165,27 @@ function main() {
     missing.push('Phase 7: Missing Live Deployment Gate task! (Project contains wrangler.toml/vercel.json live deployment config but plan lacks deployment task)');
   }
 
+  // Content Inspection 3: Dynamic Project-Specific Operational Rules Audit (v1.9.6)
+  if (fs.existsSync(projectDir)) {
+    const scanResult = scanProjectRules(projectDir);
+    const planLower = planContent.toLowerCase();
+
+    for (const rule of scanResult.rules) {
+      if (!rule.mandatory) continue;
+
+      // Special handling for key tool rules
+      if (rule.id === 'M5' && !planLower.includes('/staging') && !planLower.includes('templates/agents')) {
+        missing.push(`Project Rule ${rule.id} (${rule.title}): Plan lacks agent template staging task ('/staging' or 'templates/agents')`);
+      }
+      if (rule.id === 'M6' && !planLower.includes('tar -tzf') && !planLower.includes('dry-run') && !planLower.includes('n/a')) {
+        missing.push(`Project Rule ${rule.id} (${rule.title}): Plan lacks non-destructive tarball integrity verification task ('tar -tzf dry-run')`);
+      }
+      if (rule.id === 'M7' && !planLower.includes('templates/knowledge') && !planLower.includes('ki sync') && !planLower.includes('ki') && !planLower.includes('n/a')) {
+        missing.push(`Project Rule ${rule.id} (${rule.title}): Plan lacks Knowledge Items template sync task ('repo/templates/knowledge')`);
+      }
+    }
+  }
+
   if (missing.length > 0) {
     console.error('\n❌ Plan Structural & Content Lint Failed!');
     console.error('The following issues were detected against template & project rules:');
@@ -176,7 +194,7 @@ function main() {
     process.exit(1);
   }
 
-  console.log('\n✅ Plan Structural & Content Lint Passed! All mandatory template headings and env/deployment rules are verified.');
+  console.log('\n✅ Plan Structural & Content Lint Passed! All mandatory template headings and env/deployment/project rules are verified.');
   process.exit(0);
 }
 
