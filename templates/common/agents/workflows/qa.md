@@ -92,6 +92,7 @@ Each question is tagged with a dimension. Agent generates questions from ALL dim
 // turbo
 
 1. Identify the target artifact from user input or active document.
+
 2. Determine the mode (`plan`, `spec`, `artifact`, `audit`) — auto-detect from file location if not specified:
    - `artifacts/plans/*.md` → `plan` mode
    - `artifacts/specs/*.md` → `spec` mode
