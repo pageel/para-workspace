@@ -32,7 +32,6 @@
 | [📑 Workflow Catalog](#-workflow-catalog) | 33 governed workflows |
 | [🛡️ Rule Catalog](#️-rule-catalog) | 15 governance rules |
 | [🧩 Skill Catalog](#-skill-catalog) | 23 reusable skills |
-
 | [🔌 Tool System](#-tool-system-v180) | Install external agentic plugins |
 | [🧩 Task Management](#-task-management-hybrid-3-file-model) | Hybrid 3-File model |
 | [🔄 Upgrading](#-upgrading-versions) | Auto update + clean slate |
