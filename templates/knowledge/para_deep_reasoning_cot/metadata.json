@@ -1,0 +1,21 @@
+{
+  "title": "Deep Reasoning (CoT) Architecture & Memory Integration",
+  "summary": "Governs the 4-phase Deep Reasoning Chain-of-Thought (CoT) execution cycle, 5D scoring matrix, 3-tier memory model, and para-graph v0.17.7 MCP integration (cotMetadata, kind: cot-decision).",
+  "version": "1.0",
+  "scope": "workspace",
+  "domain": "engineering",
+  "purpose": "context",
+  "owner": "para",
+  "para_version": "1.9.6.1",
+  "tags": ["cot", "deep-reasoning", "mcp", "para-graph"],
+  "references": [
+    {
+      "type": "file",
+      "value": ".agents/skills/deep-reasoning/SKILL.md"
+    },
+    {
+      "type": "file",
+      "value": ".agents/rules/tool-routing.md"
+    }
+  ]
+}
