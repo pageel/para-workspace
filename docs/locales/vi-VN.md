@@ -371,6 +371,7 @@ para list-tools               # Liệt kê plugin đã cài
 | **[`/vibecode`](../workflows/vibecode.md)** | Quản lý chế độ thực thi tương tác/vòng lặp cho lập trình (v1.8.11) |
 | **[`/scan-sec`](../workflows/scan-sec.md)** | Quét lỗ hổng bảo mật trong mã nguồn (v1.8.11) |
 | **[`/resource`](../workflows/resource.md)** | Điều phối nhập tài nguyên, tạo đồ thị và học mẫu thiết kế (v1.8.11) |
+| **[`/fix`](../workflows/fix.md)** | Chẩn đoán lỗi cấu trúc với Spec, CSA và Graph Intelligence (v1.9.6) |
 
 ---
 
@@ -384,6 +385,7 @@ Rules chi phối hành vi, bảo mật và tuân thủ của Agent. Được t�
 | **[`vcs`](../rules/vcs.md)** | Git safety: commit, branch, merge, PR, secrets | 🔴 Critical |
 | **[`knowledge`](../rules/knowledge.md)** | KI operations — write gate, approval, namespace (v1.7.0) | 🔴 Critical |
 | **[`graph-first-policy`](../rules/graph-first-policy.md)** | Phân tích code qua đồ thị para-graph trước khi chỉnh sửa file | 🔴 Critical |
+| **[`security-observability`](../rules/security-observability.md)** | Tiêu chuẩn bảo mật đám mây, rate limit, logging và quan sát hệ thống (v1.9.6) | 🔴 Critical |
 | **[`hybrid-3-file-integrity`](../rules/hybrid-3-file-integrity.md)** | 6 constraints (C1–C6) cho quản lý task | 🟡 Important |
 | **[`agent-behavior`](../rules/agent-behavior.md)** | Proactive Trigger Check, Context Recovery (v1.6.2) | 🟡 Important |
 | **[`context-rules`](../rules/context-rules.md)** | Agent Index Loading (rules + skills), Two-Tier trigger | 🟡 Important |
@@ -424,6 +426,9 @@ Skills là các module kiến thức tái sử dụng, được load theo yêu c
 | **[Vulnerability Scanner Templates](../skills/scan-sec.md)** | Quy tắc quét bảo mật, ánh xạ OWASP Top 10 và các bản mẫu báo cáo (Sidecar, v1.8.11) |
 | **[Resource Study Templates](../skills/resource.md)** | Các bản mẫu nghiên cứu mẫu thiết kế và học hỏi tài nguyên (Sidecar, v1.8.11) |
 | **[Sidecar Skill Governance](../skills/sidecar-skill.md)** | Quy chuẩn cấu trúc và quy tắc cho việc viết Sidecar Skills để bổ trợ workflows (v1.8.11) |
+| **[Mobile Responsive Design](../skills/mobile-responsive.md)** | Thiết kế giao diện ưu tiên di động, điểm ngắt responsive và UX cảm ứng (v1.9.6) |
+| **[Automated CI/CD Pipeline](../skills/cicd.md)** | Scaffolding đường ống CI/CD, kiểm soát chất lượng và tự động phát hành (v1.9.6) |
+
 
 ---
 

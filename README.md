@@ -29,9 +29,10 @@
 | [📥 Installation](#-installation) | Prerequisites, setup, profiles, troubleshooting |
 | [🧠 The Kernel](#-the-kernel) | Invariants, heuristics, contracts |
 | [🛠️ CLI Reference](#️-cli-reference) | All CLI commands |
-| [📑 Workflow Catalog](#-workflow-catalog) | 32 governed workflows |
-| [🛡️ Rule Catalog](#️-rule-catalog) | 14 governance rules |
-| [🧩 Skill Catalog](#-skill-catalog) | 21 reusable skills |
+| [📑 Workflow Catalog](#-workflow-catalog) | 33 governed workflows |
+| [🛡️ Rule Catalog](#️-rule-catalog) | 15 governance rules |
+| [🧩 Skill Catalog](#-skill-catalog) | 23 reusable skills |
+
 | [🔌 Tool System](#-tool-system-v180) | Install external agentic plugins |
 | [🧩 Task Management](#-task-management-hybrid-3-file-model) | Hybrid 3-File model |
 | [🔄 Upgrading](#-upgrading-versions) | Auto update + clean slate |
@@ -373,6 +374,7 @@ para mcp-remove <tool>          # Remove MCP config from IDE
 | **[`/vibecode`](./docs/workflows/vibecode.md)**           | Manage interactive/loop execution modes for coding tasks (v1.8.11) |
 | **[`/scan-sec`](./docs/workflows/scan-sec.md)**           | Scan codebase for security vulnerabilities (v1.8.11)       |
 | **[`/resource`](./docs/workflows/resource.md)**           | Orchestrate resource import, graph generation, and pattern learning (v1.8.11) |
+| **[`/fix`](./docs/workflows/fix.md)**                   | Structured bug diagnosis using Spec, CSA, and Graph Intelligence (v1.9.6) |
 
 ---
 
@@ -386,6 +388,7 @@ Rules govern agent behavior, security, and compliance. Loaded on-demand via a Tw
 | **[`vcs`](./docs/rules/vcs.md)**                                                 | Git safety: commit, branch, merge, PR, secrets          | 🔴 Critical  |
 | **[`knowledge`](./docs/rules/knowledge.md)**                                      | KI operations — write gate, approval, namespace (v1.7.0)| 🔴 Critical  |
 | **[`graph-first-policy`](./docs/rules/graph-first-policy.md)**                    | Proactive code analysis using para-graph MCP tools      | 🔴 Critical  |
+| **[`security-observability`](./docs/rules/security-observability.md)**            | Cloud security headers, rate limiting, and observability standards (v1.9.6) | 🔴 Critical |
 | **[`hybrid-3-file-integrity`](./docs/rules/hybrid-3-file-integrity.md)**          | 6 constraints (C1–C6) for task management               | 🟡 Important |
 | **[`agent-behavior`](./docs/rules/agent-behavior.md)**                            | Proactive Trigger Check, Context Recovery (v1.6.2)      | 🟡 Important |
 | **[`context-rules`](./docs/rules/context-rules.md)**                              | Agent Index Loading (rules + skills), Two-Tier trigger   | 🟡 Important |
@@ -426,6 +429,9 @@ Skills are reusable knowledge modules loaded on-demand via the skills trigger in
 | **[Vulnerability Scanner Templates](./docs/skills/scan-sec.md)** | Sidecar data for the /scan-sec scanner (Sidecar, v1.8.11) |
 | **[Resource Study Templates](./docs/skills/resource.md)** | Sidecar data for the /resource learning (Sidecar, v1.8.11) |
 | **[Sidecar Skill Governance](./docs/skills/sidecar-skill.md)** | Architectural rules and standards for sidecar skills (v1.8.11) |
+| **[Mobile Responsive Design](./docs/skills/mobile-responsive.md)** | Mobile-first responsive layouts, breakpoints, and touch UX (v1.9.6) |
+| **[Automated CI/CD Pipeline](./docs/skills/cicd.md)** | CI/CD pipeline scaffolding, quality gates, and automated release (v1.9.6) |
+
 
 ---
 
