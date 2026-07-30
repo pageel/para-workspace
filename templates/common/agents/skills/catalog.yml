@@ -2,6 +2,17 @@ version: 1
 library: skills
 description: Reusable skill building blocks used by workflows and agents.
 items:
+- id: deep-reasoning
+  name: Deep Reasoning Chain-of-Thought Protocol
+  kernel_min: 1.9.6.1
+  kernel_max: 1.x
+  entrypoint: deep-reasoning/SKILL.md
+  description: 4-phase CoT execution cycle, 5D scoring matrix, 3-tier memory model, and para-graph v0.17.7 MCP integration.
+  tags:
+  - cot
+  - deep-reasoning
+  - mcp
+  - para-graph
 - id: cicd
   name: Automated CI/CD Pipeline Scaffolding
   kernel_min: 1.8.0
