@@ -87,7 +87,7 @@ Each question is tagged with a dimension. Agent generates questions from ALL dim
 
 ### Phase 1: Question Generation & Approval
 
-### Step 0. Pre-flight
+### Step 1. Pre-flight & Context Gathering
 
 // turbo
 
@@ -98,11 +98,11 @@ Each question is tagged with a dimension. Agent generates questions from ALL dim
    - Default → `artifact` mode
 3. Read the target file fully.
 4. **Context Gathering (MANDATORY):** To ask deep, expert-level questions, you MUST NOT review the artifact in a vacuum. Before proceeding, you MUST:
-   - Read `Projects/[project]/project.md` to understand the overarching contract and dependencies.
+   - Read `Projects/[project]/project.md` to understand the overarching contract, tech stack, and dependencies.
    - Read any explicitly linked Knowledge Items (KIs) or Rules.
 5. **Project Governance & CSA Loading (MANDATORY for `[GOV]` and `[CSA]` personas):** The Project Tech Lead and CSA Expert personas require full project context. Agent MUST:
-   - Read project `.agents/rules.md` index → load ALL project rules (e.g., `maintenance.md`, `review.md`).
-   - Read project `.agents/skills.md` index → load ALL project skills.
+   - Read project `.agents/rules/` directory → scan and load ALL project rules (e.g., `maintenance.md`, `qa.md`).
+   - Read project `.agents/skills/` directory → load ALL project skills.
    - Check `Projects/[project]/project.md` for `csa:` configuration (thresholds, gates) or existence of a `csa-compliance.md` rule.
    - If CSA is enabled for the project:
      - Load `csa-compliance.md` rule and `csa.md` QA domain template.
@@ -111,7 +111,7 @@ Each question is tagged with a dimension. Agent generates questions from ALL dim
 6. **Memory-Assisted QA (CONDITIONAL):** IF project has `.beads/graph/` directory, use `memory_search` to find past QA findings, known issues, and recurring patterns. Specifically, search for friction beads and past decisions related to the physical files specified in the target plan's inventory. This prevents Red Team from re-raising resolved issues, and allows them to ask historical questions based on past project quirks.
 7. **Tech Stack Domain Question Banks:** Read project tech stack from `project.md` and load relevant question bank templates from `.agents/skills/qa/domains/*.md` (e.g., `cloudflare.md`, `governance.md`, `csa.md`, `security.md`).
 
-### Step 0.3. Project Rules Pre-flight Gate (Un-bypassable Governance Audit)
+### Step 2. Project Rules Pre-flight Gate (Un-bypassable Governance Audit)
 
 // turbo
 
@@ -122,8 +122,7 @@ Each question is tagged with a dimension. Agent generates questions from ALL dim
 4. Render the **Project Rule Audit Matrix** table in the output.
 5. **Hard Gate:** If any mandatory project rule item (e.g. M5 Staging, M6 Tarball Dry-run, M7 KI Sync) shows `❌ MISSING`, the Agent **MUST** automatically set the overall QA verdict to `❌ FAIL` and require updating the plan file before proceeding.
 
-
-### Step 0.25. Graph Context Pipeline (if --graph)
+### Step 3. Graph Context Pipeline (if --graph)
 
 If the `--graph` flag is provided, execute an INTERACTIVE Graph Preparation Phase BEFORE creating the QA Strategy:
 
@@ -133,13 +132,13 @@ If the `--graph` flag is provided, execute an INTERACTIVE Graph Preparation Phas
 3. **Enrich:** For any unenriched God nodes found, use `graph_enrich` to document their semantic meaning.
 4. **Pattern Verify (Step G, para-graph §4.2):** If the artifact contains file count estimates for inline code patterns, run `grep_search` to cross-validate. Challenge: "Does the plan claim N files? Verify with grep."
 5. **Interactive Report:** Pause the workflow and present a Chat Report to the user containing the impact analysis and blast radius of the components covered in the artifact.
-6. **Wait for User:** Ask if the user wants to analyze any other aspects/nodes before generating the QA Strategy. **STOP HERE.** Proceed to Step 0.5 only after user confirms.
+6. **Wait for User:** Ask if the user wants to analyze any other aspects/nodes before generating the QA Strategy. **STOP HERE.** Proceed to Step 4 only after user confirms.
 
-### Step 0.5. Process Selection & Pre-QA Strategy (The QA Kickoff)
+### Step 4. Process Selection & Pre-QA Strategy (The QA Kickoff)
 
 > **IMPORTANT:** Do NOT generate questions yet.
 
-#### Step 0.5a. Process Selection
+#### Step 4a. Process Selection
 
 > 🧩 **Sidecar Skill:** Load `SKILL.md` §5 (Process Selection Router) for the comparison matrix and auto-suggest heuristics.
 
@@ -151,7 +150,7 @@ If the `--graph` flag is provided, execute an INTERACTIVE Graph Preparation Phas
 
 4. **After user selects:** Load the corresponding `references/process-*.md` template from the QA skill. This template defines the flow that governs all subsequent steps.
 
-#### Step 0.5b. QA Strategy Creation
+#### Step 4b. QA Strategy Creation
 
 1. **Create the QA Report file immediately:** 
    - Generate a collision-safe filename: `Projects/[project]/artifacts/qa/qa-[date]-[mode]-[target]-[seq].md`.
@@ -165,12 +164,12 @@ If the `--graph` flag is provided, execute an INTERACTIVE Graph Preparation Phas
    - **Process Log:** Create an empty table with columns `Round`, `Trigger`, `Scope`, `Questions`, `Critical`, `Fixed`. Agent MUST append a row after each round of Q&A completes.
 3. **Wait for Approval:** Present this strategy to the user. **STOP HERE.** Do not proceed to structure scan and question generation until the user approves the strategy or adjusts the focus areas.
 
-### Step 0.75. Tech Lead & CSA Governance Pre-flight
+### Step 5. Tech Lead & CSA Governance Pre-flight
 
 Before diving into general Red Team questions, the Agent MUST step into the roles of the **Project Tech Lead** and **CSA Expert** to enforce project-specific compliance and specification double-binding:
 
-1. **Load Context:** Read the project's `.agents/rules.md` and `.agents/skills.md` indexes. Identify and read all project-specific rules (e.g., `maintenance.md`, `csa-compliance.md`) and skills.
-2. **Project-Specific QA Rules Integration:** Check if the project rules index contains a rule file mapping to `qa.md` (e.g., `Projects/[project]/.agents/rules/qa.md`). If present, read it and extract all pre-defined checklist questions.
+1. **Load Context:** Read the project's `.agents/rules/` directory and `.agents/skills/` directory. Identify and read all project-specific rules (e.g., `maintenance.md`, `csa-compliance.md`) and skills.
+2. **Project-Specific QA Rules Integration:** Check if the project rules directory contains a rule file mapping to `qa.md` (e.g., `Projects/[project]/.agents/rules/qa.md`). If present, read it and extract all pre-defined checklist questions.
 3. **Generate Governance & CSA Checklist:** Create a dedicated set of crucial checklist questions by combining:
    - The pre-defined project questions extracted from `Projects/[project]/.agents/rules/qa.md` (if any, including `[CSA-1]` to `[CSA-4]` spec/anchor questions).
    - Custom compliance questions generated strictly from the loaded rules (`maintenance.md`, `csa-compliance.md`, etc.) and project skills.
@@ -178,7 +177,8 @@ Before diving into general Red Team questions, the Agent MUST step into the role
 4. **Document:** Append this combined checklist to the QA Report file under a new `## 0.5 Tech Lead & CSA Governance Checklist` section.
 5. **Halt for Review:** The Agent MUST stop and present this checklist to the user. **STOP HERE.** Wait for the user to confirm this checklist before moving to structure scan and general question generation.
 
-### Step 1. Structure Scan
+### Step 6. Structure Scan
+
 
 // turbo
 
@@ -202,14 +202,14 @@ Git Operations: N commits + N pushes
 ---
 ```
 
-### Step 2. Generate Probing Questions
+### Step 7. Generate Probing Questions
 
 For each section/phase in the artifact:
 
 0. **All-Phases Coverage Enforcer (MANDATORY):** If the process is phase-loop or risk-driven, the Agent **MUST NOT** skip or orphan any phase defined in the Structure Map. The QA questions and audit rounds **MUST** cover 100% of the phases/sections. If the Agent splits the QA process into consecutive rounds/vessels, the Agent **MUST** explicitly track which phases are pending, and **MUST** proceed to the next round until all phases from the Structure Map are audited.
-1. **Context Recovery & Rule Check (MANDATORY):** Before generating questions for the current phase or section, Agent MUST actively re-read the project rules index (`.agents/rules.md`) and load any relevant rule files (e.g., `maintenance.md`) to verify if any specific checklists, caveats, or constraints apply to the current Phase's specific actions.
+1. **Context Recovery & Rule Check (MANDATORY):** Before generating questions for the current phase or section, Agent MUST actively re-read the project rules directory (`.agents/rules/`) and load any relevant rule files (e.g., `maintenance.md`) to verify if any specific checklists, caveats, or constraints apply to the current Phase's specific actions.
 2. **Phase-Specific Graph Context & Impact Report Integration (MANDATORY):**
-   - IF the `--graph` flag is provided and the process is phase-loop, the Agent MUST execute the Graph Context Pipeline (Step 0.25) scoped specifically to the nodes modified or affected by this Phase.
+   - IF the `--graph` flag is provided and the process is phase-loop, the Agent MUST execute the Graph Context Pipeline (Step 3) scoped specifically to the nodes modified or affected by this Phase.
    - IF a Graph Impact Report exists for the current phase (e.g., `artifacts/reports/graph/graph-impact-phase-[N].md`), the Agent MUST actively read the report using `view_file` before generating questions. The Agent MUST evaluate the report's Blast Radius, God Nodes affected, security contexts touched, and plan adjustment recommendations. Integrate these findings directly into the Red Team Personas (Principal Architect, Security Auditor, Tech Lead) to generate deep, contextual, and highly critical stress-test questions targeting integration safety and regression risks.
 3. **Generate probing questions** based on the approved Focus Areas, Red Team Roster, the actively recovered Rules context, and the **specific project domain context** (especially for `spec` mode):
    - **Spec-to-Sysdesign Cross Analysis (MANDATORY for `spec` mode):** The Agent MUST NOT generate generic questions. Instead, it MUST analyze the target Spec alongside the active system design (`sysdesign-*.md`) and codebase structure to identify domain-specific risks (e.g., payload mismatch, concurrency bottlenecks, security loopholes like session management drift, database foreign key constraints conflict).
@@ -217,7 +217,7 @@ For each section/phase in the artifact:
    - **No Arbitrary Limits:** Generate **as many questions as necessary** to fully stress-test the section.
    - Each question MUST be tagged with a dimension (`[LOGIC]`, `[SEC]`, etc.).
 3. **Do NOT answer them yet.**
-4. **Format the output** as a Question List and **Append** them to the `## 2. Red Team Findings` section of the QA Report file created in Step 0.5.
+4. **Format the output** as a Question List and **Append** them to the `## 2. Red Team Findings` section of the QA Report file created in Step 4.
 
 ```
 ---
@@ -229,7 +229,7 @@ For each section/phase in the artifact:
 ...
 ```
 
-### Step 3. Interactive Iteration Loop
+### Step 8. Interactive Iteration Loop
 
 > ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here. The Agent MUST NOT answer questions or proceed to Phase 2 (Execution & Answering) in the same turn. Agent MUST present the question list, suggest deep review options, and wait for explicit user approval or input in the chat. Auto-answering questions without user approval is a severe workflow violation.
 
@@ -259,16 +259,16 @@ For each section/phase in the artifact:
 
 ### Phase 2: Execution & Answering
 
-### Step 4. Change Role & Deep Dive
+### Step 9. Change Role & Deep Dive
 
 Once the user approves the questions OR triggers a `deep` review, the agent MUST change role to executor:
 1. **If `deep` review triggered:** The user must be on a High-Token Model. Agent MUST ingest the full repository source code relevant to the target, combine it with Phase 1 results, and generate answers focusing strictly on the requested aspect (`logic`, `sec`, `perf`, `int`, `clean`, or all).
 2. Re-verify any complex code relationships, upstream specs, or missing artifacts that you deferred in Phase 1. Use `mcp_para-graph` tools to trace deep dependencies or impacts if a question requires codebase analysis.
 3. Ensure you have actively loaded the relevant `skills` and `rules` files into memory before answering.
 
-### Step 5. Answer & Verdict (Per Question Loop)
+### Step 10. Answer & Verdict (Per Question Loop)
 
-1. **Self-answer each approved question** by analyzing the artifact against the deep context loaded in Step 4.
+1. **Self-answer each approved question** by analyzing the artifact against the deep context loaded in Step 9.
 2. **Assign a verdict** to each answer:
    - `✅ OK` — No issue found.
    - `⚠️ Issue` — Minor gap, can be fixed easily.
@@ -284,7 +284,7 @@ Q1 [LOGIC]: [Question]
 → Verdict: ✅ OK | ⚠️ Issue | 🔴 Critical
 ```
 
-### Step 6. Cross-Section Consistency Check
+### Step 11. Cross-Section Consistency Check
 
 After all sections are reviewed, perform cross-cutting checks:
 
@@ -300,7 +300,7 @@ After all sections are reviewed, perform cross-cutting checks:
 | **File scope**           | Are all modified files listed in `git add` commands?                 |
 | **Version consistency**  | Is version number the same across all mentions?                      |
 
-### Step 7. Issue Summary, Recommendations & Next Steps
+### Step 12. Issue Summary, Recommendations & Next Steps
 
 Compile all `⚠️ Issue` and `🔴 Critical` findings into a summary table:
 
@@ -334,7 +334,7 @@ VERDICT: ✅ Ready for activation | ⚠️ Fix N issues first | 🔴 BLOCKED
 6. **Present the Next Steps** to the user in the chat and wait for their decision.
 
 
-### Step 8. Fix Loop & Post-Fix Re-Audit
+### Step 13. Fix Loop & Post-Fix Re-Audit
 
 If issues were found:
 
@@ -342,11 +342,12 @@ If issues were found:
    - **For 🔴 Critical risks:** Agent SHOULD proactively suggest using the `@[/brainstorm]` workflow methodology to generate 3-5 distinct options (Ideation) per issue BEFORE proposing a final fix. This ensures high-risk problems are solved with architectural rigor rather than quick patches.
 2. **Ask user:** "Fix this now? (y/n/skip) or run Brainstorm for solutions?"
 3. If user approves → apply the fix immediately.
-4. **Post-Fix Full Re-Audit:** After all fixes are applied, the artifact has changed. Agent MUST re-load the updated artifact context and perform a comprehensive re-evaluation (re-running Step 6 Cross-Section Check AND verifying that the fixes did not introduce new Security/Logic/Governance violations).
-5. If new issues are found during re-audit, return to 8.1.
+4. **Post-Fix Full Re-Audit:** After all fixes are applied, the artifact has changed. Agent MUST re-load the updated artifact context and perform a comprehensive re-evaluation (re-running Step 11 Cross-Section Check AND verifying that the fixes did not introduce new Security/Logic/Governance violations).
+5. If new issues are found during re-audit, return to 13.1.
 6. **Halt for Tracking Confirmation:** Before updating the Plan's tracking tables, the Agent MUST STOP and present a proposal: "All issues fixed. Shall I automatically update the *Review & Audit Tracking* table and tick the *Project Governance Checklist* in the Plan to conclude this QA loop? (y/n)"
 
-### Step 9. Audit Tracking Update (User Approved)
+### Step 14. Audit Tracking Update (User Approved)
+
 
 **Only perform Tracking Update if the user approved it in Step 8.6.**
 
