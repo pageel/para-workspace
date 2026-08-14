@@ -7,8 +7,7 @@
   "scope": "workspace",
   "domain": "workspace",
   "purpose": "memory",
-  "para_version": "1.9.6",
-
+  "para_version": "1.9.7",
   "tags": [
     "vibecode",
     "dsp",
@@ -36,5 +35,6 @@
     "templates/common/agents/skills/vibecode/SKILL.md",
     "templates/common/agents/skills/vibecode/references/session-quality-gate.md",
     "templates/common/agents/skills/vibecode/scripts/session-manager.sh"
-  ]
+  ],
+  "last_updated": "2026-08-14"
 }

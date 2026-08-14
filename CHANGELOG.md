@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 Detailed version changelogs are maintained internally in project docs.
 
+## [1.9.7] - 2026-08-14
+
+Template Adjustments, CLI Help Subsystem & System Knowledge Standardization.
+
+- **Added**: Standardized CLI Help Subsystem (`cli/lib/help.sh`) and upgraded `cli/para` dispatcher supporting `para help <cmd>`, `para <cmd> --help`, `-h`, `para help --json` machine-readable catalog, and smart slash workflow guidance.
+- **Added**: Automated test suite `tests/cli/test-help-system.sh` verifying bidirectional help and exit code compliance across all 21 CLI command scripts.
+- **Added**: 6-point `project.md` template adjustments (A1-A6) with `quality_gates` schema for Step 3.5 Stack Reconnaissance, `type`, `ecosystem`, and markdown sections `## Dependencies` & `## Key Decisions`.
+- **Changed**: Synchronized `project.schema.json` in kernel with full type validation for all active fields.
+- **Changed**: Registered 17 updated workflow and skill templates in `workflows/catalog.yml` and `skills/catalog.yml` (including `sysdesign` workflow and skill).
+- **Changed**: Standardized 7 System KIs in `repo/templates/knowledge/` to `para_version: "1.9.7"`, updated `overview.md` §4 schema documentation, and sanitized references per KR7.
+
+## [1.9.6.1] - 2026-07-31
+
+Deep Reasoning Engine, Governance Rules & Rule M2 Clarification.
+
+- **Added**: Staged `deep-reasoning` skill and registered entry in `skills/catalog.yml`.
+- **Added**: Shipped official System Knowledge Item `para_deep_reasoning_cot` for Chain-of-Thought memory persistence.
+- **Added**: Introduced `maintenance.md` project governance rule defining M1-M4 release integrity standards.
+- **Changed**: Synchronized version 1.9.6.1 and documented `fix` workflow, `security-observability` rule, and `cicd` skills in README catalogs.
+
+## [1.9.6] - 2026-07-28
+
+3-Layer Project Rules Enforcement, Plan Linter v2.0 & Compliance Hardening.
+
+- **Added**: 3-layer project rules enforcement architecture (Workspace, Project, Plugin) via `scan-project-rules.js`.
+- **Added**: Upgraded `lint-plan.js` to v2.0 with strict Phase verification and DoD validation.
+- **Added**: Integrated QA Pre-flight Gate and target version evaluation interlock in `/plan` workflow.
+- **Added**: Declared `cicd` and `mobile-responsive` skills in `skills/catalog.yml`.
+- **Changed**: Updated `project.schema.json` with compliance contract schema.
+
 ## [1.9.5] - 2026-07-09
 
 Template Consolidation & Release.

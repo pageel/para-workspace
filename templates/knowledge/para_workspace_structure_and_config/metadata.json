@@ -8,5 +8,7 @@
     ".para-workspace.yml",
     ".agents/rules.md",
     ".agents/skills.md"
-  ]
+  ],
+  "para_version": "1.9.7",
+  "last_updated": "2026-08-14"
 }

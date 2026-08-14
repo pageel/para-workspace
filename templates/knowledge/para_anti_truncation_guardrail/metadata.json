@@ -6,7 +6,7 @@
   "domain": "engineering",
   "purpose": "context",
   "owner": "para",
-  "para_version": "1.8.10",
+  "para_version": "1.9.7",
   "tags": [
     "anti-hallucination",
     "truncation",
@@ -27,5 +27,6 @@
   "concepts": [
     "anti-truncation",
     "context-decay"
-  ]
+  ],
+  "last_updated": "2026-08-14"
 }

@@ -6,8 +6,7 @@
   "domain": "workspace",
   "purpose": "context",
   "owner": "para",
-  "para_version": "1.9.6",
-
+  "para_version": "1.9.7",
   "tags": [
     "architecture",
     "governance",
@@ -250,5 +249,6 @@
     "phase quality gate",
     "user intent detection",
     "automated context reload"
-  ]
+  ],
+  "last_updated": "2026-08-14"
 }

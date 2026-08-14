@@ -6,8 +6,13 @@
   "domain": "engineering",
   "purpose": "context",
   "owner": "para",
-  "para_version": "1.9.6.1",
-  "tags": ["cot", "deep-reasoning", "mcp", "para-graph"],
+  "para_version": "1.9.7",
+  "tags": [
+    "cot",
+    "deep-reasoning",
+    "mcp",
+    "para-graph"
+  ],
   "references": [
     {
       "type": "file",
@@ -17,5 +22,6 @@
       "type": "file",
       "value": ".agents/rules/tool-routing.md"
     }
-  ]
+  ],
+  "last_updated": "2026-08-14"
 }

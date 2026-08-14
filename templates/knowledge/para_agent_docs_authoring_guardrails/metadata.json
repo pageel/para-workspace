@@ -4,5 +4,7 @@
   "owner": "para",
   "summary": "General guidelines to prevent hallucination when AI agents write Markdown (Astro) documentation. Bans guessing URL slugs and translating key terminology incorrectly.",
   "version": "1.0.0",
-  "references": []
+  "references": [],
+  "para_version": "1.9.7",
+  "last_updated": "2026-08-14"
 }
