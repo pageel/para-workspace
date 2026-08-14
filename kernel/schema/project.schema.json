@@ -1,9 +1,9 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "PARA Project Manifest",
-  "description": "Validates .project.yml — per-project metadata inside Projects/.",
+  "description": "Validates .project.yml and project.md frontmatter — per-project metadata inside Projects/.",
   "type": "object",
-  "required": ["name", "status", "kernel_version", "created_at"],
+  "required": ["name", "status", "created_at"],
   "additionalProperties": true,
   "properties": {
     "name": {
@@ -11,9 +11,14 @@
       "pattern": "^[a-z][a-z0-9-]*$",
       "description": "Kebab-case project name."
     },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+",
+      "description": "SemVer project version (e.g. 0.1.0, 1.9.7)."
+    },
     "status": {
       "type": "string",
-      "enum": ["active", "inactive", "archived"],
+      "enum": ["active", "inactive", "paused", "done", "archived"],
       "description": "Project lifecycle status."
     },
     "kernel_version": {
@@ -25,6 +30,10 @@
       "type": "string",
       "format": "date",
       "description": "ISO 8601 creation date."
+    },
+    "goal": {
+      "type": "string",
+      "description": "Project objective and desired outcome."
     },
     "owner": {
       "type": "string",
@@ -47,6 +56,16 @@
       "type": "array",
       "items": { "type": "string" }
     },
+    "dod": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Definition of Done checklist items."
+    },
+    "downstream": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of downstream dependent project slugs."
+    },
     "active_plan": {
       "type": ["string", "null"],
       "description": "Relative path to active plan file (from artifacts/). Supports cross-project prefix: @{ecosystem}/plans/xxx.md resolves to Projects/{ecosystem}/artifacts/plans/xxx.md. Null or empty when no plan is active."
@@ -63,21 +82,91 @@
         "rules": {
           "type": "boolean",
           "default": false,
-          "description": "Whether this project has a custom rules index in .agent/rules.md."
+          "description": "Whether this project has a custom rules index in .agents/rules.md."
         },
         "skills": {
           "type": "boolean",
           "default": false,
-          "description": "Whether this project has a custom skills index in .agent/skills.md."
+          "description": "Whether this project has a custom skills index in .agents/skills.md."
+        }
+      },
+      "additionalProperties": false
+    },
+    "compliance": {
+      "type": ["object", "null"],
+      "description": "Project compliance rules and governance modules.",
+      "properties": {
+        "rules_dir": {
+          "type": "string",
+          "description": "Directory containing project-specific rules."
+        },
+        "mandatory_modules": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of mandatory compliance rule modules."
+        }
+      },
+      "additionalProperties": true
+    },
+    "csa": {
+      "type": ["object", "null"],
+      "description": "Convergent Specification Architecture (CSA) quality thresholds.",
+      "properties": {
+        "spec_threshold": {
+          "type": "number",
+          "description": "Spec anchor coverage threshold percentage."
+        },
+        "doc_threshold": {
+          "type": "number",
+          "description": "Documentation coverage threshold percentage."
+        },
+        "doc_gate": {
+          "type": "string",
+          "enum": ["soft", "hard"],
+          "description": "Enforcement mode for doc gate."
+        }
+      },
+      "additionalProperties": false
+    },
+    "quality_gates": {
+      "type": ["object", "null"],
+      "description": "Quality gates and pre-commit verification configuration for /plan and /vibecode.",
+      "properties": {
+        "pre_commit": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Ordered FIFO array of check commands to run before git commit (e.g. npx astro check, npx vitest run)."
+        },
+        "test_dir": {
+          "type": ["string", "null"],
+          "description": "Test directory path for TDD path anchoring."
+        },
+        "browser_devtools": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable DevTools MCP verification gate for UI tasks."
+        },
+        "browser_trigger": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Keywords that trigger DevTools MCP checks (e.g. UI, CSP)."
+        },
+        "ci_node_version": {
+          "type": ["string", "null"],
+          "description": "Node.js version requirement for CI environment."
+        },
+        "deploy_cmd": {
+          "type": ["string", "null"],
+          "description": "Command to deploy project."
         }
       },
       "additionalProperties": false
     },
     "type": {
       "type": "string",
-      "enum": ["standard", "ecosystem", "meta-project"],
+      "enum": ["standard", "ecosystem", "meta-project", "sandbox"],
       "default": "standard",
-      "description": "Project type. 'ecosystem' coordinates satellites (no code). 'meta-project' produces code AND coordinates satellites. Default: standard."
+      "description": "Project type. 'standard' is single-repo code. 'ecosystem' coordinates satellites (no code). 'meta-project' produces code AND coordinates satellites. 'sandbox' is experimental playground."
     },
     "ecosystem": {
       "type": ["string", "null"],
@@ -101,6 +190,14 @@
       "type": ["string", "null"],
       "description": "Path to roadmap file. Relative from artifacts/ (e.g., 'plans/ecosystem-roadmap.md'). Supports cross-project prefix: @{ecosystem}/plans/xxx-roadmap.md resolves to Projects/{ecosystem}/artifacts/plans/xxx-roadmap.md. Null or empty when no roadmap exists.",
       "examples": ["plans/ecosystem-roadmap.md", "@pageel/plans/cms-branch-roadmap.md"]
+    },
+    "last_reviewed": {
+      "type": ["string", "null"],
+      "description": "Date of last project review or audit."
+    },
+    "milestones": {
+      "type": "array",
+      "description": "List of project milestones."
     }
   }
 }

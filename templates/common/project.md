@@ -5,6 +5,8 @@ status: "active"
 created: "YYYY-MM-DD"
 goal: ""
 deadline: ""
+type: "standard"
+ecosystem: ~
 downstream: []
 dod: []
 active_plan: ""
@@ -14,13 +16,19 @@ csa:
   spec_threshold: 90
   doc_threshold: 50
   doc_gate: soft
-has_rules: false  # DEPRECATED v1.6.2 — kept for backward compat
 agent:
   rules: true
   skills: true
 compliance:
   rules_dir: ".agents/rules/"
   mandatory_modules: []
+quality_gates:
+  pre_commit: []
+  test_dir: ~
+  browser_devtools: false
+  browser_trigger: []
+  ci_node_version: ~
+  deploy_cmd: ~
 last_reviewed: ""
 tags: []
 milestones: []
@@ -40,6 +48,14 @@ _What is included and excluded?_
 ## Definition of Done
 
 _How do we know this project is complete?_
+
+## Dependencies
+
+_External services, APIs, or reference projects this project depends on._
+
+## Key Decisions
+
+_Architectural decisions already made. Link to brainstorm artifacts._
 
 ## Links
 
