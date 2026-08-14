@@ -28,6 +28,18 @@ else
 fi
 
 # === Parse arguments ===
+if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+  echo "Usage: para scaffold {project|area|resource} <name>"
+  echo ""
+  echo "Creates a new project, area, or resource directory with standard PARA structure."
+  echo ""
+  echo "Examples:"
+  echo "  para scaffold project my-saas-app"
+  echo "  para scaffold area infrastructure"
+  echo "  para scaffold resource web-development"
+  exit 0
+fi
+
 TYPE="${1:-}"
 NAME="${2:-}"
 

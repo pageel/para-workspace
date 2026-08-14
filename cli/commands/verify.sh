@@ -13,9 +13,20 @@ fi
 PROJECT_NAME=$1
 DESCRIPTION=$2
 
+if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+  echo "Usage: para verify <project-name> [\"description\"]"
+  echo ""
+  echo "Create or list walkthrough verification documents for a project."
+  echo ""
+  echo "Examples:"
+  echo "  para verify my-saas"
+  echo "  para verify my-saas \"Auth flow end-to-end verification\""
+  exit 0
+fi
+
 if [ -z "$PROJECT_NAME" ]; then
   echo "❌ Error: Project name required."
-  echo "Usage: ./para verify <project-name> [\"description\"]"
+  echo "Usage: para verify <project-name> [\"description\"]"
   exit 1
 fi
 

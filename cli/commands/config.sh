@@ -42,11 +42,19 @@ case "$1" in
     set)
         set_val "$2" "$3"
         ;;
-    list)
-        cat "$CONFIG_FILE"
+    --help|-h|"")
+        echo "Usage: para config [get <key> | set <key> <value> | list]"
+        echo ""
+        echo "Manage workspace configuration key-value pairs in .para.json."
+        echo ""
+        echo "Commands:"
+        echo "  get <key>          Retrieve config value"
+        echo "  set <key> <value>  Update config value"
+        echo "  list               Print all configuration"
+        exit 0
         ;;
     *)
-        echo "Usage: $0 [get <key> | set <key> <value> | list]"
+        echo "Usage: para config [get <key> | set <key> <value> | list]"
         exit 1
         ;;
 esac

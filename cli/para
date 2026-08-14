@@ -2,7 +2,7 @@
 
 # PARA Workspace CLI
 # Usage: ./cli/para [command] [args...]
-# Version: 1.9.6.1
+# Version: 1.9.7
 
 # Kernel Version: 1.4
 
@@ -11,6 +11,165 @@ set -e
 # Resolve CLI directory relative to this script
 CLI_DIR="$(cd "$(dirname "$0")" && pwd)"
 COMMANDS_DIR="$CLI_DIR/commands"
+LIB_DIR="$CLI_DIR/lib"
+
+if [ -f "$LIB_DIR/help.sh" ]; then
+  source "$LIB_DIR/help.sh"
+fi
+
+# Version
+VERSION="$(cat "$CLI_DIR/../VERSION" 2>/dev/null || echo "1.4.1")"
+
+# Quick JSON Command Catalog for AI Agents
+print_json_catalog() {
+  cat <<EOF
+{
+  "version": "$VERSION",
+  "commands": {
+    "init": { "description": "Create a new workspace", "usage": "para init [--profile=X] [--lang=X] [--path=DIR]" },
+    "scaffold": { "description": "Create project, area, or resource", "usage": "para scaffold {project|area|resource} <name>" },
+    "status": { "description": "Show workspace health & stats", "usage": "para status [--json]" },
+    "archive": { "description": "Move item to Archive/", "usage": "para archive <type>/<name> [--force]" },
+    "update": { "description": "Pull latest repo + re-sync workspace", "usage": "para update [--dry-run]" },
+    "install": { "description": "Sync kernel, workflows, rules, skills", "usage": "para install [--force] [--dry-run]" },
+    "cleanup": { "description": "Remove old backups and legacy .bak files", "usage": "para cleanup [--dry-run] [--force] [--keep=N]" },
+    "migrate": { "description": "Migrate workspace to new version", "usage": "para migrate [--from=X] [--to=Y] [--dry-run]" },
+    "install-tool": { "description": "Install a PARA tool plugin", "usage": "para install-tool <name> [--version=X] [--update] [--agents] [--sync]" },
+    "remove-tool": { "description": "Remove an installed tool", "usage": "para remove-tool <name> [--force]" },
+    "list-tools": { "description": "List installed tools", "usage": "para list-tools [--json]" },
+    "mcp-setup": { "description": "Configure MCP server for an IDE", "usage": "para mcp-setup <name> [--ide=X] [--print-only]" },
+    "mcp-list": { "description": "List MCP-capable tools", "usage": "para mcp-list [--json]" },
+    "mcp-remove": { "description": "Remove MCP server from IDE config", "usage": "para mcp-remove <name> [--ide=X]" },
+    "config": { "description": "Get/set workspace config", "usage": "para config [get <key> | set <key> <val> | list]" },
+    "work": { "description": "Manage workflows (list/add/remove)", "usage": "para work [list | install <name>]" },
+    "rule": { "description": "Manage rules (list/add/remove)", "usage": "para rule [list | install <name>]" },
+    "review": { "description": "Deep workspace audit", "usage": "para review" },
+    "verify": { "description": "Create/list walkthroughs", "usage": "para verify <project> [desc]" },
+    "test": { "description": "Run kernel test suite", "usage": "para test" }
+  }
+}
+EOF
+}
+
+# Print Global CLI Help
+print_global_help() {
+  echo "PARA Workspace CLI v$VERSION"
+  echo ""
+  echo "Usage: para <command> [args...]"
+  echo ""
+  echo "━━━ Core Commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  echo "  init [--profile=X] [--lang=X]     Create a new workspace"
+  echo "       --profile=NAME               Workspace preset (general, dev)"
+  echo "       --lang=CODE                  Language (en, vi)"
+  echo "       --path=DIR                   Target directory"
+  echo ""
+  echo "  scaffold <type> <name>            Create project, area, or resource"
+  echo "       type: project | area | resource"
+  echo ""
+  echo "  status [--json]                   Show workspace health & stats"
+  echo "  archive <type>/<name> [--force]   Move item to Archive/"
+  echo ""
+  echo "━━━ Sync & Upgrade ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  echo "  update [--dry-run]                Pull latest repo + re-sync workspace"
+  echo "  install [--force] [--dry-run]      Sync kernel, workflows, rules, skills"
+  echo "       --force                      Overwrite all, even if local is newer"
+  echo "       --dry-run                    Preview changes without applying"
+  echo "  cleanup [--dry-run] [--force]      Remove old backups and legacy .bak files"
+  echo "       --keep=N                     Keep N most recent backup days (default: 5)"
+  echo ""
+  echo "  migrate [--from=X] [--to=Y]       Migrate workspace to new version"
+  echo "       --dry-run                    Preview changes without applying"
+  echo ""
+  echo "━━━ Tool Management ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  echo "  install-tool <name> [--version=X]  Install a PARA tool plugin"
+  echo "  remove-tool <name> [--force]       Remove an installed tool"
+  echo "  list-tools [--json]                List installed tools"
+  echo ""
+  echo "━━━ MCP Management ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  echo "  mcp-setup <name> [--ide=X]         Configure MCP server for an IDE"
+  echo "       --print-only                  Print JSON config without writing"
+  echo "  mcp-list [--json]                  List MCP-capable tools"
+  echo "  mcp-remove <name> [--ide=X]        Remove MCP server from IDE config"
+  echo ""
+  echo "━━━ Dev Commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  echo "  plan <project> <desc>             Create implementation plan"
+  echo "  verify <project> [desc]           Create/list walkthroughs"
+  echo "  review                            Deep workspace audit"
+  echo ""
+  echo "━━━ System Commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  echo "  config [key] [value]              Get/set workspace config"
+  echo "  work <command>                    Manage workflows (list/add/remove)"
+  echo "  rule <command>                    Manage rules (list/add/remove)"
+  echo "  test                              Run kernel test suite"
+  echo "  version                           Show CLI version"
+  echo ""
+  echo "━━━ Examples ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  echo "  para init --profile=dev --lang=en"
+  echo "  para scaffold project my-saas-app"
+  echo "  para status --json"
+  echo "  para update"
+  echo "  para install-tool para-graph"
+  echo "  para migrate --from=1.4.0 --to=1.4.1 --dry-run"
+  echo ""
+  echo "Docs: https://github.com/pageel/para-workspace"
+}
+
+# Handle 'help' command with subcommand support
+if [ "$1" = "help" ]; then
+  SUB_CMD="${2:-}"
+  case "$SUB_CMD" in
+    --json)
+      print_json_catalog
+      exit 0
+      ;;
+    open|end|plan|qa|spec|staging|brainstorm|vibecode|fix|docs|retro|learn|inbox|gen)
+      if type print_workflow_redirect >/dev/null 2>&1; then
+        print_workflow_redirect "$SUB_CMD"
+      else
+        echo "💡 '$SUB_CMD' is a Platform Workflow (Slash Command), not a CLI command."
+        echo "   Use /$SUB_CMD in the chat UI."
+      fi
+      exit 0
+      ;;
+    "")
+      print_global_help
+      exit 0
+      ;;
+    *)
+      if [ -f "$COMMANDS_DIR/$SUB_CMD.sh" ]; then
+        "$COMMANDS_DIR/$SUB_CMD.sh" --help
+        exit 0
+      else
+        echo "❌ Error: Unknown command '$SUB_CMD'" >&2
+        echo "   Run 'para --help' for available commands." >&2
+        exit 1
+      fi
+      ;;
+  esac
+fi
+
+# Global flags
+case "$1" in
+  --help|-h|"")
+    print_global_help
+    exit 0
+    ;;
+  --json)
+    print_json_catalog
+    exit 0
+    ;;
+  version|-v|--version)
+    echo "PARA Workspace v$VERSION"
+    exit 0
+    ;;
+esac
 
 # Workspace Root detection (R7: Fail Fast — no blind pwd fallback)
 if [ -f ".para-workspace.yml" ]; then
@@ -30,66 +189,35 @@ else
 fi
 export WORKSPACE_ROOT
 
-# Version
-VERSION="$(cat "$CLI_DIR/../VERSION" 2>/dev/null || echo "1.4.1")"
-
 case "$1" in
   init)
-    shift
-    "$COMMANDS_DIR/init.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/init.sh" "$@" ;;
   scaffold)
-    shift
-    "$COMMANDS_DIR/scaffold.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/scaffold.sh" "$@" ;;
   status)
-    shift
-    "$COMMANDS_DIR/status.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/status.sh" "$@" ;;
   migrate)
-    shift
-    "$COMMANDS_DIR/migrate.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/migrate.sh" "$@" ;;
   archive)
-    shift
-    "$COMMANDS_DIR/archive.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/archive.sh" "$@" ;;
   install)
-    shift
-    "$COMMANDS_DIR/install.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/install.sh" "$@" ;;
   config)
-    shift
-    "$COMMANDS_DIR/config.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/config.sh" "$@" ;;
   plan)
-    shift
-    "$COMMANDS_DIR/plan.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/plan.sh" "$@" ;;
   review)
-    shift
-    "$COMMANDS_DIR/review.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/review.sh" "$@" ;;
   verify)
-    shift
-    "$COMMANDS_DIR/verify.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/verify.sh" "$@" ;;
   update)
-    shift
-    "$COMMANDS_DIR/update.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/update.sh" "$@" ;;
   cleanup)
-    shift
-    "$COMMANDS_DIR/cleanup.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/cleanup.sh" "$@" ;;
   work)
-    shift
-    "$COMMANDS_DIR/workflow.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/workflow.sh" "$@" ;;
   rule)
-    shift
-    "$COMMANDS_DIR/rule.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/rule.sh" "$@" ;;
   test)
     shift
     echo "🧪 Running PARA Kernel Tests..."
@@ -100,96 +228,18 @@ case "$1" in
     ;;
   # ━━━ Tool Management ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   install-tool)
-    shift; "$COMMANDS_DIR/install-tool.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/install-tool.sh" "$@" ;;
   remove-tool)
-    shift; "$COMMANDS_DIR/remove-tool.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/remove-tool.sh" "$@" ;;
   list-tools)
-    shift; "$COMMANDS_DIR/list-tools.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/list-tools.sh" "$@" ;;
   # ━━━ MCP Management ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   mcp-setup)
-    shift; "$COMMANDS_DIR/mcp-setup.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/mcp-setup.sh" "$@" ;;
   mcp-list)
-    shift; "$COMMANDS_DIR/mcp-list.sh" "$@"
-    ;;
+    shift; "$COMMANDS_DIR/mcp-list.sh" "$@" ;;
   mcp-remove)
-    shift; "$COMMANDS_DIR/mcp-remove.sh" "$@"
-    ;;
-  version|-v|--version)
-    echo "PARA Workspace v$VERSION"
-    ;;
-  help|--help|-h|"")
-    echo "PARA Workspace CLI v$VERSION"
-    echo ""
-    echo "Usage: para <command> [args...]"
-    echo ""
-    echo "━━━ Core Commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "  init [--profile=X] [--lang=X]     Create a new workspace"
-    echo "       --profile=NAME               Workspace preset (general, dev)"
-    echo "       --lang=CODE                  Language (en, vi)"
-    echo "       --path=DIR                   Target directory"
-    echo ""
-    echo "  scaffold <type> <name>            Create project, area, or resource"
-    echo "       type: project | area | resource"
-    echo ""
-    echo "  status [--json]                   Show workspace health & stats"
-    echo "  archive <type>/<name> [--force]   Move item to Archive/"
-    echo ""
-    echo "━━━ Sync & Upgrade ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "  update [--dry-run]                Pull latest repo + re-sync workspace"
-    echo "  install [--force] [--dry-run]      Sync kernel, workflows, rules, skills"
-    echo "       --force                      Overwrite all, even if local is newer"
-    echo "       --dry-run                    Preview changes without applying"
-    echo "  cleanup [--dry-run] [--force]      Remove old backups and legacy .bak files"
-    echo "       --keep=N                     Keep N most recent backup days (default: 5)"
-    echo ""
-    echo "  migrate [--from=X] [--to=Y]       Migrate workspace to new version"
-    echo "       --dry-run                    Preview changes without applying"
-    echo ""
-    echo "━━━ Tool Management ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "  install-tool <name> [--version=X]  Install a PARA tool plugin"
-    echo "  remove-tool <name> [--force]       Remove an installed tool"
-    echo "  list-tools [--json]                List installed tools"
-    echo ""
-    echo "━━━ MCP Management ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "  mcp-setup <name> [--ide=X]         Configure MCP server for an IDE"
-    echo "       --print-only                  Print JSON config without writing"
-    echo "  mcp-list [--json]                  List MCP-capable tools"
-    echo "  mcp-remove <name> [--ide=X]        Remove MCP server from IDE config"
-    echo ""
-    echo "━━━ Dev Commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "  plan <project> <desc>             Create implementation plan"
-    echo "  verify <project> [desc]           Create/list walkthroughs"
-    echo "  review                            Deep workspace audit"
-    echo ""
-    echo "━━━ System Commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "  config [key] [value]              Get/set workspace config"
-    echo "  work <command>                    Manage workflows (list/add/remove)"
-    echo "  rule <command>                    Manage rules (list/add/remove)"
-    echo "  test                              Run kernel test suite"
-    echo "  version                           Show CLI version"
-    echo ""
-    echo "━━━ Examples ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "  para init --profile=dev --lang=en"
-    echo "  para scaffold project my-saas-app"
-    echo "  para status --json"
-    echo "  para update"
-    echo "  para install-tool para-graph"
-    echo "  para migrate --from=1.4.0 --to=1.4.1 --dry-run"
-    echo ""
-    echo "Docs: https://github.com/pageel/para-workspace"
-    exit 0
-    ;;
+    shift; "$COMMANDS_DIR/mcp-remove.sh" "$@" ;;
   *)
     # Prevent mistaking slash commands (workflows) for CLI commands (v1.9.2)
     case "$1" in

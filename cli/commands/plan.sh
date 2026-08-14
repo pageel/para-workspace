@@ -13,9 +13,19 @@ fi
 PROJECT_NAME=$1
 DESCRIPTION=$2
 
+if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+  echo "Usage: para plan <project-name> \"<description>\""
+  echo ""
+  echo "Create a new implementation plan scaffold for a project."
+  echo ""
+  echo "Examples:"
+  echo "  para plan my-saas \"User Authentication Flow\""
+  exit 0
+fi
+
 if [ -z "$PROJECT_NAME" ] || [ -z "$DESCRIPTION" ]; then
   echo "❌ Error: Project name and description required."
-  echo "Usage: ./para plan <project-name> \"<description>\""
+  echo "Usage: para plan <project-name> \"<description>\""
   exit 1
 fi
 

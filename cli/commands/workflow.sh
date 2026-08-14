@@ -44,8 +44,18 @@ case "$1" in
       echo "✅ Workflow '$NAME' installed as '$FINAL_NAME.md'"
     fi
     ;;
+  --help|-h|"")
+    echo "Usage: para work [list | install <name>]"
+    echo ""
+    echo "Manage workflows in the workspace catalog and .agents/workflows/ directory."
+    echo ""
+    echo "Commands:"
+    echo "  list            List all available workflows in catalog"
+    echo "  install <name>  Install or update a workflow"
+    exit 0
+    ;;
   *)
-    echo "Usage: $0 [list | install <name>]"
+    echo "Usage: para work [list | install <name>]"
     exit 1
     ;;
 esac

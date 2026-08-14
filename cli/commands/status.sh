@@ -28,6 +28,16 @@ fi
 JSON_MODE=false
 for arg in "$@"; do
   case "$arg" in
+    --help|-h)
+      echo "Usage: para status [--json]"
+      echo ""
+      echo "Show workspace health, active projects, task statistics, and agent counts."
+      echo ""
+      echo "Options:"
+      echo "  --json    Output stats in JSON format for automated tooling/agents"
+      echo ""
+      exit 0
+      ;;
     --json) JSON_MODE=true ;;
   esac
 done

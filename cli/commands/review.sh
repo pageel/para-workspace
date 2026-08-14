@@ -5,6 +5,14 @@
 
 set -e
 
+if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+  echo "Usage: para review"
+  echo ""
+  echo "Perform a health and compliance audit across all projects in the workspace."
+  echo ""
+  exit 0
+fi
+
 WS_ROOT="${WORKSPACE_ROOT:-$(realpath "../../..")}"
 export WORKSPACE_ROOT="$WS_ROOT"
 

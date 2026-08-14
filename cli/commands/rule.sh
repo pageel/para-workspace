@@ -52,8 +52,18 @@ case "$1" in
     cp "$SOURCE" "$DEST"
     echo "✅ Rule '$NAME' installed to .agents/rules/"
     ;;
+  --help|-h|"")
+    echo "Usage: para rule [list | install <name>]"
+    echo ""
+    echo "Manage rules in the workspace catalog and .agents/rules/ directory."
+    echo ""
+    echo "Commands:"
+    echo "  list            List all available rules in catalog"
+    echo "  install <name>  Install or update a rule"
+    exit 0
+    ;;
   *)
-    echo "Usage: $0 [list | install <name>]"
+    echo "Usage: para rule [list | install <name>]"
     exit 1
     ;;
 esac
