@@ -5,7 +5,7 @@ source: catalog
 
 # /plan [project-name] [action] [--graph] [--project]
 
-> **Workspace Version:** 1.9.5 (Version Evaluation & Roadmap Template Alignment)
+> **Workspace Version:** 1.9.6 (Stack Reconnaissance + Domain Routing)
 > **Constraint:** Read `.para-workspace.yml` at the workspace root to resolve the user's preferred language.
 > Resolution priority:
 > 1. If `language` is a map: 
@@ -29,6 +29,7 @@ Create, review, or update a phased implementation plan for a PARA project.
 | `create` | Create a new implementation plan (default if omitted) |
 | `review` | Review and summarize an existing plan |
 | `update` | Update phases or status in an existing plan |
+| `gate` / `preflight` | Master Tech Lead Executive Review — Consolidate all reports (Spec, CSA, Impact R1, Security R2, Test T2) into a Go/No-Go Scorecard before plan execution |
 | `dev` | Start or continue executing the active plan |
 | `end` | Complete and archive the active plan |
 
@@ -135,6 +136,60 @@ Read `Projects/[project-name]/project.md` to extract:
 - **Scope** (In-Scope / Out-of-Scope) — guards against scope creep in Phase definition.
 - **Dependencies** — external dependencies or reference projects.
 - **Key Decisions** — architectural decisions already made.
+
+#### 3.5. Stack Reconnaissance
+
+// turbo
+
+> 🔍 **Purpose:** Analyze project metadata (tags, quality_gates) from Step 3 to build a stack profile
+> BEFORE loading governance rules. This informs domain rule selection and quality gate injection.
+> **Token budget:** ~120 tokens (scan) + domain file load (on-demand).
+> **Output:** Chat-only print. Zero file I/O.
+
+From Step 3 project.md data (already in memory), extract:
+
+1. **Extract `tags[]`** — tech stack identifiers (e.g., `["astro", "cloudflare", "crm"]`)
+2. **Extract `quality_gates{}`** — structured gate profile (if present):
+   - `pre_commit[]` — ordered check sequence
+   - `test_dir` — test directory path
+   - `browser_devtools` — boolean DevTools gate
+   - `browser_trigger` — trigger keywords
+   - `ci_node_version` — CI constraint
+   - `deploy_cmd` — deploy command
+
+3. **Scan test directory** (1 bash call):
+   ```bash
+   ls Projects/[project-name]/repo/tests/ 2>/dev/null | wc -l
+   ```
+
+4. **Domain routing** (from `tags[]`):
+   - IF `"astro"` in tags → `view_file .agents/skills/plan/domains/astro.md`
+   - IF `"cloudflare"` in tags → `view_file .agents/skills/plan/domains/cloudflare.md`
+   - Loaded domain rules become **hard constraints** for Steps 10-11.
+
+5. **Output Stack Fingerprint Report** (chat print):
+   ```text
+   🔍 Stack Fingerprint Report
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━
+   | Dimension    | Value                              |
+   |:-------------|:-----------------------------------|
+   | Stack        | [from tags[]]                       |
+   | Pre-Commit   | [from pre_commit[], ordered]        |
+   | Test Dir     | [test_dir + file count]             |
+   | DevTools     | [browser_devtools + trigger]        |
+   | CI Node      | [ci_node_version]                   |
+   | Deploy       | [deploy_cmd]                        |
+   | Domain Rules | [loaded domain files]               |
+   ```
+
+6. **Skip gate:** IF no `quality_gates` AND no `tags` in project.md:
+   - Print: `⏭️ No stack profile available — skipping reconnaissance`
+   - Proceed directly to Step 4.
+
+7. **Store profile** in agent working memory (NOT file). Used by:
+   - Step 4 (domain-aware rules loading)
+   - Step 11 (Phase design — auto-inject quality gate tasks)
+   - Step 15 (Post-Draft Audit — verify gates were injected)
 
 #### 4. Load Project Context (default for create, or if --project)
 
@@ -393,6 +448,13 @@ Break the project into sequential phases. Each phase should:
 
 > **Guideline:** Aim for 4-7 phases total. Each phase should be completable in 1-2 days.
 
+> 🔍 **Stack Fingerprint Profile Integration** (from Step 3.5):
+> IF Stack Fingerprint Profile is available from Step 3.5:
+>   - **pre_commit[] injection:** Insert commands from `pre_commit` array as **ordered tasks** BEFORE every git commit task in each Phase. Maintain the exact array order.
+>   - **browser_devtools gate:** IF `browser_devtools: true` → inject DevTools MCP verification task + `⛔ CHECKPOINT` in Phases that modify UI components, CSP headers, script tags, or interactive elements.
+>   - **ci_node_version guard:** IF `ci_node_version` present → add CI compat warning comment to Phase 0 header: `<!-- ⚠️ CI GUARD: Target Node.js [version]. Avoid version-specific APIs. -->`
+>   - **Domain rules:** Enforce all constraints loaded from `domains/*.md` files (e.g., Astro `npx astro check` gate, CSP nonce binding, frontmatter import order).
+
 #### 12. Cross-reference & Code Reuse
 
 ##### 12a. Map Code Reuse
@@ -620,6 +682,12 @@ Projects/[project-name]/artifacts/plans/[plan-name].md
 
 #### 17. Complete Plan Creation
 
+> 🗺️ **Roadmap Plan Specialization (v1.9.6):**
+> If the created plan is a **Roadmap Plan** (`roadmap-[scope].md` / template: `roadmap.md`):
+> 1. **Do NOT set `active_plan`:** Roadmaps are meta-plans (living indices) and MUST NOT be set as `active_plan`. Automatically update `roadmap: plans/roadmap-[scope].md` in `project.md`.
+> 2. **Bypass TDD Task Audit:** Skip the TDD task classification table as Roadmaps do not contain daily code execution tasks.
+> 3. **Primary Recommendation:** Instead of `/plan dev`, the Agent MUST recommend creating a Detail Plan for Phase 1 (P1): `/plan [project-name] create [vP1-version]` or writing a Specification for Phase 1: `/spec [project-name] create [p1-topic]`.
+
 Present the plan creation summary and next step options to the User:
 
 ```
@@ -629,10 +697,15 @@ Status: 📝 Draft (Audited & Verified)
 Phases: [N] | Timeline: [N] days | Tasks: [N]
 File:   artifacts/plans/[plan-name].md
 
-Next Steps:
+Next Steps (Detail Plans):
   A. /plan [project-name] dev   → Activate plan & start execution (auto-sets active_plan)
   B. /vibecode loop             → Sandbox/interactive execution loop
   C. /qa [project-name] plan    → Stress-test plan with Red Team Q&A review
+
+Next Steps (Roadmap Plans):
+  ⭐ RECOMMENDATION: /plan [project-name] create [vP1-version] → Create Detail Plan for Phase 1
+  A. /spec [project-name] create [p1-topic]                   → Write Spec for Phase 1
+  B. /backlog [project-name] sync                              → Map backlog items to roadmap phases
 ```
 
 > **Note:** `/plan dev` automatically handles activation (sets Status to `🔨 Active`,
@@ -846,6 +919,40 @@ Apply changes and increment the plan version (e.g., `1.0` → `1.1`).
 #### 4. Log Update in Session
 
 Log the update in the current session.
+
+---
+
+## 🛡️ Action: gate / preflight
+
+Use this action to execute the **Master Tech Lead Executive Audit** before authorizing plan execution.
+
+> ⛔ **ANTI-OVERCONFIDENCE GUARD (Anti-Hallucination Protocol):**
+> The Agent **MUST NOT** blindly output green checkmarks (`🟢 PASS`) based on past conversation context or truncated summaries.
+> The Agent **MUST** perform an empirical, evidence-based verification cycle:
+> 1. **Physical File Verification:** Read actual contents of linked artifacts (`B1`, `S1`, `R1`, `R2`, `T2`) using `view_file`.
+> 2. **Explicit Reasoning Log:** Write a dedicated, step-by-step reasoning chain in internal thinking (`<thought>`) analyzing edge cases, failure modes, and assumptions.
+> 3. **Empirical Evidence Record:** Generate the durable **Tech Lead Pre-Flight Audit Decision Log** at `Projects/[project-name]/artifacts/reports/preflight/preflight-executive-audit-[version].md`.
+
+### Steps
+
+#### 1. Locate & Parse Active Plan
+Read `Projects/[project-name]/project.md` to identify `active_plan`. Extract linked files in `## References` (`B1`, `S1`, `T1`, `G1`, `R1`, `R2`, `T2`).
+
+#### 2. Empirical Verification Cycle
+- **Verification 1 (Spec & Brainstorm Sync):** Read `B1` and `S1`. Verify non-empty ACs and CSA anchors (`#csa-*`).
+- **Verification 2 (Plan Linter):** Run `node .agents/skills/plan/scripts/lint-plan.js <plan> <template>`. Must return Exit Code 0.
+- **Verification 3 (CSA Anchors):** Run `node .para/tools/graph/dist/cli.js audit csa --project Projects/[project-name]`.
+- **Verification 4 (Graph Impact Analysis R1):** Read `R1`. Verify Risk Score (1–25) and Blast Radius mapping.
+- **Verification 5 (Plan Security Audit R2):** Read `R2`. Verify Security Verdict (`PASS`/`WARN`/`FAIL`) and OWASP compliance.
+- **Verification 6 (Test Plan Protocol T2):** Read `T2`. Verify Test Map and Manual Test Scenarios.
+- **Verification 7 (Build & Typecheck):** Execute static code check (`npx tsc --noEmit` or equivalent).
+
+#### 3. Record Executive Audit Log
+Save the full empirical audit trail and reasoning evidence to:  
+📁 `Projects/[project-name]/artifacts/reports/preflight/preflight-executive-audit-[version].md`.
+
+#### 4. Present Executive Go/No-Go Scorecard
+Present the Master Executive Dashboard to the user with clickable file links and exact evidence for each gate, ending with a clear Go/No-Go recommendation and awaiting explicit user authorization (`Proceed with /plan [project] dev`).
 
 ---
 

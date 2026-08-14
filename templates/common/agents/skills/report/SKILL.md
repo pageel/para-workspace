@@ -18,6 +18,7 @@ version: 1.0.0
 
 | `references/dev-session-report-template.md` | Called during plan closure (`/plan end --report`) | Standard structure for comprehensive dev session reports |
 | `references/graph-impact-report-template.md` | Called during plan graph analysis (`/para-graph --report plan`) | Template for Graph Impact Analysis reports |
+| `references/plan-security-report-template.md` | Called during plan security audit (`/scan-sec --plan` or `/report --security`) | Template for Plan Security Audit reports aligned with `scan-sec` |
 
 ## Data Collection & Analysis Instructions
 

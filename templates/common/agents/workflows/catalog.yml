@@ -393,4 +393,16 @@ items:
   - telemetry
   - documentation
   - post-mortem
+- id: sysdesign
+  name: System Architecture Designer
+  kernel_min: 1.8.8
+  kernel_max: 1.x
+  entrypoint: sysdesign.md
+  description: Design system architecture, data models, APIs, and infrastructure before writing specifications.
+  tags:
+  - architecture
+  - sysdesign
+  - infra
+  - database
+  - api
 

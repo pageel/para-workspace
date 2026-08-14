@@ -17,7 +17,18 @@ Scan security vulnerabilities for AI-generated code (vibe code). This skill chec
 | Language Detection | `references/language-detection.md` | Language detection guide to find primary repo language |
 | Output Template | `references/output-format.md` | Layout template for report generation |
 | Data Flow Classification | `references/data-flow-classification.md` | Data flow mapping (L1-L4) guidelines |
-| Rules directory | `rules/` | Directory containing all 21 generic and specific rule files |
+| Rules directory | `rules/` | Directory containing all 21 generic, language-specific, and custom rule files |
+| Project Extension | `Projects/<name>/.agents/rules/` | Custom project security rules dynamically loaded during scans |
+
+### Extensible Security Engine & Domain Profiles
+
+`scan-sec` automatically discovers and loads domain-specific security rules:
+- **Universal OWASP Baseline:** Secrets, Auth/RBAC, Input Injection, Transport/TLS, Resource Limits.
+- **Healthcare & Medical (HIPAA):** Patient Data Isolation, Audit Logs, PII/PHI Redaction.
+- **FinTech & E-commerce (PCI-DSS):** Key Tokenization, Anti-Fraud, Transaction Protection.
+- **Multi-Tenant SaaS:** Row-Level Security (RLS), Tenant Isolation Boundaries.
+- **AI & Agentic Systems:** Prompt Injection Guards, Tool Execution Sandboxing.
+- **Custom Project Rules:** Dynamic loading from `Projects/<name>/.agents/rules/*security*.md`.
 
 
 
@@ -37,6 +48,7 @@ In the Antigravity Agent Manager chat box:
 | `project <name>` | Specific project | Scan files in `Projects/<name>` |
 | `resource <name>` | Specific resource | Scan files in `Resources/<name>` (or Areas/Learning/Resources) |
 | `area <name>` | Specific area | Scan files in `Areas/<name>` |
+| `plan <path\|name>` | **Implementation Plan** | Audit Plan file against OWASP rules using `plan-security-report-template.md` |
 
 **Output Language Selection:** `lang=vi` / `--vi` (default) or `lang=en` / `--en`.
 
@@ -44,6 +56,7 @@ Examples:
 ```
 scan security uncommitted lang=en
 /scan-sec project app-tinycrm
+/scan-sec plan Projects/website-hcc/artifacts/plans/v1.6.0-2026-08-13-google-sheets-notification.md
 audit security resource para-workspace lang=vi
 ```
 

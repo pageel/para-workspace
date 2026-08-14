@@ -306,6 +306,47 @@ items:
   - report
   - metrics
   - output
+- id: sysdesign
+  name: System Design Router
+  kernel_min: 1.8.8
+  kernel_max: 1.x
+  entrypoint: sysdesign/SKILL.md
+  description: Sidecar skill routing templates and architecture patterns for the /sysdesign workflow.
+  tags:
+  - sysdesign
+  - architecture
+  - sidecar
+  - templates
+- id: learn
+  name: Learning Packaging Assistant
+  kernel_min: 1.8.0
+  kernel_max: 1.x
+  entrypoint: learn/SKILL.md
+  description: Helper skill for packaging lessons, postmortems, and concepts into Areas/Learning.
+  tags:
+  - learn
+  - knowledge
+  - sidecar
+- id: open
+  name: Workspace Session Open Assistant
+  kernel_min: 1.8.0
+  kernel_max: 1.x
+  entrypoint: open/SKILL.md
+  description: Sidecar skill for session opening diagnostics, sync queues, and startup reports.
+  tags:
+  - open
+  - session
+  - sidecar
+- id: para-knowledge
+  name: PARA Knowledge Sidecar
+  kernel_min: 1.8.0
+  kernel_max: 1.x
+  entrypoint: para-knowledge/SKILL.md
+  description: Sidecar data and templates for the /para-knowledge workflow.
+  tags:
+  - knowledge
+  - ki
+  - sidecar
 
 
 

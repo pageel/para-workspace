@@ -191,7 +191,7 @@ When scaffolding CI/CD for a new monorepo project:
 ### 6.1. Reference Files Index
 
 For detailed pattern breakdowns and reusable copy-paste recipes, consult:
-- **Astro Monorepo Pattern:** [`references/patterns/astro-monorepo.md`](file:///.agents/skills/cicd/references/patterns/astro-monorepo.md)
-- **Dependabot Auto-Merge Recipe:** [`references/recipes/dependabot-auto-merge.md`](file:///.agents/skills/cicd/references/recipes/dependabot-auto-merge.md)
-- **OSS PR Template Recipe:** [`references/recipes/pr-template-oss.md`](file:///.agents/skills/cicd/references/recipes/pr-template-oss.md)
+- **Astro Monorepo Pattern:** [`references/patterns/astro-monorepo.md`](.agents/skills/cicd/references/patterns/astro-monorepo.md)
+- **Dependabot Auto-Merge Recipe:** [`references/recipes/dependabot-auto-merge.md`](.agents/skills/cicd/references/recipes/dependabot-auto-merge.md)
+- **OSS PR Template Recipe:** [`references/recipes/pr-template-oss.md`](.agents/skills/cicd/references/recipes/pr-template-oss.md)
 

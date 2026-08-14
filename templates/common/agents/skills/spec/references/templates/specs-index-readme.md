@@ -30,4 +30,4 @@ Historical log of CSA compliance audit results across project versions:
 
 ## ⚙️ CSA Standards Reference
 
-For CSA anchor design standards, naming schemas, and integration workflows, please refer to the global rule [.agents/rules/csa.md](file:///.agents/rules/csa.md) or the CSA Skill documentation [.agents/skills/csa/SKILL.md](file:///.agents/skills/csa/SKILL.md).
+For CSA anchor design standards, naming schemas, and integration workflows, please refer to the global rule [.agents/rules/csa.md](.agents/rules/csa.md) or the CSA Skill documentation [.agents/skills/csa/SKILL.md](.agents/skills/csa/SKILL.md).

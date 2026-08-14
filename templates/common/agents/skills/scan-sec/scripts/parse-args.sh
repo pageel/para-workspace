@@ -154,7 +154,7 @@ else
 fi
 
 # 4) Strip noise (double-protect)
-FILES=$(echo "$FILES" | grep -vE '(^|/)(node_modules|vendor|dist|build|\.next|\.nuxt|target|\.venv|__pycache__|\.git|reports)/' || true)
+FILES=$(echo "$FILES" | grep -vE '(^|/)(node_modules|vendor|dist|build|\.next|\.nuxt|target|\.venv|__pycache__|\.git|reports|\.wrangler)/' || true)
 
 # 5) Prepare save location
 TIMESTAMP=$(date +"%Y-%m-%d-%H%M%S")

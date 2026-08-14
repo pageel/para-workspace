@@ -31,7 +31,8 @@ source: catalog
 | `references/detail-plan-tdd.md` | Step 9 — Plan Type = Detail Plan (TDD mode) | Document structure for strict Test-Driven Development implementation |
 | `references/detail-plan-hardened.md` | Step 9 — Plan Type = Hardened Plan | Detail Plan + Mandatory Audit Gate + Selective TDD injection |
 | `references/detail-plan-csa-audit.md` | Step 9 — Plan Type = CSA Audit | Document structure for auditing legacy spec-to-code alignment |
-| `domains/[stack].md` | Step 0 — Pre-flight (Techstack detected: cloudflare, etc.) | Techstack-specific plan rules (Turnstile pairing, D1 synchronicity, wrangler secrets) |
+| `domains/cloudflare.md` | Step 3.5 — Techstack detected: cloudflare (Workers, Pages, D1, Turnstile) | Cloudflare-specific plan rules (Turnstile pairing, D1 synchronicity, wrangler secrets) |
+| `domains/astro.md` | Step 3.5 — Techstack detected: astro | Astro-specific plan rules (astro check gate, CSP nonce binding, DevTools verification, frontmatter import order) |
 
 > **Convention:** Data files live in `references/` (not `templates/`).
 > This follows the Sidecar Skill convention formalized in v1.7.6.3.
@@ -118,6 +119,11 @@ After loading project governance, read `project.md` and adapt the chosen templat
 | Project has release process | Include release Phase (build + tarball + gh release) per project rules |
 | Risks & Mitigations table has entries | Add `<!-- ⚠️ HARNESS GUARD (Phase N Risk): ... -->` comment to each mapped Phase |
 | Spec has `## 9. Diagnostics Design` AND plan involves runtime code | Include `🔍 Debug Infrastructure Setup` task in Phase 0 (structured logger, error taxonomy constants, observable checkpoint stubs). In Hardened Plans, also add `Diagnostics Coverage` dimension to Post-Draft Audit and `🔍 Debug` type to TDD Classification. Add `Diagnostics Design Verification` to Walkthrough. |
+| Project `tags[]` contain `astro` | **Astro Domain Rule:** Load `domains/astro.md` via Step 3.5. Inject `npx astro check` checkpoint BEFORE every git commit task. If CSP active → inject nonce binding verification sub-task for `.astro` files with `<script>` tags. |
+| Project has `quality_gates.browser_devtools: true` OR project rules mention "DevTools" | **Browser Verification Gate:** Inject DevTools MCP task (`list_console_messages` → 0 errors) + `⛔ CHECKPOINT` in Phases that modify UI components, CSP headers, script tags, or interactive elements. Trigger keyword matching from `browser_trigger` field. |
+| Project has `quality_gates.test_dir` OR `tests/` directory detected in Step 3.5 | **Test Path Anchoring:** Use detected test directory for all TDD task references and test file creation paths. Agent MUST NOT guess test paths — use the anchored value. |
+| Project has `quality_gates.pre_commit` array | **Ordered Pre-Commit Cascade:** Replace default "Build/Test pass" with exact sequence from `pre_commit[]` array as ordered tasks BEFORE git commit. Maintain array order strictly. |
+| Project has `quality_gates.ci_node_version` | **CI Compat Guard:** Add `<!-- ⚠️ CI GUARD: Target Node.js [version]. Avoid version-specific APIs. -->` comment to Phase 0 header. Agent SHOULD flag any code using Node.js APIs not available in the target version. |
 
 > **Principle:** Template = clean skeleton. Adaptation = Skill responsibility.
 > **Status lifecycle:** 📝 Draft → 🔨 Active → ✅ Done. Transition from Draft → Active requires explicit user approval at `/plan create` Step 10 or `/plan update`.

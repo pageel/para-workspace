@@ -581,7 +581,7 @@ Create Phase [N] for this goal? (y/n/refine)
 
 **2c. Present Quality Gate:**
 
-- **MANDATORY AUDIT GATE PROPOSAL:** At this phase boundary, Agent MUST actively ask the User: "Would you like to initiate a structured design audit before coding? I can run /qa plan (to stress-test requirements) or /brainstorm (to clarify architecture details) for Phase [N]."
+- **MANDATORY PHASE START BASELINE GATE:** At this phase boundary, Agent MUST actively ask the User: "Would you like to initiate a structured design baseline before coding? I can run `/brainstorm` (clarify architecture), `/qa` (stress-test requirements), `/spec` (write/update specification), or `/research` (investigate unknowns) for Phase [N]."
 
 ```
 📋 PHASE [N] QUALITY GATE
@@ -593,28 +593,34 @@ Proposed quality tools for this phase:
   Pre-code (run BEFORE coding):
   ⚗️ /brainstorm   → [✅ Recommended | ⚪ Optional] — [Reason]
   📋 /qa           → [✅ Recommended | ⚪ Optional] — [Reason]
+  📝 /spec         → [✅ Recommended | ⚪ Optional] — [Reason]
+  🔍 /research     → [✅ Recommended | ⚪ Optional] — [Reason]
 
   During dev (activate WHILE coding):
   🧪 TDD Mode      → [✅ Recommended | ⚪ Optional] — [Reason]
   🔍 --graph       → [✅ Recommended | ⚪ Optional] — [Reason]
   🔒 --hardened    → [✅ Recommended | ⚪ Optional] — [Reason]
 
-💡 Recommended flow: brainstorm → QA stress-test → then code with TDD + --graph
-Select tools to activate: (all / pick / none / run qa / run brainstorm)
+💡 Recommended flow: brainstorm → spec → QA stress-test → then code with TDD + --graph
+Select tools to activate: (all / pick / none / run brainstorm / run qa / run spec / run research)
 ```
 
 **2d. Auto-recommend logic** (from `references/session-quality-gate.md`):
 - `/brainstorm` → YES if architecture unclear, multiple valid approaches, new patterns
 - `/qa` → YES if complex business logic, security-critical, edge cases likely
+- `/spec` → YES if feature touches multiple components, requires acceptance criteria, multi-step user journey, or no existing spec covers this scope
+- `/research` → YES if topic is new/unfamiliar, external API integration, no prior art in codebase, or technology investigation needed
 - `TDD` → YES if logic-heavy, DB/API changes, business rules
 - `--graph` → YES if blast radius ≥ 3 files, cross-module dependency
 - `--hardened` → YES if sensitive keyword detected (password, auth, token, etc.)
 - If `--hardened` → TDD is **automatically co-recommended** (defense-in-depth)
 
 **2e. Execute pre-code tools** (if user selected):
-1. **`/brainstorm` first** (if selected): Run focused 3-turn brainstorm → log decision in Phase's `⚗️ Brainstorm Log`
-2. **`/qa` second** (if selected): Run stress-test review → issues found feed into implementation steps
-3. Update the plan file to ensure all proposed file modifications are documented in `Proposed Changes` and all tasks are listed in the implementation checklist.
+1. **`/brainstorm` first** (if selected): Run focused 3-turn brainstorm → log decision in Phase’s `⚗️ Brainstorm Log`
+2. **`/spec` second** (if selected): Run specification workflow → write/update spec document
+3. **`/qa` third** (if selected): Run stress-test review → issues found feed into implementation steps
+4. **`/research` fourth** (if selected): Run research workflow → document findings as reference
+5. Update the plan file to ensure all proposed file modifications are documented in `Proposed Changes` and all tasks are listed in the implementation checklist.
 
 **2f. ⛔ PRE-CODE CHECKPOINT (MANDATORY):**
 Before writing any code or making any file modifications for Phase N, Agent MUST:
@@ -636,7 +642,12 @@ For each milestone (Phase N) in the session plan:
 - If `--graph` is active: Use `graph_context_bundle` for upstream/downstream awareness.
 - If `--hardened` is active: Apply Audit Gate mini-checklist (sanitization, auth checks, secret scan).
 
-**3b. Checkpoint & Verification Gate:**
+**3b. Task Done Verification & Checkpoint Gate:**
+- **3b-pre. Task Done Check (MANDATORY):** Before presenting git diff to the User, Agent MUST run:
+  ```bash
+  node .agents/skills/plan/scripts/check-phase-tasks.js <plan-file> <phase-number>
+  ```
+  If exit code ≠ 0, Agent MUST list the unchecked tasks, resolve them (mark done or explain why incomplete), and re-run the script until exit code = 0. Agent MUST NOT propose git commit while the script reports failures.
 - Run verification tests/lints automatically.
 - Present test results and Git diff to the User.
 - ⛔ **CHECKPOINT (Interactive Pause):** Wait for User confirmation that the milestone is successful.

@@ -4,7 +4,7 @@ description: Create research case studies documenting agent processes, developme
 
 # /research [project-name] [type] [--brainstorm-sync]
 
-> **Workspace Kernel Version:** 1.7.3 (Brainstorm Integration)
+> **Workspace Kernel Version:** 1.7.5 (Brainstorm Planning Map + CoT Research Governance)
 
 Create structured research documents that capture real-world processes, agent behavior, architecture decisions, and development timelines. Research docs are **internal-only** — never published via `/docs publish`.
 
@@ -68,6 +68,45 @@ Determine:
 
 - **Topic**: Specific topic (e.g., "knowledge-system-merge", "v1.7.2-workflow-simplification")
 - **Scope**: Current session only, or cross-session?
+
+### 1.5. Research Health Check (Long Research Governance — v1.7.4)
+
+> **Gate:** Only runs when the project has existing research files with a Decision Tracker section (≥500 lines or ≥5 open questions).
+> **Purpose:** Prevent research drift — stale questions, lost progress, forgotten decisions.
+
+Agent MUST perform this check BEFORE Step 2 (evidence gathering) if the research topic matches an existing research document:
+
+```bash
+# Find existing research files matching topic
+find Projects/[project-name]/docs/researches/ -name "*.md" ! -name "README.md" 2>/dev/null
+```
+
+**IF matching research found (≥500 lines):**
+
+1. **Read Decision Tracker** — Scan for `Decision Tracker` or `Bảng Tổng Hợp` section
+2. **Report Health Status** to user:
+
+```
+🏥 RESEARCH HEALTH CHECK: [research-file-name]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 Questions: [N] total | ✅ [N] closed | 🟡 [N] blocking | 🟢 [N] deferred
+📏 Document: [N] lines | Version: [X.Y.Z]
+⏱️ Stale Questions: [list Qs not updated in >3 sessions, if any]
+
+💡 Suggested Focus:
+   → [Highest priority open Q with rationale]
+
+📈 Progress: [N]% closed ([closed]/[total])
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+3. **Stale Question Alert** — If any Q has status `🟡 Blocking` or `🟢 Non-blocking` and has not been updated in >3 brainstorm sessions, warn:
+   `⚠️ Stale Q: [QN] — last addressed [N] sessions ago. Consider resolving or archiving.`
+
+4. **Graduation Gate** — If ≥80% of questions are `✅ Closed`:
+   `🎓 GRADUATION READY: [N]% questions resolved. Suggest /plan create to implement findings.`
+
+**IF no matching research found:** Skip this step, proceed to Step 2.
 
 ### 2. Gather Evidence
 
@@ -168,6 +207,41 @@ Write to `Projects/[project-name]/docs/researches/research-[YYYY-MM-DD]-[topic].
 >        - A direct clickable file link to the original brainstorm file in the project.
 >     2. **Unified Technical Analysis:** Consolidate and merge all detailed technical analyses, ASCII/Mermaid diagrams, JSON schemas, trade-offs, and general evaluations from all brainstorms into a unified, coherent, and highly-detailed section in the main body of the Research document. Do not omit any technical detail or hide them in collapsible elements in this section.
 > *   This creates a seamless knowledge flow, making the Research document the most comprehensive and detailed study of that topic.
+
+> 🧠 **CoT-Research Auto-Sync Protocol (v1.7.4):**
+> When a brainstorm with `--deep` active has `contributes_to` pointing to a research file, Agent **MUST** perform these additional sync operations AFTER writing the brainstorm content:
+>
+> 1. **Decision Tracker Update:** Scan the research file for the Decision Tracker table. For each new decision made in the brainstorm's Phase 4:
+>    - IF the decision closes an existing Open Question → Update its status to `✅ Closed` with implementation reference
+>    - IF the decision opens a new question → Add a new row with `🟡 Blocking` or `🟢 Non-blocking` status
+> 2. **Open Questions Update:** For each new Open Question discovered during the brainstorm:
+>    - Add a new `##### QN:` section under the appropriate Group heading
+>    - Include: Status, Decision Type, Source (link to brainstorm), recommended approach
+> 3. **Evolution Map Update:** Append a new entry to the Evolution section:
+>    `[N]. **[Topic] (vX.Y.Z):** [1-line summary]. QN → [status].`
+> 4. **Version Bump:** Increment the research document's minor version (e.g., v1.7.0 → v1.8.0)
+>
+> ⛔ **Guard:** Agent MUST NOT modify research content that is unrelated to the brainstorm topic. Only update Tracker, Open Qs, Evolution, and Version.
+
+> 🗺️ **Brainstorm Planning Map Protocol (v1.7.5):**
+> When a research document of type `analysis` or `compare` contains **2 or more actionable proposals** (improvement proposals, action items, or implementation options), the Agent **MUST** generate a **Brainstorm Planning Map** section as the penultimate section (before the document footer).
+>
+> **Purpose:** Bridge the gap between research findings and execution by explicitly mapping which proposals need `/brainstorm --deep` deliberation vs. which can be implemented directly.
+>
+> **Protocol:**
+> 1. **Decision Complexity Assessment:** For each proposal/action item, evaluate:
+>    - Does it have **open design questions** (schema choices, interaction models, migration strategies)? → 🔴 Needs `--deep`
+>    - Does it have **architectural trade-offs** with no clear winner? → 🟡 Needs `--deep`
+>    - Is the output **clearly defined** with existing precedent? → 🟢 Direct implementation
+> 2. **Dependency Chain:** If proposals have dependencies (e.g., P3 schema must finalize before P1 flow design), document the execution order explicitly.
+> 3. **Open Questions Extraction:** For each brainstorm-needed proposal, extract the specific Open Questions (Q1, Q2, ...) with options and evaluation criteria.
+> 4. **Direct Implementation Checklist:** For proposals that don't need brainstorming, provide a concrete implementation checklist.
+> 5. **Command Generation:** For each brainstorm-needed proposal, generate the exact `/brainstorm` command with `--deep` flag and `--contributes-to` pointing back to this research file.
+>
+> **Conditional Gate:**
+> - IF research has **0-1 proposals** → Skip Brainstorm Planning Map (not enough items to map)
+> - IF research type is `process` or `chronicle` → Skip (retrospective/historical, not forward-looking)
+> - IF ALL proposals are 🟢 Direct Implementation → Replace full map with a simple "Implementation Checklist" section
 
 ### 5. Update Doc Index
 
@@ -527,6 +601,54 @@ _Source: [list sources]_
 
 ---
 
+## 7. Brainstorm Planning Map
+
+> Conditional section — only generated when research has ≥2 actionable proposals.
+> Maps each proposal to brainstorm need and execution order.
+
+### 7.1. Decision Complexity Matrix
+
+| # | Proposal | Brainstorm? | Rationale | Open Questions |
+| :--- | :--- | :--- | :--- | :--- |
+| P[N] | [proposal-name] | 🔴 **Needs --deep** / 🟡 **Needs --deep** / 🟢 **Direct impl** | [Why brainstorm is/isn't needed] | [Q1-QN refs or —] |
+
+### 7.2. Execution Order
+
+```text
+Brainstorm #1:  P[N] — [topic]              ← [dependency rationale]
+                  ↓ output: [expected output]
+Brainstorm #2:  P[N] — [topic]              ← [dependency rationale]
+                  ↓ output: [expected output]
+Implement:      P[N] — [topic]              ← [why direct implementation]
+Implement:      P[N] — [topic]              ← [why direct implementation]
+```
+
+### 7.3. Brainstorm Scopes (for each 🔴/🟡 proposal)
+
+#### Brainstorm #[N]: [Topic] (P[N])
+
+**Command:** `/brainstorm [project-name] [topic-slug] --deep --contributes-to [path-to-this-research]`
+
+**Prerequisite:** [None / Brainstorm #N-1 must complete first]
+
+**Open Questions:**
+
+##### Q[N]: [Question title]
+
+- **Option A:** [description]
+- **Option B:** [description]
+- **Evaluation criteria:** [what to consider]
+
+### 7.4. Direct Implementation Checklist (for each 🟢 proposal)
+
+#### P[N]: [Proposal Name]
+
+- [ ] [concrete task 1]
+- [ ] [concrete task 2]
+- [ ] [verify/test step]
+
+---
+
 _Internal Document — YYYY-MM-DD_
 _Source: [source code, docs, KI artifacts]_
 ```
@@ -612,6 +734,19 @@ _Source: [source code, docs, KI artifacts]_
 
 ---
 
+## 6. Brainstorm Planning Map
+
+> Conditional — only if ≥2 options led to additional open questions requiring deeper analysis.
+> See `analysis` template §7 for full structure. Use a simplified version here:
+
+| # | Action Item | Brainstorm? | Rationale |
+| :--- | :--- | :--- | :--- |
+| 1 | [item] | 🔴/🟡/🟢 | [reason] |
+
+**Execution Order:** [dependency chain if applicable]
+
+---
+
 _Internal Document — YYYY-MM-DD_
 _Source: [brainstorm artifacts, code analysis, external research]_
 ```
@@ -626,6 +761,7 @@ _Source: [brainstorm artifacts, code analysis, external research]_
 - [ ] Document follows the correct template for type
 - [ ] All claims backed by evidence (tool calls, git commits, file paths)
 - [ ] Failures and wrong assumptions included (transparency)
+- [ ] Brainstorm Planning Map generated (if ≥2 proposals, type = `analysis`/`compare`)
 - [ ] `docs/researches/README.md` updated with new entry under the correct type
 - [ ] Follow-up action suggested
 

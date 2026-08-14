@@ -55,6 +55,24 @@ contributes_to: []
 | 1 | [Name] | [Pro vs Con] | |
 | 2 | [Name] | [Pro vs Con] | |
 
+<!-- ⚠️ AGENT INSTRUCTION: Include the following section ONLY IF Deep Reasoning (CoT) was active during this brainstorm session (--deep flag or auto-triggered). Omit entirely if CoT was not active. -->
+
+## 🧠 Deep Reasoning Summary (CoT)
+
+- **Root Problem:** [Concise statement of core challenge]
+- **Options Evaluated & Scoring:**
+
+  | Approach | Blast Radius (30%) | Maintainability (25%) | Security (20%) | Door Type (15%) | Efficiency (10%) | Weighted Total | Status |
+  |:---|:---:|:---:|:---:|:---:|:---:|:---:|:---|
+  | **A. Conservative** | [1-5] | [1-5] | [1-5] | [1-5] | [1-5] | **[Score]** | [Selected/Rejected] |
+  | **B. Balanced** | [1-5] | [1-5] | [1-5] | [1-5] | [1-5] | **[Score]** | [Selected/Rejected] |
+  | **C. Aggressive** | [1-5] | [1-5] | [1-5] | [1-5] | [1-5] | **[Score]** | [Selected/Rejected] |
+
+- **Critical Trade-Offs:** [Key sacrifices made for safety/scalability]
+- **Failure Modes & Guards:** [Key risks identified and mitigated]
+- **Decision Type:** [One-Way Door / Two-Way Door]
+- **MCP Evidence:** [Graph nodes queried, blast radius data, past decisions surfaced — or "N/A (no graph)"]
+
 ## Decision
 
 [Selected approach and rationale — or "Pending" if still incubating]

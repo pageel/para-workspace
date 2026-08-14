@@ -184,6 +184,68 @@ function main() {
         missing.push(`Project Rule ${rule.id} (${rule.title}): Plan lacks Knowledge Items template sync task ('repo/templates/knowledge')`);
       }
     }
+
+    // Content Inspection 4: Feature Branch & Auto-Merge PR Protocol Gate (maintenance.md §3)
+    const rulesDir = path.join(projectDir, '.agents/rules');
+    let hasPrRule = false;
+    if (fs.existsSync(rulesDir)) {
+      const ruleFiles = fs.readdirSync(rulesDir);
+      for (const file of ruleFiles) {
+        if (!file.endsWith('.md')) continue;
+        const ruleText = fs.readFileSync(path.join(rulesDir, file), 'utf8');
+        if (ruleText.toLowerCase().includes('feature branch') || ruleText.toLowerCase().includes('auto-merge pr protocol') || ruleText.toLowerCase().includes('gh pr create')) {
+          hasPrRule = true;
+          break;
+        }
+      }
+    }
+    if (hasPrRule) {
+      const hasPrTask = planLower.includes('gh pr create') || planLower.includes('auto-merge') || planLower.includes('feature branch');
+      if (!hasPrTask) {
+        missing.push('Project Rule (maintenance.md §3): Plan lacks Feature Branch and PR Auto-Merge tasks! (Project enforces PR protocol but plan lacks gh pr create / feature branch tasks)');
+      }
+    }
+  }
+
+  // Content Inspection 5: Harness Guard Header Check for Git Checkpoints (v1.9.7)
+  const planLines = planContent.split('\n');
+  for (let i = 0; i < planLines.length; i++) {
+    const line = planLines[i];
+    if (line.includes('👤') && (line.toLowerCase().includes('git checkpoint') || line.toLowerCase().includes('git commit'))) {
+      let foundHarnessGuard = false;
+      for (let j = Math.max(0, i - 5); j < i; j++) {
+        if (planLines[j].includes('HARNESS GUARD') || planLines[j].includes('rules/vcs.md')) {
+          foundHarnessGuard = true;
+          break;
+        }
+      }
+      if (!foundHarnessGuard) {
+        missing.push(`Harness Guard Missing: Git task at line ${i + 1} ("${line.trim()}") lacks mandatory HARNESS GUARD header (<!-- ⚠️ HARNESS GUARD (VCS) -->) above it!`);
+      }
+    }
+  }
+
+  // Content Inspection 6: Astro Dual Static Analysis Gate (astro.md §1)
+  const repoDir = path.join(projectDir, 'repo');
+  const hasAstroConfig = fs.existsSync(path.join(repoDir, 'astro.config.mjs')) ||
+                         fs.existsSync(path.join(repoDir, 'astro.config.mts')) ||
+                         fs.existsSync(path.join(repoDir, 'astro.config.ts'));
+  let hasAstroDep = false;
+  const pkgJsonPath = path.join(repoDir, 'package.json');
+  if (!hasAstroConfig && fs.existsSync(pkgJsonPath)) {
+    try {
+      const pkgContent = fs.readFileSync(pkgJsonPath, 'utf8');
+      hasAstroDep = pkgContent.includes('"astro"') || pkgContent.includes('"@astrojs/');
+    } catch (_) { /* ignore */ }
+  }
+  if (hasAstroConfig || hasAstroDep) {
+    const planLowerAstro = planContent.toLowerCase();
+    if (!planLowerAstro.includes('astro check')) {
+      missing.push('Astro Domain Rule §1: Plan lacks mandatory `npx astro check` static analysis gate! (Project is Astro-based — see .agents/skills/plan/domains/astro.md §1)');
+    }
+    if (!planLowerAstro.includes('tsc --noemit') && !planLowerAstro.includes('tsc --noemit')) {
+      missing.push('Astro Domain Rule §1: Plan lacks mandatory `npx tsc --noEmit` static analysis gate! (Project is Astro-based — see .agents/skills/plan/domains/astro.md §1)');
+    }
   }
 
   if (missing.length > 0) {

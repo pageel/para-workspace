@@ -18,14 +18,16 @@ Proposed quality tools for this phase:
   Pre-code (run BEFORE coding):
   ⚗️ /brainstorm   → [✅ Recommended | ⚪ Optional] — [Reason]
   📋 /qa           → [✅ Recommended | ⚪ Optional] — [Reason]
+  📝 /spec         → [✅ Recommended | ⚪ Optional] — [Reason]
+  🔍 /research     → [✅ Recommended | ⚪ Optional] — [Reason]
 
   During dev (activate WHILE coding):
   🧪 TDD Mode      → [✅ Recommended | ⚪ Optional] — [Reason]
   🔍 --graph       → [✅ Recommended | ⚪ Optional] — [Reason]
   🔒 --hardened    → [✅ Recommended | ⚪ Optional] — [Reason]
 
-💡 Recommended flow: brainstorm → QA stress-test → then code with TDD + --graph
-Select tools to activate: (all / pick / none)
+💡 Recommended flow: brainstorm → spec → QA stress-test → then code with TDD + --graph
+Select tools to activate: (all / pick / none / run brainstorm / run qa / run spec / run research)
 ```
 
 **Rules:**
@@ -45,6 +47,8 @@ Select tools to activate: (all / pick / none)
 | **🔍 --graph** | Blast radius ≥ 3 files, cross-module imports, refactoring shared utilities, changing function signatures | Single-file fix, adding new isolated file, docs |
 | **⚗️ /brainstorm** | Architecture unclear, multiple valid approaches, new patterns not yet in codebase, trade-off decisions | Well-defined tasks, bug fix with clear root cause, routine CRUD |
 | **📋 /qa** | Complex business logic, security-critical flows, edge cases likely, multi-step user journeys | Simple one-file changes, config updates, styling fixes |
+| **📝 /spec** | Feature touches multiple components, requires acceptance criteria, multi-step user journey, or no existing spec covers this scope | Single-file bug fix, config change, styling tweak, task already covered by existing spec |
+| **🔍 /research** | Topic is new/unfamiliar, external API integration, no prior art in codebase, technology investigation needed | Well-known patterns, internal refactoring, routine updates |
 | **🔒 --hardened** | Sensitive keyword detected (see registry below), security-critical code, auth flows | UI components, non-sensitive CRUD, styling |
 
 ### Combination Rules
@@ -54,9 +58,37 @@ Select tools to activate: (all / pick / none)
   (so blast radius data is available for the TDD/QA recommendation).
 - If `/brainstorm` is activated → Agent runs a focused 3-turn brainstorm BEFORE coding
   starts. Result is logged in the Phase's `⚗️ Brainstorm Log` section.
+- If `/spec` is activated → Agent runs the `/spec` workflow to write/update a specification
+  document. Spec anchors feed into CSA binding during implementation.
 - If `/qa` is activated → Agent runs a stress-test review (probing questions across logic,
   security, feasibility dimensions) BEFORE coding. Issues found feed into implementation.
-- **Execution order:** `/brainstorm` → `/qa` → then code with TDD + `--graph` + `--hardened`.
+- If `/research` is activated → Agent runs the `/research` workflow to investigate unknowns.
+  Findings are documented as a reference and inform implementation decisions.
+- **Execution order:** `/brainstorm` → `/spec` → `/qa` → `/research` → then code with TDD + `--graph` + `--hardened`.
+
+### Post-Baseline Approval Gate (v1.9.9)
+
+> ⛔ **MANDATORY TURN BOUNDARY:** After completing ANY pre-code tool
+> (`/brainstorm`, `/spec`, `/qa`, `/research`) during a vibecode session phase,
+> Agent MUST follow this strict sequence:
+>
+> 1. **Save** the output artifact (decision record, spec document, QA report, research doc)
+> 2. **Present** a concise summary of the baseline findings to the user
+> 3. **STOP calling tools and END the current turn** — do NOT proceed to code modifications
+> 4. **Wait** for explicit user confirmation in a NEW turn (e.g., "y", "ok", "proceed", "dev")
+> 5. **Only AFTER** receiving user confirmation may Agent begin code modifications
+>
+> **Violation classification:** Proceeding from brainstorm/spec/qa/research output
+> to code modification in the same turn is a **sovereignty violation** — user never
+> reviewed or approved the design baseline before code was changed.
+>
+> **Scope:** This gate applies when pre-code tools run INSIDE a vibecode session
+> (triggered by Phase Start Baseline Gate). Standalone `/brainstorm` already has
+> its own Step 5 checkpoint in the workflow.
+>
+> **Plan template enforcement:** Session/Detail plan templates SHOULD generate
+> a visible `⛔ POST-BASELINE APPROVAL` checkpoint item between the baseline
+> task and the first code task in each Phase ≥ 1.
 
 ---
 

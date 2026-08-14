@@ -29,6 +29,7 @@ source: custom
 /scan-sec project <name> --graph # Scan project and assess blast radius using code graph
 /scan-sec resource <name>       # Scan a specific resource (e.g., resource scan-sec)
 /scan-sec area <name>           # Scan a specific area (e.g., area Learning)
+/scan-sec plan <path>           # Scan an Implementation Plan file against OWASP security rules
 ```
 
 Optional arguments:

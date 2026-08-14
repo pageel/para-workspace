@@ -341,6 +341,7 @@ gh pr create --title "[PR title]" --body "[PR description]" --auto --squash
 - [ ] 1.N-2 🤖 **Type/Lint Check:** Run project's static check/typecheck (e.g., `npx tsc --noEmit` or `npm run lint`) to ensure zero compilation or syntax errors.
 - [ ] 1.N-1 🤖 **Pre-commit Gate:** Run project's tests and resolve any problems.
 - [ ] 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to detect physical drift), and `graph_audit_csa` (with `planScope: "[active-plan-path]"` to verify plan-scoped spec coverage is 100% and bind introduced code entities).
+- [ ] ⛔ CHECKPOINT (Task Done Verification): Run `node .agents/skills/plan/scripts/check-phase-tasks.js <plan-file> <phase>` and verify exit code 0. If unchecked tasks remain, STOP and fix them before proceeding.
 - [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Verify that all implemented tasks in the active plan/phase are marked as completed (`[x]`) in this plan file BEFORE committing or proposing git. Commit #N/M — DO NOT push.
 <!-- ⚠️ HARNESS GUARD (VCS — Commit #N/M [Local]): Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit. -->
 > ⛔ **HARNESS GUARD (VCS):** Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit.
@@ -389,8 +390,8 @@ Package release tarball (if applicable), sync version badges & feature highlight
 - [ ] [N].3b 🤖 Verify & Stage Agent Intelligence templates into `repo/templates/agents/` (`/staging` workflow — N/A if no agent workflows/skills/rules were modified)
 
 
-- [ ] [N].4 🤖 Propose and execute Git commit & push: `/push` (requires user confirmation)
-- [ ] [N].5 🤖 Propose and execute GitHub Release tag & publishing: `gh release create v[X.Y.Z] [project-name]-v[X.Y.Z].tar.gz` (N/A if internal repo without GitHub release tags)
+- [ ] [N].4 🤖 Propose and execute Git commit & push: `/push` or Feature Branch PR Protocol (per `maintenance.md` §3)
+- [ ] [N].5 👤 **Git Release Tag & NPM Publish Gate (maintenance.md §5):** Propose creating Git Release Tag (`gh release create v[X.Y.Z] --title "Release v[X.Y.Z]" --notes "..."`) to trigger automated NPM package publishing workflow (`.github/workflows/publish.yml`) (N/A if internal project or user chooses to publish later; requires explicit user confirmation).
 
 
 

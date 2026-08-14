@@ -18,6 +18,17 @@ reference_curriculum: "Standard Web Architecture Patterns"
 
 ---
 
+## 0. Zero-Assumption & Data Isolation Principles
+
+> 🛡️ **Goal:** Prevent hallucinating or assuming non-existent business data, branding, emails, locations, or secrets in code and documentation.
+
+1. **Strict Data-Code Decoupling:** UI components MUST NOT hardcode address details, hotlines, partner names, or emails in code files (`.astro`/`.tsx`/`.html`). Configuration data MUST be dynamically loaded from a config file (e.g., `src/config/app.config.ts`).
+2. **Dynamic Component Fallback:** When actual business data is not yet provided (`status: "pending"` or empty array `[]`), components MUST automatically render a safe placeholder UI or hide gracefully without throwing runtime errors.
+3. **Backend Configuration Safeguard:** API Endpoints MUST validate environment variables. If placeholder strings (`[TBD]`) are detected, the API MUST automatically switch to **Local Fail-safe Logging** instead of dispatching requests to non-existent addresses or external servers.
+4. **Pre-flight Configuration Gate:** Use a pre-build check script (e.g., `npm run check:config`) to scan and report any remaining `[TBD]` constants before staging or production deployment.
+
+---
+
 ## 1. Infrastructure & Deployment Architecture
 *   **Deployment Target**: [e.g., Cloudflare Workers, Docker on AWS EC2]
 *   **Networking & Gateway**: [CDN, Load balancer, CORS, domain routes]
@@ -156,3 +167,37 @@ reference_curriculum: "Standard Web Architecture Patterns"
     *   **P2 (High)**: Degraded performance, error spike → 15-min response
     *   **P3 (Medium)**: Non-critical warnings → next business day
 *   **Runbook References**: Links to operational runbooks for common failure modes
+
+---
+
+## 7. Specs Mapping
+
+| Target Spec File | Category | Status | Subsystem | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `spec-[topic]-ui.md` | Frontend UI | Planned | Component Layer | Detailed specification for UI components |
+| `spec-[topic]-api.md` | Backend API | Planned | API & Service Layer | Detailed specification for API endpoints and contracts |
+
+---
+
+## 8. Reviews & Risk Assessments
+
+| Review Date | Version | Health Score | Status | Detailed Assessment Report | Assessor |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| YYYY-MM-DD | `v0.1.0` | **95/100** | `Completed` | [Report Title](../reports/sysdesign/sysdesign-report-[topic]-[date].md) | Antigravity |
+
+---
+
+## 9. Pending Information Checklist & Fallback Strategy
+
+> 📌 All unverified business parameters MUST be marked as `[TBD]`. Code components MUST implement safe fallback strategies when business information is pending.
+
+| # | Information Item | Status | Description / Notes | Code Fallback Strategy | Verification Gate |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | Production Domain | ⏳ Pending | Domain name for hosting | Use dynamic `site` context, avoid hardcoded URLs | `npm run check:config` |
+| 2 | Notification Admin Email | ⏳ Pending | Recipient email for form leads | Fallback to local file logging (`logs/leads-fallback.log`) | `config-validator.ts` |
+| 3 | Sender Email / Mail Domain | ⏳ Pending | Verified sender email on Mailer service | Skip email dispatch step if unconfigured | `config-validator.ts` |
+| 4 | API Keys & Secrets | ⏳ Pending | Production / Staging credentials | Disable external verifiers in local dev environment | `.env.example` check |
+| 5 | Physical Store/Branch List | ⏳ Pending | Addresses, hotlines, maps | Render placeholder branch card (`FallbackBranch.astro`) | `app.config.ts` |
+| 6 | Business Services & Pricing | ⏳ Pending | Service catalog and pricing | Render default service template | `app.config.ts` |
+| 7 | Team / Specialist Profiles | ⏳ Pending | Photos, titles, bios | Hide section gracefully if array is empty `[]` | `app.config.ts` |
+| 8 | Brand Assets & Logos | ⏳ Pending | High-resolution logo files, banners | Use default SVG logo placeholder & UI placeholders | Asset check |

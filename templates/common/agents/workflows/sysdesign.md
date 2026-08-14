@@ -58,6 +58,12 @@ If `--graph` is specified:
 If `--source-context [paths]` is specified:
 1. The Agent MUST use the `view_file` tool to read the contents of each file specified in the comma-separated `[paths]` array before starting the constraint definition or writing steps. This provides a direct, concrete view of the active implementation.
 
+> ⛔ **HARNESS GUARD (Zero-Assumption & Business Data Protection for New Projects):**
+> When establishing a system design for a project (especially new projects), Agent MUST NOT assume or hallucinate unverified business details (such as brand names, store/clinic locations, branch lists, recipient emails, hotline numbers, or API secrets).
+> 1. Read `project.md` and active project context carefully to extract verified parameters.
+> 2. Any business content, credentials, domain names, or asset references not explicitly defined in `project.md` MUST be marked as `[TBD]` or `[TBD / To Be Provided]`.
+> 3. Agent MUST include **Section 0: Zero-Assumption & Data Isolation Principles** and **Section 9: Pending Information & Fallback Strategy Checklist** in every sysdesign file.
+
 > ⛔ **HARNESS GUARD (Avoid Sysdesign Duplicates):** Before creating a new sysdesign file, Agent MUST list existing sysdesign files (`ls -t Projects/[project-name]/artifacts/sysdesigns/sysdesign-*.md 2>/dev/null`).
 > - **IF a sysdesign file for this topic/subsystem already exists:** Agent MUST abort the `create` action, notify the user, and propose running `/sysdesign [project] update` on the existing file instead.
 > - **IF no matching sysdesign exists:** Proceed with the creation flow.

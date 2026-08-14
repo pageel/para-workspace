@@ -3,9 +3,11 @@ description: Brainstorm context, issues, and solutions before formal planning
 source: catalog
 ---
 
-# /brainstorm [project-name] [topic] [--graph] [--contributes-to [paths]]
+# /brainstorm [project-name] [topic] [--graph] [--deep] [--contributes-to [paths]]
 
-> **Workspace Version:** 1.8.7 (Generalized Traceability Integration)
+> 🧠 **DEEP REASONING (CoT) GUARD:** IF `--deep` or `--cot` flag is provided, OR topic matches auto-trigger keywords (see Step 4), Agent MUST load `.agents/skills/deep-reasoning/SKILL.md` and execute the 4-Phase CoT Protocol with Multi-Dimensional Scoring Matrix before generating and evaluating options.
+
+> **Workspace Version:** 1.9.8 (CoT + MCP Integration + Process Transparency)
 
 Collaborative troubleshooting and ideation for a project. Use this workflow to explore problem spaces, evaluate potential solutions, and clarify thinking before committing to a formal implementation plan (`/plan`).
 
@@ -16,6 +18,7 @@ Collaborative troubleshooting and ideation for a project. Use this workflow to e
 | `--graph` | Run Graph Pipeline (Build → Query → Bundles) to anchor brainstorm in real codebase architecture |
 | `--deep` | Activate Deep Reasoning Protocol (`deep-reasoning` skill) for 4-phase CoT analysis |
 | `--contributes-to [paths]` | Link this brainstorm to destination documents (e.g., specs, sysdesigns, researches). Automatically updates the target files with the detailed analysis and diagrams. |
+| `--resume-qa [path]` | Path to QA Report file. Links brainstorm decision back to QA report and auto-triggers QA resume recommendation upon conclusion. |
 
 ## Steps
 
@@ -46,6 +49,14 @@ If the `--graph` flag is provided, execute the graph intelligence pipeline BEFOR
 // turbo
 
 First, understand the core topic and the project's current state.
+
+> 🏥 **Research Health Check (v1.9.8 — if `--deep` + project has research):**
+> BEFORE ideation, Agent MUST check if the project has existing research documents (≥500 lines) related to the topic.
+> IF found → Execute the Research Health Check protocol from `/research` workflow §1.5:
+> - Read Decision Tracker → report progress + stale questions
+> - Suggest highest priority open Q
+> - Apply Graduation Gate (≥80% closed → suggest `/plan create`)
+> This ensures brainstorm sessions on long research topics start with full awareness of prior progress.
 
 > ⚠️ **Proactive Context & Trigger Check:** BEFORE brainstorming ANY solution, YOU MUST:
 > 1. Read the project's own domain skill at `Projects/[project-name]/.agents/skills/[project-name]/SKILL.md` (if it exists) to understand project-specific rules.
@@ -147,8 +158,57 @@ cat .agents/skills/csa/SKILL.md 2>/dev/null | head -60
 
 ### 4. Ideation & Exploration
 
-> 🧠 **Deep Reasoning Protocol Check:** IF `--deep` flag is present OR topic touches core architecture, security, or breaking changes:
-> Agent MUST load `.agents/skills/deep-reasoning/SKILL.md` and execute the 4-phase CoT reasoning cycle (Decompose ➔ Diverge ➔ Red-Team ➔ Converge) before generating options.
+> 🧠 **Deep Reasoning Protocol Check:**
+> Agent MUST activate the 4-phase CoT reasoning cycle (Decompose ➔ Diverge ➔ Red-Team ➔ Converge) IF any of the following conditions are true:
+> 1. `--deep` or `--cot` flag is explicitly provided.
+> 2. Topic matches **auto-trigger keywords** (see detection table below).
+> 3. Agent detects the topic involves a **one-way door** decision (irreversible architectural or data change).
+>
+> When activated, Agent MUST load `.agents/skills/deep-reasoning/SKILL.md` and follow the full 4-phase protocol.
+
+#### 4a. Auto-Trigger Detection Table
+
+| Keywords detected in topic | Trigger level | Action |
+|:--|:--|:--|
+| security, auth, encryption, RBAC, CSRF, XSS, secrets | 🔴 Always | MUST activate CoT |
+| migration, breaking change, one-way door, data loss | 🔴 Always | MUST activate CoT |
+| architecture, infrastructure, database schema, topology | 🟡 Suggest | SHOULD activate CoT, ask user if not `--deep` |
+| refactor, redesign, rewrite, deprecate | 🟡 Suggest | SHOULD activate CoT, ask user if not `--deep` |
+| performance, scalability, caching, load balancing | 🟡 Suggest | SHOULD activate CoT, ask user if not `--deep` |
+| config, env, deploy, CI/CD | 🟢 Optional | Agent MAY suggest `--deep` if complexity is high |
+
+> **Rule:** If 🔴 keywords are detected and `--deep` was NOT explicitly provided, Agent MUST auto-activate CoT and inform the user: "🧠 Auto-activating Deep Reasoning — topic involves [keyword category]."
+
+#### 4b. MCP-Enriched CoT Pipeline (if project has graph)
+
+> **Gate:** Check `test -d "Projects/[project-name]/.beads/graph"` OR `test -d "Projects/[project-name]/repo/.beads/graph"`.
+> If graph exists → MCP tools MUST be used to ground CoT phases in real codebase data.
+> If no graph → CoT runs as pure reasoning protocol (no MCP calls).
+
+When graph is available, Agent integrates MCP tools into each CoT phase:
+
+| CoT Phase | MCP Tool | Purpose |
+|:--|:--|:--|
+| **Phase 1: Decompose** | `graph_query` | Locate architectural nodes related to topic |
+| **Phase 1: Decompose** | `memory_search` | Retrieve past decisions and friction on similar topics |
+| **Phase 2: Diverge** | `graph_impact_analysis` | Assess blast radius of each approach |
+| **Phase 2: Diverge** | `graph_god_nodes` | Identify hot spots (most connected nodes) to gauge risk |
+| **Phase 2: Diverge** | `graph_context_bundle` | Pull callers/callees for feasibility checks |
+| **Phase 3: Red-Team** | `graph_edges` | Verify dependency assumptions against real graph |
+| **Phase 3: Red-Team** | `insight_search` | Surface outstanding risks/gotchas for the area |
+| **Phase 4: Converge** | `memory_push` | Persist CoT decision with `kind: "cot-decision"` |
+
+> **Token Guard:** Limit MCP calls to **max 5 per phase** to prevent token bloat. Prioritize `graph_impact_analysis` and `memory_search` as highest-value calls.
+
+> 🔄 **Empty Graph Early Exit (v1.9.7.1):**
+> After Phase 1 MCP calls (`graph_query` + `memory_search`), Agent MUST evaluate the results:
+> - **IF both return empty** (`[]` / `count: 0`) → Graph exists but has no relevant data for this topic.
+>   - Agent MUST downgrade to **pure reasoning** for Phase 2-3 (skip remaining MCP calls).
+>   - Agent MUST log: `"⏭️ Graph empty for topic — MCP skipped for Phase 2-3, continuing as pure reasoning."`
+>   - Phase 4 `memory_push` is still executed (to persist the CoT decision).
+> - **IF any result is non-empty** → Continue MCP-enriched pipeline normally.
+
+#### 4c. Standard Ideation (all modes)
 
 Generate 3-5 distinct perspectives, solutions, or root causes related to the topic. For each option, concisely outline:
 
@@ -156,7 +216,10 @@ Generate 3-5 distinct perspectives, solutions, or root causes related to the top
 - **Pros:** Why it might work.
 - **Cons/Risks:** Potential drawbacks or technical challenges.
 
-> 🔍 **Graph-Assisted Ideation (if `--graph`):** During exploration, Agent SHOULD
+> When CoT is active, Agent MUST structure options as the 3 canonical approaches:
+> **A (Conservative)**, **B (Balanced/Optimal)**, **C (Aggressive/Redesign)** — and score them using the 5D Scoring Matrix from the deep-reasoning skill.
+
+> 🔍 **Graph-Assisted Ideation (if `--graph` without `--deep`):** During exploration, Agent SHOULD
 > actively use MCP tools to validate or challenge ideas against the real codebase:
 > - `graph_query` — Find nodes related to proposed changes
 > - `graph_god_nodes` — Identify architectural hot spots (most connected nodes) to assess risk
@@ -171,6 +234,12 @@ Generate 3-5 distinct perspectives, solutions, or root causes related to the top
 > ⚠️ **MUST NOT skip this step.** Agent MUST present the options to the user and
 > wait for explicit feedback before proceeding to Step 6. Skipping refinement
 > leads to premature decisions and consent violations.
+
+> ⛔ **CHECKPOINT (CoT Sessions — v1.9.7.1):** When CoT was active in Step 4, Agent has already
+> converged on a recommended approach in Phase 4. However, CoT convergence is NOT user approval.
+> Agent **MUST** still present the CoT results (approaches, scores, recommendation) to the user
+> and **STOP calling tools** until the user explicitly confirms, modifies, or rejects the recommendation.
+> Auto-proceeding from CoT Phase 4 to Step 6 without user input is a **sovereignty violation**.
 
 Collaborate with the user to evaluate the options:
 
@@ -199,6 +268,28 @@ Collaborate with the user to evaluate the options:
 > ⚠️ **Status Check:** Agent MUST determine or ask the user:
 > - **Open**: An ongoing exploration — findings will accumulate over time.
 > - **Decided**: A final choice is made — the brainstorm is concluded.
+
+> 🧠 **CoT Output Requirement (v1.9.8 — Process Transparency):**
+> IF Deep Reasoning (CoT) was active during this brainstorm session (Step 4), Agent **MUST**:
+>
+> **A. Phase Logging (MANDATORY):** Include the full phase-by-phase documentation in the brainstorm artifact:
+>   - `## Step 0: Tier Detection Log` — Tier result table (3-layer scores)
+>   - `## Phase 1: Problem Decomposition & Invariants` — Root problem, sub-problems, invariants
+>   - `## Phase 2: Divergent Exploration & Scoring` — 3 approaches, 5D Scoring Matrix
+>   - `## Phase 3: Red-Team & Stress Testing` — Stress tests, trade-off matrix
+>   - `## Phase 4: Convergence & Decision` — Selected approach, rationale, next steps
+>
+> **B. Summary Blocks (MANDATORY):** Include BOTH:
+>   - `### 🧠 Deep Reasoning Summary (CoT)` — Root Problem, Scoring Matrix, Trade-Offs, Door Type
+>   - `### 🔍 Kiểm Toán Suy Luận Linh Hoạt` (Audit Trail) — Tier, Budget, Reentry, Confidence
+>   - MCP Evidence (if graph was available): list of graph nodes queried, blast radius data, past decisions surfaced
+>
+> **C. Phase Skip Warning:** If any phase was skipped, Agent MUST include: `> ⚠️ PHASE SKIPPED: [Phase Name] — Reason: [why]`
+>
+> The Phase Logging sections are placed **before** the Summary blocks. The CoT Summary section is placed **after** the Options/Analysis section and **before** the Decision section in both brainstorm and decision templates.
+> IF CoT was NOT active → omit all CoT sections entirely.
+>
+> ⛔ **Harness Guard Cross-Reference:** See `deep-reasoning/SKILL.md` v2.2.0 §Process Transparency Harness Guard for the authoritative Guard 1-3 definitions. This workflow requirement is the enforcement mechanism.
 
 > 🛠️ **Ecosystem Traceability & Integration Rule (v1.8.7):**
 > 1. **YAML Metadata:** In the brainstorm file's YAML frontmatter, the Agent **MUST** record the `contributes_to: [ "relative/path/to/target1.md", "relative/path/to/target2.md" ]` array field if run with the `--contributes-to [paths]` flag or if related specifications, system designs, or research documents are detected.
@@ -282,7 +373,7 @@ using the **Research template** from the Sidecar Skill.
    test -d "Projects/[project-name]/.beads/graph" && echo "✅ Graph Memory available" || echo "⏭️ No graph — skip memory push"
    ```
 
-2. **IF graph exists AND decision finalized:**
+2. **IF graph exists AND decision finalized (new decision, not append):**
    Push the decision summary via MCP `memory_push`:
    - **kind:** `brainstorm-decision`
    - **content:** Decision title + chosen approach + key rationale (from the Decision section)
@@ -291,9 +382,22 @@ using the **Research template** from the Sidecar Skill.
 
    Agent calls `memory_push(projectName, kind, content, sessionId, metadata)`.
 
-3. **Curate memory:** After pushing, call `memory_curate(projectName)` to consolidate raw memory events into semantic slices for future sessions.
+   > **Append vs New Decision (v1.9.7.1):** IF this session appended to an existing brainstorm file (Running Log entry)
+   > AND the file status was already `Decided` before this session → skip `brainstorm-decision` push
+   > (decision already persisted in a prior session). Only push `cot-decision` if CoT was active.
 
-4. **IF no graph OR open brainstorm** → Skip silently.
+3. **IF CoT was active during this session (Step 4):**
+   Push a separate CoT decision node via MCP `memory_push`:
+   - **kind:** `cot-decision`
+   - **content:** Root Problem + Selected Approach + 5D Weighted Score + Critical Trade-Offs (from the CoT Summary section)
+   - **sessionId:** `YYYY-MM-DD-brainstorm-[topic]`
+   - **metadata:** `{ "cotDepth": 4, "scoringDimensions": 5, "selectedApproach": "[A/B/C]", "weightedScore": [N.NN], "doorType": "[one-way/two-way]", "mcp_evidence": [true/false] }`
+
+   > This creates a dedicated `cot-decision` node in the knowledge graph, enabling future sessions to retrieve architectural reasoning context via `memory_search(query, category: "cot-decision")`.
+
+4. **Curate memory:** After pushing, call `memory_curate(projectName)` to consolidate raw memory events into semantic slices for future sessions.
+
+5. **IF no graph OR open brainstorm** → Skip silently.
 
 ### 8. Choose Next Action
 
@@ -352,7 +456,11 @@ Agent evaluates these signals to determine the best next action:
 
   I. 📐 Proceed to /sysdesign — Design system architecture
 
+  J. 🔄 Resume QA Session — Return to /qa with completed brainstorm finding (--resume-qa)
+
 ⭐ RECOMMENDATION: [X] — [1-sentence rationale based on context analysis]
+
+> **QA Handback Override Rule:** IF `--resume-qa [path]` flag is present OR `qa_context` is active, the Agent MUST automatically set `⭐ RECOMMENDATION: Option J (Resume QA Session)` with the auto-generated command `/qa resume [qa-report-path]`.
 
 ❓ Proceed with [X], or choose another option?
 ```

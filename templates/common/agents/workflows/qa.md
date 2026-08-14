@@ -28,6 +28,7 @@ Systematic Q&A review and quality audit loop (Red Team) for PARA artifacts (plan
 | `spec` | Section-by-section Q&A on a Spec and alignment check with Sysdesign | Before spec approval |
 | `audit` | Compliance-focused Q&A (guards, governance, VCS, CSA) | Post-review harness verification or pre-commit |
 | `generic` | Generic Q&A on other markdown artifacts (brainstorms, roadmaps) | Macro artifact evaluation |
+| `resume` | Resume a paused QA session from QA Report (State Container) & Graph Memory | Resume QA after deep brainstorm |
 
 ## Options
 
@@ -218,7 +219,7 @@ For each section/phase in the artifact:
    - **No Arbitrary Limits:** Generate **as many questions as necessary** to fully stress-test the section.
    - Each question MUST be tagged with a dimension (`[LOGIC]`, `[SEC]`, etc.).
 3. **Do NOT answer them yet.**
-4. **Format the output** as a Question List and **Append** them to the `## 2. Red Team Findings` section of the QA Report file created in Step 4.
+4. **Format the output** as a Question List and **Append** them to the `## 2. Red Team Findings` section of the QA Report file created in Step 4:
 
 ```
 ---
@@ -230,14 +231,34 @@ For each section/phase in the artifact:
 ...
 ```
 
-### Step 8. Interactive Iteration Loop
+### Step 8. Question Severity & Complexity Triage Matrix
+
+Before presenting questions to the user or attempting to answer them, the Agent MUST evaluate each generated probing question against the Triage Matrix:
+
+1. **Calculate Complexity & Risk Score (1-5):**
+   - **Score 1–2.5 (Class A — Standard Questions):** Low/Medium risk, standard implementation logic, or simple UI/config checks.
+   - **Score 3.5–5 (Class B — Deep Architectural & Security Questions):** High-risk, complex algorithm design, security implications, data schema migrations, or systemic architectural trade-offs.
+
+2. **Class B Question Tagging & Harness Guard:**
+   - Mark Class B questions with `[SEC - Class B]` or `[ARCH - Class B]`.
+   - Class B questions CANNOT be answered automatically by the Red Team in a single pass without deep research.
+   - Attach a `> ⛔ HARNESS CHECKPOINT (Deep Research Required)` guard to Class B questions.
+
+### Step 9. Interactive Iteration Loop
 
 > ⛔ **CHECKPOINT (Interactive Pause):** Agent MUST STOP here. The Agent MUST NOT answer questions or proceed to Phase 2 (Execution & Answering) in the same turn. Agent MUST present the question list, suggest deep review options, and wait for explicit user approval or input in the chat. Auto-answering questions without user approval is a severe workflow violation.
 
-1. Present the generated Question List to the user in the chat.
-2. **Agent Suggestion:** Proactively suggest 1-2 areas where deeper questions could be asked.
-3. **Ask user:** "Do you approve this question list? You can add your own questions, ask me to re-roll, or type `deep [aspect]` to add deep source-code level questions (e.g. `deep logic`, `deep sec`)."
-4. **Deep Review (Dual-Pass) Options:** Display the following options for High-Token Models:
+1. Present the generated Question List to the user in the chat, clearly separating **Class A (Standard Qs)** and **Class B (Deep Qs)**.
+2. **Class B Question Harness Pause:**
+   - If any Class B questions exist, pause the QA workflow and present a dedicated Harness Checkpoint block.
+   - For each Class B question, auto-generate the exact copy-paste command for the user:
+     ```bash
+     /brainstorm --deep "[Question title]" --contributes-to Projects/[project]/artifacts/qa/[qa-report-filename]#Q[N] --resume-qa Projects/[project]/artifacts/qa/[qa-report-filename]
+     ```
+   - Set Header Verdict in QA Report to: `Verdict: [Pending (Round N - Q[N] Brainstorming)]`.
+3. **Agent Suggestion:** Proactively suggest 1-2 areas where deeper questions could be asked.
+4. **Ask user:** "Do you approve this question list? You can add your own questions, ask me to re-roll, or type `deep [aspect]` to add deep source-code level questions (e.g. `deep logic`, `deep sec`)."
+5. **Deep Review (Dual-Pass) Options:** Display the following options for High-Token Models:
    ```text
    🚀 Deep Review Options: To run a deep source-level review, type:
    - `deep`       : Comprehensive review (Line-by-line).
@@ -250,24 +271,24 @@ For each section/phase in the artifact:
    - `deep clean` : Review Code Smells and propose Refactoring.
    *(Note: The Agent will ingest the full repository source code upon activation).*
    ```
-5. **Loop:** If the user adds questions or requests a `deep` aspect:
+6. **Loop:** If the user adds questions or requests a `deep` aspect:
    - Generate the new questions.
    - Append them to the QA file.
    - Present again.
-6. ⛔ **CHECKPOINT (Interactive Pause):** Wait for final user approval. STOP HERE. Do NOT proceed to Phase 2 until approved.
+7. ⛔ **CHECKPOINT (Interactive Pause):** Wait for final user approval. STOP HERE. Do NOT proceed to Phase 2 until approved.
 
 ---
 
 ### Phase 2: Execution & Answering
 
-### Step 9. Change Role & Deep Dive
+### Step 10. Change Role & Deep Dive
 
 Once the user approves the questions OR triggers a `deep` review, the agent MUST change role to executor:
 1. **If `deep` review triggered:** The user must be on a High-Token Model. Agent MUST ingest the full repository source code relevant to the target, combine it with Phase 1 results, and generate answers focusing strictly on the requested aspect (`logic`, `sec`, `perf`, `int`, `clean`, or all).
 2. Re-verify any complex code relationships, upstream specs, or missing artifacts that you deferred in Phase 1. Use `mcp_para-graph` tools to trace deep dependencies or impacts if a question requires codebase analysis.
 3. Ensure you have actively loaded the relevant `skills` and `rules` files into memory before answering.
 
-### Step 10. Answer & Verdict (Per Question Loop)
+### Step 11. Answer & Verdict (Per Question Loop)
 
 1. **Self-answer each approved question** by analyzing the artifact against the deep context loaded in Step 9.
 2. **Assign a verdict** to each answer:
@@ -285,14 +306,14 @@ Q1 [LOGIC]: [Question]
 → Verdict: ✅ OK | ⚠️ Issue | 🔴 Critical
 ```
 
-### Step 11. Cross-Section Consistency Check
+### Step 12. Cross-Section Consistency Check
 
 After all sections are reviewed, perform cross-cutting checks:
 
 > **Process-Specific Enforcement:** If the selected process is `phase-loop`, Agent MUST also execute the **Step 4: Cross-Phase Consistency Check** defined in `references/process-phase-loop.md` (God Node conflicts, shared helper references, config accumulation). This step is MANDATORY and MUST NOT be skipped.
 
 | Check                    | What to verify                                                       |
-| :----------------------- | :------------------------------------------------------------------- |
+| :--------------- | :-------------------------------------------------------------------- |
 | **Task numbering**       | Are task numbers sequential and non-duplicated?                      |
 | **Git refs**             | Do Git Operation Summary refs match actual task numbers?             |
 | **Walkthrough coverage** | Does every key deliverable appear in Walkthrough?                    |
@@ -301,7 +322,7 @@ After all sections are reviewed, perform cross-cutting checks:
 | **File scope**           | Are all modified files listed in `git add` commands?                 |
 | **Version consistency**  | Is version number the same across all mentions?                      |
 
-### Step 12. Issue Summary, Recommendations & Next Steps
+### Step 13. Issue Summary, Recommendations & Next Steps
 
 Compile all `⚠️ Issue` and `🔴 Critical` findings into a summary table:
 
@@ -513,6 +534,17 @@ Agent: (reads brainstorm → questions each option → checks decision rationale
 ```
 
 ---
+
+## Action: resume
+
+Resume a paused QA session after a deep sub-brainstorm has completed:
+
+1. **Load State Container:** Read the QA Report file specified in `[qa-report-path]`.
+2. **Retrieve Brainstorm Decision:** Read the updated section `#Q[N]` in the QA Report or query `para-graph` MCP memory via `memory_search("Q[N] cot-decision")`.
+3. **Incorporate Answer:** Replace the pending status with the deep brainstorm finding and verdict (`✅ OK` or `⚠️ Issue`).
+4. **Structural Linter Gate:** Run `node .agents/skills/qa/scripts/lint-qa.js [qa-report-path]`.
+5. **Resume Workflow:** Proceed to Step 11 (Summary & Next Steps).
+
 
 ## Related
 

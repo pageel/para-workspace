@@ -40,6 +40,7 @@ source: user
 | `references/session-quality-gate.md` | Sensitive keywords registry + Quality Gate template for session phases |
 | `references/verification.md` | Build/lint commands by tech stack |
 | `scripts/session-manager.sh` | Dynamic session KI (vibecode_session) management helper script |
+| `.agents/skills/plan/scripts/check-phase-tasks.js` | Universal pre-git task completion checker (exit 0 = all done, exit 1 = unchecked tasks remain) |
 
 ## Mode Chaining Guide
 
@@ -101,10 +102,13 @@ After execution, verify:
 - [ ] User confirmed before real writes
 - [ ] Phase gates respected (auto mode)
 - [ ] Quality Gate and Pre-Code Checkpoint presented at EVERY Phase start (session mode — TDD/graph/QA/hardened)
+- [ ] Phase Start Baseline Gate presented at EVERY Phase ≥ 1 (proposing /brainstorm, /qa, /spec, /research)
+- [ ] Post-Baseline Approval Gate enforced: Agent STOPPED turn after brainstorm/spec/qa output and waited for user confirmation before coding (Guard #17)
 - [ ] User approval obtained at Pre-Code Checkpoint and confirmed to run `/plan [project-name] dev` before making any code modifications
 - [ ] Rollback mechanism available (loop: git stash, sandbox: delete)
 - [ ] Path substitution correct (--sandbox: sandbox prefix)
 - [ ] Bash scripts syntax-checked with `bash -n` (--sandbox)
 - [ ] Sandbox cleaned up after completion
 - [ ] Final report generated with file inventory + lessons learned
+- [ ] Pre-git Task Done Check (`check-phase-tasks.js`) executed with exit code 0 before every git commit
 - [ ] Mandatory User confirmation obtained (suggesting `/plan [project-name] end`) before performing session teardown or archiving/cleaning plan files

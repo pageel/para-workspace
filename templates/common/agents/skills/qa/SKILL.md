@@ -41,7 +41,7 @@ When creating the QA Report at Step 0.5 (Pre-QA Strategy), the Agent MUST format
 > **Workflow Mode:** `/qa [plan/spec/artifact/audit]`
 > **Process:** `[full-plan / phase-loop (specify N phases) / risk-driven (specify N risks) / adversarial]` (MUST specify the exact count of phases/risks in parentheses to prevent context decay)
 > **Dimensions:** `[LOGIC, SEC, FEAS, COMP, CONS, DEP, GOV, OSS]`
-> **Verdict:** `[✅ Ready | ⚠️ Action Required | 🔴 Blocked]`
+> **Verdict:** `[✅ Ready | ⚠️ Action Required | 🔴 Blocked | ⏳ Pending (Round N - Q[N] Brainstorming)]`
 
 ## 0. QA Strategy (Pre-QA)
 

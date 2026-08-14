@@ -191,6 +191,7 @@
   - [ ] (If missing FAIL) 🛑 Revert code, rewrite RED test.
 - [ ] 5.5 🤖 **Type/Lint Check:** Run project's static check/typecheck per project contract (`project.md`) or maintenance rule (`maintenance.md` §1) (e.g., `npx astro sync && npx tsc --noEmit` for Astro, `tsc`, or `npm run lint`) to ensure zero compilation or syntax errors.
 - [ ] 5.6 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to detect physical drift), and `graph_audit_csa` (with `planScope: "[active-plan-path]"` to verify plan-scoped spec coverage is 100% and bind introduced code entities).
+- [ ] ⛔ CHECKPOINT (Task Done Verification): Run `node .agents/skills/plan/scripts/check-phase-tasks.js <plan-file> <phase>` and verify exit code 0. If unchecked tasks remain, STOP and fix them before proceeding.
 - [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Verify that all implemented tasks in the active plan/phase are marked as completed (`[x]`) in this plan file BEFORE committing or proposing git. Commit #N/M — DO NOT push.
 <!-- ⚠️ HARNESS GUARD (VCS — Commit #N/M [Local]): Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit. -->
 > ⛔ **HARNESS GUARD (VCS):** Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit.
@@ -225,6 +226,7 @@
   - [ ] (If missing FAIL) 🛑 Revert code, rewrite RED test.
 - [ ] 5.5 🤖 **Type/Lint Check:** Run project's static check/typecheck (e.g., `npx tsc --noEmit` or `npm run lint`) to ensure zero compilation or syntax errors.
 - [ ] 5.6 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to compare changes against baseline snapshot to detect physical drift / M9 compliance), and `graph_audit_csa` (to verify spec coverage meets the project's configured threshold and bind introduced code entities).
+- [ ] ⛔ CHECKPOINT (Task Done Verification): Run `node .agents/skills/plan/scripts/check-phase-tasks.js <plan-file> <phase>` and verify exit code 0. If unchecked tasks remain, STOP and fix them before proceeding.
 - [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Verify that all implemented tasks in the active plan/phase are marked as completed (`[x]`) in this plan file BEFORE committing or proposing git. Commit #N/M — DO NOT push.
 <!-- ⚠️ HARNESS GUARD (VCS — Commit #N/M [Local]): Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit. -->
 > ⛔ **HARNESS GUARD (VCS):** Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit.
@@ -252,6 +254,7 @@
 
 - [ ] 1. 🟣 **REFACTOR:** Clean up and restructure code.
 - [ ] 2.5 🤖 **Pre-commit Physical Snapshot Gate & CSA Compliance Gate (MCP):** If graph/mcp is available, run MCP tools `project_snapshot` (to take a snapshot), `project_diff` (to detect physical drift), and `graph_audit_csa` (with `planScope: "[active-plan-path]"` to verify plan-scoped spec coverage is 100% and bind introduced code entities).
+- [ ] ⛔ CHECKPOINT (Task Done Verification): Run `node .agents/skills/plan/scripts/check-phase-tasks.js <plan-file> <phase>` and verify exit code 0. If unchecked tasks remain, STOP and fix them before proceeding.
 - [ ] ⛔ CHECKPOINT: Re-read `rules/vcs.md`. Confirm scope = local-only. Verify that all implemented tasks in the active plan/phase are marked as completed (`[x]`) in this plan file BEFORE committing or proposing git. Commit #N/M — DO NOT push.
 <!-- ⚠️ HARNESS GUARD (VCS — Commit #N/M [Local]): Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit. -->
 > ⛔ **HARNESS GUARD (VCS):** Agent MUST re-read rules/vcs.md, verify all implemented tasks are checked [x] in the plan, and commit.
