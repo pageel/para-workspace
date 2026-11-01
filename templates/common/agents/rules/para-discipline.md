@@ -50,7 +50,7 @@ glob:
 
 ### 6. Kernel Compliance
 
-- **MUST** follow the kernel invariants (I1–I10) defined in the governance framework.
+- **MUST** follow the kernel invariants defined in `Resources/ai-agents/kernel/invariants.md`.
 - **MUST** use `backlog.md` as the canonical task store via the `/backlog` workflow.
 - **MUST NOT** delete files without explicit user approval.
 

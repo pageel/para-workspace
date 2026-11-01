@@ -40,7 +40,7 @@ MUST NOT modify `Projects/para-workspace/repo/` unless explicitly developing the
 
 ### 6. Kernel Compliance
 
-MUST follow kernel invariants (I1–I10). MUST use `backlog.md` as canonical task store via `/backlog`. MUST NOT delete files without user approval.
+MUST follow kernel invariants (`Resources/ai-agents/kernel/invariants.md`). MUST use `backlog.md` as canonical task store via `/backlog`. MUST NOT delete files without user approval.
 
 ### 7. VCS & Git Boundaries
 
