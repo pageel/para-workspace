@@ -95,6 +95,6 @@ glob: .para/knowledge/*
 
 ## Related
 
-- `kernel/schema/ki.schema.json` — KI metadata schema
-- `kernel/heuristics.md` H10 — Knowledge Items heuristic
+- `Resources/ai-agents/kernel/schema/ki.schema.json` — KI metadata schema (`kernel/schema/` in this repo)
+- `Resources/ai-agents/kernel/heuristics.md` H10 — Knowledge Items heuristic (`kernel/` in this repo)
 - `.agents/workflows/para-knowledge.md` — Primary workflow

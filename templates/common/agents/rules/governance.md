@@ -8,7 +8,7 @@ glob: kernel/*, .para/*, Resources/ai-agents/*
 
 # Agent Governance
 
-> **Context:** PARA Workspace Kernel v1.4.5
+> **Context:** PARA Workspace Kernel (version: `kernel_version` in `.para-workspace.yml`)
 > **Spec Path:** `Resources/ai-agents/kernel/`
 
 You are operating within a strict PARA methodology workspace. This file contains the critical invariants. Adhere to them absolutely.
